@@ -1,0 +1,35 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 04_gnome_screensaver.dpatch by  <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Replaces XScreensaver Support with Gnome Screensaver Support
+
+@DPATCH@
+
+diff -Nru mythtv-0.20.orig/libs/libmyth/screensaver-x11.cpp mythtv-0.20/libs/libmyth/screensaver-x11.cpp
+--- mythtv-0.20.orig/libs/libmyth/screensaver-x11.cpp	2006-05-31 18:36:05.000000000 -0500
++++ mythtv-0.20/libs/libmyth/screensaver-x11.cpp	2006-09-12 14:27:57.000000000 -0500
+@@ -37,14 +37,14 @@
+ {
+     d = new ScreenSaverX11Private();
+     d->state.xscreensaverRunning = 
+-                  (myth_system("xscreensaver-command -version >&- 2>&-") == 0); 
++                  (myth_system("gnome-screensaver-command --query >&- 2>&-") == 0); 
+     if (d->state.xscreensaverRunning)
+     {
+         d->resetTimer = new QTimer(this);
+         connect(d->resetTimer, SIGNAL(timeout()), this, SLOT(resetSlot()));
+ 
+         d->timeoutInterval = -1;
+-        VERBOSE(VB_GENERAL, "XScreenSaver support enabled");
++        VERBOSE(VB_GENERAL, "Gnome-Screensaver support enabled");
+     }
+ 
+     int dummy;
+@@ -176,5 +176,5 @@
+ 
+ void ScreenSaverX11::resetSlot() 
+ {
+-    myth_system(QString("xscreensaver-command -deactivate >&- 2>&- &")); 
++    myth_system(QString("gnome-screensaver-command --poke >&- 2>&- &")); 
+ }

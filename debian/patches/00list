@@ -1,0 +1,10 @@
+01_debian
+02_settings.pro
+03_libdts
+05_11372
+06_gnomescreensaver
+07_alsa_default.dpatch
+20_backend_crash_without_tuner
+21_openmedia_mheg5.dpatch
+22_openmedia_livetv.dpatch
+#23_video_device_symlinks.dpatch

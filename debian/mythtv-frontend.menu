@@ -1,0 +1,2 @@
+?package(mythtv-frontend):needs="X11" section="Apps/Graphics" \
+  title="MythTV" command="/usr/bin/mythfrontend"

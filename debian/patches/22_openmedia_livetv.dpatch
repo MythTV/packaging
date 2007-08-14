@@ -1,0 +1,829 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 22_openmdedia_livetv.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: A backport of several patches from trunk to 0.20 fixes
+## DP: described upon bug http://svn.mythtv.org/trac/ticket/3591
+## DP: trunk changeset, 11324, 11616, 11834, 12550, 12675, 12760
+
+@DPATCH@
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/NuppelVideoPlayer.cpp mythtv-0.20+fixes13716/libs/libmythtv/NuppelVideoPlayer.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/NuppelVideoPlayer.cpp	2007-04-24 21:59:55.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/NuppelVideoPlayer.cpp	2007-06-17 13:37:00.000000000 -0500
+@@ -2844,6 +2844,9 @@
+         return;
+     }
+ 
++    // the bitrate is reset by ringBuffer->OpenFile()...
++    ringBuffer->UpdateRawBitrate(GetDecoder()->GetRawBitrate());
++
+     ringBuffer->Unpause();
+ 
+     if (discontinuity || newtype)
+@@ -2949,6 +2952,9 @@
+         return;
+     }
+ 
++    // the bitrate is reset by ringBuffer->OpenFile()...
++    ringBuffer->UpdateRawBitrate(GetDecoder()->GetRawBitrate());
++
+     ringBuffer->Unpause();
+     ringBuffer->IgnoreLiveEOF(false);
+ 
+@@ -3464,6 +3470,8 @@
+ 
+     timecode += tc_wrap[tc_type];
+ 
++#define DOTCWRAP 0
++#if DOTCWRAP
+     // wrapped
+     if (timecode < tc_lastval[tc_type] - 10000)
+     {
+@@ -3500,6 +3508,7 @@
+             tc_avcheck_framecounter = 0;
+         }
+     }
++#endif
+ }
+ 
+ /** \fn NuppelVideoPlayer::AddAudioData(char*,int,long long)
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/RingBuffer.cpp mythtv-0.20+fixes13716/libs/libmythtv/RingBuffer.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/RingBuffer.cpp	2006-08-21 20:50:10.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/RingBuffer.cpp	2007-06-17 13:37:00.000000000 -0500
+@@ -7,6 +7,7 @@
+ // POSIX C headers
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/time.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+ #include <pthread.h>
+@@ -39,7 +40,9 @@
+ #define O_LARGEFILE 0
+ #endif
+ 
+-const uint RingBuffer::kBufferSize = 10 * 256 * 1024;
++const uint RingBuffer::kBufferSize = 3 * 1024 * 1024;
++
++#define CHUNK 32768 /* readblocksize increments */
+ 
+ #define PNG_MIN_SIZE   20 /* header plus one empty chunk */
+ #define NUV_MIN_SIZE  204 /* header size? */
+@@ -92,8 +95,8 @@
+       internalreadpos(0),       ateof(false),
+       readsallowed(false),      wantseek(false), setswitchtonext(false),
+       rawbitrate(4000),         playspeed(1.0f),
+-      fill_threshold(-1),       fill_min(-1),
+-      readblocksize(128000),    wanttoread(0),
++      fill_threshold(65536),    fill_min(-1),
++      readblocksize(CHUNK),     wanttoread(0),
+       numfailures(0),           commserror(false),
+       dvdPriv(NULL),            oldfile(false),
+       livetvchain(NULL),        ignoreliveeof(false),
+@@ -534,48 +537,51 @@
+  */
+ void RingBuffer::CalcReadAheadThresh(void)
+ {
+-    const uint KB32  =  32*1024;
+-    const uint KB64  =  64*1024;
+-    const uint KB128 = 128*1024;
+-    const uint KB256 = 256*1024;
+-    const uint KB512 = 512*1024;
+     uint estbitrate;
+ 
+-    wantseek = true;
+     pthread_rwlock_wrlock(&rwlock);
+-
+-    estbitrate     = (uint) max(abs(rawbitrate * playspeed), 0.5f * rawbitrate);
+-    estbitrate     = min(rawbitrate * 3, estbitrate);
+     wantseek       = false;
+     readsallowed   = false;
++    readblocksize  = CHUNK;
++
++    // loop without sleeping if the buffered data is less than this
++    fill_threshold = CHUNK * 2;
+     fill_min       = 1;
+-    readblocksize  = (estbitrate > 2500)  ? KB64  : KB32;
+-    readblocksize  = (estbitrate > 5000)  ? KB128 : readblocksize;
+-    readblocksize  = (estbitrate > 9000)  ? KB256 : readblocksize;
+-    readblocksize  = (estbitrate > 18000) ? KB512 : readblocksize;
+ 
+-    uint  secs_thr = 300; // seconds of buffering desired
+-    float secs_min = 0.1; // minumum seconds of buffering before allowing read
++#ifdef USING_FRONTEND
++    if (dvdPriv)
++    {
++        const uint KB32  =  32*1024;
++        const uint KB64  =  64*1024;
++        const uint KB128 = 128*1024;
++        const uint KB256 = 256*1024;
++        const uint KB512 = 512*1024;
+ 
+-    // set basic fill_threshold based on bitrate
+-    fill_threshold = (estbitrate * secs_thr) >> 3; // >>3 => bits -> bytes
+-    // extra buffering for remote files
+-    fill_threshold = fill_threshold + ((remotefile) ? KB256 : 0);
+-    // make the fill_threshold at least one block
+-    fill_threshold = max(readblocksize, fill_threshold);
++        estbitrate     = (uint) max(abs(rawbitrate * playspeed),
++                                    0.5f * rawbitrate);
++        estbitrate     = min(rawbitrate * 3, estbitrate);
++        readblocksize  = (estbitrate > 2500)  ? KB64  : KB32;
++        readblocksize  = (estbitrate > 5000)  ? KB128 : readblocksize;
++        readblocksize  = (estbitrate > 9000)  ? KB256 : readblocksize;
++        readblocksize  = (estbitrate > 18000) ? KB512 : readblocksize;
+ 
+-    // set the minimum buffering before allowing ffmpeg read
+-    fill_min        = (uint) ((estbitrate * secs_min) * 0.125f);
+-    // make this a multiple of ffmpeg block size..
+-    fill_min        = ((fill_min / KB32) + 1) * KB32;
++        // minumum seconds of buffering before allowing read
++        float secs_min = 0.1;
++
++        // set the minimum buffering before allowing ffmpeg read
++        fill_min        = (uint) ((estbitrate * secs_min) * 0.125f);
++        // make this a multiple of ffmpeg block size..
++        fill_min        = ((fill_min / KB32) + 1) * KB32;
++    }
++#endif // USING_FRONTEND    
++
++    pthread_rwlock_unlock(&rwlock);
+ 
+     VERBOSE(VB_PLAYBACK, LOC +
+             QString("CalcReadAheadThresh(%1 KB)\n\t\t\t -> "
+                     "threshhold(%2 KB) min read(%3 KB) blk size(%4 KB)")
+             .arg(estbitrate).arg(fill_threshold/1024)
+             .arg(fill_min/1024).arg(readblocksize/1024));
+-
+-    pthread_rwlock_unlock(&rwlock);
+ }
+ 
+ /** \fn RingBuffer::ReadBufFree(void) const
+@@ -611,6 +617,7 @@
+ void RingBuffer::ResetReadAhead(long long newinternal)
+ {
+     readAheadLock.lock();
++    readblocksize = CHUNK;
+     rbrpos = 0;
+     rbwpos = 0;
+     internalreadpos = newinternal;
+@@ -722,9 +729,15 @@
+     int used = 0;
+     int loops = 0;
+ 
++    struct timeval lastread, now;
++    gettimeofday(&lastread, NULL);
++    const int KB640 = 640*1024;
++    int readtimeavg = 300;
++    int readinterval;
++
+     pausereadthread = false;
+ 
+-    readAheadBuffer = new char[kBufferSize + 256000];
++    readAheadBuffer = new char[kBufferSize + KB640];
+ 
+     ResetReadAhead(0);
+     totfree = ReadBufFree();
+@@ -768,6 +781,31 @@
+             // limit the read size
+             totfree = readblocksize;
+ 
++            // adapt blocksize
++            gettimeofday(&now, NULL);
++            readinterval = (now.tv_sec  - lastread.tv_sec ) * 1000 +
++                           (now.tv_usec - lastread.tv_usec) / 1000;
++
++            readtimeavg = (readtimeavg * 9 + readinterval) / 10;
++
++            if (readtimeavg < 200 && readblocksize < KB640)
++            {
++                readblocksize += CHUNK;
++                VERBOSE(VB_PLAYBACK,
++                    QString("Avg read interval was %1 msec. %2K block size")
++                            .arg(readtimeavg).arg(readblocksize/1024));
++                readtimeavg = 300;
++            }
++            else if (readtimeavg > 400 && readblocksize > CHUNK)
++            {
++                readblocksize -= CHUNK;
++                VERBOSE(VB_PLAYBACK,
++                    QString("Avg read interval was %1 msec. %2K block size")
++                            .arg(readtimeavg).arg(readblocksize/1024));
++                readtimeavg = 300;
++            }
++            lastread = now;
++
+             if (rbwpos + totfree > kBufferSize)
+                 totfree = kBufferSize - rbwpos;
+ 
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/avformatdecoder.cpp mythtv-0.20+fixes13716/libs/libmythtv/avformatdecoder.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/avformatdecoder.cpp	2007-06-17 13:36:59.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/avformatdecoder.cpp	2007-06-17 13:37:00.000000000 -0500
+@@ -36,6 +36,8 @@
+ #include "libavcodec/liba52/a52.h"
+ #include "../libmythmpeg2/mpeg2.h"
+ #include "ivtv_myth.h"
++// from libavcodec
++extern const uint8_t *ff_find_start_code(const uint8_t * restrict p, const uint8_t *end, uint32_t * restrict state);
+ }
+ 
+ #define LOC QString("AFD: ")
+@@ -266,10 +268,10 @@
+       ic(NULL),
+       frame_decoded(0),             decoded_video_frame(NULL),
+       directrendering(false),       drawband(false),
+-      bitrate(0),
+       gopset(false),                seen_gop(false),
+       seq_count(0),                 firstgoppos(0),
+       prevgoppos(0),                gotvideo(false),
++      start_code_state(0xffffffff),
+       lastvpts(0),                  lastapts(0),
+       lastccptsu(0),
+       using_null_videoout(use_null_videoout),
+@@ -291,7 +293,6 @@
+       dvdmenupktseen(false), dvdvideopause(false)
+ {
+     bzero(&params, sizeof(AVFormatParameters));
+-    bzero(prvpkt, 3 * sizeof(char));
+     bzero(audioSamples, AVCODEC_MAX_AUDIO_FRAME_SIZE * sizeof(short int));
+     ccd608->SetIgnoreTimecode(true);
+ 
+@@ -1247,64 +1248,6 @@
+     }
+ }
+ 
+-/** \fn AvFormatDecoder::ScanDSMCCStreams(void)
+- *  \brief Check to see whether there is a Network Boot Ifo sub-descriptor in the PMT which
+- *         requires the MHEG application to reboot.
+- */
+-void AvFormatDecoder::ScanDSMCCStreams(void)
+-{
+-    if (!ic->cur_pmt_sect)
+-        return;
+-
+-    if (!itv && ! (itv = GetNVP()->GetInteractiveTV()))
+-        return;
+-
+-    const PESPacket pes = PESPacket::ViewData(ic->cur_pmt_sect);
+-    const PSIPTable psip(pes);
+-    const ProgramMapTable pmt(psip);
+-    
+-    for (uint i = 0; i < pmt.StreamCount(); i++)
+-    {
+-        if (! StreamID::IsObjectCarousel(pmt.StreamType(i)))
+-            continue;
+-
+-        const desc_list_t desc_list = MPEGDescriptor::ParseOnlyInclude(
+-            pmt.StreamInfo(i), pmt.StreamInfoLength(i),
+-            DescriptorID::data_broadcast_id);
+-
+-        for (uint j = 0; j < desc_list.size(); j++)
+-        {
+-            const unsigned char *desc = desc_list[j];
+-            desc++; // Skip tag
+-            uint length = *desc++;
+-            const unsigned char *endDesc = desc+length;
+-            uint dataBroadcastId = desc[0]<<8 | desc[1];
+-            if (dataBroadcastId != 0x0106) // ETSI/UK Profile
+-                continue;
+-            desc += 2; // Skip data ID
+-            while (desc != endDesc)
+-            {
+-                uint appTypeCode = desc[0]<<8 | desc[1];
+-                desc += 3; // Skip app type code and boot priority hint
+-                uint appSpecDataLen = *desc++;
+-                if (appTypeCode == 0x101) // UK MHEG profile
+-                {
+-                    const unsigned char *subDescEnd = desc + appSpecDataLen;
+-                    while (desc < subDescEnd)
+-                    {
+-                        uint sub_desc_tag = *desc++;
+-                        uint sub_desc_len = *desc++;
+-                        if (sub_desc_tag == 1) // Network boot info sub-descriptor.
+-                            itv->SetNetBootInfo(desc, sub_desc_len);
+-                        desc += sub_desc_len;
+-                    }
+-                }
+-                else desc += appSpecDataLen;
+-            }
+-        }
+-    }
+-}
+-
+ int AvFormatDecoder::ScanStreams(bool novideo)
+ {
+     int scanerror = 0;
+@@ -1611,8 +1554,6 @@
+     if (GetNVP()->IsErrored())
+         scanerror = -1;
+ 
+-    ScanDSMCCStreams();
+-
+     return scanerror;
+ }
+ 
+@@ -1948,38 +1889,29 @@
+ void AvFormatDecoder::MpegPreProcessPkt(AVStream *stream, AVPacket *pkt)
+ {
+     AVCodecContext *context = stream->codec;
+-    unsigned char *bufptr = pkt->data;
+-    //unsigned char *bufend = pkt->data + pkt->size;
+-    unsigned int state = 0xFFFFFFFF, v = 0;
+-    int prvcount = -1;
++    const uint8_t *bufptr = pkt->data;
++    const uint8_t *bufend = pkt->data + pkt->size;
+ 
+-    while (bufptr < pkt->data + pkt->size)
++    while (bufptr < bufend)
+     {
+-        if (++prvcount < 3)
+-            v = prvpkt[prvcount];
+-        else
+-            v = *bufptr++;
+-
+-        unsigned int last_state = state;
+-        state = ((state << 8) | v) & 0xFFFFFF;
+-
++        bufptr = ff_find_start_code(bufptr, bufend, &start_code_state);
++        
+         if (ringBuffer->isDVD() && pkt->size == 4 &&
+-            state == SEQ_END_CODE && !dvdvideopause)
++            start_code_state == SEQ_END_CODE && !dvdvideopause)
+         {
+             dvdvideopause = true;
+             d->ResetMPEG2();
+             return;
+         }
+ 
+-        if (last_state != 0x000001)
+-            continue;
+-        else if (state >= SLICE_MIN && state <= SLICE_MAX)
++        if (start_code_state >= SLICE_MIN && start_code_state <= SLICE_MAX)
+             continue;
+-        else if (SEQ_START == state)
++        else if (SEQ_START == start_code_state)
+         {
+             if (bufptr + 11 >= pkt->data + pkt->size)
+                 continue; // not enough valid data...
+-            SequenceHeader *seq = reinterpret_cast<SequenceHeader*>(bufptr);
++            SequenceHeader *seq = reinterpret_cast<SequenceHeader*>(
++                const_cast<uint8_t*>(bufptr));
+ 
+             uint  width  = seq->width();
+             uint  height = seq->height();
+@@ -2036,15 +1968,13 @@
+                 pkt->flags |= PKT_FLAG_KEY;
+             }
+         }
+-        else if (GOP_START == state)
++        else if (GOP_START == start_code_state)
+         {
+             HandleGopStart(pkt);
+             seen_gop = true;
+             pkt->flags |= PKT_FLAG_KEY;
+         }
+     }
+-
+-    memcpy(prvpkt, pkt->data + pkt->size - 3, 3);
+ }
+ 
+ void AvFormatDecoder::H264PreProcessPkt(AVStream *stream, AVPacket *pkt)
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/avformatdecoder.h mythtv-0.20+fixes13716/libs/libmythtv/avformatdecoder.h
+--- mythtv-0.20+fixes13716~/libs/libmythtv/avformatdecoder.h	2007-06-17 13:36:59.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/avformatdecoder.h	2007-06-17 13:37:00.000000000 -0500
+@@ -205,8 +205,6 @@
+     bool directrendering;
+     bool drawband;
+ 
+-    int bitrate;
+-
+     bool gopset;
+     /// A flag to indicate that we've seen a GOP frame.  Used in junction with seq_count.
+     bool seen_gop;
+@@ -219,7 +217,7 @@
+ 
+     bool gotvideo;
+ 
+-    unsigned char prvpkt[3];
++    uint32_t  start_code_state;
+ 
+     long long lastvpts;
+     long long lastapts;
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/decoderbase.cpp mythtv-0.20+fixes13716/libs/libmythtv/decoderbase.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/decoderbase.cpp	2006-09-03 22:50:52.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/decoderbase.cpp	2007-06-17 13:37:00.000000000 -0500
+@@ -23,6 +23,7 @@
+ 
+       current_width(640), current_height(480),
+       current_aspect(1.33333), fps(29.97),
++      bitrate(4000),
+ 
+       framesPlayed(0), framesRead(0), lastKey(0), keyframedist(-1),
+       indexOffset(0),
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/decoderbase.h mythtv-0.20+fixes13716/libs/libmythtv/decoderbase.h
+--- mythtv-0.20+fixes13716~/libs/libmythtv/decoderbase.h	2006-09-03 22:50:52.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/decoderbase.h	2007-06-17 13:37:00.000000000 -0500
+@@ -79,6 +79,8 @@
+ 
+     virtual QString GetEncodingType(void) const = 0;
+     virtual double  GetFPS(void) const { return fps; }
++    /// Returns the estimated bitrate if the video were played at normal speed.
++    uint GetRawBitrate(void) const { return bitrate; }
+ 
+     virtual void UpdateFramesPlayed(void);
+     long long GetFramesRead(void) const { return framesRead; };
+@@ -163,6 +165,7 @@
+     int current_height;
+     float current_aspect;
+     double fps;
++    uint bitrate;
+ 
+     long long framesPlayed;
+     long long framesRead;
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/dtvrecorder.cpp mythtv-0.20+fixes13716/libs/libmythtv/dtvrecorder.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/dtvrecorder.cpp	2007-03-03 00:25:06.000000000 -0600
++++ mythtv-0.20+fixes13716/libs/libmythtv/dtvrecorder.cpp	2007-06-17 13:37:00.000000000 -0500
+@@ -13,6 +13,11 @@
+ #include "dtvrecorder.h"
+ #include "tv_rec.h"
+ 
++extern "C" {
++// from libavcodec
++extern const uint8_t *ff_find_start_code(const uint8_t * restrict p, const uint8_t *end, uint32_t * restrict state);
++}
++
+ #define LOC QString("DTVRec(%1): ").arg(tvrec->GetCaptureCardNum())
+ #define LOC_ERR QString("DTVRec(%1) Error: ").arg(tvrec->GetCaptureCardNum())
+ 
+@@ -37,7 +42,7 @@
+     _stream_fd(-1),
+     _recording_type("all"),
+     // used for scanning pes headers for keyframes
+-    _header_pos(0),                 _first_keyframe(-1),
++    _start_code(0xffffffff),        _first_keyframe(-1),
+     _last_gop_seen(0),              _last_seq_seen(0),
+     _last_keyframe_seen(0),
+     // H.264 support
+@@ -136,7 +141,7 @@
+ {
+     QMutexLocker locker(&_position_map_lock);
+ 
+-    _header_pos                 = 0;
++    _start_code                 = 0xffffffff;
+     _first_keyframe             =-1;
+     _last_keyframe_seen         = 0;
+     _last_gop_seen              = 0;
+@@ -218,7 +223,7 @@
+     // looking for first byte of MPEG start code (3 bytes 0 0 1)
+     // otherwise, pick up search where we left off.
+     const bool payloadStart = tspacket->PayloadStart();
+-    _header_pos = (payloadStart) ? 0 : _header_pos;
++    _start_code = (payloadStart) ? 0xffffffff : _start_code;
+ 
+     // Just make these local for efficiency reasons (gcc not so smart..)
+     const uint maxKFD = kMaxKeyFrameDistance;
+@@ -231,22 +236,17 @@
+     //   00 00 01 B8: group_start_code
+     //   00 00 01 B3: seq_start_code
+     //   (there are others that we don't care about)
+-    uint i = tspacket->AFCOffset();
+-    for (; i < TSPacket::SIZE; i++)
++    const uint8_t *bufptr = tspacket->data() + tspacket->AFCOffset();
++    const uint8_t *bufend = tspacket->data() + TSPacket::SIZE;
++
++    while (bufptr < bufend)
+     {
+-        const unsigned char k = tspacket->data()[i];
+-        if (0 == _header_pos)
+-            _header_pos = (k == 0x00) ? 1 : 0;
+-        else if (1 == _header_pos)
+-            _header_pos = (k == 0x00) ? 2 : 0;
+-        else if (2 == _header_pos)
+-            _header_pos = (k == 0x00) ? 2 : ((k == 0x01) ? 3 : 0);
+-        else if (3 == _header_pos)
++        bufptr = ff_find_start_code(bufptr, bufend, &_start_code);
++        if ((_start_code & 0xffffff00) == 0x00000100)
+         {
+-            _header_pos = 0;
+             // At this point we have seen the start code 0 0 1
+             // the next byte will be the PES packet stream id.
+-            const int stream_id = k;
++            const int stream_id = _start_code & 0x000000ff;
+             if (PESStreamID::PictureStartCode == stream_id)
+                 hasFrame = true;
+             else if (PESStreamID::GOPStartCode == stream_id)
+@@ -257,7 +257,7 @@
+             else if (PESStreamID::SequenceStartCode == stream_id)
+             {
+                 _last_seq_seen  = _frames_seen_count;
+-                hasKeyFrame    |=(_last_gop_seen + maxKFD)<_frames_seen_count;
++                hasKeyFrame    |= (_last_gop_seen + maxKFD)<_frames_seen_count;
+             }
+         }
+     }
+@@ -388,7 +388,7 @@
+     {
+         // reset PES sync state
+         _pes_synced = false;
+-        _header_pos = 0;
++        _start_code = 0xffffffff;
+     }
+ 
+     bool hasFrame = false;
+@@ -465,7 +465,7 @@
+         // special handling when we've synced to a NAL unit
+         if (_h264_kf_seq.HasStateChanged())
+         {
+-            if (_h264_kf_seq.DidReadNALHeaderByte() && _h264_kf_seq.LastSyncedType() == H264::NALUnitType::SPS)
++            if (_h264_kf_seq.LastSyncedType() == H264::NALUnitType::SPS)
+                 _seen_sps = true;
+ 
+             if (_h264_kf_seq.IsOnKeyframe())
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/dtvrecorder.h mythtv-0.20+fixes13716/libs/libmythtv/dtvrecorder.h
+--- mythtv-0.20+fixes13716~/libs/libmythtv/dtvrecorder.h	2006-05-22 14:08:08.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/dtvrecorder.h	2007-06-17 13:37:00.000000000 -0500
+@@ -66,7 +66,7 @@
+     QString _recording_type;
+ 
+     // used for scanning pes headers for keyframes
+-    uint      _header_pos;
++    uint32_t  _start_code;
+     int       _first_keyframe;
+     unsigned long long _last_gop_seen;
+     unsigned long long _last_seq_seen;
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/ivtvdecoder.cpp mythtv-0.20+fixes13716/libs/libmythtv/ivtvdecoder.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/ivtvdecoder.cpp	2006-03-22 07:58:31.000000000 -0600
++++ mythtv-0.20+fixes13716/libs/libmythtv/ivtvdecoder.cpp	2007-06-17 13:37:00.000000000 -0500
+@@ -49,6 +49,7 @@
+ {
+     lastResetTime.start();
+     fps = 29.97f;
++    bitrate = 8000;
+     lastKey = 0;
+ }
+ 
+@@ -277,7 +278,7 @@
+ 
+     fps = (ntsc) ? 29.97f : 25.0f; // save for later length calculations
+ 
+-    ringBuffer->UpdateRawBitrate(8000);
++    ringBuffer->UpdateRawBitrate(GetRawBitrate());
+ 
+     if (m_playbackinfo || livetv || watchingrecording)
+     {
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/mpeg/h264utils.cpp mythtv-0.20+fixes13716/libs/libmythtv/mpeg/h264utils.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/mpeg/h264utils.cpp	2006-09-04 13:16:43.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/mpeg/h264utils.cpp	2007-06-17 13:37:00.000000000 -0500
+@@ -39,6 +39,11 @@
+ // MythTV headers
+ #include "h264utils.h"
+ 
++extern "C" {
++// from libavcodec
++extern const uint8_t *ff_find_start_code(const uint8_t * p, const uint8_t *end, uint32_t * state);
++}
++
+ namespace H264
+ {
+ 
+@@ -52,13 +57,10 @@
+     errored = false;
+     state_changed = false;
+ 
+-    synced = false;
+-    memset(sync_accumulator, 0, sizeof(sync_accumulator));
+-    sync_accumulator_index = 0;
++    sync_accumulator = 0xffffffff;
+     sync_stream_offset = 0;
+ 
+-    read_first_NAL_byte = false;
+-    first_NAL_byte = 0;
++    first_NAL_byte = H264::NALUnitType::UNKNOWN;
+ 
+     saw_AU_delimiter = false;
+     saw_first_VCL_NAL_unit = false;
+@@ -142,50 +144,24 @@
+     const uint8_t *local_bytes = bytes;
+     const uint8_t *local_bytes_end = bytes + byte_count;
+ 
+-    if (!synced)
+-    {
+-        while (local_bytes < local_bytes_end)
+-        {
+-            if (sync_accumulator_index == 3)
+-            {
+-                if (sync_accumulator[0] == 0x00 && 
+-                    sync_accumulator[1] == 0x00 && 
+-                    sync_accumulator[2] == 0x01)
+-                {
+-                    synced = true;
+-                    sync_accumulator_index = 0;
+-                    sync_stream_offset = stream_offset;
+-
+-                    read_first_NAL_byte = false;
+-                    keyframe = false;
+-
+-                    return local_bytes - bytes;
+-                }
+-                else
+-                {
+-                    sync_accumulator_index = 2;
+-                    sync_accumulator[0] = sync_accumulator[1];
+-                    sync_accumulator[1] = sync_accumulator[2];
+-                }
+-            }
+-
+-            sync_accumulator[sync_accumulator_index++] = *local_bytes;
+-            local_bytes++;
+-        }
+-    }
+-
+     state_changed = false;
+-    if (synced && !read_first_NAL_byte && local_bytes < local_bytes_end)
++
++    while (local_bytes < local_bytes_end)
+     {
+-        KeyframePredicate(*local_bytes);
++        local_bytes = ff_find_start_code(local_bytes, local_bytes_end,
++                                         &sync_accumulator);
+ 
+-        first_NAL_byte = *local_bytes;
+-        local_bytes++;
++        if ((sync_accumulator & 0xffffff00) == 0x00000100)
++        {
++            uint8_t k = *(local_bytes-1);
++            sync_stream_offset = stream_offset;
++            keyframe = false;
+ 
+-        synced = false;
+-        read_first_NAL_byte = true;
++            KeyframePredicate(k);
++            first_NAL_byte = k;
+ 
+-        return local_bytes - bytes;
++            return local_bytes - bytes;
++        }
+     }
+ 
+     return local_bytes - bytes;
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/mpeg/h264utils.h mythtv-0.20+fixes13716/libs/libmythtv/mpeg/h264utils.h
+--- mythtv-0.20+fixes13716~/libs/libmythtv/mpeg/h264utils.h	2006-07-17 17:15:43.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/mpeg/h264utils.h	2007-06-17 13:37:00.000000000 -0500
+@@ -161,13 +161,6 @@
+     uint32_t AddBytes(const uint8_t *bytes, const uint32_t byte_count,
+                       const int64_t stream_offset); /* throw() */
+ 
+-    /**
+-     *  This function returns true when the sequencer read the first data
+-     *  byte (past the start code) of a new NAL unit.
+-     */
+-    inline bool DidReadNALHeaderByte(void) const /* throw() */
+-        { return read_first_NAL_byte; }
+-
+     /// This function returns the NAL unit type of the last synced unit.
+     inline uint8_t LastSyncedType(void) const /* throw() */
+         { return first_NAL_byte & 0x1f; }
+@@ -185,12 +178,9 @@
+     bool    errored;
+     bool    state_changed;
+ 
+-    bool    synced;
+-    uint8_t sync_accumulator[3];
+-    uint8_t sync_accumulator_index;
+-    int64_t sync_stream_offset;
++    uint32_t sync_accumulator;
++    int64_t  sync_stream_offset;
+ 
+-    bool    read_first_NAL_byte;
+     uint8_t first_NAL_byte;
+ 
+     bool    saw_AU_delimiter;
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/nuppeldecoder.cpp mythtv-0.20+fixes13716/libs/libmythtv/nuppeldecoder.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/nuppeldecoder.cpp	2006-09-04 17:01:20.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/nuppeldecoder.cpp	2007-06-17 13:37:00.000000000 -0500
+@@ -547,7 +547,8 @@
+     if (usingextradata && extradata.video_fourcc == MKTAG('D', 'I', 'V', 'X'))
+         setreadahead = true;
+ 
+-    ringBuffer->UpdateRawBitrate(0);
++    bitrate = 0;
++    ringBuffer->UpdateRawBitrate(GetRawBitrate());
+ 
+     videosizetotal = 0;
+     videoframesread = 0;
+@@ -1099,10 +1100,11 @@
+                 {
+                     videosizetotal /= videoframesread;
+ 
+-                    float bps = videosizetotal * 8.0 / 1024 * video_frame_rate;
+-                    bps = bps * 3 / 2;
++                    float bps = (videosizetotal * 8.0f / 1024.0f *
++                                 video_frame_rate);
++                    bitrate = (uint) (bps * 1.5f);
+ 
+-                    ringBuffer->UpdateRawBitrate((uint) bps);
++                    ringBuffer->UpdateRawBitrate(GetRawBitrate());
+                     setreadahead = true;
+                 }
+             }
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/tv_rec.cpp mythtv-0.20+fixes13716/libs/libmythtv/tv_rec.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/tv_rec.cpp	2007-04-14 00:04:11.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/tv_rec.cpp	2007-06-17 13:37:00.000000000 -0500
+@@ -127,6 +127,8 @@
+       internalState(kState_None), desiredNextState(kState_None),
+       changeState(false), pauseNotify(true),
+       stateFlags(0), lastTuningRequest(0),
++      // Previous recording info
++      lastRecording(NULL),
+       // Current recording info
+       curRecording(NULL), autoRunJobs(JOB_NONE),
+       // Pending recording info
+@@ -473,12 +475,6 @@
+         return retval;
+     }
+ 
+-    if (pendingRecording)
+-    {
+-        delete pendingRecording;
+-        pendingRecording = NULL;
+-    }
+-
+     ClearFlags(kFlagAskAllowRecording);
+ 
+     // Flush out events...
+@@ -552,6 +548,12 @@
+         retval = rsTunerBusy;
+     }
+ 
++    if (pendingRecording)
++    {
++        delete pendingRecording;
++        pendingRecording = NULL;
++    }
++
+     WaitForEventThreadSleep();
+ 
+     if ((curRecording) && (curRecording->recstatus == rsFailed) &&
+@@ -1296,11 +1298,6 @@
+         // Check for the end of the current program..
+         if (GetState() == kState_WatchingLiveTV)
+         {
+-#define LIVETV_END (now >= curRecording->endts)
+-// use the following instead to test ringbuffer switching
+-//static QDateTime last = QDateTime::currentDateTime(); 
+-//#define LIVETV_END ((now >= curRecording->recstartts.addSecs(20)) && (now > last))
+-
+             QDateTime now   = QDateTime::currentDateTime();
+             bool has_finish = HasFlags(kFlagFinishRecording);
+             bool has_rec    = pseudoLiveTVRecording;
+@@ -1328,19 +1325,26 @@
+ 
+                 SetPseudoLiveTVRecording(NULL);
+             }
+-            else if (!has_rec && !rec_soon && curRecording && LIVETV_END)
++            else if (!has_rec && !rec_soon && curRecording &&
++                     (now >= curRecording->endts))
+             {
+-                SwitchLiveTVRingBuffer();
++                if (lastRecording != curRecording)
++                {
++                    lastRecording = curRecording;
+ 
+-                QDateTime starttime; starttime.setTime_t(0);
+-                if (curRecording)
+-                    starttime = curRecording->recstartts;
+-                VERBOSE(VB_RECORD, LOC 
+-                        <<"!has_rec("<<!has_rec<<") "
+-                        <<"!rec_soon("<<!rec_soon<<") "
+-                        <<"curRec("<<curRecording<<") "
+-                        <<"starttm("<<starttime.toString(Qt::ISODate)<<")");
+-//                last = QDateTime::currentDateTime().addSecs(20); 
++                    SwitchLiveTVRingBuffer(false, true);
++
++                    QDateTime starttime; starttime.setTime_t(0);
++                    if (curRecording)
++                        starttime = curRecording->recstartts;
++
++                    VERBOSE(VB_RECORD, LOC 
++                            <<"!has_rec("<<!has_rec<<") "
++                            <<"!rec_soon("<<!rec_soon<<") "
++                            <<"curRec("<<curRecording<<") "
++                            <<"starttm("
++                            <<starttime.toString(Qt::ISODate)<<")");
++                }
+             }
+             else
+                 enable_ui = false;
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/tv_rec.h mythtv-0.20+fixes13716/libs/libmythtv/tv_rec.h
+--- mythtv-0.20+fixes13716~/libs/libmythtv/tv_rec.h	2006-06-09 13:05:49.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/tv_rec.h	2007-06-17 13:37:00.000000000 -0500
+@@ -348,6 +348,9 @@
+     QWaitCondition triggerEventLoop;
+     QWaitCondition triggerEventSleep;
+ 
++    // Previous recording pointer (do not dereference)
++    ProgramInfo *lastRecording;
++
+     // Current recording info
+     ProgramInfo *curRecording;
+     QDateTime    recordEndTime;

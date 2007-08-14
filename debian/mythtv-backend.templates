@@ -1,0 +1,19 @@
+Template: mythtv/create_v4l_devs
+Type: boolean
+Default: true
+_Description: Is it OK to create the video4linux device nodes?
+
+Template: mythtv/run_setup
+Type: note
+_Description: mythtv-setup must be run in order to complete MythTV installation
+ You must run mythtv-setup as a user in the 'mythtv' group in order to complete 
+ mythtv configuration.  Note that this program requires an X display, so you must
+ either login to an X session as a user in the 'mythtv' group, or otherwise 
+ arrange for that user to have access to your X display.
+ .
+ You must complete all four steps presented in the program.
+ .
+ Once you have done this, you may start the backend by executing the
+ following command:
+ .
+ sudo /etc/init.d/mythtv-backend start

@@ -1,0 +1,73 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          mythtv-backend
+# Required-Start:    $local_fs
+# Required-Stop:     $local_fs
+# Default-Start:     24
+# Default-Stop:      S
+# Short-Description: Start/Stop the MythTV server.
+### END INIT INFO
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/bin/mythbackend
+NAME="mythbackend"
+DESC="MythTV server"
+
+test -x $DAEMON || exit 0
+
+set -e
+
+USER=mythtv
+RUNDIR=/var/run/mythtv
+ARGS="--daemon --logfile /var/log/mythtv/mythbackend.log --pidfile $RUNDIR/$NAME.pid"
+EXTRA_ARGS=""
+NICE=0
+
+if [ -f /etc/default/mythtv-backend ]; then
+  . /etc/default/mythtv-backend
+fi
+
+ARGS="$ARGS $EXTRA_ARGS"
+
+mkdir -p $RUNDIR
+chown -R $USER $RUNDIR
+
+unset DISPLAY
+unset SESSION_MANAGER
+
+case "$1" in
+  start)
+	if test -e $RUNDIR/$NAME.pid ; then
+		echo "mythbackend already running, use restart instead."
+	else
+		echo -n "Starting $DESC: $NAME "
+		start-stop-daemon --start --pidfile $RUNDIR/$NAME.pid \
+			--chuid $USER --nicelevel $NICE --exec $DAEMON -- $ARGS
+		echo "."
+	fi
+	;;
+  stop)
+	echo -n "Stopping $DESC: $NAME "
+	start-stop-daemon --stop --oknodo --pidfile $RUNDIR/$NAME.pid \
+		--chuid $USER --exec $DAEMON -- $ARGS
+	test -e $RUNDIR/$NAME.pid && rm $RUNDIR/$NAME.pid
+	echo "."
+	;;
+  restart|force-reload)
+	echo -n "Restarting $DESC: $NAME "
+	start-stop-daemon --stop --oknodo --pidfile $RUNDIR/$NAME.pid \
+                --chuid $USER --exec $DAEMON -- $ARGS
+	echo "."
+	sleep 3
+	start-stop-daemon --start --pidfile $RUNDIR/$NAME.pid \
+                --chuid $USER --nicelevel $NICE --exec $DAEMON -- $ARGS
+	echo "."
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

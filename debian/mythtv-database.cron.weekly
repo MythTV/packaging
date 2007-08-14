@@ -1,0 +1,34 @@
+#!/bin/sh
+# /etc/cron.weekly/mythtv-database script - check and backup mythconverg tables
+# Copyright 2005/12/02 2006/10/08 Paul Andreassen 
+
+# Deleting the MySQL database:
+# NOTE: Performing this step will remove the entire database. You will lose all
+# of your settings and will need to re-run the /usr/share/mythtv/sql/mc.sql    
+# script to setup the database structure before running the setup program.     
+# $ mysql -u mythtv -p 'drop database mythconverg'
+# To restore: (assuming that you've dropped the database)
+# $ mysql -u mythtv -p 'create database mythconverg'
+# $ zcat /var/backups/mythconverg.sql.gz | mysql -u mythtv -p mythconverg
+# see http://mythtv.org/docs/mythtv-HOWTO.html#toc23.5
+
+set -e -u
+
+if [ -f /etc/mythtv/mysql.txt ]; then
+  . /etc/mythtv/mysql.txt
+fi
+
+DBNAME="mythconverg"
+BACKUP="/var/backups/$DBNAME.sql.gz"
+DEBIAN="--defaults-extra-file=/etc/mysql/debian.cnf"
+OPTIONS="--all --complete-insert --extended-insert --quick --quote-names --lock-tables"
+
+/usr/bin/mysqlcheck $DEBIAN -s $DBNAME
+
+/usr/bin/savelog -c 7 -l -n -q $BACKUP
+
+/usr/bin/mysqldump $DEBIAN $OPTIONS $DBNAME | gzip > $BACKUP
+
+/usr/bin/logger -p daemon.info -i -t${0##*/} "$DBNAME checked and backedup."
+
+# End of file.

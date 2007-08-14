@@ -1,0 +1,43 @@
+#!/bin/sh -e
+
+case "$1" in
+    configure)
+        if [ ! -e /dev/.devfsd ]; then
+            . /usr/share/debconf/confmodule
+
+            db_get mythtv/create_v4l_devs
+            if [ "$RET" = "true" ]; then
+                (cd /dev && MAKEDEV v4l)
+            fi
+        fi
+
+        for dir in /var/log/mythtv /var/lib/mythtv/recordings /var/cache/mythtv; do
+	    if ! dpkg-statoverride --list "$dir" >/dev/null; then
+                chown mythtv:mythtv "$dir"
+    	        chmod 2775 "$dir"
+            fi
+        done
+
+        if [ -z "$2" ]; then
+            # Migrate from old mythtv -> mythtv-backend
+            [ -f /etc/logrotate.d/mythtv ] && \
+                mv /etc/logrotate.d/mythtv /etc/logrotate.d/mythtv-backend
+
+            # Errors now sent via cron
+            rm -f /var/log/mythtv/mythfilldatabase.log*
+        fi
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

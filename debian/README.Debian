@@ -1,0 +1,11 @@
+MythTV for Ubuntu
+-----------------
+
+Within the scripts directory is a a file called myth.rebuilddatabase.pl
+Running this script on Ubuntu requires the following:
+
+sudo apt-get install libtimedate-perl libtime-format-perl
+chmod a+x myth.rebuilddatabase.pl
+./myth.rebuilddatabase.pl
+
+ -- Mario Limonciello <superm1@ubuntu.com>, Mon July 09 01:22:46 2007

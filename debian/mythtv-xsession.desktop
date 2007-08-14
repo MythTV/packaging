@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=MythTV
+Comment=Use this session to run MythTV
+Exec=/usr/share/mythtv/startmythtv.sh
+Icon=
+Type=Application

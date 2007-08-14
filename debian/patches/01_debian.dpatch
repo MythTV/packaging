@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 01_debian-patch.dpatch by Christian Marillat <marillat@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Patch related to Debian paths.
+
+@DPATCH@
+
+--- mythtv-0.20.orig/programs/mythtv-setup/backendsettings.cpp	2006-09-11 16:25:06.000000000 +0200
++++ mythtv-0.20/programs/mythtv-setup/backendsettings.cpp	2006-09-11 16:25:27.000000000 +0200
+@@ -68,7 +68,7 @@
+ {
+     HostLineEdit *gc = new HostLineEdit("RecordFilePrefix");
+     gc->setLabel(QObject::tr("Directory to hold recordings"));
+-    gc->setValue("/mnt/store/");
++    gc->setValue("/var/lib/mythtv/recordings");
+     gc->setHelpText(QObject::tr("All recordings get stored in this "
+                     "directory."));
+     return gc;

@@ -1,0 +1,16 @@
+Name: MythTV-Database reconfigure required
+Priority: High
+Terminal: False
+DontShowAfterReboot: True
+Description: The mythtv-database package was upgraded or installed, but was unable
+ to contact a MySQL server.
+ .
+ If you were in the process of dist-upgrading, this is normal as mysql-server 
+ is stopped for a portion of the upgrade.
+ .
+ If this is a fresh package installation, verify that mysql-server is installed
+ and running.  Once you have verified the server is running, you can reconfigure 
+ the package by running 'sudo dpkg-reconfigure mythtv-database'.
+ .
+ If your root password or location of the MySQL server are non standard, you can
+ also update them via 'sudo dpkg-reconfigure mythtv-database'.

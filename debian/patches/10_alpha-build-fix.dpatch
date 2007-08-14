@@ -1,0 +1,38 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 20.dpatch by  <pkahle@pobox.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Fix alpha build.
+
+@DPATCH@
+
+--- mythtv-0.20.orig/libs/libavutil/libavutil.pro	2006-09-11 19:35:37.000000000 +0200
++++ mythtv-0.20/libs/libavutil/libavutil.pro	2006-09-11 19:35:57.000000000 +0200
+@@ -34,7 +34,7 @@
+ INSTALLS += inc
+ 
+ contains( TARGET_ARCH_ALPHA, yes ) {
+-    QMAKE_CFLAGS_RELEASE += -fforce-addr -freduce-all-givs
++    QMAKE_CFLAGS_RELEASE += -fforce-addr
+ }
+ 
+ contains( TARGET_ALTIVEC, yes ) {
+--- mythtv-0.20.orig/libs/libavcodec/libavcodec.pro	2006-09-11 19:36:31.000000000 +0200
++++ mythtv-0.20/libs/libavcodec/libavcodec.pro	2006-09-11 19:36:56.000000000 +0200
+@@ -447,7 +447,7 @@
+     SOURCES += alpha/dsputil_alpha.c alpha/mpegvideo_alpha.c 
+     SOURCES += alpha/motion_est_alpha.c alpha/dsputil_alpha_asm.S
+     SOURCES += alpha/simple_idct_alpha.c alpha/motion_est_mvi_asm.S
+-    QMAKE_CFLAGS_RELEASE += -fforce-addr -freduce-all-givs
++    QMAKE_CFLAGS_RELEASE += -fforce-addr
+ }
+ 
+ contains( TARGET_ARCH_POWERPC, yes ) {
+
+
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+# User as which to run
+#USER=mythtv
+
+# Replace all arguments to mythtv-backend
+#ARGS=""
+
+# Append additional arguments
+#EXTRA_ARGS="--verbose"
+
+# Set priority
+#NICE=-10

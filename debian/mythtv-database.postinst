@@ -1,0 +1,162 @@
+#!/bin/sh -e
+
+MYSQL="/usr/share/mythtv/sql/mythtv_0.20.1.sql"
+MYSQLCONFIG="/etc/mysql/conf.d/mythtv.cnf"
+FSTAB="/etc/fstab"
+EXT3=0
+NEWIP="127.0.0.1"
+LOCALHOSTNAME=`cat /etc/hostname`
+
+prepare_database() {
+    sed -e "/^$/d; /^#/d; /^proc/d; /swap/d; /nfs/d; s/\t/\ \ \ \ /g;" $FSTAB | tee /tmp/fstab > /dev/null
+    if grep /var/lib/mythtv/recordings /tmp/fstab > /dev/null; then
+        if grep /var/lib/mythtv/recordings /tmp/fstab | grep ext3 > /dev/null; then
+            EXT3=1
+        fi    
+    elif grep /var/lib/mythtv /tmp/fstab > /dev/null; then
+        if grep /var/lib/mythtv /tmp/fstab | grep ext3 > /dev/null; then
+            EXT3=1
+        fi
+    elif grep /var/lib /tmp/fstab > /dev/null; then
+        if grep /var/lib /tmp/fstab | grep ext3 > /dev/null; then
+            EXT3=1
+        fi
+    elif grep "/var " /tmp/fstab > /dev/null; then
+        if grep "/var " /tmp/fstab | grep ext3 > /dev/null; then
+            EXT3=1
+        fi
+    elif grep "/ " /tmp/fstab > /dev/null; then
+        if grep "/ " /tmp/fstab | grep ext3 > /dev/null; then
+            EXT3=1
+        fi
+    fi
+    rm /tmp/fstab
+
+    sed -e "s/OLDHOSTNAME/$LOCALHOSTNAME/g; s/127.0.0.1/$NEWIP/g; s/Slowly','0/Slowly','$EXT3/g;" $MYSQL | tee ${MYSQL}.new > /dev/null
+    mv ${MYSQL}.new $MYSQL
+    
+    if [ "$admin_password" != "" ]; then
+        mysql -h $hostname -u $admin_username -p$admin_password $database < $MYSQL
+    else
+        mysql -h $hostname -u $admin_username $database < $MYSQL
+    fi
+}
+
+escape_quotes() {
+    cat <<EOF | sed -e "s/'/\\\\'/g"
+$1
+EOF
+}
+
+DoSQL() {
+    local host="$1"
+    local admin_username="$2"
+    local admin_password="$3"
+    local database="$4"
+    local statement="`escape_quotes \"$5\"`"
+    local tmp=`tempfile -m 600`
+    cat <<EOF >$tmp
+$admin_password
+EOF
+    perl -e "
+use DBI;
+chomp(\$password=<>);
+@statements=split(/;/, '$statement');
+\$db = DBI->connect('dbi:mysql:host=$host;database=$database',
+            '$admin_username', \$password,
+            { PrintError => 0 }) || die 'Failed to connect to database: ' . \$DBI::errstr;
+for \$s (@statements) { \$db->do(\$s) || die 'Failed to execute SQL: ' . \$s . '\n' . \$DBI::errstr; }
+" < $tmp
+    ret=$?
+    rm -f $tmp
+    return $ret
+}
+
+case "$1" in
+    configure)
+    . /usr/share/debconf/confmodule
+
+    db_get mythtv/mysql_admin_user
+    admin_username="$RET"
+    db_get mythtv/mysql_admin_password
+    admin_password="$RET"
+
+    db_get mythtv/mysql_host
+    hostname="$RET"    
+
+    if test -z "$hostname"; then
+        hostname=localhost
+    fi
+
+    db_get mythtv/mysql_mythtv_dbname
+    database="$RET"
+
+    if ! DoSQL "$hostname" "$admin_username" "$admin_password" "$database" "SELECT NULL" 2>/dev/null; then
+
+        if ! DoSQL "$hostname" "$admin_username" "$admin_password" "" \
+          "CREATE DATABASE $database"; then
+          echo "Failed to create database (incorrect admin username/password?)" >&2
+          echo "It's also possible that mysql-server wasn't running.  After install" >&2
+          echo "is completed, you will need to make sure mysql-server is running" >&2
+          echo "and that you supplied correct information. Try:" >&2
+          echo "sudo dpkg-reconfigure mythtv-database" >&2
+          # silently exit, instead pop up a notification for user indicating this
+          unud=/var/lib/update-notifier/user.d
+          if test -d $uund; then
+          cp -f /usr/share/mythtv/mythtv-reconfigure-required.update-notifier \
+                  /var/lib/update-notifier/user.d/mythtv-reconfigure-required
+          fi
+          exit 0
+        fi
+
+    fi
+
+    db_get mythtv/mysql_mythtv_user
+    mythtv_username="$RET"
+    db_get mythtv/mysql_mythtv_password
+    mythtv_password="$RET"
+
+    DoSQL "$hostname" "$admin_username" "$admin_password" "$database" \
+        "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@localhost IDENTIFIED BY '$mythtv_password'"
+
+    DoSQL "$hostname" "$admin_username" "$admin_password" "$database" \
+        "GRANT ALL PRIVILEGES ON $database.* TO
+        $mythtv_username@'%' IDENTIFIED BY '$mythtv_password'"
+
+    #For database fillings
+    #and mysql binding checks
+    db_get mythtv/public_bind
+    if [ $RET = true ]; then
+        NEWIP=`ifconfig | grep "inet addr:" | grep --invert-match 127.0.0.1 | sed ' s/inet addr://g; s/^[ \t]*//;s/[ \t]*$//; q;' | awk '{print $1}'`
+	sed -e 's/^#bind/bind/' ${MYSQLCONFIG} | tee ${MYSQLCONFIG}.new > /dev/null
+    else
+	sed -e 's/^bind/#bind/' ${MYSQLCONFIG} | tee ${MYSQLCONFIG}.new > /dev/null
+    fi
+    mv ${MYSQLCONFIG}.new ${MYSQLCONFIG}
+    
+    #only prepare database if tables don't already exist
+    if ! DoSQL "$hostname" "$admin_username" "$admin_password" "$database" "SELECT value FROM settings LIMIT 1, 1" 2>/dev/null; then
+	    prepare_database
+    else
+    #otherwise, just update sql with new bind settings if requested
+	    DoSQL "$hostname" "$admin_username" "$admin_password" "$database" \
+	    "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'BackendServerIP' AND settings.hostname = '$LOCALHOSTNAME'"
+	    DoSQL "$hostname" "$admin_username" "$admin_password" "$database" \
+	    "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'MasterServerIP'"
+    fi    
+
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+
+    ;;
+
+    *)
+    echo "postinst called with unknown argument \`$1'" >&2
+    exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

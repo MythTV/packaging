@@ -1,0 +1,22 @@
+#!/bin/sh -e
+
+temp=$(tempfile)
+
+. /etc/mythtv/mysql.txt
+
+cat >$temp <<EOF
+[client]
+user=$DBUserName
+password=$DBPassword
+database=$DBName
+host=$DBHostName
+EOF
+
+set +e
+mysql --defaults-extra-file=$temp
+set -e
+ret=$?
+
+rm -f $temp
+
+exit $ret

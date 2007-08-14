@@ -1,0 +1,32 @@
+#!/bin/sh -e
+if [ configure = "$1" ]; then
+        # Symlink to start-up config files, it they don't already exist
+        MYTHHOME=$(getent passwd mythtv | cut -d: -f6)
+        if [ ! -e "$MYTHHOME"/.config/openbox/menu.xml ]; then
+            mkdir -p "$MYTHHOME"/.config/openbox
+            chown -R mythtv:mythtv "$MYTHHOME"/.config
+            ln -s /etc/mythtv/openbox-menu.xml "$MYTHHOME"/.config/openbox/menu.xml
+        fi
+        if [ ! -e "$MYTHHOME"/.dmrc ]; then
+            cp /etc/mythtv/dmrc "$MYTHHOME"/.dmrc
+            chown mythtv:mythtv "$MYTHHOME"/.dmrc
+        fi
+	if [ ! -e "$MYTHHOME"/.mplayer/config ]; then
+            mkdir -p "$MYTHHOME"/.mplayer
+            cp /etc/mythtv/mplayer-config "$MYTHHOME"/.mplayer/config
+            chown -R mythtv:mythtv "$MYTHHOME/.mplayer"
+	fi
+
+        #add gdm.conf alternative, make sure higher than 50 so that takes priority over xubuntu if installed on xubuntu
+	#Also, if this is a mythbuntu installation, make sure that we use a gdm.conf that is more appropriate
+	if [ -f /usr/share/gdm/themes/Mythbuntu/mythbuntu.xml ]; then
+	        update-alternatives --install /etc/gdm/gdm-cdd.conf gdm-config-derivative /etc/xdg/mythtv-ubuntu/gdm/mythbuntu-gdm.conf 60
+	else
+	        update-alternatives --install /etc/gdm/gdm-cdd.conf gdm-config-derivative /etc/xdg/mythtv-ubuntu/gdm/gdm.conf 60
+	fi
+fi
+
+#DEBHELPER#
+
+exit 0
+

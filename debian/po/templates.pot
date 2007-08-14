@@ -1,0 +1,291 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: ubuntu-mythtv@lists.ubuntu.com\n"
+"POT-Creation-Date: 2007-07-06 21:08-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../mythtv-backend.templates:1001
+msgid "Is it OK to create the video4linux device nodes?"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-backend.templates:2001 ../mythtv-common.templates:5001
+msgid "mythtv-setup must be run in order to complete MythTV installation"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-backend.templates:2001
+msgid ""
+"You must run mythtv-setup as a user in the 'mythtv' group in order to "
+"complete  mythtv configuration.  Note that this program requires an X "
+"display, so you must either login to an X session as a user in the 'mythtv' "
+"group, or otherwise  arrange for that user to have access to your X display."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-backend.templates:2001
+msgid "You must complete all four steps presented in the program."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-backend.templates:2001
+msgid ""
+"Once you have done this, you may start the backend by executing the "
+"following command:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-backend.templates:2001
+msgid "sudo /etc/init.d/mythtv-backend start"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:1001
+msgid "What database should be used to hold MythTV data:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:1001
+msgid "If a database with this name already exists, it will be used."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:2001
+msgid "What username should MythTV use to access its database:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:2001
+msgid ""
+"This user will automatically be granted appropriate permissions to the "
+"database."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../mythtv-common.templates:3001
+msgid "What password should MythTV use to access its database:"
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../mythtv-common.templates:3001
+msgid "If you give an empty password, a random one will be generated."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:4001
+msgid "On what host does the MySQL server reside:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:5001
+msgid ""
+"You must run mythtv-setup as a user in the 'mythtv' group in order to "
+"complete mythtv configuration."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:5001
+msgid ""
+"If you are not in the mythtv group when launching setup, you will be given  "
+"the opportunity to be automatically added."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:6001
+msgid "The Ubuntu MythTV packages generate a random MySQL password."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:6001
+msgid ""
+"The generated password for this machine is '${password}'.  If you are adding "
+"this machine to an existing mythtv-network, you will want to update this "
+"password to the one in use by the network after completing installation."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:6001
+msgid "This can be done by: 'sudo dpkg-reconfigure mythtv-common'."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:6001
+msgid ""
+"In case you forget this password, it is also stored in '/etc/mythtv/mysql."
+"txt'."
+msgstr ""
+
+#. Type: select
+#. Choices
+#: ../mythtv-common.templates:7001
+msgid "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../mythtv-common.templates:7002
+msgid "Which XMLTV grabber should be used to retrieve program listings:"
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../mythtv-common.templates:7002
+msgid ""
+" - tv_grab_na retrieves listings for North America (US and Canada)\n"
+" - tv_grab_de retrieves listings for Germany and Austria\n"
+" - tv_grab_sn retrieves listings for Sweden or Norway\n"
+" - tv_grab_uk retrieves listings for the United Kingdom\n"
+" - tv_grab_uk_rt retrieves listings for the United Kingdom (alternate)"
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../mythtv-common.templates:8001
+msgid "Which television standard should be used by MythTV:"
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../mythtv-common.templates:9001
+msgid "Which channel frequency table should be used by MythTV:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:10001
+msgid "WARNING: old MythTV binaries found"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:10001
+msgid ""
+"It appears that you have installed mythtv from source previously, and some "
+"files remain from the previous installation, including at least:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:10001
+msgid "${files}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:10001
+msgid ""
+"Installation of these packages should succeed, but you MUST remove these "
+"files in order for the packaged version of MythTV to work properly."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-database.templates:1001
+msgid "What is the name of the MySQL administrator account:"
+msgstr ""
+
+#. Type: string
+#. Description
+#. Type: password
+#. Description
+#: ../mythtv-database.templates:1001 ../mythtv-database.templates:2001
+msgid "This information will be used to create a database and user for MythTV."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-database.templates:1001
+msgid ""
+"Unless you have explicitly changed this on the MySQL server, and understand "
+"MySQL's privilege system, use the default of 'root'."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../mythtv-database.templates:2001
+msgid "What is the password for the MySQL administrator account '${user}':"
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../mythtv-database.templates:2001
+msgid ""
+"Unless you have explicitly changed the password on the MySQL server, leave "
+"this blank."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../mythtv-database.templates:3001
+msgid "Will you be using other computers running MythTV?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../mythtv-database.templates:3001
+msgid ""
+"If you will be using any other computers with MythTV, this computer needs to "
+"be configured to allow remote connections.  Do you want to enable remote  "
+"connectivity?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../mythtv-database.templates:3001
+msgid ""
+"Note that this is a security risk, as both the MythTV and MySQL services "
+"will be exposed. Be sure to place this machine behind a firewall."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../mythtv-database.templates:3001
+msgid ""
+"If you have multiple interfaces, the first one listed in 'ifconfig' will be "
+"used."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-frontend.templates:1001
+msgid ""
+"What is the hostname of the system where the MythTV backend is installed:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-frontend.templates:2001
+msgid "On what port number is the MythTV server listening:"
+msgstr ""

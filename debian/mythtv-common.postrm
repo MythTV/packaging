@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+if [ $1 = purge ]; then  
+    deluser --quiet --system mythtv
+fi 
+
+#DEBHELPER#
+
+exit 0

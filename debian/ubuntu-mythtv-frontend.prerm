@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+if [ remove = "$1" ]; then
+    update-alternatives --remove gdm-config-derivative /etc/xdg/mythtv-ubuntu/gdm/gdm.conf
+    update-alternatives --remove gdm-config-derivative /etc/xdg/mythtv-ubuntu/gdm/mythbuntu-gdm.conf 
+fi
+
+#DEBHELPER#
+
+exit 0
+

@@ -1,0 +1,26 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## alsa-patch.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad mythtv-0.20-svn20070122~/programs/mythfrontend/globalsettings.cpp mythtv-0.20-svn20070122/programs/mythfrontend/globalsettings.cpp
+--- mythtv-0.20-svn20070122~/programs/mythfrontend/globalsettings.cpp	2007-01-22 03:08:36.000000000 -0600
++++ mythtv-0.20-svn20070122/programs/mythfrontend/globalsettings.cpp	2007-04-08 19:03:44.000000000 -0500
+@@ -26,6 +26,7 @@
+     HostComboBox *gc = new HostComboBox("AudioOutputDevice", true);
+ 
+     gc->setLabel(QObject::tr("Audio output device"));
++    gc->addSelection("ALSA:default");
+     QDir dev("/dev", "dsp*", QDir::Name, QDir::System);
+     gc->fillSelectionsFromDir(dev);
+     dev.setNameFilter("adsp*");
+@@ -75,6 +76,7 @@
+ 
+     gc->setLabel(QObject::tr("Mixer Device"));
+     QDir dev("/dev", "mixer*", QDir::Name, QDir::System);
++    gc->addSelection("default");
+     gc->fillSelectionsFromDir(dev);
+ 
+     dev.setPath("/dev/sound");

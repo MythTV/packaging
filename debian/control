@@ -1,0 +1,189 @@
+Source: mythtv
+Section: graphics
+Priority: optional
+Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
+XSBC-Original-Maintainer: Christian Marillat <marillat@debian.org>
+Bugs: mailto:ubuntu-mythtv@lists.ubuntu.com
+Standards-Version: 3.7.2
+Build-Conflicts: libmyth-0.20-dev, libmyth-dev
+Build-Depends: debhelper (>> 5.0.0), libqt3-mt-dev, libdvb-dev, dpatch,
+ libmysqlclient15-dev | libmysqlclient12-dev, libfreetype6-dev, libavc1394-dev,
+ libvorbis-dev, liblame-dev, liblircclient-dev, libartsc0-dev, libasound2-dev,
+ libxinerama-dev | xlibs-static-dev (<< 6.8.1-1), libiec61883-dev (>= 1.0.0),
+ libxxf86vm-dev | xlibs-static-dev (<< 6.8.1-1), po-debconf, libdts-dev,
+ libxvmc-dev | xlibs-static-dev (<< 6.8.1-1), libdvdnav-dev, libimlib2-dev,
+ libxext-dev | xlibs-static-dev (<< 6.8.1-1), libjack0.100.0-dev | libjack-dev,
+ texi2html, ccache, linux-kernel-headers
+
+Package: mythtv
+Architecture: all
+Depends: mythtv-database (= ${source:Version}), mythtv-frontend (= ${source:Version}), mythtv-backend (= ${source:Version}), mysql-server, ntp | ntp-simple
+Recommends: mythtv-doc, mythtv-themes
+Description: A personal video recorder application (client and server)
+ MythTV implements the following PVR features, and more, with a
+ unified graphical interface:
+ .
+  - Basic 'live-tv' functionality. Pause/Fast Forward/Rewind "live" TV.
+  - Video compression using RTjpeg or MPEG-4
+  - Program listing retrieval using XMLTV
+  - Themable, semi-transparent on-screen display
+  - Electronic program guide
+  - Scheduled recording of TV programs
+  - Resolution of conflicts between scheduled recordings
+  - Basic video editing
+ .
+ http://www.mythtv.org/
+ .
+ This package will install a complete MythTV client/server environment on a
+ single system.  If you are intended on using this as your only MythTV machine,
+ and this machine is already configured as a desktop, this package will get you
+ up and running switfly.
+ .
+ If you are intended on installing this on a standalone/non-desktop machine,
+ you should look into the metapackages available:
+ mythtv-backend-master (backend with a local database)
+ mythtv-backend (backend needing a remote database)
+ ubuntu-mythtv-frontend
+
+Package: mythtv-common
+Architecture: all
+Depends: adduser, pwgen, mysql-client, ttf-freefont, ${misc:Depends}
+Recommends: mythtv-doc (= ${source:Version})
+Conflicts: mythtv (<< 0.8-1)
+Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.15-3)
+Description: A personal video recorder application (common data)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains infrastructure needed by both the client and the
+ server.
+
+Package: mythtv-doc
+Architecture: all
+Conflicts: mythtv (<< 0.8-1)
+Section: doc
+Replaces: mythtv (<< 0.8-1)
+Description: A personal video recorder application (documentation)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains documentation, including the MythTV HOWTO.
+
+Package: mythtv-database
+Architecture: all
+Depends: mythtv-common (= ${source:Version}), libdbd-mysql-perl, mysql-client, cron, update-notifier, ${misc:Depends}
+Conflicts: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
+Replaces: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
+Description: A personal video recorder application (database)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package sets up a MySQL database for use by MythTV. It should be
+ installed on the system where the MySQL server resides.
+
+Package: mythtv-backend
+Architecture: any
+Depends: mythtv-common (= ${source:Version}), mythtv-transcode-utils (= ${source:Version}), ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, fake-msttcorefonts | msttcorefonts, ${misc:Depends}
+Conflicts: mythtv (<< 0.8-1)
+Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
+Recommends: mythtv-database, logrotate, xmltv-util
+Suggests: mythtv-frontend, mythweb, ntp | ntp-simple
+Description: A personal video recorder application (server)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains only the server software, which provides video and
+ audio capture and encoding services. In order to be useful, it requires a
+ mythtv-frontend installation, either on the same system or one reachable
+ via the network.
+ .
+ A database is also required. The mythtv-database package must be installed,
+ either on the same system, or one reachable via the network.
+ .
+ For a complete installation of all MythTV components, install the 'mythtv'
+ package.
+
+Package: mythtv-transcode-utils
+Architecture: any
+Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, transcode
+Conflicts: mythtv-backend (<< 0.20)
+Replaces: mythtv-backend (<< 0.20)
+Suggests: mythtv-backend, mytharchive
+Description: Utilities used for transcoding MythTV tasks
+ Some utilties are applicable for both a frontend or a backend machine.
+ This package provides utilities that can be used on both without
+ requiring an entire backend to be installed.
+
+Package: mythtv-frontend
+Architecture: any
+Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, fake-msttcorefonts | msttcorefonts, ${misc:Depends}
+Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythdvd, mythvideo, mythgame
+Conflicts: mythtv (<< 0.8-1)
+Replaces: mythtv (<< 0.8-1)
+Recommends: mysql-server
+Suggests: ntp | ntp-simple
+Description: A personal video recorder application (client)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains only the client software, which provides a front-end
+ for playback and configuration. It requires access to a mythtv-backend
+ installation, either on the same system or one reachable via the network.
+ .
+ A database is also required. The mythtv-database package must be installed,
+ either on the same system, or one reachable via the network.
+ .
+ For a complete installation of all MythTV components, install the 'mythtv'
+ package.
+
+Package: libmyth-0.20
+Architecture: any
+Section: libs
+Depends: ${shlibs:Depends}, libqt3-mt-mysql | libqt3c102-mt-mysql
+Conflicts: mythtv (<< 0.7-5)
+Replaces: mythtv (<< 0.7-5)
+Description: Common library code for MythTV and add-on modules (runtime)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains a shared library, libmyth, which is used by various
+ components in the system.
+
+Package: libmyth-dev
+Architecture: any
+Section: libdevel
+Depends: libmyth-0.20 (= ${source:Version}), libqt3c102-mt-dev | libqt3-mt-dev
+Provides: libmyth-0.20-dev
+Conflicts: libmyth-0.20-dev
+Description: Common library code for MythTV and add-on modules (development)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains files needed for developing applications which use
+ libmyth (such as the various add-ons for MythTV)
+
+Package: mythtv-backend-master
+Architecture: all
+Section: metapackages
+Depends: ntp | ntp-simple, mysql-server, mythtv-database (= ${source:Version}), mythtv-backend (= ${source:Version})
+Recommends: mythweb
+Description: Metapackage to setup and configure a "Master Backend" profile of MythTV.
+ This package will install and configure all necessary packages for this machine
+ to behave as a "Master" Backend for a mythtv network.  This package is intended to
+ be installed on the machine that will behave as the first (and possibly only)
+ backend for the network.  Typically, this package will be installed on a server rather then a desktop.
+ It makes no sense to install it on anything but the first backend machine on the network.
+
+Package: ubuntu-mythtv-frontend
+Architecture: all
+Section: metapackages
+Depends: xserver-xorg, gsfonts-x11, xfonts-100dpi, xfonts-75dpi, xfonts-base, mythbuntu-gdm-theme | feisty-gdm-themes | edgy-gdm-themes | gdm-themes , xterm, mythbuntu-artwork-usplash | usplash-theme-ubuntu, gdm, mythtv-frontend, openbox, gnome-screensaver, feh, libgl1-mesa-glx, ntp | ntp-simple
+Pre-Depends: gdm
+Recommends: mytharchive, mythphone, mythgame, mythmusic, mythcontrols, mythdvd, mythflix, mythnews, mythweather, mythtv-themes
+Description: Metapackage to setup and configure a "Frontend" profile of MythTV.
+ This package will install and configure all necessary packages for this machine
+ to behave as a standalone Frontend for a mythtv network.  This package is intended
+ to be installed after a backend has been configured on the network.  Also, this
+ package is intended for usage on a standalone machine only running MythTV.  A machine already
+ configured as a desktop should install mythtv-frontend instead.  Without a running and
+ accessible backend, this package will not properly function.

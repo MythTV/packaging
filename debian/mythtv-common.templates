@@ -1,0 +1,76 @@
+Template: mythtv/mysql_mythtv_dbname
+Type: string
+Default: mythconverg
+_Description: What database should be used to hold MythTV data:
+ If a database with this name already exists, it will be used.
+
+Template: mythtv/mysql_mythtv_user
+Type: string
+Default: mythtv
+_Description: What username should MythTV use to access its database:
+ This user will automatically be granted appropriate permissions to the
+ database.
+
+Template: mythtv/mysql_mythtv_password
+Type: password
+_Description: What password should MythTV use to access its database:
+ If you give an empty password, a random one will be generated.
+
+Template: mythtv/mysql_host
+Type: string
+Default: localhost
+_Description: On what host does the MySQL server reside:
+
+Template: mythtv/run_setup
+Type: note
+_Description: mythtv-setup must be run in order to complete MythTV installation
+ You must run mythtv-setup as a user in the 'mythtv' group in order to complete mythtv
+ configuration.  
+ .
+ If you are not in the mythtv group when launching setup, you will be given 
+ the opportunity to be automatically added.
+
+Template: mythtv/display_password
+Type: note
+_Description: The Ubuntu MythTV packages generate a random MySQL password.
+ The generated password for this machine is '${password}'.  If you are
+ adding this machine to an existing mythtv-network, you will want to update
+ this password to the one in use by the network after completing installation.  
+ .
+ This can be done by: 'sudo dpkg-reconfigure mythtv-common'. 
+ .
+ In case you forget this password, it is also stored in '/etc/mythtv/mysql.txt'.
+
+Template: mythtv/grabber
+Type: select
+_Choices: tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt
+Default: tv_grab_na
+_Description: Which XMLTV grabber should be used to retrieve program listings:
+  - tv_grab_na retrieves listings for North America (US and Canada)
+  - tv_grab_de retrieves listings for Germany and Austria
+  - tv_grab_sn retrieves listings for Sweden or Norway
+  - tv_grab_uk retrieves listings for the United Kingdom
+  - tv_grab_uk_rt retrieves listings for the United Kingdom (alternate)
+
+Template: mythtv/tv_format
+Type: select
+Choices: NTSC, PAL, SECAM, PAL-NC, PAL-M, PAL-N, NTSC-JP
+Default: NTSC
+_Description: Which television standard should be used by MythTV:
+
+Template: mythtv/freqtable
+Type: select
+Choices: us-bcast, us-cable, us-cable-hrc, japan-bcast, japan-cable, europe-west, europe-east, italy, newzealand, australia, ireland, france, china-bcast, southafrica, argentina, canada-cable, australia-optus
+Default: us-cable
+_Description: Which channel frequency table should be used by MythTV:
+
+Template: mythtv/old_bins
+Type: note
+_Description: WARNING: old MythTV binaries found
+ It appears that you have installed mythtv from source previously, and some
+ files remain from the previous installation, including at least:
+ .
+ ${files}
+ .
+ Installation of these packages should succeed, but you MUST remove these
+ files in order for the packaged version of MythTV to work properly.

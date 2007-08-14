@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 01_debian-patch.dpatch by Christian Marillat <marillat@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Option to fix build if made on /
+
+@DPATCH@
+
+--- mythtv-0.18.1.orig/settings.pro	2006-06-12 15:14:15.000000000 +0200
++++ mythtv-0.18.1/settings.pro	2006-06-12 15:14:35.000000000 +0200
+@@ -7,6 +7,8 @@
+ LIBVERSION = 0.19
+ VERSION = 0.19.0
+ 
++QMAKE_PROJECT_DEPTH = 1
++
+ # Die on the (common) case where OS X users inadvertently use Fink's
+ # Qt/X11 install instead of Qt/Mac. '
+ contains(CONFIG_DARWIN, yes) {

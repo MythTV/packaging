@@ -1,0 +1,885 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## openmedia-mheg5.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: A backport of several patches from trunk to 0.20 fixes
+## DP: described upon bug http://svn.mythtv.org/trac/ticket/3590
+## DP: trunk changeset, 11598,11611,13147,13279,13280
+
+@DPATCH@
+diff -urNad mythtv-0.20+fixes13716~/keys.txt mythtv-0.20+fixes13716/keys.txt
+--- mythtv-0.20+fixes13716~/keys.txt	2006-08-16 16:23:23.000000000 -0500
++++ mythtv-0.20+fixes13716/keys.txt	2007-06-17 13:36:19.000000000 -0500
+@@ -67,6 +67,22 @@
+ - ] or F11    Increase volume
+ - Ctrl+B      Jump to the beginning of the recording / ringbuffer.
+ 
++When in Teletext Menu mode:
++- Up/Down     Previous/Next Page
++- Left/Right  Previous/Next Subpage
++- T           Exit Teletext Menu
++- F2-F6       Menu Red, Green, Yellow, Blue, or White, respectively
++- F7          Toggle Background on/off
++- F8          Reveal hidden text.
++
++When MHEG ITV is enabled:
++- F2-F5       Menu Red, Green, Yellow, or Blue, respectively
++- F6          Exit key, exits from interactive mode on some channels
++- F7          Text key, enters interactive mode on some channels
++- F12         EPG key, enters EPG mode (New Zealand only).
++  The effect of these keys depends on what is being displayed.  The arrow,
++  Enter, and 0-9 keys may also be used.
++
+ Without the stickykeys option selected:
+ 
+ - Left arrow to rewind the configured number of seconds.  (default is 5)
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythfreemheg/DynamicLineArt.cpp mythtv-0.20+fixes13716/libs/libmythfreemheg/DynamicLineArt.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythfreemheg/DynamicLineArt.cpp	2006-04-06 15:23:34.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythfreemheg/DynamicLineArt.cpp	2007-06-17 13:36:19.000000000 -0500
+@@ -82,7 +82,7 @@
+     m_picture->Clear();
+ }
+ 
+-// As well as their general action these actions also clear the drawing.
++// As well as the general action this also clears the drawing.
+ void MHDynamicLineArt::SetBoxSize(int nWidth, int nHeight, MHEngine *engine)
+ {
+     MHLineArt::SetBoxSize(nWidth, nHeight, engine);
+@@ -90,11 +90,8 @@
+     Clear();
+ }
+ 
+-void MHDynamicLineArt::SetPosition(int nXPos, int nYPos, MHEngine *engine) { MHLineArt::SetPosition(nXPos, nYPos, engine); Clear(); }
+-void MHDynamicLineArt::BringToFront(MHEngine *engine) { MHVisible::BringToFront(engine); Clear(); }
+-void MHDynamicLineArt::SendToBack(MHEngine *engine) { MHVisible::SendToBack(engine); Clear(); }
+-void MHDynamicLineArt::PutBefore(const MHRoot *pRef, MHEngine *engine) { MHVisible::PutBefore(pRef, engine); Clear(); }
+-void MHDynamicLineArt::PutBehind(const MHRoot *pRef, MHEngine *engine) { MHVisible::PutBehind(pRef, engine); Clear(); }
++// SetPosition, BringToFront, SendToBack, PutBefore and PutBehind were defined in the original
++// MHEG standard to clear the drawing.  This was removed in the MHEG Corrigendum.
+ 
+ void MHDynamicLineArt::SetFillColour(const MHColour &colour, MHEngine *)
+ {
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythfreemheg/DynamicLineArt.h mythtv-0.20+fixes13716/libs/libmythfreemheg/DynamicLineArt.h
+--- mythtv-0.20+fixes13716~/libs/libmythfreemheg/DynamicLineArt.h	2006-04-06 15:23:34.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythfreemheg/DynamicLineArt.h	2007-06-17 13:36:19.000000000 -0500
+@@ -45,13 +45,9 @@
+     // Get the opaque area.  This is only opaque if the background is.
+     virtual QRegion GetOpaqueArea();
+ 
+-    // These actions also have the effect of clearing the drawing.
++    // This action also has the effect of clearing the drawing.
+     virtual void SetBoxSize(int nWidth, int nHeight, MHEngine *engine);
+-    virtual void SetPosition(int nXPosition, int nYPosition, MHEngine *engine);
+-    virtual void BringToFront(MHEngine *engine);
+-    virtual void SendToBack(MHEngine *engine);
+-    virtual void PutBefore(const MHRoot *pRef, MHEngine *engine);
+-    virtual void PutBehind(const MHRoot *pRef, MHEngine *engine);
++
+     // Actions
+     virtual void Clear();
+     // These actions set the properties for subsequent drawing but don't affect anything drawn so far.
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythfreemheg/Programs.cpp mythtv-0.20+fixes13716/libs/libmythfreemheg/Programs.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythfreemheg/Programs.cpp	2006-04-06 15:23:34.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythfreemheg/Programs.cpp	2007-06-17 13:36:19.000000000 -0500
+@@ -127,7 +127,7 @@
+                 ftime(&timebuffer);
+ #else
+     #ifdef HAVE_GETTIMEOFDAY
+-		struct timeval   time;
++        struct timeval   time;
+                 struct timezone  zone;
+ 
+                 if (gettimeofday(&time,&zone) == -1)
+@@ -393,7 +393,22 @@
+             // Returns basic SI information about the service indicated by an index
+             // returned by GSI.
+             // Returns networkID, origNetworkID, transportStreamID, serviceID
+-            ASSERT(false);
++            if (args.Size() == 5) {
++                int channelId = GetInt(args.GetAt(0), engine);
++                int netId, origNetId, transportId, serviceId;
++                // Look the information up in the database.
++                bool res = engine->GetContext()->GetServiceInfo(channelId, netId, origNetId,
++                                transportId, serviceId);
++                if (res)
++                {
++                    engine->FindObject(*(args.GetAt(1)->GetReference()))->SetVariableValue(netId);
++                    engine->FindObject(*(args.GetAt(2)->GetReference()))->SetVariableValue(origNetId);
++                    engine->FindObject(*(args.GetAt(3)->GetReference()))->SetVariableValue(transportId);
++                    engine->FindObject(*(args.GetAt(4)->GetReference()))->SetVariableValue(serviceId);
++                }
++                SetSuccessFlag(success, res, engine);
++            }
++            else SetSuccessFlag(success, false, engine);
+         }
+         else if (m_Name.Equal("GBI")) { // GetBootInfo
+             // Gets the NB_info field.
+@@ -402,7 +417,30 @@
+         else if (m_Name.Equal("CCR")) { // CheckContentRef
+             // Sees if an item with a particular content reference is available
+             // in the carousel.
+-            ASSERT(false);
++            // in the carousel.  This looks like it should block until the file
++            // is available.  The profile recommends that this should be forked
++            // rather than called.
++            if (args.Size() == 3) {
++                MHUnion un;
++                un.GetValueFrom(*(args.GetAt(0)), engine);
++                un.CheckType(MHUnion::U_ContentRef);
++                MHContentRef fileName;
++                fileName.Copy(un.m_ContentRefVal);
++                QString csPath = engine->GetPathName(fileName.m_ContentRef);
++                bool result = false;
++                QByteArray text;
++                // Try to load the object.
++                if (! csPath.isEmpty())
++                    result = engine->GetContext()->GetCarouselData(csPath, text);
++                // Set the result variable.
++                MHParameter *pResFlag = args.GetAt(1);
++                engine->FindObject(*(pResFlag->GetReference()))->SetVariableValue(result);
++                MHParameter *pResCR = args.GetAt(2);
++                // Copy the file name to the resulting content ref.
++                engine->FindObject(*(pResCR->GetReference()))->SetVariableValue(fileName);
++                SetSuccessFlag(success, true, engine);
++            }
++            else SetSuccessFlag(success, false, engine);
+         }
+         else if (m_Name.Equal("CGR")) { // CheckGroupIDRef
+             // Sees if an application or scene with a particular group id
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythfreemheg/freemheg.h mythtv-0.20+fixes13716/libs/libmythfreemheg/freemheg.h
+--- mythtv-0.20+fixes13716~/libs/libmythfreemheg/freemheg.h	2006-05-31 14:44:54.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythfreemheg/freemheg.h	2007-06-17 13:36:19.000000000 -0500
+@@ -116,6 +116,9 @@
+ 
+     // Tuning.  Get the index corresponding to a given channel.
+     virtual int GetChannelIndex(const QString &str) = 0;
++    // Get netId etc from the channel index.
++    virtual bool GetServiceInfo(int channelId, int &netId, int &origNetId,
++                                int &transportId, int &serviceId) = 0;
+     // Tune to an index returned by GetChannelIndex
+     virtual bool TuneTo(int channel) = 0;
+ 
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/avformatdecoder.cpp mythtv-0.20+fixes13716/libs/libmythtv/avformatdecoder.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/avformatdecoder.cpp	2007-05-26 05:14:16.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/avformatdecoder.cpp	2007-06-17 13:36:19.000000000 -0500
+@@ -1247,6 +1247,64 @@
+     }
+ }
+ 
++/** \fn AvFormatDecoder::ScanDSMCCStreams(void)
++ *  \brief Check to see whether there is a Network Boot Ifo sub-descriptor in the PMT which
++ *         requires the MHEG application to reboot.
++ */
++void AvFormatDecoder::ScanDSMCCStreams(void)
++{
++    if (!ic->cur_pmt_sect)
++        return;
++
++    if (!itv && ! (itv = GetNVP()->GetInteractiveTV()))
++        return;
++
++    const PESPacket pes = PESPacket::ViewData(ic->cur_pmt_sect);
++    const PSIPTable psip(pes);
++    const ProgramMapTable pmt(psip);
++    
++    for (uint i = 0; i < pmt.StreamCount(); i++)
++    {
++        if (! StreamID::IsObjectCarousel(pmt.StreamType(i)))
++            continue;
++
++        const desc_list_t desc_list = MPEGDescriptor::ParseOnlyInclude(
++            pmt.StreamInfo(i), pmt.StreamInfoLength(i),
++            DescriptorID::data_broadcast_id);
++
++        for (uint j = 0; j < desc_list.size(); j++)
++        {
++            const unsigned char *desc = desc_list[j];
++            desc++; // Skip tag
++            uint length = *desc++;
++            const unsigned char *endDesc = desc+length;
++            uint dataBroadcastId = desc[0]<<8 | desc[1];
++            if (dataBroadcastId != 0x0106) // ETSI/UK Profile
++                continue;
++            desc += 2; // Skip data ID
++            while (desc != endDesc)
++            {
++                uint appTypeCode = desc[0]<<8 | desc[1];
++                desc += 3; // Skip app type code and boot priority hint
++                uint appSpecDataLen = *desc++;
++                if (appTypeCode == 0x101) // UK MHEG profile
++                {
++                    const unsigned char *subDescEnd = desc + appSpecDataLen;
++                    while (desc < subDescEnd)
++                    {
++                        uint sub_desc_tag = *desc++;
++                        uint sub_desc_len = *desc++;
++                        if (sub_desc_tag == 1) // Network boot info sub-descriptor.
++                            itv->SetNetBootInfo(desc, sub_desc_len);
++                        desc += sub_desc_len;
++                    }
++                }
++                else desc += appSpecDataLen;
++            }
++        }
++    }
++}
++
+ int AvFormatDecoder::ScanStreams(bool novideo)
+ {
+     int scanerror = 0;
+@@ -1553,6 +1611,8 @@
+     if (GetNVP()->IsErrored())
+         scanerror = -1;
+ 
++    ScanDSMCCStreams();
++
+     return scanerror;
+ }
+ 
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/avformatdecoder.h mythtv-0.20+fixes13716/libs/libmythtv/avformatdecoder.h
+--- mythtv-0.20+fixes13716~/libs/libmythtv/avformatdecoder.h	2006-10-03 23:10:03.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/avformatdecoder.h	2007-06-17 13:36:19.000000000 -0500
+@@ -147,6 +147,7 @@
+ 
+     void ScanATSCCaptionStreams(int av_stream_index);
+     void ScanTeletextCaptions(int av_stream_index);
++    void ScanDSMCCStreams(void);
+     int AutoSelectAudioTrack(void);
+ 
+   private:
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/dsmccobjcarousel.cpp mythtv-0.20+fixes13716/libs/libmythtv/dsmccobjcarousel.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/dsmccobjcarousel.cpp	2006-03-21 09:19:51.000000000 -0600
++++ mythtv-0.20+fixes13716/libs/libmythtv/dsmccobjcarousel.cpp	2007-06-17 13:36:19.000000000 -0500
+@@ -150,20 +150,26 @@
+                     VERBOSE(VB_DSMCC, QString("[dsmcc] Already Know "
+                                               "Module %1")
+                             .arg(info->module_id));
+-
+-                    return;
++                    if (cachep->ModuleSize() == info->module_size)
++                        return;
++                    // It seems that when ITV4 starts broadcasting it
++                    // updates the contents of a file but doesn't
++                    // update the version.  This is a work-around.
++                    VERBOSE(VB_DSMCC, QString("[dsmcc] Module %1 size "
++                                              "has changed (%2 to %3) "
++                                              "but version has not!!")
++                             .arg(info->module_id)
++                             .arg(info->module_size)
++                             .arg(cachep->DataSize()));
+                 }
+-                else
+-                {
+-                    // Version has change - Drop old data.
+-                    VERBOSE(VB_DSMCC, QString("[dsmcc] Updated "
+-                                              "Module %1")
+-                            .arg(info->module_id));
++                // Version has changed - Drop old data.
++                VERBOSE(VB_DSMCC, QString("[dsmcc] Updated "
++                                          "Module %1")
++                        .arg(info->module_id));
+ 
+-                    // Remove and delete the cache object.
+-                    m_Cache.remove();
+-                    break;
+-                }
++                // Remove and delete the cache object.
++                m_Cache.remove();
++                break;
+             }
+         }
+ 
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/dsmccobjcarousel.h mythtv-0.20+fixes13716/libs/libmythtv/dsmccobjcarousel.h
+--- mythtv-0.20+fixes13716~/libs/libmythtv/dsmccobjcarousel.h	2006-03-21 09:19:51.000000000 -0600
++++ mythtv-0.20+fixes13716/libs/libmythtv/dsmccobjcarousel.h	2007-06-17 13:36:19.000000000 -0500
+@@ -35,6 +35,7 @@
+     unsigned short ModuleId(void)   const { return m_module_id;   }
+     unsigned short StreamId(void)   const { return m_stream_id;   }
+     unsigned char  Version(void)    const { return m_version;     }
++    unsigned long  ModuleSize(void) const { return m_moduleSize;  }
+ 
+     /// Return the, possibly uncompressed, module size
+     unsigned long  DataSize(void) const
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/interactivetv.cpp mythtv-0.20+fixes13716/libs/libmythtv/interactivetv.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/interactivetv.cpp	2006-04-20 18:57:38.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/interactivetv.cpp	2007-06-17 13:36:19.000000000 -0500
+@@ -75,3 +75,8 @@
+ {
+     m_context->GetInitialStreams(audioTag, videoTag);
+ }
++
++void InteractiveTV::SetNetBootInfo(const unsigned char *data, uint length)
++{
++    m_context->SetNetBootInfo(data, length);
++}
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/interactivetv.h mythtv-0.20+fixes13716/libs/libmythtv/interactivetv.h
+--- mythtv-0.20+fixes13716~/libs/libmythtv/interactivetv.h	2006-04-20 18:57:38.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/interactivetv.h	2007-06-17 13:36:19.000000000 -0500
+@@ -21,6 +21,9 @@
+                              int componentTag, unsigned carouselId,
+                              int dataBroadcastId);
+ 
++    // A NetworkBootInfo sub-descriptor is present in the PMT
++    void SetNetBootInfo(const unsigned char *data, uint length);
++
+     // See if the image has changed.
+     bool ImageHasChanged(void);
+     // Draw the (updated) image.
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/mhi.cpp mythtv-0.20+fixes13716/libs/libmythtv/mhi.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/mhi.cpp	2006-05-23 17:52:11.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/mhi.cpp	2007-06-17 13:36:19.000000000 -0500
+@@ -1,4 +1,6 @@
+ #include <unistd.h>
++#include <qpointarray.h>
++#include <qbitarray.h>
+ 
+ #include "mhi.h"
+ #include "osd.h"
+@@ -21,6 +23,10 @@
+     int    m_y;
+ };
+ 
++// Special values for the NetworkBootInfo version.  Real values are a byte.
++#define NBI_VERSION_UNSET       257
++#define NBI_VERSION_ABSENT      256
++
+ MHIContext::MHIContext(InteractiveTV *parent)
+     : m_parent(parent),     m_dsmcc(NULL),
+       m_engine(NULL),       m_stop(false),
+@@ -29,7 +35,7 @@
+       m_face_loaded(false), m_currentChannel(-1),
+       m_isLive(false),      m_currentCard(0),
+       m_audioTag(-1),       m_videoTag(-1),
+-      m_tuningTo(-1)
++      m_tuningTo(-1),       m_lastNbiVersion(NBI_VERSION_UNSET)
+ {
+     m_display.setAutoDelete(true);
+     m_dsmccQueue.setAutoDelete(true);
+@@ -146,6 +152,8 @@
+         m_updated = true;
+         m_stop = false;
+         m_isLive = isLive;
++        // Don't set the NBI version here.  Restart is called
++        // after the PMT is processed.
+         m_stopped = pthread_create(&m_engineThread, NULL,
+                                    StartMHEGEngine, this) != 0;
+         m_audioTag = -1;
+@@ -173,6 +181,7 @@
+         int key = 0;
+         do
+         {
++            (void)NetworkBootRequested();
+             ProcessDSMCCQueue();
+             {
+                 QMutexLocker locker(&m_keyLock);
+@@ -242,6 +251,40 @@
+     m_engine_wait.wakeAll();
+ }
+ 
++// A NetworkBootInfo sub-descriptor is present in the PMT.
++void MHIContext::SetNetBootInfo(const unsigned char *data, uint length)
++{
++    if (length < 2) return;
++    QMutexLocker locker(&m_dsmccLock);
++    // Save the data from the descriptor.
++    m_nbiData.duplicate(data, length);
++    // If there is no Network Boot Info or we're setting it
++    // for the first time just update the "last version".
++    if (length < 2)
++        m_lastNbiVersion = NBI_VERSION_ABSENT;
++    else if (m_lastNbiVersion == NBI_VERSION_UNSET)
++        m_lastNbiVersion = data[0];
++    else
++        m_engine_wait.wakeAll();
++}
++
++void MHIContext::NetworkBootRequested(void)
++{
++    QMutexLocker locker(&m_dsmccLock);
++    if (m_nbiData.size() >= 2 && m_nbiData[0] != m_lastNbiVersion)
++    {
++        m_lastNbiVersion = m_nbiData[0]; // Update the saved version
++        if (m_nbiData[1] == 1)
++        {
++            m_dsmcc->Reset();
++            m_engine->SetBooting();
++            m_display.clear();
++            m_updated = true;
++        }
++        // TODO: else if it is 2 generate an EngineEvent.
++    }
++}
++
+ // Called by the engine to check for the presence of an object in the carousel.
+ bool MHIContext::CheckCarouselObject(QString objectPath)
+ {
+@@ -285,24 +328,32 @@
+     int action = 0;
+     QMutexLocker locker(&m_keyLock);
+ 
++    // This supports the UK and NZ key profile registers.
++    // The UK uses 3, 4 and 5 and NZ 13, 14 and 15.  These are
++    // similar but the NZ profile also provides an EPG key.
++
+     if (key == "UP")
+     {
+-        if (m_keyProfile == 4 || m_keyProfile == 5)
++        if (m_keyProfile == 4 || m_keyProfile == 5 ||
++            m_keyProfile == 14 || m_keyProfile == 15)
+             action = 1;
+     }
+     else if (key == "DOWN")
+     {
+-        if (m_keyProfile == 4 || m_keyProfile == 5)
++        if (m_keyProfile == 4 || m_keyProfile == 5 ||
++            m_keyProfile == 14 || m_keyProfile == 15)
+             action = 2;
+     }
+     else if (key == "LEFT")
+     {
+-        if (m_keyProfile == 4 || m_keyProfile == 5)
++        if (m_keyProfile == 4 || m_keyProfile == 5 ||
++            m_keyProfile == 14 || m_keyProfile == 15)
+             action = 3;
+     }
+     else if (key == "RIGHT")
+     {
+-        if (m_keyProfile == 4 || m_keyProfile == 5)
++        if (m_keyProfile == 4 || m_keyProfile == 5 ||
++            m_keyProfile == 14 || m_keyProfile == 15)
+             action = 4;
+     }
+     else if (key == "0" || key == "1" || key == "2" ||
+@@ -310,12 +361,13 @@
+              key == "6" || key == "7" || key == "8" ||
+              key == "9")
+     {
+-        if (m_keyProfile == 4)
++        if (m_keyProfile == 4 || m_keyProfile == 14)
+             action = key.toInt() + 5;
+     }
+     else if (key == "SELECT")
+     {
+-        if (m_keyProfile == 4 || m_keyProfile == 5)
++        if (m_keyProfile == 4 || m_keyProfile == 5 ||
++            m_keyProfile == 14 || m_keyProfile == 15)
+             action = 15;
+     }
+     // The EXIT key is supposed to be passed to the MHEG application
+@@ -331,7 +383,9 @@
+     else if (key == "MENUBLUE")
+         action = 103;
+     else if (key == "MENUTEXT")
+-        action = 104;
++        action = m_keyProfile > 12 ? 105 : 104;
++    else if (key == "MENUEPG")
++        action = m_keyProfile > 12 ? 300 : 0;
+ 
+     if (action != 0)
+     {
+@@ -533,7 +587,7 @@
+         if (query.exec() && query.isActive() && query.next())
+             return query.value(0).toInt();
+     }
+-    else if (str == "rec://svc/cur")
++    else if (str == "rec://svc/cur" || str == "rec://svc/def")
+         return m_currentChannel;
+     else if (str.startsWith("rec://"))
+     {
+@@ -541,6 +595,27 @@
+     return -1;
+ }
+ 
++// Get netId etc from the channel index.  This is the inverse of GetChannelIndex.
++bool MHIContext::GetServiceInfo(int channelId, int &netId, int &origNetId,
++                                int &transportId, int &serviceId)
++{
++    MSqlQuery query(MSqlQuery::InitCon());
++    query.prepare("SELECT networkid, transportid, serviceid "
++                  "FROM channel, dtv_multiplex "
++                  "WHERE chanid           = :CHANID AND "
++                  "      channel.mplexid  = dtv_multiplex.mplexid");
++    query.bindValue(":CHANID", channelId);
++    if (query.exec() && query.isActive() && query.next())
++    {
++        netId = query.value(0).toInt();
++        origNetId = netId; // We don't have this in the database.
++        transportId = query.value(1).toInt();
++        serviceId = query.value(2).toInt();
++        return true;
++    }
++    else return false;
++}
++
+ bool MHIContext::TuneTo(int channel)
+ {
+     if (!m_isLive)
+@@ -549,7 +624,10 @@
+     // Post an event requesting a channel change.
+     MythEvent me(QString("NETWORK_CONTROL CHANID %1").arg(channel));
+     gContext->dispatch(me);
+-
++    // Reset the NBI version here to prevent a reboot.
++    QMutexLocker locker(&m_dsmccLock);
++    m_lastNbiVersion = NBI_VERSION_UNSET;
++    m_nbiData.resize(0);
+     return true;
+ }
+ 
+@@ -1034,14 +1112,104 @@
+ // The UK MHEG profile defines exactly how transparency is supposed to work.
+ // The drawings are made using possibly transparent ink with any crossings
+ // just set to that ink and then the whole drawing is alpha-merged with the
+-// underlying graphics.  Since DynamicLineArt is hardly used in practice,
+-// the only example I've seen so far is in the YooGames' Tetris and
+-// that only uses opaque rectangles, there's no point in doing very much here.
++// underlying graphics.
++// DynamicLineArt no longer seems to be used in transmissions in the UK
++// although it appears that DrawPoly is used in New Zealand.  These are
++// very basic implementations of the functions.
+ 
+ // Lines
+-void MHIDLA::DrawLine(int /*x1*/, int /*y1*/, int /*x2*/, int /*y2*/)
++void MHIDLA::DrawLine(int x1, int y1, int x2, int y2)
+ {
+-    VERBOSE(VB_IMPORTANT, "Dynamic Line Art: DrawLinel not implemented");
++    // Get the arguments so that the lower x comes first and the
++    // absolute gradient is less than one.
++    if (abs(y2-y1) > abs(x2-x1))
++    {
++        if (y2 > y1)
++            DrawLineSub(y1, x1, y2, x2, true);
++        else
++            DrawLineSub(y2, x2, y1, x1, true);
++    }
++    else
++    {
++        if (x2 > x1)
++            DrawLineSub(x1, y1, x2, y2, false);
++        else
++            DrawLineSub(x2, y2, x1, y1, false);
++    }
++}
++
++// Based on the Bresenham line drawing algorithm but extended to draw
++// thick lines.
++void MHIDLA::DrawLineSub(int x1, int y1, int x2, int y2, bool swapped)
++{
++    QRgb colour = qRgba(m_lineColour.red(), m_lineColour.green(),
++                         m_lineColour.blue(), m_lineColour.alpha());
++    int dx = x2-x1, dy = abs(y2-y1);
++    int yStep = y2 >= y1 ? 1 : -1;
++    // Adjust the starting positions to take account of the
++    // line width.
++    int error2 = dx/2;
++    for (int k = 0; k < m_lineWidth/2; k++)
++    {
++        y1--;
++        y2--;
++        error2 += dy;
++        if (error2*2 > dx)
++        {
++            error2 -= dx;
++            x1 += yStep;
++            x2 += yStep;
++        }
++    }
++    // Main loop
++    int y = y1;
++    int error = dx/2;
++    for (int x = x1; x <= x2; x++) // Include both endpoints
++    {
++        error2 = dx/2;
++        int j = 0;
++        // Inner loop also uses the Bresenham algorithm to draw lines
++        // perpendicular to the principal direction.
++        for (int i = 0; i < m_lineWidth; i++)
++        {
++            if (swapped)
++            {
++                if (x+j >= 0 && y+i >= 0 && y+i < m_width && x+j < m_height)
++                    m_image.setPixel(y+i, x+j, colour);
++            }
++            else
++            {
++                if (x+j >= 0 && y+i >= 0 && x+j < m_width && y+i < m_height)
++                    m_image.setPixel(x+j, y+i, colour);
++            }
++            error2 += dy;
++            if (error2*2 > dx)
++            {
++                error2 -= dx;
++                j -= yStep;
++                if (i < m_lineWidth-1)
++                {
++                    // Add another pixel in this case.
++                    if (swapped)
++                    {
++                        if (x+j >= 0 && y+i >= 0 && y+i < m_width && x+j < m_height)
++                            m_image.setPixel(y+i, x+j, colour);
++                    }
++                    else
++                    {
++                        if (x+j >= 0 && y+i >= 0 && x+j < m_width && y+i < m_height)
++                            m_image.setPixel(x+j, y+i, colour);
++                    }
++                }
++            }
++        }
++        error += dy;
++        if (error*2 > dx)
++        {
++            error -= dx;
++            y += yStep;
++        }
++    }
+ }
+ 
+ // Rectangles
+@@ -1077,23 +1245,169 @@
+ }
+ 
+ // Ovals (ellipses)
+-void MHIDLA::DrawOval(int /*x*/, int /*y*/, int /*width*/, int /*height*/)
++void MHIDLA::DrawOval(int x, int y, int width, int height)
+ {
+-    VERBOSE(VB_IMPORTANT, "Dynamic Line Art: DrawOval not implemented");
++    // Simple but inefficient way of drawing a ellipse.
++    QPointArray ellipse;
++    ellipse.makeEllipse(x, y, width, height);
++    DrawPoly(true, ellipse);
+ }
+ 
+ // Arcs and sectors
+-void MHIDLA::DrawArcSector(int /*x*/, int /*y*/,
+-                           int /*width*/, int /*height*/,
+-                           int /*start*/, int /*arc*/, bool /*isSector*/)
++void MHIDLA::DrawArcSector(int x, int y, int width, int height,
++                           int start, int arc, bool isSector)
+ {
+-    VERBOSE(VB_IMPORTANT, "Dynamic Line Art: DrawArcSector not implemented");
++    QPointArray points;
++    // MHEG and Qt both measure arcs as angles anticlockwise from
++    // the 3 o'clock position but MHEG uses 64ths of a degree
++    // whereas Qt uses 16ths.
++    points.makeArc(x, y, width, height, start/4, arc/4);
++    if (isSector)
++    {
++        // Have to add the centre as a point and fill the figure.
++        if (arc != 360*64)
++            points.putPoints(points.size(), 1, x+width/2, y+height/2);
++        DrawPoly(true, points);
++    }
++    else
++        DrawPoly(false, points);
+ }
+ 
+-// Polygons
+-void MHIDLA::DrawPoly(bool/* isFilled*/, const QPointArray &/*points*/)
++// Polygons.  This is used directly and also to draw other figures.
++// The UK profile says that MHEG should not contain concave or
++// self-crossing polygons but we can get the former at least as
++// a result of rounding when drawing ellipses.
++void MHIDLA::DrawPoly(bool isFilled, const QPointArray &points)
+ {
+-    VERBOSE(VB_IMPORTANT, "Dynamic Line Art: DrawPoly not implemented");
++    int nPoints = points.size();
++    if (nPoints < 2)
++        return;
++
++    if (isFilled)
++    {
++        // Polygon filling is done by sketching the outline of
++        // the polygon in a separate bitmap and then raster scanning
++        // across this to generate the fill.  There are some special
++        // cases that have to be considered when doing this.  Maximum
++        // and minimum points have to be removed otherwise they will
++        // turn the scan on but not off again.  Horizontal lines are
++        // suppressed and their ends handled specially.
++        QRect bounds = points.boundingRect();
++        int width = bounds.width()+1, height = bounds.height()+1;
++        QBitArray boundsMap(width*height);
++        boundsMap.fill(0);
++        // Draw the boundaries in the bounds map.  This is
++        // the Bresenham algorithm if the absolute gradient is
++        // greater than 1 but puts only the centre of each line
++        // (so there is only one point for each y value) if less.
++        QPoint last = points[nPoints-1]; // Last point
++        for (int i = 0; i < nPoints; i++)
++        {
++            QPoint thisPoint = points[i];
++            int x1 = last.x() - bounds.x();
++            int y1 = last.y() - bounds.y();
++            int x2 = thisPoint.x() - bounds.x();
++            int y2 = thisPoint.y() - bounds.y();
++            int x, xEnd, y, yEnd;
++            if (y2 > y1)
++            {
++                x = x1;
++                y = y1;
++                xEnd = x2;
++                yEnd = y2;
++            }
++            else
++            {
++                x = x2;
++                y = y2;
++                xEnd = x1;
++                yEnd = y1;
++            }
++            int dx = abs(xEnd-x), dy = yEnd-y;
++            int xStep = xEnd >= x ? 1 : -1;
++            if (abs(y2-y1) > abs(x2-x1))
++            {
++                int error = dy/2;
++                y++;
++                for (; y < yEnd; y++) // Exclude endpoints
++                {
++                    boundsMap.toggleBit(x+y*width);
++                    error += dx;
++                    if (error*2 > dy)
++                    {
++                        error -= dy;
++                        x += xStep;
++                    }
++                }
++            }
++            else
++            {
++                int error = 0;
++                y++;
++                for (; y < yEnd; y++)
++                {
++                    boundsMap.toggleBit(x+y*width);
++                    error += dx;
++                    while (error > dy)
++                    {
++                        x += xStep;
++                        error -= dy;
++                    }
++                }
++            }
++            QPoint nextPoint = points[(i+1) % nPoints];
++            int nextY = nextPoint.y() - bounds.y();
++            int turn = (y2 - y1) * (nextY - y2);
++            if (turn > 0) // Not a max or min
++                boundsMap.toggleBit(x2+y2*width);
++            else if (turn == 0) // Previous or next line is horizontal
++            {
++                // We only draw a point at the beginning or end of a horizontal
++                // line if it turns clockwise.  This means that the fill
++                // will be different depending on the direction the polygon was
++                // drawn but that will be tidied up when we draw the lines round.
++                if (y1 == y2)
++                {
++                    if ((x2-x1) * (nextY - y2) > 0)
++                       boundsMap.toggleBit(x2+y2*width);
++                }
++                else if ((nextPoint.x() - bounds.x() - x2) * (y2 - y1) < 0)
++                    // Next line is horizontal -  draw point if turn is clockwise.
++                    boundsMap.toggleBit(x2+y2*width);
++            }
++            last = thisPoint;
++        }
++        QRgb fillColour = qRgba(m_fillColour.red(), m_fillColour.green(),
++                                m_fillColour.blue(), m_fillColour.alpha());
++        // Now scan the bounds map and use this to fill the polygon.
++        for (int j = 0; j < bounds.height(); j++)
++        {
++            bool penDown = false;
++            for (int k = 0; k < bounds.width(); k++)
++            {
++                if (boundsMap.testBit(k+j*width))
++                    penDown = ! penDown;
++                else if (penDown && k+bounds.x() >= 0 && j+bounds.y() >= 0 &&
++                         k+bounds.x() < m_width && j+bounds.y() < m_height)
++                    m_image.setPixel(k+bounds.x(), j+bounds.y(), fillColour);
++            }
++        }
++
++        // Draw the boundary
++        last = points[nPoints-1]; // Last point
++        for (int i = 0; i < nPoints; i++)
++        {
++            DrawLine(points[i].x(), points[i].y(), last.x(), last.y());
++            last = points[i];
++        }
++    }
++    else // PolyLine - draw lines between the points but don't close it.
++    {
++        for (int i = 1; i < nPoints; i++)
++        {
++            DrawLine(points[i].x(), points[i].y(), points[i-1].x(), points[i-1].y());
++        }
++    }
+ }
+ 
+ 
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/mhi.h mythtv-0.20+fixes13716/libs/libmythtv/mhi.h
+--- mythtv-0.20+fixes13716~/libs/libmythtv/mhi.h	2006-08-23 06:55:15.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/mhi.h	2007-06-17 13:36:19.000000000 -0500
+@@ -44,6 +44,8 @@
+ 
+     void QueueDSMCCPacket(unsigned char *data, int length, int componentTag,
+         unsigned carouselId, int dataBroadcastId);
++    // A NetworkBootInfo sub-descriptor is present in the PMT.
++    void SetNetBootInfo(const unsigned char *data, uint length);
+     /// Restart the MHEG engine.
+     void Restart(uint chanid, uint cardid, bool isLive);
+     // Offer a key press.  Returns true if it accepts it.
+@@ -97,6 +99,9 @@
+     void DrawImage(int x, int y, const QRect &rect, const QImage &image);
+ 
+     virtual int GetChannelIndex(const QString &str);
++    /// Get netId etc from the channel index.
++    virtual bool GetServiceInfo(int channelId, int &netId, int &origNetId,
++                                int &transportId, int &serviceId);
+     virtual bool TuneTo(int channel);
+ 
+     /// Begin playing audio from the specified stream
+@@ -133,6 +138,7 @@
+     static void *StartMHEGEngine(void *param);
+     void RunMHEGEngine(void);
+     void ProcessDSMCCQueue(void);
++    void NetworkBootRequested(void);
+ 
+     InteractiveTV   *m_parent;
+ 
+@@ -169,6 +175,9 @@
+     int              m_audioTag;
+     int              m_videoTag;
+     int              m_tuningTo;
++
++    uint             m_lastNbiVersion;
++    QMemArray<unsigned char> m_nbiData;
+ };
+ 
+ // Object for drawing text.
+@@ -272,6 +281,7 @@
+ 
+   protected:
+     void DrawRect(int x, int y, int width, int height, MHRgba colour);
++    void DrawLineSub(int x1, int y1, int x2, int y2, bool swapped);
+ 
+   protected:
+     MHIContext *m_parent;
+diff -urNad mythtv-0.20+fixes13716~/libs/libmythtv/tv_play.cpp mythtv-0.20+fixes13716/libs/libmythtv/tv_play.cpp
+--- mythtv-0.20+fixes13716~/libs/libmythtv/tv_play.cpp	2006-09-30 12:17:20.000000000 -0500
++++ mythtv-0.20+fixes13716/libs/libmythtv/tv_play.cpp	2007-06-17 13:36:19.000000000 -0500
+@@ -220,6 +220,7 @@
+     REG_KEY("ITV Menu", "MENUBLUE",   "Menu Blue",   "F5");
+     REG_KEY("ITV Menu", "TEXTEXIT",   "Menu Exit",   "F6");
+     REG_KEY("ITV Menu", "MENUTEXT",   "Menu Text",   "F7");
++    REG_KEY("ITV Menu", "MENUEPG",    "Menu EPG",    "F12");
+ /*
+   keys already used:
+ 
+@@ -244,7 +245,7 @@
+   Global:   F1,
+   Playback:                   F7,F8,F9,F10,F11
+   Teletext     F2,F3,F4,F5,F6,F7,F8
+-  ITV          F2,F3,F4,F5,F6,F7
++  ITV          F2,F3,F4,F5,F6,F7,F12
+ 
+   Playback: Ctrl-B,Ctrl-G
+ */

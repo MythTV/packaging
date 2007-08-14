@@ -1,0 +1,9 @@
+Template: mythtv/server_host
+Type: string
+Default: localhost
+_Description: What is the hostname of the system where the MythTV backend is installed:
+
+Template: mythtv/server_port
+Type: string
+Default: 6543
+_Description: On what port number is the MythTV server listening:

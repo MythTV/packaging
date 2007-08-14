@@ -1,0 +1,1050 @@
+mythtv (0.20.1+fixes14194-0.0ubuntu1) gutsy; urgency=low
+
+  * New upstream checkout:
+    - Includes support for mythstream in the menu system.
+  * Change background color to black in gdm configurations.
+  * debian/control:
+    - Move ntp | ntp-simple into metas only.
+    - Make ntp | ntp-simple Suggests on mythtv-frontend or mythtv-backend.
+  * debian/mythfrontend.sh:
+    - Make sure that exec mythfrontend to start
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue,  14 Aug 2007 09:54:21 -0500
+
+mythtv (0.20.1+fixes13837-0.0ubuntu2) gutsy; urgency=low
+
+  * debian/control:
+    - Update to ${source:version}. (LP: #125685)
+  * Add additional function to ubuntu-mythtv-frontend's prerm.
+  * Source xmodmap configuration if the user has it.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon,  9 Jul 2007 20:37:52 -0500
+
+mythtv (0.20.1+fixes13837-0.0ubuntu1) gutsy; urgency=low
+
+  * New svn fixes co, 13837.
+  * Correct minor typo in debian/control.
+  * Add the rest of mythbuntu-gdm.conf
+  * Myth mythtv-transcode-utils conflict older backends.
+  * Modify README.debian to clarify a contrib script.
+  * Prefill the database with populated information.
+    No longer is it "necessary" to run mythtv-setup before
+    starting mythfrontend.
+  * Provide debconf questions that can be used to change
+    bind settings for MySQL and MythTV.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 25 Jun 2007 10:04:06 -0500
+
+mythtv (0.20.1+fixes13737-0.0ubuntu1) gutsy; urgency=low
+
+  * Update to new SVN Fixes co, 13737.
+  * Adapt new package naming structure.
+  * Add 21_openmedia_mheg5.dpatch importing many MHEG5
+    fixes from trunk. (LP: 119984).
+  * Add 22_openmedia_livetv.dpatch importing many Livetv
+    fixes from trunk. (LP: 119884).
+  * debian/rules:
+    - Add support to grab the latest .orig.tar.gz.
+    - Add debconf-updatepo to the clean: target.
+  * Clean up all fields mismarked as translatable (LP: 118952)
+  * Add source.lintian-overrides to handle a few warnings 
+    about binary NMU's.
+  * Add a mythbuntu gdm.conf that will use the mythbuntu-gdm-theme
+    if available at package installation.
+  * Update debian/ubuntu-mythtv-frontend.postinst to use the appropriate
+    gdm theme.
+  * Add mythbuntu-gdm-theme | feisty-gdm-themes to debian/control.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 17 Jun 2007 11:53:58 -0500
+
+mythtv (0.20-svn20070523-0.0ubuntu1) gutsy; urgency=low
+
+  [ Mario Limonciello ]
+  * Merge with debian multimedia:
+    o New SVN release. (last change is 13496)
+    o Rename libmyth0.20-dev to libmyth-dev .
+  * Remaining changes:
+    o Drop 21_changeset12782_hd_homerun as its included in 13496.
+    o Make ubuntu-mythtv-frontend depend on mythbuntu-artwork-usplash 
+      rather than the ubuntu artwork if available.
+    o Create mythtv-transcode-utils (LP: #92703)
+    o FE & BE depend on either fake-msttcorefonts or msttcorefonts. (LP: #110068)
+    o Bump debian/compat to 5.
+    o Add an option to /etc/mythtv/session-settings for controlling
+      if mythwelcome is used or mythfrontend.
+    o Add "ntp |" to all ntp-simple depends. (LP: 118705)
+    o Add update-notifier to mythtv-database depends (LP: # 109950)
+
+  [ Nick Fox ]
+  * Add gnome-power-manager to startmythtv.sh script if installed
+    to properly control DPMS.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 05 June 2007 12:26:31 -0500
+
+mythtv (0.20-svn20070122-0.0ubuntu6) feisty; urgency=low
+
+  [ Mario Limonciello ]
+  * debian/mythtv-database.postinst:
+    - Move "exit 0" after notifier install. (LP: #105948)
+  * debian/mythtv-reconfigure-required.update-notifier:
+    - Update text to more closely reflect packaging changes.
+  * debian/startmythtv.sh:
+    - Add checks to see if backend has been ran yet. (LP: #96737)
+  * debian/mythtv-setup.sh:
+    - Start/Stop mythbackend & offer to fill database for user.
+  * Add mythtv-setup.desktop. (LP: #106002)
+
+  [ Tom Metro ]
+  * Fix minor typo in init mythtv-backend.init. (LP: #106012)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 12 Apr 2007 14:17:14 -0500
+
+mythtv (0.20-svn20070122-0.0ubuntu5) feisty; urgency=low
+
+  * debian/mythtv-database.config:
+    - Change priority of questions.  User will only get questions
+      when reconfiguring the package. (LP: #99916)
+  * debian/mythtv-common.templates & mythtv-common.postinst
+    - Tell the user about their MySQL password. (LP: #96739)
+  * debian/ubuntu-mythtv-frontend.postinst & mplayer-config
+    - Add mplayer config to make sure screensaver off. (LP: #103191)
+  * Add 07_alsa_default.dpatch to make ALSA default. (LP: #93341)
+  * debian/mythtv-backend.init:
+    - unset DISPLAY & SESSION_MANAGER to prevent ominous QT
+      authentication warnings. (LP: #55827)
+  * Clarify text of debian/dialog_functions.sh.
+  * Add 21_changeset12782_hd_homerun.dpatch (LP: #104965)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue,  10 Apr 2007 03:50:16 -0500
+
+mythtv (0.20-svn20070122-0.0ubuntu4) feisty; urgency=low
+
+  * debian/control:
+    - msttcorefonts to mythtv-frontend and mythtv-backend.
+      Appears several themes DO use it. (LP: #93986, #96734, #96768)
+  * Update templates for correct wording about mythtv
+    users/groups (LP: #96739)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 24 Mar 2007 19:30:53 -0500
+
+mythtv (0.20-svn20070122-0.0ubuntu3) feisty; urgency=low
+
+  [ Mario Limonciello ]
+  * Add new wrapper script for mythfrontend and mythtv-setup
+    to guarantee user is in the mythtv group. (LP: #93476).
+  * debian/control: Add zenity | kdebase-bin, gksu | kdebase-bin
+    for wrapper scripts to mythtv-backend and mythtv-frontend.
+  * debian/rules: Install wrapper scripts functions.
+  * debian/control: Add XSBC-Original-Maintainer field.
+  * debian/control: Drop msttcorefonts requirement
+  * debian/control: Add mythtv user to dialout group (LP: #95074).
+
+  [ Kees Cook ]
+  * debian/patches/20_backend_crash_without_tuner.dpatch: stop backend
+    crashes when missing tuner info (LP: #93250).
+
+ -- Kees Cook <kees@ubuntu.com>  Fri, 23 Mar 2007 22:59:29 -0700
+
+mythtv (0.20-svn20070122-0.0ubuntu2) feisty; urgency=low
+
+  * debian/control: Trim down metapackages.
+  * debian/rules: adjusted config file locations.
+  * debian/*myth*.{pre,post}{inst,rm}: moved gdm link, built symlinks to
+    startup configs.  Fixed insecure temp file.
+  * debian/patches/01_debian_patch: Use /var/lib/mythtv/recordings,
+    drop mythtv cron.
+  * Removed debian/mythtv-backend.cron.daily; the database fill must
+    happen from backend scheduler to take advantage of next-run hints.
+
+ -- Kees Cook <kees@ubuntu.com>  Mon, 19 Feb 2007 08:49:46 -0800
+
+mythtv (0.20-svn20070122-0.0ubuntu1) feisty; urgency=low
+
+  * Merge with debian multimedia:
+    o New svn release (12617).
+    o Install desktop file in the right package.
+  * Remaining Changes:
+    o Update debian/rules to more closely match debian multimedia.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 22 Jan 2007 08:59:52 -0600
+
+mythtv (0.20-svn20061209-0.3ubuntu1) feisty; urgency=low
+
+  * Merge with debian multimedia:
+    o To re-enable dvb support in some archs (amd64, powerpc) :
+       - Build-depends on linux-kernel-headers instead of linux-headers-2.6
+       - and don't set --dvb-path (not necessary).
+    o Call su with - in cron.daily for mythtv-backend package.
+    o Update --dvb-path option to use linux-headers-`uname -r` path.
+    o Build-Conflicts: libmyth-0.20-dev, build with --enable-opengl-vsync.
+    o Add mythtv user to the cdrom group.
+    o Add desktop file for GNOME.
+    o Call update-notifier if mysql-server isn't running
+    o Source /etc/mythtv/mysql.txt in cron.weekly for mythtv-database.
+  * Remaining changes:
+    o Add source.lintian-overrides to cover two lintian warnings
+      with explanations why they are safe to ignore.
+    o Switch to alternative's system for gdm.conf.
+    o Install openbox menu.xml only to /home/mythtv instead of /etc/mythtv.
+    o Remove openbox from PreDepends.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 28 Dec 2006 15:20:21  -0600
+
+mythtv (0.20-svn20061209-0.1ubuntu1) feisty; urgency=low
+
+  * Merge with debian multimedia:
+    o Add all files in the contrib directory to the mythtv-backend package.
+    o New svn from 0.20 fixes branch (12227).
+    o Source /etc/mythtv/mysql.txt in cron.weekly for the mythtv-database package.
+  * Remaining Changes:  
+    o Add a ubuntu-mythtv-frontend.postinst to set permissions on /home/mythtv
+      if it already exists.
+    o Add feisty-gdm-themes | edgy-gdm-themes to ubuntu-mythtv-frontend 
+      depends.
+    o Add libgl1-mesa-glx to  ubuntu-mythtv-frontend depends.
+    o Make sure gdm.conf-custom and openbox-menu.xml are placed in /etc/mythtv.
+      Create symlinks for them in /etc/gdm and /etc/xdg/openbox.
+    o Properly set up diversions for /etc/gdm/gdm.conf-custom & 
+      /etc/xdg/openbox/menu.xml.
+    o Add a pre-depends to ubuntu-mythtv-frontend to make sure that
+      gdm.conf-custom and menu.xml are generated *before* the diversions.
+    o Add ubuntu-mythtv-secondary-backend metapackage for consistency.
+    o Add ntp-simple to several metapackages.
+    o Change default recordings directory to /media/mythtv/recordings.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 10 Dec 2006 01:36:46 -0600
+
+mythtv (0.20-0.5ubuntu2) feisty; urgency=low
+
+  * Remove unnecessary mythtv-frontend.files.old.
+  * Make startmythtv.sh executable on installation.
+  * Fix depends on ubuntu-mythtv-secondary-backend-frontend.
+  * Update description for ubuntu-mythtv-secondary-backend-frontend.
+  * Add .dmrc to set default session for mythtv user in ubuntu-mythtv-frontend.
+  * Add feh to dependencies to set a nice background for ubuntu-mythtv-frontend.
+  * Provide background.xpm for ubuntu-mythtv-frontend.
+  * Provide menu.xml for openbox in ubuntu-mythtv-frontend.
+  * Provide gdm.conf-custom in ubuntu-mythtv-frontend.
+  * Add ubuntu-mythtv-frontend.preinst and .postrm for menu.xml, gdm.conf-custom diversions.
+  * Add mythtv-themes to Recommends for ubuntu-mythtv-frontend.
+  
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri,  8 Dec 2006 20:13:36 -0600
+
+mythtv (0.20-0.5ubuntu1) feisty; urgency=low
+
+  * Merge with debian multimedia:
+    o Check in cron script if mythfilldatabase is here and executable.
+    o Updated 0.20 fixes patch (latest is 11627).
+    o Added patch from svn to fix hue when using XV. Mythtv bug 2241.
+    o Added support for make -j
+    o Make sure that mythtv is stopped before mysql in init script.
+    o Added /etc/cron/weekly/mythtv-database to backup mythconverg database.
+    o Added mythtv-backend.configfiles to preserve user changes.
+    o Move CDS_scpd.xml, CMGR_scpd.xml and upnpavcd.xml into
+      mythtv-backend. (Thanks Scott Davilla)
+    o Add ccache to build depends.
+  * Remaining Changes:
+    o Revert the --disable-ccache in debian/rules
+    o Be sure that debian/mythtv-database.prerm includes a DEBHELPER tag
+    o Remove patch #11365 for mythreplex bug.  
+      Included in new 0.20-fixes patch from debian multimedia.
+    o Update maintainer, "MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>"
+    o Add mysql-server to 'mythtv' metapackage, so that this package
+      can again be used for a quick install on top of a desktop to
+      properly get all necessary dependencies.
+    o Begin to introduce the idea of "profile metapackages" to be used for 
+      standalone Ubuntu machines intended soley for mythtv usage.
+      - ubuntu-mythtv-master-backend
+      - ubuntu-mythtv-frontend
+      - ubuntu-mythtv-master-backend-frontend
+      - ubuntu-mythtv-secondary-backend-frontend
+    o Create GDM xsession to be used in frontend profiles
+    o Create openbox startup script to be used in frontend profiles
+      - Include support for irexec, nvidia-settings, gnome-screensaver
+    o Be sure that "mythtv" is added to the cdrom group.  This will make 
+      sure that mtd will be able to rip dvds. (Closes: #69651)
+    o Rename 05_gnomescreensaver.dpatch to 06_gnomescreensaver.dpatch
+      to make room for upstream patch 05_11372.dpatch
+    o Update author on 06_gnomescreensaver.dpatch.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon,  04 Dec 2006 02:52:20 -0600
+
+mythtv (0.20-0.2ubuntu3) edgy; urgency=low
+
+  * Silently fail more gracefully during dist-upgrades if mysql-server isn't
+    running.  Instead provide a update-notifier notification to the user to
+    reconfigure the database.  (Closes Ubuntu: #67696, 41339, 58155, 68400)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 28 Oct 2006 11:38:27 -0500
+
+mythtv (0.20-0.2ubuntu2) edgy; urgency=low
+
+  * Import changeset #11365 from mythtv SVN to resolve mythreplex bug
+    (Closes Ubuntu: #65790)
+  * Update maintainer to be MOTU-Media
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 15 Oct 2006 13:18:12 -0500
+
+mythtv (0.20-0.2ubuntu1) edgy; urgency=low
+  
+  * Merge with debian multimedia.  Remaining changes:
+  * Keep --enable-opengl-vsync enabled
+  * Remove mythtv-debug from suggests in debian/control
+  * Rename 04_gnomescreensaver.dpatch to 05_gnomescreensaver.dpatch
+    to make room for 04_0.20-fixes.dpatch from debian multimedia.
+  * Compile with --compile-type=debug to adhere to requirements
+    for pkg-create-dbgsym.  All debugging symbols are still stripped,
+    but placed in a .ddeb by pkg-create-dbgsym.
+
+ -- Mario Limonciello <superm1@gmail.com>  Thu,  5 Oct 2006 12:47:25 -0500
+
+mythtv (0.20-0.0ubuntu4) edgy; urgency=low
+
+  * Adds a menu file for mythfrontend (Closes Ubuntu: #737).
+
+ -- Mario Limonciello <superm1@gmail.com>  Tue,  3 Oct 2006 12:45:37 -0500
+
+mythtv (0.20-0.0ubuntu3) edgy; urgency=low
+
+  * Fix gnome-screensaver patch to properly disable screensaver
+  * Explicitly enable MMX for i386
+
+ -- Mario Limonciello <superm1@gmail.com>  Fri, 29 Sep 2006 01:31:16 -0500
+
+mythtv (0.20-0.0ubuntu2) edgy; urgency=low
+
+  * Added --disable-ccache to debain/rules so it doesnt try to use 
+    ccache on the buildd's
+
+ -- Brandon Holtsclaw <imbrandon@kubuntu.org>  Thu, 28 Sep 2006 00:22:27 -0500
+
+mythtv (0.20-0.0ubuntu1) edgy; urgency=low
+
+  [ Mario Limonciello ]
+  * Syncronize with debian-multimedia
+  * Add 04_gnomescreensaver.dpatch to disable gnome-screensaver instead of xscreensaver
+
+ -- Brandon Holtsclaw <imbrandon@kubuntu.org>  Thu, 14 Sep 2006 23:42:09 -0500
+
+mythtv (0.20-0.0) unstable; urgency=low
+
+  * New upstream release
+  * Removed sparc patch.
+  * Removed --enable-dvb-eit who has been removed.
+  * Replace debconf dependency by ${misc:Depends}.
+  * mythtv-database should depends on mysql-client instead of mysql-server.
+
+ -- Christian Marillat <marillat@debian.org>  Tue, 12 Sep 2006 08:46:02 +0200
+
+mythtv (0.19-0.10) unstable; urgency=low
+
+  * Add 02_0.19-fixes patch. This patch add all the changes from the
+    0.19-fixes svn branch.
+  * New patch to fix build on alpha.
+  * Delete the mythtv user on purge.
+
+ -- Christian Marillat <marillat@debian.org>  Sat,  1 Jul 2006 15:24:40 +0200
+
+mythtv (0.19-0.9) unstable; urgency=low
+
+  * Really apply the libdts patch.
+
+ -- Christian Marillat <marillat@debian.org>  Wed, 28 Jun 2006 10:55:30 +0200
+
+mythtv (0.19-0.8) unstable; urgency=low
+
+  * The dts patch should be applied for all archs.
+  * Build with -fPIC
+
+ -- Christian Marillat <marillat@debian.org>  Tue, 27 Jun 2006 15:01:58 +0200
+
+mythtv (0.19-0.7) unstable; urgency=low
+
+  * Fix typo (a space character) in 01_debian patch. Thanks to Andrew Ruthven.
+  * Set QMAKE_PROJECT_DEPTH to 1 in settings.pro
+
+ -- Christian Marillat <marillat@debian.org>  Mon, 12 Jun 2006 15:16:53 +0200
+
+mythtv (0.19-0.6) unstable; urgency=low
+
+  * Oooops, update-rc.d was called with wrong arguments.
+
+ -- Christian Marillat <marillat@debian.org>  Fri, 24 Mar 2006 14:40:58 +0100
+
+mythtv (0.19-0.5) unstable; urgency=low
+
+  * Create /etc/mythtv directories in mythtv-common package.
+  * Start the backend more later than the mysql serveur (24 instead of 20).
+
+ -- Christian Marillat <marillat@debian.org>  Wed, 22 Mar 2006 13:58:46 +0100
+
+mythtv (0.19-0.4) unstable; urgency=low
+
+  * Added a patch from svn to fix a problem with mysql 5 (mythtv lose
+    "Recording Schedule").
+
+ -- Christian Marillat <marillat@debian.org>  Wed,  8 Mar 2006 10:04:49 +0100
+
+mythtv (0.19-0.3) unstable; urgency=low
+
+  * Doesn't use CFLAGS but instead --extra-cflags for special gcc flags (sparc).
+  * Remove the pid file when stop is invoked in the mythbackend init.d
+    script so start can work has expected. Thanks to Sebastian Bremicker.
+  * debian/control replace libmysqlclient-dev by libmysqlclient12-dev.
+  * Fix for ppc from Magnus Ihse Bursie to link against libdts.
+  * XvMC is also disabled for ppc.
+
+ -- Christian Marillat <marillat@debian.org>  Sat, 18 Feb 2006 14:46:03 +0100
+
+mythtv (0.19-0.2) unstable; urgency=low
+
+  * libmyth-0.19-dev and mythtv-debug should depends on libmyth-0.19 instead
+    of libmyth-0.18.1
+  * Build with "--compile-type=debug" for the debug package (Thanks to Brad Fritz).
+  * Revert "Move debug libraries in the right place." introduced in 0.18.1-11
+
+ -- Christian Marillat <marillat@debian.org>  Thu, 16 Feb 2006 09:57:35 +0100
+
+mythtv (0.19-0.1) unstable; urgency=low
+
+  * Forgot to add Guido's changes.
+  * Add libjack-dev and libdts-dev in Build-Depends.
+  * Doesn't build XvMC support for amd64 (doesn't compile).
+  * New amd64 patch to fix link problem with libdts.
+
+ -- Christian Marillat <marillat@debian.org>  Wed, 15 Feb 2006 14:40:14 +0100
+
+mythtv (0.19-0.0) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Christian Marillat <marillat@debian.org>  Tue, 14 Feb 2006 18:52:34 +0100
+
+mythtv (0.18.1-11) unstable; urgency=low
+
+  * Move debug libraries in the right place.
+
+ -- Christian Marillat <marillat@debian.org>  Thu, 26 Jan 2006 11:14:44 +0100
+
+mythtv (0.18.1-10) unstable; urgency=low
+
+  * Doh ! Forget to write the test command in my test.
+
+ -- Christian Marillat <marillat@debian.org>  Wed, 11 Jan 2006 08:57:12 +0100
+
+mythtv (0.18.1-9) unstable; urgency=low
+
+  * Doesn't restart the backend if already running in postinst.
+  * Patch from Peter Kahle no not use repeat who is a keyword in mysql 5.0
+  * mythtv-database.postinst If hostname is blank set to localhost.
+
+ -- Christian Marillat <marillat@debian.org>  Tue, 10 Jan 2006 16:01:07 +0100
+
+mythtv (0.18.1-8) unstable; urgency=low
+
+  * Changes from Micah F. Galizia
+    o Use --tune=i486 instead of pentium4.
+    o Enable vld XvMC and XvMC.
+
+ -- Christian Marillat <marillat@debian.org>  Tue,  3 Jan 2006 15:59:56 +0100
+
+mythtv (0.18.1-7) unstable; urgency=low
+
+  * Move patches in the diff to dpatch.
+  * gettextize debconf templates files.
+
+ -- Christian Marillat <marillat@debian.org>  Fri, 23 Dec 2005 15:49:52 +0100
+
+mythtv (0.18.1-6) unstable; urgency=low
+
+  * Rebuild after removing the fglrx-driver package.
+  * Add a versioned libiec61883-dev in Build-Depends.
+  * Add libavc1394-dev in Build-Depends.
+
+ -- Christian Marillat <marillat@debian.org>  Tue, 20 Dec 2005 16:40:07 +0100
+
+mythtv (0.18.1-5) unstable; urgency=low
+
+  * Prefer libmysqlclient15-dev in Build-Depends.
+  * Build with --enable-dvb-eit and --enable-dvb
+
+ -- Christian Marillat <marillat@debian.org>  Sat, 17 Dec 2005 16:32:28 +0100
+
+mythtv (0.18.1-4) unstable; urgency=low
+
+  * Prefer libmysqlclient14-dev
+
+ -- Matt Zimmerman <mdz@ubuntu.com>  Mon, 29 Aug 2005 15:16:34 -0700
+
+mythtv (0.18.1-3) unstable; urgency=low
+
+  * Fix menu entry to refer to mythtv-frontend, rather than mythtv (thanks
+    to Paul Andreassen)
+  * Disable silly xinit test entirely
+
+ -- Matt Zimmerman <mdz@ubuntu.com>  Sat, 11 Jun 2005 12:51:58 -0700
+
+mythtv (0.18.1-2) unstable; urgency=low
+
+  * Fix configure test for xinit to work on Debian as well
+
+ -- Matt Zimmerman <mdz@ubuntu.com>  Sat, 11 Jun 2005 12:07:11 -0700
+
+mythtv (0.18.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Changes from Micah Galizia <mfgalizi@csd.uwo.ca>
+   - Patch configure to allow xvmc-vld
+  * Use gcc-3.4 rather than -3.3 (ABI transition for libmyth-0.18.1)
+  * Fix configure xinit test to be compatible with Ubuntu breezy (where
+    xinit has moved to /usr/bin)
+  * Adjust dependencies on libqt3-mt-mysql to accomodate systems both
+    before and after the gcc-4.0 transition
+  * Include static libraries in libmyth-0.18.1-dev where available
+
+ -- Matt Zimmerman <mdz@ubuntu.com>  Fri, 10 Jun 2005 12:53:11 -0700
+
+mythtv (0.18-3) unstable; urgency=low
+
+  * Add /usr/X11R6/include to INCLUDEPATH for libmyth
+
+ -- Matt Zimmerman <mdz@ubuntu.com>  Sun, 29 May 2005 18:57:30 -0700
+
+mythtv (0.18-2) breezy; urgency=low
+
+  * mythtv Recommends: mythtv-themes
+  * Build-Depends: libxext-dev
+  * Update README.Debian to reflect that running as alternate users
+    doesn't quite work anymore (patches welcome)
+  * Configure with --cpu=i486 --tune=pentium4 --enable-mmx
+
+ -- Matt Zimmerman <mdz@ubuntu.com>  Thu, 26 May 2005 14:27:54 -0700
+
+mythtv (0.18-1) breezy; urgency=low
+
+  * New upstream release
+    - Use gcc-3.3 explicitly, and build-depend on it, so as to continue to
+      build on Breezy (at least libavcodec doesn't compile with 4.0)
+    - mythtv-setup is now installed for us, no need to do it in debian/rules
+    - Set QMAKE_LIBDIR_X11 in settings.pro
+    - Comment out code in configure which disables x11 support based on
+      presence of xinit(?!)
+  * Explicitly enable lirc, alsa, oss, jack, arts, xvmc, opengl-vsync, dvb,
+    firewire, ivtv and joystick-menu
+    - Add build-depends: libdvb-dev
+  * Build-Depends: libdvb-dev, gcc-3.3
+
+ -- Matt Zimmerman <mdz@ubuntu.com>  Sun,  1 May 2005 21:22:54 -0700
+
+mythtv (0.17-3) hoary; urgency=low
+
+  * Fix bad merge of backendsettings.cpp
+
+ -- Matt Zimmerman <mdz@ubuntu.com>  Mon, 14 Feb 2005 09:50:35 -0800
+
+mythtv (0.17-2) hoary; urgency=low
+
+  * Fix CXXFLAGS to -O2 -g all around (fixes FTBFS on amd64)
+
+ -- Matt Zimmerman <mdz@ubuntu.com>  Sun, 13 Feb 2005 23:24:53 -0800
+
+mythtv (0.17-1) unstable; urgency=low
+
+  * New upstream release
+  * Add build-depends: libxinerama-dev | xlibs-static-dev (<< 6.8.1-1), libxxf86vm-dev | xlibs-static-dev (<< 6.8.1-1)
+  * Add debian/mysql.txt.dist as template; upstream no longer ships one
+
+ -- Matt Zimmerman <mdz@ubuntu.com>  Sat, 12 Feb 2005 23:10:39 -0800
+
+mythtv (0.16-2) unstable; urgency=low
+
+  * Drop alternative dependency on libqt3-mt-mysql, since woody isn't
+    really supported anymore anyway, and it was causing confusion
+
+ -- Matt Zimmerman <mdz@ubuntu.com>  Fri, 11 Feb 2005 19:33:06 -0800
+
+mythtv (0.16-1) unstable; urgency=low
+  
+  * New upstream release
+  * Add an explanation to the package description of mythtv-debug
+    explaining its use
+  * Build without -march=i686
+  * Add a Depends: line to mythtv-debug to appease linda
+
+ -- Matt Zimmerman <mdz@debian.org>  Fri, 10 Sep 2004 17:46:18 -0700
+
+mythtv (0.15.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Add mythtv-backend.NEWS file with pointer to datadirect upgrade
+    instructions
+
+ -- Matt Zimmerman <mdz@debian.org>  Tue,  1 Jun 2004 12:12:09 -0700
+
+mythtv (0.15-1) unstable; urgency=low
+
+  * New upstream release
+    - Includes support for Zap2It Data Direct service (you'll need to
+      switch to this if you used tv_grab_na with 0.14)
+  * Downgrade xmltv-util dependency to a Recommends, since it's now
+    optional for North American users
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed, 26 May 2004 22:53:35 -0700
+
+mythtv (0.14-6) unstable; urgency=low
+
+  * Use copytruncate in logrotate config, so that mythbackend is always
+    writing to mythbackend.log, as a workaround until such time as I get
+    around to adding a signal handler to mythtv to reopen the logfile
+    (thanks to Brad Fritz)
+  * Remove build-depends: linux-kernel-headers
+  * Provide concrete alternative libmysqlclient10-dev for virtual package
+    libmysqlclient-dev
+
+ -- Matt Zimmerman <mdz@debian.org>  Mon, 29 Mar 2004 19:43:31 -0800
+
+mythtv (0.14-5) unstable; urgency=low
+
+  * Include ALSA and ARTS support
+  * Preserve permissions on /etc/mythtv/mysql.txt if they are changed
+
+ -- Matt Zimmerman <mdz@debian.org>  Fri, 20 Feb 2004 15:32:58 -0800
+
+mythtv (0.14-4) unstable; urgency=low
+
+  * Add missing ttf-freefont dependency
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed, 18 Feb 2004 23:36:29 -0800
+
+mythtv (0.14-3) unstable; urgency=low
+
+  * Replace FreeMono.ttf, FreeSans.ttf with a symlink to the one in ttf-freefont
+  * Move setup.xml and font symlinks into mythtv-common, since they're
+    needed by mythtv-setup
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed, 18 Feb 2004 11:09:21 -0800
+
+mythtv (0.14-2) unstable; urgency=low
+
+  * Move themes into mythtv-common, as they're needed for the backend
+    setup as well
+  * mythtv-common Replaces mythtv-frontend (<< 0.14-2)
+  * New binary package mythtv-debug, which has debugging symbols for
+    mythtv-frontend, mythtv-backend and libmyth.  No more recompiling just
+    to get backtraces.
+  * Build with -O2 -g -march=pentiumpro (rather than -O3 -fomit-frame-pointer)
+
+ -- Matt Zimmerman <mdz@debian.org>  Sat, 31 Jan 2004 20:35:36 -0800
+
+mythtv (0.14-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Matt Zimmerman <mdz@debian.org>  Sat, 31 Jan 2004 14:43:48 -0800
+
+mythtv (0.13-6) unstable; urgency=low
+
+  * Add a check to ensure that the package isn't being built under /usr,
+    due to #180240 (which shows no signs of being fixed)
+  * Remove debconf prompts from mythtv-frontend which used to be used to
+    configure the backend location; this is now done inside the UI
+
+ -- Matt Zimmerman <mdz@debian.org>  Sat, 24 Jan 2004 12:29:06 -0800
+
+mythtv (0.13-5) unstable; urgency=low
+
+  * Don't compress the mythbackend log when rotating it (it doesn't get
+    reopened yet)
+  * Install configfiles/* as examples
+
+ -- Matt Zimmerman <mdz@debian.org>  Mon, 12 Jan 2004 09:54:06 -0800
+
+mythtv (0.13-4) unstable; urgency=low
+
+  * Enable DVB and LIRC support
+
+ -- Matt Zimmerman <mdz@debian.org>  Sun, 14 Dec 2003 11:57:23 -0800
+
+mythtv (0.13-3) unstable; urgency=low
+
+  * Apply tvformat.fix.0.13.diff to fix problem where tvformat column was
+    not properly initialized
+
+ -- Matt Zimmerman <mdz@debian.org>  Sat, 13 Dec 2003 23:43:53 -0800
+
+mythtv (0.13-2) unstable; urgency=low
+
+  * Include mythtvosd in mythtv-frontend until such time as I decide where
+    it really belongs
+
+ -- Matt Zimmerman <mdz@debian.org>  Sat, 13 Dec 2003 16:00:49 -0800
+
+mythtv (0.13-1) unstable; urgency=low
+
+  * New upstream release (packaged at last)
+  * No more database upgrade scripts (hurrah)
+
+ -- Matt Zimmerman <mdz@debian.org>  Fri, 12 Dec 2003 15:14:01 -0800
+
+mythtv (0.11-6) unstable; urgency=low
+
+  * Rebuild with gcc 3.3.2-0pre2.  Building with 3.3.2-0pre3 is broken due to
+    #210848
+
+ -- Matt Zimmerman <mdz@debian.org>  Thu, 18 Sep 2003 10:47:50 -0400
+
+mythtv (0.11-5) unstable; urgency=low
+
+  * Make sure that debian/mythsql is executable (it is created by the
+    Debian diff)
+
+ -- Matt Zimmerman <mdz@debian.org>  Tue, 16 Sep 2003 09:06:10 -0400
+
+mythtv (0.11-4) unstable; urgency=low
+
+  * Fix another problem initializing the database on fresh installs
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed, 20 Aug 2003 22:29:48 -0400
+
+mythtv (0.11-3) unstable; urgency=low
+
+  * Add Suggests for the various add-ons
+  * Fix a strange problem in the mythtv-database postinst which broke
+    fresh installs
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed, 20 Aug 2003 21:30:51 -0400
+
+mythtv (0.11-2) unstable; urgency=low
+
+  * Clean up database handling a bunch, adding a script (mythsql) which
+    can be used by the add-ons to initialize their database without messy
+    postinst tricks
+  * mythtv-common Depends: mysql-client
+  * Fix description for libmyth-0.11-dev
+
+ -- Matt Zimmerman <mdz@debian.org>  Fri, 15 Aug 2003 23:28:39 -0400
+
+mythtv (0.11-1) unstable; urgency=low
+
+  * New upstream release
+  * Run qmake before make, because qmake puts broken dependencies into the
+    Makefile
+
+ -- Matt Zimmerman <mdz@debian.org>  Fri, 15 Aug 2003 15:24:48 -0400
+
+mythtv (0.10-4) unstable; urgency=low
+
+  * Don't attempt to drop the database in postrm.  Too many people screw up
+    the username/password configuration and then can't purge it 
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed, 30 Jul 2003 09:03:17 -0400
+
+mythtv (0.10-3) unstable; urgency=low
+
+  * Include mythcommflag in mythtv-backend.  Thanks to Jim <jim@jtan.com>
+    for pointing this out.
+  * Include i18n files for mythfrontend
+  * Include mythtranscode binary in mythtv-backend
+  * Build-Depend on libfreetype6-dev rather than libttf-dev.  Thanks to
+    Eduardo P?rez Ureta <eperez@it.uc3m.es>
+
+ -- Matt Zimmerman <mdz@debian.org>  Tue, 22 Jul 2003 20:03:46 -0400
+
+mythtv (0.10-2) unstable; urgency=low
+
+  * Add /etc/default/mythtv-backend with some handy options for controlling
+    the startup of the backend 
+  * Include patch from upstream CVS to work correctly with xmltv 0.5.15
+  * Use exact versioned dependencies for the mythtv metapackage to make it
+    easy to keep everything in sync
+
+ -- Matt Zimmerman <mdz@debian.org>  Thu, 10 Jul 2003 00:02:57 -0400
+
+mythtv (0.10-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Matt Zimmerman <mdz@debian.org>  Tue,  1 Jul 2003 21:22:40 -0400
+
+mythtv (0.9.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Add keys.txt to documentation
+
+ -- Matt Zimmerman <mdz@debian.org>  Tue, 10 Jun 2003 16:51:45 -0400
+
+mythtv (0.9-2) unstable; urgency=low
+
+  * Fix permissions on /var/lib/mythtv and /var/cache/mythtv
+
+ -- Matt Zimmerman <mdz@debian.org>  Tue, 10 Jun 2003 14:33:02 -0400
+
+mythtv (0.9-1) unstable; urgency=low
+
+  * New upstream release
+  * Recommend mythtv-doc in a few places
+  * Fix default paths in backend setup; apparently this was lost in the 0.8
+    merge.  The correct defaults are /var/lib/mythtv and /var/cache/mythtv for
+    recordings and live tv, respectively.  Permissions are automatically set
+    appropriately on these directories by default.
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed,  4 Jun 2003 23:12:05 -0400
+
+mythtv (0.8-11) unstable; urgency=low
+
+  * Print a warning if any old myth stuff is found in /usr/local 
+    (too many complaints about "broken" packages caused by old libraries and
+     binaries)
+
+ -- Matt Zimmerman <mdz@debian.org>  Fri,  4 Apr 2003 15:10:00 -0500
+
+mythtv (0.8-10) unstable; urgency=low
+
+  * Clean /var/log/mythtv on purge of mythtv-backend
+  * Clarify the debconf note which explains about running setup, so that
+    it includes a note about X and explains how to start the backend
+    afterward.
+  * Clarify package descriptions to explain their relationships
+  * Raise the priority of the question about the mysql admin password to
+    'high', and add some additional info to it.  There is a dilemma here
+    between confusing users by asking this question (when they have not
+    set a password), and confusing them by skipping it (when the user has
+    set a password)
+  * Move the dependency on the Qt mysql module to libmyth-0.8 where it is
+    shared by all packages which depend on it
+
+ -- Matt Zimmerman <mdz@debian.org>  Thu, 20 Mar 2003 09:34:41 -0500
+
+mythtv (0.8-9) unstable; urgency=low
+
+  * Fix display of hostname in informational message in postinst
+  * Fix log rotation (mythfilldatabase.log no longer exists, rotate
+    mythbackend.log)
+  * Fix permissions on /var/log/mythtv in mythtv-backend postinst
+  * Move database drop from mythtv-common to mythtv-database
+  * Fix removal of /etc/mythtv in mythtv-common on purge
+  * Create mythbackend.log with proper permissions
+  * Generate the random database password in mythtv-common, not
+    mythtv-database (would end up with a blank password in
+    /etc/mythtv/mysql.txt)
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed, 19 Mar 2003 10:40:37 -0500
+
+mythtv (0.8-8) unstable; urgency=low
+
+  * Fix error introduced in 0.8-7
+
+ -- Matt Zimmerman <mdz@debian.org>  Mon, 17 Mar 2003 00:09:43 -0500
+
+mythtv (0.8-7) unstable; urgency=low
+
+  * Close all file descriptors when daemonizing the backend, to avoid a
+    hang when using debconf in mythtv-backend postinst
+
+ -- Matt Zimmerman <mdz@debian.org>  Sun, 16 Mar 2003 23:41:33 -0500
+
+mythtv (0.8-6) unstable; urgency=low
+
+  * Oops, load confmodule in mythtv-backend.postinst
+  * mythtv-backend Depends: debconf
+
+ -- Matt Zimmerman <mdz@debian.org>  Sun, 16 Mar 2003 23:30:26 -0500
+
+mythtv (0.8-5) unstable; urgency=low
+
+  * Finish moving creation of v4l devices to mythtv-backend from
+    mythtv-common
+
+ -- Matt Zimmerman <mdz@debian.org>  Sun, 16 Mar 2003 23:19:05 -0500
+
+mythtv (0.8-4) unstable; urgency=low
+
+  * Make 'mythtv' Architecture: all, since it is just a metapackage now
+  * Do automated database upgrade from 0.7
+  * Fix cron.daily pathname in informational message in setup
+  * Fix quoting in cron.daily/mythtv-backend
+
+ -- Matt Zimmerman <mdz@debian.org>  Sun, 16 Mar 2003 23:04:16 -0500
+
+mythtv (0.8-3) unstable; urgency=low
+
+  * Return proper exit status from DoSQL in postinst (broke initial
+    creation of the database and error detection)
+
+ -- Matt Zimmerman <mdz@debian.org>  Sun, 16 Mar 2003 22:43:25 -0500
+
+mythtv (0.8-2) unstable; urgency=low
+
+  * Split database configuration into a separate package, mythtv-database,
+    which should be installed where the mysql server is
+  * Make config file substitution in postinst scripts a bit more robust
+  * Add mythtv-doc package with HOWTO
+
+ -- Matt Zimmerman <mdz@debian.org>  Sun, 16 Mar 2003 17:14:46 -0500
+
+mythtv (0.8-1) unstable; urgency=low
+
+  * New upstream release
+  * Split up backend and frontend into separate packages
+  * Add some error checking in postinst to give more meaningful error
+    messages when database operations fail
+  * Attempt to migrate cron and logrotate config from mythtv to
+    mythtv-backend
+  * Install new program mythprogfind
+  * Fix up copyright file
+  * Use --quiet in mythfilldatabase cron job, and report errors via cron,
+    rather than writing a logfile
+  * mythtv-backend Depends: libqt3c102-mt-mysql | libqt3-mt-mysql, to
+    support unstable
+  * Clean up dependencies a bit, so they should work correctly for
+    distributed setups (though I have none to test at present)
+
+ -- Matt Zimmerman <mdz@debian.org>  Sun, 16 Mar 2003 12:52:31 -0500
+
+mythtv (0.7-12) unstable; urgency=low
+
+  * Add missing '-c' option in example for running mythtv-setup 
+
+ -- Matt Zimmerman <mdz@debian.org>  Thu, 21 Nov 2002 16:27:25 -0500
+
+mythtv (0.7-11) unstable; urgency=low
+  
+  * Improve the run_setup template to omit the now-unnecessary --shell
+    option to su, and to give some instruction on how to properly start
+    mythtv for those who don't read README.Debian.
+  * Add workaround for pwgen bug #118181, which exists in woody and was
+    causing the strange failures with exit code 160.
+
+ -- Matt Zimmerman <mdz@debian.org>  Tue, 19 Nov 2002 11:24:23 -0500
+
+mythtv (0.7-10) unstable; urgency=low
+
+  * Add Bugs: header to control file.  Please use reportbug to report
+    problems with these packages
+  * Include keys.txt in documentation (describes key bindings)
+
+ -- Matt Zimmerman <mdz@debian.org>  Sun, 17 Nov 2002 17:22:11 -0500
+
+mythtv (0.7-9) unstable; urgency=low
+
+  * When generating a random password, store it in the debconf database for
+    next time 
+
+ -- Matt Zimmerman <mdz@debian.org>  Fri, 15 Nov 2002 18:16:06 -0500
+
+mythtv (0.7-8) unstable; urgency=low
+
+  * Fix sections
+  * Redirect mythfilldatabase stderr to the logfile, as well as stdout
+    (filed Debian bug #169157 against xmltv to get this fixed right)
+  * Add missing dependency on pwgen
+
+ -- Matt Zimmerman <mdz@debian.org>  Thu, 14 Nov 2002 21:24:31 -0500
+
+mythtv (0.7-7) unstable; urgency=low
+
+  * Depend on pwgen, and generate a random password if none is specified
+  * Fix setup text to not recommend "su --shell" since the mythtv user now
+    has a real shell
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed, 13 Nov 2002 23:47:55 -0500
+
+mythtv (0.7-6) unstable; urgency=low
+
+  * Depend on adduser
+  * Ensure that we are doing an upgrade before comparing the version
+    number
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed, 13 Nov 2002 23:19:12 -0500
+
+mythtv (0.7-5) unstable; urgency=low
+
+  * Split libmyth into its own package(s) in order to facilitate packaging
+    of add-ons such as mythmusic and mythweb
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed, 13 Nov 2002 19:45:51 -0500
+
+mythtv (0.7-4) unstable; urgency=low
+
+  * Add a real package description
+  * Add a README.Debian
+  * Create the mythtv user with shell /bin/sh, and change the shell on
+    upgrade from a previous version
+  * Flesh out some of the debconf questions with more explanations
+
+ -- Matt Zimmerman <mdz@debian.org>  Tue, 12 Nov 2002 23:17:58 -0500
+
+mythtv (0.7-3) unstable; urgency=low
+
+  * Revert to the RingBuffer in 0.7-1 for now
+  * Build against woody libc6
+
+ -- Matt Zimmerman <mdz@debian.org>  Sun, 10 Nov 2002 18:44:49 -0500
+
+mythtv (0.7-2) unstable; urgency=low
+
+  * Revert RingBuffer changes, which caused a drastic performance decrease on
+    my installation
+  * Improve clean target
+
+ -- Matt Zimmerman <mdz@debian.org>  Sat,  9 Nov 2002 22:19:17 -0500
+
+mythtv (0.7-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Matt Zimmerman <mdz@debian.org>  Sat,  9 Nov 2002 17:38:51 -0500
+
+mythtv (0.6+cvs.20021109-1) unstable; urgency=low
+
+  * Synched with upstream CVS
+  * Make a shlibs file and corresponding virtual package for libmyth
+  * Add dependency on wget, used for fetching channel logos
+  * Fix permissions on configuration files
+
+ -- Matt Zimmerman <mdz@debian.org>  Sat,  9 Nov 2002 15:56:47 -0500
+
+mythtv (0.6+cvs.20021106-3) unstable; urgency=low
+
+  * Grant privileges to user@localhost as well as user@'%' so that stuff
+    should work with a local database
+  * Add documentation
+  * Call MAKEDEV to create v4l devices with appropriate permissions
+  * Create database tables using mc.sql
+  * Add lots more configuration options
+  * Patch setup to explain how to run mythfilldatabase as the mythtv user
+
+ -- Matt Zimmerman <mdz@debian.org>  Sat,  9 Nov 2002 15:20:32 -0500
+
+mythtv (0.6+cvs.20021106-2) unstable; urgency=low
+
+  * First attempt at database setup at install time
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed,  6 Nov 2002 23:28:39 -0500
+
+mythtv (0.6+cvs.20021106-1) unstable; urgency=low
+
+  * Synched with upstream CVS
+  
+ -- Matt Zimmerman <mdz@debian.org>  Wed,  6 Nov 2002 19:38:20 -0500
+
+mythtv (0.6+cvs.20021105-1) unstable; urgency=low
+
+  * Synched with upstream CVS
+
+ -- Matt Zimmerman <mdz@debian.org>  Tue,  5 Nov 2002 22:51:35 -0500
+
+mythtv (0.6+cvs.20021031-1) unstable; urgency=low
+
+  * Synched with upstream CVS
+  * Move config files to /etc/mythtv
+  * postinst: Create mythtv user and set permissions
+
+ -- Matt Zimmerman <mdz@debian.org>  Thu, 31 Oct 2002 22:28:33 -0500
+
+mythtv (0.6-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed, 16 Oct 2002 23:20:56 -0400
+

@@ -1,0 +1,12 @@
+mythtv (0.15.1-1) unstable; urgency=low
+
+  * As of version 0.15-1, the tv_grab_na grabber from xmltv is now
+    deprecated in favour of the Zap2It Data Direct service.  If you are
+    using tv_grab_na, you must register for the new service and run
+    mythtv-setup to configure MythTV to use it.  See:
+  
+    http://www.mythtv.org/docs/mythtv-HOWTO-21.html#MigratingtoDD
+  
+    for instructions.
+
+ -- Matt Zimmerman <mdz@debian.org>  Wed, 26 May 2004 22:53:35 -0700

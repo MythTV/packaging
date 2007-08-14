@@ -1,0 +1,11 @@
+usr/bin/mythfrontend.real
+usr/bin/mythlcdserver
+usr/bin/mythreplex
+usr/bin/mythshutdown
+usr/bin/mythtv
+usr/bin/mythtvosd
+usr/bin/mythwelcome
+usr/lib/mythtv/filters
+usr/share/mythtv/i18n/mythfrontend_*
+usr/share/mythtv/*.ttf
+usr/share/mythtv/*.xml

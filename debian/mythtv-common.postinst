@@ -1,0 +1,77 @@
+#!/bin/sh -e
+
+case "$1" in
+    configure)
+	. /usr/share/debconf/confmodule
+
+	if [ -n "$2" ] && dpkg --compare-versions "$2" lt "0.7-4"; then
+	  usermod -s /bin/sh mythtv
+	fi
+	adduser --quiet --system --group --disabled-password --system \
+	    --shell /bin/sh mythtv
+	adduser --quiet mythtv video
+	adduser --quiet mythtv audio
+	adduser --quiet mythtv cdrom
+	adduser --quiet mythtv dialout
+
+	db_get mythtv/mysql_host
+	hostname="$RET"
+	db_get mythtv/mysql_mythtv_dbname
+	database="$RET"
+
+	db_get mythtv/mysql_mythtv_user
+	mythtv_username="$RET"
+	db_get mythtv/mysql_mythtv_password
+	mythtv_password="$RET"
+
+	if [ -z "$mythtv_password" ]; then
+	    # workaround bug #118181 in woody
+	    set +e
+	    mythtv_password="$(pwgen -s 8)"
+	    set -e
+	    db_set mythtv/mysql_mythtv_password "$mythtv_password"
+            db_get mythtv/mysql_mythtv_password
+            db_subst mythtv/display_password password "$RET"
+            db_input high mythtv/display_password || true
+            db_go
+	fi
+
+	NEW=$(mktemp -t mysql.txt-XXXXXX)
+	if [ -s /etc/mythtv/mysql.txt ]; then
+	    INPUT=/etc/mythtv/mysql.txt
+	    chown --reference="$INPUT" "$NEW"
+	    chmod --reference="$INPUT" "$NEW"
+	else
+	    INPUT=/usr/share/mythtv/mysql.txt.dist
+	    chown mythtv:mythtv "$NEW"
+	    chmod 660 "$NEW"
+	fi
+
+	cat $INPUT | grep -v 'DBPassword=' | sed -e "
+s/^\(\(str  *\)\?DBHostName\)=.*$/\1=$hostname/g;
+s/^\(\(str  *\)\?DBUserName\)=.*$/\1=$mythtv_username/g;
+s/^\(\(str  *\)\?DBName\)=.*$/\1=$database/g;" > $NEW
+	    cat <<EOF >> $NEW
+DBPassword=$mythtv_password
+EOF
+	mv $NEW /etc/mythtv/mysql.txt
+
+	if dpkg --compare-versions "$1" lt 0.9-1 && test -f /etc/mythtv/backend_settings.txt; then
+	    mv /etc/mythtv/backend_settings.txt /etc/mythtv/backend_settings.txt.dpkg-old
+	fi
+
+	;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+
+	;;
+
+    *)
+	echo "postinst called with unknown argument \`$1'" >&2
+	exit 1
+	;;
+esac
+
+#DEBHELPER#
+
+exit 0

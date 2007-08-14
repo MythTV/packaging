@@ -1,0 +1,212 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE=1
+
+SVN_PACKAGE+=mythtv
+SVN_TYPE+=fixes
+SVN_MAJOR_RELEASE+=20
+SVN_MINOR_RELEASE+=1
+SVN_REVISION+=14194
+SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
+ifneq "$(SVN_MINOR_RELEASE)" ""
+	SVN_RELEASE+=0.$(SVN_MAJOR_RELEASE).$(SVN_MINOR_RELEASE)
+else
+	SVN_RELEASE+=0.$(SVN_MAJOR_RELEASE)
+endif
+TARFILE+=$(SVN_PACKAGE)_$(SVN_RELEASE)+fixes$(SVN_REVISION).orig.tar.gz
+
+get-orig-source:
+	svn export -r $(SVN_REVISION) $(SVN_BRANCH) $(SVN_PACKAGE)-$(SVN_RELEASE)+fixes$(SVN_REVISION)
+	tar czf $(CURDIR)/../$(TARFILE) $(SVN_PACKAGE)-$(SVN_RELEASE)+fixes$(SVN_REVISION)
+	rm -rf $(CURDIR)/$(SVN_PACKAGE)-$(SVN_RELEASE)+fixes$(SVN_REVISION)
+
+NCPUS := $(shell getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)
+
+ifeq ($(NCPUS),-1)
+	NCPUS:=1
+endif
+
+ifeq ($(NCPUS),0)
+	NCPUS:=1
+endif
+
+DEB_HOST_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
+
+include /usr/share/dpatch/dpatch.make
+
+CFLAGS += -fPIC -DPIC
+
+CONFIGURE_OPTS += --compile-type=debug
+
+ifeq "$(DEB_BUILD_ARCH)" "i386"
+	CONFIGURE_OPTS += --tune=i486 --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-mmx
+else
+ifeq "$(DEB_BUILD_ARCH)" "sparc"
+	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --extra-cflags="-mcpu=ultrasparc -mvis"
+else
+ifeq "$(DEB_BUILD_ARCH)" "powerpc"
+	CONFIGURE_OPTS +=
+else
+ifeq "$(DEB_BUILD_ARCH)" "amd64"
+	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro
+endif
+endif
+endif
+endif
+
+configure: configure-stamp
+configure-stamp: patch-stamp
+	dh_testdir
+
+	CFLAGS="$(CFLAGS)" ./configure --prefix=/usr --enable-lirc --enable-audio-alsa \
+	--enable-audio-oss --enable-audio-jack --enable-audio-arts --enable-dvb \
+	--enable-ivtv --enable-firewire --enable-joystick-menu $(CONFIGURE_OPTS) \
+	--enable-proc-opt --enable-opengl-vsync
+
+	touch configure-stamp
+
+build: configure-stamp build-stamp
+build-stamp:
+	dh_testdir
+
+	$(CCVARS) qmake -o Makefile PREFIX=/usr mythtv.pro
+
+	$(MAKE) -j $(NCPUS) $(CCVARS)
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	debconf-updatepo
+	rm -f build-stamp configure-stamp
+
+	[ ! -f Makefile ] || $(MAKE) distclean
+
+	find . -name '.qmake*' | xargs --no-run-if-empty rm -f
+	rm -f config.mak config.h
+	rm -rf debian/shlibs.local
+
+	debian/rules unpatch
+
+	dh_clean Makefile config.log setup/Makefile programs/mythbackend/version.cpp \
+	programs/mythfrontend/version.cpp
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs -A etc/mythtv
+
+	chmod a+x debian/*.sh
+	dh_install -pmythtv-frontend debian/mythtv.desktop usr/share/applications
+	dh_install -pmythtv-backend debian/mythtv-setup.desktop usr/share/applications
+	dh_install -pmythtv-frontend debian/mythfrontend.sh usr/share/mythtv
+	dh_install -pmythtv-backend debian/mythtv-setup.sh usr/share/mythtv
+	dh_install -pmythtv-common   debian/dialog_functions.sh usr/share/mythtv
+	dh_install -pubuntu-mythtv-frontend debian/startmythtv.sh usr/share/mythtv
+	dh_install -pubuntu-mythtv-frontend debian/mythtv-xsession.desktop usr/share/xsessions
+	dh_install -pubuntu-mythtv-frontend debian/dmrc etc/mythtv
+	dh_install -pubuntu-mythtv-frontend debian/session-settings etc/mythtv
+	dh_install -pubuntu-mythtv-frontend debian/mplayer-config etc/mythtv
+	dh_install -pubuntu-mythtv-frontend debian/background.xpm usr/share/mythtv
+	dh_install -pubuntu-mythtv-frontend debian/openbox-menu.xml etc/mythtv
+	dh_install -pubuntu-mythtv-frontend debian/gdm.conf etc/xdg/mythtv-ubuntu/gdm
+	dh_install -pubuntu-mythtv-frontend debian/mythbuntu-gdm.conf etc/xdg/mythtv-ubuntu/gdm
+	dh_install -pmythtv-common debian/mysql.txt.dist usr/share/mythtv
+
+	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/mythtv
+	mv debian/mythtv/usr/bin/mythfrontend debian/mythtv/usr/bin/mythfrontend.real
+	mv debian/mythtv/usr/bin/mythtv-setup debian/mythtv/usr/bin/mythtv-setup.real
+	dh_link    -pmythtv-frontend usr/share/mythtv/mythfrontend.sh usr/bin/mythfrontend
+	dh_link    -pmythtv-backend  usr/share/mythtv/mythtv-setup.sh usr/bin/mythtv-setup
+
+	install -d debian/mythtv/usr/share/mythtv/sql
+	install -m 644 database/*.sql debian/mythtv/usr/share/mythtv/sql
+
+	rm -f debian/mythtv/usr/share/mythtv/FreeSans.ttf debian/mythtv/usr/share/mythtv/FreeMono.ttf
+	dh_link -pmythtv-common usr/share/fonts/truetype/freefont/FreeSans.ttf usr/share/mythtv/FreeSans.ttf
+	dh_link -pmythtv-common usr/share/fonts/truetype/freefont/FreeMono.ttf usr/share/mythtv/FreeMono.ttf
+
+	dh_install --sourcedir=debian/mythtv -pmythtv-backend usr/share/mythtv/setup.xml
+	rm -f debian/mythtv/usr/share/mythtv/setup.xml
+
+	find debian/mythtv/usr/share -type f -exec chmod 0644 {} \;
+
+	dh_movefiles --sourcedir=debian/mythtv
+
+	dh_install -pmythtv-common debian/mythsql usr/share/mythtv
+
+# Autogenerated configuration files
+	set -e; \
+	for cf in debian/mythtv-common/usr/share/mythtv/mysql.txt; do \
+		ln -s /etc/mythtv/`basename $$cf` $$cf; \
+	done
+
+	cp debian/mythtv.desktop debian/mythtv-frontend/usr/share/applications
+	cp debian/mythtv-setup.desktop debian/mythtv-backend/usr/share/applications
+
+# Remove empty directories
+	find debian -type d | xargs rmdir -p --ignore-fail-on-non-empty
+
+	dh_installdirs -pmythtv-backend var/lib/mythtv/recordings var/cache/mythtv \
+	var/log/mythtv usr/share/doc/mythtv-backend
+
+	dh_installdirs -pmythtv-common /etc/mythtv
+
+# Install files in contrib directory.
+
+	cp -r contrib debian/mythtv-backend/usr/share/doc/mythtv-backend
+
+	dh_install -pmythtv-database debian/mythtv-reconfigure-required.update-notifier usr/share/mythtv
+	dh_install -pmythtv-database debian/mythtv.cnf etc/mysql/conf.d
+	dh_install -pmythtv-database debian/mythtv_0.20.1.sql usr/share/mythtv/sql
+
+# Build architecture-independent files here.
+# Pass -i to all debhelper commands in this target to reduce clutter.
+binary-indep: build install
+	dh_testdir -i
+	dh_testroot -i
+	dh_installdebconf -i
+	dh_installdocs -A README debian/README.Debian AUTHORS FAQ UPGRADING keys.txt
+	dh_installdocs -pmythtv-doc docs/mythtv-HOWTO*
+	dh_installexamples -pmythtv-doc configfiles/*
+	dh_installcron -i
+	dh_installchangelogs  -i
+	dh_link -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir -a
+	dh_testroot -a
+	dh_installdocs -a -A README debian/README.Debian AUTHORS keys.txt FAQ UPGRADING
+	dh_installdebconf -a
+	dh_installexamples -a
+	dh_installmenu -a
+	dh_installlogrotate -a
+	dh_installinit -a -u'defaults 24 16'
+	dh_installcron -a
+	dh_installinfo -a
+	dh_installchangelogs  -a
+	dh_strip -a
+	dh_link -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_makeshlibs -a -V -Xusr/lib/mythtv/filters
+	dh_installdeb -a
+#	dh_shlibdeps -a -ldebian/libmyth-0.19/usr/lib
+	dh_shlibdeps -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure
