@@ -8,6 +8,8 @@ mythtv (0.20.1+fixes14194-0.0ubuntu1) gutsy; urgency=low
     - Make ntp | ntp-simple Suggests on mythtv-frontend or mythtv-backend.
   * debian/mythfrontend.sh:
     - Make sure that exec mythfrontend to start
+  * Remove 20_backend_crash_without_tuner.dpatch.  It's included
+    in the current 0.20-fixes branch.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Tue,  14 Aug 2007 09:54:21 -0500
 
