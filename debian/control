@@ -117,11 +117,10 @@ Description: Utilities used for transcoding MythTV tasks
 Package: mythtv-frontend
 Architecture: any
 Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, fake-msttcorefonts | msttcorefonts, ${misc:Depends}
-Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythdvd, mythvideo, mythgame
+Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythdvd, mythvideo, mythgame, mythstream, ntp | ntp-simple
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1)
 Recommends: mysql-server
-Suggests: ntp | ntp-simple
 Description: A personal video recorder application (client)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -179,7 +178,7 @@ Architecture: all
 Section: metapackages
 Depends: xserver-xorg, gsfonts-x11, xfonts-100dpi, xfonts-75dpi, xfonts-base, mythbuntu-gdm-theme | feisty-gdm-themes | edgy-gdm-themes | gdm-themes , xterm, mythbuntu-artwork-usplash | usplash-theme-ubuntu, gdm, mythtv-frontend, openbox, gnome-screensaver, feh, libgl1-mesa-glx, ntp | ntp-simple
 Pre-Depends: gdm
-Recommends: mytharchive, mythphone, mythgame, mythmusic, mythcontrols, mythdvd, mythflix, mythnews, mythweather, mythtv-themes, mythbrowser, mythgallery, mythvideo
+Recommends: mytharchive, mythphone, mythgame, mythmusic, mythcontrols, mythdvd, mythflix, mythnews, mythweather, mythtv-themes, mythbrowser, mythgallery, mythvideo, mythstream
 Description: Metapackage to setup and configure a "Frontend" profile of MythTV.
  This package will install and configure all necessary packages for this machine
  to behave as a standalone Frontend for a mythtv network.  This package is intended

@@ -1,3 +1,17 @@
+mythtv (0.20.1+fixes14232-0.0ubuntu1) UNRELEASED; urgency=low
+
+  * New Upstream Checkout:
+    - Removes deprecated datadirect support in favor of Schedules 
+      Direct for North American users.
+  * debian/control:
+    - Adjust Suggests for mythtv-frontend.
+    - Adjust recommends for ubuntu-mythtv-frontend
+  * debian/rules:
+    - Add support to show svn version number in mythfrontend --version.
+  * Cleanup source.lintian-overrides for additional warnings.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 20 Aug 2007 16:40:59 -0500
+
 mythtv (0.20.1+fixes14194-0.0ubuntu1) gutsy; urgency=low
 
   * New upstream checkout:
@@ -6,7 +20,6 @@ mythtv (0.20.1+fixes14194-0.0ubuntu1) gutsy; urgency=low
   * debian/control:
     - Move ntp | ntp-simple into metas only.
     - Make ntp | ntp-simple Suggests on mythtv-frontend or mythtv-backend.
-    - Adjust recommends for ubuntu-mythtv-frontend
   * debian/mythfrontend.sh:
     - Make sure that exec mythfrontend to start
   * Remove 20_backend_crash_without_tuner.dpatch.  It's included

@@ -6,7 +6,7 @@ SVN_PACKAGE+=mythtv
 SVN_TYPE+=fixes
 SVN_MAJOR_RELEASE+=20
 SVN_MINOR_RELEASE+=1
-SVN_REVISION+=14194
+SVN_REVISION+=14232
 SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
 ifneq "$(SVN_MINOR_RELEASE)" ""
 	SVN_RELEASE+=0.$(SVN_MAJOR_RELEASE).$(SVN_MINOR_RELEASE)
@@ -60,6 +60,9 @@ configure: configure-stamp
 configure-stamp: patch-stamp
 	dh_testdir
 
+	[ -f version.pro.old ] || mv version.pro version.pro.old
+	cat version.pro.old | sed -e "s/\`(svnversion \$$\$${SVNTREEDIR} 2>\/dev\/null) || echo Unknown\`/$(SVN_REVISION)/" | tee version.pro > /dev/null
+
 	CFLAGS="$(CFLAGS)" ./configure --prefix=/usr --enable-lirc --enable-audio-alsa \
 	--enable-audio-oss --enable-audio-jack --enable-audio-arts --enable-dvb \
 	--enable-ivtv --enable-firewire --enable-joystick-menu $(CONFIGURE_OPTS) \
@@ -93,6 +96,8 @@ clean:
 
 	dh_clean Makefile config.log setup/Makefile programs/mythbackend/version.cpp \
 	programs/mythfrontend/version.cpp
+
+	[ ! -f version.pro.old ] || mv version.pro.old version.pro
 
 install: build
 	dh_testdir
