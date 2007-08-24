@@ -15,6 +15,7 @@ mythtv (0.20.1+fixes14278-0.0ubuntu1) UNRELEASED; urgency=low
   * Drop unnecessary libdts patch as dts has changed upstream.
   * Use proper files for upnp support from backported -fixes on 
     mythtv-backend.
+  * Change section to multiverse/graphics so this can build on PPAs.
 
   [ Nick Hemsley ]
   * Add support to check for ~/.mythtv/session upon startup for 

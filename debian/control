@@ -1,5 +1,5 @@
 Source: mythtv
-Section: graphics
+Section: multiverse/graphics
 Priority: optional
 Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
 XSBC-Original-Maintainer: Christian Marillat <marillat@debian.org>
