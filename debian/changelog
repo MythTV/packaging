@@ -1,7 +1,8 @@
-mythtv (0.20.1+fixes14278-0.0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.20.2-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * New Upstream Checkout:
+    - Tagged release to 0.20.2.
     - Removes deprecated datadirect support in favor of Schedules 
       Direct for North American users.
     - Cleans up UPNP support.
@@ -11,8 +12,10 @@ mythtv (0.20.1+fixes14278-0.0ubuntu1) UNRELEASED; urgency=low
     - Adjust recommends for ubuntu-mythtv-frontend
   * debian/rules:
     - Add support to show svn version number in mythfrontend --version.
+    - Add support for tagged releases that don't need +fixes appended.
   * Cleanup source.lintian-overrides for additional warnings.
-  * Drop unnecessary libdts patch as dts has changed upstream.
+  * Drop unnecessary libdts patch as dts has changed upstream to
+    detect when dts_pic is necessary.
   * Use proper files for upnp support from backported -fixes on 
     mythtv-backend.
   * Change section to multiverse/graphics so this can build on PPAs.

@@ -2,23 +2,31 @@
 
 #export DH_VERBOSE=1
 
+#Comment out TAGGED_RELEASE for -fixes releases
+#Bump major and minor versions for tagged releases
+
 SVN_PACKAGE+=mythtv
 SVN_TYPE+=fixes
 SVN_MAJOR_RELEASE+=20
-SVN_MINOR_RELEASE+=1
-SVN_REVISION+=14278
+SVN_MINOR_RELEASE+=2
+SVN_REVISION+=14283
 SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
+TAGGED_RELEASE+=true
+
 ifneq "$(SVN_MINOR_RELEASE)" ""
 	SVN_RELEASE+=0.$(SVN_MAJOR_RELEASE).$(SVN_MINOR_RELEASE)
 else
 	SVN_RELEASE+=0.$(SVN_MAJOR_RELEASE)
 endif
-TARFILE+=$(SVN_PACKAGE)_$(SVN_RELEASE)+fixes$(SVN_REVISION).orig.tar.gz
+ifeq "$(TAGGED_RELEASE)" ""
+	SUFFIX+="+$(SVN_TYPE)$(SVN_REVISION)"
+endif
+TARFILE+=$(SVN_PACKAGE)_$(SVN_RELEASE)$(SUFFIX).orig.tar.gz
 
 get-orig-source:
-	svn export -r $(SVN_REVISION) $(SVN_BRANCH) $(SVN_PACKAGE)-$(SVN_RELEASE)+fixes$(SVN_REVISION)
-	tar czf $(CURDIR)/../$(TARFILE) $(SVN_PACKAGE)-$(SVN_RELEASE)+fixes$(SVN_REVISION)
-	rm -rf $(CURDIR)/$(SVN_PACKAGE)-$(SVN_RELEASE)+fixes$(SVN_REVISION)
+	svn export -r $(SVN_REVISION) $(SVN_BRANCH) $(SVN_PACKAGE)-$(SVN_RELEASE)$(SUFFIX)
+	tar czf $(CURDIR)/../$(TARFILE) $(SVN_PACKAGE)-$(SVN_RELEASE)$(SUFFIX)
+	rm -rf $(CURDIR)/$(BASE)
 
 NCPUS := $(shell getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)
 
