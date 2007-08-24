@@ -55,6 +55,11 @@ fi
 #start window manager
 openbox &
 
+echo "Checking for custom mythtv commands in ~/.mythtv/session"
+if [ -x ~/.mythtv/session ]; then
+	~/.mythtv/session &
+fi
+
 if [ -x /usr/bin/mythbackend ]; then
 	if [ -e ~/.mythtv/backend_configured ]; then
 		HAS_BACKEND_CONFIGURED=1
