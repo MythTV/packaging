@@ -26,7 +26,7 @@ TARFILE+=$(SVN_PACKAGE)_$(SVN_RELEASE)$(SUFFIX).orig.tar.gz
 get-orig-source:
 	svn export -r $(SVN_REVISION) $(SVN_BRANCH) $(SVN_PACKAGE)-$(SVN_RELEASE)$(SUFFIX)
 	tar czf $(CURDIR)/../$(TARFILE) $(SVN_PACKAGE)-$(SVN_RELEASE)$(SUFFIX)
-	rm -rf $(CURDIR)/$(BASE)
+	rm -rf $(CURDIR)/$(SVN_PACKAGE)-$(SVN_RELEASE)$(SUFFIX)
 
 NCPUS := $(shell getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)
 
