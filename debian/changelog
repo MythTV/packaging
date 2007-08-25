@@ -1,4 +1,4 @@
-mythtv (0.20.2-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.20.2-0ubuntu1) gutsy; urgency=low
 
   [ Mario Limonciello ]
   * New Upstream Checkout:
