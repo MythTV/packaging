@@ -1,3 +1,11 @@
+mythtv (0.20.2-0ubuntu2) gutsy; urgency=low
+
+  * Add 23_schedulesdirect.dpatch:
+    - Cherry pick [14307] [14324] [14348] to fix a few items
+      found related to schedules direct after 0.20.2 release.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 28 Aug 2007 16:16:24 -0500
+
 mythtv (0.20.2-0ubuntu1) gutsy; urgency=low
 
   [ Mario Limonciello ]

@@ -1,0 +1,55 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 23_schedulesdirect.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad mythtv-0.20.2~/libs/libmythtv/datadirect.cpp mythtv-0.20.2/libs/libmythtv/datadirect.cpp
+--- mythtv-0.20.2~/libs/libmythtv/datadirect.cpp	2007-08-23 17:39:10.000000000 -0500
++++ mythtv-0.20.2/libs/libmythtv/datadirect.cpp	2007-08-28 16:21:07.000000000 -0500
+@@ -897,6 +897,9 @@
+     poststream << "</SOAP-ENV:Envelope>\n";
+     postfile.close();
+ 
++    // Allow for single quotes in userid and password (shell escape)
++    password.replace('\'', "'\\''");
++    userid.replace('\'', "'\\''");
+     QString command = QString(
+         "wget --http-user='%1' --http-passwd='%2' --post-file='%3' "
+         "--header='Accept-Encoding:gzip' %4 --output-document=- ")
+@@ -947,7 +950,8 @@
+ 
+     QString command = QString("wget --http-user='%1' --http-passwd='%2' "
+                               "--post-file='%3' %4 --output-document='%5'")
+-        .arg(GetUserID()).arg(GetPassword()).arg(GetPostFilename())
++        .arg(GetUserID().replace('\'', "'\\''"))
++        .arg(GetPassword().replace('\'', "'\\''")).arg(GetPostFilename())
+         .arg(ddurl).arg(GetResultFilename());
+ 
+     if (SHOW_WGET_OUTPUT)
+diff -urNad mythtv-0.20.2~/programs/mythbackend/housekeeper.cpp mythtv-0.20.2/programs/mythbackend/housekeeper.cpp
+--- mythtv-0.20.2~/programs/mythbackend/housekeeper.cpp	2006-10-05 23:59:01.000000000 -0500
++++ mythtv-0.20.2/programs/mythbackend/housekeeper.cpp	2007-08-28 16:21:04.000000000 -0500
+@@ -179,7 +179,8 @@
+                     {
+                         result.prepare("SELECT COUNT(*) FROM videosource "
+                                        "WHERE xmltvgrabber IN "
+-                                           "( 'datadirect', 'technovera' );");
++                                           "( 'datadirect', 'technovera',"
++                                           " 'schedulesdirect1' );");
+ 
+                         if ((result.exec()) &&
+                             (result.isActive()) &&
+diff -urNad mythtv-0.20.2~/programs/mythfilldatabase/filldata.cpp mythtv-0.20.2/programs/mythfilldatabase/filldata.cpp
+--- mythtv-0.20.2~/programs/mythfilldatabase/filldata.cpp	2007-08-23 17:39:10.000000000 -0500
++++ mythtv-0.20.2/programs/mythfilldatabase/filldata.cpp	2007-08-28 16:20:57.000000000 -0500
+@@ -3111,6 +3111,8 @@
+                         VERBOSE(VB_GENERAL,
+                             "Data Refresh always needed for tomorrow");
+                     }
++
++                    download_needed = true;
+                 }
+                 else
+                 {

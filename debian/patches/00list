@@ -5,4 +5,5 @@
 07_alsa_default.dpatch
 21_openmedia_mheg5.dpatch
 22_openmedia_livetv.dpatch
+23_schedulesdirect.dpatch
 #23_video_device_symlinks.dpatch
