@@ -71,7 +71,7 @@ Description: A personal video recorder application (documentation)
 
 Package: mythtv-database
 Architecture: all
-Depends: mythtv-common (= ${source:Version}), libdbd-mysql-perl, mysql-client, cron, update-notifier, ${misc:Depends}
+Depends: mythtv-common (= ${source:Version}), libdbd-mysql-perl, mysql-client, cron, update-notifier | adept-notifier, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
 Replaces: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
 Description: A personal video recorder application (database)

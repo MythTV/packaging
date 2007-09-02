@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 24_mythstream_typo.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad mythtv-0.20.2~/programs/mythfrontend/library.xml mythtv-0.20.2/programs/mythfrontend/library.xml
+--- mythtv-0.20.2~/programs/mythfrontend/library.xml	2007-08-07 09:41:51.000000000 -0500
++++ mythtv-0.20.2/programs/mythfrontend/library.xml	2007-09-02 04:47:24.000000000 -0500
+@@ -108,7 +108,7 @@
+    <button>
+      <type>STREAM</type>
+      <text>Play online streams</text>
+-     <action>PLUGIN mythtream</action>
++     <action>PLUGIN mythstream</action>
+      <depends>mythstream</depends>
+    </button>
+ 
