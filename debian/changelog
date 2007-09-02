@@ -2,9 +2,11 @@ mythtv (0.20.2-0ubuntu3) gutsy; urgency=low
 
   * Add 24_mythstream_typo.dpatch:
     - Fixes mythstream load errors. (LP: #136483)
-  * Depend on update-notifier | adept-notifier to
-    not pull in unnecessary dependencies for kubuntu
-    users.  (LP: #135431)
+  * debian/control:
+    - Depend on update-notifier | adept-notifier to not pull in
+      unnecessary dependencies for kubuntu users.  (LP: #135431)
+    - Depend on usplash-theme-ubuntu | usplash to make backporting to
+      Dapper easier.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sun, 02 Sep 2007 04:52:33 -0500
 

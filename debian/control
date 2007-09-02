@@ -176,7 +176,7 @@ Description: Metapackage to setup and configure a "Master Backend" profile of My
 Package: ubuntu-mythtv-frontend
 Architecture: all
 Section: multiverse/metapackages
-Depends: xserver-xorg, gsfonts-x11, xfonts-100dpi, xfonts-75dpi, xfonts-base, mythbuntu-gdm-theme | feisty-gdm-themes | edgy-gdm-themes | gdm-themes , xterm, mythbuntu-artwork-usplash | usplash-theme-ubuntu, gdm, mythtv-frontend, openbox, gnome-screensaver, feh, libgl1-mesa-glx, ntp | ntp-simple
+Depends: xserver-xorg, gsfonts-x11, xfonts-100dpi, xfonts-75dpi, xfonts-base, mythbuntu-gdm-theme | feisty-gdm-themes | edgy-gdm-themes | gdm-themes , xterm, mythbuntu-artwork-usplash | usplash-theme-ubuntu | usplash, gdm, mythtv-frontend, openbox, gnome-screensaver, feh, libgl1-mesa-glx, ntp | ntp-simple
 Pre-Depends: gdm
 Recommends: mytharchive, mythphone, mythgame, mythmusic, mythcontrols, mythdvd, mythflix, mythnews, mythweather, mythtv-themes, mythbrowser, mythgallery, mythvideo, mythstream
 Description: Metapackage to setup and configure a "Frontend" profile of MythTV.
