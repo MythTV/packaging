@@ -102,7 +102,7 @@ case "$1" in
           echo "sudo dpkg-reconfigure mythtv-database" >&2
           # silently exit, instead pop up a notification for user indicating this
           unud=/var/lib/update-notifier/user.d
-          if test -d $uund; then
+          if test -d $unud; then
           cp -f /usr/share/mythtv/mythtv-reconfigure-required.update-notifier \
                   /var/lib/update-notifier/user.d/mythtv-reconfigure-required
           fi

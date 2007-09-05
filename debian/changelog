@@ -1,3 +1,13 @@
+mythtv (0.20.2-0ubuntu4) gutsy; urgency=low
+
+  * debian/control:
+    - Make update-notifier | adept-notifier recommends so
+      gnome/kde users benefit without harming non users. (LP: #135431)
+  * debian/mythtv-database.postinst:
+    - Check for $unud and only copy if it exists.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 04 Sep 2007 22:17:13 -0500
+
 mythtv (0.20.2-0ubuntu3) gutsy; urgency=low
 
   * Add 24_mythstream_typo.dpatch:
