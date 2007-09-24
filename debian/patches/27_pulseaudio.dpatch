@@ -1,0 +1,90 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 27_pulseaudio.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Resolves issues with pulseaudio (LP: #138810)
+
+@DPATCH@
+diff -urNad mythtv-0.20.2~/libs/libmyth/audiooutputalsa.cpp mythtv-0.20.2/libs/libmyth/audiooutputalsa.cpp
+--- mythtv-0.20.2~/libs/libmyth/audiooutputalsa.cpp	2006-06-14 16:33:59.000000000 -0500
++++ mythtv-0.20.2/libs/libmyth/audiooutputalsa.cpp	2007-09-23 23:48:27.000000000 -0500
+@@ -113,7 +113,7 @@
+         return false;
+     }
+ 
+-    err = SetParameters(pcm_handle, SND_PCM_ACCESS_MMAP_INTERLEAVED,
++    err = SetParameters(pcm_handle,
+                         format, audio_channels, audio_samplerate, buffer_time,
+                         period_time);
+     if (err < 0) 
+@@ -164,7 +164,7 @@
+     
+     while (frames > 0) 
+     {
+-        lw = snd_pcm_mmap_writei(pcm_handle, tmpbuf, frames);
++        lw = pcm_write_func(pcm_handle, tmpbuf, frames);
+         
+         if (lw >= 0)
+         {
+@@ -221,7 +221,7 @@
+         }
+         else
+         {
+-            VERBOSE(VB_IMPORTANT, QString("snd_pcm_mmap_writei: %1 (%2)")
++            VERBOSE(VB_IMPORTANT, QString("pcm_write_func: %1 (%2)")
+                     .arg(snd_strerror(lw)).arg(lw));
+             VERBOSE(VB_IMPORTANT, QString("WriteAudio: snd_pcm_state == %1")
+                     .arg(snd_pcm_state(pcm_handle)));
+@@ -292,7 +292,7 @@
+ }
+ 
+ 
+-int AudioOutputALSA::SetParameters(snd_pcm_t *handle, snd_pcm_access_t access,
++int AudioOutputALSA::SetParameters(snd_pcm_t *handle,
+                                    snd_pcm_format_t format, unsigned int channels,
+                                    unsigned int rate, unsigned int buffer_time,
+                                    unsigned int period_time)
+@@ -324,12 +324,18 @@
+         return err;
+     }
+ 
+-    /* set the interleaved read/write format */
+-    if ((err = snd_pcm_hw_params_set_access(handle, params, access)) < 0)
++    /* set the interleaved read/write format, use mmap if available */
++    pcm_write_func = &snd_pcm_mmap_writei;
++    if ((err = snd_pcm_hw_params_set_access(handle, params, SND_PCM_ACCESS_MMAP_INTERLEAVED)) < 0)
+     {
+-        Error(QString("Access type not available: %1")
+-              .arg(snd_strerror(err)));
+-        return err;
++        VERBOSE(VB_GENERAL, QString("ALSA mmap not available"));
++        pcm_write_func = &snd_pcm_writei;
++        if ((err = snd_pcm_hw_params_set_access(handle, params, SND_PCM_ACCESS_RW_INTERLEAVED)) < 0)
++        {
++            Error(QString("Access type not available: %1")
++                  .arg(snd_strerror(err)));
++            return err;
++        }
+     }
+ 
+     /* set the sample format */
+diff -urNad mythtv-0.20.2~/libs/libmyth/audiooutputalsa.h mythtv-0.20.2/libs/libmyth/audiooutputalsa.h
+--- mythtv-0.20.2~/libs/libmyth/audiooutputalsa.h	2006-06-14 16:33:59.000000000 -0500
++++ mythtv-0.20.2/libs/libmyth/audiooutputalsa.h	2007-09-23 23:48:27.000000000 -0500
+@@ -37,7 +37,7 @@
+     virtual inline int getBufferedOnSoundcard(void);
+ 
+   private:
+-    inline int SetParameters(snd_pcm_t *handle, snd_pcm_access_t access,
++    inline int SetParameters(snd_pcm_t *handle,
+                              snd_pcm_format_t format, unsigned int channels,
+                              unsigned int rate, unsigned int buffer_time,
+                              unsigned int period_time);
+@@ -59,6 +59,7 @@
+     float        volume_range_multiplier;
+     long         playback_vol_min;
+     long         playback_vol_max;
++    snd_pcm_sframes_t (*pcm_write_func)(snd_pcm_t*, const void*, snd_pcm_uframes_t);
+ };
+ 
+ #endif

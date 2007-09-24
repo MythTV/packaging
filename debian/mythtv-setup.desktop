@@ -7,4 +7,4 @@ Type=Application
 Encoding=UTF-8
 Icon=/usr/share/mythtv/themes/blue/myth_tv_logo.png
 Categories=GTK;System;Settings
-
+X-AppInstall-Package=mythtv

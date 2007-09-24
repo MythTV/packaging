@@ -28,14 +28,12 @@ if [ -x /usr/bin/gnome-power-manager ]; then
 fi
 
 #check if irexec is needed, and start if need be
-if [ -x /usr/bin/irexec ]; then
-        if [ -f ~/.lircrc ]; then
-                if [ -n "$(cat ~/.lircrc | grep --invert-match "#" | grep irexec | grep prog)" ]
-                then
-			killall irexec
-			irexec -d
-                fi
-        fi
+if [ -x /usr/bin/irexec ] && [ ! -f ~/.noirexec ] && [ -f ~/.lircrc ]; then
+            if [ -n "$(cat ~/.lircrc | grep --invert-match "#" | grep irexec | grep prog)" ]
+            then
+		killall irexec
+		irexec -d
+            fi
 fi
 
 #if nvidia settings are saved and nvidia drivers installed, load them
@@ -50,6 +48,11 @@ if [ -x /usr/bin/xmodmap ]; then
 	if [ -f ~/.xmodmap ]; then
 		xmodmap ~/.xmodmap
 	fi
+fi
+
+#If we have mtd around, good idea to start it too
+if [ -x /usr/bin/mtd ]; then
+	/usr/bin/mtd -d
 fi
 
 #start window manager
@@ -92,9 +95,53 @@ if [ "$HAS_BACKEND_CONFIGURED" = "0" ]; then
 	xterm -title "Starting Backend" -e "unset DISPLAY && unset SESSION_MANAGER && mythbackend $ARGS $EXTRA_ARGS; sleep 3"
 fi
 
+# set log files
+MYTHFELOG="/var/log/mythtv/mythfrontend.log"
+MYTHWELCOMELOG="/var/log/mythtv/mythwelcome.log"
+
+# make sure that our log files exist
+# it's ok if we fail, we'll fall back to a different logfile location later on
+if [ ! -f "${MYTHFELOG}" ]; then
+    touch "${MYTHFELOG}" || true
+fi
+if [ ! -f "${MYTHWELCOMELOG}"; then
+    touch "${MYTHWELCOMELOG}" || true
+fi
+# make sure log files are writeable by members of the "mythtv" group
+# again, it's ok if we fail
+chgrp mythtv "${MYTHFELOG}" && \
+chmod g+rw "${MYTHFELOG}" || true
+chgrp mythtv "${MYTHWELCOMELOG}" && \
+chmod g+rw "${MYTHWELCOMELOG}" true
+
+# Are the log files writeable as well? If not, warn the user and
+# fall back to tempory log location
+if [ ! -w "${MYTHFELOG}" ]; then
+    echo "Sorry, "${MYTHFELOG}" is not writeable. Please make sure it's writeable"
+    echo "  for the \"mythtv\" group."
+    echo "Logging to /tmp/mythfrontend.${$}.log instead"
+    MYTHFELOG="/tmp/mythfrontend.${$}.log"
+fi
+
+if [ ! -w "${MYTHWELCOMELOG}" ]; then
+    echo "Sorry, "${MYTHWELCOMELOG}" is not writeable. Please make sure it's writeable"
+    echo "  for the \"mythtv\" group."
+    echo "Logging to /tmp/mythwelcome.${$}.log instead"
+    MYTHWELCOMELOG="/tmp/mythwelcome.${$}.log"
+fi
+
+
 #start mythtv frontend software
 if [ "$MYTHWELCOME" = "true" ]; then
-	exec mythwelcome
+	if [ ! -z $MYTHFRONTEND_OPTS ]; then
+	    echo "Note: It looks like you set MYTHFRONTEND_OPTS in /etc/mythtv/session-settings" | tee -a "${MYTHWELCOMELOG}"
+	    echo "However, mythwelcome won't recognize these." | tee -a "${MYTHWELCOMELOG}"
+	    echo "You have to set to set your startup options in the mythwelcome settings screens" | tee -a "${MYTHWELCOMELOG}"
+	    echo "Starting mythwelcome.." | tee -a "${MYTHWELCOMELOG}"
+	fi
+# Note: if mythwelcome would support -O to override database settings, we could tell it to start the frontend with $MYTHFRONTEND_OPTS
+# This is not possible yet, but maybe it'll happen in the future
+	exec mythwelcome | tee -a "${MYTHWELCOMELOG}"
 else
-	exec mythfrontend
+	exec mythfrontend --logfile "${MYTHFELOG}" "${MYTHFRONTEND_OPTS}"
 fi

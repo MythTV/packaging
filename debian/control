@@ -17,7 +17,7 @@ Build-Depends: debhelper (>> 5.0.0), libqt3-mt-dev, libdvb-dev, dpatch,
 
 Package: mythtv
 Architecture: all
-Depends: mythtv-database (= ${source:Version}), mythtv-frontend (= ${source:Version}), mythtv-backend (= ${source:Version}), mysql-server, ntp | ntp-simple
+Depends: mythtv-database (= ${source:Version}), mythtv-frontend (= ${source:Version}), mythtv-backend (= ${source:Version}), mysql-server, ntp | time-daemon | ntp-simple
 Recommends: mythtv-doc, mythtv-themes
 Description: A personal video recorder application (client and server)
  MythTV implements the following PVR features, and more, with a
@@ -88,7 +88,7 @@ Depends: mythtv-common (= ${source:Version}), mythtv-transcode-utils (= ${source
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
 Recommends: mythtv-database, logrotate, xmltv-util
-Suggests: mythtv-frontend, mythweb, ntp | ntp-simple
+Suggests: mythtv-frontend, mythweb, ntp | time-daemon | ntp-simple
 Description: A personal video recorder application (server)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -107,8 +107,8 @@ Description: A personal video recorder application (server)
 Package: mythtv-transcode-utils
 Architecture: any
 Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, transcode
-Conflicts: mythtv-backend (<< 0.20)
-Replaces: mythtv-backend (<< 0.20)
+Conflicts: mythtv-backend (<< 0.20.2-0ubuntu1)
+Replaces: mythtv-backend (<< 0.20.2-0ubuntu1)
 Suggests: mythtv-backend, mytharchive
 Description: Utilities used for transcoding MythTV tasks
  Some utilties are applicable for both a frontend or a backend machine.
@@ -118,7 +118,7 @@ Description: Utilities used for transcoding MythTV tasks
 Package: mythtv-frontend
 Architecture: any
 Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, fake-msttcorefonts | msttcorefonts, ${misc:Depends}
-Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythdvd, mythvideo, mythgame, mythstream, ntp | ntp-simple
+Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythdvd, mythvideo, mythgame, mythstream, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1)
 Recommends: mysql-server
@@ -165,7 +165,7 @@ Description: Common library code for MythTV and add-on modules (development)
 Package: mythtv-backend-master
 Architecture: all
 Section: multiverse/metapackages
-Depends: ntp | ntp-simple, mysql-server, mythtv-database (= ${source:Version}), mythtv-backend (= ${source:Version})
+Depends: ntp | time-daemon | ntp-simple, mysql-server, mythtv-database (= ${source:Version}), mythtv-backend (= ${source:Version})
 Recommends: mythweb
 Description: Metapackage to setup and configure a "Master Backend" profile of MythTV.
  This package will install and configure all necessary packages for this machine
@@ -177,7 +177,7 @@ Description: Metapackage to setup and configure a "Master Backend" profile of My
 Package: ubuntu-mythtv-frontend
 Architecture: all
 Section: multiverse/metapackages
-Depends: xserver-xorg, gsfonts-x11, xfonts-100dpi, xfonts-75dpi, xfonts-base, mythbuntu-gdm-theme | feisty-gdm-themes | edgy-gdm-themes | gdm-themes , xterm, mythbuntu-artwork-usplash | usplash-theme-ubuntu | usplash, gdm, mythtv-frontend, openbox, gnome-screensaver, feh, libgl1-mesa-glx, ntp | ntp-simple
+Depends: xserver-xorg, gsfonts-x11, xfonts-100dpi, xfonts-75dpi, xfonts-base, mythbuntu-gdm-theme | feisty-gdm-themes | edgy-gdm-themes | gdm-themes , xterm, mythbuntu-artwork-usplash | usplash-theme-ubuntu | usplash, gdm, mythtv-frontend, openbox, gnome-screensaver, feh, libgl1-mesa-glx, ntp | time-daemon | ntp-simple
 Pre-Depends: gdm
 Recommends: mytharchive, mythphone, mythgame, mythmusic, mythcontrols, mythdvd, mythflix, mythnews, mythweather, mythtv-themes, mythbrowser, mythgallery, mythvideo, mythstream
 Description: Metapackage to setup and configure a "Frontend" profile of MythTV.
