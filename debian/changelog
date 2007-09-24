@@ -6,6 +6,8 @@ mythtv (0.20.2-0ubuntu7) gutsy; urgency=low
     - Make all instances of ntp, ntp | time-daemon (LP: #144268)
   * Add debian/patches/26_edit_display.dpatch (LP: #139821)
   * Add debian/patches/27_pulseaudio.dpatch (LP: #138810)
+  
+  [ Joel Ebel ]
   * debian/startmythtv.sh:
     - Add support to start mtd -d
     - Add support to check for not executing irexec -d
