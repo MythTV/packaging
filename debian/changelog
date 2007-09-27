@@ -1,3 +1,15 @@
+mythtv (0.20.2-0ubuntu8) UNRELEASED; urgency=low
+
+  * debian/startmythtv.sh:
+    - Switch ~ to $HOME
+    - Correct minor typo in ${MYTHWELCOME}.
+    - Only run mtd if not running.
+  * debian/control:
+    - Refresh dependencies for ubuntu-mythtv-frontend
+      to gutsy appropriate package names.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 27 Sep 2007 02:00:01 -0500
+
 mythtv (0.20.2-0ubuntu7) gutsy; urgency=low
 
   [ Mario Limonciello ]
