@@ -1,4 +1,4 @@
-mythtv (0.20.2-0ubuntu8) UNRELEASED; urgency=low
+mythtv (0.20.2-0ubuntu8) gutsy; urgency=low
 
   [ Mario Limonciello ]
   * debian/startmythtv.sh:
