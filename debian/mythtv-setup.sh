@@ -23,7 +23,7 @@ if [ "$IGNORE_NOT" = "0" ]; then
 		else
 			$SU_TYPE /etc/init.d/mythtv-backend stop --message "Please enter your current login password to stop mythtv-backend."
 		fi
-		/usr/bin/mythtv-setup.real "$@"
+		/usr/bin/x-terminal-emulator -e /usr/bin/mythtv-setup.real "$@"
 		dialog_question "Fill Database?" "Would you like to run mythfilldatabase?"
 		DATABASE_NOT=$?
 		if [ "$DATABASE_NOT" = "0" ]; then
