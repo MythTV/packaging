@@ -17,6 +17,9 @@ mythtv (0.20.2-0ubuntu8) UNRELEASED; urgency=low
   [ Jo Shields ]
   * Start mythtv-setup in a terminal. (LP: #147701)
 
+  [ Brian J. Murrell ]
+  * Clarify text in mythtv-database.postinst (LP: #146328)
+
  -- Mario Limonciello <superm1@ubuntu.com>  Thu, 27 Sep 2007 02:00:01 -0500
 
 mythtv (0.20.2-0ubuntu7) gutsy; urgency=low

@@ -19,9 +19,9 @@ Template: mythtv/public_bind
 Type: boolean
 Default: false
 _Description: Will you be using other computers running MythTV?
- If you will be using any other computers with MythTV, this computer needs
- to be configured to allow remote connections.  Do you want to enable remote 
- connectivity?
+ If you will be using any other computers (that includes other Front End 
+ machines) with MythTV, this computer needs to be configured to allow 
+ remote connections. Do you want to enable remote connectivity? 
  .
  Note that this is a security risk, as both the MythTV and MySQL services
  will be exposed. Be sure to place this machine behind a firewall.
