@@ -17,6 +17,11 @@ if [ configure = "$1" ]; then
             chown -R mythtv:mythtv "$MYTHHOME/.mplayer"
 	fi
 
+	if [ ! -d "$MYTHHOME"/.mythtv ]; then
+            mkdir -p "$MYTHHOME"/.mythtv
+            chown -R mythtv:mythtv "$MYTHHOME/.mythtv"
+	fi
+
         #add gdm.conf alternative, make sure higher than 50 so that takes priority over xubuntu if installed on xubuntu
 	#Also, if this is a mythbuntu installation, make sure that we use a gdm.conf that is more appropriate
 	if [ -f /usr/share/gdm/themes/Mythbuntu/mythbuntu.xml ]; then

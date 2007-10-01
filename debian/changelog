@@ -1,12 +1,21 @@
 mythtv (0.20.2-0ubuntu8) UNRELEASED; urgency=low
 
+  [ Mario Limonciello ]
   * debian/startmythtv.sh:
     - Switch ~ to $HOME
-    - Correct minor typo in ${MYTHWELCOME}.
     - Only run mtd if not running.
   * debian/control:
     - Refresh dependencies for ubuntu-mythtv-frontend
       to gutsy appropriate package names.
+  * debian/ubuntu-mythtv-frontend.postinst:
+    - Take ownership of ~/.mythtv if necessary. (LP: #145714)
+
+  [ Michael Haas ]
+  * debian/startmythtv.sh:
+    - Correct minor typo in ${MYTHWELCOME}. (LP: #144541)
+
+  [ Jo Shields ]
+  * Start mythtv-setup in a terminal. (LP: #147701)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Thu, 27 Sep 2007 02:00:01 -0500
 
