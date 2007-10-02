@@ -46,10 +46,10 @@ include /usr/share/dpatch/dpatch.make
 
 CFLAGS += -fPIC -DPIC
 
-CONFIGURE_OPTS += --compile-type=debug
+CONFIGURE_OPTS += --compile-type=profile
 
 ifeq "$(DEB_BUILD_ARCH)" "i386"
-	CONFIGURE_OPTS += --tune=i486 --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-mmx
+	CONFIGURE_OPTS += --cpu=pentium-mmx --tune=i686 --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro
 else
 ifeq "$(DEB_BUILD_ARCH)" "sparc"
 	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --extra-cflags="-mcpu=ultrasparc -mvis"
@@ -73,7 +73,7 @@ configure-stamp: patch-stamp
 	CFLAGS="$(CFLAGS)" ./configure --prefix=/usr --enable-lirc --enable-audio-alsa \
 	--enable-audio-oss --enable-audio-jack --enable-audio-arts --enable-dvb \
 	--enable-ivtv --enable-firewire --enable-joystick-menu $(CONFIGURE_OPTS) \
-	--enable-proc-opt --enable-opengl-vsync
+	--enable-opengl-vsync
 
 	touch configure-stamp
 

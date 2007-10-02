@@ -11,3 +11,4 @@
 #23_video_device_symlinks.dpatch
 26_edit_display.dpatch
 27_pulseaudio.dpatch
+28_profilebuild.dpatch
