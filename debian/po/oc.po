@@ -1,12 +1,16 @@
-#, fuzzy
+# Occitan (post 1500) translation for mythtv
+# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# This file is distributed under the same license as the mythtv package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: ubuntu-mythtv@lists.ubuntu.com\n"
+"Project-Id-Version: mythtv\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2007-07-06 21:08-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2007-09-30 21:18+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: Occitan (post 1500) <oc@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -53,7 +57,7 @@ msgstr ""
 #. Description
 #: ../mythtv-backend.templates:2001
 msgid "sudo /etc/init.d/mythtv-backend start"
-msgstr ""
+msgstr "sudo /etc/init.d/mythtv-backend start"
 
 #. Type: string
 #. Description
@@ -148,7 +152,7 @@ msgstr ""
 #. Choices
 #: ../mythtv-common.templates:7001
 msgid "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
-msgstr ""
+msgstr "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
 
 #. Type: select
 #. Description
@@ -197,7 +201,7 @@ msgstr ""
 #. Description
 #: ../mythtv-common.templates:10001
 msgid "${files}"
-msgstr ""
+msgstr "${files}"
 
 #. Type: note
 #. Description
