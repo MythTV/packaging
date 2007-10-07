@@ -1,5 +1,6 @@
 mythtv (0.20.2-0ubuntu9) gutsy; urgency=low
 
+  [ Mario Limonciello ]
   * Change compile type to profile per upstream recommendations.
   * Include 28_patch_build.dpatch from upstream # 14587 to improve
     profile builds.
@@ -12,7 +13,7 @@ mythtv (0.20.2-0ubuntu9) gutsy; urgency=low
     - Add dh_perl  to debian/rules
     - Build --with-bindings=perl in debian/rules
 
- [Michael Haas]
+ [ Michael Haas ]
   * Add 30_xinerama_fix.dpatch from upstream trunk rev 14520 (LP: #136533)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Mon, 01 Oct 2007 18:47:06 -0500
@@ -49,12 +50,12 @@ mythtv (0.20.2-0ubuntu7) gutsy; urgency=low
     - Make all instances of ntp, ntp | time-daemon (LP: #144268)
   * Add debian/patches/26_edit_display.dpatch (LP: #139821)
   * Add debian/patches/27_pulseaudio.dpatch (LP: #138810)
-  
+
   [ Joel Ebel ]
   * debian/startmythtv.sh:
     - Add support to start mtd -d
     - Add support to check for not executing irexec -d
-  
+
   [ Michael Haas ]
   * debian/startmythtv.sh:
     - Create a frontend and welcome log file in /var/lib/mythtv.
@@ -63,8 +64,8 @@ mythtv (0.20.2-0ubuntu7) gutsy; urgency=low
 
 mythtv (0.20.2-0ubuntu6) gutsy; urgency=low
 
-  * Add X-AppInstall-Package= to both .desktop files to ensure that 
-    they install the 'mythtv' metapackage rather than mythtv-backend 
+  * Add X-AppInstall-Package= to both .desktop files to ensure that
+    they install the 'mythtv' metapackage rather than mythtv-backend
     or mythtv-frontend when selected in Add/Remove programs.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Mon, 10 Sep 2007 00:23:26 -0500
@@ -114,7 +115,7 @@ mythtv (0.20.2-0ubuntu1) gutsy; urgency=low
   [ Mario Limonciello ]
   * New Upstream Checkout:
     - Tagged release to 0.20.2.
-    - Removes deprecated datadirect support in favor of Schedules 
+    - Removes deprecated datadirect support in favor of Schedules
       Direct for North American users.
     - Cleans up UPNP support.
     - Checks for DTS libraries properly
@@ -127,12 +128,12 @@ mythtv (0.20.2-0ubuntu1) gutsy; urgency=low
   * Cleanup source.lintian-overrides for additional warnings.
   * Drop unnecessary libdts patch as dts has changed upstream to
     detect when dts_pic is necessary.
-  * Use proper files for upnp support from backported -fixes on 
+  * Use proper files for upnp support from backported -fixes on
     mythtv-backend.
   * Change section to multiverse/graphics so this can build on PPAs.
 
   [ Nick Hemsley ]
-  * Add support to check for ~/.mythtv/session upon startup for 
+  * Add support to check for ~/.mythtv/session upon startup for
     ubuntu-mythtv-frontend meta. (LP: #134028)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Mon, 20 Aug 2007 16:40:59 -0500
@@ -188,7 +189,7 @@ mythtv (0.20.1+fixes13737-0.0ubuntu1) gutsy; urgency=low
     - Add support to grab the latest .orig.tar.gz.
     - Add debconf-updatepo to the clean: target.
   * Clean up all fields mismarked as translatable (LP: 118952)
-  * Add source.lintian-overrides to handle a few warnings 
+  * Add source.lintian-overrides to handle a few warnings
     about binary NMU's.
   * Add a mythbuntu gdm.conf that will use the mythbuntu-gdm-theme
     if available at package installation.
@@ -206,7 +207,7 @@ mythtv (0.20-svn20070523-0.0ubuntu1) gutsy; urgency=low
     o Rename libmyth0.20-dev to libmyth-dev .
   * Remaining changes:
     o Drop 21_changeset12782_hd_homerun as its included in 13496.
-    o Make ubuntu-mythtv-frontend depend on mythbuntu-artwork-usplash 
+    o Make ubuntu-mythtv-frontend depend on mythbuntu-artwork-usplash
       rather than the ubuntu artwork if available.
     o Create mythtv-transcode-utils (LP: #92703)
     o FE & BE depend on either fake-msttcorefonts or msttcorefonts. (LP: #110068)
@@ -337,15 +338,15 @@ mythtv (0.20-svn20061209-0.1ubuntu1) feisty; urgency=low
     o Add all files in the contrib directory to the mythtv-backend package.
     o New svn from 0.20 fixes branch (12227).
     o Source /etc/mythtv/mysql.txt in cron.weekly for the mythtv-database package.
-  * Remaining Changes:  
+  * Remaining Changes:
     o Add a ubuntu-mythtv-frontend.postinst to set permissions on /home/mythtv
       if it already exists.
-    o Add feisty-gdm-themes | edgy-gdm-themes to ubuntu-mythtv-frontend 
+    o Add feisty-gdm-themes | edgy-gdm-themes to ubuntu-mythtv-frontend
       depends.
     o Add libgl1-mesa-glx to  ubuntu-mythtv-frontend depends.
     o Make sure gdm.conf-custom and openbox-menu.xml are placed in /etc/mythtv.
       Create symlinks for them in /etc/gdm and /etc/xdg/openbox.
-    o Properly set up diversions for /etc/gdm/gdm.conf-custom & 
+    o Properly set up diversions for /etc/gdm/gdm.conf-custom &
       /etc/xdg/openbox/menu.xml.
     o Add a pre-depends to ubuntu-mythtv-frontend to make sure that
       gdm.conf-custom and menu.xml are generated *before* the diversions.
@@ -368,7 +369,7 @@ mythtv (0.20-0.5ubuntu2) feisty; urgency=low
   * Provide gdm.conf-custom in ubuntu-mythtv-frontend.
   * Add ubuntu-mythtv-frontend.preinst and .postrm for menu.xml, gdm.conf-custom diversions.
   * Add mythtv-themes to Recommends for ubuntu-mythtv-frontend.
-  
+
  -- Mario Limonciello <superm1@ubuntu.com>  Fri,  8 Dec 2006 20:13:36 -0600
 
 mythtv (0.20-0.5ubuntu1) feisty; urgency=low
@@ -387,13 +388,13 @@ mythtv (0.20-0.5ubuntu1) feisty; urgency=low
   * Remaining Changes:
     o Revert the --disable-ccache in debian/rules
     o Be sure that debian/mythtv-database.prerm includes a DEBHELPER tag
-    o Remove patch #11365 for mythreplex bug.  
+    o Remove patch #11365 for mythreplex bug.
       Included in new 0.20-fixes patch from debian multimedia.
     o Update maintainer, "MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>"
     o Add mysql-server to 'mythtv' metapackage, so that this package
       can again be used for a quick install on top of a desktop to
       properly get all necessary dependencies.
-    o Begin to introduce the idea of "profile metapackages" to be used for 
+    o Begin to introduce the idea of "profile metapackages" to be used for
       standalone Ubuntu machines intended soley for mythtv usage.
       - ubuntu-mythtv-master-backend
       - ubuntu-mythtv-frontend
@@ -402,7 +403,7 @@ mythtv (0.20-0.5ubuntu1) feisty; urgency=low
     o Create GDM xsession to be used in frontend profiles
     o Create openbox startup script to be used in frontend profiles
       - Include support for irexec, nvidia-settings, gnome-screensaver
-    o Be sure that "mythtv" is added to the cdrom group.  This will make 
+    o Be sure that "mythtv" is added to the cdrom group.  This will make
       sure that mtd will be able to rip dvds. (Closes: #69651)
     o Rename 05_gnomescreensaver.dpatch to 06_gnomescreensaver.dpatch
       to make room for upstream patch 05_11372.dpatch
@@ -427,7 +428,7 @@ mythtv (0.20-0.2ubuntu2) edgy; urgency=low
  -- Mario Limonciello <superm1@ubuntu.com>  Sun, 15 Oct 2006 13:18:12 -0500
 
 mythtv (0.20-0.2ubuntu1) edgy; urgency=low
-  
+
   * Merge with debian multimedia.  Remaining changes:
   * Keep --enable-opengl-vsync enabled
   * Remove mythtv-debug from suggests in debian/control
@@ -454,7 +455,7 @@ mythtv (0.20-0.0ubuntu3) edgy; urgency=low
 
 mythtv (0.20-0.0ubuntu2) edgy; urgency=low
 
-  * Added --disable-ccache to debain/rules so it doesnt try to use 
+  * Added --disable-ccache to debain/rules so it doesnt try to use
     ccache on the buildd's
 
  -- Brandon Holtsclaw <imbrandon@kubuntu.org>  Thu, 28 Sep 2006 00:22:27 -0500
@@ -705,7 +706,7 @@ mythtv (0.16-2) unstable; urgency=low
  -- Matt Zimmerman <mdz@ubuntu.com>  Fri, 11 Feb 2005 19:33:06 -0800
 
 mythtv (0.16-1) unstable; urgency=low
-  
+
   * New upstream release
   * Add an explanation to the package description of mythtv-debug
     explaining its use
@@ -876,7 +877,7 @@ mythtv (0.11-1) unstable; urgency=low
 mythtv (0.10-4) unstable; urgency=low
 
   * Don't attempt to drop the database in postrm.  Too many people screw up
-    the username/password configuration and then can't purge it 
+    the username/password configuration and then can't purge it
 
  -- Matt Zimmerman <mdz@debian.org>  Wed, 30 Jul 2003 09:03:17 -0400
 
@@ -894,7 +895,7 @@ mythtv (0.10-3) unstable; urgency=low
 mythtv (0.10-2) unstable; urgency=low
 
   * Add /etc/default/mythtv-backend with some handy options for controlling
-    the startup of the backend 
+    the startup of the backend
   * Include patch from upstream CVS to work correctly with xmltv 0.5.15
   * Use exact versioned dependencies for the mythtv metapackage to make it
     easy to keep everything in sync
@@ -933,7 +934,7 @@ mythtv (0.9-1) unstable; urgency=low
 
 mythtv (0.8-11) unstable; urgency=low
 
-  * Print a warning if any old myth stuff is found in /usr/local 
+  * Print a warning if any old myth stuff is found in /usr/local
     (too many complaints about "broken" packages caused by old libraries and
      binaries)
 
@@ -1044,12 +1045,12 @@ mythtv (0.8-1) unstable; urgency=low
 
 mythtv (0.7-12) unstable; urgency=low
 
-  * Add missing '-c' option in example for running mythtv-setup 
+  * Add missing '-c' option in example for running mythtv-setup
 
  -- Matt Zimmerman <mdz@debian.org>  Thu, 21 Nov 2002 16:27:25 -0500
 
 mythtv (0.7-11) unstable; urgency=low
-  
+
   * Improve the run_setup template to omit the now-unnecessary --shell
     option to su, and to give some instruction on how to properly start
     mythtv for those who don't read README.Debian.
@@ -1069,7 +1070,7 @@ mythtv (0.7-10) unstable; urgency=low
 mythtv (0.7-9) unstable; urgency=low
 
   * When generating a random password, store it in the debconf database for
-    next time 
+    next time
 
  -- Matt Zimmerman <mdz@debian.org>  Fri, 15 Nov 2002 18:16:06 -0500
 
@@ -1166,7 +1167,7 @@ mythtv (0.6+cvs.20021106-2) unstable; urgency=low
 mythtv (0.6+cvs.20021106-1) unstable; urgency=low
 
   * Synched with upstream CVS
-  
+
  -- Matt Zimmerman <mdz@debian.org>  Wed,  6 Nov 2002 19:38:20 -0500
 
 mythtv (0.6+cvs.20021105-1) unstable; urgency=low
