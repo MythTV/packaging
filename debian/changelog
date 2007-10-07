@@ -13,8 +13,8 @@ mythtv (0.20.2-0ubuntu9) gutsy; urgency=low
     - Add dh_perl  to debian/rules
     - Build --with-bindings=perl in debian/rules
 
-    [Michael Haas]
-    * Add 29_xinerama_fix.dpatch from upstream trunk rev 14520 (LP: #136533)
+  [ Michael Haas ]
+  * Add 30_xinerama_fix.dpatch from upstream trunk rev 14520 (LP: #136533)
 
 
  -- Mario Limonciello <superm1@ubuntu.com>  Mon, 01 Oct 2007 18:47:06 -0500
