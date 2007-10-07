@@ -73,7 +73,7 @@ configure-stamp: patch-stamp
 	CFLAGS="$(CFLAGS)" ./configure --prefix=/usr --enable-lirc --enable-audio-alsa \
 	--enable-audio-oss --enable-audio-jack --enable-audio-arts --enable-dvb \
 	--enable-ivtv --enable-firewire --enable-joystick-menu $(CONFIGURE_OPTS) \
-	--enable-opengl-vsync
+	--enable-opengl-vsync --with-bindings=perl
 
 	touch configure-stamp
 
@@ -186,6 +186,7 @@ binary-indep: build install
 	dh_installcron -i
 	dh_installchangelogs  -i
 	dh_link -i
+	dh_perl -i
 	dh_compress -i
 	dh_fixperms -i
 	dh_installdeb -i

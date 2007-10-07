@@ -47,7 +47,7 @@ Description: A personal video recorder application (client and server)
 
 Package: mythtv-common
 Architecture: all
-Depends: adduser, pwgen, mysql-client, ttf-freefont, ${misc:Depends}
+Depends: adduser, pwgen, mysql-client, ttf-freefont, ${misc:Depends}, ${perl:Depends}, libdbi-perl, libdbd-mysql-perl
 Recommends: mythtv-doc (= ${source:Version})
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.15-3)

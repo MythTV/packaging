@@ -1,12 +1,19 @@
-mythtv (0.20.2-0ubuntu9) UNRELEASED; urgency=low
+mythtv (0.20.2-0ubuntu9) gutsy; urgency=low
 
   * Change compile type to profile per upstream recommendations.
   * Include 28_patch_build.dpatch from upstream # 14587 to improve
     profile builds.
   * Import debconf translations from rosetta.
+  * Build with perl bindings.  For now include them in mythtv-common,
+    but later they will be included in their own binary package.
+    - Add 29_perl_bindings.dpatch to update settings.pro
+    - Add to mythtv-common package in debian/control
+    - Remove pack list from debian/rules
+    - Add dh_perl  to debian/rules
+    - Build --with-bindings=perl in debian/rules
 
  [Michael Haas]
-  * Add 29_xinerama_fix.dpatch from upstream trunk rev 14520 (LP: #136533)
+  * Add 30_xinerama_fix.dpatch from upstream trunk rev 14520 (LP: #136533)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Mon, 01 Oct 2007 18:47:06 -0500
 

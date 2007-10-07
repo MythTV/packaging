@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mythtv\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2007-07-06 21:08-0500\n"
+"Report-Msgid-Bugs-To: ubuntu-mythtv@lists.ubuntu.com\n"
+"POT-Creation-Date: 2007-10-05 14:43-0500\n"
 "PO-Revision-Date: 2007-08-31 15:38+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -145,8 +145,8 @@ msgstr ""
 #. Description
 #: ../mythtv-common.templates:6001
 msgid ""
-"In case you forget this password, it is also stored in "
-"'/etc/mythtv/mysql.txt'."
+"In case you forget this password, it is also stored in '/etc/mythtv/mysql."
+"txt'."
 msgstr ""
 
 #. Type: select
@@ -223,8 +223,7 @@ msgstr "Qual o nome da conta administrativa do MySQL:"
 #. Type: password
 #. Description
 #: ../mythtv-database.templates:1001 ../mythtv-database.templates:2001
-msgid ""
-"This information will be used to create a database and user for MythTV."
+msgid "This information will be used to create a database and user for MythTV."
 msgstr ""
 
 #. Type: string
@@ -259,9 +258,9 @@ msgstr ""
 #. Description
 #: ../mythtv-database.templates:3001
 msgid ""
-"If you will be using any other computers with MythTV, this computer needs to "
-"be configured to allow remote connections.  Do you want to enable remote  "
-"connectivity?"
+"If you will be using any other computers (that includes other Front End  "
+"machines) with MythTV, this computer needs to be configured to allow  remote "
+"connections. Do you want to enable remote connectivity?"
 msgstr ""
 
 #. Type: boolean

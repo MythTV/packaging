@@ -1,0 +1,43 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 29_perl_bindings.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Corrects locations of configure and settings.pro scripts so
+## DP: that perl bindings work correctly.
+
+@DPATCH@
+diff -urNad mythtv-0.20.2~/bindings/perl/Makefile.PL mythtv-0.20.2/bindings/perl/Makefile.PL
+--- mythtv-0.20.2~/bindings/perl/Makefile.PL	2006-04-07 00:13:55.000000000 -0500
++++ mythtv-0.20.2/bindings/perl/Makefile.PL	2007-10-06 00:29:03.000000000 -0500
+@@ -20,6 +20,7 @@
+                             'DBD::mysql'    => 0,
+                            },
+         'NO_META'       => 1,
++	'PREFIX'	=> '/usr',
+ );
+ 
+ 
+diff -urNad mythtv-0.20.2~/configure mythtv-0.20.2/configure
+--- mythtv-0.20.2~/configure	2007-08-23 04:27:58.000000000 -0500
++++ mythtv-0.20.2/configure	2007-10-06 00:28:06.000000000 -0500
+@@ -361,7 +361,7 @@
+ logging="yes"
+ logfile="config.err"
+ compile_type="release"
+-PREFIX="/usr/local"
++PREFIX="/usr"
+ libdir_name="lib"
+ libdir=""
+ shlibdir=""
+diff -urNad mythtv-0.20.2~/settings.pro mythtv-0.20.2/settings.pro
+--- mythtv-0.20.2~/settings.pro	2007-10-06 00:28:05.000000000 -0500
++++ mythtv-0.20.2/settings.pro	2007-10-06 00:28:06.000000000 -0500
+@@ -1,7 +1,7 @@
+ CONFIG += $$CCONFIG
+ 
+ isEmpty( PREFIX ) {
+-    PREFIX = /usr/local
++    PREFIX = /usr
+ }
+ 
+ LIBVERSION = 0.20.2

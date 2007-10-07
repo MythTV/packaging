@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mythtv\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2007-07-06 21:08-0500\n"
+"Report-Msgid-Bugs-To: ubuntu-mythtv@lists.ubuntu.com\n"
+"POT-Creation-Date: 2007-10-05 14:43-0500\n"
 "PO-Revision-Date: 2007-09-18 07:44+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -138,8 +138,7 @@ msgstr ""
 #. Description
 #: ../mythtv-common.templates:6001
 msgid "The Ubuntu MythTV packages generate a random MySQL password."
-msgstr ""
-"Los paquetes MythTV de Ubuntu generan una contraseña MySQL aleatoria."
+msgstr "Los paquetes MythTV de Ubuntu generan una contraseña MySQL aleatoria."
 
 #. Type: note
 #. Description
@@ -157,18 +156,17 @@ msgstr ""
 #. Description
 #: ../mythtv-common.templates:6001
 msgid "This can be done by: 'sudo dpkg-reconfigure mythtv-common'."
-msgstr ""
-"Esto puede se puede hacer con: 'sudo dpkg-reconfigure mythtv-common'."
+msgstr "Esto puede se puede hacer con: 'sudo dpkg-reconfigure mythtv-common'."
 
 #. Type: note
 #. Description
 #: ../mythtv-common.templates:6001
 msgid ""
-"In case you forget this password, it is also stored in "
-"'/etc/mythtv/mysql.txt'."
+"In case you forget this password, it is also stored in '/etc/mythtv/mysql."
+"txt'."
 msgstr ""
-"En caso de que olvide esta contraseña, esta se encuentra almacenada en "
-"'/etc/mythtv/mysql.txt'."
+"En caso de que olvide esta contraseña, esta se encuentra almacenada en '/etc/"
+"mythtv/mysql.txt'."
 
 #. Type: select
 #. Choices
@@ -254,8 +252,7 @@ msgstr "Cuál es el nombre de la cuenta de administrador de MySQL:"
 #. Type: password
 #. Description
 #: ../mythtv-database.templates:1001 ../mythtv-database.templates:2001
-msgid ""
-"This information will be used to create a database and user for MythTV."
+msgid "This information will be used to create a database and user for MythTV."
 msgstr ""
 "Esta información se usará para crear una base de datos y un usuario para "
 "MythTV."
@@ -296,10 +293,15 @@ msgstr "¿Va a utilizar otros equipos ejecutando MythTV?"
 #. Type: boolean
 #. Description
 #: ../mythtv-database.templates:3001
+#, fuzzy
+#| msgid ""
+#| "If you will be using any other computers with MythTV, this computer needs "
+#| "to be configured to allow remote connections.  Do you want to enable "
+#| "remote  connectivity?"
 msgid ""
-"If you will be using any other computers with MythTV, this computer needs to "
-"be configured to allow remote connections.  Do you want to enable remote  "
-"connectivity?"
+"If you will be using any other computers (that includes other Front End  "
+"machines) with MythTV, this computer needs to be configured to allow  remote "
+"connections. Do you want to enable remote connectivity?"
 msgstr ""
 "Si va a usar algún otro equipo con MythTV, este equipo debe configurarse "
 "para permitir conexiones remotas. ¿Desea activar la conectividad remota?"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mythtv 0.18.1\n"
 "Report-Msgid-Bugs-To: ubuntu-mythtv@lists.ubuntu.com\n"
-"POT-Creation-Date: 2007-07-06 21:08-0500\n"
+"POT-Creation-Date: 2007-10-05 14:43-0500\n"
 "PO-Revision-Date: 2007-09-10 15:09+0000\n"
 "Last-Translator: Christian Marillat<marillat@debian.org>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -16,43 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2007-10-05 08:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#~ msgid "mythconverg"
-#~ msgstr "mythconverg"
-
-#~ msgid "root"
-#~ msgstr "root"
-
-#~ msgid "mythtv"
-#~ msgstr "mythtv"
-
-#~ msgid "localhost"
-#~ msgstr "localhost"
-
-#~ msgid "NTSC, PAL, SECAM, PAL-NC, PAL-M, PAL-N, NTSC-JP"
-#~ msgstr "NTSC, PAL, SECAM, PAL-NC, PAL-M, PAL-N, NTSC-JP"
-
-#~ msgid ""
-#~ "us-bcast, us-cable, us-cable-hrc, japan-bcast, japan-cable, europe-west, "
-#~ "europe-east, italy, newzealand, australia, ireland, france, china-bcast, "
-#~ "southafrica, argentina, canada-cable, australia-optus"
-#~ msgstr ""
-#~ "us-bcast, us-cable, us-cable-hrc, japan-bcast, japan-cable, europe-west, "
-#~ "europe-east, italy, newzealand, australia, ireland, france, china-bcast, "
-#~ "southafrica, argentina, canada-cable, australia-optus"
-
-#~ msgid "6543"
-#~ msgstr "6543"
-
-#~ msgid "su - mythtv -c mythtv-setup"
-#~ msgstr "su - mythtv -c mythtv-setup"
-
-#~ msgid ""
-#~ "and follow any instructions that it gives.  Once you have done this, you "
-#~ "should be able to run mythtv as the 'mythtv' user."
-#~ msgstr ""
-#~ "et suivre les instructions qu'il donne. Une fois fini ceci, vous devriez "
-#~ "être capable d'utiliser mythtv en tant qu'utilisateur 'mythtv'."
 
 #. Type: boolean
 #. Description
@@ -207,11 +170,11 @@ msgstr ""
 #. Description
 #: ../mythtv-common.templates:6001
 msgid ""
-"In case you forget this password, it is also stored in "
-"'/etc/mythtv/mysql.txt'."
+"In case you forget this password, it is also stored in '/etc/mythtv/mysql."
+"txt'."
 msgstr ""
-"Au cas où vous oublieriez ce mot de passe, il est également stocké dans "
-"'/etc/mythtv/mysql.txt'."
+"Au cas où vous oublieriez ce mot de passe, il est également stocké dans '/"
+"etc/mythtv/mysql.txt'."
 
 #. Type: select
 #. Choices
@@ -291,8 +254,7 @@ msgstr "Quel est le nom de l'administrateur MySQL :"
 #. Type: password
 #. Description
 #: ../mythtv-database.templates:1001 ../mythtv-database.templates:2001
-msgid ""
-"This information will be used to create a database and user for MythTV."
+msgid "This information will be used to create a database and user for MythTV."
 msgstr ""
 "Cet information sera utilisé pour créer la base de donnée et l'utilisateur "
 "MythTV."
@@ -332,10 +294,15 @@ msgstr "Utiliserez-vous MythTv sur d'autres ordinateurs?"
 #. Type: boolean
 #. Description
 #: ../mythtv-database.templates:3001
+#, fuzzy
+#| msgid ""
+#| "If you will be using any other computers with MythTV, this computer needs "
+#| "to be configured to allow remote connections.  Do you want to enable "
+#| "remote  connectivity?"
 msgid ""
-"If you will be using any other computers with MythTV, this computer needs to "
-"be configured to allow remote connections.  Do you want to enable remote  "
-"connectivity?"
+"If you will be using any other computers (that includes other Front End  "
+"machines) with MythTV, this computer needs to be configured to allow  remote "
+"connections. Do you want to enable remote connectivity?"
 msgstr ""
 "Si vous voulez utiliser d'autres ordinateurs avec MythTV, cet ordinateur a "
 "besoin d'être configuré pour permettre les connexions distantes. Voulez-vous "
@@ -374,3 +341,40 @@ msgstr "Quel est le nom de la machine ou MythTV backend est installé :"
 #: ../mythtv-frontend.templates:2001
 msgid "On what port number is the MythTV server listening:"
 msgstr "Quel est le numéro du port du serveur MythTV :"
+
+#~ msgid "mythconverg"
+#~ msgstr "mythconverg"
+
+#~ msgid "root"
+#~ msgstr "root"
+
+#~ msgid "mythtv"
+#~ msgstr "mythtv"
+
+#~ msgid "localhost"
+#~ msgstr "localhost"
+
+#~ msgid "NTSC, PAL, SECAM, PAL-NC, PAL-M, PAL-N, NTSC-JP"
+#~ msgstr "NTSC, PAL, SECAM, PAL-NC, PAL-M, PAL-N, NTSC-JP"
+
+#~ msgid ""
+#~ "us-bcast, us-cable, us-cable-hrc, japan-bcast, japan-cable, europe-west, "
+#~ "europe-east, italy, newzealand, australia, ireland, france, china-bcast, "
+#~ "southafrica, argentina, canada-cable, australia-optus"
+#~ msgstr ""
+#~ "us-bcast, us-cable, us-cable-hrc, japan-bcast, japan-cable, europe-west, "
+#~ "europe-east, italy, newzealand, australia, ireland, france, china-bcast, "
+#~ "southafrica, argentina, canada-cable, australia-optus"
+
+#~ msgid "6543"
+#~ msgstr "6543"
+
+#~ msgid "su - mythtv -c mythtv-setup"
+#~ msgstr "su - mythtv -c mythtv-setup"
+
+#~ msgid ""
+#~ "and follow any instructions that it gives.  Once you have done this, you "
+#~ "should be able to run mythtv as the 'mythtv' user."
+#~ msgstr ""
+#~ "et suivre les instructions qu'il donne. Une fois fini ceci, vous devriez "
+#~ "être capable d'utiliser mythtv en tant qu'utilisateur 'mythtv'."

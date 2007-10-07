@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mythtv\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2007-07-06 21:08-0500\n"
+"Report-Msgid-Bugs-To: ubuntu-mythtv@lists.ubuntu.com\n"
+"POT-Creation-Date: 2007-10-05 14:43-0500\n"
 "PO-Revision-Date: 2007-09-01 22:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -27,8 +27,7 @@ msgstr "Är det OK att skapa video4linux-enhetsnoder?"
 #. Description
 #: ../mythtv-backend.templates:2001 ../mythtv-common.templates:5001
 msgid "mythtv-setup must be run in order to complete MythTV installation"
-msgstr ""
-"mythtv-setup måste köras för att färdigställa installationen av MythTV"
+msgstr "mythtv-setup måste köras för att färdigställa installationen av MythTV"
 
 #. Type: note
 #. Description
@@ -77,15 +76,13 @@ msgstr "Vilken databas ska användas för MythTV-data:"
 #. Description
 #: ../mythtv-common.templates:1001
 msgid "If a database with this name already exists, it will be used."
-msgstr ""
-"Om en databas med det här namnet redan finns kommer den att användas."
+msgstr "Om en databas med det här namnet redan finns kommer den att användas."
 
 #. Type: string
 #. Description
 #: ../mythtv-common.templates:2001
 msgid "What username should MythTV use to access its database:"
-msgstr ""
-"Vilket användarnamn ska MythTV använda för att komma åt dess databas:"
+msgstr "Vilket användarnamn ska MythTV använda för att komma åt dess databas:"
 
 #. Type: string
 #. Description
@@ -107,8 +104,7 @@ msgstr "Vilket lösenord ska MythTV använda för att komma åt dess databas:"
 #. Description
 #: ../mythtv-common.templates:3001
 msgid "If you give an empty password, a random one will be generated."
-msgstr ""
-"Om du anger ett blankt lösenord kommer ett lösenord att slumpas fram."
+msgstr "Om du anger ett blankt lösenord kommer ett lösenord att slumpas fram."
 
 #. Type: string
 #. Description
@@ -166,11 +162,11 @@ msgstr ""
 #. Description
 #: ../mythtv-common.templates:6001
 msgid ""
-"In case you forget this password, it is also stored in "
-"'/etc/mythtv/mysql.txt'."
+"In case you forget this password, it is also stored in '/etc/mythtv/mysql."
+"txt'."
 msgstr ""
-"Om du råkar glömma lösenordet så finns det även lagrat i "
-"\"/etc/mythtv/mysql.txt\"."
+"Om du råkar glömma lösenordet så finns det även lagrat i \"/etc/mythtv/mysql."
+"txt\"."
 
 #. Type: select
 #. Choices
@@ -257,8 +253,7 @@ msgstr "Vad är namnet på MySQL-administratörskontot:"
 #. Type: password
 #. Description
 #: ../mythtv-database.templates:1001 ../mythtv-database.templates:2001
-msgid ""
-"This information will be used to create a database and user for MythTV."
+msgid "This information will be used to create a database and user for MythTV."
 msgstr ""
 "Den här informationen kommer att användas för att skapa en databas och "
 "användare för MythTV."
@@ -298,10 +293,15 @@ msgstr "Kommer du att använda andra datorer som kör MythTV?"
 #. Type: boolean
 #. Description
 #: ../mythtv-database.templates:3001
+#, fuzzy
+#| msgid ""
+#| "If you will be using any other computers with MythTV, this computer needs "
+#| "to be configured to allow remote connections.  Do you want to enable "
+#| "remote  connectivity?"
 msgid ""
-"If you will be using any other computers with MythTV, this computer needs to "
-"be configured to allow remote connections.  Do you want to enable remote  "
-"connectivity?"
+"If you will be using any other computers (that includes other Front End  "
+"machines) with MythTV, this computer needs to be configured to allow  remote "
+"connections. Do you want to enable remote connectivity?"
 msgstr ""
 "Om du använder andra datorer med MythTV behöver den här datorn konfigureras "
 "till att tillåta fjärranslutningar. Vill du aktivera fjärranslutningar?"

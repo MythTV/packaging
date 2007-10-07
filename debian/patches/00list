@@ -12,4 +12,5 @@
 26_edit_display.dpatch
 27_pulseaudio.dpatch
 28_profilebuild.dpatch
-29_xinerama_fix.dpatch
+29_perl_bindings.dpatch
+30_xinerama_fix.dpatch
