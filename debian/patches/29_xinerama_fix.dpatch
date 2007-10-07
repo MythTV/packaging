@@ -1,0 +1,26 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 29_xinerama_fix.dpatch by Michael Haas <laga@laga.ath.cx>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Fix https://bugs.launchpad.net/mythbuntu/+bug/136533 using
+## DP: http://svn.mythtv.org/trac/changeset/14520
+## DP: Original patch by Isaac Richards
+
+@DPATCH@
+Index: libs/libmythtv/videoout_xv.cpp
+===================================================================
+--- a/libs/libmythtv/videoout_xv.cpp	(Revision 14623)
++++ b/libs/libmythtv/videoout_xv.cpp	(Arbeitskopie)
+@@ -418,11 +418,7 @@
+             .arg(w).arg(h).arg(window_w).arg(window_h));
+ 
+     // Determine if we are using Xinerama
+-    int event_base, error_base;
+-    bool usingXinerama = false;
+-    X11S(usingXinerama = 
+-         (XineramaQueryExtension(XJ_disp, &event_base, &error_base) &&
+-          XineramaIsActive(XJ_disp)));
++    bool usingXinerama = (GetNumberOfXineramaScreens() > 1);
+ 
+     // If the dimensions are invalid, assume square pixels and 17" screen.
+     // Only print warning if this isn't Xinerama, we will fix Xinerama later.
