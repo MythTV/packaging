@@ -1,0 +1,16 @@
+/var/log/mythtv/mythfrontend.log {
+        daily
+        rotate 7
+        notifempty
+        copytruncate
+	missingok
+}
+
+/var/log/mythtv/mythwelcome.log {
+        daily
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+}
+

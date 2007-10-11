@@ -2,7 +2,7 @@
 Name=MythTV Frontend
 Comment=A frontend for all content on a mythtv-backend
 GenericName=MythTV Viewer
-Exec=mythfrontend
+Exec=mythfrontend --service
 Type=Application
 Encoding=UTF-8
 Icon=/usr/share/mythtv/themes/blue/myth_tv_logo.png

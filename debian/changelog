@@ -1,3 +1,11 @@
+mythtv (0.20.2-0ubuntu10) gutsy; urgency=low
+
+  [ Michael Haas ]
+  * Move logging support.  It's now setup to log for any
+    methods other than a terminal launch. (LP: #130925)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 11 Oct 2007 09:02:36 -0500
+
 mythtv (0.20.2-0ubuntu9) gutsy; urgency=low
 
   [ Mario Limonciello ]
