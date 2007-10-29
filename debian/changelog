@@ -1,3 +1,12 @@
+mythtv (0.20.2-0ubuntu11) UNRELEASED; urgency=low
+
+  * Create a symbolic link to /etc/mythtv/mysql.txt in ~/.mythtv/
+    if you don't already have a mysql.txt.
+  * Update 06_gnomescreensaver.dpatch with changeset 10090, 14023,
+    and 14755 from trunk. (LP: #147905)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 29 Oct 2007 16:56:16 -0400
+
 mythtv (0.20.2-0ubuntu10) gutsy; urgency=low
 
   [ Michael Haas ]

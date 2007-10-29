@@ -13,6 +13,12 @@ find_su
 #check that we are in the mythtv group
 check_groups
 
+#create a symbolic link for mysql.txt so it can't be overwritten
+mkdir -p $HOME/.mythtv
+if [ ! -e $HOME/.mythtv/mysql.txt ]; then
+	ln -s /etc/mythtv/mysql.txt $HOME/.mythtv/mysql.txt
+fi
+
 if [ "$1" = "--service" ]; then
     #source frontend session settings
     . /etc/mythtv/session-settings
