@@ -6,6 +6,10 @@ mythtv (0.20.2-0ubuntu11) UNRELEASED; urgency=low
     than just gnome-screensaver.
   * Update 06_gnomescreensaver.dpatch with changeset 10090, 14023,
     and 14755 from trunk. (LP: #147905)
+  * debian/control:
+    - Move all references of mythtv-doc to suggests
+    - Remove mysql-server from recommends
+    - Move reference of xmltv-util to suggests
 
  -- Mario Limonciello <superm1@ubuntu.com>  Mon, 29 Oct 2007 16:56:16 -0400
 
