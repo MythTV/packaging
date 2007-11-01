@@ -14,3 +14,4 @@
 28_profilebuild.dpatch
 29_perl_bindings.dpatch
 30_xinerama_fix.dpatch
+31_pvr350_ivtv.dpatch
