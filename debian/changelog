@@ -10,7 +10,7 @@ mythtv (0.20.2-0ubuntu11) UNRELEASED; urgency=low
     - Move all references of mythtv-doc to suggests
     - Remove mysql-server from recommends
     - Move reference of xmltv-util to suggests
-  * Add 31_pvr350_ivtv.dpatch to fix pvr-350 ivtv output.
+  * Add 31_pvr350_ivtv.dpatch to fix pvr-350 ivtv output. (LP: #158562)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Mon, 29 Oct 2007 16:56:16 -0400
 
