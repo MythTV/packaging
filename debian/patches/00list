@@ -5,13 +5,8 @@
 07_alsa_default.dpatch
 21_openmedia_mheg5.dpatch
 22_openmedia_livetv.dpatch
-23_schedulesdirect.dpatch
-24_mythstream_typo.dpatch
-25_firewire.dpatch
 #23_video_device_symlinks.dpatch
 26_edit_display.dpatch
 27_pulseaudio.dpatch
-28_profilebuild.dpatch
 29_perl_bindings.dpatch
-30_xinerama_fix.dpatch
 31_pvr350_ivtv.dpatch

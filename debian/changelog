@@ -1,5 +1,11 @@
-mythtv (0.20.2-0ubuntu11) UNRELEASED; urgency=low
+mythtv (0.20.2+fixes14789-0ubuntu1) hardy; urgency=low
 
+  * New upstream checkout (svn changeset 14789)
+    - Drop 23_schedulesdirect.dpatch (included upstream).
+    - Drop 24_mythstream_typo.dpatch (included upstream).
+    - Drop 25_firewire.dpatch (included upstream).
+    - Drop 28_profilebuild.dpatch (included upstream).
+    - Drop 30_xinerama_fix.dpatch (included upstream).
   * Create a symbolic link to /etc/mythtv/mysql.txt in ~/.mythtv/
     if you don't already have a mysql.txt.
   * debian/control: depend on gnome-screensaver | xscreensaver rather
