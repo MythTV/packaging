@@ -1,0 +1,571 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 33_israeli_frequencies.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad mythtv-0.20.2+fixes15096~/libs/libmythtv/frequencies.c mythtv-0.20.2+fixes15096/libs/libmythtv/frequencies.c
+--- mythtv-0.20.2+fixes15096~/libs/libmythtv/frequencies.c	2007-04-12 10:23:34.000000000 -0500
++++ mythtv-0.20.2+fixes15096/libs/libmythtv/frequencies.c	2007-12-09 21:13:39.000000000 -0600
+@@ -1282,6 +1282,60 @@
+ };
+ 
+ /* --------------------------------------------------------------------- */
++/* Israel has cable (HOT) and air analog channels. Cable consists of
++   three companies that have recently joined to form HOT - matav, tevel, and
++   Golden Channels. This is the frequency table used in Matav. */
++/* Added by Max Timchenko [www.maxvt.net], 04/04/2007 */
++static struct CHANLIST israel_hot_matav[] = {
++    {  "1", 184250 },
++    {  "2", 192250 },
++    {  "3", 200250 },
++    {  "4", 208250 },
++    {  "5", 216250 },
++    {  "6", 224250 },
++    {  "7", 232250 },
++    {  "8", 248250 },
++    {  "9", 256250 },
++    { "10", 264250 },
++    { "11", 272250 },
++    { "12", 280250 },
++    { "13", 288250 },
++    { "14", 296250 },
++    { "15", 304250 },
++    { "16", 312250 },
++    { "17", 320250 },
++    { "18", 328250 },
++    { "19", 336250 },
++    { "20", 344250 },
++    { "21", 352250 },
++    { "22", 360250 },
++    { "23", 368250 },
++    { "24", 376250 },
++    { "25", 384250 },
++    { "26", 392250 },
++    { "27", 400250 },
++    { "28", 408250 },
++    { "29", 416250 },
++    { "30", 424250 },
++    { "31", 432250 },
++    { "32", 440250 },
++    { "33", 472250 },
++    { "34", 480250 },
++    { "35", 488250 },
++    { "36", 496250 },
++    { "37", 504250 },
++    { "38", 512250 },
++    { "39", 520250 },
++    { "40", 528250 },
++    { "41", 536250 },
++    { "42", 544250 },
++    { "43", 552250 },
++    { "44", 560250 },
++    { "45", 584250 },
++    { "46", 648250 },
++};
++
++/* --------------------------------------------------------------------- */
+ 
+ struct CHANLISTS chanlists[] = {
+     { "us-bcast",         ntsc_bcast,        CHAN_COUNT(ntsc_bcast)        },
+@@ -1302,5 +1356,6 @@
+     { "argentina",        argentina,         CHAN_COUNT(argentina)         },
+     { "australia-optus",  pal_australia_optus, CHAN_COUNT(pal_australia_optus) },
+     { "singapore",        pal_bcast_sg,      CHAN_COUNT(pal_bcast_sg)      },
++    { "israel-hot-matav", israel_hot_matav,  CHAN_COUNT(israel_hot_matav)  },
+     { NULL, NULL, 0 } /* EOF */
+ };
+diff -urNad mythtv-0.20.2+fixes15096~/libs/libmythtv/videosource.cpp mythtv-0.20.2+fixes15096/libs/libmythtv/videosource.cpp
+--- mythtv-0.20.2+fixes15096~/libs/libmythtv/videosource.cpp	2007-09-28 15:59:00.000000000 -0500
++++ mythtv-0.20.2+fixes15096/libs/libmythtv/videosource.cpp	2007-12-09 21:13:39.000000000 -0600
+@@ -54,7 +54,7 @@
+ QString VSSetting::whereClause(MSqlBindings& bindings)
+ {
+     QString sourceidTag(":WHERESOURCEID");
+-    
++
+     QString query("sourceid = " + sourceidTag);
+ 
+     bindings.insert(sourceidTag, parent.getSourceID());
+@@ -67,7 +67,7 @@
+     QString sourceidTag(":SETSOURCEID");
+     QString colTag(":SET" + getColumn().upper());
+ 
+-    QString query("sourceid = " + sourceidTag + ", " + 
++    QString query("sourceid = " + sourceidTag + ", " +
+             getColumn() + " = " + colTag);
+ 
+     bindings.insert(sourceidTag, parent.getSourceID());
+@@ -79,7 +79,7 @@
+ QString CCSetting::whereClause(MSqlBindings& bindings)
+ {
+     QString cardidTag(":WHERECARDID");
+-    
++
+     QString query("cardid = " + cardidTag);
+ 
+     bindings.insert(cardidTag, parent.getCardID());
+@@ -111,7 +111,7 @@
+     };
+ };
+ 
+-FreqTableSelector::FreqTableSelector(const VideoSource& parent) 
++FreqTableSelector::FreqTableSelector(const VideoSource& parent)
+   : VSSetting(parent, "freqtable")
+ {
+     setLabel(QObject::tr("Channel frequency table"));
+@@ -160,7 +160,7 @@
+ 
+ void DataDirectLineupSelector::fillSelections(const QString &uid,
+                                               const QString &pwd,
+-                                              int _source) 
++                                              int _source)
+ {
+     (void) uid;
+     (void) pwd;
+@@ -173,7 +173,7 @@
+     DataDirectProcessor ddp(_source, uid, pwd);
+     QString waitMsg = tr("Fetching lineups from %1...")
+         .arg(ddp.GetListingsProviderName());
+-        
++
+     VERBOSE(VB_GENERAL, waitMsg);
+     MythProgressDialog pdlg(waitMsg, 2);
+ 
+@@ -201,7 +201,7 @@
+ #endif // USING_BACKEND
+ }
+ 
+-void DataDirect_config::load() 
++void DataDirect_config::load()
+ {
+     VerticalConfigurationGroup::load();
+     bool is_sd_userid = userid->getValue().contains("@") > 0;
+@@ -210,7 +210,7 @@
+     if (((userid->getValue() != lastloadeduserid) ||
+          (password->getValue() != lastloadedpassword)) && match)
+     {
+-        lineupselector->fillSelections(userid->getValue(), 
++        lineupselector->fillSelections(userid->getValue(),
+                                        password->getValue(),
+                                        source);
+         lastloadeduserid = userid->getValue();
+@@ -221,7 +221,7 @@
+ DataDirect_config::DataDirect_config(const VideoSource& _parent, int _source) :
+     ConfigurationGroup(false, false, false, false),
+     VerticalConfigurationGroup(false, false, false, false),
+-    parent(_parent) 
++    parent(_parent)
+ {
+     source = _source;
+ 
+@@ -251,11 +251,11 @@
+         userid->getValue(), password->getValue(), source);
+ }
+ 
+-XMLTV_generic_config::XMLTV_generic_config(const VideoSource& _parent, 
++XMLTV_generic_config::XMLTV_generic_config(const VideoSource& _parent,
+                                            QString _grabber) :
+     ConfigurationGroup(false, false, false, false),
+     VerticalConfigurationGroup(false, false, false, false),
+-    parent(_parent), grabber(_grabber) 
++    parent(_parent), grabber(_grabber)
+ {
+     TransLabelSetting *label = new TransLabelSetting();
+     label->setLabel(grabber);
+@@ -315,7 +315,7 @@
+             gContext->GetMainWindow(), QObject::tr("Warning."), err_msg);
+     }
+ 
+-    pdlg.setProgress( 2 );    
++    pdlg.setProgress( 2 );
+     pdlg.Close();
+ }
+ 
+@@ -435,11 +435,14 @@
+         VERBOSE(VB_IMPORTANT, "Failed to run tv_find_grabbers");
+     }
+ 
++    addTarget("tv_grab_il", new XMLTV_generic_config(parent, "tv_grab_il"));
++    grabber->addSelection("Israel", "tv_grab_il");
++
+     addTarget("/bin/true", new NoGrabber_config(parent));
+     grabber->addSelection("No grabber", "/bin/true");
+ }
+ 
+-VideoSource::VideoSource() 
++VideoSource::VideoSource()
+ {
+     // must be first
+     addChild(id = new ID());
+@@ -452,8 +455,8 @@
+     addChild(group);
+ }
+ 
+-bool VideoSourceEditor::cardTypesInclude(const int &sourceID, 
+-                                         const QString &thecardtype) 
++bool VideoSourceEditor::cardTypesInclude(const int &sourceID,
++                                         const QString &thecardtype)
+ {
+     MSqlQuery query(MSqlQuery::InitCon());
+     query.prepare("SELECT count(cardtype)"
+@@ -476,7 +479,7 @@
+     return false;
+ }
+ 
+-void VideoSource::fillSelections(SelectSetting* setting) 
++void VideoSource::fillSelections(SelectSetting* setting)
+ {
+     MSqlQuery result(MSqlQuery::InitCon());
+     result.prepare("SELECT name, sourceid FROM videosource;");
+@@ -491,7 +494,7 @@
+     }
+ }
+ 
+-void VideoSource::loadByID(int sourceid) 
++void VideoSource::loadByID(int sourceid)
+ {
+     id->setValue(sourceid);
+     load();
+@@ -540,7 +543,7 @@
+         const QFileInfoList *il = dir.entryInfoList();
+         if (!il)
+             return cnt;
+-        
++
+         QFileInfoListIterator it( *il );
+         QFileInfo *fi;
+ 
+@@ -1240,8 +1243,8 @@
+ 
+     setTrigger(cardtype);
+     setSaveAll(false);
+-    
+-    
++
++
+ #ifdef USING_V4L
+     addTarget("V4L",       new V4LConfigurationGroup(parent));
+     addTarget("HDTV",      new pcHDTVConfigurationGroup(parent));
+@@ -1275,13 +1278,13 @@
+ #endif // USING_FREEBOX
+ }
+ 
+-void CaptureCardGroup::triggerChanged(const QString& value) 
++void CaptureCardGroup::triggerChanged(const QString& value)
+ {
+     QString own = (value == "MJPEG" || value == "GO7007") ? "V4L" : value;
+     TriggeredConfigurationGroup::triggerChanged(own);
+ }
+ 
+-CaptureCard::CaptureCard(bool use_card_group) 
++CaptureCard::CaptureCard(bool use_card_group)
+ {
+     // must be first
+     addChild(id = new ID());
+@@ -1296,12 +1299,12 @@
+     parentid->setValue(QString::number(id));
+ }
+ 
+-void CaptureCard::fillSelections(SelectSetting* setting) 
++void CaptureCard::fillSelections(SelectSetting* setting)
+ {
+     CaptureCard::fillSelections(setting, false);
+ }
+ 
+-void CaptureCard::fillSelections(SelectSetting* setting, bool no_children) 
++void CaptureCard::fillSelections(SelectSetting* setting, bool no_children)
+ {
+     MSqlQuery query(MSqlQuery::InitCon());
+     QString qstr =
+@@ -1333,14 +1336,14 @@
+     }
+ }
+ 
+-void CaptureCard::loadByID(int cardid) 
++void CaptureCard::loadByID(int cardid)
+ {
+     id->setValue(cardid);
+     load();
+ }
+ 
+ CardType::CardType(const CaptureCard& parent)
+-        : CCSetting(parent, "cardtype") 
++        : CCSetting(parent, "cardtype")
+ {
+     setLabel(QObject::tr("Card type"));
+     setHelpText(QObject::tr("Change the cardtype to the appropriate type for "
+@@ -1497,7 +1500,7 @@
+         setLabel(QObject::tr("Allow audio only channels"));
+         setHelpText(QObject::tr(
+                         "If set, audio only channels will not be ignored "
+-                        "by the MythTV channel scanner.")); 
++                        "by the MythTV channel scanner."));
+     };
+ };
+ 
+@@ -1557,7 +1560,7 @@
+         return;
+     }
+ 
+-    // If there are channels sort them, then add them 
++    // If there are channels sort them, then add them
+     // (selecting the old start channel if it is there).
+     QString order = gContext->GetSetting("ChannelOrdering", "channum");
+     ChannelUtil::SortChannels(channels, order);
+@@ -1625,7 +1628,7 @@
+     if (isDTVcard)
+     {
+         // we place this in a group just so the margins match the DVB ones.
+-        ConfigurationGroup *chgroup = 
++        ConfigurationGroup *chgroup =
+             new HorizontalConfigurationGroup(false, false, true, true);
+         chgroup->addChild(new FreeToAir(*this));
+         group->addChild(chgroup);
+@@ -1640,8 +1643,8 @@
+         diseqc->setVisible(DTVDeviceNeedsConfiguration(_cardid));
+         group->addChild(diseqc);
+         connect(diseqc, SIGNAL(pressed()), SLOT(diseqcConfig()));
+-   
+-        ConfigurationGroup *chgroup = 
++
++        ConfigurationGroup *chgroup =
+             new HorizontalConfigurationGroup(false, false, true, true);
+         chgroup->addChild(new RadioServices(*this));
+         chgroup->addChild(new DishNetEIT(*this));
+@@ -1715,7 +1718,7 @@
+     scanwizard.exec(false,true);
+ 
+     if (SourceUtil::GetChannelCount(srcid))
+-        startchan->SetSourceID(QString::number(srcid));        
++        startchan->SetSourceID(QString::number(srcid));
+     if (num_channels_before)
+     {
+         startchan->load();
+@@ -1725,7 +1728,7 @@
+     VERBOSE(VB_IMPORTANT, "You must compile the backend "
+             "to be able to scan for channels");
+ #endif
+-    
++
+ }
+ 
+ void CardInput::sourceFetch(void)
+@@ -1755,7 +1758,7 @@
+     }
+ 
+     if (SourceUtil::GetChannelCount(srcid))
+-        startchan->SetSourceID(QString::number(srcid));        
++        startchan->SetSourceID(QString::number(srcid));
+     if (num_channels_before)
+     {
+         startchan->load();
+@@ -1771,10 +1774,10 @@
+ #endif // USING_DVB
+ }
+ 
+-QString CISetting::whereClause(MSqlBindings& bindings) 
++QString CISetting::whereClause(MSqlBindings& bindings)
+ {
+     QString cardinputidTag(":WHERECARDINPUTID");
+-    
++
+     QString query("cardinputid = " + cardinputidTag);
+ 
+     bindings.insert(cardinputidTag, parent.getInputID());
+@@ -1782,12 +1785,12 @@
+     return query;
+ }
+ 
+-QString CISetting::setClause(MSqlBindings& bindings) 
++QString CISetting::setClause(MSqlBindings& bindings)
+ {
+     QString cardinputidTag(":SETCARDINPUTID");
+     QString colTag(":SET" + getColumn().upper());
+ 
+-    QString query("cardinputid = " + cardinputidTag + ", " + 
++    QString query("cardinputid = " + cardinputidTag + ", " +
+             getColumn() + " = " + colTag);
+ 
+     bindings.insert(cardinputidTag, parent.getInputID());
+@@ -1796,7 +1799,7 @@
+     return query;
+ }
+ 
+-void CardInput::loadByID(int inputid) 
++void CardInput::loadByID(int inputid)
+ {
+     id->setValue(inputid);
+ #ifdef USING_DVB
+@@ -1805,7 +1808,7 @@
+     load();
+ }
+ 
+-void CardInput::loadByInput(int _cardid, QString _inputname) 
++void CardInput::loadByInput(int _cardid, QString _inputname)
+ {
+     MSqlQuery query(MSqlQuery::InitCon());
+     query.prepare("SELECT cardinputid FROM cardinput "
+@@ -1813,12 +1816,12 @@
+     query.bindValue(":CARDID", _cardid);
+     query.bindValue(":INPUTNAME", _inputname);
+ 
+-    if (query.exec() && query.isActive() && query.size() > 0) 
++    if (query.exec() && query.isActive() && query.size() > 0)
+     {
+         query.next();
+         loadByID(query.value(0).toInt());
+-    } 
+-    else 
++    }
++    else
+     {
+         load(); // new
+         cardid->setValue(QString::number(_cardid));
+@@ -1826,7 +1829,7 @@
+     }
+ }
+ 
+-void CardInput::save() 
++void CardInput::save()
+ {
+ 
+     if (sourceid->getValue() == "0")
+@@ -1846,17 +1849,17 @@
+     }
+ }
+ 
+-int CISetting::getInputID(void) const 
++int CISetting::getInputID(void) const
+ {
+     return parent.getInputID();
+ }
+ 
+-int CCSetting::getCardID(void) const 
++int CCSetting::getCardID(void) const
+ {
+     return parent.getCardID();
+ }
+ 
+-int CaptureCardEditor::exec() 
++int CaptureCardEditor::exec()
+ {
+     while (ConfigurationDialog::exec() == QDialog::Accepted)
+         edit();
+@@ -1864,7 +1867,7 @@
+     return QDialog::Rejected;
+ }
+ 
+-void CaptureCardEditor::load() 
++void CaptureCardEditor::load()
+ {
+     clearSelections();
+     addSelection(QObject::tr("(New capture card)"), "0");
+@@ -1875,7 +1878,7 @@
+ }
+ 
+ MythDialog* CaptureCardEditor::dialogWidget(MythMainWindow* parent,
+-                                            const char* widgetName) 
++                                            const char* widgetName)
+ {
+     dialog = ConfigurationDialog::dialogWidget(parent, widgetName);
+     connect(dialog, SIGNAL(menuButtonPressed()), this, SLOT(menu()));
+@@ -1886,12 +1889,12 @@
+ 
+ void CaptureCardEditor::menu(void)
+ {
+-    if (getValue().toInt() == 0) 
++    if (getValue().toInt() == 0)
+     {
+         CaptureCard cc;
+         cc.exec();
+-    } 
+-    else 
++    }
++    else
+     {
+         int val = MythPopupBox::show2ButtonPopup(
+             gContext->GetMainWindow(),
+@@ -1989,7 +1992,7 @@
+ }
+ 
+ MythDialog* VideoSourceEditor::dialogWidget(MythMainWindow* parent,
+-                                            const char* widgetName) 
++                                            const char* widgetName)
+ {
+     dialog = ConfigurationDialog::dialogWidget(parent, widgetName);
+     connect(dialog, SIGNAL(menuButtonPressed()), this, SLOT(menu()));
+@@ -2014,12 +2017,12 @@
+ 
+ void VideoSourceEditor::menu()
+ {
+-    if (getValue().toInt() == 0) 
++    if (getValue().toInt() == 0)
+     {
+         VideoSource vs;
+         vs.exec();
+-    } 
+-    else 
++    }
++    else
+     {
+         int val = MythPopupBox::show2ButtonPopup(
+             gContext->GetMainWindow(),
+@@ -2036,7 +2039,7 @@
+     }
+ }
+ 
+-void VideoSourceEditor::edit() 
++void VideoSourceEditor::edit()
+ {
+     const int sourceid = getValue().toInt();
+     if (-1 == sourceid)
+@@ -2071,7 +2074,7 @@
+     }
+ }
+ 
+-void VideoSourceEditor::del() 
++void VideoSourceEditor::del()
+ {
+     int val = MythPopupBox::show2ButtonPopup(
+         gContext->GetMainWindow(), "",
+@@ -2119,7 +2122,7 @@
+     }
+ }
+ 
+-int CardInputEditor::exec() 
++int CardInputEditor::exec()
+ {
+     while (ConfigurationDialog::exec() == QDialog::Accepted)
+         cardinputs[getValue().toInt()]->exec();
+@@ -2127,7 +2130,7 @@
+     return QDialog::Rejected;
+ }
+ 
+-void CardInputEditor::load() 
++void CardInputEditor::load()
+ {
+     cardinputs.clear();
+     clearSelections();
+@@ -2345,7 +2348,7 @@
+ 
+     addChild(cardnum);
+ 
+-    HorizontalConfigurationGroup *hg0 = 
++    HorizontalConfigurationGroup *hg0 =
+         new HorizontalConfigurationGroup(false, false, true, true);
+     hg0->addChild(cardname);
+     hg0->addChild(cardtype);
+@@ -2373,9 +2376,9 @@
+            "detect this problem."));
+ 
+     TransButtonSetting *buttonRecOpt = new TransButtonSetting();
+-    buttonRecOpt->setLabel(tr("Recording Options"));    
++    buttonRecOpt->setLabel(tr("Recording Options"));
+ 
+-    HorizontalConfigurationGroup *advcfg = 
++    HorizontalConfigurationGroup *advcfg =
+         new HorizontalConfigurationGroup(false, false, true, true);
+     advcfg->addChild(buttonDiSEqC);
+     advcfg->addChild(buttonAnalog);

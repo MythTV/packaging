@@ -1,3 +1,23 @@
+mythtv (0.20.2+fixes15096-0ubuntu1) hardy; urgency=low
+
+  * New upstream checkout. (LP: #172291)
+  * Drop 32_gcc_4.2_changes.  No longer necessary.
+  * debian/rules:
+    - Disable symbol visibility again.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 09 Dec 2007 15:40:01 -0600
+
+mythtv (0.20.2+fixes14789-0ubuntu2) hardy; urgency=low
+
+  * Add 32_gcc_4.2_changes to prevent FTBFS when using
+    gcc 4.2 in hardy.
+  * Update 31_pvr350_ivtv to remove old ivtv ".orig" file.
+  * debian/rules:
+    - Explicitly turn on symbol visibility
+  * Add 33_israeli_frequencies to include israeli frequencies.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 14 Nov 2007 19:45:11 -0600
+
 mythtv (0.20.2+fixes14789-0ubuntu1) hardy; urgency=low
 
   * New upstream checkout (svn changeset 14789)
