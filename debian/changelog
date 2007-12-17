@@ -1,3 +1,18 @@
+mythtv (0.20.2+fixes15096-0ubuntu2) UNRELEASED; urgency=low
+
+  [ Mario Limonciello ]
+  * mythtv-backend.init:
+    - Require networking and remote file systems to be started before
+      running.
+    - Find the home directory of our USER and then create a symbolic
+      link in that user's home directory for mysql.txt.
+    - Add LSB support.
+
+  [ Paul McEnery ]
+  * More resilient init script PID handling (LP: #118538)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 17 Dec 2007 00:15:52 -0600
+
 mythtv (0.20.2+fixes15096-0ubuntu1) hardy; urgency=low
 
   * New upstream checkout. (LP: #172291)

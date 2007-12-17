@@ -1,7 +1,7 @@
 #! /bin/sh
 ### BEGIN INIT INFO
 # Provides:          mythtv-backend
-# Required-Start:    $local_fs
+# Required-Start:    $local_fs $remote_fs $network
 # Required-Stop:     $local_fs
 # Default-Start:     24
 # Default-Stop:      S
@@ -15,9 +15,12 @@ DESC="MythTV server"
 
 test -x $DAEMON || exit 0
 
+. /lib/lsb/init-functions
+
 set -e
 
 USER=mythtv
+USER_HOME=$(grep ^$USER /etc/passwd | awk -F : '{print $6}')
 RUNDIR=/var/run/mythtv
 ARGS="--daemon --logfile /var/log/mythtv/mythbackend.log --pidfile $RUNDIR/$NAME.pid"
 EXTRA_ARGS=""
@@ -35,38 +38,50 @@ chown -R $USER $RUNDIR
 unset DISPLAY
 unset SESSION_MANAGER
 
+#create a symbolic link for mysql.txt so it can't be overwritten
+mkdir -p $USER_HOME/.mythtv
+chown -R $USER $USER_HOME/.mythtv
+if [ ! -e $USER_HOME/.mythtv/mysql.txt ]; then
+        ln -s /etc/mythtv/mysql.txt $USER_HOME/.mythtv/mysql.txt
+fi
+
 case "$1" in
   start)
-	if test -e $RUNDIR/$NAME.pid ; then
-		echo "mythbackend already running, use restart instead."
-	else
-		echo -n "Starting $DESC: $NAME "
-		start-stop-daemon --start --pidfile $RUNDIR/$NAME.pid \
-			--chuid $USER --nicelevel $NICE --exec $DAEMON -- $ARGS
-		echo "."
+	if [ -e $RUNDIR/$NAME.pid ]; then
+		PIDDIR=/proc/$(cat $RUNDIR/$NAME.pid)
+		if [ -d ${RUNDIR} -a "$(readlink -f ${RUNDIR}/exe)" = "${DAEMON}" ]; then
+			log_success_msg "$DESC already started; use restart instead."
+			exit 1
+		else
+			log_success_msg "Removing stale PID file $RUNDIR/$NAME"
+			rm -f $RUNDIR/$NAME.pid
+		fi
 	fi
+	log_daemon_msg "Starting $DESC: $NAME "
+	start-stop-daemon --start --pidfile $RUNDIR/$NAME.pid \
+		--chuid $USER --nicelevel $NICE --exec $DAEMON -- $ARGS
+	log_end_msg $?
 	;;
   stop)
-	echo -n "Stopping $DESC: $NAME "
+	log_daemon_msg "Stopping $DESC: $NAME "
 	start-stop-daemon --stop --oknodo --pidfile $RUNDIR/$NAME.pid \
 		--chuid $USER --exec $DAEMON -- $ARGS
+	log_end_msg $?
 	test -e $RUNDIR/$NAME.pid && rm $RUNDIR/$NAME.pid
-	echo "."
 	;;
   restart|force-reload)
-	echo -n "Restarting $DESC: $NAME "
+	log_daemon_msg "Restarting $DESC: $NAME "
 	start-stop-daemon --stop --oknodo --pidfile $RUNDIR/$NAME.pid \
                 --chuid $USER --exec $DAEMON -- $ARGS
-	echo "."
 	sleep 3
 	start-stop-daemon --start --pidfile $RUNDIR/$NAME.pid \
                 --chuid $USER --nicelevel $NICE --exec $DAEMON -- $ARGS
-	echo "."
+    log_end_msg $?
 	;;
   *)
 	N=/etc/init.d/$NAME
 	echo "Usage: $N {start|stop|restart|force-reload}" >&2
-	exit 1
+	exit 2
 	;;
 esac
 
