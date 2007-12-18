@@ -1,3 +1,10 @@
+mythtv (0.20.2+fixes15096-0ubuntu3) UNRELEASED; urgency=low
+
+  * mythtv-backend.int:
+    - Bump the default starting runlevel to 50.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 18 Dec 2007 03:25:37 -0600
+
 mythtv (0.20.2+fixes15096-0ubuntu2) hardy; urgency=low
 
   [ Mario Limonciello ]

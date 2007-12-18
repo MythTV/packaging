@@ -3,7 +3,7 @@
 # Provides:          mythtv-backend
 # Required-Start:    $local_fs $remote_fs $network
 # Required-Stop:     $local_fs
-# Default-Start:     24
+# Default-Start:     50
 # Default-Stop:      S
 # Short-Description: Start/Stop the MythTV server.
 ### END INIT INFO
