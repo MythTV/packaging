@@ -1,0 +1,65 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 34_utf8_fixes.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad mythtv-0.20.2+fixes15096~/programs/mythbackend/upnpcdsmusic.cpp mythtv-0.20.2+fixes15096/programs/mythbackend/upnpcdsmusic.cpp
+--- mythtv-0.20.2+fixes15096~/programs/mythbackend/upnpcdsmusic.cpp	2007-08-23 11:09:51.000000000 -0500
++++ mythtv-0.20.2+fixes15096/programs/mythbackend/upnpcdsmusic.cpp	2008-01-01 13:31:37.000000000 -0600
+@@ -179,13 +179,13 @@
+     QString        sName;
+ 
+     int            nId          = query.value( 0).toInt();
+-    QString        sArtist      = query.value( 1).toString();
+-    QString        sAlbum       = query.value( 2).toString();
+-    QString        sTitle       = query.value( 3).toString();
+-    QString        sGenre       = query.value( 4).toString();
++    QString        sArtist      = QString::fromUtf8(query.value( 1).toString());
++    QString        sAlbum       = QString::fromUtf8(query.value( 2).toString());
++    QString        sTitle       = QString::fromUtf8(query.value( 3).toString());
++    QString        sGenre       = QString::fromUtf8(query.value( 4).toString());
+ //    int            nYear        = query.value( 5).toInt();
+     int            nTrackNum    = query.value( 6).toInt();
+-    QString        sDescription = query.value( 7).toString();
++    QString        sDescription = QString::fromUtf8(query.value( 7).toString());
+     QString        sFileName    = query.value( 8).toString();
+     uint           nLength      = query.value( 9).toInt();
+ 
+diff -urNad mythtv-0.20.2+fixes15096~/programs/mythbackend/upnpcdstv.cpp mythtv-0.20.2+fixes15096/programs/mythbackend/upnpcdstv.cpp
+--- mythtv-0.20.2+fixes15096~/programs/mythbackend/upnpcdstv.cpp	2007-08-23 11:09:51.000000000 -0500
++++ mythtv-0.20.2+fixes15096/programs/mythbackend/upnpcdstv.cpp	2008-01-01 13:31:37.000000000 -0600
+@@ -178,12 +178,12 @@
+     int            nChanid      = query.value( 0).toInt();
+     QDateTime      dtStartTime  = query.value( 1).toDateTime();
+     QDateTime      dtEndTime    = query.value( 2).toDateTime();
+-    QString        sTitle       = query.value( 3).toString();
+-    QString        sSubtitle    = query.value( 4).toString();
+-    QString        sDescription = query.value( 5).toString();
++    QString        sTitle       = QString::fromUtf8(query.value( 3).toString());
++    QString        sSubtitle    = QString::fromUtf8(query.value( 4).toString());
++    QString        sDescription = QString::fromUtf8(query.value( 5).toString());
+     QString        sCategory    = query.value( 6).toString();
+     QString        sHostName    = query.value( 7).toString();
+-    QString        sRecGroup    = query.value( 8).toString();
++    QString        sRecGroup    = QString::fromUtf8(query.value( 8).toString());
+     long long      nFileSize    = stringToLongLong( query.value( 9).toString() );
+     QString        sBaseName    = query.value(10).toString();
+ 
+diff -urNad mythtv-0.20.2+fixes15096~/programs/mythbackend/upnpcdsvideo.cpp mythtv-0.20.2+fixes15096/programs/mythbackend/upnpcdsvideo.cpp
+--- mythtv-0.20.2+fixes15096~/programs/mythbackend/upnpcdsvideo.cpp	2007-08-23 11:09:51.000000000 -0500
++++ mythtv-0.20.2+fixes15096/programs/mythbackend/upnpcdsvideo.cpp	2008-01-01 13:31:37.000000000 -0600
+@@ -236,9 +236,9 @@
+                             MSqlQuery               &query )
+ {
+     int            nVidID       = query.value( 0).toInt();
+-    QString        sTitle       = query.value( 1).toString();
+-    QString        sDirector    = query.value( 2).toString();
+-    QString        sDescription = query.value( 3).toString();
++    QString        sTitle       = QString::fromUtf8(query.value( 1).toString());
++    QString        sDirector    = QString::fromUtf8(query.value( 2).toString());
++    QString        sDescription = QString::fromUtf8(query.value( 3).toString());
+     QString        sYear        = query.value( 4).toString();
+     QString        sUserRating  = query.value( 5).toString();
+   //long long      nFileSize    = stringToLongLong( query.value( 6).toString() );
