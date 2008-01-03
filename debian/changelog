@@ -3,6 +3,7 @@ mythtv (0.20.2+fixes15096-0ubuntu3) UNRELEASED; urgency=low
   * mythtv-backend.int:
     - Bump the default starting runlevel to 50.
   * Add UTF-8 support for UPnP server. (LP: #156689)
+  * Add fixes for 0 length recordings. (LP: #156691)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Tue, 18 Dec 2007 03:25:37 -0600
 
