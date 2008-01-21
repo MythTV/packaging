@@ -24,15 +24,15 @@ if [ "$IGNORE_NOT" = "0" ]; then
 			$SU_TYPE /etc/init.d/mythtv-backend stop --message "Please enter your current login password to stop mythtv-backend."
 		fi
 		/usr/bin/x-terminal-emulator -e /usr/bin/mythtv-setup.real "$@"
-		dialog_question "Fill Database?" "Would you like to run mythfilldatabase?"
-		DATABASE_NOT=$?
-		if [ "$DATABASE_NOT" = "0" ]; then
-			xterm -title "Running mythfilldatabase" -e "unset DISPLAY && unset SESSION_MANAGER && mythfilldatabase; sleep 3"
-		fi
 		if [ "$DE" = "kde" ]; then
 			$SU_TYPE /etc/init.d/mythtv-backend restart
 		else
 			$SU_TYPE /etc/init.d/mythtv-backend restart --message "Please enter your current login password to start mythtv-backend."
+		fi
+		dialog_question "Fill Database?" "Would you like to run mythfilldatabase?"
+		DATABASE_NOT=$?
+		if [ "$DATABASE_NOT" = "0" ]; then
+			xterm -title "Running mythfilldatabase" -e "unset DISPLAY && unset SESSION_MANAGER && mythfilldatabase; sleep 3"
 		fi
 	fi
 fi
