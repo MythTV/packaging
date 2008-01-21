@@ -2,7 +2,7 @@
 ## 34_utf8_fixes.dpatch by Mario Limonciello <superm1@ubuntu.com>
 ##
 ## All lines beginning with `## DP:' are a description of the patch.
-## DP: No description.
+## DP: Fixes UTF8 problems encountered for PS3 users
 
 @DPATCH@
 diff -urNad mythtv-0.20.2+fixes15096~/programs/mythbackend/upnpcdsmusic.cpp mythtv-0.20.2+fixes15096/programs/mythbackend/upnpcdsmusic.cpp

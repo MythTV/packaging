@@ -2,7 +2,7 @@
 ## 30_pvr350_ivtv.dpatch by Mario Limonciello <superm1@ubuntu.com>
 ##
 ## All lines beginning with `## DP:' are a description of the patch.
-## DP: No description.
+## DP: Fixes V4L2 pvr-350 ivtv support
 
 @DPATCH@
 diff -urNad mythtv-0.20.2~/libs/libmythtv/ivtv_myth.h mythtv-0.20.2/libs/libmythtv/ivtv_myth.h

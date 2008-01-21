@@ -2,7 +2,7 @@
 ## 35_upnp_length.dpatch by Mario Limonciello <superm1@ubuntu.com>
 ##
 ## All lines beginning with `## DP:' are a description of the patch.
-## DP: No description.
+## DP: Fix length errors on PS3 users
 
 @DPATCH@
 diff -urNad mythtv-0.20.2+fixes15096~/programs/mythbackend/upnpcdsmusic.cpp mythtv-0.20.2+fixes15096/programs/mythbackend/upnpcdsmusic.cpp

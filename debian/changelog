@@ -7,6 +7,9 @@ mythtv (0.20.2+fixes15513-0ubuntu3) hardy; urgency=low
   * Add fixes for 0 length recordings. (LP: #156691)
   * mythtv-setup.sh:
     - Fill database *after* starting backend.
+  * debian/control:
+    - Change ntp requirements from suggests to recommends.
+    - Make mythtv-database a suggest rather than recommend.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Tue, 18 Dec 2007 03:25:37 -0600
 

@@ -2,7 +2,7 @@
 ## alsa-patch.dpatch by Mario Limonciello <superm1@ubuntu.com>
 ##
 ## All lines beginning with `## DP:' are a description of the patch.
-## DP: No description.
+## DP: Makes ALSA the default handler for audio.
 
 @DPATCH@
 diff -urNad mythtv-0.20-svn20070122~/programs/mythfrontend/globalsettings.cpp mythtv-0.20-svn20070122/programs/mythfrontend/globalsettings.cpp

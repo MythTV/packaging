@@ -88,9 +88,8 @@ Architecture: any
 Depends: mythtv-common (= ${source:Version}), mythtv-transcode-utils (= ${source:Version}), ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, fake-msttcorefonts | msttcorefonts, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
-Recommends: mythtv-database, logrotate
-Suggests: xmltv-util
-Suggests: mythtv-frontend, mythweb, ntp | time-daemon | ntp-simple
+Recommends: ntp | time-daemon | ntp-simple, logrotate
+Suggests: mythtv-frontend, mythweb, mythtv-database, xmltv-util
 Description: A personal video recorder application (server)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
