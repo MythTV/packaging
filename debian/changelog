@@ -10,6 +10,7 @@ mythtv (0.20.2+fixes15513-0ubuntu3) hardy; urgency=low
   * debian/control:
     - Change ntp requirements from suggests to recommends.
     - Make mythtv-database a suggest rather than recommend.
+    - Drop gdm from depends on ubuntu-mythtv-frontend.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Tue, 18 Dec 2007 03:25:37 -0600
 
