@@ -1,3 +1,10 @@
+mythtv (0.20.2+fixes15513-0ubuntu4) hardy; urgency=low
+
+  * Rebuild against newer kdelibs to resolve stat64 symbol
+    problems. (LP: #185033, 185108)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 23 Jan 2008 01:06:21 -0600
+
 mythtv (0.20.2+fixes15513-0ubuntu3) hardy; urgency=low
 
   * New upstream checkout (minor fixes).
