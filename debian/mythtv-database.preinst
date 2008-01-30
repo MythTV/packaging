@@ -1,0 +1,34 @@
+#!/bin/sh -e
+
+MYSQL="/usr/share/mythtv/sql/mythtv_0.20.1.sql"
+MYSQLCONFIG="/etc/mysql/conf.d/mythtv.cnf"
+FSTAB="/etc/fstab"
+EXT3=0
+NEWIP="127.0.0.1"
+LOCALHOSTNAME=`cat /etc/hostname`
+
+case "$1" in
+    upgrade)
+    . /usr/share/debconf/confmodule
+
+    if [ -x /etc/cron.weekly/mythtv-database ]; then
+	db_input high mythtv/backup_db || true
+	db_go || true
+	/etc/cron.weekly/mythtv-database || true
+    fi    
+
+    ;;
+
+    abort-upgrade|install)
+
+    ;;
+
+    *)
+    echo "preinst called with unknown argument \`$1'" >&2
+    exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

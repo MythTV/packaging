@@ -1,0 +1,22 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 08_default_directory.dpatch by laga <> 
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Make "/var/lib/mythtv/recordings" the default recording directory
+## DP: This patch replaces 01_debian.dpatch
+
+@DPATCH@
+
+Index: libs/libmythtv/storagegroup.cpp
+===================================================================
+--- a/libs/libmythtv/storagegroup.cpp	(revision 15154)
++++ b/libs/libmythtv/storagegroup.cpp	(working copy)
+@@ -11,7 +11,7 @@
+ #define LOC_WARN QString("SG(%1) Warning: ").arg(m_groupname)
+ #define LOC_ERR QString("SG(%1) Error: ").arg(m_groupname)
+ 
+-const char *StorageGroup::kDefaultStorageDir = "/mnt/store";
++const char *StorageGroup::kDefaultStorageDir = "/var/lib/mythtv/recordings";
+ 
+ /****************************************************************************/
+ 

@@ -1,3 +1,9 @@
+mythtv (0.20.99+trunk15513-0ubuntu1) hardy; urgency=low
+
+  * Switch to trunk in preparation for 0.21's release.
+
+ -- Michael Haas <laga@prometheus.lan>  Thu, 13 Sep 2007 22:19:08 +0200
+
 mythtv (0.20.2+fixes15513-0ubuntu4) hardy; urgency=low
 
   * Rebuild against newer kdelibs to resolve stat64 symbol

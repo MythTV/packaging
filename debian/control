@@ -48,10 +48,10 @@ Description: A personal video recorder application (client and server)
 
 Package: mythtv-common
 Architecture: all
-Depends: adduser, pwgen, mysql-client, ttf-freefont, ${misc:Depends}, ${perl:Depends}, libdbi-perl, libdbd-mysql-perl
+Depends: adduser, pwgen, mysql-client, ttf-freefont, ${misc:Depends}
 Suggests: mythtv-doc (= ${source:Version})
-Conflicts: mythtv (<< 0.8-1)
-Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.15-3)
+Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393)
+Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.15-3), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393)
 Description: A personal video recorder application (common data)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -85,7 +85,7 @@ Description: A personal video recorder application (database)
 
 Package: mythtv-backend
 Architecture: any
-Depends: mythtv-common (= ${source:Version}), mythtv-transcode-utils (= ${source:Version}), ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, fake-msttcorefonts | msttcorefonts, ${misc:Depends}
+Depends: mythtv-common (= ${source:Version}), mythtv-transcode-utils (= ${source:Version}), ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, fake-msttcorefonts | msttcorefonts, libmyth-perl, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
 Recommends: ntp | time-daemon | ntp-simple, logrotate
@@ -119,7 +119,7 @@ Description: Utilities used for transcoding MythTV tasks
 Package: mythtv-frontend
 Architecture: any
 Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, fake-msttcorefonts | msttcorefonts, ${misc:Depends}
-Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythdvd, mythvideo, mythgame, mythstream, ntp | time-daemon | ntp-simple
+Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, mythstream, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1)
 Description: A personal video recorder application (client)
@@ -162,6 +162,20 @@ Description: Common library code for MythTV and add-on modules (development)
  This package contains files needed for developing applications which use
  libmyth (such as the various add-ons for MythTV)
 
+Package: libmyth-perl
+Architecture: any
+Section: multiverse/libs
+Depends: ${perl:Depends}, libdbi-perl, libdbd-mysql-perl
+Replaces: mythtv-common (<< 0.20.98 )
+Conflicts: mythtv-common (<< 0.20.98 )
+Description: A PERL library to access some MythTV features
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains files needed for some PERL MythTV add-ons like
+ nuvexport or mythrename.pl.
+
+
 Package: mythtv-backend-master
 Architecture: all
 Section: multiverse/metapackages
@@ -179,7 +193,7 @@ Architecture: all
 Section: multiverse/metapackages
 Depends: xorg, gsfonts-x11, mythbuntu-gdm-theme | feisty-gdm-themes | edgy-gdm-themes | gdm-themes , xterm, mythbuntu-artwork-usplash | usplash-theme-ubuntu | usplash, mythtv-frontend, openbox, gnome-screensaver | xscreensaver , feh, libgl1-mesa-glx, ntp | time-daemon | ntp-simple
 Pre-Depends: gdm
-Recommends: mytharchive, mythphone, mythgame, mythmusic, mythcontrols, mythdvd, mythflix, mythnews, mythweather, mythtv-themes, mythbrowser, mythgallery, mythvideo, mythstream
+Recommends: mytharchive, mythphone, mythgame, mythmusic, mythcontrols, mythflix, mythnews, mythweather, mythtv-themes, mythbrowser, mythgallery, mythvideo, mythstream
 Description: Metapackage to setup and configure a "Frontend" profile of MythTV.
  This package will install and configure all necessary packages for this machine
  to behave as a standalone Frontend for a mythtv network.  This package is intended

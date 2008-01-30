@@ -1,0 +1,30 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 11_idle_countdown_reset-fix.dpatch by laga <>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Scheduler resets the idle countdown often, thus breaking automatic shutdown.
+## DP: See http://svn.mythtv.org/trac/ticket/3597 for details
+## DP: Original Patch by Tino Keitel
+
+@DPATCH@
+
+Index: programs/mythbackend/scheduler.cpp
+===================================================================
+--- a/programs/mythbackend/scheduler.cpp  (revision 13414)
++++ b/programs/mythbackend/scheduler.cpp  (working copy)
+@@ -1526,9 +1526,13 @@
+
+         if (statuschanged)
+         {
++         QString msg;
+             MythEvent me("SCHEDULE_CHANGE");
+             gContext->dispatch(me);
+-            idleSince = QDateTime();
++           msg = QString("Resetting of idleSince aborted!");
++           VERBOSE(VB_IMPORTANT, msg);
++
++            //idleSince = QDateTime();
+         }
+
+         // if idletimeout is 0, the user disabled the auto-shutdown feature
+

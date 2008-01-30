@@ -1,5 +1,2 @@
 usr/share/mythtv/themes
 usr/share/mythtv/mysql.txt*
-usr/share/perl/*/IO/Socket/INET/*
-usr/share/perl/*/MythTV*
-

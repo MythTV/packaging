@@ -74,3 +74,22 @@ _Description: WARNING: old MythTV binaries found
  .
  Installation of these packages should succeed, but you MUST remove these
  files in order for the packaged version of MythTV to work properly.
+
+Template: mythtv/svn_warning
+Type: boolean
+_Description: Warning! These packages are experimental! Install?
+ You are about to install MythTV packages created from SVN trunk.
+ These packages should be considered experimental and may well
+ break your existing setup. 
+ .
+ Choose "Yes" if you want to proceed at your own risk.
+
+Template: mythtv/abort_svn_install
+Type: note
+_Description: Install canceled!
+ You have chosen to cancel the installation of
+ the experimental MythTV packages. 
+ .
+ Please use your favourite package manager (e.g. adept,
+ synaptic or aptitude) to remove these packages or
+ to downgrade to a more stable version of MythTV.
