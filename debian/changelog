@@ -1,8 +1,37 @@
-mythtv (0.20.99+trunk15513-0ubuntu1) hardy; urgency=low
+mythtv (0.20.99+trunk15681-0ubuntu1) hardy; urgency=low
 
-  * Switch to trunk in preparation for 0.21's release.
+  " it's about time we switched "
 
- -- Michael Haas <laga@prometheus.lan>  Thu, 13 Sep 2007 22:19:08 +0200
+  [ Mario Limonciello ]
+  * Switch to trunk in preparation of upcoming 0.21 release.
+    - Feature freeze is Feb 14, all changes between this and the 0.21
+      release will be bug fixes, but not necessarily tracked on LP.
+  * Merge with ubuntu-mythtv's trunk bzr branch.
+    - Drop perl items from mythtv-common package.
+    - Update debian/rules get-orig-source target to base from -fixes.
+    - Drop 01_debian, 06_gnome_screensaver, 10_alpha-build-fix, 20_backend_crash
+      21_openmedia_mheg5, 22_openmedia_livetv, 26_edit_display, 33_israeli_freq,
+      34_utf8_fixes, 35_upnp_length patches.
+  * Update standards version to 3.7.3, no source changes.
+
+  [ Michael Haas ]
+  * Until builds are actually at 0.21, include warnings via preinstall
+    files about the stability.
+  * Add perl bindings to libmyth-perl package.
+  * Drop old debian default directory patch in favor of a storage
+    groups patch, 08_default_direcotry
+  * Add 11_perl_bindings_prefix patch that doesn't work off /usr/local.
+  * Add local patches from tickey 3597 in 11_idle_countdown_reset-fix,
+    13_interlaced_fresh_rate.
+  * debian/rules:
+    - Build with xvmc/opengl and opengl/video
+    - Install examples to proper location
+  * Update default session-settings to give a better warning.
+  * debian/control:
+    - Update for dropped mythdvd package
+    - Add libmyth-perl package.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 29 Jan 2008 23:51:39 -0600
 
 mythtv (0.20.2+fixes15513-0ubuntu4) hardy; urgency=low
 

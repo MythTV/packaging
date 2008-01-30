@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
 XSBC-Original-Maintainer: Christian Marillat <marillat@debian.org>
 Bugs: mailto:ubuntu-mythtv@lists.ubuntu.com
-Standards-Version: 3.7.2
+Standards-Version: 3.7.3
 Build-Conflicts: libmyth-0.20-dev, libmyth-dev
 Build-Depends: debhelper (>> 5.0.0), libqt3-mt-dev, libdvb-dev, dpatch,
  libmysqlclient15-dev | libmysqlclient12-dev, libfreetype6-dev, libavc1394-dev,

@@ -1,7 +1,6 @@
-#01_debian - replaced by 08_default_directory.dpatch
-08_default_directory.dpatch
 02_settings.pro
 07_alsa_default.dpatch
+08_default_directory.dpatch
 09_perl_bindings_prefix
 11_idle_countdown_reset-fix
 13_interlaced_fresh_rate

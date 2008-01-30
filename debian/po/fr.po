@@ -329,9 +329,9 @@ msgstr ""
 #. Description
 #: ../mythtv-database.templates:3001
 msgid ""
-"If you will be using any other computers with MythTV, this computer needs to "
-"be configured to allow remote connections.  Do you want to enable remote  "
-"connectivity?"
+"If you will be using any other computers (that includes other Front End  "
+"machines) with MythTV, this computer needs to be configured to allow  remote "
+"connections. Do you want to enable remote connectivity?"
 msgstr ""
 
 #. Type: boolean
