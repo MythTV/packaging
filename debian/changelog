@@ -17,6 +17,12 @@ mythtv (0.20.99+trunk15682-0ubuntu1) hardy; urgency=low
   * debian/rules:
     - Don't optimize to a particular cpu as that's deprecated in new gcc.
       Default configure behavior now tunes to generic and arch's to i686.
+  * Add 14_set_newlibraries to force sonames to 0.21 until upstream changes this
+    with their impending freeze.
+  * debian/control:
+    - Adjust packages to 0.21 soname.
+  * Move libmyth-0.20.files to libmyth-0.21.files.
+  * Adjust lintian override for 0.21 soname
 
   [ Michael Haas ]
   * Until builds are actually at 0.21, include warnings via preinstall

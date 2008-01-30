@@ -1,0 +1,21 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 14_set_newlibraries.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad mythtv-0.20.99+trunk15682~/settings.pro mythtv-0.20.99+trunk15682/settings.pro
+--- mythtv-0.20.99+trunk15682~/settings.pro	2007-12-11 20:51:02.000000000 -0600
++++ mythtv-0.20.99+trunk15682/settings.pro	2008-01-30 13:52:07.000000000 -0600
+@@ -4,8 +4,8 @@
+     PREFIX = /usr/local
+ }
+ 
+-LIBVERSION = 0.20
+-VERSION = 0.20.0
++LIBVERSION = 0.21
++VERSION = 0.21.0
+ 
+ isEmpty(TARGET_OS) : win32 {
+     CONFIG += mingw
