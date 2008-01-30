@@ -5,5 +5,4 @@
 11_idle_countdown_reset-fix
 13_interlaced_fresh_rate
 #23_video_device_symlinks.dpatch
-27_pulseaudio.dpatch
 31_pvr350_ivtv.dpatch

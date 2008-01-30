@@ -10,8 +10,8 @@ mythtv (0.20.99+trunk15681-0ubuntu1) hardy; urgency=low
     - Drop perl items from mythtv-common package.
     - Update debian/rules get-orig-source target to base from -fixes.
     - Drop 01_debian, 06_gnome_screensaver, 10_alpha-build-fix, 20_backend_crash
-      21_openmedia_mheg5, 22_openmedia_livetv, 26_edit_display, 33_israeli_freq,
-      34_utf8_fixes, 35_upnp_length patches.
+      21_openmedia_mheg5, 22_openmedia_livetv, 26_edit_display, 27_pulseaudio,
+      33_israeli_freq, 34_utf8_fixes, 35_upnp_length patches.
   * Update standards version to 3.7.3, no source changes.
 
   [ Michael Haas ]
