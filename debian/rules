@@ -7,7 +7,7 @@ SVN_PACKAGE+=mythtv
 SVN_TYPE+=trunk
 SVN_MAJOR_RELEASE+=20
 SVN_MINOR_RELEASE+=99
-SVN_REVISION+=15681
+SVN_REVISION+=15682
 #SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
 SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)/$(SVN_PACKAGE)
 #TAGGED_RELEASE+=true
@@ -48,7 +48,7 @@ CFLAGS += -fPIC -DPIC
 CONFIGURE_OPTS += --compile-type=profile
 
 ifeq "$(DEB_BUILD_ARCH)" "i386"
-	CONFIGURE_OPTS += --cpu=pentium-mmx --tune=i686 --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro
+	CONFIGURE_OPTS += --arch=generic --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro
 else
 ifeq "$(DEB_BUILD_ARCH)" "sparc"
 	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --extra-cflags="-mcpu=ultrasparc -mvis"
@@ -71,9 +71,10 @@ configure-stamp: patch-stamp
 
 	CFLAGS="$(CFLAGS)" ./configure --prefix=/usr --enable-lirc --enable-audio-alsa \
 	--enable-audio-oss --enable-audio-jack --enable-audio-arts --enable-dvb \
-	--enable-ivtv --enable-firewire --enable-joystick-menu $(CONFIGURE_OPTS) \
+	--enable-ivtv --enable-firewire --enable-joystick-menu \
 	--enable-opengl-vsync --with-bindings=perl --enable-opengl-video \
-	--enable-xvmc-opengl
+	--enable-xvmc-opengl \
+        $(CONFIGURE_OPTS)
 
 	touch configure-stamp
 

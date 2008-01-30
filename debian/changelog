@@ -1,4 +1,4 @@
-mythtv (0.20.99+trunk15681-0ubuntu1) hardy; urgency=low
+mythtv (0.20.99+trunk15682-0ubuntu1) hardy; urgency=low
 
   " it's about time we switched "
 
@@ -11,9 +11,12 @@ mythtv (0.20.99+trunk15681-0ubuntu1) hardy; urgency=low
     - Update debian/rules get-orig-source target to base from -fixes.
     - Drop 01_debian, 06_gnome_screensaver, 10_alpha-build-fix, 20_backend_crash
       21_openmedia_mheg5, 22_openmedia_livetv, 26_edit_display, 27_pulseaudio,
-      29_perl_bindings, 31_pvr350_ivtv, 33_israeli_freq, 34_utf8_fixes, 
+      29_perl_bindings, 31_pvr350_ivtv, 33_israeli_freq, 34_utf8_fixes,
       35_upnp_length patches.
   * Update standards version to 3.7.3, no source changes.
+  * debian/rules:
+    - Don't optimize to a particular cpu as that's deprecated in new gcc.
+      Default configure behavior now tunes to generic and arch's to i686.
 
   [ Michael Haas ]
   * Until builds are actually at 0.21, include warnings via preinstall
@@ -32,7 +35,7 @@ mythtv (0.20.99+trunk15681-0ubuntu1) hardy; urgency=low
     - Update for dropped mythdvd package
     - Add libmyth-perl package.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Tue, 29 Jan 2008 23:51:39 -0600
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 30 Jan 2008 11:24:34 -0600
 
 mythtv (0.20.2+fixes15513-0ubuntu4) hardy; urgency=low
 
