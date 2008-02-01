@@ -163,7 +163,7 @@ Description: Common library code for MythTV and add-on modules (development)
  libmyth (such as the various add-ons for MythTV)
 
 Package: libmyth-perl
-Architecture: any
+Architecture: all
 Section: multiverse/libs
 Depends: ${perl:Depends}, libdbi-perl, libdbd-mysql-perl
 Replaces: mythtv-common (<< 0.20.98 )
