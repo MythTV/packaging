@@ -5,13 +5,11 @@
 ## DP: Force PERL bindings to be installed into $PREFIX
 
 @DPATCH@
-
-Index: bindings/perl/perl.pro
-===================================================================
---- a/bindings/perl/perl.pro      (revision 13967)
-+++ b/bindings/perl/perl.pro      (working copy)
+diff -urNad mythtv-0.20.99+trunk15689~/bindings/perl/perl.pro mythtv-0.20.99+trunk15689/bindings/perl/perl.pro
+--- mythtv-0.20.99+trunk15689~/bindings/perl/perl.pro	2008-02-01 03:04:06.000000000 -0600
++++ mythtv-0.20.99+trunk15689/bindings/perl/perl.pro	2008-02-02 14:20:37.000000000 -0600
 @@ -4,12 +4,12 @@
-
+ 
  mythperlbindings.target = Makefile.perl
  mythperlbindings.depends = Makefile.PL
 -contains(PREFIX, ^/usr(/local)?/?$) {
@@ -25,8 +23,15 @@ Index: bindings/perl/perl.pro
      mythperlbindings.commands = perl Makefile.PL MAKEFILE=Makefile.perl PREFIX=$${PREFIX}
 -}
 +#}
-
+ 
  mythperbindingsbuild.target = perl_build
  mythperbindingsbuild.depends = Makefile.perl
-
-
+@@ -20,7 +20,7 @@
+ 
+ perl_install.target = install
+ perl_install.depends = all
+-perl_install.commands = make -f Makefile.perl pure_install PERL_INSTALL_ROOT="$(INSTALL_ROOT)"
++perl_install.commands = make -f Makefile.perl pure_install INSTALLDIRS=vendor PREFIX="../../debian/libmyth-perl/usr"
+ 
+ QMAKE_LINK=@-echo
+ PRE_TARGETDEPS += perl_build

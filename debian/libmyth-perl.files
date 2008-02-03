@@ -1,2 +1,2 @@
-usr/share/perl/*/MythTV*
-usr/share/perl/*/IO/Socket/INET/*
+usr/share/perl5/MythTV*
+usr/share/perl5/IO/Socket/INET/*

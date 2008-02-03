@@ -136,7 +136,7 @@ Description: A personal video recorder application (client)
  For a complete installation of all MythTV components, install the 'mythtv'
  package.
 
-Package: libmyth-0.21
+Package: libmyth-0.21-0
 Architecture: any
 Section: multiverse/libs
 Depends: ${shlibs:Depends}, libqt3-mt-mysql | libqt3c102-mt-mysql
@@ -152,8 +152,8 @@ Description: Common library code for MythTV and add-on modules (runtime)
 Package: libmyth-dev
 Architecture: any
 Section: multiverse/libdevel
-Depends: libmyth-0.21 (= ${source:Version}), libqt3c102-mt-dev | libqt3-mt-dev
-Provides: libmyth-0.21-dev
+Depends: libmyth-0.21-0 (= ${source:Version}), libqt3c102-mt-dev | libqt3-mt-dev
+Provides: libmyth-0.21-0-dev
 Conflicts: libmyth-0.21-dev
 Description: Common library code for MythTV and add-on modules (development)
  MythTV provides a unified graphical interface for recording and viewing

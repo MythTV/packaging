@@ -1,3 +1,20 @@
+mythtv (0.20.99+trunk15689-0ubuntu3) hardy; urgency=low
+
+  * debian/control:
+    - Change soname of library package to libmyth-0.21-0
+  * Update 09_perl_bindings_prefix, debian/libmyth-perl.files
+    - Make libmyth-perl install into /usr/share/perl5 
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 02 Feb 2008 14:22:00 -0600
+
+mythtv (0.20.99+trunk15689-0ubuntu2) hardy; urgency=low
+
+  * debian/control:
+    - Make libmyth-perl arch all rather than any
+  * Drop 11_idle_countdown_reset-fix and 13_interlaced_refresh_rate.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 01 Feb 2008 03:05:05 -0600
+
 mythtv (0.20.99+trunk15689-0ubuntu1) hardy; urgency=low
 
   " it's about time we switched "
