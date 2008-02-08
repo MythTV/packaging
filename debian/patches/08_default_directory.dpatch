@@ -6,11 +6,9 @@
 ## DP: This patch replaces 01_debian.dpatch
 
 @DPATCH@
-
-Index: libs/libmythtv/storagegroup.cpp
-===================================================================
---- a/libs/libmythtv/storagegroup.cpp	(revision 15154)
-+++ b/libs/libmythtv/storagegroup.cpp	(working copy)
+diff -urNad mythtv-0.20.99+trunk15849~/libs/libmyth/storagegroup.cpp mythtv-0.20.99+trunk15849/libs/libmyth/storagegroup.cpp
+--- mythtv-0.20.99+trunk15849~/libs/libmyth/storagegroup.cpp	2008-02-07 22:17:24.000000000 -0600
++++ mythtv-0.20.99+trunk15849/libs/libmyth/storagegroup.cpp	2008-02-08 13:56:48.000000000 -0600
 @@ -11,7 +11,7 @@
  #define LOC_WARN QString("SG(%1) Warning: ").arg(m_groupname)
  #define LOC_ERR QString("SG(%1) Error: ").arg(m_groupname)
@@ -18,5 +16,5 @@ Index: libs/libmythtv/storagegroup.cpp
 -const char *StorageGroup::kDefaultStorageDir = "/mnt/store";
 +const char *StorageGroup::kDefaultStorageDir = "/var/lib/mythtv/recordings";
  
- /****************************************************************************/
- 
+ const QStringList StorageGroup::kSpecialGroups = QStringList()
+     << "LiveTV"

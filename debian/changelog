@@ -1,4 +1,13 @@
-mythtv (0.20.99+trunk15746-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.20.99+trunk15849-0ubuntu2) hardy; urgency=low
+
+  * Update 07_alsa_default which was causing FTBFS
+    due to changes with ALSA handling upstream.
+  * Update 08_default_directory which was causing
+    FTBFS since storage groups got moved.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 08 Feb 2008 13:54:31 -0600
+
+mythtv (0.20.99+trunk15849-0ubuntu1) hardy; urgency=low
 
   * New upstream checkout.
     - Fixes FTBFS on powerpc.
