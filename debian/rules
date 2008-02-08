@@ -73,7 +73,7 @@ configure-stamp: patch-stamp
 	--enable-audio-oss --enable-audio-jack --enable-audio-arts --enable-dvb \
 	--enable-ivtv --enable-firewire --enable-joystick-menu \
 	--enable-opengl-vsync --with-bindings=perl --enable-opengl-video \
-	--enable-xvmc-opengl \
+	--enable-xvmc-opengl --enable-ffmpeg-pthreads\
         $(CONFIGURE_OPTS)
 
 	touch configure-stamp

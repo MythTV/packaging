@@ -3,6 +3,11 @@ mythtv (0.20.99+trunk15746-0ubuntu1) UNRELEASED; urgency=low
   * New upstream checkout.
     - Fixes FTBFS on powerpc.
   * Drop 14_newlibraries since upstream does this now.
+  * debian/rules:
+    - Build with ffmpeg pthread support.
+  * debian/control:
+    - Depend on ttf-liberation | msttcorefonts since ttf-liberation
+      provides fonts with the correct metrics.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sun, 03 Feb 2008 23:10:21 -0600
 

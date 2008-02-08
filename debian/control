@@ -85,7 +85,7 @@ Description: A personal video recorder application (database)
 
 Package: mythtv-backend
 Architecture: any
-Depends: mythtv-common (= ${source:Version}), mythtv-transcode-utils (= ${source:Version}), ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, fake-msttcorefonts | msttcorefonts, libmyth-perl, ${misc:Depends}
+Depends: mythtv-common (= ${source:Version}), mythtv-transcode-utils (= ${source:Version}), ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, libmyth-perl, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
 Recommends: ntp | time-daemon | ntp-simple, logrotate
@@ -118,7 +118,7 @@ Description: Utilities used for transcoding MythTV tasks
 
 Package: mythtv-frontend
 Architecture: any
-Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, fake-msttcorefonts | msttcorefonts, ${misc:Depends}
+Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, ${misc:Depends}
 Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, mythstream, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1)
