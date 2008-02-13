@@ -1,3 +1,102 @@
+mythtv (0.21.0~fixes15967-0ubuntu1) hardy; urgency=low
+
+  * New upstream checkout.
+    - Upstream has entered feature freeze and this is built
+      against the 0.21-fixes branch now.
+  * Update 07_alsa_default due to upstream changes again.
+  *debian/control:
+    - Add new python bindings package, libmyth-python.
+    - Promote all mysql-server depends to pre-depends.
+  * debian/rules:
+    - Add python-support to build depends
+    - Add libnet-upnp-perl to libmyth-perl depends.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 12 Feb 2008 20:13:15 -0600
+
+mythtv (0.20.99+trunk15849-0ubuntu2) hardy; urgency=low
+
+  * Update 07_alsa_default which was causing FTBFS
+    due to changes with ALSA handling upstream.
+  * Update 08_default_directory which was causing
+    FTBFS since storage groups got moved.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 08 Feb 2008 13:54:31 -0600
+
+mythtv (0.20.99+trunk15849-0ubuntu1) hardy; urgency=low
+
+  * New upstream checkout.
+    - Fixes FTBFS on powerpc.
+  * Drop 14_newlibraries since upstream does this now.
+  * debian/rules:
+    - Build with ffmpeg pthread support.
+  * debian/control:
+    - Depend on ttf-liberation | msttcorefonts since ttf-liberation
+      provides fonts with the correct metrics.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 03 Feb 2008 23:10:21 -0600
+
+mythtv (0.20.99+trunk15689-0ubuntu3) hardy; urgency=low
+
+  * debian/control:
+    - Change soname of library package to libmyth-0.21-0
+  * Update 09_perl_bindings_prefix, debian/libmyth-perl.files
+    - Make libmyth-perl install into /usr/share/perl5 
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 02 Feb 2008 14:22:00 -0600
+
+mythtv (0.20.99+trunk15689-0ubuntu2) hardy; urgency=low
+
+  * debian/control:
+    - Make libmyth-perl arch all rather than any
+  * Drop 11_idle_countdown_reset-fix and 13_interlaced_refresh_rate.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 01 Feb 2008 03:05:05 -0600
+
+mythtv (0.20.99+trunk15689-0ubuntu1) hardy; urgency=low
+
+  " it's about time we switched "
+
+  [ Mario Limonciello ]
+  * Switch to trunk in preparation of upcoming 0.21 release.
+    - Feature freeze is Feb 14, all changes between this and the 0.21
+      release will be bug fixes, but not necessarily tracked on LP.
+  * Merge with ubuntu-mythtv's trunk bzr branch.
+    - Drop perl items from mythtv-common package.
+    - Update debian/rules get-orig-source target to base from -fixes.
+    - Drop 01_debian, 06_gnome_screensaver, 10_alpha-build-fix, 20_backend_crash
+      21_openmedia_mheg5, 22_openmedia_livetv, 26_edit_display, 27_pulseaudio,
+      29_perl_bindings, 31_pvr350_ivtv, 33_israeli_freq, 34_utf8_fixes,
+      35_upnp_length patches.
+  * Update standards version to 3.7.3, no source changes.
+  * debian/rules:
+    - Don't optimize to a particular cpu as that's deprecated in new gcc.
+      Default configure behavior now tunes to generic and arch's to i686.
+  * Add 14_set_newlibraries to force sonames to 0.21 until upstream changes this
+    with their impending freeze.
+  * debian/control:
+    - Adjust packages to 0.21 soname.
+  * Move libmyth-0.20.files to libmyth-0.21.files.
+  * Adjust lintian override for 0.21 soname
+
+  [ Michael Haas ]
+  * Until builds are actually at 0.21, include warnings via preinstall
+    files about the stability.
+  * Add perl bindings to libmyth-perl package.
+  * Drop old debian default directory patch in favor of a storage
+    groups patch, 08_default_direcotry
+  * Add 11_perl_bindings_prefix patch that doesn't work off /usr/local.
+  * Add local patches from tickey 3597 in 11_idle_countdown_reset-fix,
+    13_interlaced_fresh_rate.
+  * debian/rules:
+    - Build with xvmc/opengl and opengl/video
+    - Install examples to proper location
+  * Update default session-settings to give a better warning.
+  * debian/control:
+    - Update for dropped mythdvd package
+    - Add libmyth-perl package.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 30 Jan 2008 11:24:34 -0600
+
 mythtv (0.20.2+fixes15513-0ubuntu4) hardy; urgency=low
 
   * Rebuild against newer kdelibs to resolve stat64 symbol

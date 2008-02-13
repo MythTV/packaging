@@ -5,22 +5,38 @@
 ## DP: Makes ALSA the default handler for audio.
 
 @DPATCH@
-diff -urNad mythtv-0.20-svn20070122~/programs/mythfrontend/globalsettings.cpp mythtv-0.20-svn20070122/programs/mythfrontend/globalsettings.cpp
---- mythtv-0.20-svn20070122~/programs/mythfrontend/globalsettings.cpp	2007-01-22 03:08:36.000000000 -0600
-+++ mythtv-0.20-svn20070122/programs/mythfrontend/globalsettings.cpp	2007-04-08 19:03:44.000000000 -0500
-@@ -26,6 +26,7 @@
+diff -urNad mythtv-0.21.0~fixes15967~/programs/mythfrontend/globalsettings.cpp mythtv-0.21.0~fixes15967/programs/mythfrontend/globalsettings.cpp
+--- mythtv-0.21.0~fixes15967~/programs/mythfrontend/globalsettings.cpp	2008-02-12 11:21:57.000000000 -0600
++++ mythtv-0.21.0~fixes15967/programs/mythfrontend/globalsettings.cpp	2008-02-12 21:25:07.000000000 -0600
+@@ -41,6 +41,15 @@
      HostComboBox *gc = new HostComboBox("AudioOutputDevice", true);
- 
      gc->setLabel(QObject::tr("Audio output device"));
-+    gc->addSelection("ALSA:default");
+ 
++#ifdef USING_ALSA
++    gc->addSelection("ALSA:default",       "ALSA:default");
++    gc->addSelection("ALSA:spdif",         "ALSA:spdif");
++    gc->addSelection("ALSA:surround51",    "ALSA:surround51");
++    gc->addSelection("ALSA:analog",        "ALSA:analog");
++    gc->addSelection("ALSA:digital",       "ALSA:digital");
++    gc->addSelection("ALSA:mixed-analog",  "ALSA:mixed-analog");
++    gc->addSelection("ALSA:mixed-digital", "ALSA:mixed-digital");
++#endif
+ #ifdef USING_OSS
      QDir dev("/dev", "dsp*", QDir::Name, QDir::System);
      gc->fillSelectionsFromDir(dev);
-     dev.setNameFilter("adsp*");
-@@ -75,6 +76,7 @@
- 
-     gc->setLabel(QObject::tr("Mixer Device"));
-     QDir dev("/dev", "mixer*", QDir::Name, QDir::System);
-+    gc->addSelection("default");
-     gc->fillSelectionsFromDir(dev);
- 
-     dev.setPath("/dev/sound");
+@@ -56,15 +65,6 @@
+         gc->fillSelectionsFromDir(dev);
+     }
+ #endif
+-#ifdef USING_ALSA
+-    gc->addSelection("ALSA:default",       "ALSA:default");
+-    gc->addSelection("ALSA:spdif",         "ALSA:spdif");
+-    gc->addSelection("ALSA:surround51",    "ALSA:surround51");
+-    gc->addSelection("ALSA:analog",        "ALSA:analog");
+-    gc->addSelection("ALSA:digital",       "ALSA:digital");
+-    gc->addSelection("ALSA:mixed-analog",  "ALSA:mixed-analog");
+-    gc->addSelection("ALSA:mixed-digital", "ALSA:mixed-digital");
+-#endif
+ #ifdef USING_ARTS
+     gc->addSelection("ARTS:", "ARTS:");
+ #endif

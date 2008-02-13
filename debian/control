@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
 XSBC-Original-Maintainer: Christian Marillat <marillat@debian.org>
 Bugs: mailto:ubuntu-mythtv@lists.ubuntu.com
-Standards-Version: 3.7.2
+Standards-Version: 3.7.3
 Build-Conflicts: libmyth-0.20-dev, libmyth-dev
 Build-Depends: debhelper (>> 5.0.0), libqt3-mt-dev, libdvb-dev, dpatch,
  libmysqlclient15-dev | libmysqlclient12-dev, libfreetype6-dev, libavc1394-dev,
@@ -13,11 +13,12 @@ Build-Depends: debhelper (>> 5.0.0), libqt3-mt-dev, libdvb-dev, dpatch,
  libxxf86vm-dev | xlibs-static-dev (<< 6.8.1-1), po-debconf, libdts-dev,
  libxvmc-dev | xlibs-static-dev (<< 6.8.1-1), libdvdnav-dev, libimlib2-dev,
  libxext-dev | xlibs-static-dev (<< 6.8.1-1), libjack0.100.0-dev | libjack-dev,
- texi2html, ccache, linux-kernel-headers
+ texi2html, ccache, linux-kernel-headers, python-support
 
 Package: mythtv
 Architecture: all
-Depends: mythtv-database (= ${source:Version}), mythtv-frontend (= ${source:Version}), mythtv-backend (= ${source:Version}), mysql-server, ntp | time-daemon | ntp-simple
+Pre-Depends: mysql-server
+Depends: mythtv-database (= ${source:Version}), mythtv-frontend (= ${source:Version}), mythtv-backend (= ${source:Version}), ntp | time-daemon | ntp-simple
 Recommends: mythtv-themes
 Suggests: mythtv-doc
 Description: A personal video recorder application (client and server)
@@ -48,10 +49,10 @@ Description: A personal video recorder application (client and server)
 
 Package: mythtv-common
 Architecture: all
-Depends: adduser, pwgen, mysql-client, ttf-freefont, ${misc:Depends}, ${perl:Depends}, libdbi-perl, libdbd-mysql-perl
+Depends: adduser, pwgen, mysql-client, ttf-freefont, ${misc:Depends}
 Suggests: mythtv-doc (= ${source:Version})
-Conflicts: mythtv (<< 0.8-1)
-Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.15-3)
+Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393)
+Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.15-3), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393)
 Description: A personal video recorder application (common data)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -85,7 +86,7 @@ Description: A personal video recorder application (database)
 
 Package: mythtv-backend
 Architecture: any
-Depends: mythtv-common (= ${source:Version}), mythtv-transcode-utils (= ${source:Version}), ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, fake-msttcorefonts | msttcorefonts, ${misc:Depends}
+Depends: mythtv-common (= ${source:Version}), mythtv-transcode-utils (= ${source:Version}), ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, libmyth-perl, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
 Recommends: ntp | time-daemon | ntp-simple, logrotate
@@ -118,8 +119,8 @@ Description: Utilities used for transcoding MythTV tasks
 
 Package: mythtv-frontend
 Architecture: any
-Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, fake-msttcorefonts | msttcorefonts, ${misc:Depends}
-Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythdvd, mythvideo, mythgame, mythstream, ntp | time-daemon | ntp-simple
+Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, ${misc:Depends}
+Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, mythstream, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1)
 Description: A personal video recorder application (client)
@@ -136,7 +137,7 @@ Description: A personal video recorder application (client)
  For a complete installation of all MythTV components, install the 'mythtv'
  package.
 
-Package: libmyth-0.20
+Package: libmyth-0.21-0
 Architecture: any
 Section: multiverse/libs
 Depends: ${shlibs:Depends}, libqt3-mt-mysql | libqt3c102-mt-mysql
@@ -152,9 +153,9 @@ Description: Common library code for MythTV and add-on modules (runtime)
 Package: libmyth-dev
 Architecture: any
 Section: multiverse/libdevel
-Depends: libmyth-0.20 (= ${source:Version}), libqt3c102-mt-dev | libqt3-mt-dev
-Provides: libmyth-0.20-dev
-Conflicts: libmyth-0.20-dev
+Depends: libmyth-0.21-0 (= ${source:Version}), libqt3c102-mt-dev | libqt3-mt-dev
+Provides: libmyth-0.21-0-dev
+Conflicts: libmyth-0.21-dev
 Description: Common library code for MythTV and add-on modules (development)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -162,10 +163,37 @@ Description: Common library code for MythTV and add-on modules (development)
  This package contains files needed for developing applications which use
  libmyth (such as the various add-ons for MythTV)
 
+Package: libmyth-perl
+Architecture: all
+Section: multiverse/libs
+Depends: ${perl:Depends}, libdbi-perl, libdbd-mysql-perl, libnet-upnp-perl
+Replaces: mythtv-common (<< 0.20.98 )
+Conflicts: mythtv-common (<< 0.20.98 )
+Description: A PERL library to access some MythTV features
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains files needed for some PERL MythTV add-ons like
+ nuvexport or mythrename.pl.
+
+Package: libmyth-python
+Architecture: all
+Section: multiverse/libs
+Depends: ${python:Depends}, python-mysqldb
+Replaces: mythtv-common (<< 0.20.98 )
+Conflicts: mythtv-common (<< 0.20.98 )
+Description: A python library to access some MythTV features
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains files needed for some python MythTV add-ons.
+
+
 Package: mythtv-backend-master
 Architecture: all
 Section: multiverse/metapackages
-Depends: ntp | time-daemon | ntp-simple, mysql-server, mythtv-database (= ${source:Version}), mythtv-backend (= ${source:Version})
+Pre-Depends: mysql-server
+Depends: ntp | time-daemon | ntp-simple, mythtv-database (= ${source:Version}), mythtv-backend (= ${source:Version})
 Recommends: mythweb
 Description: Metapackage to setup and configure a "Master Backend" profile of MythTV.
  This package will install and configure all necessary packages for this machine
@@ -179,7 +207,7 @@ Architecture: all
 Section: multiverse/metapackages
 Depends: xorg, gsfonts-x11, mythbuntu-gdm-theme | feisty-gdm-themes | edgy-gdm-themes | gdm-themes , xterm, mythbuntu-artwork-usplash | usplash-theme-ubuntu | usplash, mythtv-frontend, openbox, gnome-screensaver | xscreensaver , feh, libgl1-mesa-glx, ntp | time-daemon | ntp-simple
 Pre-Depends: gdm
-Recommends: mytharchive, mythphone, mythgame, mythmusic, mythcontrols, mythdvd, mythflix, mythnews, mythweather, mythtv-themes, mythbrowser, mythgallery, mythvideo, mythstream
+Recommends: mytharchive, mythphone, mythgame, mythmusic, mythcontrols, mythflix, mythnews, mythweather, mythtv-themes, mythbrowser, mythgallery, mythvideo, mythstream
 Description: Metapackage to setup and configure a "Frontend" profile of MythTV.
  This package will install and configure all necessary packages for this machine
  to behave as a standalone Frontend for a mythtv network.  This package is intended

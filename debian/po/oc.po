@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mythtv\n"
 "Report-Msgid-Bugs-To: ubuntu-mythtv@lists.ubuntu.com\n"
-"POT-Creation-Date: 2007-10-05 14:43-0500\n"
+"POT-Creation-Date: 2007-08-08 01:37+0200\n"
 "PO-Revision-Date: 2007-09-30 21:18+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Occitan (post 1500) <oc@li.org>\n"
@@ -211,6 +211,49 @@ msgid ""
 "files in order for the packaged version of MythTV to work properly."
 msgstr ""
 
+#. Type: boolean
+#. Description
+#: ../mythtv-common.templates:11001
+msgid "Warning! These packages are experimental! Install?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../mythtv-common.templates:11001
+msgid ""
+"You are about to install MythTV packages created from SVN trunk. These "
+"packages should be considered experimental and may well break your existing "
+"setup."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../mythtv-common.templates:11001
+msgid "Choose \"Yes\" if you want to proceed at your own risk."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:12001
+msgid "Install canceled!"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:12001
+msgid ""
+"You have chosen to cancel the installation of the experimental MythTV "
+"packages."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-common.templates:12001
+msgid ""
+"Please use your favourite package manager (e.g. adept, synaptic or aptitude) "
+"to remove these packages or to downgrade to a more stable version of MythTV."
+msgstr ""
+
 #. Type: string
 #. Description
 #: ../mythtv-database.templates:1001
@@ -276,6 +319,22 @@ msgstr ""
 msgid ""
 "If you have multiple interfaces, the first one listed in 'ifconfig' will be "
 "used."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-database.templates:4001
+msgid "A backup of your database will be made"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../mythtv-database.templates:4001
+msgid ""
+"We'll now make a backup of your \"mythconverg\" database which holds all "
+"your current settings. This database dump allows you to go back to your "
+"previous packages more easily in case something breaks. It can usually be "
+"found at /var/backups/mythconverg.sql.gz"
 msgstr ""
 
 #. Type: string

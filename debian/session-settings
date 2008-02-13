@@ -18,6 +18,8 @@
 # To obtain a list of verbose levels, run "mythfrontend --verbose help"
 # To find out more about other available options, run "mythfrontend --help"
 # 
-# Note: a log file is already available at /var/log/mythtv/mythfrontend.log 
+# Note: a log file is already available at /var/log/mythtv/mythfrontend.log,
+# so there's no need to specify --logfile (or -l) unless you want to log to a
+# non-standard location
 #
 # MYTHFRONTEND_OPTS="--verbose all,nodatabase"
