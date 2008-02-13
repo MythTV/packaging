@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-MYSQL="/usr/share/mythtv/sql/mythtv_0.20.1.sql"
+MYSQL="/usr/share/mythtv/sql/mythtv_0.21.0.sql"
 MYSQLCONFIG="/etc/mysql/conf.d/mythtv.cnf"
 FSTAB="/etc/fstab"
 EXT3=0

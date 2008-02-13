@@ -4,12 +4,17 @@ mythtv (0.21.0~fixes15967-0ubuntu1) hardy; urgency=low
     - Upstream has entered feature freeze and this is built
       against the 0.21-fixes branch now.
   * Update 07_alsa_default due to upstream changes again.
-  *debian/control:
+  * debian/control:
     - Add new python bindings package, libmyth-python.
     - Promote all mysql-server depends to pre-depends.
   * debian/rules:
     - Add python-support to build depends
     - Add libnet-upnp-perl to libmyth-perl depends.
+  * Drop mythtv-common and mythtv-database experimental
+    warnings.
+  * debian/startmythtv.sh:
+    - Launch via xterm to guarantee order that things happen.
+  * Update pre-filled SQL file that is shipped to be 0.21.0 based
 
  -- Mario Limonciello <superm1@ubuntu.com>  Tue, 12 Feb 2008 20:13:15 -0600
 

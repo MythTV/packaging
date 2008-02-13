@@ -180,7 +180,7 @@ install: build
 
 	dh_install -pmythtv-database debian/mythtv-reconfigure-required.update-notifier usr/share/mythtv
 	dh_install -pmythtv-database debian/mythtv.cnf etc/mysql/conf.d
-	dh_install -pmythtv-database debian/mythtv_0.20.1.sql usr/share/mythtv/sql
+	dh_install -pmythtv-database debian/mythtv_0.21.0.sql usr/share/mythtv/sql
 # Build architecture-independent files here.
 # Pass -i to all debhelper commands in this target to reduce clutter.
 binary-indep: build install
