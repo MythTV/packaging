@@ -53,7 +53,7 @@ CFLAGS += -fPIC -DPIC
 CONFIGURE_OPTS += --compile-type=profile
 
 ifeq "$(DEB_BUILD_ARCH)" "i386"
-	CONFIGURE_OPTS += --arch=generic --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro
+	CONFIGURE_OPTS += --tune=i686 --cpu=i686 --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro
 else
 ifeq "$(DEB_BUILD_ARCH)" "sparc"
 	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --extra-cflags="-mcpu=ultrasparc -mvis"

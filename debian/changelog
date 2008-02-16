@@ -1,3 +1,10 @@
+mythtv (0.21.0~fixes15967-0ubuntu2) hardy; urgency=low
+
+  * Replace --tune=i686 and --cpu=i686 as it was a performance loss
+    to tune to generic. (LP: #191165)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 16 Feb 2008 02:07:39 -0600
+
 mythtv (0.21.0~fixes15967-0ubuntu1) hardy; urgency=low
 
   * New upstream checkout.
