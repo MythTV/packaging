@@ -52,6 +52,10 @@ CFLAGS += -fPIC -DPIC
 
 CONFIGURE_OPTS += --compile-type=profile
 
+#These aren't mentioned in ./configure --help
+TOP_SECRET_OPTS += --enable-libfaad --enable-libfaac --enable-libmp3lame --enable-liba52 \
+                   --enable-libfaadbin --enable-libx264 --enable-libxvid
+
 ifeq "$(DEB_BUILD_ARCH)" "i386"
 	CONFIGURE_OPTS += --tune=i686 --cpu=i686 --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro
 else
@@ -79,7 +83,7 @@ configure-stamp: patch-stamp
 	--enable-ivtv --enable-firewire --enable-joystick-menu \
 	--enable-opengl-vsync --with-bindings=perl --enable-opengl-video \
 	--enable-xvmc-opengl --enable-ffmpeg-pthreads\
-        $(CONFIGURE_OPTS)
+        $(CONFIGURE_OPTS) $(TOP_SECRET_OPTS)
 
 	touch configure-stamp
 

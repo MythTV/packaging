@@ -2,6 +2,12 @@ mythtv (0.21.0~fixes15967-0ubuntu2) hardy; urgency=low
 
   * Replace --tune=i686 and --cpu=i686 as it was a performance loss
     to tune to generic. (LP: #191165)
+  * Build with unadvertised faad support.
+  * Build with unadvertised faac support.
+  * Build with unadvertised libmp3lame support.
+  * Build with unadvertised liba52 support.
+  * Build with unadvertised libx264 support.
+  * Build with unadvertised libxvid support.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sat, 16 Feb 2008 02:07:39 -0600
 
