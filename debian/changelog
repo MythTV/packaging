@@ -1,3 +1,10 @@
+mythtv (0.21.0~fixes15967-0ubuntu3) UNRELEASED; urgency=low
+
+  * Depend on libfaad2-dev | libfaad-dev so as to make building
+    on gutsy still possible
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 16 Feb 2008 17:14:23 -0600
+
 mythtv (0.21.0~fixes15967-0ubuntu2) hardy; urgency=low
 
   * Replace --tune=i686 and --cpu=i686 as it was a performance loss
