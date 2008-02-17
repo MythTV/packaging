@@ -1,5 +1,7 @@
-mythtv (0.21.0~fixes15967-0ubuntu3) UNRELEASED; urgency=low
+mythtv (0.21.0~fixes16116-0ubuntu1) UNRELEASED; urgency=low
 
+  * New upstream checkout.
+    - Drop 07_alsa_default as it has been absorbed upstream (rev 15995)
   * Depend on libfaad2-dev | libfaad-dev so as to make building
     on gutsy still possible
 
