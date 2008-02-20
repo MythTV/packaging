@@ -1,4 +1,4 @@
-mythtv (0.21.0~fixes16127-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.21.0~fixes16174-0ubuntu1) hardy; urgency=low
 
   * New upstream checkout.
     - Drop 07_alsa_default as it has been absorbed upstream (rev 15995)
