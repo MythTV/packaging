@@ -1,3 +1,17 @@
+mythtv (0.21.0~fixes16259-0ubuntu1) hardy; urgency=low
+
+  * New upstream checkout.
+  * debian/control:
+    - Add libfftw3-dev to build depends for FFT support.
+    - Add conflicts/replaces for mythappearance. (LP: #195421)
+  * debian/rules:
+    - Replace with pentium3 tuning to attempt to get more MMX
+      optimizations.
+      Should (hopefully) fix (LP: #195306).
+    - Add libfftw3 support (undocumented in configure)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 20 Feb 2008 02:16:46 -0600
+
 mythtv (0.21.0~fixes16174-0ubuntu1) hardy; urgency=low
 
   * New upstream checkout.

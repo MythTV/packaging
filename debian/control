@@ -14,7 +14,7 @@ Build-Depends: debhelper (>> 5.0.0), libqt3-mt-dev, libdvb-dev, dpatch,
  libxvmc-dev | xlibs-static-dev (<< 6.8.1-1), libdvdnav-dev, libimlib2-dev,
  libxext-dev | xlibs-static-dev (<< 6.8.1-1), libjack0.100.0-dev | libjack-dev,
  texi2html, ccache, linux-kernel-headers, python-support, libfaad-dev | libfaad2-dev,
- libfaac-dev, liblame-dev, liba52-0.7.4-dev, libx264-dev, libxvidcore4-dev
+ libfaac-dev, liblame-dev, liba52-0.7.4-dev, libx264-dev, libxvidcore4-dev, libfftw3-dev
 
 Package: mythtv
 Architecture: all
@@ -122,8 +122,8 @@ Package: mythtv-frontend
 Architecture: any
 Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, ${misc:Depends}
 Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, mythstream, ntp | time-daemon | ntp-simple
-Conflicts: mythtv (<< 0.8-1)
-Replaces: mythtv (<< 0.8-1)
+Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0)
+Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0)
 Description: A personal video recorder application (client)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
