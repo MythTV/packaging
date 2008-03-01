@@ -1,0 +1,31 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 10_mythfilldatabase_log.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Correct mythfilldatabase's log directory setting
+
+@DPATCH@
+diff -urNad mythtv-0.21.0~fixes16259~/programs/mythbackend/housekeeper.cpp mythtv-0.21.0~fixes16259/programs/mythbackend/housekeeper.cpp
+--- mythtv-0.21.0~fixes16259~/programs/mythbackend/housekeeper.cpp	2007-12-11 08:56:01.000000000 -0600
++++ mythtv-0.21.0~fixes16259/programs/mythbackend/housekeeper.cpp	2008-03-01 02:04:24.000000000 -0600
+@@ -300,7 +300,7 @@
+                                           "mythfilldatabase");
+     QString mfarg = gContext->GetSetting("MythFillDatabaseArgs", "");
+     QString mflog = gContext->GetSetting("MythFillDatabaseLog",
+-                                         "/var/log/mythfilldatabase.log");
++                                         "/var/log/mythtv");
+ 
+     if (mfpath == "mythfilldatabase")
+         mfpath = gContext->GetInstallPrefix() + "/bin/mythfilldatabase";
+diff -urNad mythtv-0.21.0~fixes16259~/programs/mythwelcome/welcomedialog.cpp mythtv-0.21.0~fixes16259/programs/mythwelcome/welcomedialog.cpp
+--- mythtv-0.21.0~fixes16259~/programs/mythwelcome/welcomedialog.cpp	2008-01-14 10:45:33.000000000 -0600
++++ mythtv-0.21.0~fixes16259/programs/mythwelcome/welcomedialog.cpp	2008-03-01 02:04:24.000000000 -0600
+@@ -458,7 +458,7 @@
+                                           "mythfilldatabase");
+     QString mfarg = gContext->GetSetting("MythFillDatabaseArgs", "");
+     QString mflog = gContext->GetSetting("MythFillDatabaseLog",
+-                                         "/var/log/mythfilldatabase.log");
++                                         "/var/log/mythtv/mythfilldatabase.log");
+ 
+     if (mflog == "")
+         command = QString("%1 %2").arg(mfpath).arg(mfarg);

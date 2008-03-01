@@ -7,6 +7,8 @@ mythtv (0.21.0~fixes16259-0ubuntu2) UNRELEASED; urgency=low
   * debian/rules:
     - Turn on fribidi formatting (LP: #195780)
     - Drop XvMC-OpenGL. (LP: #195780)
+  * Add 41-mythtv-permissions.rules to override permissions on
+    raw1394 devices to folks in the mythtv group. (LP: #197202)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sat, 01 Mar 2008 01:54:49 -0600
 

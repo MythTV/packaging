@@ -1,0 +1,5 @@
+#For firewire capture devices, we need access rights
+#to raw1394.  Note, that this may be a security risk
+#because devices on firewire can then do anything they
+#please as root on your system.
+KERNEL=="raw1394", GROUP="mythtv"

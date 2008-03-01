@@ -124,6 +124,7 @@ install: build
 	chmod a+x debian/*.sh
 	dh_install -pmythtv-frontend debian/mythtv.desktop usr/share/applications
 	dh_install -pmythtv-backend debian/mythtv-setup.desktop usr/share/applications
+	dh_install -pmythtv-backend debian/41-mythtv-permissions.rules etc/udev/rules.d
 	dh_install -pmythtv-frontend debian/mythfrontend.sh usr/share/mythtv
 	dh_install -pmythtv-frontend debian/session-settings etc/mythtv
 	dh_install -pmythtv-backend debian/mythtv-setup.sh usr/share/mythtv
