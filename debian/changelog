@@ -2,6 +2,8 @@ mythtv (0.21.0~fixes16259-0ubuntu2) UNRELEASED; urgency=low
 
   * debian/mythtv-frontend.dirs:
     - Add var/log/mythtv (LP: #185646)
+  * debian/patches/10_mythfilldatabase_log:
+    - Should allow mythfilldatabase to really log (LP: #196553)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sat, 01 Mar 2008 01:54:49 -0600
 
