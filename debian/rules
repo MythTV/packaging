@@ -54,7 +54,8 @@ CONFIGURE_OPTS += --compile-type=profile
 
 #These aren't mentioned in ./configure --help
 TOP_SECRET_OPTS += --enable-libfaad --enable-libfaac --enable-libmp3lame --enable-liba52 \
-                   --enable-libfaadbin --enable-libx264 --enable-libxvid --enable-libfftw3
+                   --enable-libfaadbin --enable-libx264 --enable-libxvid --enable-libfftw3 \
+                   --enable-fribidi
 
 ifeq "$(DEB_BUILD_ARCH)" "i386"
 	CONFIGURE_OPTS += --tune=pentium3 --cpu=pentium3 --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro
@@ -82,7 +83,7 @@ configure-stamp: patch-stamp
 	--enable-audio-oss --enable-audio-jack --enable-audio-arts --enable-dvb \
 	--enable-ivtv --enable-firewire --enable-joystick-menu \
 	--enable-opengl-vsync --with-bindings=perl --enable-opengl-video \
-	--enable-xvmc-opengl --enable-ffmpeg-pthreads\
+	--enable-ffmpeg-pthreads\
         $(CONFIGURE_OPTS) $(TOP_SECRET_OPTS)
 
 	touch configure-stamp
