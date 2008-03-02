@@ -8,6 +8,11 @@ case "$1" in
         db_unregister mythtv/server_host || true
         db_unregister mythtv/server_port || true
 
+        if ! dpkg-statoverride --list /var/log/mythtv >/dev/null; then
+            chown mythtv:mythtv /var/log/mythtv
+            chmod 2775 "$dir"
+        fi
+
         ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

@@ -9,3 +9,6 @@
 
 # Set priority
 #NICE=-10
+
+# Enable firewire priming
+#ENABLE_FIREWIRE=FALSE

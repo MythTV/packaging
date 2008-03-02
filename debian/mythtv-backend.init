@@ -19,6 +19,15 @@ test -x $DAEMON || exit 0
 
 set -e
 
+prime_firewire()
+{
+    if [ "$ENABLE_FIREWIRE" = "TRUE" ]; then
+	log_daemon_msg "Priming Firewire "
+        su - $USER -c "/usr/bin/myth_prime"
+	log_end_msg $?
+    fi
+}
+
 USER=mythtv
 USER_HOME=$(grep ^$USER /etc/passwd | awk -F : '{print $6}')
 RUNDIR=/var/run/mythtv
@@ -57,6 +66,7 @@ case "$1" in
 			rm -f $RUNDIR/$NAME.pid
 		fi
 	fi
+	prime_firewire
 	log_daemon_msg "Starting $DESC: $NAME "
 	start-stop-daemon --start --pidfile $RUNDIR/$NAME.pid \
 		--chuid $USER --nicelevel $NICE --exec $DAEMON -- $ARGS
@@ -74,6 +84,7 @@ case "$1" in
 	start-stop-daemon --stop --oknodo --pidfile $RUNDIR/$NAME.pid \
                 --chuid $USER --exec $DAEMON -- $ARGS
 	sleep 3
+	prime_firewire
 	start-stop-daemon --start --pidfile $RUNDIR/$NAME.pid \
                 --chuid $USER --nicelevel $NICE --exec $DAEMON -- $ARGS
     log_end_msg $?
