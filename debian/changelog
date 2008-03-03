@@ -1,3 +1,9 @@
+mythtv (0.21.0~fixes16338-0ubuntu2) hardy; urgency=low
+
+  * Add chmod to mythtv-frontend.postinst.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 03 Mar 2008 06:37:04 -0600
+
 mythtv (0.21.0~fixes16338-0ubuntu1) hardy; urgency=low
 
   * New upstream checkout.

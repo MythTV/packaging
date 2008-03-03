@@ -10,7 +10,7 @@ case "$1" in
 
         if ! dpkg-statoverride --list /var/log/mythtv >/dev/null; then
             chown mythtv:mythtv /var/log/mythtv
-            chmod 2775 "$dir"
+            chmod 2775 "/var/log/mythtv"
         fi
 
         ;;
