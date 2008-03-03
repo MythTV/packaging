@@ -1,14 +1,20 @@
-mythtv (0.21.0~fixes16259-0ubuntu2) UNRELEASED; urgency=low
+mythtv (0.21.0~fixes16338-0ubuntu1) hardy; urgency=low
 
+  * New upstream checkout.
   * debian/mythtv-frontend.dirs:
     - Add var/log/mythtv (LP: #185646)
   * debian/patches/10_mythfilldatabase_log:
     - Should allow mythfilldatabase to really log (LP: #196553)
+  * debian/patches/11_add_myth_prime:
+    - Adds mythprime binary for firewire priming.
   * debian/rules:
     - Turn on fribidi formatting (LP: #195780)
     - Drop XvMC-OpenGL. (LP: #195780)
+  * debian/mythtv-backend.files:
+    - Install mythprime binary
   * Add 41-mythtv-permissions.rules to override permissions on
     raw1394 devices to folks in the mythtv group. (LP: #197202)
+  * Add firewire priming support to mythtv-backend init script.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sat, 01 Mar 2008 01:54:49 -0600
 

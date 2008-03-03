@@ -1,0 +1,261 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 11_add_myth_prime.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.c mythtv-0.21.0~fixes16259/programs/mythprime/mythprime.c
+--- mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.c	1969-12-31 18:00:00.000000000 -0600
++++ mythtv-0.21.0~fixes16259/programs/mythprime/mythprime.c	2008-03-02 20:10:51.000000000 -0600
+@@ -0,0 +1,221 @@
++/*
++ *  myth_prime mythtv firewire primer
++ *  developed for use with motorola DCT62xx series STB
++ *  3 mar 2007
++ *
++ *  attempts to stabilize a firewire broadcast connection
++ *  on mythbackend init
++ *
++ *  called by /etc/init.d/mythtv-backend on -start and -restart
++ *
++ *  returns: 0 on stable broadcast connection
++ *           1 on handle creation error
++ *	     2 on priming error
++ *
++ *  adapted from:
++ *
++ *  firewire_tester
++ *  Copyright (c) 2006 by Jim Westfall
++ *  Distributed as part of MythTV under GPL v2 and later.
++ *
++ *  compile instruction:
++ *  $ gcc -Wall -o myth_prime myth_prime.c -liec61883 -lraw1394
++ */
++
++#include <unistd.h>
++#include <stdlib.h>
++#include <stdio.h>
++#include <errno.h>
++#include <sys/select.h>
++#include <libraw1394/raw1394.h>
++#include <libiec61883/iec61883.h>
++
++#define SYNC_BYTE           0x47
++#define MIN_PACKETS         25
++#define MAX_NODATA          10
++
++int sync_failed = 0;
++int nodata = 0;
++
++// read packets from firwire
++static int read_packet (unsigned char *tspacket, int len, 
++                        unsigned int dropped, void *callback_data)
++{
++    int *count = (int *)callback_data;
++
++    if (dropped)
++    {
++// packets were dropped
++        return 0;
++    }
++
++    if (tspacket[0] != SYNC_BYTE)
++    {
++        sync_failed = 1;
++        return 0;
++    }
++    nodata = 0;
++    *count = *count + 1;
++    return 1;
++}
++
++// test the firewire connection
++int test_connection(raw1394handle_t handle, int channel)
++{
++    int count = 0;
++    int retry = 0;
++
++    int fd = raw1394_get_fd(handle);
++
++    iec61883_mpeg2_t mpeg;
++
++    struct timeval tv;
++    fd_set rfds;
++
++    sync_failed = 0;
++
++    mpeg = iec61883_mpeg2_recv_init(handle, read_packet, (void*) &count);
++    iec61883_mpeg2_recv_start(mpeg, channel);
++
++    while(count < MIN_PACKETS && retry < 2 && !sync_failed 
++          && nodata < MAX_NODATA)
++    {
++        FD_ZERO(&rfds);
++        FD_SET(fd, &rfds);
++        tv.tv_sec = 1;
++        tv.tv_usec = 0;
++
++        if (select(fd + 1, &rfds, NULL, NULL, &tv) > 0)
++        {
++             nodata++;
++             raw1394_loop_iterate(handle);
++        }
++        else
++        {
++            retry++;
++        }
++    }
++    iec61883_mpeg2_recv_stop(mpeg);
++    iec61883_mpeg2_close(mpeg);
++
++    if (sync_failed)
++        return 0;
++
++    return count;
++}
++
++// create and test a p2p connection
++// returns 1 on success, 0 on failure
++
++int test_p2p(raw1394handle_t handle, nodeid_t node) {
++
++    int channel, count, success = 0;
++    channel = node;
++
++    // open a connection
++
++    if (iec61883_cmp_create_p2p_output(handle, node | 0xffc0, 0, channel,
++                                       1 /* fix me, speed */ ) != 0)
++        return 0;  // failed
++    
++    count = test_connection(handle, channel);  // grab some packets
++    
++    if (count >= MIN_PACKETS)   // did we get a good number of packets?
++       success = 1;		// yes
++    
++    // close the connection
++
++    iec61883_cmp_disconnect(handle, node | 0xffc0, 0,
++                            raw1394_get_local_id (handle),
++                            -1, channel, 0);
++    return success;
++}
++
++// create and test a broadcast connection
++// returns 1 on success, 0 on failure
++
++int test_broadcast(raw1394handle_t handle, nodeid_t node) {
++
++    int channel, count, success = 0;
++    channel = 63 - node;
++
++    // open a connection
++
++    if (iec61883_cmp_create_bcast_output(handle, node | 0xffc0, 0, channel, 
++                                         1 /* fix me, speed */ ) != 0)
++        return 0;  // failed
++    
++    count = test_connection(handle, channel);  // try to grab some packets
++
++    if (count >= MIN_PACKETS)   // did we get a good number of packets?
++        success = 1;		// yes, flag success
++    
++    // close the connection
++
++    iec61883_cmp_disconnect(handle, node | 0xffc0, 0,
++                            raw1394_get_local_id (handle),
++                            -1, channel, 0);
++    return success;
++}  
++
++/* 
++ *  fix_broadcast: Attempts to stablilize a reliable broadcast connection.
++ *
++ *  Makes 3 total attempts:
++ *  by first trying multiple p2p connections until data is received.
++ *  once p2p data is seen: attempts 5 consecutive broadcast 
++ *  connections to verify it is stable.
++ *
++ *  Returns (1) on success or (0) for priming error.
++ *    
++ */
++
++int fix_broadcast(raw1394handle_t handle, nodeid_t node) {
++
++    int p2p_retries;
++    int bcast_success = 0;
++    int max_tries = 0;	
++    
++    while (max_tries < 3)	// maximum tries before error
++    {
++	p2p_retries = 0;  // reset p2p counter
++
++        while (p2p_retries < 10)  //  attempt up to 10 p2p connections
++        { 
++            if (test_p2p(handle, node))  // did we get a good p2p connection?
++            {
++                bcast_success = 0;  // yes, reset our broadcast tries
++		
++                while (test_broadcast(handle, node))  // did we get a good bcast connection?
++                {
++                    bcast_success++; // yes, count it
++
++                    if (bcast_success == 5)  // have we got 5 stable connections?
++                       return 1;  // yes, return success
++                }
++            }
++            p2p_retries++;  // try p2p again
++        }
++        max_tries++;    // still unstable, try another round
++    }
++    return 0;  // unstable- return with error
++}
++
++int main(void) {
++
++    raw1394handle_t handle;	// our firewire handle...
++    int port = 0;		// port 0
++    int node = 1;		// node 1 is default for 62xx (?)
++    
++    handle = raw1394_new_handle_on_port(port);	// get a new handle and bind it to our port
++    
++    if (!handle)		// if no handle is returned, there's a problem
++    	return 1;		// exit with handle error
++            
++    if (!fix_broadcast(handle, node))    // try the fix 
++        return 2;			 // failed, exit with priming error    
++    
++// primed and ready, release the firewire handle and exit with no error
++	raw1394_destroy_handle(handle);
++        return 0;
++}     
+diff -urNad mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.pro mythtv-0.21.0~fixes16259/programs/mythprime/mythprime.pro
+--- mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.pro	1969-12-31 18:00:00.000000000 -0600
++++ mythtv-0.21.0~fixes16259/programs/mythprime/mythprime.pro	2008-03-02 20:34:07.000000000 -0600
+@@ -0,0 +1,14 @@
++include ( ../../config.mak )
++include ( ../../settings.pro )
++include ( ../../version.pro )
++include ( ../programs-libs.pro )
++
++TEMPLATE = app
++CONFIG += thread
++TARGET = mythprime
++target.path = $${PREFIX}/bin
++INSTALLS = target
++
++QMAKE_CLEAN += $(TARGET)
++
++SOURCES += mythprime.c
+diff -urNad mythtv-0.21.0~fixes16259~/programs/programs.pro mythtv-0.21.0~fixes16259/programs/programs.pro
+--- mythtv-0.21.0~fixes16259~/programs/programs.pro	2008-01-29 14:17:31.000000000 -0600
++++ mythtv-0.21.0~fixes16259/programs/programs.pro	2008-03-02 20:32:23.000000000 -0600
+@@ -12,6 +12,7 @@
+ 
+ using_backend {
+     SUBDIRS += mythbackend mythfilldatabase mythtv-setup
++    SUBDIRS += mythprime
+ }
+ 
+ using_frontend:using_backend {

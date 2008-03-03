@@ -23,7 +23,7 @@ prime_firewire()
 {
     if [ "$ENABLE_FIREWIRE" = "TRUE" ]; then
 	log_daemon_msg "Priming Firewire "
-        su - $USER -c "/usr/bin/myth_prime"
+        su - $USER -c "/usr/bin/mythprime"
 	log_end_msg $?
     fi
 }
