@@ -178,6 +178,8 @@ install: build
 	dh_installdirs -pmythtv-backend var/lib/mythtv/recordings var/cache/mythtv \
 	var/log/mythtv usr/share/doc/mythtv-backend
 
+	dh_installdirs -pmythtv-frontend var/log/mythtv
+
 	dh_installdirs -pmythtv-common /etc/mythtv
 
 # Install files in contrib directory.

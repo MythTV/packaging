@@ -1,3 +1,11 @@
+mythtv (0.21.0~fixes16338-0ubuntu3) hardy; urgency=low
+
+  * Install var/log/mythtv into mythtv-frontend package
+    to prevent alternate install CDs from failing in the order
+    packages get installed. (LP: #198314)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 04 Mar 2008 01:47:57 -0600
+
 mythtv (0.21.0~fixes16338-0ubuntu2) hardy; urgency=low
 
   * Add chmod to mythtv-frontend.postinst.
