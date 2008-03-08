@@ -88,6 +88,14 @@ case "$1" in
         hostname=localhost
     fi
 
+    if [ "$hostname" = "localhost" ]; then
+        #redirection of 3 is because of debconf internally using it.
+	if [ -x /usr/sbin/invoke-rc.d ]; then
+		invoke-rc.d mysql start 3> /dev/null|| true
+	else
+		/etc/init.d/mysql start 3> /dev/null|| true
+	fi
+    fi
     db_get mythtv/mysql_mythtv_dbname
     database="$RET"
 

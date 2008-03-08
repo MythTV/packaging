@@ -23,7 +23,7 @@ if [ "$IGNORE_NOT" = "0" ]; then
 		else
 			$SU_TYPE /etc/init.d/mythtv-backend stop --message "Please enter your current login password to stop mythtv-backend."
 		fi
-		xterm -title "MythTV Setup Terminal" -e /usr/bin/mythtv-setup.real "$@"
+		xterm -title "MythTV Setup Terminal" -e taskset -c 0 /usr/bin/mythtv-setup.real "$@"
 		if [ "$DE" = "kde" ]; then
 			$SU_TYPE /etc/init.d/mythtv-backend restart
 		else
