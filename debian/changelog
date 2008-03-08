@@ -1,10 +1,12 @@
-mythtv (0.21.0-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.21.0-0ubuntu1) hardy; urgency=low
 
   * New upstream version. (LP: #192486)
   * Include etc/network/if-up.d/mythtv-backend.if-up.d.  This makes sure
     that if the network is to come up late, myth starts late. (LP: #187348)
   * Start mysql from mythtv-database postinst if we can.
   * Start mythtv-setup with taskset -c 0 (Thanks Daniel Kristjansson)
+  * Only --tune to i686 again due to upstream changes in the configure
+    script.  This time add MMX though. (LP: #198104) (LP: #198115)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sat, 08 Mar 2008 01:31:06 -0600
 

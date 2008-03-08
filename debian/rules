@@ -7,7 +7,7 @@ SVN_PACKAGE+=mythtv
 SVN_TYPE+=fixes
 SVN_MAJOR_RELEASE+=21
 SVN_MINOR_RELEASE+=0
-SVN_REVISION+=16446
+SVN_REVISION+=16468
 SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
 #SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)/$(SVN_PACKAGE)
 GREATER+=true
@@ -58,7 +58,7 @@ TOP_SECRET_OPTS += --enable-libfaad --enable-libfaac --enable-libmp3lame --enabl
                    --enable-fribidi
 
 ifeq "$(DEB_BUILD_ARCH)" "i386"
-	CONFIGURE_OPTS += --tune=pentium3 --cpu=pentium3 --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro
+	CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro
 else
 ifeq "$(DEB_BUILD_ARCH)" "sparc"
 	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --extra-cflags="-mcpu=ultrasparc -mvis"
