@@ -1,3 +1,11 @@
+mythtv (0.21.0-0ubuntu2) hardy; urgency=low
+
+  * Add 12_changeset_16483.dpatch:
+    - Fixes DVD menu handling problem found shortly after release.
+      See MythTV #4897 and #4567 for more information.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 09 Mar 2008 20:20:48 -0500
+
 mythtv (0.21.0-0ubuntu1) hardy; urgency=low
 
   * New upstream version. (LP: #192486)
