@@ -5,17 +5,43 @@ Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
 XSBC-Original-Maintainer: Christian Marillat <marillat@debian.org>
 Bugs: mailto:ubuntu-mythtv@lists.ubuntu.com
 Standards-Version: 3.7.3
-Build-Conflicts: libmyth-0.20-dev, libmyth-dev
-Build-Depends: debhelper (>> 5.0.0), libqt3-mt-dev, libdvb-dev, dpatch,
- libmysqlclient15-dev | libmysqlclient12-dev, libfreetype6-dev, libavc1394-dev,
- libvorbis-dev, liblame-dev, liblircclient-dev, libartsc0-dev, libasound2-dev,
- libxinerama-dev | xlibs-static-dev (<< 6.8.1-1), libiec61883-dev (>= 1.0.0),
- libxxf86vm-dev | xlibs-static-dev (<< 6.8.1-1), po-debconf, libdts-dev,
- libxvmc-dev | xlibs-static-dev (<< 6.8.1-1), libdvdnav-dev, libimlib2-dev,
- libxext-dev | xlibs-static-dev (<< 6.8.1-1), libjack0.100.0-dev | libjack-dev,
- texi2html, ccache, linux-kernel-headers, python-support, libfaad-dev | libfaad2-dev,
- libfaac-dev, liblame-dev, liba52-0.7.4-dev, libx264-dev, libxvidcore4-dev, libfftw3-dev | fftw3-dev,
- libchromexvmc1, libchromexvmcpro1
+Build-Conflicts: libmyth-0.20-dev,
+                 libmyth-dev
+Build-Depends:  debhelper (>> 5.0.0),
+                dpatch,
+                ccache,
+                libqt3-mt-dev,
+                libdvb-dev,
+                po-debconf,
+                texi2html,
+                python-support,
+                linux-kernel-headers,
+                libdvdnav-dev,
+                libfreetype6-dev,
+                libavc1394-dev,
+                libiec61883-dev (>= 1.0.0),
+                liblircclient-dev,
+                libxinerama-dev | xlibs-static-dev (<< 6.8.1-1),
+                libxxf86vm-dev | xlibs-static-dev (<< 6.8.1-1),
+                libmysqlclient15-dev | libmysqlclient12-dev,
+                libxvmc-dev | xlibs-static-dev (<< 6.8.1-1),
+                libxext-dev | xlibs-static-dev (<< 6.8.1-1),
+                libimlib2-dev,
+                libasound2-dev,
+                libartsc0-dev,
+                libjack0.100.0-dev | libjack-dev,
+                libfaad-dev | libfaad2-dev,
+                libfaac-dev,
+                liblame-dev,
+                liblame-dev,
+                libvorbis-dev,
+                libdts-dev,
+                liba52-0.7.4-dev,
+                libx264-dev,
+                libxvidcore4-dev,
+                libfftw3-dev | fftw3-dev,
+                libchromexvmc1,
+                libchromexvmcpro1
 
 Package: mythtv
 Architecture: all
