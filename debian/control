@@ -14,7 +14,8 @@ Build-Depends: debhelper (>> 5.0.0), libqt3-mt-dev, libdvb-dev, dpatch,
  libxvmc-dev | xlibs-static-dev (<< 6.8.1-1), libdvdnav-dev, libimlib2-dev,
  libxext-dev | xlibs-static-dev (<< 6.8.1-1), libjack0.100.0-dev | libjack-dev,
  texi2html, ccache, linux-kernel-headers, python-support, libfaad-dev | libfaad2-dev,
- libfaac-dev, liblame-dev, liba52-0.7.4-dev, libx264-dev, libxvidcore4-dev, libfftw3-dev | fftw3-dev
+ libfaac-dev, liblame-dev, liba52-0.7.4-dev, libx264-dev, libxvidcore4-dev, libfftw3-dev | fftw3-dev,
+ libchromexvmc1, libchromexvmcpro1
 
 Package: mythtv
 Architecture: all

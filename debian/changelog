@@ -1,3 +1,10 @@
+mythtv (0.21.0-0ubuntu3) UNRELEASED; urgency=low
+
+  * Add libchromexvmc1 and libchromexvmcpro1 to build depends to allow
+    VIA XvMC support. (LP: #200633)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 12 Mar 2008 03:37:46 -0500
+
 mythtv (0.21.0-0ubuntu2) hardy; urgency=low
 
   * Add 12_changeset_16483.dpatch:
