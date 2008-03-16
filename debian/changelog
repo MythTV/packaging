@@ -3,6 +3,7 @@ mythtv (0.21.0-0ubuntu3) UNRELEASED; urgency=low
   * Add libchromexvmc1 and libchromexvmcpro1 to build depends to allow
     VIA XvMC support. (LP: #200633)
   * Build without faad runtime library loading.  (LP: #202590, #201572)
+  * Fix problem where glXGetProcAddress can't be found in some OpenGL libs  (LP: #201567)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 12 Mar 2008 03:37:46 -0500
 

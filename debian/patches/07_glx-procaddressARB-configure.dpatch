@@ -1,0 +1,73 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 07_glx-procaddressARB-configure.dpatch by Michael Haas <laga+mythtv@laga.ath.cx>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Fix MythTV for older Nvidia drivers. See MythTV #4064 for more info.
+
+@DPATCH@
+ 
+Index: configure
+===================================================================
+--- mythtv.a/configure	(revision 16588)
++++ mythtv.b/configure	(working copy)
+@@ -163,6 +163,7 @@
+   echo "                           directory with frontend.h [$dvb_path]"
+   echo "  --disable-x11            disable X11 support"
+   echo "  --x11-path=X11LOC        location of X11 include files [$x11_include_path-path]"
++#  echo "  --enable-glx-procaddrarb use glXGetProcAddressARB() instead of glXGetProcAddress()"
+   echo "  --disable-xrandr         disable X11 resolution switching"
+   echo "  --disable-xv             disable XVideo   (X11 video output accel.)"
+   echo "  --disable-xvmc           disable XvMC     (Linux/BSD MPEG accel.)"
+@@ -904,6 +905,7 @@
+     xvmc_vld
+     dvdv
+     fribidi
++    glx_proc_addr_arb
+ '
+ 
+ MYTHTV_LIST='
+@@ -1189,6 +1191,7 @@
+ xvmc_opengl="yes"
+ xvmc_vld="yes"
+ xvmcw="yes"
++glx_proc_addr_arb="no"
+ 
+ # libraries
+ enable zlib
+@@ -1353,6 +1356,10 @@
+   ;;
+   --xvmc-lib=*) xvmc_lib="$optval"
+   ;;
++  --enable-glx-procaddrarb) glx_proc_addr_arb="yes" 
++  ;;
++  --disable-glx-procaddrarb) glx_proc_addr_arb="no"
++  ;;
+   --enable-mac-accel) dvdv="yes"
+   ;;
+   --disable-mac-accel) dvdv="no"
+@@ -3336,6 +3343,10 @@
+   fi
+ fi
+ 
++if enabled glx_proc_addr_arb; then
++    append CONFIG_DEFINES "USING_GLX_PROC_ADDR_ARB"
++fi
++
+ if enabled xv; then
+   echo "CONFIG_XV_LIBS=-lXinerama -lXv -lX11 -lXext -lXxf86vm" >> $MYTH_CONFIG_MAK
+ fi
+Index: libs/libmythtv/util-opengl.cpp
+===================================================================
+--- mythtv.a/libs/libmythtv/util-opengl.cpp	(revision 16588)
++++ mythtv.b/libs/libmythtv/util-opengl.cpp	(working copy)
+@@ -306,7 +306,9 @@
+ {
+     __GLXextFuncPtr ret = NULL;
+ 
+-#if GLX_VERSION_1_4
++#if USING_GLX_PROC_ADDR_ARB
++    X11S(ret = glXGetProcAddressARB((const GLubyte*)procName.latin1()));
++#elif GLX_VERSION_1_4
+     X11S(ret = glXGetProcAddress((const GLubyte*)procName.latin1()));
+ #elif GLX_ARB_get_proc_address
+     X11S(ret = glXGetProcAddressARB((const GLubyte*)procName.latin1()));
