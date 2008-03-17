@@ -8,6 +8,10 @@ mythtv (0.21.0-0ubuntu3) hardy; urgency=low
     - Fixes UPnP breakage on PS3.
   * Fribidi needs version 0.19.x, but only 0.10.9 is in apt right now.
     Disable it from debian/rules until newer version available.
+  * Add 12_firewire_tester.dpatch:
+    - Creates directory structure for building with firewire tester.
+  * debian/rules:
+    - Create symlinks for firewire tester out of contrib (LP: #201876)
 
   [ Michael Haas ]
   * Fix problem where glXGetProcAddress can't be found in some OpenGL libs.
