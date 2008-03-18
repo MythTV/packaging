@@ -16,8 +16,10 @@ mythtv (0.21.0-0ubuntu3) hardy; urgency=low
   [ Michael Haas ]
   * Add 07_glx-procaddressARB-configure to fix problem where glXGetProcAddress 
     can't be found in some OpenGL libs. (LP: #201567)
+  * Remove liba52-0.7.4-dev from build dependencies
   * debian/rules:
     - Add call to the glx-procaddressARB patch new argument.
+    - Do not build with unadvertised liba52 support (LP: #203692)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 12 Mar 2008 03:37:46 -0500
 
