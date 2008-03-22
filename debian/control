@@ -113,7 +113,7 @@ Description: A personal video recorder application (database)
 
 Package: mythtv-backend
 Architecture: any
-Depends: mythtv-common (= ${source:Version}), mythtv-transcode-utils (= ${source:Version}), ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, libmyth-perl, ${misc:Depends}
+Depends: mythtv-common (= ${source:Version}), mythtv-transcode-utils (= ${source:Version}), ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, libmyth-perl, xterm, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
 Recommends: ntp | time-daemon | ntp-simple, logrotate
