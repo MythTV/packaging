@@ -1,7 +1,11 @@
 mythtv (0.21.0-0ubuntu4) UNRELEASED; urgency=low
 
+  [ Mario Limonciello ]
   * debian/control:
     - Add xterm to mythtv-backend depends (LP: #202708)
+
+  [ Michael Haas ]
+  * Don't build depend against liba52.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sat, 22 Mar 2008 00:56:47 -0500
 
