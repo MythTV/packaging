@@ -1,0 +1,27 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 15_hue_fix.dpatch by Michael Haas <laga+mythtv@laga.ath.cx>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Reintroduce hue offset for some Xv adaptors which was lost in
+## DP: changeset 14689
+## DP: see http://svn.mythtv.org/trac/ticket/5039
+
+@DPATCH@
+
+--- a/libs/libmythtv/videoout_xv.cpp	(Revision 16772)
++++ b/libs/libmythtv/videoout_xv.cpp	(Arbeitskopie)
+@@ -3820,10 +3820,11 @@
+     int port_min = xv_attribute_min[attribute];
+     int port_max = xv_attribute_max[attribute];
+     int range    = port_max - port_min;
++
++    int tmpval2 = (newValue + valAdj) % 100; 
++    int tmpval3 = (int) roundf(range * 0.01f * tmpval2); 
++    int value   = min(tmpval3 + port_min, port_max); 
+     
+-    int tmpval = (int) roundf(range * 0.01f * newValue);
+-    int value   = min(tmpval + port_min, port_max);
+-
+     xv_set_attrib(XJ_disp, xv_port, attrName.ascii(), value);
+ 
+ #ifdef USING_XVMC
