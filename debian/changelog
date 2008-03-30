@@ -1,4 +1,4 @@
-mythtv (0.21.0+fixes16834-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes16838-0ubuntu1) UNRELEASED; urgency=low
 
   * New upstream checkout: switch to release-0-21-fixes branch
   * Remove the following patches as they're included now:
