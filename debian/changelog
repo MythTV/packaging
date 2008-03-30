@@ -1,25 +1,27 @@
-mythtv (0.21.0+fixes16838-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes16838-0ubuntu1) hardy; urgency=low
 
+  [ Michael Haas ]
+  * Don't build depend against liba52.
   * New upstream checkout: switch to release-0-21-fixes branch
+    - SECURITY FIX:
+      + CVE 2007-6036
   * Remove the following patches as they're included now:
-    12_changeset_16483.dpatch
-    13_changeset_16577.dpatch
+    - 12_changeset_16483.dpatch
+    - 13_changeset_16577.dpatch
   * Add 14_fix_video_fallback.dpatch so we don't fall back to the opengl
     video renderer if xvmc-blit is not available (LP: #205158)
   * Add 15_hue_fix.dpatch (see <http://svn.mythtv.org/trac/ticket/5039>)
-
- -- Michael Haas <laga@laga.ath.cx>  Fri, 28 Mar 2008 23:47:20 +0100
-
-mythtv (0.21.0-0ubuntu4) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * debian/control:
     - Add xterm to mythtv-backend depends (LP: #202708)
 
-  [ Michael Haas ]
-  * Don't build depend against liba52.
+  [ majoridiot ]
+  * Update debian/patches/11_add_mythprime:
+    - Automatically detect both P2P and broadcast connections
+      and prime them now without needing to specify node and device.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Sat, 22 Mar 2008 00:56:47 -0500
+ -- Michael Haas <laga@laga.ath.cx>  Fri, 28 Mar 2008 23:47:20 +0100
 
 mythtv (0.21.0-0ubuntu3) hardy; urgency=low
 

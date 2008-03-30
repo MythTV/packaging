@@ -5,32 +5,35 @@
 ## DP: No description.
 
 @DPATCH@
-diff -urNad mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.c mythtv-0.21.0~fixes16259/programs/mythprime/mythprime.c
---- mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.c	1969-12-31 18:00:00.000000000 -0600
-+++ mythtv-0.21.0~fixes16259/programs/mythprime/mythprime.c	2008-03-02 20:10:51.000000000 -0600
-@@ -0,0 +1,221 @@
+diff -urNad mythtv-0.21.0+fixes16838~/programs/mythprime/mythprime.c mythtv-0.21.0+fixes16838/programs/mythprime/mythprime.c
+--- mythtv-0.21.0+fixes16838~/programs/mythprime/mythprime.c	1969-12-31 18:00:00.000000000 -0600
++++ mythtv-0.21.0+fixes16838/programs/mythprime/mythprime.c	2008-03-30 00:54:02.000000000 -0500
+@@ -0,0 +1,465 @@
 +/*
-+ *  myth_prime mythtv firewire primer
-+ *  developed for use with motorola DCT62xx series STB
-+ *  3 mar 2007
++ *  mythprime mythtv firewire primer
++ *  developed for mythbuntu 8.04
++ *  March 2008 by majoridiot
 + *
-+ *  attempts to stabilize a firewire broadcast connection
-+ *  on mythbackend init
++ *  attempts to intelligently locate and stabilize connections to
++ *  cable stbs on the firewire bus
 + *
 + *  called by /etc/init.d/mythtv-backend on -start and -restart
 + *
-+ *  returns: 0 on stable broadcast connection
++ *  returns: 0 on successful prime
 + *           1 on handle creation error
 + *	     2 on priming error
 + *
-+ *  adapted from:
++ *  incorporates code (c) by: Jim Westfall, Kristian Hogsberg, Dan Dennedy, 
++ *                            Andreas Micklei and Jim Lohmeyer
 + *
-+ *  firewire_tester
-+ *  Copyright (c) 2006 by Jim Westfall
-+ *  Distributed as part of MythTV under GPL v2 and later.
++ *  Distributed as part of the mythbuntu distribution of
++ *  MythTV under GPL v2 and later.
++ *
++ *  depends on: libraw1394-dev libiec61883-dev libavc1394-dev
 + *
 + *  compile instruction:
-+ *  $ gcc -Wall -o myth_prime myth_prime.c -liec61883 -lraw1394
++ *  $ gcc -Wall -o mythprime mythprime.c -liec61883 -lraw1394 -lavc1394
++ *
 + */
 +
 +#include <unistd.h>
@@ -38,17 +41,70 @@ diff -urNad mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.c mythtv-0.21
 +#include <stdio.h>
 +#include <errno.h>
 +#include <sys/select.h>
++#include <string.h>
 +#include <libraw1394/raw1394.h>
++#include <libavc1394/avc1394.h>
++#include <libavc1394/rom1394.h>
 +#include <libiec61883/iec61883.h>
 +
++#define VERSION             ".53 beta"
++
++#define VERBOSE(args...)    do { if (verbose) printf(args); } while (0)
 +#define SYNC_BYTE           0x47
 +#define MIN_PACKETS         25
 +#define MAX_NODATA          10
++#define CSR_O_PCR_0         0x904 
++#define STARTING_NODE       0
++#define EXTENSION_CODE      7
++#define AVC1394_RETRY       2
++#define TUNER               AVC1394_SUBUNIT_TYPE_TUNER
++#define TUNER_ALT           AVC1394_SUBUNIT_TUNER
++#define PANEL               AVC1394_SUBUNIT_TYPE_PANEL
++#define VCR                 AVC1394_SUBUNIT_TYPE_VCR
++#define VCR_ALT             AVC1394_SUBUNIT_VCR
++
++extern 
++int iec61883_plug_set(raw1394handle_t handle, nodeid_t node, nodeaddr_t a, quadlet_t value);
++
++extern 
++int iec61883_plug_get(raw1394handle_t h, nodeid_t n, nodeaddr_t a, quadlet_t *value);
++
++#define iec61883_get_oPCR0(h,n,v) iec61883_plug_get((h), (n), CSR_O_PCR_0, (quadlet_t *)(v))
++#define iec61883_set_oPCR0(h,n,v) iec61883_plug_set((h), (n), CSR_O_PCR_0, *((quadlet_t *)&(v)))
++
++#if ( __BYTE_ORDER == __BIG_ENDIAN )
++struct iec61883_oPCR {
++	unsigned int online:1;
++	unsigned int bcast_connection:1;
++	unsigned int n_p2p_connections:6;
++	unsigned int reserved:2;
++	unsigned int channel:6;
++	unsigned int data_rate:2;
++	unsigned int overhead_id:4;
++	unsigned int payload:10;
++};
++#else
++struct iec61883_oPCR {
++	unsigned int payload:10;
++	unsigned int overhead_id:4;
++	unsigned int data_rate:2;
++	unsigned int channel:6;
++	unsigned int reserved:2;
++	unsigned int n_p2p_connections:6;
++	unsigned int bcast_connection:1;
++	unsigned int online:1;
++};
++#endif
 +
 +int sync_failed = 0;
 +int nodata = 0;
++int verbose = 0;
++int port = 0;		
++int plugact;
 +
-+// read packets from firwire
++raw1394handle_t handle;	
++
++// read packets from firewire, looking for the synch byte
 +static int read_packet (unsigned char *tspacket, int len, 
 +                        unsigned int dropped, void *callback_data)
 +{
@@ -56,7 +112,7 @@ diff -urNad mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.c mythtv-0.21
 +
 +    if (dropped)
 +    {
-+// packets were dropped
++        VERBOSE("Dropped %d packet(s)...\n", dropped);
 +        return 0;
 +    }
 +
@@ -70,19 +126,15 @@ diff -urNad mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.c mythtv-0.21
 +    return 1;
 +}
 +
-+// test the firewire connection
++// try to get a valid mpeg stream from firewire
 +int test_connection(raw1394handle_t handle, int channel)
 +{
 +    int count = 0;
 +    int retry = 0;
-+
 +    int fd = raw1394_get_fd(handle);
-+
 +    iec61883_mpeg2_t mpeg;
-+
 +    struct timeval tv;
 +    fd_set rfds;
-+
 +    sync_failed = 0;
 +
 +    mpeg = iec61883_mpeg2_recv_init(handle, read_packet, (void*) &count);
@@ -110,32 +162,47 @@ diff -urNad mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.c mythtv-0.21
 +    iec61883_mpeg2_close(mpeg);
 +
 +    if (sync_failed)
++    {
++        VERBOSE("Error: could not find stream synch byte.  Is STB tuned to a valid/unencrypted channel?\n");
 +        return 0;
++    }
 +
 +    return count;
 +}
 +
 +// create and test a p2p connection
 +// returns 1 on success, 0 on failure
-+
 +int test_p2p(raw1394handle_t handle, nodeid_t node) {
 +
 +    int channel, count, success = 0;
 +    channel = node;
 +
-+    // open a connection
++    VERBOSE("Establishing P2P connection on node %d, channel %d... ", node, channel);
++    fflush(stdout);
 +
 +    if (iec61883_cmp_create_p2p_output(handle, node | 0xffc0, 0, channel,
 +                                       1 /* fix me, speed */ ) != 0)
-+        return 0;  // failed
++    {
++        printf("ERROR: iec61883_cmp_create_p2p_output failed\n");
++        return 0;
++    }
 +    
-+    count = test_connection(handle, channel);  // grab some packets
-+    
-+    if (count >= MIN_PACKETS)   // did we get a good number of packets?
-+       success = 1;		// yes
-+    
-+    // close the connection
++    VERBOSE("P2P: connection established.\n");
++    VERBOSE("P2P: receiving packets... ");
 +
++    count = test_connection(handle, channel);  
++    
++    if (count >= MIN_PACKETS)   
++    {
++        VERBOSE("%d packets received\n", count);
++        success = 1;
++    }
++    else
++    {
++        VERBOSE("FAILED.\n");
++    }
++
++    VERBOSE("Disconnecting P2P connection on node %d, channel %d\n", node, channel);
 +    iec61883_cmp_disconnect(handle, node | 0xffc0, 0,
 +                            raw1394_get_local_id (handle),
 +                            -1, channel, 0);
@@ -144,25 +211,36 @@ diff -urNad mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.c mythtv-0.21
 +
 +// create and test a broadcast connection
 +// returns 1 on success, 0 on failure
-+
 +int test_broadcast(raw1394handle_t handle, nodeid_t node) {
 +
 +    int channel, count, success = 0;
 +    channel = 63 - node;
 +
-+    // open a connection
++    VERBOSE("Creating Broadcast connection on node %d, channel %d... ", node, channel);
++    fflush(stdout);
 +
 +    if (iec61883_cmp_create_bcast_output(handle, node | 0xffc0, 0, channel, 
 +                                         1 /* fix me, speed */ ) != 0)
-+        return 0;  // failed
++    {
++        VERBOSE("ERROR: iec61883_cmp_create_bcast_output failed\n");
++        return 0;
++    }
 +    
-+    count = test_connection(handle, channel);  // try to grab some packets
++    VERBOSE("Broadcast: connection established.\n");
++    VERBOSE("Broadcast: receiving packets... ");
 +
-+    if (count >= MIN_PACKETS)   // did we get a good number of packets?
-+        success = 1;		// yes, flag success
-+    
-+    // close the connection
++    count = test_connection(handle, channel);  
++    if (count >= MIN_PACKETS)   
++    {
++        VERBOSE("%d packets received.\n", count);
++        success = 1;		
++    }
++    else
++    {
++        VERBOSE("FAILED.\n");
++    }
 +
++    VERBOSE("Disconnecting broadcast connection on node %d, channel %d\n", node, channel);
 +    iec61883_cmp_disconnect(handle, node | 0xffc0, 0,
 +                            raw1394_get_local_id (handle),
 +                            -1, channel, 0);
@@ -170,69 +248,235 @@ diff -urNad mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.c mythtv-0.21
 +}  
 +
 +/* 
-+ *  fix_broadcast: Attempts to stablilize a reliable broadcast connection.
++ * 
++ *  prime_stb: attempts to prime the stb on the supplied port and node
 + *
-+ *  Makes 3 total attempts:
-+ *  by first trying multiple p2p connections until data is received.
-+ *  once p2p data is seen: attempts 5 consecutive broadcast 
-+ *  connections to verify it is stable.
++ *  priming scheme is as follows:
 + *
-+ *  Returns (1) on success or (0) for priming error.
++ *  the stb is first checked to see if a broadcast connection already exists and if so, how stable it is-
++ *  for backend server restarts and moto boxes that reamin stable across reboots 
++ *
++ *  if not, an attempt at stabilizing p2p connection is made, looking for 10 consecutive streams- with
++ *  an early-out for total failure of the first loop for quicker moto primes
++ *
++ *  if p2p fails, the final attempt is to stabilize a broadcast connection by sheer will alone ;)
++ *
++ *  returns 1 if any of the three priming attempts succeed or 0 for total priming failure
 + *    
 + */
 +
-+int fix_broadcast(raw1394handle_t handle, nodeid_t node) {
++int prime_stb(raw1394handle_t handle, nodeid_t node) {
 +
-+    int p2p_retries;
-+    int bcast_success = 0;
-+    int max_tries = 0;	
-+    
-+    while (max_tries < 3)	// maximum tries before error
++    struct iec61883_oPCR o_pcr;
++    int plugnode = (0xffc0 + node);
++    int retries;  
++    int success = 0;
++    int tries = 0;
++    int loop;
++
++    VERBOSE("Testing for existing stable broadcast connection... port %d node %d\n", port, node);
++    if (test_broadcast(handle, node))
 +    {
-+	p2p_retries = 0;  // reset p2p counter
++        for (loop = 0; loop < 4; loop++)
++            success += (test_broadcast(handle, node)); 
++        if (success == 4) 
++        {
++            printf("Broadcast connection already stable- mythprime exiting.\n");
++            return 1;
++        }
++    }
 +
-+        while (p2p_retries < 10)  //  attempt up to 10 p2p connections
++    VERBOSE("Connection unstable... attempting P2P priming.\n");
++    VERBOSE("Reading oPCR0...");
++ 
++    plugact = iec61883_get_oPCR0 (handle, plugnode, &o_pcr);  
++    if (plugact < 0)
++    {
++        printf("ERROR reading 0PCR0: %s\n", strerror( errno ));
++        return 0; 
++    }
++    VERBOSE("no error\n");
++    VERBOSE("curent n_p2p_connections=%d\n", o_pcr.n_p2p_connections);
++
++    o_pcr.n_p2p_connections = 0; 
++
++    plugact = iec61883_set_oPCR0 (handle, plugnode, o_pcr);
++    if (plugact < 0)
++    {
++        printf("ERROR setting 0PCR0: %s\n", strerror( errno ));
++        return 0;  
++    }
++
++    success = 0;
++
++    while (tries < 10)
++    {    
++         VERBOSE("setting n_p2p_connections=1... ");
++         o_pcr.n_p2p_connections = 1; 
++         plugact = iec61883_set_oPCR0 (handle, plugnode, o_pcr);
++             if (plugact < 0)
++             {
++                 printf("ERROR setting 0PCR0: %s\n", strerror( errno ));
++                 return 0;  
++             }        
++         VERBOSE("no error\n");
++
++         for (loop = 0; loop < 10; loop++)
++             success += test_p2p(handle, node);
++ 
++         VERBOSE("setting n_p2p_connections=0... ");
++         o_pcr.n_p2p_connections = 0; 
++         plugact = iec61883_set_oPCR0 (handle, plugnode, o_pcr);
++         if (plugact < 0)
++         {
++             printf("ERROR setting 0PCR0: %s\n", strerror( errno ));
++             return 0;  
++         }        
++
++         VERBOSE("no error\n");
++         VERBOSE("successful connections: %d\n", success);
++
++         if (success > 8)
++             return 1;
++         else if
++             (success < 2)  // this might be an unstable moto, don't waste time trying.
++             break;  
++
++         tries++;
++         VERBOSE("Tries=%d\n", tries);
++    }
++
++    VERBOSE("P2P priming failed... attempting broadcast priming.\n");
++
++    tries = 0;
++    success = 0;
++
++    while (tries < 3)  
++    {
++	retries = 0;  
++        while (retries < 15)  
 +        { 
-+            if (test_p2p(handle, node))  // did we get a good p2p connection?
++            if (test_p2p(handle, node))  
 +            {
-+                bcast_success = 0;  // yes, reset our broadcast tries
-+		
-+                while (test_broadcast(handle, node))  // did we get a good bcast connection?
++                success = 0; 
++                while (test_broadcast(handle, node))  
 +                {
-+                    bcast_success++; // yes, count it
-+
-+                    if (bcast_success == 5)  // have we got 5 stable connections?
-+                       return 1;  // yes, return success
++                    success++; 
++                    if (success == 5)  
++                       return 1;  
 +                }
 +            }
-+            p2p_retries++;  // try p2p again
++            retries++;  
 +        }
-+        max_tries++;    // still unstable, try another round
++        tries++;  
 +    }
-+    return 0;  // unstable- return with error
++    return 0;  // the beast is still unstable- return with priming error
 +}
 +
-+int main(void) {
++void usage(void) {
++    printf("mythprime [-v][-V][-h]\n");
++    printf(" Options:\n");
++    printf("    -v          - verbose output\n");
++    printf("    -V          - Display version information and exit\n");
++    printf("    -h          - display this help and exit\n");
++    exit(1);
++}
 +
-+    raw1394handle_t handle;	// our firewire handle...
-+    int port = 0;		// port 0
-+    int node = 1;		// node 1 is default for 62xx (?)
++int main(int argc, char **argv) {
++
++    int c;
++    int devices;
++    int searchnode = 0;
++    int error = 0;
++
++    opterr = 0;
++
++    while ((c = getopt(argc, argv, "vVh")) != -1)
++    {
++        switch (c) 
++        {
++            case 'v':
++                verbose = 1;
++                break;
++
++            case 'V':
++                printf("\nmythprime version %s\n\n", VERSION);
++                exit(1);
++                break;
++
++            case 'h':
++                usage();
++                exit(1);
++                break;
++
++            default:
++                printf("\nInvalid command line\n");
++                usage();
++                
++        }
++    }
++
++    VERBOSE("\nAcquiring handle on port %d.\n", port);
++    handle = raw1394_new_handle_on_port(port);
 +    
-+    handle = raw1394_new_handle_on_port(port);	// get a new handle and bind it to our port
-+    
-+    if (!handle)		// if no handle is returned, there's a problem
-+    	return 1;		// exit with handle error
-+            
-+    if (!fix_broadcast(handle, node))    // try the fix 
-+        return 2;			 // failed, exit with priming error    
-+    
-+// primed and ready, release the firewire handle and exit with no error
-+	raw1394_destroy_handle(handle);
++    if (!handle)
++    {		
++       printf("Failed to acquire handle on port %d.\n", port);
++    	return 1;
++    }
++
++    devices = raw1394_get_nodecount(handle);
++
++/*
++ *  locate and prime cable boxes on the firewire bus by avc subtypes:
++ *
++ *  the first check rules out vcrs then two more checks for "panel" and both
++ *  types of "tuner" devices.  if the device is not a panel or a tuner, priming
++ *  is skipped on that node.
++ *
++ *  this should find and prime only stbs and ignore all other devices on the 
++ *  firewire bus.
++ *
++*/
++
++    VERBOSE("%d devices detected.  checking avc subtypes...\n", devices - 1);
++    for (devices=devices; devices > 0; devices--)
++    {
++        if (avc1394_check_subunit_type(handle, searchnode, VCR) ||
++            avc1394_check_subunit_type(handle, searchnode, VCR_ALT))
++                {
++                     printf("node %d is not an STB and will not be primed\n", searchnode); 
++                     searchnode++;
++                     continue;  
++                 }
++        if (avc1394_check_subunit_type(handle, searchnode, TUNER) ||
++            avc1394_check_subunit_type(handle, searchnode, TUNER_ALT) ||
++            avc1394_check_subunit_type(handle, searchnode, PANEL)) 
++        {
++            VERBOSE("Attempting to prime device on port %d node %d.\n", port, searchnode);      
++            if (!prime_stb(handle, searchnode))
++                {
++                    printf("Failed to prime stb on port %d node %d.\n", port, searchnode);      
++                    error++;
++                 }
++             else
++                 printf("Successfully primed stb on port %d node %d.\n", port, searchnode);      
++         }
++            searchnode++;
++     }
++
++    raw1394_destroy_handle(handle);
++
++    if (!error)
 +        return 0;
-+}     
-diff -urNad mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.pro mythtv-0.21.0~fixes16259/programs/mythprime/mythprime.pro
---- mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.pro	1969-12-31 18:00:00.000000000 -0600
-+++ mythtv-0.21.0~fixes16259/programs/mythprime/mythprime.pro	2008-03-02 20:34:07.000000000 -0600
++
++    printf("Priming errors encountered- one or more stb connections may be unstable.");      
++        return 2;   
++}
++
+diff -urNad mythtv-0.21.0+fixes16838~/programs/mythprime/mythprime.pro mythtv-0.21.0+fixes16838/programs/mythprime/mythprime.pro
+--- mythtv-0.21.0+fixes16838~/programs/mythprime/mythprime.pro	1969-12-31 18:00:00.000000000 -0600
++++ mythtv-0.21.0+fixes16838/programs/mythprime/mythprime.pro	2008-03-30 00:55:26.000000000 -0500
 @@ -0,0 +1,14 @@
 +include ( ../../config.mak )
 +include ( ../../settings.pro )
@@ -248,9 +492,9 @@ diff -urNad mythtv-0.21.0~fixes16259~/programs/mythprime/mythprime.pro mythtv-0.
 +QMAKE_CLEAN += $(TARGET)
 +
 +SOURCES += mythprime.c
-diff -urNad mythtv-0.21.0~fixes16259~/programs/programs.pro mythtv-0.21.0~fixes16259/programs/programs.pro
---- mythtv-0.21.0~fixes16259~/programs/programs.pro	2008-01-29 14:17:31.000000000 -0600
-+++ mythtv-0.21.0~fixes16259/programs/programs.pro	2008-03-02 20:32:23.000000000 -0600
+diff -urNad mythtv-0.21.0+fixes16838~/programs/programs.pro mythtv-0.21.0+fixes16838/programs/programs.pro
+--- mythtv-0.21.0+fixes16838~/programs/programs.pro	2008-01-29 14:17:31.000000000 -0600
++++ mythtv-0.21.0+fixes16838/programs/programs.pro	2008-03-30 00:55:26.000000000 -0500
 @@ -12,6 +12,7 @@
  
  using_backend {
