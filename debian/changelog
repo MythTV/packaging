@@ -1,3 +1,10 @@
+mythtv (0.21.0+fixes16838-0ubuntu2) hardy; urgency=low
+
+  * Update 11_add_myth_prime's internal primer
+    for fixes on SA cable boxes.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 10 Apr 2008 22:49:01 -0500
+
 mythtv (0.21.0+fixes16838-0ubuntu1) hardy; urgency=low
 
   [ Michael Haas ]
