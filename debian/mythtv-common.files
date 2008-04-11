@@ -1,7 +1,7 @@
 usr/share/mythtv/themes
 usr/share/mythtv/mysql.txt*
-debian/myth-halt usr/bin
-debian/myth-reboot usr/bin
-debian/myth-suspend usr/bin
-debian/myth-hibernate usr/bin
+myth-halt usr/bin
+myth-reboot usr/bin
+myth-suspend usr/bin
+myth-hibernate usr/bin
 
