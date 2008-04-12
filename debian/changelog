@@ -1,7 +1,7 @@
 mythtv (0.21.0+fixes16838-0ubuntu3) hardy; urgency=low
 
-  * mythtv-common: add myth-reboot, myth-halt, myth-suspend and
-    myth-hibernate into /usr/bin. These scripts use HAL to shutdown/reboot/etc
+  * mythtv-common: add myth-reboot.sh, myth-halt.sh, myth-suspend.sh and
+    myth-hibernate.sh into /usr/share/mythtv/. These scripts use HAL to shutdown/reboot/etc
   * Add 16_hal_shutdown.dpatch to adjust some defaults in mythtv to use the
     new scripts 
 
