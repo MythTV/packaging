@@ -1,9 +1,15 @@
 mythtv (0.21.0+fixes16838-0ubuntu3) hardy; urgency=low
 
+  [ Michael Haas ]
   * mythtv-common: add myth-reboot.sh, myth-halt.sh, myth-suspend.sh and
     myth-hibernate.sh into /usr/share/mythtv/. These scripts use HAL to shutdown/reboot/etc
   * Add 16_hal_shutdown.dpatch to adjust some defaults in mythtv to use the
-    new scripts 
+    new scripts.
+
+  [ Mario Limonciello ]
+  * Don't spawn gnome-screensaver in ubuntu-mythtv-frontend.
+    It doesn't work.  ubuntu-mythtv-frontend is going away in Intrepid
+    but not this late in the game here.  (LP: #216431)
 
  -- Michael Haas <laga@laga.ath.cx>  Fri, 11 Apr 2008 20:54:14 +0200
 

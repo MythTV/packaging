@@ -14,11 +14,6 @@ find_su
 #set background
 feh --bg-center /usr/share/mythtv/background.xpm
 
-#spawn gnome-screensaver if installed
-if [ -x /usr/bin/gnome-screensaver ]; then
-    gnome-screensaver
-fi
-
 #start gnome-power-manager if installed
 if [ -x /usr/bin/gnome-power-manager ]; then
     gnome-power-manager
