@@ -10,6 +10,7 @@ mythtv (0.21.0+fixes16838-0ubuntu3) hardy; urgency=low
   * Don't spawn gnome-screensaver in ubuntu-mythtv-frontend.
     It doesn't work.  ubuntu-mythtv-frontend is going away in Intrepid
     but not this late in the game here.  (LP: #216431)
+  * Don't depend on a screensaver for u-m-f, since it's broke.
 
  -- Michael Haas <laga@laga.ath.cx>  Fri, 11 Apr 2008 20:54:14 +0200
 
