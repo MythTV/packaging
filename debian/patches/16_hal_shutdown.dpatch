@@ -13,7 +13,7 @@
      HostLineEdit *ge = new HostLineEdit("RebootCommand");
      ge->setLabel(QObject::tr("Reboot command"));
 -    ge->setValue("reboot");
-+    ge->setValue("/usr/bin/myth-reboot");
++    ge->setValue("/usr/share/mythtv/myth-reboot.sh");
      ge->setHelpText(QObject::tr("Command or script to run if you select "
                      "the reboot option from the exit menu, if the option "
                      "is displayed. You must configure an exit key to "
@@ -22,7 +22,7 @@
      HostLineEdit *ge = new HostLineEdit("HaltCommand");
      ge->setLabel(QObject::tr("Halt command"));
 -    ge->setValue("halt");
-+    ge->setValue("/usr/bin/myth-halt");
++    ge->setValue("/usr/share/mythtv/myth-halt.sh");
      ge->setHelpText(QObject::tr("Command or script to run if you select "
                      "the shutdown option from the exit menu, if the option "
                      "is displayed. You must configure an exit key to "

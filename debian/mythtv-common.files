@@ -1,7 +1,3 @@
 usr/share/mythtv/themes
 usr/share/mythtv/mysql.txt*
-myth-halt usr/bin
-myth-reboot usr/bin
-myth-suspend usr/bin
-myth-hibernate usr/bin
 

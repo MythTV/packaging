@@ -147,7 +147,7 @@ install: build
 	dh_install -pubuntu-mythtv-frontend debian/openbox-menu.xml etc/mythtv
 	dh_install -pubuntu-mythtv-frontend debian/gdm.conf etc/xdg/mythtv-ubuntu/gdm
 	dh_install -pubuntu-mythtv-frontend debian/mythbuntu-gdm.conf etc/xdg/mythtv-ubuntu/gdm
-	dh_install -pmythtv-common debian/mysql.txt.dist usr/share/mythtv
+	dh_install -pmythtv-common debian/mysql.txt.dist debian/myth-halt.sh debian/myth-reboot.sh debian/myth-hibernate.sh usr/share/mythtv
 
 	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/mythtv
 	mv debian/mythtv/usr/bin/mythfrontend debian/mythtv/usr/bin/mythfrontend.real
