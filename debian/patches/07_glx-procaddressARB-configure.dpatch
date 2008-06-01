@@ -5,38 +5,12 @@
 ## DP: Fix MythTV for older Nvidia drivers. See MythTV #4064 for more info.
 
 @DPATCH@
- 
-Index: configure
-===================================================================
---- mythtv.a/configure	(revision 16588)
-+++ mythtv.b/configure	(working copy)
-@@ -163,6 +163,7 @@
-   echo "                           directory with frontend.h [$dvb_path]"
-   echo "  --disable-x11            disable X11 support"
-   echo "  --x11-path=X11LOC        location of X11 include files [$x11_include_path-path]"
-+#  echo "  --enable-glx-procaddrarb use glXGetProcAddressARB() instead of glXGetProcAddress()"
-   echo "  --disable-xrandr         disable X11 resolution switching"
-   echo "  --disable-xv             disable XVideo   (X11 video output accel.)"
-   echo "  --disable-xvmc           disable XvMC     (Linux/BSD MPEG accel.)"
-@@ -904,6 +905,7 @@
-     xvmc_vld
-     dvdv
-     fribidi
-+    glx_proc_addr_arb
- '
- 
- MYTHTV_LIST='
-@@ -1189,6 +1191,7 @@
- xvmc_opengl="yes"
- xvmc_vld="yes"
- xvmcw="yes"
-+glx_proc_addr_arb="no"
- 
- # libraries
- enable zlib
-@@ -1353,6 +1356,10 @@
+diff -urNad mythtv-0.21.0+fixes17416~/configure mythtv-0.21.0+fixes17416/configure
+--- mythtv-0.21.0+fixes17416~/configure	2008-05-22 19:09:12.000000000 -0500
++++ mythtv-0.21.0+fixes17416/configure	2008-06-01 18:32:50.000000000 -0500
+@@ -1360,6 +1360,10 @@
    ;;
-   --xvmc-lib=*) xvmc_lib="$optval"
+   --disable-glx-procaddrarb) glx_proc_addr_arb="no"
    ;;
 +  --enable-glx-procaddrarb) glx_proc_addr_arb="yes" 
 +  ;;
@@ -45,7 +19,7 @@ Index: configure
    --enable-mac-accel) dvdv="yes"
    ;;
    --disable-mac-accel) dvdv="no"
-@@ -3336,6 +3343,10 @@
+@@ -3363,6 +3367,10 @@
    fi
  fi
  
@@ -56,18 +30,26 @@ Index: configure
  if enabled xv; then
    echo "CONFIG_XV_LIBS=-lXinerama -lXv -lX11 -lXext -lXxf86vm" >> $MYTH_CONFIG_MAK
  fi
-Index: libs/libmythtv/util-opengl.cpp
-===================================================================
---- mythtv.a/libs/libmythtv/util-opengl.cpp	(revision 16588)
-+++ mythtv.b/libs/libmythtv/util-opengl.cpp	(working copy)
-@@ -306,7 +306,9 @@
- {
-     __GLXextFuncPtr ret = NULL;
- 
--#if GLX_VERSION_1_4
-+#if USING_GLX_PROC_ADDR_ARB
-+    X11S(ret = glXGetProcAddressARB((const GLubyte*)procName.latin1()));
-+#elif GLX_VERSION_1_4
-     X11S(ret = glXGetProcAddress((const GLubyte*)procName.latin1()));
- #elif GLX_ARB_get_proc_address
-     X11S(ret = glXGetProcAddressARB((const GLubyte*)procName.latin1()));
+diff -urNad mythtv-0.21.0+fixes17416~/libs/libmythtv/util-opengl.cpp.rej mythtv-0.21.0+fixes17416/libs/libmythtv/util-opengl.cpp.rej
+--- mythtv-0.21.0+fixes17416~/libs/libmythtv/util-opengl.cpp.rej	1969-12-31 18:00:00.000000000 -0600
++++ mythtv-0.21.0+fixes17416/libs/libmythtv/util-opengl.cpp.rej	2008-06-01 18:32:50.000000000 -0500
+@@ -0,0 +1,19 @@
++***************
++*** 306,312 ****
++  {
++      __GLXextFuncPtr ret = NULL;
++  
++- #if GLX_VERSION_1_4
++      X11S(ret = glXGetProcAddress((const GLubyte*)procName.latin1()));
++  #elif GLX_ARB_get_proc_address
++      X11S(ret = glXGetProcAddressARB((const GLubyte*)procName.latin1()));
++--- 306,314 ----
++  {
++      __GLXextFuncPtr ret = NULL;
++  
+++ #if USING_GLX_PROC_ADDR_ARB
+++     X11S(ret = glXGetProcAddressARB((const GLubyte*)procName.latin1()));
+++ #elif GLX_VERSION_1_4
++      X11S(ret = glXGetProcAddress((const GLubyte*)procName.latin1()));
++  #elif GLX_ARB_get_proc_address
++      X11S(ret = glXGetProcAddressARB((const GLubyte*)procName.latin1()));
