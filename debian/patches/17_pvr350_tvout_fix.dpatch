@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 17_pvr350_tvout_fix.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Fix PVR-350 TV output.  Pull from svn #17354
+
+@DPATCH@
+diff -urNad mythtv-0.21.0+fixes16838~/libs/libmythtv/videoout_ivtv.cpp mythtv-0.21.0+fixes16838/libs/libmythtv/videoout_ivtv.cpp
+--- mythtv-0.21.0+fixes16838~/libs/libmythtv/videoout_ivtv.cpp	2008-03-07 18:07:31.000000000 -0600
++++ mythtv-0.21.0+fixes16838/libs/libmythtv/videoout_ivtv.cpp	2008-06-01 16:50:36.000000000 -0500
+@@ -411,7 +411,7 @@
+ 
+     db_vdisp_profile->SetVideoRenderer("ivtv");
+ 
+-    allowpreviewepg = false;
++    allowpreviewepg = true;
+ 
+     videoDevice = gContext->GetSetting("PVR350VideoDev");
+ 

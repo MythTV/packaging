@@ -9,6 +9,9 @@ mythtv (0.21.0+fixes16838-0ubuntu4) UNRELEASED; urgency=low
   * debian/control:
     - Adjust dependencies to only build depend on chrome for i386 and 
       amd64.  This should fix all other archs. (LP: #211125)
+  * add debian/patches/17_pvr350_tvout_fix:
+    - Fixes PVR-350 tv output's EPG.  (LP: #236498)
+      Thanks bal_zac for tracking this down.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sun, 01 Jun 2008 16:28:01 -0500
 
