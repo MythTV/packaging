@@ -39,8 +39,8 @@ Build-Depends:  debhelper (>> 5.0.0),
                 libx264-dev,
                 libxvidcore4-dev,
                 libfftw3-dev | fftw3-dev,
-                libchromexvmc1,
-                libchromexvmcpro1
+                libchromexvmc1 [i386 amd64],
+                libchromexvmcpro1 [i386 amd64]
 
 Package: mythtv
 Architecture: all
