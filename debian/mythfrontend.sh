@@ -21,7 +21,9 @@ fi
 
 if [ "$1" = "--service" ]; then
     #source frontend session settings
-    . /etc/mythtv/session-settings
+    if [ -f /etc/mythtv/session-settings ]; then
+        . /etc/mythtv/session-settings
+    fi
     echo "Please note: additional command line arguments will not be passed"
     echo "  to mythfrontend when using --service"
     echo "Please set them in /etc/mythtv/session-settings instead"

@@ -1,3 +1,9 @@
+mythtv (0.21.0+fixes16838-0ubuntu4) UNRELEASED; urgency=low
+
+  * check for /etc/mythtv/session-settings when sourcing it. (LP: #220681)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 01 Jun 2008 16:28:01 -0500
+
 mythtv (0.21.0+fixes16838-0ubuntu3) hardy; urgency=low
 
   [ Michael Haas ]
