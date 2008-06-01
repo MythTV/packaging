@@ -12,9 +12,9 @@ case "$1" in
         fi
 
         for dir in /var/log/mythtv /var/lib/mythtv/recordings /var/cache/mythtv; do
-	    if ! dpkg-statoverride --list "$dir" >/dev/null; then
+	    if [ -d "$dir" ] && ! dpkg-statoverride --list "$dir" >/dev/null; then
                 chown mythtv:mythtv "$dir"
-    	        chmod 2775 "$dir"
+                chmod 2775 "$dir"
             fi
         done
 

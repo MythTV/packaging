@@ -1,6 +1,11 @@
 mythtv (0.21.0+fixes16838-0ubuntu4) UNRELEASED; urgency=low
 
-  * check for /etc/mythtv/session-settings when sourcing it. (LP: #220681)
+  * debian/mythfrontend.sh:
+    - check for /etc/mythtv/session-settings when sourcing it. (LP: #220681)
+  * debian/mythtv-backend.postinst:
+    - check for directories before overriding (LP: #223988)
+  * drop debian/mythtv-database.postrm
+    - Wasn't doing anything productive but causing crashes. (LP: #213200)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sun, 01 Jun 2008 16:28:01 -0500
 
