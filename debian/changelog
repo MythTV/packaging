@@ -1,3 +1,15 @@
+mythtv (0.22.0~trunk17464-0ubuntu1) hardy; urgency=low
+
+  * first trunk build for upcoming 0.22 
+
+ -- Michael Haas <laga@moar>  Thu, 12 Jun 2008 23:57:42 +0200
+
+mythtv (0.22.0~trunk17464-) hardy; urgency=low
+
+  * 0ubuntu1
+
+ -- Michael Haas <laga@moar>  Thu, 12 Jun 2008 23:57:38 +0200
+
 mythtv (0.21.0+fixes17416-0ubuntu1) intrepid; urgency=low
 
   * New checkout of release-0-21-fixes branch.

@@ -80,12 +80,12 @@ configure-stamp: patch-stamp
 	dh_testdir
 
 	#give us firewire testing support (from contrib)
-	ln -s ../../contrib/firewire_tester.c programs/firewire_tester
+	ln -sf ../../contrib/development/firewire_tester/firewire_tester.c programs/firewire_tester
 	
 	#update SVN REVISION to show the right version
 	sed -i -e "s/\`(svnversion \$$\$${SVNTREEDIR} 2>\/dev\/null) || echo Unknown\`/$(SVN_REVISION)/" version.pro
 
-	CFLAGS="$(CFLAGS)" ./configure --prefix=/usr --enable-lirc --enable-audio-alsa \
+	CFLAGS="$(CFLAGS)" ./configure --prefix=/usr --runtime-prefix=/usr --enable-lirc --enable-audio-alsa \
 	--enable-audio-oss --enable-audio-jack --enable-audio-arts --enable-dvb \
 	--enable-ivtv --enable-firewire --enable-joystick-menu \
 	--enable-opengl-vsync --with-bindings=perl --enable-opengl-video \
@@ -206,9 +206,9 @@ binary-indep: build install
 	dh_testroot -i
 	dh_installdebconf -i
 	dh_installdocs -A README debian/README.Debian AUTHORS FAQ UPGRADING keys.txt
-	dh_installdocs -pmythtv-backend contrib/firewire_tester-README
+	dh_installdocs -pmythtv-backend contrib/development/firewire_tester/README 
 	dh_installdocs -pmythtv-doc docs/mythtv-HOWTO*
-	dh_installexamples -pmythtv-doc contrib/configfiles/*
+	dh_installexamples -pmythtv-doc contrib/config_files/*
 	dh_installcron -i
 	dh_installchangelogs  -i
 	dh_pysupport -plibmyth-python
