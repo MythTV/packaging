@@ -164,7 +164,7 @@ Description: A personal video recorder application (client)
  For a complete installation of all MythTV components, install the 'mythtv'
  package.
 
-Package: libmyth-0.21-0
+Package: libmyth-0.22-0
 Architecture: any
 Section: multiverse/libs
 Depends: ${shlibs:Depends}, libqt3-mt-mysql | libqt3c102-mt-mysql
