@@ -1,10 +1,12 @@
 02_settings.pro
-07_glx-procaddressARB-configure
+#07_glx-procaddressARB-configure
 08_default_directory.dpatch
 09_perl_bindings_prefix
 10_mythfilldatabase_log
 11_add_myth_prime
 12_add_firewire_tester
 14_fix_video_fallback
-15_hue_fix
+#15_hue_fix
 16_hal_shutdown
+#17_pvr350_tvout_fix
+18_fix_video_profile.dpatch

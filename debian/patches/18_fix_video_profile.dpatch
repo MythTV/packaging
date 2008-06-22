@@ -1,0 +1,27 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 18_fix_video_profile.dpatch by Michael Haas <laga+mythtv@laga.ath.cx>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Fix deinterlacer selection with LiveTV
+## DP: This is probably not the final patch
+## DP: This dpatch is based on http://svn.mythtv.org/trac/attachment/ticket/5025/patch.diff
+## DP: see http://svn.mythtv.org/trac/ticket/5025
+
+Index: a/libs/libmythtv/NuppelVideoPlayer.cpp
+===================================================================
+--- a/libs/libmythtv/NuppelVideoPlayer.cpp        (revision 17338)
++++ b/libs/libmythtv/NuppelVideoPlayer.cpp        (working copy)
+@@ -707,6 +707,12 @@
+     // We need to tell it this for automatic deinterlacer settings
+     videoOutput->SetVideoFrameRate(video_frame_rate * play_speed);
+
++    if (is_interlaced(m_scan))
++    {
++        videoOutput->SetupDeinterlace(false);
++        videoOutput->SetupDeinterlace(true);
++    }
++
+     if (videoOutput->IsErrored())
+     {
+         VERBOSE(VB_IMPORTANT, "ReinitVideo(): videoOutput->IsErrored()");
+
