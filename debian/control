@@ -180,9 +180,9 @@ Description: Common library code for MythTV and add-on modules (runtime)
 Package: libmyth-dev
 Architecture: any
 Section: multiverse/libdevel
-Depends: libmyth-0.21-0 (= ${source:Version}), libqt3c102-mt-dev | libqt3-mt-dev
-Provides: libmyth-0.21-0-dev
-Conflicts: libmyth-0.21-dev
+Depends: libmyth-0.22-0 (= ${source:Version}), libqt3c102-mt-dev | libqt3-mt-dev
+Provides: libmyth-0.22-0-dev
+Conflicts: libmyth-0.22-dev
 Description: Common library code for MythTV and add-on modules (development)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
