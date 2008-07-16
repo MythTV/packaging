@@ -1,3 +1,25 @@
+mythtv (0.21.0+fixes17416-0ubuntu3) UNRELEASED; urgency=low
+
+  * debian/control:
+    - Build Depend on dshowserver-dev.
+    - Introduce new binary package, libmyth-coreavc-0.21-0. This package
+      will always conflict with the current libmyth-0.21.0 version.
+  * debian/rules:
+    - Build through the process twice.  The second time around, the CoreAVC
+      version of the package will get built.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 16 Jun 2008 00:42:43 -0500
+
+mythtv (0.21.0+fixes17416-0ubuntu2) intrepid; urgency=low
+
+  * Build depend on xserver-xorg-video-openchrome or old libchrome*
+    packages (to not break building on earlier releases, but still allow
+    building on intrepid) (LP: #256540)
+  * Start mythfrontend.real from mythfrontend rather than another script
+    instance. (LP: #241015)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 16 Jul 2008 01:22:49 -0500
+
 mythtv (0.21.0+fixes17416-0ubuntu1) intrepid; urgency=low
 
   * New checkout of release-0-21-fixes branch.
