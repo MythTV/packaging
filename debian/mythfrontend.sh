@@ -80,7 +80,7 @@ if [ "$1" = "--service" ]; then
             exec mythwelcome | tee -a "${MYTHWELCOMELOG}"
         else
             echo "Starting mythfrontend.real.." >> "${MYTHFELOG}"
-            exec mythfrontend --logfile "${MYTHFELOG}" "${MYTHFRONTEND_OPTS}"
+            exec /usr/bin/mythfrontend.real --logfile "${MYTHFELOG}" "${MYTHFRONTEND_OPTS}"
         fi
     fi
 # if we're not in --service mode, just behave normally
