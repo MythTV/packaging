@@ -2,7 +2,7 @@
 08_default_directory.dpatch
 09_perl_bindings_prefix
 10_mythfilldatabase_log
-11_add_myth_prime
-12_add_firewire_tester
+#11_add_myth_prime
+#12_add_firewire_tester
 14_fix_video_fallback
 16_hal_shutdown
