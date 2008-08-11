@@ -167,7 +167,7 @@ Description: A personal video recorder application (client)
 Package: libmyth-0.22-0
 Architecture: any
 Section: multiverse/libs
-Depends: ${shlibs:Depends}, libqt3-mt-mysql | libqt3c102-mt-mysql
+Depends: ${shlibs:Depends}
 Conflicts: mythtv (<< 0.7-5)
 Replaces: mythtv (<< 0.7-5)
 Description: Common library code for MythTV and add-on modules (runtime)
@@ -180,7 +180,7 @@ Description: Common library code for MythTV and add-on modules (runtime)
 Package: libmyth-dev
 Architecture: any
 Section: multiverse/libdevel
-Depends: libmyth-0.22-0 (= ${source:Version}), libqt3c102-mt-dev | libqt3-mt-dev
+Depends: libmyth-0.22-0 (= ${source:Version})
 Provides: libmyth-0.22-0-dev
 Conflicts: libmyth-0.22-dev
 Description: Common library code for MythTV and add-on modules (development)
