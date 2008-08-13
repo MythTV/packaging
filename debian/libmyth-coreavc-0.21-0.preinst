@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+LIST="/usr/lib/libmythtv-0.21.so.0.21 /usr/lib/libmythtv-0.21.so.0 /usr/lib/libmythtv-0.21.so.0.21.0"
+
+
+if [ install = "$1" ] || [ upgrade = "$1" ]; then
+
+    for i in $LIST; do
+        LIB=`basename $i`
+        dpkg-divert --package libmyth-coreavc-0.21-0 --divert /usr/lib/mythtv/${LIB} --rename --add "$i"
+    done
+fi
+
+#DEBHELPER#
+
+exit 0
+

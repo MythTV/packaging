@@ -169,7 +169,7 @@ Package: libmyth-0.21-0
 Architecture: any
 Section: multiverse/libs
 Depends: ${shlibs:Depends}, libqt3-mt-mysql | libqt3c102-mt-mysql
-Conflicts: mythtv (<< 0.7-5), libmyth-coreavc-0.21-0
+Conflicts: mythtv (<< 0.7-5)
 Replaces: mythtv (<< 0.7-5)
 Description: Common library code for MythTV and add-on modules (runtime)
  MythTV provides a unified graphical interface for recording and viewing
@@ -181,8 +181,8 @@ Description: Common library code for MythTV and add-on modules (runtime)
 Package: libmyth-coreavc-0.21-0
 Architecture: any
 Section: multiverse/libs
-Depends: ${shlibs:Depends}, dshowserver, libqt3-mt-mysql | libqt3c102-mt-mysql
-Conflicts: mythtv (<< 0.7-5), libmyth-0.21-0
+Depends:${shlibs:Depends}, dshowserver, libqt3-mt-mysql | libqt3c102-mt-mysql
+Conflicts: mythtv (<< 0.7-5)
 Replaces: mythtv (<< 0.7-5)
 Description: Common library code for MythTV and add-on modules, CoreAVC version (runtime)
  MythTV provides a unified graphical interface for recording and viewing
