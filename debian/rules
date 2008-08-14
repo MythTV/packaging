@@ -143,7 +143,7 @@ clean:
 	mkdir -p coreavc
 	patch -N -p0 -R -r coreavc/rejects < /usr/share/dshowserver-dev/mythtv/dshowserver.patch 2>&1 1>/dev/null || true
 	rm -rf coreavc/	
-	rm build-coreavc-stamp
+	rm -f build-coreavc-stamp
 	#this is a symlink manually added in
 	rm -f programs/firewire_tester.c
 
