@@ -80,7 +80,7 @@ configure-stamp: patch-stamp
 	dh_testdir
 
 	#give us firewire testing support (from contrib)
-	ln -s ../../contrib/firewire_tester.c programs/firewire_tester
+	ln -sf ../../contrib/firewire_tester.c programs/firewire_tester
 	
 	#update SVN REVISION to show the right version
 	sed -i -e "s/\`(svnversion \$$\$${SVNTREEDIR} 2>\/dev\/null) || echo Unknown\`/$(SVN_REVISION)/" version.pro
