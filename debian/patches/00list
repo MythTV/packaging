@@ -1,5 +1,5 @@
 02_settings.pro
-07_glx-procaddressARB-configure
+#07_glx-procaddressARB-configure
 08_default_directory.dpatch
 09_perl_bindings_prefix
 10_mythfilldatabase_log
