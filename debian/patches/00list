@@ -6,6 +6,5 @@
 12_add_firewire_tester
 14_fix_video_fallback
 16_hal_shutdown
-#17_pvr350_tvout_fix
 24_fix_h264_frame_counting
 25_skiploop_option
