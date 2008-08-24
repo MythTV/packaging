@@ -10,3 +10,5 @@
 16_hal_shutdown
 #17_pvr350_tvout_fix
 18_fix_video_profile.dpatch
+24_fix_h264_frame_counting
+25_skiploop_option
