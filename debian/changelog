@@ -8,8 +8,14 @@ mythtv (0.21.0+fixes18185-0ubuntu1) intrepid; urgency=low
   * debian/rules:
     - Build through the process twice.  The second time around, the CoreAVC
       version of the package will get built.
+  * debian/patches:
+    - drop 17_pvr_350_tvout_fix.dpatch, 07_glx-procaddressARB-configure.dpatch
+      and 15_hue_fix.dpatch because these changes have been committed
+      upstream
+    - add 24_fix_h264_frame_counting.dpatch and
+      debian/patches/25_skiploop_option.dpatch
 
- -- Michael Haas <laga@prometheus>  Fri, 22 Aug 2008 16:11:01 +0200
+ -- Michael Haas <laga@laga.ath.cx>  Sun, 24 Aug 2008 16:44:18 +0200
 
 mythtv (0.21.0+fixes17416-0ubuntu2) intrepid; urgency=low
 
