@@ -1,13 +1,6 @@
 mythtv (0.21.0+fixes18185-0ubuntu1) intrepid; urgency=low
 
   * New checkout of release-0-21-fixes branch.
-  * debian/control:
-    - Build Depend on dshowserver-dev.
-    - Introduce new binary package, libmyth-coreavc-0.21-0. This package
-      will always conflict with the current libmyth-0.21.0 version.
-  * debian/rules:
-    - Build through the process twice.  The second time around, the CoreAVC
-      version of the package will get built.
   * debian/patches:
     - drop 17_pvr_350_tvout_fix.dpatch, 07_glx-procaddressARB-configure.dpatch
       and 15_hue_fix.dpatch because these changes have been committed
