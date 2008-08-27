@@ -40,8 +40,7 @@ Build-Depends:  debhelper (>> 5.0.0),
                 libxvidcore4-dev,
                 libfftw3-dev | fftw3-dev,
                 xserver-xorg-video-openchrome [i386 amd64] | libchromexvmc1 [i386 amd64],
-                xserver-xorg-video-openchrome [i386 amd64] | libchromexvmcpro1 [i386 amd64],
-   		dshowserver-dev ( >= 0.1~svn65-0ubuntu3+mythbuntu1)
+                xserver-xorg-video-openchrome [i386 amd64] | libchromexvmcpro1 [i386 amd64]
 
 Package: mythtv
 Architecture: all
@@ -177,22 +176,6 @@ Description: Common library code for MythTV and add-on modules (runtime)
  .
  This package contains a shared library, libmyth, which is used by various
  components in the system.
-
-Package: libmyth-coreavc-0.21-0
-Architecture: any
-Section: multiverse/libs
-Depends:${shlibs:Depends}, dshowserver, libqt3-mt-mysql | libqt3c102-mt-mysql
-Conflicts: mythtv (<< 0.7-5)
-Replaces: mythtv (<< 0.7-5)
-Description: Common library code for MythTV and add-on modules, CoreAVC version (runtime)
- MythTV provides a unified graphical interface for recording and viewing
- television programs. Refer to the mythtv package for more information.
- .
- This package contains a shared library, libmyth, which is used by various
- components in the system.
- .
- This is the CoreAVC version of the library.  It requires a license to the high performance
- proprietary CoreAVC codec to function.
 
 Package: libmyth-dev
 Architecture: any

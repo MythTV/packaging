@@ -94,7 +94,7 @@ configure-stamp: patch-stamp
 
 	touch configure-stamp
 
-build: configure-stamp build-coreavc-stamp build-stamp
+build: configure-stamp build-stamp
 build-stamp:
 	dh_testdir
 
@@ -103,29 +103,6 @@ build-stamp:
 	$(MAKE) -j $(NCPUS) $(CCVARS)
 
 	touch build-stamp
-
-build-coreavc-stamp:
-	dh_testdir
-
-	#add our patch
-	patch -N -p0 < /usr/share/dshowserver-dev/mythtv/dshowserver.patch
-
-	#build
-	$(CCVARS) qmake -o Makefile PREFIX=/usr mythtv.pro
-	$(MAKE) -j $(NCPUS) $(CCVARS)
-
-	#remove our patch
-	patch -N -p0 -R -r coreavc/rejects < /usr/share/dshowserver-dev/mythtv/dshowserver.patch
-
-	#take out ONLY the pieces we need
-	mkdir -p coreavc/usr/lib
-	mkdir -p coreavc/usr/share/mythtv
-	mv libs/libmythtv/libmyth*so* coreavc/usr/lib 
-	cp /usr/share/dshowserver-dev/mythtv/dshowcodecs coreavc/usr/share/mythtv
-
-	touch build-coreavc-stamp
-
-	cd libs/libmythtv && $(MAKE) clean
 
 clean:
 	dh_testdir
@@ -139,11 +116,6 @@ clean:
 	rm -f config.mak config.h
 	rm -rf debian/shlibs.local
 
-	#in case we did some coreavc fun:
-	mkdir -p coreavc
-	patch -N -p0 -R -r coreavc/rejects < /usr/share/dshowserver-dev/mythtv/dshowserver.patch 2>&1 1>/dev/null || true
-	rm -rf coreavc/	
-	rm -f build-coreavc-stamp
 	#this is a symlink manually added in
 	rm -f programs/firewire_tester.c
 	rm -f programs/firewire_tester/firewire_tester.c
@@ -158,8 +130,6 @@ install: build
 	dh_testroot
 	dh_clean -k
 	dh_installdirs -A etc/mythtv
-
-	dh_install -plibmyth-coreavc-0.21-0
 
 	chmod a+x debian/*.sh debian/*.d
 	dh_install -pmythtv-frontend debian/mythtv.desktop usr/share/applications
@@ -273,7 +243,7 @@ binary-arch: build install
 	dh_makeshlibs -a -V -Xusr/lib/mythtv/filters
 	dh_installdeb -a
 #	dh_shlibdeps -a -ldebian/libmyth-0.19/usr/lib
-	dh_shlibdeps -a -- -xlibmyth-coreavc-0.21-0
+	dh_shlibdeps -a
 	dh_gencontrol -a
 	dh_md5sums -a
 	dh_builddeb -a
