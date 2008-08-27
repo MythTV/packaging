@@ -1,0 +1,33 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 27_latm_audio.dpatch by Michael Haas <laga@laga.ath.cx>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Add support for LATM AAC audio support
+## DP: See http://svn.mythtv.org/trac/ticket/5487 for upstream inclusion status
+## DP: and original patch (by Paul ????)
+
+@DPATCH@
+
+diff -ur mythtv-0.21.0+fixes16973-svn/libs/libmythtv/mpeg/mpegtables.cpp mythtv-0.21.0+fixes16973+ffmpeg13060+latm/libs/libmythtv/mpeg/mpegtables.cpp
+--- mythtv-0.21.0+fixes16973-svn/libs/libmythtv/mpeg/mpegtables.cpp	2008-04-09 20:49:45.000000000 +1200
++++ mythtv-0.21.0+fixes16973+ffmpeg13060+latm/libs/libmythtv/mpeg/mpegtables.cpp	2008-04-22 21:25:03.000000000 +1200
+@@ -772,6 +772,8 @@
+         return "audio-mp2-layer[1,2,3]"; // EIT, PMT
+     else if (StreamID::MPEG1Audio==streamID)
+         return "audio-mp1-layer[1,2,3]"; // EIT, PMT
++    else if (StreamID::MPEG2AudioAmd1==streamID)
++        return "audio-aac-latm"; // EIT, PMT
+     else if (StreamID::AACAudio==streamID)
+         return "audio-aac"; // EIT, PMT
+     else if (StreamID::DTSAudio==streamID)
+diff -ur mythtv-0.21.0+fixes16973-svn/libs/libmythtv/mpeg/mpegtables.h mythtv-0.21.0+fixes16973+ffmpeg13060+latm/libs/libmythtv/mpeg/mpegtables.h
+--- mythtv-0.21.0+fixes16973-svn/libs/libmythtv/mpeg/mpegtables.h	2008-04-09 20:49:45.000000000 +1200
++++ mythtv-0.21.0+fixes16973+ffmpeg13060+latm/libs/libmythtv/mpeg/mpegtables.h	2008-04-22 21:26:12.000000000 +1200
+@@ -155,6 +155,7 @@
+     {
+         return ((StreamID::MPEG1Audio == type) ||
+                 (StreamID::MPEG2Audio == type) ||
++                (StreamID::MPEG2AudioAmd1 == type) ||
+                 (StreamID::AACAudio   == type) ||
+                 (StreamID::AC3Audio   == type) ||
+                 (StreamID::DTSAudio   == type));
