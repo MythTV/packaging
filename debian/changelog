@@ -1,12 +1,14 @@
-mythtv (0.21.0+fixes18185-0ubuntu1) intrepid; urgency=low
+mythtv (0.21.0+fixes18207-0ubuntu1) intrepid; urgency=low
 
   * New checkout of release-0-21-fixes branch.
   * debian/patches:
     - drop 17_pvr_350_tvout_fix.dpatch, 07_glx-procaddressARB-configure.dpatch
       and 15_hue_fix.dpatch because these changes have been committed
       upstream
-    - add 24_fix_h264_frame_counting.dpatch and
-      debian/patches/25_skiploop_option.dpatch
+    - add 24_fix_h264_frame_counting.dpatch,
+      25_skiploop_option.dpatch, 26_h264_ffmpeg_merge.dpatch and
+      27_latm_audio.dpatch
+      
 
  -- Michael Haas <laga@laga.ath.cx>  Sun, 24 Aug 2008 16:44:18 +0200
 
