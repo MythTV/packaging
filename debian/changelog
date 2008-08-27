@@ -8,9 +8,8 @@ mythtv (0.21.0+fixes18207-0ubuntu1) intrepid; urgency=low
     - add 24_fix_h264_frame_counting.dpatch,
       25_skiploop_option.dpatch, 26_h264_ffmpeg_merge.dpatch and
       27_latm_audio.dpatch
-      
 
- -- Michael Haas <laga@laga.ath.cx>  Sun, 24 Aug 2008 16:44:18 +0200
+ -- Michael Haas <laga@laga.ath.cx>  Wed, 27 Aug 2008 22:30:23 +0200
 
 mythtv (0.21.0+fixes17416-0ubuntu2) intrepid; urgency=low
 
