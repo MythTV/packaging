@@ -6,10 +6,9 @@ mythtv (0.21.0+fixes18207-0ubuntu1) intrepid; urgency=low
       and 15_hue_fix.dpatch because these changes have been committed
       upstream
     - add 24_fix_h264_frame_counting.dpatch,
-      25_skiploop_option.dpatch, 26_h264_ffmpeg_merge.dpatch and
-      27_latm_audio.dpatch
+      25_skiploop_option.dpatch and 26_h264_ffmpeg_merge.dpatch.
 
- -- Michael Haas <laga@laga.ath.cx>  Wed, 27 Aug 2008 22:30:23 +0200
+ -- Michael Haas <laga@laga.ath.cx>  Wed, 27 Aug 2008 23:16:52 +0200
 
 mythtv (0.21.0+fixes17416-0ubuntu2) intrepid; urgency=low
 
