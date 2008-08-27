@@ -8,3 +8,4 @@
 16_hal_shutdown
 24_fix_h264_frame_counting
 25_skiploop_option
+26_h264_ffmpeg_merge
