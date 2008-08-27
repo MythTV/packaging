@@ -4,7 +4,7 @@
 ## All lines beginning with `## DP:' are a description of the patch.
 ## DP: Add support for LATM AAC audio support
 ## DP: See http://svn.mythtv.org/trac/ticket/5487 for upstream inclusion status
-## DP: and original patch (by Paul ????)
+## DP: and original patch (by Paul ???? <paul AT kcbbs DOT gen DOT nz>)
 
 @DPATCH@
 
