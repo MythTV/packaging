@@ -1,8 +1,21 @@
-mythtv (0.21.0+fixes18207-0ubuntu3) intrepid; urgency=low
+mythtv (0.21.0+fixes18207-0ubuntu4) intrepid; urgency=low
 
   * Update 25_skiploop_option w/ upstream requested changes.
+  * debian/control:
+    - Modify previous change by a nonmaintainer to re-include adept-notifier 
+      as an option.  Dropping it breaks hardy builds, and this package is
+      very often backported.
+    - Add Vcs-Bzr fields to deter further uploads without commiting back
+      to the branch.
+    - Add homepage field.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Thu, 28 Aug 2008 15:32:22 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 28 Aug 2008 15:59:11 -0500
+
+mythtv (0.21.0+fixes18207-0ubuntu3) intrepid; urgency=low
+
+  * Recommends update-notifier-kde instead of adept-notifier
+
+ -- Anthony Mercatante <tonio@ubuntu.com>  Thu, 28 Aug 2008 15:08:03 +0200
 
 mythtv (0.21.0+fixes18207-0ubuntu2) intrepid; urgency=low
 
