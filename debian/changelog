@@ -1,3 +1,9 @@
+mythtv (0.21.0+fixes18207-0ubuntu3) intrepid; urgency=low
+
+  * Update 25_skiploop_option w/ upstream requested changes.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 28 Aug 2008 15:32:22 -0500
+
 mythtv (0.21.0+fixes18207-0ubuntu2) intrepid; urgency=low
 
   * debian/control:
