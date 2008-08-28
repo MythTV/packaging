@@ -18,17 +18,22 @@
 +                bool skip_loop_filter = vdp.IsSkipLoopEnabled();
                  VERBOSE(VB_PLAYBACK, QString("Using %1 CPUs for decoding")
                          .arg(ENABLE_THREADS ? thread_count : 1));
- 
-@@ -1494,6 +1495,9 @@
-                 {
-                     avcodec_thread_init(enc, thread_count);
+
+@@ -1500,6 +1501,12 @@
                      enc->thread_count = thread_count;
-+                        if  (!skip_loop_filter)
-+                        enc->skip_loop_filter = AVDISCARD_ALL;
-+                        
                  }
- 
+
++                if  (!skip_loop_filter)
++                {
++                    enc->skip_loop_filter = AVDISCARD_ALL;
++                }
++
++
                  bool handled = false;
+ #ifdef USING_XVMC
+                 if (!using_null_videoout && mpeg_version(enc->codec_id))
+
+ 
 Index: libs/libmythtv/videodisplayprofile.h
 ===================================================================
 --- a/libs/libmythtv/videodisplayprofile.h	(revision 16446)
