@@ -1,3 +1,11 @@
+mythtv (0.21.0+fixes18207-0ubuntu2) intrepid; urgency=low
+
+  * debian/control:
+    - Build depend on liblame-dev | libmp3lame-dev instead
+      since liblame-dev is gone for intrepid.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 27 Aug 2008 17:29:49 -0500
+
 mythtv (0.21.0+fixes18207-0ubuntu1) intrepid; urgency=low
 
   * New checkout of release-0-21-fixes branch.
