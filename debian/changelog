@@ -1,4 +1,4 @@
-mythtv (0.21.0+fixes18207-0ubuntu5) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes18207-0ubuntu5) intrepid; urgency=low
 
   [ Michael Haas ]
   * Fix init script (LP: #263127)
