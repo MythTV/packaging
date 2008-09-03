@@ -1,3 +1,9 @@
+mythtv (0.21.0+fixes18207-0ubuntu6) intrepid; urgency=low
+
+  * debian/mythtv-backend.init: Add the 'status' action (LP: #251325).
+
+ -- Dustin Kirkland <kirkland@ubuntu.com>  Wed, 03 Sep 2008 10:16:21 -0500
+
 mythtv (0.21.0+fixes18207-0ubuntu5) intrepid; urgency=low
 
   [ Michael Haas ]
