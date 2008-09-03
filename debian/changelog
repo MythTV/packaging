@@ -1,6 +1,10 @@
 mythtv (0.21.0+fixes18207-0ubuntu5) UNRELEASED; urgency=low
 
-  * Fix init script (LP: #263127) 
+  [ Michael Haas ]
+  * Fix init script (LP: #263127)
+
+  [ Mario Limonciello
+  * Don't crash on init script installation. (LP: #261866)
 
  -- Michael Haas <laga@moar>  Mon, 01 Sep 2008 21:04:13 +0200
 
