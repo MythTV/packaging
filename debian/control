@@ -4,6 +4,9 @@ Priority: optional
 Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
 XSBC-Original-Maintainer: Christian Marillat <marillat@debian.org>
 Bugs: mailto:ubuntu-mythtv@lists.ubuntu.com
+Homepage: http://www.mythtv.org
+Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~ubuntu-mythtv/mythtv/mythtv-fixes
+Vcs-Browser: http://bazaar.launchpad.net/~ubuntu-mythtv/mythtv-mythtv-fixes
 Standards-Version: 3.7.3
 Build-Conflicts: libmyth-0.20-dev,
                  libmyth-dev
@@ -32,8 +35,7 @@ Build-Depends:  debhelper (>> 5.0.0),
                 libjack0.100.0-dev | libjack-dev,
                 libfaad-dev | libfaad2-dev,
                 libfaac-dev,
-                liblame-dev,
-                liblame-dev,
+                liblame-dev | libmp3lame-dev,
                 libvorbis-dev,
                 libdts-dev,
                 libx264-dev,
@@ -101,7 +103,7 @@ Description: A personal video recorder application (documentation)
 Package: mythtv-database
 Architecture: all
 Depends: mythtv-common (= ${source:Version}), libdbd-mysql-perl, mysql-client, cron, ${misc:Depends}
-Recommends: update-notifier | adept-notifier
+Recommends: update-notifier | update-notifier-kde | adept-notifier
 Conflicts: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
 Replaces: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
 Description: A personal video recorder application (database)

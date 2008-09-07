@@ -1,3 +1,46 @@
+mythtv (0.21.0+fixes18207-0ubuntu6) intrepid; urgency=low
+
+  * debian/mythtv-backend.init: Add the 'status' action (LP: #251325).
+
+ -- Dustin Kirkland <kirkland@ubuntu.com>  Wed, 03 Sep 2008 10:16:21 -0500
+
+mythtv (0.21.0+fixes18207-0ubuntu5) intrepid; urgency=low
+
+  [ Michael Haas ]
+  * Fix init script (LP: #263127)
+
+  [ Mario Limonciello
+  * Don't crash on init script installation. (LP: #261866)
+
+ -- Michael Haas <laga@moar>  Mon, 01 Sep 2008 21:04:13 +0200
+
+mythtv (0.21.0+fixes18207-0ubuntu4) intrepid; urgency=low
+
+  * Update 25_skiploop_option w/ upstream requested changes.
+  * debian/control:
+    - Modify previous change by a nonmaintainer to re-include adept-notifier 
+      as an option.  Dropping it breaks hardy builds, and this package is
+      very often backported.
+    - Add Vcs-Bzr fields to deter further uploads without commiting back
+      to the branch.
+    - Add homepage field.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 28 Aug 2008 15:59:11 -0500
+
+mythtv (0.21.0+fixes18207-0ubuntu3) intrepid; urgency=low
+
+  * Recommends update-notifier-kde instead of adept-notifier
+
+ -- Anthony Mercatante <tonio@ubuntu.com>  Thu, 28 Aug 2008 15:08:03 +0200
+
+mythtv (0.21.0+fixes18207-0ubuntu2) intrepid; urgency=low
+
+  * debian/control:
+    - Build depend on liblame-dev | libmp3lame-dev instead
+      since liblame-dev is gone for intrepid.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 27 Aug 2008 17:29:49 -0500
+
 mythtv (0.21.0+fixes18207-0ubuntu1) intrepid; urgency=low
 
   * New checkout of release-0-21-fixes branch.
