@@ -1,0 +1,74 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 27_disable_deinterlacing_in_guide.dpatch by Michael Haas <laga@laga.ath.cx>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Disable deinterlacer when entering EPG.
+## DP: This patch is taken from MythTV trunk (r18180 and r18172)
+## DP: Original author is danielk
+
+
+@DPATCH@
+
+Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
+===================================================================
+--- mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(Revision 18254)
++++ mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(Arbeitskopie)
+@@ -145,6 +145,8 @@
+       m_playbackinfo(NULL),
+       // Window stuff
+       parentWidget(NULL), embedid(0), embx(-1), emby(-1), embw(-1), embh(-1),
++      embed_saved_scan_type((FrameScanType)-2),
++      embed_saved_scan_lock(false),
+       // State
+       eof(false),
+       m_double_framerate(false),    m_double_process(false),
+@@ -1591,6 +1593,16 @@
+ {
+     if (videoOutput)
+     {
++        // BEGIN HACK -- Temporarily disable deinterlacing
++        // Note: this should no longer be needed after mythtv-vid merge
++        if ((int)embed_saved_scan_type <= kScan_Ignore)
++        {
++            embed_saved_scan_type = m_scan;
++            embed_saved_scan_lock = m_scan_locked;
++            SetScanType(kScan_Progressive);
++        }
++        // END HACK
++
+         videoOutput->EmbedInWidget(wid, x, y, w, h);
+     }
+     else
+@@ -1608,6 +1620,17 @@
+     if (videoOutput)
+     {
+         videoOutput->StopEmbedding();
++
++        // BEGIN HACK -- Temporarily disable deinterlacing
++        // Note: this should no longer be needed after mythtv-vid merge
++        if ((int)embed_saved_scan_type >= kScan_Ignore)
++        {
++            SetScanType(embed_saved_scan_type);
++            m_scan_locked = embed_saved_scan_lock;
++            embed_saved_scan_type = (FrameScanType) -2;
++        }
++        // END HACK
++
+         ReinitOSD();
+     }
+ }
+Index: mythtv/libs/libmythtv/NuppelVideoPlayer.h
+===================================================================
+--- mythtv/libs/libmythtv/NuppelVideoPlayer.h	(Revision 18254)
++++ mythtv/libs/libmythtv/NuppelVideoPlayer.h	(Arbeitskopie)
+@@ -527,8 +527,9 @@
+     QWidget *parentWidget;
+     WId embedid;
+     int embx, emby, embw, embh;
++    FrameScanType embed_saved_scan_type;
++    bool          embed_saved_scan_lock;
+ 
+-
+     // State
+     QWaitCondition decoderThreadPaused;
+     QWaitCondition videoThreadPaused;
