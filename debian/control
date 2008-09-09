@@ -40,7 +40,7 @@ Build-Depends:  debhelper (>> 5.0.0),
                 libxvidcore4-dev,
                 libfftw3-dev | fftw3-dev,
                 libchromexvmc1 [i386 amd64],
-                libchromexvmcpro1 [i386 amd64]
+                libchromexvmcpro1 [i386 amd64],
 
 Package: mythtv
 Architecture: all
@@ -167,7 +167,7 @@ Description: A personal video recorder application (client)
 Package: libmyth-0.22-0
 Architecture: any
 Section: multiverse/libs
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, libqt4-sql-mysql
 Conflicts: mythtv (<< 0.7-5)
 Replaces: mythtv (<< 0.7-5)
 Description: Common library code for MythTV and add-on modules (runtime)
