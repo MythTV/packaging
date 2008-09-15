@@ -2,6 +2,8 @@ mythtv (0.21.0+fixes18207-0ubuntu7) UNRELEASED; urgency=low
 
   * Correct arguments for mythfrontend launching. (LP: #212604)
   * Backport fix for slow guide (LP: #229949)
+  * Add 28_text_captialization_error to correct inconsistent text
+    in theme xml file. (LP: #242000)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Mon, 15 Sep 2008 00:47:31 -0500
 

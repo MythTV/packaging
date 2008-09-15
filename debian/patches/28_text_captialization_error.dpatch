@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 28_text_captialization_error.dpatch by Mario Limonciello <superm1@ubuntu.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad mythtv-0.21.0+fixes18207~/programs/mythfrontend/library.xml mythtv-0.21.0+fixes18207/programs/mythfrontend/library.xml
+--- mythtv-0.21.0+fixes18207~/programs/mythfrontend/library.xml	2008-03-21 04:27:07.000000000 -0500
++++ mythtv-0.21.0+fixes18207/programs/mythfrontend/library.xml	2008-09-15 01:07:41.000000000 -0500
+@@ -119,7 +119,7 @@
+ 
+    <button>
+      <type>STREAM</type>
+-     <text>Play online streams</text>
++     <text>Play Online streams</text>
+      <text lang="HE">נגן מדיה מכוונת</text>
+      <action>PLUGIN mythstream</action>
+      <depends>mythstream</depends>
