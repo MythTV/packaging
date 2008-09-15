@@ -1,3 +1,9 @@
+mythtv (0.21.0+fixes18207-0ubuntu7) intrepid; urgency=low
+
+  * Correct arguments for mythfrontend launching. (LP: #212604)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 15 Sep 2008 00:47:31 -0500
+
 mythtv (0.21.0+fixes18207-0ubuntu6) intrepid; urgency=low
 
   * debian/mythtv-backend.init: Add the 'status' action (LP: #251325).
