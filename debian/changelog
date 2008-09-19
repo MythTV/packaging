@@ -1,9 +1,10 @@
-mythtv (0.21.0+fixes18207-0ubuntu7) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes18337-0ubuntu1) UNRELEASED; urgency=low
 
+  + Sync against release-0-21-fixes branch:
+    * Fix inconsistent text in theme xml file (LP: #242000)
   * Correct arguments for mythfrontend launching. (LP: #212604)
   * Backport fix for slow guide (LP: #229949)
-  * Add 28_text_captialization_error to correct inconsistent text
-    in theme xml file. (LP: #242000)
+  * 26_h264_ffmpeg_merge.dpatch: add improved patch as suggested by upstream
 
  -- Mario Limonciello <superm1@ubuntu.com>  Mon, 15 Sep 2008 00:47:31 -0500
 
