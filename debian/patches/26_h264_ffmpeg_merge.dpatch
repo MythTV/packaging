@@ -4484,3 +4484,278 @@ Index: mythtv-fixes/libs/libavcodec/svq3.c
    MpegEncContext *const s = avctx->priv_data;
    H264Context *const h = avctx->priv_data;
    int m, mb_type;
+Index: mythtv-fixes/libs/libavcodec/rectangle.h
+===================================================================
+--- mythtv-fixes/libs/libavcodec/rectangle.h	(Revision 0)
++++ mythtv-fixes/libs/libavcodec/rectangle.h	(Revision 0)
+@@ -0,0 +1,121 @@
++/*
++ * rectangle filling function
++ * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
++ *
++ * This file is part of FFmpeg.
++ *
++ * FFmpeg is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * FFmpeg is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with FFmpeg; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++/**
++ * @file rectangle.h
++ * useful rectangle filling function
++ * @author Michael Niedermayer <michaelni@gmx.at>
++ */
++
++#ifndef FFMPEG_RECTANGLE_H
++#define FFMPEG_RECTANGLE_H
++
++#include "common.h"
++
++/**
++ * fill a rectangle.
++ * @param h height of the rectangle, should be a constant
++ * @param w width of the rectangle, should be a constant
++ * @param size the size of val (1 or 4), should be a constant
++ */
++static av_always_inline void fill_rectangle(void *vp, int w, int h, int stride, uint32_t val, int size){
++    uint8_t *p= (uint8_t*)vp;
++    assert(size==1 || size==4);
++    assert(w<=4);
++
++    w      *= size;
++    stride *= size;
++
++    assert((((long)vp)&(FFMIN(w, STRIDE_ALIGN)-1)) == 0);
++    assert((stride&(w-1))==0);
++    if(w==2){
++        const uint16_t v= size==4 ? val : val*0x0101;
++        *(uint16_t*)(p + 0*stride)= v;
++        if(h==1) return;
++        *(uint16_t*)(p + 1*stride)= v;
++        if(h==2) return;
++        *(uint16_t*)(p + 2*stride)= v;
++        *(uint16_t*)(p + 3*stride)= v;
++    }else if(w==4){
++        const uint32_t v= size==4 ? val : val*0x01010101;
++        *(uint32_t*)(p + 0*stride)= v;
++        if(h==1) return;
++        *(uint32_t*)(p + 1*stride)= v;
++        if(h==2) return;
++        *(uint32_t*)(p + 2*stride)= v;
++        *(uint32_t*)(p + 3*stride)= v;
++    }else if(w==8){
++    //gcc can't optimize 64bit math on x86_32
++#if defined(ARCH_X86_64) || (defined(MP_WORDSIZE) && MP_WORDSIZE >= 64)
++        const uint64_t v= val*0x0100000001ULL;
++        *(uint64_t*)(p + 0*stride)= v;
++        if(h==1) return;
++        *(uint64_t*)(p + 1*stride)= v;
++        if(h==2) return;
++        *(uint64_t*)(p + 2*stride)= v;
++        *(uint64_t*)(p + 3*stride)= v;
++    }else if(w==16){
++        const uint64_t v= val*0x0100000001ULL;
++        *(uint64_t*)(p + 0+0*stride)= v;
++        *(uint64_t*)(p + 8+0*stride)= v;
++        *(uint64_t*)(p + 0+1*stride)= v;
++        *(uint64_t*)(p + 8+1*stride)= v;
++        if(h==2) return;
++        *(uint64_t*)(p + 0+2*stride)= v;
++        *(uint64_t*)(p + 8+2*stride)= v;
++        *(uint64_t*)(p + 0+3*stride)= v;
++        *(uint64_t*)(p + 8+3*stride)= v;
++#else
++        *(uint32_t*)(p + 0+0*stride)= val;
++        *(uint32_t*)(p + 4+0*stride)= val;
++        if(h==1) return;
++        *(uint32_t*)(p + 0+1*stride)= val;
++        *(uint32_t*)(p + 4+1*stride)= val;
++        if(h==2) return;
++        *(uint32_t*)(p + 0+2*stride)= val;
++        *(uint32_t*)(p + 4+2*stride)= val;
++        *(uint32_t*)(p + 0+3*stride)= val;
++        *(uint32_t*)(p + 4+3*stride)= val;
++    }else if(w==16){
++        *(uint32_t*)(p + 0+0*stride)= val;
++        *(uint32_t*)(p + 4+0*stride)= val;
++        *(uint32_t*)(p + 8+0*stride)= val;
++        *(uint32_t*)(p +12+0*stride)= val;
++        *(uint32_t*)(p + 0+1*stride)= val;
++        *(uint32_t*)(p + 4+1*stride)= val;
++        *(uint32_t*)(p + 8+1*stride)= val;
++        *(uint32_t*)(p +12+1*stride)= val;
++        if(h==2) return;
++        *(uint32_t*)(p + 0+2*stride)= val;
++        *(uint32_t*)(p + 4+2*stride)= val;
++        *(uint32_t*)(p + 8+2*stride)= val;
++        *(uint32_t*)(p +12+2*stride)= val;
++        *(uint32_t*)(p + 0+3*stride)= val;
++        *(uint32_t*)(p + 4+3*stride)= val;
++        *(uint32_t*)(p + 8+3*stride)= val;
++        *(uint32_t*)(p +12+3*stride)= val;
++#endif
++    }else
++        assert(0);
++    assert(h==4);
++}
++
++#endif /* FFMPEG_RECTANGLE_H */
+Index: mythtv-fixes/libs/libavcodec/i386/h264_i386.h
+===================================================================
+--- mythtv-fixes/libs/libavcodec/i386/h264_i386.h	(Revision 0)
++++ mythtv-fixes/libs/libavcodec/i386/h264_i386.h	(Revision 0)
+@@ -0,0 +1,144 @@
++/*
++ * H.26L/H.264/AVC/JVT/14496-10/... encoder/decoder
++ * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
++ *
++ * This file is part of FFmpeg.
++ *
++ * FFmpeg is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * FFmpeg is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with FFmpeg; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++/**
++ * @file h264_i386.h
++ * H.264 / AVC / MPEG4 part10 codec.
++ * non-MMX i386-specific optimizations for H.264
++ * @author Michael Niedermayer <michaelni@gmx.at>
++ */
++
++#ifndef FFMPEG_H264_I386_H
++#define FFMPEG_H264_I386_H
++
++
++#include "cabac.h"
++
++//FIXME use some macros to avoid duplicatin get_cabac (cannot be done yet as that would make optimization work hard)
++#if defined(ARCH_X86) && defined(HAVE_7REGS) && defined(HAVE_EBX_AVAILABLE) && !defined(BROKEN_RELOCATIONS)
++static int decode_significance_x86(CABACContext *c, int max_coeff, uint8_t *significant_coeff_ctx_base, int *index){
++    void *end= significant_coeff_ctx_base + max_coeff - 1;
++    int minusstart= -(int)significant_coeff_ctx_base;
++    int minusindex= 4-(int)index;
++    int coeff_count;
++    asm volatile(
++        "movl "RANGE    "(%3), %%esi            \n\t"
++        "movl "LOW      "(%3), %%ebx            \n\t"
++
++        "2:                                     \n\t"
++
++        BRANCHLESS_GET_CABAC("%%edx", "%3", "(%1)", "%%ebx", "%%bx", "%%esi", "%%eax", "%%al")
++
++        "test $1, %%edx                         \n\t"
++        " jz 3f                                 \n\t"
++
++        BRANCHLESS_GET_CABAC("%%edx", "%3", "61(%1)", "%%ebx", "%%bx", "%%esi", "%%eax", "%%al")
++
++        "mov  %2, %%"REG_a"                     \n\t"
++        "movl %4, %%ecx                         \n\t"
++        "add  %1, %%"REG_c"                     \n\t"
++        "movl %%ecx, (%%"REG_a")                \n\t"
++
++        "test $1, %%edx                         \n\t"
++        " jnz 4f                                \n\t"
++
++        "add  $4, %%"REG_a"                     \n\t"
++        "mov  %%"REG_a", %2                     \n\t"
++
++        "3:                                     \n\t"
++        "add  $1, %1                            \n\t"
++        "cmp  %5, %1                            \n\t"
++        " jb 2b                                 \n\t"
++        "mov  %2, %%"REG_a"                     \n\t"
++        "movl %4, %%ecx                         \n\t"
++        "add  %1, %%"REG_c"                     \n\t"
++        "movl %%ecx, (%%"REG_a")                \n\t"
++        "4:                                     \n\t"
++        "add  %6, %%eax                         \n\t"
++        "shr $2, %%eax                          \n\t"
++
++        "movl %%esi, "RANGE    "(%3)            \n\t"
++        "movl %%ebx, "LOW      "(%3)            \n\t"
++        :"=&a"(coeff_count), "+r"(significant_coeff_ctx_base), "+m"(index)
++        :"r"(c), "m"(minusstart), "m"(end), "m"(minusindex)
++        : "%"REG_c, "%ebx", "%edx", "%esi", "memory"
++    );
++    return coeff_count;
++}
++
++static int decode_significance_8x8_x86(CABACContext *c, uint8_t *significant_coeff_ctx_base, int *index, const uint8_t *sig_off){
++    int minusindex= 4-(int)index;
++    int coeff_count;
++    long last=0;
++    asm volatile(
++        "movl "RANGE    "(%3), %%esi            \n\t"
++        "movl "LOW      "(%3), %%ebx            \n\t"
++
++        "mov %1, %%"REG_D"                      \n\t"
++        "2:                                     \n\t"
++
++        "mov %6, %%"REG_a"                      \n\t"
++        "movzbl (%%"REG_a", %%"REG_D"), %%edi   \n\t"
++        "add %5, %%"REG_D"                      \n\t"
++
++        BRANCHLESS_GET_CABAC("%%edx", "%3", "(%%"REG_D")", "%%ebx", "%%bx", "%%esi", "%%eax", "%%al")
++
++        "mov %1, %%edi                          \n\t"
++        "test $1, %%edx                         \n\t"
++        " jz 3f                                 \n\t"
++
++        "movzbl "MANGLE(last_coeff_flag_offset_8x8)"(%%edi), %%edi\n\t"
++        "add %5, %%"REG_D"                      \n\t"
++
++        BRANCHLESS_GET_CABAC("%%edx", "%3", "15(%%"REG_D")", "%%ebx", "%%bx", "%%esi", "%%eax", "%%al")
++
++        "mov %2, %%"REG_a"                      \n\t"
++        "mov %1, %%edi                          \n\t"
++        "movl %%edi, (%%"REG_a")                \n\t"
++
++        "test $1, %%edx                         \n\t"
++        " jnz 4f                                \n\t"
++
++        "add $4, %%"REG_a"                      \n\t"
++        "mov %%"REG_a", %2                      \n\t"
++
++        "3:                                     \n\t"
++        "addl $1, %%edi                         \n\t"
++        "mov %%edi, %1                          \n\t"
++        "cmpl $63, %%edi                        \n\t"
++        " jb 2b                                 \n\t"
++        "mov %2, %%"REG_a"                      \n\t"
++        "movl %%edi, (%%"REG_a")                \n\t"
++        "4:                                     \n\t"
++        "addl %4, %%eax                         \n\t"
++        "shr $2, %%eax                          \n\t"
++
++        "movl %%esi, "RANGE    "(%3)            \n\t"
++        "movl %%ebx, "LOW      "(%3)            \n\t"
++        :"=&a"(coeff_count),"+m"(last), "+m"(index)
++        :"r"(c), "m"(minusindex), "m"(significant_coeff_ctx_base), "m"(sig_off)
++        : "%"REG_c, "%ebx", "%edx", "%esi", "%"REG_D, "memory"
++    );
++    return coeff_count;
++}
++#endif /* defined(ARCH_X86) && && defined(HAVE_7REGS) && defined(HAVE_EBX_AVAILABLE) && !defined(BROKEN_RELOCATIONS) */
++
++#endif /* FFMPEG_H264_I386_H */

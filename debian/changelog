@@ -1,4 +1,4 @@
-mythtv (0.21.0+fixes18337-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes18337-0ubuntu1) intrepid; urgency=low
 
   + Sync against release-0-21-fixes branch:
     * Fix inconsistent text in theme xml file (LP: #242000)
@@ -6,7 +6,7 @@ mythtv (0.21.0+fixes18337-0ubuntu1) UNRELEASED; urgency=low
   * Backport fix for slow guide (LP: #229949)
   * 26_h264_ffmpeg_merge.dpatch: add improved patch as suggested by upstream
 
- -- Mario Limonciello <superm1@ubuntu.com>  Mon, 15 Sep 2008 00:47:31 -0500
+ -- Michael Haas <laga@laga.ath.cx>  Mon, 15 Sep 2008 00:47:31 -0500
 
 mythtv (0.21.0+fixes18207-0ubuntu6) intrepid; urgency=low
 
