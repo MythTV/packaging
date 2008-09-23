@@ -1,13 +1,13 @@
-mythtv (0.21.0+fixes18379-0ubuntu1~ppa4) intrepid; urgency=low
+mythtv (0.21.0+fixes18379-0ubuntu1) intrepid; urgency=low
 
   * Sync against release-0-21-fixes branch:
     - Fix inconsistent text in theme xml file (LP: #242000)
   * Correct arguments for mythfrontend launching. (LP: #212604)
   * Backport fix for slow guide (LP: #229949)
-  * debian/patches: 
+  * debian/patches:
     - 26_h264_ffmpeg_merge.dpatch: drop patch as it's been committed upstream
 
- -- Michael Haas <laga@laga.ath.cx>  Mon, 15 Sep 2008 00:47:31 -0500
+ -- Michael Haas <laga@laga.ath.cx>  Wed, 24 Sep 2008 00:57:01 +0200
 
 mythtv (0.21.0+fixes18207-0ubuntu6) intrepid; urgency=low
 
