@@ -1,3 +1,11 @@
+mythtv (0.21.0+fixes18546-0ubuntu1) UNRELEASED; urgency=low
+
+  * Sync against release-0-21-fixes branch
+  * Update 24_fix_h264_frame_counting.dpatch to incorporate changeset 
+    18542 from trunk <http://svn.mythtv.org/trac/changeset/18542>
+
+ -- Michael Haas <laga@laga.ath.cx>  Sun, 05 Oct 2008 00:00:03 +0200
+
 mythtv (0.21.0+fixes18379-0ubuntu1) intrepid; urgency=low
 
   * Sync against release-0-21-fixes branch:
