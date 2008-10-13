@@ -1,4 +1,4 @@
-mythtv (0.21.0+fixes18546-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes18692-0ubuntu1) UNRELEASED; urgency=low
 
   * Sync against release-0-21-fixes branch
   * Update 24_fix_h264_frame_counting.dpatch to incorporate changeset 
