@@ -2,16 +2,17 @@ mythtv (0.21.0+fixes18722-0ubuntu1) intrepid; urgency=low
 
   * Sync against release-0-21-fixes branch. Fixes:
     - (LP: #260429)
-  * Update 24_fix_h264_frame_counting.dpatch to incorporate changeset 
+  * Update 24_fix_h264_frame_counting.dpatch to incorporate changeset
     18542 from trunk <http://svn.mythtv.org/trac/changeset/18542>
   * debian/patches/:
     - drop 27_disable_deinterlacing_in_guide.dpatch because it's been
       committed upstream
+    - add 28_fix_v4l.dpatch (LP: #259321)
   * Add debian/mythtv-frontend.dirs back in (LP: #280792)
   * Add kdesudo to list of graphical sudo providers in
     debian/dialog_functions.sh to account for KDE 4 in Intrepid (LP: #274602)
 
- -- Michael Haas <laga@laga.ath.cx>  Sun, 05 Oct 2008 00:00:03 +0200
+ -- Michael Haas <laga@laga.ath.cx>  Wed, 15 Oct 2008 23:56:53 +0200
 
 mythtv (0.21.0+fixes18379-0ubuntu1) intrepid; urgency=low
 
