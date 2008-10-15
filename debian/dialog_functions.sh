@@ -68,6 +68,15 @@ find_su()
                 fi
         fi
 
+        if [ -z "$SU" ]; then
+                SU=`which kdesudo`
+
+                if [ -z "$SU_TYPE" ]; then
+                        SU_TYPE=kdesudo
+                fi
+        fi
+
+
         if [ -z "$SU_TYPE" ]; then
                 failure "You need gksu or kdesu installed to run mythfrontend"
         fi
