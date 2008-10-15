@@ -1,3 +1,10 @@
+mythtv (0.21.0+fixes18692-0ubuntu1~ppa3) intrepid; urgency=low
+
+  * PPA upload 
+  * Add 28_fix_v4l.dpatch as a test case
+
+ -- Michael Haas <laga@laga.ath.cx>  Mon, 13 Oct 2008 23:23:38 +0200
+
 mythtv (0.21.0+fixes18692-0ubuntu1) intrepid; urgency=low
 
   * Sync against release-0-21-fixes branch
@@ -6,6 +13,7 @@ mythtv (0.21.0+fixes18692-0ubuntu1) intrepid; urgency=low
   * debian/patches/:
     - drop 27_disable_deinterlacing_in_guide.dpatch because it's been
       committed upstream
+  * Add debian/mythtv-frontend.dirs back in (LP: #280792)
 
  -- Michael Haas <laga@laga.ath.cx>  Sun, 05 Oct 2008 00:00:03 +0200
 
