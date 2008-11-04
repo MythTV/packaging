@@ -46,7 +46,7 @@ use LWP::UserAgent;
 use IO::File; 
 
 my $file = 'win32-packager.pl';
-my $url  = "http://svn.mythtv.org/svn/trunk/mythtv/contrib/Win32/build/$file";
+my $url  = "http://svn.mythtv.org/svn/trunk/packaging/Win32/build/$file";
 my $proxy = ''; # or somehting like: 'http://enter.your.proxy.here:8080';
 
 my $ua = LWP::UserAgent->new;

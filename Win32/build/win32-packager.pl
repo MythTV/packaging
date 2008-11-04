@@ -4,7 +4,7 @@
 ### win32-packager.pl
 ###
 ### =location
-### http://svn.mythtv.org/svn/trunk/mythtv/contrib/Win32/build/win32-packager.pl
+### http://svn.mythtv.org/svn/trunk/packaging/Win32/build/win32-packager.pl
 ###
 ### =description
 ### Tool for automating frontend builds on MS Windows XP (and compatible)
@@ -152,7 +152,7 @@ my $is_same = "$compile_type-$svnlocation-$qtver.same";
 $is_same =~ s#/#-#g; # don't put dir slashes in a filename! 
 
 # this list defines the components to build , to build everything, leave as-is
-my @components = ( 'mythtv', 'myththemes', 'mythplugins' );
+my @components = ( 'mythtv', 'myththemes', 'mythplugins', 'packaging' );
 
 
 # TODO - we should try to autodetect these paths, rather than assuming
@@ -1566,7 +1566,7 @@ cp '.$unixmythtv.'mythtv/libs/libmyth/mythconfig.mak '.$unixmythtv.'build//inclu
 
 touch '.$unixmythtv.'/build/package_flag
 cp '.$unixmythtv.'gdb_*.bat '.$unixmythtv.'build/bin
-cp '.$unixmythtv.'mythtv/contrib/Win32/debug/*.cmd '.$unixmythtv.'build/bin
+cp '.$unixmythtv.'packaging/Win32/debug/*.cmd '.$unixmythtv.'build/bin
 ' 
 ],comment => 'write a script to install mythtv to build folder'],
 
@@ -1936,9 +1936,9 @@ if ($package == 1) {
       exec    => 'copy /Y "C:\Program Files\Inno Setup 5\WizModernSmallImage-IS.bmp" '.
                  $dosmythtv.'build\isfiles\WizModernSmallImage-IS.bmp',
       comment => 'Copy WizModernSmallImage-IS.bmp to setup directory' ],
-    # Copy required files from sources or mythtv/contrib to setup directory:
+    # Copy required files from sources or packaging to setup directory:
     [ filesame => [$mythtv.'build/isfiles/mythtvsetup.iss',
-                   $mythtv.'mythtv/contrib/win32/build/mythtvsetup.iss'],
+                   $mythtv.'packaging/win32/build/mythtvsetup.iss'],
       copy     => [''=>'', 
       comment  => 'mythtvsetup.iss'] ],
     [ filesame => [$mythtv.'build/isfiles/mysql.gif',
