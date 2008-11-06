@@ -5,9 +5,9 @@
 #
 # by:   Chris Petersen <rpm@forevermore.net>
 #
-# The latest version of this file can be found at:
+# The latest version of this file can be found in mythtv svn:
 #
-#     http://www.mythtv.org/wiki/index.php/Mythtv-svn-rpmbuild.spec
+#    $URL$
 #
 # This file is intended to be sourced into bash with the "." command,
 # not just run directly on the command line.  If you just run this as
@@ -64,8 +64,8 @@
             -e "s,define _svnrev .\+,define _svnrev r$REL," \
             -e "s,define branch .\+,define branch trunk,"   \
             -e "s,Version:.\+,Version: $VERSION,"           \
-            /usr/src/redhat/SPECS/mythtv-svn.spec
-            /usr/src/redhat/SPECS/mythtv-themes-svn.spec
+            /usr/src/redhat/SPECS/mythtv.spec
+            /usr/src/redhat/SPECS/mythtv-themes.spec
     # Create the appropriate tarballs
         echo "Creating tarballs from svn checkout at $DIR"
         mkdir -p /usr/src/redhat/SOURCES/{mythtv,mythtv-themes}
@@ -82,7 +82,7 @@
         done
         cd -
     # Build MythTV
-        rpmbuild -bb /usr/src/redhat/SPECS/mythtv-svn.spec \
+        rpmbuild -bb /usr/src/redhat/SPECS/mythtv.spec \
             --with debug            \
             --without mytharchive   \
             --without mythflix      \
@@ -100,7 +100,7 @@
             return
         fi
     # Build MythTV Themes
-        rpmbuild -bb /usr/src/redhat/SPECS/mythtv-themes-svn.spec
+        rpmbuild -bb /usr/src/redhat/SPECS/mythtv-themes.spec
     # Error?
         if [ "$?" -ne 0 ]; then
             echo "MythTV Themes build error."
