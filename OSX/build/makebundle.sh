@@ -4,7 +4,7 @@
 # makebundle
 #
 # = LOCATION
-# http://svn.mythtv.org/svn/trunk/mythtv/contrib/OSX/build/makebundle.sh
+# http://svn.mythtv.org/svn/trunk/packaging/OSX/build/makebundle.sh
 #
 # = USAGE
 # makebundle mythfrontend[.app]
@@ -46,7 +46,7 @@ fi
 # with a binary, this will also produce the .app directory structure too.
 
 echo "Installing libraries into bundle as Frameworks"
-../../contrib/OSX/build/osx-bundler.pl $1 ../../libs/* $QTDIR/lib
+../../../packaging/OSX/build/osx-bundler.pl $1 ../../libs/* $QTDIR/lib
 if [ $? -ne 0 ] ; then
     echo
     echo "    ERROR.    osx-bundler.pl failed"

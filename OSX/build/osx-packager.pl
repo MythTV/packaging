@@ -7,7 +7,7 @@
 ### $Id$
 ###
 ### = location
-### http://svn.mythtv.org/svn/trunk/mythtv/contrib/OSX/build/osx-packager.pl
+### http://svn.mythtv.org/svn/trunk/packaging/OSX/build/osx-packager.pl
 ###
 ### = description
 ### Tool for automating frontend builds on Mac OS X.
@@ -551,7 +551,7 @@ END
 
 ### Third party packages
 my (@build_depends, %seen_depends);
-my @comps = ('mythtv', @components);
+my @comps = ('mythtv', @components, 'packaging');
 
 # Deal with user-supplied skip arguments
 if ( $OPT{'mythtvskip'} )
@@ -921,7 +921,7 @@ $VERS =~ s/^.*\-(.*)\.dylib$/$1/s;
 $VERS .= '.' . $OPT{'version'} if $OPT{'version'};
 
 ### Program which creates bundles:
-our @bundler = "$SVNDIR/mythtv/contrib/OSX/build/osx-bundler.pl";
+our @bundler = "$SVNDIR/packaging/OSX/build/osx-bundler.pl";
 if ( $OPT{'verbose'} )
 {   push @bundler, '--verbose'   }
 
