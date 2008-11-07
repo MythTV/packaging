@@ -957,7 +957,7 @@ push @{$expect},
 #[ pause => 'press [enter] to extract and patch QT4 next!'],
 
 [ archive => $sources.'qt-win-opensource-src-4.4.0.zip',  
-  fetch => 'http://ftp.ntua.gr/pub/X11/Qt/qt/source/qt-win-opensource-src-4.4.0.zip'],
+  fetch => 'http://ftp.icm.edu.pl/packages/qt/source/qt-win-opensource-src-4.4.0.zip'],
 [ dir => $msys.'qt-win-opensource-src-4.4.0', 
   extract => [$sources.'qt-win-opensource-src-4.4.0.zip', $msys] ],
 
