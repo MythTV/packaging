@@ -1,6 +1,7 @@
 mythtv (0.21.0+fixes18722-0ubuntu3) jaunty; urgency=low
 
   * Added size restriction to frontend and backend logs (10M)
+    - (LP: #250776)
 
  -- Thomas Mashos <thomas@hermes>  Tue, 18 Nov 2008 21:52:48 -0800
 
