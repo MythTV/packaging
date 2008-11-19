@@ -1,3 +1,10 @@
+mythtv (0.21.0+fixes18722-0ubuntu2) jaunty; urgency=low
+
+  * Updated posters dir to /var/lib/mythtv/posters
+
+ -- Thomas Mashos <thomas@weilandhomes.com>  Tue, 18 Nov 2008 21:06:43 
+-0800
+
 mythtv (0.21.0+fixes18722-0ubuntu1) intrepid; urgency=low
 
   * Sync against release-0-21-fixes branch. Fixes:
