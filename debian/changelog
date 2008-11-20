@@ -1,9 +1,12 @@
-mythtv (0.21.0+fixes18722-0ubuntu3) jaunty; urgency=low
+mythtv (0.21.0+fixes19136-0ubuntu3) jaunty; urgency=low
 
   * Added size restriction to frontend and backend logs (10M)
     - (LP: #250776)
+  * debian/patches:
+    - Add 29_mythwelcome_fix.dpatch to prevent MythWelcome from quitting
+      spuriously (backports revision 18671 from trunk)
 
- -- Thomas Mashos <thomas@hermes>  Tue, 18 Nov 2008 21:52:48 -0800
+ -- Michael Haas <laga@laga.ath.cx>  Thu, 20 Nov 2008 09:30:46 +0100
 
 mythtv (0.21.0+fixes18722-0ubuntu2) jaunty; urgency=low
 
