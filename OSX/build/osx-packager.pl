@@ -155,7 +155,7 @@ our %depend = (
   'mysqlclient' =>
   {
     'url' 
-    => 'http://mysql.osuosl.org/Downloads/MySQL-4.1/mysql-4.1.22.tar.gz',
+    => 'http://mirror.x10.com/mirror/mysql/Downloads/MySQL-4.1/mysql-4.1.22.tar.gz',
     'conf'
     =>  [
           '--without-debug',
