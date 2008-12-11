@@ -1,3 +1,51 @@
+mythtv (0.22.0~trunk19320-0ubuntu2) jaunty; urgency=low
+
+  * Trying libqt4-opengl-dev depencency
+
+ -- Thomas Mashos <thomas@hermes>  Wed, 10 Dec 2008 14:42:24 -0800
+
+mythtv (0.22.0~trunk19320-0ubuntu1) intrepid; urgency=low
+
+  * Updated SVN, build for intrepid
+
+ -- Thomas Mashos <thomas@hermes>  Wed, 10 Dec 2008 14:03:24 -0800
+
+mythtv (0.22.0~trunk19313-0ubuntu1) jaunty; urgency=low
+
+  * Updated svn
+
+ -- Thomas Mashos <thomas@hermes>  Tue, 09 Dec 2008 22:18:27 -0800
+
+mythtv (0.22.0~trunk19301-0ubuntu5) jaunty; urgency=low
+
+  * Fixed rules file
+
+ -- Thomas Mashos <thomas@hermes>  Tue, 09 Dec 2008 16:57:32 -0800
+
+mythtv (0.22.0~trunk19301-0ubuntu4) jaunty; urgency=low
+
+  * Fixed  more dependency issues
+
+ -- Thomas Mashos <thomas@hermes>  Tue, 09 Dec 2008 15:54:45 -0800
+
+mythtv (0.22.0~trunk19301-0ubuntu3) jaunty; urgency=low
+
+  * Fixed xserver-xorg-video-openchrome dependency
+
+ -- Thomas Mashos <thomas@hermes>  Tue, 09 Dec 2008 15:36:13 -0800
+
+mythtv (0.22.0~trunk19301-0ubuntu2) jaunty; urgency=low
+
+  * Fixed liblame dependency problem
+
+ -- Thomas Mashos <thomas@hermes>  Tue, 09 Dec 2008 15:15:57 -0800
+
+mythtv (0.22.0~trunk19301-0ubuntu1) jaunty; urgency=low
+
+  * Updated trunk build
+
+ -- Thomas Mashos <thomas@hermes>  Tue, 09 Dec 2008 13:39:34 -0800
+
 mythtv (0.22.0~trunk17464-0ubuntu1) hardy; urgency=low
 
   * first trunk build for upcoming 0.22 

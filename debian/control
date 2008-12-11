@@ -4,13 +4,14 @@ Priority: optional
 Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
 XSBC-Original-Maintainer: Christian Marillat <marillat@debian.org>
 Bugs: mailto:ubuntu-mythtv@lists.ubuntu.com
-Standards-Version: 3.7.3
+Standards-Version: 3.8.0
 Build-Conflicts: libmyth-0.20-dev,
                  libmyth-dev
 Build-Depends:  debhelper (>> 5.0.0),
                 dpatch,
                 ccache,
                 libqt4-dev,
+		libqt4-opengl-dev,
                 libdvb-dev,
                 po-debconf,
                 texi2html,
@@ -32,15 +33,13 @@ Build-Depends:  debhelper (>> 5.0.0),
                 libjack0.100.0-dev | libjack-dev,
                 libfaad-dev | libfaad2-dev,
                 libfaac-dev,
-                liblame-dev,
-                liblame-dev,
+                libmp3lame-dev,
                 libvorbis-dev,
                 libdts-dev,
                 libx264-dev,
                 libxvidcore4-dev,
                 libfftw3-dev | fftw3-dev,
-                libchromexvmc1 [i386 amd64],
-                libchromexvmcpro1 [i386 amd64],
+                xserver-xorg-video-openchrome [i386 amd64],
 
 Package: mythtv
 Architecture: all
