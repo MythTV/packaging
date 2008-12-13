@@ -1,16 +1,27 @@
-mythtv (0.21.0+fixes19136-0ubuntu3) jaunty; urgency=low
+mythtv (0.21.0+fixes19136-0ubuntu1) UNRELEASED; urgency=low
 
+  [ Thomas Mashos ]
+  * Updated posters dir to /var/lib/mythtv/posters
+
+  [ Michael Haas ]
+  * New upstream snapshot.
   * Added size restriction to frontend and backend logs (10M)
     - (LP: #250776)
   * debian/patches:
     - Add 29_mythwelcome_fix.dpatch to prevent MythWelcome from quitting
       spuriously (backports revision 18671 from trunk)
 
- -- Michael Haas <laga@laga.ath.cx>  Thu, 20 Nov 2008 09:30:46 +0100
+  [ Dustin Kirkland ]
+  * debian/mythtv-database.config: test the validity of the input mysql
+    passphrase, up to 5 times (LP: #243504)
 
-mythtv (0.21.0+fixes18722-0ubuntu2) jaunty; urgency=low
+  [ Mario Limonciello ]
+  * debian/mythtv-database.postinst:
+    - Clean up old code calls
+    - Adjust for changes to .config
+    - Make sure to clear root password
 
-  * Updated posters dir to /var/lib/mythtv/posters
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 12 Dec 2008 21:29:40 -0600
 
  -- Thomas Mashos <thomas@weilandhomes.com>  Tue, 18 Nov 2008 21:06:43 -0800
 
