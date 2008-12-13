@@ -8,163 +8,121 @@ NEWIP="127.0.0.1"
 LOCALHOSTNAME=`cat /etc/hostname`
 
 prepare_database() {
-    sed -e "/^$/d; /^#/d; /^proc/d; /swap/d; /nfs/d; s/\t/\ \ \ \ /g;" $FSTAB | tee /tmp/fstab > /dev/null
-    if grep /var/lib/mythtv/recordings /tmp/fstab > /dev/null; then
-        if grep /var/lib/mythtv/recordings /tmp/fstab | grep ext3 > /dev/null; then
-            EXT3=1
-        fi    
-    elif grep /var/lib/mythtv /tmp/fstab > /dev/null; then
-        if grep /var/lib/mythtv /tmp/fstab | grep ext3 > /dev/null; then
-            EXT3=1
-        fi
-    elif grep /var/lib /tmp/fstab > /dev/null; then
-        if grep /var/lib /tmp/fstab | grep ext3 > /dev/null; then
-            EXT3=1
-        fi
-    elif grep "/var " /tmp/fstab > /dev/null; then
-        if grep "/var " /tmp/fstab | grep ext3 > /dev/null; then
-            EXT3=1
-        fi
-    elif grep "/ " /tmp/fstab > /dev/null; then
-        if grep "/ " /tmp/fstab | grep ext3 > /dev/null; then
-            EXT3=1
-        fi
+    if test -f $FSTAB &&
+       sed -e "/^$/d; /^#/d; /^proc/d; /swap/d; /nfs/d; s/\t/\ \ \ \ /g;" $FSTAB |\
+       grep ext3 |\
+       grep "/var/lib/mythtv/recordings\|\
+/var/lib/mythtv\|\
+/var/lib/mythtv\|\
+/var/lib\|\
+/var \|\
+/ "    >/dev/null; then
+       EXT3=1
     fi
-    rm /tmp/fstab
 
-    sed -e "s/OLDHOSTNAME/$LOCALHOSTNAME/g; s/127.0.0.1/$NEWIP/g; s/Slowly','0/Slowly','$EXT3/g;" $MYSQL | tee ${MYSQL}.new > /dev/null
-    mv ${MYSQL}.new $MYSQL
-    
     if [ "$admin_password" != "" ]; then
-        mysql -h $hostname -u $admin_username -p$admin_password $database < $MYSQL
-    else
-        mysql -h $hostname -u $admin_username $database < $MYSQL
+        admin_password="-p$admin_password"
     fi
-}
-
-escape_quotes() {
-    cat <<EOF | sed -e "s/'/\\\\'/g"
-$1
-EOF
-}
-
-DoSQL() {
-    local host="$1"
-    local admin_username="$2"
-    local admin_password="$3"
-    local database="$4"
-    local statement="`escape_quotes \"$5\"`"
-    local tmp=`tempfile -m 600`
-    cat <<EOF >$tmp
-$admin_password
-EOF
-    perl -e "
-use DBI;
-chomp(\$password=<>);
-@statements=split(/;/, '$statement');
-\$db = DBI->connect('dbi:mysql:host=$host;database=$database',
-            '$admin_username', \$password,
-            { PrintError => 0 }) || die 'Failed to connect to database: ' . \$DBI::errstr;
-for \$s (@statements) { \$db->do(\$s) || die 'Failed to execute SQL: ' . \$s . '\n' . \$DBI::errstr; }
-" < $tmp
-    ret=$?
-    rm -f $tmp
-    return $ret
+    cat $MYSQL | sed -e "s/OLDHOSTNAME/$LOCALHOSTNAME/g; s/127.0.0.1/$NEWIP/g; s/Slowly','0/Slowly','$EXT3/g;" |\
+        mysql -h $hostname -u $admin_username $admin_password $database
 }
 
 case "$1" in
     configure)
     . /usr/share/debconf/confmodule
 
-    db_get mythtv/mysql_admin_user
-    admin_username="$RET"
-    db_get mythtv/mysql_admin_password
-    admin_password="$RET"
-
     db_get mythtv/mysql_host
-    hostname="$RET"    
+    hostname="$RET"
 
     if test -z "$hostname"; then
         hostname=localhost
     fi
 
+    #If we are running locally, make sure to start mysql first
+    #It's okay if it fails, we'll fall back cleanly later
     if [ "$hostname" = "localhost" ]; then
         #redirection of 3 is because of debconf internally using it.
-	if [ -x /usr/sbin/invoke-rc.d ]; then
-		invoke-rc.d mysql start 3> /dev/null|| true
-	else
-		/etc/init.d/mysql start 3> /dev/null|| true
-	fi
+        if [ -x /usr/sbin/invoke-rc.d ]; then
+            invoke-rc.d mysql start 3> /dev/null || true
+        else
+            /etc/init.d/mysql start 3> /dev/null || true
+        fi
     fi
+
+    db_get mythtv/mysql_admin_user
+    admin_username="$RET"
+    
+    db_get mythtv/mysql_admin_password
+    admin_password="$RET"
+
     db_get mythtv/mysql_mythtv_dbname
     database="$RET"
 
-    if ! DoSQL "$hostname" "$admin_username" "$admin_password" "$database" "SELECT NULL" 2>/dev/null; then
+    if ! echo "SELECT NULL;" | mysql --host="$hostname" --user="$admin_username" --password="$admin_password" "$database" >/dev/null 2>&1; then
+        if ! echo "CREATE DATABASE $database;" | mysql --host="$hostname" --user="$admin_username" --password="$admin_password" >/dev/null 2>&1; then
+            echo "Failed to create database (incorrect admin username/password?)" >&2
+            echo "It's also possible that mysql-server wasn't running.  After install" >&2
+            echo "is completed, you will need to make sure mysql-server is running" >&2
+            echo "and that you supplied correct information. Try:" >&2
+            echo "sudo dpkg-reconfigure mythtv-database" >&2
 
-        if ! DoSQL "$hostname" "$admin_username" "$admin_password" "" \
-          "CREATE DATABASE $database"; then
-          echo "Failed to create database (incorrect admin username/password?)" >&2
-          echo "It's also possible that mysql-server wasn't running.  After install" >&2
-          echo "is completed, you will need to make sure mysql-server is running" >&2
-          echo "and that you supplied correct information. Try:" >&2
-          echo "sudo dpkg-reconfigure mythtv-database" >&2
-          # silently exit, instead pop up a notification for user indicating this
-          unud=/var/lib/update-notifier/user.d
-          if test -d $unud; then
-          cp -f /usr/share/mythtv/mythtv-reconfigure-required.update-notifier \
-                  /var/lib/update-notifier/user.d/mythtv-reconfigure-required
-          fi
-          exit 0
+            # silently exit, instead pop up a notification for user indicating this
+            unud=/var/lib/update-notifier/user.d
+            if test -d $unud; then
+                cp -f /usr/share/mythtv/mythtv-reconfigure-required.update-notifier \
+                    /var/lib/update-notifier/user.d/mythtv-reconfigure-required
+            fi
+            db_set mythtv/mysql_admin_password ""
+            exit 0
         fi
-
     fi
 
     db_get mythtv/mysql_mythtv_user
     mythtv_username="$RET"
+    
     db_get mythtv/mysql_mythtv_password
     mythtv_password="$RET"
 
-    DoSQL "$hostname" "$admin_username" "$admin_password" "$database" \
-        "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@localhost IDENTIFIED BY '$mythtv_password'"
+    echo "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@localhost IDENTIFIED BY '$mythtv_password';" | \
+        mysql --host="$hostname" --user="$admin_username" --password="$admin_password" "$database" >/dev/null 2>&1
 
-    DoSQL "$hostname" "$admin_username" "$admin_password" "$database" \
-        "GRANT ALL PRIVILEGES ON $database.* TO
-        $mythtv_username@'%' IDENTIFIED BY '$mythtv_password'"
+    echo "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@'%' IDENTIFIED BY '$mythtv_password';" | \
+        mysql --host="$hostname" --user="$admin_username" --password="$admin_password" "$database" >/dev/null 2>&1
 
     #For database fillings
     #and mysql binding checks
     db_get mythtv/public_bind
     if [ $RET = true ]; then
         NEWIP=`ifconfig | grep "inet addr:" | grep --invert-match 127.0.0.1 | sed ' s/inet addr://g; s/^[ \t]*//;s/[ \t]*$//; q;' | awk '{print $1}'`
-	sed -e 's/^#bind/bind/' ${MYSQLCONFIG} | tee ${MYSQLCONFIG}.new > /dev/null
+        sed -i -e 's/^#bind/bind/' ${MYSQLCONFIG}
     else
-	sed -e 's/^bind/#bind/' ${MYSQLCONFIG} | tee ${MYSQLCONFIG}.new > /dev/null
+        sed -i -e 's/^bind/#bind/' ${MYSQLCONFIG}
     fi
-    mv ${MYSQLCONFIG}.new ${MYSQLCONFIG}
     
     #only prepare database if tables don't already exist
-    if ! DoSQL "$hostname" "$admin_username" "$admin_password" "$database" "SELECT value FROM settings LIMIT 1, 1" 2>/dev/null; then
-	    prepare_database
-    else
+    if ! echo "SELECT value FROM settings LIMIT 1, 1;" | mysql --host="$hostname" --user="$admin_username" --password="$admin_password" "$database" >/dev/null 2>&1; then
+        prepare_database
     #otherwise, just update sql with new bind settings if requested
-	    DoSQL "$hostname" "$admin_username" "$admin_password" "$database" \
-	    "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'BackendServerIP' AND settings.hostname = '$LOCALHOSTNAME'"
-	    DoSQL "$hostname" "$admin_username" "$admin_password" "$database" \
-	    "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'MasterServerIP'"
-    fi    
+    else
+        echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'BackendServerIP' AND settings.hostname = '$LOCALHOSTNAME';" | \
+            mysql --host="$hostname" --user="$admin_username" --password="$admin_password" "$database" >/dev/null 2>&1
 
+        echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'MasterServerIP';" | \
+            mysql --host="$hostname" --user="$admin_username" --password="$admin_password" "$database" >/dev/null 2>&1
+    fi
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
-
     ;;
 
     *)
     echo "postinst called with unknown argument \`$1'" >&2
+    db_set mythtv/mysql_admin_password ""
     exit 1
     ;;
 esac
 
 #DEBHELPER#
 
+db_set mythtv/mysql_admin_password ""
 exit 0
