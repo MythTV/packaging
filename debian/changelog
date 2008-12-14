@@ -1,4 +1,4 @@
-mythtv (0.21.0+fixes19136-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes19136-0ubuntu1) jaunty; urgency=low
 
   [ Thomas Mashos ]
   * Updated posters dir to /var/lib/mythtv/posters
@@ -25,9 +25,7 @@ mythtv (0.21.0+fixes19136-0ubuntu1) UNRELEASED; urgency=low
   * debian/mythtv-common.postinst:
     - Clean up old file checks that are unnecessary.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Fri, 12 Dec 2008 21:29:40 -0600
-
- -- Thomas Mashos <thomas@weilandhomes.com>  Tue, 18 Nov 2008 21:06:43 -0800
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 13 Dec 2008 18:39:01 -0600
 
 mythtv (0.21.0+fixes18722-0ubuntu1) intrepid; urgency=low
 
