@@ -20,11 +20,50 @@ prepare_database() {
        EXT3=1
     fi
 
-    if [ "$admin_password" != "" ]; then
-        admin_password="-p$admin_password"
-    fi
     cat $MYSQL | sed -e "s/OLDHOSTNAME/$LOCALHOSTNAME/g; s/127.0.0.1/$NEWIP/g; s/Slowly','0/Slowly','$EXT3/g;" |\
         mysql -h $hostname -u $admin_username $admin_password $database
+}
+
+#Used to fail at some point but not abort postinst
+fail_database() {
+    echo "Failed to create or modify database (incorrect admin username/password?)" >&2
+    echo "Try:" >&2
+    echo "sudo dpkg-reconfigure mythtv-database" >&2
+
+    # silently exit, instead pop up a notification for user indicating this
+    unud=/var/lib/update-notifier/user.d
+    if test -d $unud; then
+        cp -f /usr/share/mythtv/mythtv-reconfigure-required.update-notifier \
+            /var/lib/update-notifier/user.d/mythtv-reconfigure-required
+    fi
+    db_set mythtv/mysql_admin_password ""
+    exit 0
+}
+
+update_database() {
+    #Set up privs for mythtv@localhost
+    if ! echo "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@localhost IDENTIFIED BY '$mythtv_password';" | \
+        mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
+        fail_database
+    fi
+
+    #Set up privs for mythtv@network
+    if ! echo "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@'%' IDENTIFIED BY '$mythtv_password';" | \
+        mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
+        fail_database
+    fi
+    
+    #Set up local IP and hostname
+    if ! echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'BackendServerIP' AND settings.hostname = '$LOCALHOSTNAME';" | \
+        mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
+        fail_database
+    fi
+
+    #Set up master IP and hostname
+    if ! echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'MasterServerIP';" | \
+        mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
+        fail_database
+    fi
 }
 
 case "$1" in
@@ -34,8 +73,23 @@ case "$1" in
     db_get mythtv/mysql_host
     hostname="$RET"
 
-    if test -z "$hostname"; then
-        hostname=localhost
+    db_get mythtv/mysql_admin_user
+    admin_username="$RET"
+    
+    db_get mythtv/mysql_admin_password
+    admin_password="$RET"
+
+    db_get mythtv/mysql_mythtv_dbname
+    database="$RET"
+
+    db_get mythtv/mysql_mythtv_user
+    mythtv_username="$RET"
+
+    db_get mythtv/mysql_mythtv_password
+    mythtv_password="$RET"
+
+    if [ "$admin_password" != "" ]; then
+        admin_password="-p$admin_password"
     fi
 
     #If we are running locally, make sure to start mysql first
@@ -49,46 +103,6 @@ case "$1" in
         fi
     fi
 
-    db_get mythtv/mysql_admin_user
-    admin_username="$RET"
-    
-    db_get mythtv/mysql_admin_password
-    admin_password="$RET"
-
-    db_get mythtv/mysql_mythtv_dbname
-    database="$RET"
-
-    if ! echo "SELECT NULL;" | mysql --host="$hostname" --user="$admin_username" --password="$admin_password" "$database" >/dev/null 2>&1; then
-        if ! echo "CREATE DATABASE $database;" | mysql --host="$hostname" --user="$admin_username" --password="$admin_password" >/dev/null 2>&1; then
-            echo "Failed to create database (incorrect admin username/password?)" >&2
-            echo "It's also possible that mysql-server wasn't running.  After install" >&2
-            echo "is completed, you will need to make sure mysql-server is running" >&2
-            echo "and that you supplied correct information. Try:" >&2
-            echo "sudo dpkg-reconfigure mythtv-database" >&2
-
-            # silently exit, instead pop up a notification for user indicating this
-            unud=/var/lib/update-notifier/user.d
-            if test -d $unud; then
-                cp -f /usr/share/mythtv/mythtv-reconfigure-required.update-notifier \
-                    /var/lib/update-notifier/user.d/mythtv-reconfigure-required
-            fi
-            db_set mythtv/mysql_admin_password ""
-            exit 0
-        fi
-    fi
-
-    db_get mythtv/mysql_mythtv_user
-    mythtv_username="$RET"
-    
-    db_get mythtv/mysql_mythtv_password
-    mythtv_password="$RET"
-
-    echo "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@localhost IDENTIFIED BY '$mythtv_password';" | \
-        mysql --host="$hostname" --user="$admin_username" --password="$admin_password" "$database" >/dev/null 2>&1
-
-    echo "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@'%' IDENTIFIED BY '$mythtv_password';" | \
-        mysql --host="$hostname" --user="$admin_username" --password="$admin_password" "$database" >/dev/null 2>&1
-
     #For database fillings
     #and mysql binding checks
     db_get mythtv/public_bind
@@ -98,18 +112,23 @@ case "$1" in
     else
         sed -i -e 's/^bind/#bind/' ${MYSQLCONFIG}
     fi
-    
-    #only prepare database if tables don't already exist
-    if ! echo "SELECT value FROM settings LIMIT 1, 1;" | mysql --host="$hostname" --user="$admin_username" --password="$admin_password" "$database" >/dev/null 2>&1; then
-        prepare_database
-    #otherwise, just update sql with new bind settings if requested
-    else
-        echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'BackendServerIP' AND settings.hostname = '$LOCALHOSTNAME';" | \
-            mysql --host="$hostname" --user="$admin_username" --password="$admin_password" "$database" >/dev/null 2>&1
 
-        echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'MasterServerIP';" | \
-            mysql --host="$hostname" --user="$admin_username" --password="$admin_password" "$database" >/dev/null 2>&1
+    #Check for existing database
+    if ! echo "SELECT NULL;" | mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
+        #No existing database, create a database
+        if ! echo "CREATE DATABASE $database;" | mysql --host="$hostname" --user="$admin_username" $admin_password >/dev/null 2>&1; then
+            fail_database
+        fi
     fi
+
+    #Preload tables
+    if ! echo "SELECT value FROM settings LIMIT 1, 1;" | mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
+        prepare_database
+    fi
+    
+    #Update IP and permissions
+    update_database
+    
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
