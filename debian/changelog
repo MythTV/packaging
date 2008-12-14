@@ -26,6 +26,8 @@ mythtv (0.21.0+fixes19136-0ubuntu2) UNRELEASED; urgency=low
     - Drop, we're at 0.21 now!
   * debian/mythsql:
     - Drop old unused script.
+  * debian/mythtv-backend.NEWS:
+    - Drop quite old NEWS file.  We're not updating it anyway.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sat, 13 Dec 2008 21:32:03 -0600
 
