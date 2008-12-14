@@ -6,6 +6,20 @@ mythtv (0.21.0+fixes19136-0ubuntu2) UNRELEASED; urgency=low
     - Drop references to ubuntu-mythtv-frontend
     - Reorder build dep on lame so that apt-get build-dep
       resolves correctly.
+  * Drop these files as they were only used by
+    ubuntu-mythtv-frontend:
+    - debian/background.xpm
+    - debian/dmrc
+    - debian/gdm.conf
+    - debian/mplayer-config
+    - debian/mythbuntu-gdm.conf
+    - debian/mythtv-xsession.desktop
+    - debian/openbox-menu.xml
+    - debian/startmythtv.sh
+    - debian/ubuntu-mythtv-frontend.postinst
+    - debian/ubuntu-mythtv-frontend.prerm
+  * debian/rules:
+    - Drop references to ubuntu-mythtv-frontend
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sat, 13 Dec 2008 21:32:03 -0600
 

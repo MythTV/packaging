@@ -140,14 +140,6 @@ install: build
 	dh_install -pmythtv-frontend debian/session-settings etc/mythtv
 	dh_install -pmythtv-backend debian/mythtv-setup.sh usr/share/mythtv
 	dh_install -pmythtv-common   debian/dialog_functions.sh usr/share/mythtv
-	dh_install -pubuntu-mythtv-frontend debian/startmythtv.sh usr/share/mythtv
-	dh_install -pubuntu-mythtv-frontend debian/mythtv-xsession.desktop usr/share/xsessions
-	dh_install -pubuntu-mythtv-frontend debian/dmrc etc/mythtv
-	dh_install -pubuntu-mythtv-frontend debian/mplayer-config etc/mythtv
-	dh_install -pubuntu-mythtv-frontend debian/background.xpm usr/share/mythtv
-	dh_install -pubuntu-mythtv-frontend debian/openbox-menu.xml etc/mythtv
-	dh_install -pubuntu-mythtv-frontend debian/gdm.conf etc/xdg/mythtv-ubuntu/gdm
-	dh_install -pubuntu-mythtv-frontend debian/mythbuntu-gdm.conf etc/xdg/mythtv-ubuntu/gdm
 	dh_install -pmythtv-common debian/mysql.txt.dist debian/myth-halt.sh debian/myth-reboot.sh debian/myth-hibernate.sh usr/share/mythtv
 
 	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/mythtv
