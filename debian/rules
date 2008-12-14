@@ -162,7 +162,6 @@ install: build
 
 	dh_movefiles --sourcedir=debian/mythtv
 
-	dh_install -pmythtv-common debian/mythsql usr/share/mythtv
 	# perl bindings
 #	dh_install -plibmyth-perl usr/share/perl/*/MythTV*
 
