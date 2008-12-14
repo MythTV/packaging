@@ -20,6 +20,8 @@ mythtv (0.21.0+fixes19136-0ubuntu2) UNRELEASED; urgency=low
     - debian/ubuntu-mythtv-frontend.prerm
   * debian/rules:
     - Drop references to ubuntu-mythtv-frontend
+    - Install all sql files rather than a specific one
+    - Don't install dirs here.  Do that in specific files
   * debian/session-settings:
     - Drop some references to ubuntu-mythtv-frontend
   * debian/mythtv_0.20.1.sql:
@@ -28,6 +30,8 @@ mythtv (0.21.0+fixes19136-0ubuntu2) UNRELEASED; urgency=low
     - Drop old unused script.
   * debian/mythtv-backend.NEWS:
     - Drop quite old NEWS file.  We're not updating it anyway.
+  * debian/debian/README.Debian:
+    - Drop.  The comments in here are pretty old and dated.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sat, 13 Dec 2008 21:32:03 -0600
 
