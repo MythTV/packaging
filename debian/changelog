@@ -20,6 +20,10 @@ mythtv (0.21.0+fixes19136-0ubuntu1) UNRELEASED; urgency=low
     - Clean up old code calls
     - Adjust for changes to .config
     - Make sure to clear root password
+  * debian/mythtv-common.config:
+    - Read mysql.txt before starting
+  * debian/mythtv-common.postinst:
+    - Clean up old file checks that are unnecessary.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Fri, 12 Dec 2008 21:29:40 -0600
 
