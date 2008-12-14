@@ -74,7 +74,6 @@ Description: A personal video recorder application (client and server)
  you should look into the metapackages available:
  mythtv-backend-master (backend with a local database)
  mythtv-backend (backend needing a remote database)
- ubuntu-mythtv-frontend
 
 Package: mythtv-common
 Architecture: all

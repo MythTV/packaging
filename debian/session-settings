@@ -1,7 +1,6 @@
 ###############################################################################
 # This file is used if /usr/bin/mythfrontend is called with --service         #
-# For example, this happens in ubuntu-mythtv-frontend (in startmythtv.sh)     #
-# and in mythtv.desktop which ships with the mythtv-frontend package          #
+# as in mythtv.desktop which ships with the mythtv-frontend package           #
 ###############################################################################
 
 # Enable mythwelcome
