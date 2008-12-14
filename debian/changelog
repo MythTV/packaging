@@ -1,9 +1,11 @@
-mythtv (0.21.0+fixes19136-0ubuntu2) jaunty; urgency=low
+mythtv (0.21.0+fixes19136-0ubuntu2) UNRELEASED; urgency=low
 
   * Add 30_2.6.28_support.dpatch.  Fixes FTBFS when
     working building against 2.6.28.
   * debian/control:
     - Drop references to ubuntu-mythtv-frontend
+    - Reorder build dep on lame so that apt-get build-dep
+      resolves correctly.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sat, 13 Dec 2008 21:32:03 -0600
 

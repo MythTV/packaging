@@ -35,7 +35,7 @@ Build-Depends:  debhelper (>> 5.0.0),
                 libjack0.100.0-dev | libjack-dev,
                 libfaad-dev | libfaad2-dev,
                 libfaac-dev,
-                liblame-dev | libmp3lame-dev,
+                libmp3lame-dev | liblame-dev,
                 libvorbis-dev,
                 libdts-dev,
                 libx264-dev,
@@ -230,17 +230,3 @@ Description: Metapackage to setup and configure a "Master Backend" profile of My
  be installed on the machine that will behave as the first (and possibly only)
  backend for the network.  Typically, this package will be installed on a server rather then a desktop.
  It makes no sense to install it on anything but the first backend machine on the network.
-
-Package: ubuntu-mythtv-frontend
-Architecture: all
-Section: multiverse/metapackages
-Depends: xorg, gsfonts-x11, mythbuntu-gdm-theme | feisty-gdm-themes | edgy-gdm-themes | gdm-themes , xterm, mythbuntu-artwork-usplash | usplash-theme-ubuntu | usplash, mythtv-frontend, openbox, feh, libgl1-mesa-glx, ntp | time-daemon | ntp-simple
-Pre-Depends: gdm
-Recommends: mytharchive, mythphone, mythgame, mythmusic, mythcontrols, mythflix, mythnews, mythweather, mythtv-themes, mythbrowser, mythgallery, mythvideo, mythstream
-Description: Metapackage to setup and configure a "Frontend" profile of MythTV.
- This package will install and configure all necessary packages for this machine
- to behave as a standalone Frontend for a mythtv network.  This package is intended
- to be installed after a backend has been configured on the network.  Also, this
- package is intended for usage on a standalone machine only running MythTV.  A machine already
- configured as a desktop should install mythtv-frontend instead.  Without a running and
- accessible backend, this package will not properly function.
