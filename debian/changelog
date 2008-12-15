@@ -1,3 +1,21 @@
+mythtv (0.22.0~trunk19374-0ubuntu1) jaunty; urgency=low
+
+  * SVN Bump
+
+ -- Thomas Mashos <thomas@hermes>  Mon, 15 Dec 2008 12:55:43 -0800
+
+mythtv (0.22.0~trunk19363-0ubuntu2) jaunty; urgency=low
+
+  * removed arts support for qt3->qt4 transition
+
+ -- Thomas Mashos <thomas@hermes>  Mon, 15 Dec 2008 10:51:28 -0800
+
+mythtv (0.22.0~trunk19363-0ubuntu1) jaunty; urgency=low
+
+  * SVN Bump
+
+ -- Thomas Mashos <thomas@hermes>  Sun, 14 Dec 2008 16:01:03 -0800
+
 mythtv (0.22.0~trunk19320-0ubuntu2) jaunty; urgency=low
 
   * Trying libqt4-opengl-dev depencency

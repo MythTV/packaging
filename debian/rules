@@ -87,7 +87,7 @@ configure-stamp: patch-stamp
 	sed -i -e "s/\`(svnversion \$$\$${SVNTREEDIR} 2>\/dev\/null) || echo Unknown\`/$(SVN_REVISION)/" version.pro
 
 	CFLAGS="$(CFLAGS)" ./configure --prefix=/usr --runprefix=/usr --enable-lirc --enable-audio-alsa \
-	--enable-audio-oss --enable-audio-jack --enable-audio-arts --enable-dvb \
+	--enable-audio-oss --enable-audio-jack --enable-dvb \
 	--enable-ivtv --enable-firewire --enable-joystick-menu \
 	--enable-opengl-vsync --with-bindings=perl --enable-opengl-video \
 	--enable-ffmpeg-pthreads\
