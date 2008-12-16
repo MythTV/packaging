@@ -3,8 +3,8 @@
 # Provides:          mythtv-backend
 # Required-Start:    $local_fs $remote_fs $network
 # Required-Stop:     $local_fs
-# Default-Start:     50
-# Default-Stop:      S
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
 # Short-Description: Start/Stop the MythTV server.
 ### END INIT INFO
 
@@ -89,9 +89,20 @@ case "$1" in
                 --chuid $USER --nicelevel $NICE --exec $DAEMON -- $ARGS
     log_end_msg $?
 	;;
+  status)
+	# We want to maintain backward compatibility with Hardy,
+	# so we're not going to use status_of_proc()
+	pidofproc -p $RUNDIR/$NAME.pid $DAEMON >/dev/null && status=0 || status=$?
+	if [ $status -eq 0 ]; then
+		log_success_msg "$NAME is running"
+	else
+		log_failure_msg "$NAME is not running"
+	fi
+	exit $status
+	;;
   *)
 	N=/etc/init.d/$NAME
-	echo "Usage: $N {start|stop|restart|force-reload}" >&2
+	echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
 	exit 2
 	;;
 esac

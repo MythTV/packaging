@@ -1,5 +1,6 @@
 /var/log/mythtv/mythfrontend.log {
         daily
+	size=10M
         rotate 7
         notifempty
         copytruncate
@@ -8,6 +9,7 @@
 
 /var/log/mythtv/mythwelcome.log {
         daily
+	size=10M
         rotate 7
         notifempty
         copytruncate

@@ -1,80 +1,168 @@
-mythtv (0.22.0~trunk19374-0ubuntu1) jaunty; urgency=low
+mythtv (0.22.0~trunk19374-0ubuntu1) UNRELEASED; urgency=low
 
-  * SVN Bump
+  [ Thomas Mashos ]
+  * Remove arts support
+  * Add libqt4-opengl-dev as build dep
 
- -- Thomas Mashos <thomas@hermes>  Mon, 15 Dec 2008 12:55:43 -0800
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 13 Dec 2008 21:32:03 -0600
 
-mythtv (0.22.0~trunk19363-0ubuntu2) jaunty; urgency=low
+mythtv (0.21.0+fixes19136-0ubuntu2) jaunty; urgency=low
 
-  * removed arts support for qt3->qt4 transition
+  * Add 30_2.6.28_support.dpatch.  Fixes FTBFS when
+    working building against 2.6.28.
+  * debian/control:
+    - Drop references to ubuntu-mythtv-frontend
+    - Reorder build dep on lame so that apt-get build-dep
+      resolves correctly.
+  * Drop these files as they were only used by
+    ubuntu-mythtv-frontend:
+    - debian/background.xpm
+    - debian/dmrc
+    - debian/gdm.conf
+    - debian/mplayer-config
+    - debian/mythbuntu-gdm.conf
+    - debian/mythtv-xsession.desktop
+    - debian/openbox-menu.xml
+    - debian/startmythtv.sh
+    - debian/ubuntu-mythtv-frontend.postinst
+    - debian/ubuntu-mythtv-frontend.prerm
+  * debian/rules:
+    - Drop references to ubuntu-mythtv-frontend
+    - Install all sql files rather than a specific one
+    - Don't install dirs here.  Do that in specific files
+  * debian/session-settings:
+    - Drop some references to ubuntu-mythtv-frontend
+  * debian/mythtv_0.20.1.sql:
+    - Drop, we're at 0.21 now!
+  * debian/mythsql:
+    - Drop old unused script.
+  * debian/mythtv-backend.NEWS:
+    - Drop quite old NEWS file.  We're not updating it anyway.
+  * debian/debian/README.Debian:
+    - Drop.  The comments in here are pretty old and dated.
 
- -- Thomas Mashos <thomas@hermes>  Mon, 15 Dec 2008 10:51:28 -0800
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 13 Dec 2008 21:32:03 -0600
 
-mythtv (0.22.0~trunk19363-0ubuntu1) jaunty; urgency=low
+mythtv (0.21.0+fixes19136-0ubuntu1) jaunty; urgency=low
 
-  * SVN Bump
+  [ Thomas Mashos ]
+  * Updated posters dir to /var/lib/mythtv/posters
 
- -- Thomas Mashos <thomas@hermes>  Sun, 14 Dec 2008 16:01:03 -0800
+  [ Michael Haas ]
+  * New upstream snapshot.
+  * Added size restriction to frontend and backend logs (10M)
+    - (LP: #250776)
+  * debian/patches:
+    - Add 29_mythwelcome_fix.dpatch to prevent MythWelcome from quitting
+      spuriously (backports revision 18671 from trunk)
 
-mythtv (0.22.0~trunk19320-0ubuntu2) jaunty; urgency=low
+  [ Dustin Kirkland ]
+  * debian/mythtv-database.config: test the validity of the input mysql
+    passphrase, up to 5 times (LP: #243504)
 
-  * Trying libqt4-opengl-dev depencency
+  [ Mario Limonciello ]
+  * debian/mythtv-database.postinst:
+    - Clean up old code calls
+    - Adjust for changes to .config
+    - Make sure to clear root password
+  * debian/mythtv-common.config:
+    - Read mysql.txt before starting
+  * debian/mythtv-common.postinst:
+    - Clean up old file checks that are unnecessary.
 
- -- Thomas Mashos <thomas@hermes>  Wed, 10 Dec 2008 14:42:24 -0800
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 13 Dec 2008 18:39:01 -0600
 
-mythtv (0.22.0~trunk19320-0ubuntu1) intrepid; urgency=low
+mythtv (0.21.0+fixes18722-0ubuntu1) intrepid; urgency=low
 
-  * Updated SVN, build for intrepid
+  * Sync against release-0-21-fixes branch. Fixes:
+    - (LP: #260429)
+  * Update 24_fix_h264_frame_counting.dpatch to incorporate changeset
+    18542 from trunk <http://svn.mythtv.org/trac/changeset/18542>
+  * debian/patches/:
+    - drop 27_disable_deinterlacing_in_guide.dpatch because it's been
+      committed upstream
+    - add 28_fix_v4l.dpatch (LP: #259321)
+  * Add debian/mythtv-frontend.dirs back in (LP: #280792)
+  * Add kdesudo to list of graphical sudo providers in
+    debian/dialog_functions.sh to account for KDE 4 in Intrepid (LP: #274602)
 
- -- Thomas Mashos <thomas@hermes>  Wed, 10 Dec 2008 14:03:24 -0800
+ -- Michael Haas <laga@laga.ath.cx>  Wed, 15 Oct 2008 23:56:53 +0200
 
-mythtv (0.22.0~trunk19313-0ubuntu1) jaunty; urgency=low
+mythtv (0.21.0+fixes18379-0ubuntu1) intrepid; urgency=low
 
-  * Updated svn
+  * Sync against release-0-21-fixes branch:
+    - Fix inconsistent text in theme xml file (LP: #242000)
+  * Correct arguments for mythfrontend launching. (LP: #212604)
+  * Backport fix for slow guide (LP: #229949)
+  * debian/patches:
+    - 26_h264_ffmpeg_merge.dpatch: drop patch as it's been committed upstream
 
- -- Thomas Mashos <thomas@hermes>  Tue, 09 Dec 2008 22:18:27 -0800
+ -- Michael Haas <laga@laga.ath.cx>  Wed, 24 Sep 2008 00:57:01 +0200
 
-mythtv (0.22.0~trunk19301-0ubuntu5) jaunty; urgency=low
+mythtv (0.21.0+fixes18207-0ubuntu6) intrepid; urgency=low
 
-  * Fixed rules file
+  * debian/mythtv-backend.init: Add the 'status' action (LP: #251325).
 
- -- Thomas Mashos <thomas@hermes>  Tue, 09 Dec 2008 16:57:32 -0800
+ -- Dustin Kirkland <kirkland@ubuntu.com>  Wed, 03 Sep 2008 10:16:21 -0500
 
-mythtv (0.22.0~trunk19301-0ubuntu4) jaunty; urgency=low
+mythtv (0.21.0+fixes18207-0ubuntu5) intrepid; urgency=low
 
-  * Fixed  more dependency issues
+  [ Michael Haas ]
+  * Fix init script (LP: #263127)
 
- -- Thomas Mashos <thomas@hermes>  Tue, 09 Dec 2008 15:54:45 -0800
+  [ Mario Limonciello
+  * Don't crash on init script installation. (LP: #261866)
 
-mythtv (0.22.0~trunk19301-0ubuntu3) jaunty; urgency=low
+ -- Michael Haas <laga@moar>  Mon, 01 Sep 2008 21:04:13 +0200
 
-  * Fixed xserver-xorg-video-openchrome dependency
+mythtv (0.21.0+fixes18207-0ubuntu4) intrepid; urgency=low
 
- -- Thomas Mashos <thomas@hermes>  Tue, 09 Dec 2008 15:36:13 -0800
+  * Update 25_skiploop_option w/ upstream requested changes.
+  * debian/control:
+    - Modify previous change by a nonmaintainer to re-include adept-notifier 
+      as an option.  Dropping it breaks hardy builds, and this package is
+      very often backported.
+    - Add Vcs-Bzr fields to deter further uploads without commiting back
+      to the branch.
+    - Add homepage field.
 
-mythtv (0.22.0~trunk19301-0ubuntu2) jaunty; urgency=low
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 28 Aug 2008 15:59:11 -0500
 
-  * Fixed liblame dependency problem
+mythtv (0.21.0+fixes18207-0ubuntu3) intrepid; urgency=low
 
- -- Thomas Mashos <thomas@hermes>  Tue, 09 Dec 2008 15:15:57 -0800
+  * Recommends update-notifier-kde instead of adept-notifier
 
-mythtv (0.22.0~trunk19301-0ubuntu1) jaunty; urgency=low
+ -- Anthony Mercatante <tonio@ubuntu.com>  Thu, 28 Aug 2008 15:08:03 +0200
 
-  * Updated trunk build
+mythtv (0.21.0+fixes18207-0ubuntu2) intrepid; urgency=low
 
- -- Thomas Mashos <thomas@hermes>  Tue, 09 Dec 2008 13:39:34 -0800
+  * debian/control:
+    - Build depend on liblame-dev | libmp3lame-dev instead
+      since liblame-dev is gone for intrepid.
 
-mythtv (0.22.0~trunk17464-0ubuntu1) hardy; urgency=low
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 27 Aug 2008 17:29:49 -0500
 
-  * first trunk build for upcoming 0.22 
+mythtv (0.21.0+fixes18207-0ubuntu1) intrepid; urgency=low
 
- -- Michael Haas <laga@moar>  Thu, 12 Jun 2008 23:57:42 +0200
+  * New checkout of release-0-21-fixes branch.
+  * debian/patches:
+    - drop 17_pvr_350_tvout_fix.dpatch, 07_glx-procaddressARB-configure.dpatch
+      and 15_hue_fix.dpatch because these changes have been committed
+      upstream
+    - add 24_fix_h264_frame_counting.dpatch,
+      25_skiploop_option.dpatch and 26_h264_ffmpeg_merge.dpatch.
 
-mythtv (0.22.0~trunk17464-) hardy; urgency=low
+ -- Michael Haas <laga@laga.ath.cx>  Wed, 27 Aug 2008 23:16:52 +0200
 
-  * 0ubuntu1
+mythtv (0.21.0+fixes17416-0ubuntu2) intrepid; urgency=low
 
- -- Michael Haas <laga@moar>  Thu, 12 Jun 2008 23:57:38 +0200
+  * Build depend on xserver-xorg-video-openchrome or old libchrome*
+    packages (to not break building on earlier releases, but still allow
+    building on intrepid) (LP: #256540)
+  * Start mythfrontend.real from mythfrontend rather than another script
+    instance. (LP: #241015)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 16 Jul 2008 01:22:49 -0500
 
 mythtv (0.21.0+fixes17416-0ubuntu1) intrepid; urgency=low
 

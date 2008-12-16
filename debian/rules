@@ -140,14 +140,6 @@ install: build
 	dh_install -pmythtv-frontend debian/session-settings etc/mythtv
 	dh_install -pmythtv-backend debian/mythtv-setup.sh usr/share/mythtv
 	dh_install -pmythtv-common   debian/dialog_functions.sh usr/share/mythtv
-	dh_install -pubuntu-mythtv-frontend debian/startmythtv.sh usr/share/mythtv
-	dh_install -pubuntu-mythtv-frontend debian/mythtv-xsession.desktop usr/share/xsessions
-	dh_install -pubuntu-mythtv-frontend debian/dmrc etc/mythtv
-	dh_install -pubuntu-mythtv-frontend debian/mplayer-config etc/mythtv
-	dh_install -pubuntu-mythtv-frontend debian/background.xpm usr/share/mythtv
-	dh_install -pubuntu-mythtv-frontend debian/openbox-menu.xml etc/mythtv
-	dh_install -pubuntu-mythtv-frontend debian/gdm.conf etc/xdg/mythtv-ubuntu/gdm
-	dh_install -pubuntu-mythtv-frontend debian/mythbuntu-gdm.conf etc/xdg/mythtv-ubuntu/gdm
 	dh_install -pmythtv-common debian/mysql.txt.dist debian/myth-halt.sh debian/myth-reboot.sh debian/myth-hibernate.sh usr/share/mythtv
 
 	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/mythtv
@@ -170,7 +162,6 @@ install: build
 
 	dh_movefiles --sourcedir=debian/mythtv
 
-	dh_install -pmythtv-common debian/mythsql usr/share/mythtv
 	# perl bindings
 #	dh_install -plibmyth-perl usr/share/perl/*/MythTV*
 
@@ -199,14 +190,14 @@ install: build
 
 	dh_install -pmythtv-database debian/mythtv-reconfigure-required.update-notifier usr/share/mythtv
 	dh_install -pmythtv-database debian/mythtv.cnf etc/mysql/conf.d
-	dh_install -pmythtv-database debian/mythtv_0.21.0.sql usr/share/mythtv/sql
+	dh_install -pmythtv-database debian/*.sql usr/share/mythtv/sql
 # Build architecture-independent files here.
 # Pass -i to all debhelper commands in this target to reduce clutter.
 binary-indep: build install
 	dh_testdir -i
 	dh_testroot -i
 	dh_installdebconf -i
-	dh_installdocs -A README debian/README.Debian AUTHORS FAQ UPGRADING keys.txt
+	dh_installdocs -A README AUTHORS FAQ UPGRADING keys.txt
 	dh_installdocs -pmythtv-backend contrib/development/firewire_tester/README 
 	dh_installdocs -pmythtv-doc docs/mythtv-HOWTO*
 	dh_installexamples -pmythtv-doc contrib/config_files/*
@@ -227,12 +218,12 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir -a
 	dh_testroot -a
-	dh_installdocs -a -A README debian/README.Debian AUTHORS keys.txt FAQ UPGRADING
+	dh_installdocs -a -A README AUTHORS keys.txt FAQ UPGRADING
 	dh_installdebconf -a
 	dh_installexamples -a
 	dh_installmenu -a
 	dh_installlogrotate -a
-	dh_installinit -a -u'defaults 24 16'
+	dh_installinit -a -- defaults 24 16
 	dh_installcron -a
 	dh_installinfo -a
 	dh_installchangelogs  -a
@@ -242,7 +233,6 @@ binary-arch: build install
 	dh_fixperms -a
 	dh_makeshlibs -a -V -Xusr/lib/mythtv/filters
 	dh_installdeb -a
-#	dh_shlibdeps -a -ldebian/libmyth-0.19/usr/lib
 	dh_shlibdeps -a
 	dh_gencontrol -a
 	dh_md5sums -a

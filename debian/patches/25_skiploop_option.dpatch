@@ -1,0 +1,304 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 25_skiploop_option.dpatch by Michael Haas <laga@laga.ath.cx>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Add a checkbox to disable the deblocking loop filter for h.264 ffmpeg.
+## DP: Enable this checkbox to reduce CPU usage when playing h.264 content.
+## DP: Original patch by reidjr_at_lineone_net, updated by Robert Mcnamara 
+
+@DPATCH@
+
+===================================================================
+--- a/libs/libmythtv/avformatdecoder.cpp	(revision 16446)
++++ b/libs/libmythtv/avformatdecoder.cpp	(working copy)
+@@ -1487,6 +1487,7 @@
+                 vdp.SetInput(QSize(width, height));
+                 QString dec = vdp.GetDecoder();
+                 uint thread_count = vdp.GetMaxCPUs();
++                bool skip_loop_filter = vdp.IsSkipLoopEnabled();
+                 VERBOSE(VB_PLAYBACK, QString("Using %1 CPUs for decoding")
+                         .arg(ENABLE_THREADS ? thread_count : 1));
+
+@@ -1500,6 +1501,12 @@
+                     enc->thread_count = thread_count;
+                 }
+
++                if  (!skip_loop_filter)
++                {
++                    enc->skip_loop_filter = AVDISCARD_ALL;
++                }
++
++
+                 bool handled = false;
+ #ifdef USING_XVMC
+                 if (!using_null_videoout && mpeg_version(enc->codec_id))
+
+ 
+Index: libs/libmythtv/videodisplayprofile.h
+===================================================================
+--- a/libs/libmythtv/videodisplayprofile.h	(revision 16446)
++++ b/libs/libmythtv/videodisplayprofile.h	(working copy)
+@@ -84,6 +84,9 @@
+     uint GetMaxCPUs(void) const
+         { return GetPreference("pref_max_cpus").toUInt(); }
+ 
++    bool IsSkipLoopEnabled(void) const
++        { return GetPreference("pref_skiploop").toInt(); }
++    
+     QString GetVideoRenderer(void) const
+         { return GetPreference("pref_videorenderer"); }
+ 
+@@ -125,7 +128,7 @@
+         uint grpid, uint priority,
+         QString cmp0, uint width0, uint height0,
+         QString cmp1, uint width1, uint height1,
+-        QString decoder, uint max_cpus, QString videorenderer,
++        QString decoder, uint max_cpus, bool skiploop, QString videorenderer,
+         QString osdrenderer, bool osdfade,
+         QString deint0, QString deint1, QString filters);
+ 
+Index: libs/libmythtv/videodisplayprofile.cpp
+===================================================================
+--- a/libs/libmythtv/videodisplayprofile.cpp	(revision 16446)
++++ b/libs/libmythtv/videodisplayprofile.cpp	(working copy)
+@@ -170,6 +170,7 @@
+     QString cmp1      = Get("pref_cmp1");
+     QString decoder   = Get("pref_decoder");
+     uint    max_cpus  = Get("pref_max_cpus").toUInt();
++    bool    skiploop  = Get("pref_skiploop").toInt();
+     QString renderer  = Get("pref_videorenderer");
+     QString osd       = Get("pref_osdrenderer");
+     QString deint0    = Get("pref_deint0");
+@@ -177,9 +178,9 @@
+     QString filter    = Get("pref_filters");
+     bool    osdfade   = Get("pref_osdfade").toInt();
+ 
+-    QString str =  QString("cmp(%1%2) dec(%3) cpus(%4) rend(%5) ")
++    QString str =  QString("cmp(%1%2) dec(%3) cpus(%4) skiploop(%5) rend(%6) ")
+         .arg(cmp0).arg(QString(cmp1.isEmpty() ? "" : ",") + cmp1)
+-        .arg(decoder).arg(max_cpus).arg(renderer);
++        .arg(decoder).arg(max_cpus).arg((skiploop) ? "enabled" : "disabled").arg(renderer);
+     str += QString("osd(%1) osdfade(%2) deint(%3,%4) filt(%5)")
+         .arg(osd).arg((osdfade) ? "enabled" : "disabled")
+         .arg(deint0).arg(deint1).arg(filter);
+@@ -799,7 +800,7 @@
+     uint groupid, uint priority,
+     QString cmp0, uint width0, uint height0,
+     QString cmp1, uint width1, uint height1,
+-    QString decoder, uint max_cpus, QString videorenderer,
++    QString decoder, uint max_cpus, bool skiploop, QString videorenderer,
+     QString osdrenderer, bool osdfade,
+     QString deint0, QString deint1, QString filters)
+ {
+@@ -845,6 +846,9 @@
+     queryValue += "pref_max_cpus";
+     queryData  += QString::number(max_cpus);
+ 
++    queryValue += "pref_skiploop";
++    queryData  += (skiploop) ? "1" : "0";
++
+     queryValue += "pref_videorenderer";
+     queryData  += videorenderer;
+ 
+@@ -958,48 +962,48 @@
+     DeleteProfileGroup("CPU++", hostname);
+     uint groupid = CreateProfileGroup("CPU++", hostname);
+     CreateProfile(groupid, 1, ">", 0, 0, "", 0, 0,
+-                  "ffmpeg", 1, "xv-blit", "softblend", true,
++                  "ffmpeg", 1, true, "xv-blit", "softblend", true,
+                   "bobdeint", "linearblend", "");
+     CreateProfile(groupid, 2, ">", 0, 0, "", 0, 0,
+-                  "ffmpeg", 1, "quartz-blit", "softblend", true,
++                  "ffmpeg", 1, true, "quartz-blit", "softblend", true,	     
+                   "linearblend", "linearblend", "");
+ 
+     (void) QObject::tr("CPU+", "Sample: Hardware assist HD only");
+     DeleteProfileGroup("CPU+", hostname);
+     groupid = CreateProfileGroup("CPU+", hostname);
+     CreateProfile(groupid, 1, "<=", 720, 576, ">", 0, 0,
+-                  "ffmpeg", 1, "xv-blit", "softblend", true,
++                  "ffmpeg", 1, true, "xv-blit", "softblend", true,
+                   "bobdeint", "linearblend", "");
+     CreateProfile(groupid, 2, "<=", 1280, 720, ">", 720, 576,
+-                  "xvmc", 1, "xvmc-blit", "opengl", true,
++                  "xvmc", 1, true, "xvmc-blit", "opengl", true,
+                   "bobdeint", "onefield", "");
+     CreateProfile(groupid, 3, "<=", 1280, 720, ">", 720, 576,
+-                  "libmpeg2", 1, "xv-blit", "softblend", true,
++                  "libmpeg2", 1, true, "xv-blit", "softblend", true,
+                   "bobdeint", "onefield", "");
+     CreateProfile(groupid, 4, ">", 0, 0, "", 0, 0,
+-                  "xvmc", 1, "xvmc-blit", "ia44blend", false,
++                  "xvmc", 1, true, "xvmc-blit", "ia44blend", false,
+                   "bobdeint", "onefield", "");
+     CreateProfile(groupid, 5, ">", 0, 0, "", 0, 0,
+-                  "libmpeg2", 1, "xv-blit", "chromakey", false,
++                  "libmpeg2", 1, true, "xv-blit", "chromakey", false,
+                   "bobdeint", "onefield", "");
+ 
+     (void) QObject::tr("CPU--", "Sample: Hardware assist all");
+     DeleteProfileGroup("CPU--", hostname);
+     groupid = CreateProfileGroup("CPU--", hostname);
+     CreateProfile(groupid, 1, "<=", 720, 576, ">", 0, 0,
+-                  "ivtv", 1, "ivtv", "ivtv", true,
++                  "ivtv", 1, true, "ivtv", "ivtv", true,
+                   "none", "none", "");
+     CreateProfile(groupid, 2, "<=", 720, 576, ">", 0, 0,
+-                  "xvmc", 1, "xvmc-blit", "ia44blend", false,
++                  "xvmc", 1, true, "xvmc-blit", "ia44blend", false,
+                   "bobdeint", "onefield", "");
+     CreateProfile(groupid, 3, "<=", 1280, 720, ">", 720, 576,
+-                  "xvmc", 1, "xvmc-blit", "ia44blend", false,
++                  "xvmc", 1, true, "xvmc-blit", "ia44blend", false,
+                   "bobdeint", "onefield", "");
+     CreateProfile(groupid, 4, ">", 0, 0, "", 0, 0,
+-                  "xvmc", 1, "xvmc-blit", "ia44blend", false,
++                  "xvmc", 1, true, "xvmc-blit", "ia44blend", false,
+                   "bobdeint", "onefield", "");
+     CreateProfile(groupid, 5, ">", 0, 0, "", 0, 0,
+-                  "libmpeg2", 1, "xv-blit", "chromakey", false,
++                  "libmpeg2", 1, true, "xv-blit", "chromakey", false,
+                   "none", "none", "");
+ }
+ 
+@@ -1009,48 +1013,48 @@
+     DeleteProfileGroup("High Quality", hostname);
+     uint groupid = CreateProfileGroup("High Quality", hostname);
+     CreateProfile(groupid, 1, ">=", 1920, 1080, "", 0, 0,
+-                  "ffmpeg", 2, "xv-blit", "softblend", true,
++                  "ffmpeg", 2, true, "xv-blit", "softblend", true,
+                   "linearblend", "linearblend", "");
+     CreateProfile(groupid, 2, ">", 0, 0, "", 0, 0,
+-                  "ffmpeg", 1, "xv-blit", "softblend", true,
++                  "ffmpeg", 1, true, "xv-blit", "softblend", true,
+                   "yadifdoubleprocessdeint", "yadifdeint", "");
+     CreateProfile(groupid, 3, ">=", 1920, 1080, "", 0, 0,
+-                  "ffmpeg", 2, "quartz-blit", "softblend", true,
++                  "ffmpeg", 2, true, "quartz-blit", "softblend", true,
+                   "linearblend", "linearblend", "");
+     CreateProfile(groupid, 4, ">", 0, 0, "", 0, 0,
+-                  "ffmpeg", 1, "quartz-blit", "softblend", true,
++                  "ffmpeg", 1, true, "quartz-blit", "softblend", true,
+                   "yadifdoubleprocessdeint", "yadifdeint", "");
+ 
+     (void) QObject::tr("Normal", "Sample: average quality");
+     DeleteProfileGroup("Normal", hostname);
+     groupid = CreateProfileGroup("Normal", hostname);
+     CreateProfile(groupid, 1, ">=", 1280, 720, "", 0, 0,
+-                  "ffmpeg", 1, "xv-blit", "softblend", false,
++                  "ffmpeg", 1, true, "xv-blit", "softblend", false,
+                   "linearblend", "linearblend", "");
+     CreateProfile(groupid, 2, ">", 0, 0, "", 0, 0,
+-                  "ffmpeg", 1, "xv-blit", "softblend", true,
++                  "ffmpeg", 1, true, "xv-blit", "softblend", true,
+                   "greedyhdoubleprocessdeint", "kerneldeint", "");
+     CreateProfile(groupid, 3, ">=", 1280, 720, "", 0, 0,
+-                  "ffmpeg", 1, "quartz-blit", "softblend", false,
++                  "ffmpeg", 1, true, "quartz-blit", "softblend", false,
+                   "linearblend", "linearblend", "");
+     CreateProfile(groupid, 4, ">", 0, 0, "", 0, 0,
+-                  "ffmpeg", 1, "quartz-blit", "softblend", true,
++                  "ffmpeg", 1, true, "quartz-blit", "softblend", true,
+                   "greedyhdoubleprocessdeint", "kerneldeint", "");
+ 
+     (void) QObject::tr("Slim", "Sample: low CPU usage");
+     DeleteProfileGroup("Slim", hostname);
+     groupid = CreateProfileGroup("Slim", hostname);
+     CreateProfile(groupid, 1, ">=", 1280, 720, "", 0, 0,
+-                  "ffmpeg", 1, "xv-blit", "softblend", false,
++                  "ffmpeg", 1, true, "xv-blit", "softblend", false,
+                   "onefield", "onefield", "");
+     CreateProfile(groupid, 2, ">", 0, 0, "", 0, 0,
+-                  "ffmpeg", 1, "xv-blit", "softblend", true,
++                  "ffmpeg", 1, true, "xv-blit", "softblend", true,
+                   "linearblend", "linearblend", "");
+     CreateProfile(groupid, 3, ">=", 1280, 720, "", 0, 0,
+-                  "ffmpeg", 1, "quartz-blit", "softblend", false,
++                  "ffmpeg", 1, true, "quartz-blit", "softblend", false,
+                   "onefield", "onefield", "");
+     CreateProfile(groupid, 4, ">", 0, 0, "", 0, 0,
+-                  "ffmpeg", 1, "quartz-blit", "softblend", true,
++                  "ffmpeg", 1, true, "quartz-blit", "softblend", true,
+                   "linearblend", "linearblend", "");
+ }
+ 
+Index: programs/mythfrontend/globalsettings.cpp
+===================================================================
+--- a/programs/mythfrontend/globalsettings.cpp	(revision 16446)
++++ b/programs/mythfrontend/globalsettings.cpp	(working copy)
+@@ -846,6 +846,7 @@
+     height[1] = new TransSpinBoxSetting(0, 1088, 64, true);
+     decoder   = new TransComboBoxSetting();
+     max_cpus  = new TransSpinBoxSetting(1, ENABLE_THREADS ? 4 : 1, 1, true);
++    skiploop  = new TransCheckBoxSetting();
+     vidrend   = new TransComboBoxSetting();
+     osdrend   = new TransComboBoxSetting();
+     osdfade   = new TransCheckBoxSetting();
+@@ -877,6 +878,7 @@
+ 
+     decoder->setLabel(tr("Decoder"));
+     max_cpus->setLabel(tr("Max CPUs"));
++    skiploop->setLabel(tr("Loopfilter"));
+     vidrend->setLabel(tr("Video Renderer"));
+     osdrend->setLabel(tr("OSD Renderer"));
+     osdfade->setLabel(tr("OSD Fade"));
+@@ -894,6 +896,12 @@
+     filters->setHelpText(
+         QObject::tr("Example Custom filter list: 'ivtc,denoise3d'"));
+ 
++    skiploop->setHelpText(
++        tr("When unchecked the deblocking loopfilter will be disabled "
++           "for h264 decoding.") + "\n" +
++        tr("Disabling will significantly reduce the load on the CPU "
++           "when watching HD h264."));
++
+     osdfade->setHelpText(
+         tr("When unchecked the OSD will not fade away but instead "
+            "will disappear abruptly.") + "\n" +
+@@ -902,7 +910,7 @@
+ 
+     vid_row->addChild(decoder);
+     vid_row->addChild(max_cpus);
+-
++    vid_row->addChild(skiploop);
+     osd_row->addChild(vidrend);
+     osd_row->addChild(osdrend);
+     osd_row->addChild(osdfade);
+@@ -955,6 +963,7 @@
+ 
+     QString pdecoder  = item.Get("pref_decoder");
+     QString pmax_cpus = item.Get("pref_max_cpus");
++    QString pskiploop  = item.Get("pref_skiploop");
+     QString prenderer = item.Get("pref_videorenderer");
+     QString posd      = item.Get("pref_osdrenderer");
+     QString posdfade  = item.Get("pref_osdfade");
+@@ -982,6 +991,9 @@
+ 
+     if (!pmax_cpus.isEmpty())
+         max_cpus->setValue(pmax_cpus.toUInt());
++
++    skiploop->setValue((!pskiploop.isEmpty()) ? (bool) pskiploop.toInt() : true);
++
+     if (!prenderer.isEmpty())
+         vidrend->setValue(prenderer);
+     if (!posd.isEmpty())
+@@ -1015,6 +1027,7 @@
+ 
+     item.Set("pref_decoder",       decoder->getValue());
+     item.Set("pref_max_cpus",      max_cpus->getValue());
++    item.Set("pref_skiploop",       (skiploop->boolValue()) ? "1" : "0");
+     item.Set("pref_videorenderer", vidrend->getValue());
+     item.Set("pref_osdrenderer",   osdrend->getValue());
+     item.Set("pref_osdfade",       (osdfade->boolValue()) ? "1" : "0");
+Index: programs/mythfrontend/globalsettings.h
+===================================================================
+--- a/programs/mythfrontend/globalsettings.h	(revision 16446)
++++ b/programs/mythfrontend/globalsettings.h	(working copy)
+@@ -87,6 +87,7 @@
+     TransSpinBoxSetting  *height[2];
+     TransComboBoxSetting *decoder;
+     TransSpinBoxSetting  *max_cpus;
++    TransCheckBoxSetting *skiploop;
+     TransComboBoxSetting *vidrend;
+     TransComboBoxSetting *osdrend;
+     TransCheckBoxSetting *osdfade;

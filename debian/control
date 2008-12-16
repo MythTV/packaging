@@ -4,14 +4,17 @@ Priority: optional
 Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
 XSBC-Original-Maintainer: Christian Marillat <marillat@debian.org>
 Bugs: mailto:ubuntu-mythtv@lists.ubuntu.com
+Homepage: http://www.mythtv.org
 Standards-Version: 3.8.0
+Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~ubuntu-mythtv/mythtv/mythtv-trunk-022
+Vcs-Browser: http://bazaar.launchpad.net/~ubuntu-mythtv/mythtv-trunk-022
 Build-Conflicts: libmyth-0.20-dev,
                  libmyth-dev
 Build-Depends:  debhelper (>> 5.0.0),
                 dpatch,
                 ccache,
                 libqt4-dev,
-		libqt4-opengl-dev,
+                libqt4-opengl-dev,
                 libdvb-dev,
                 po-debconf,
                 texi2html,
@@ -32,13 +35,14 @@ Build-Depends:  debhelper (>> 5.0.0),
                 libjack0.100.0-dev | libjack-dev,
                 libfaad-dev | libfaad2-dev,
                 libfaac-dev,
-                libmp3lame-dev,
+                libmp3lame-dev | liblame-dev,
                 libvorbis-dev,
                 libdts-dev,
                 libx264-dev,
                 libxvidcore4-dev,
                 libfftw3-dev | fftw3-dev,
-                xserver-xorg-video-openchrome [i386 amd64],
+                xserver-xorg-video-openchrome [i386 amd64] | libchromexvmc1 [i386 amd64],
+                xserver-xorg-video-openchrome [i386 amd64] | libchromexvmcpro1 [i386 amd64]
 
 Package: mythtv
 Architecture: all
@@ -70,7 +74,6 @@ Description: A personal video recorder application (client and server)
  you should look into the metapackages available:
  mythtv-backend-master (backend with a local database)
  mythtv-backend (backend needing a remote database)
- ubuntu-mythtv-frontend
 
 Package: mythtv-common
 Architecture: all
@@ -99,7 +102,7 @@ Description: A personal video recorder application (documentation)
 Package: mythtv-database
 Architecture: all
 Depends: mythtv-common (= ${source:Version}), libdbd-mysql-perl, mysql-client, cron, ${misc:Depends}
-Recommends: update-notifier | adept-notifier
+Recommends: update-notifier | update-notifier-kde | adept-notifier
 Conflicts: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
 Replaces: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
 Description: A personal video recorder application (database)
@@ -226,17 +229,3 @@ Description: Metapackage to setup and configure a "Master Backend" profile of My
  be installed on the machine that will behave as the first (and possibly only)
  backend for the network.  Typically, this package will be installed on a server rather then a desktop.
  It makes no sense to install it on anything but the first backend machine on the network.
-
-Package: ubuntu-mythtv-frontend
-Architecture: all
-Section: multiverse/metapackages
-Depends: xorg, gsfonts-x11, mythbuntu-gdm-theme | feisty-gdm-themes | edgy-gdm-themes | gdm-themes , xterm, mythbuntu-artwork-usplash | usplash-theme-ubuntu | usplash, mythtv-frontend, openbox, feh, libgl1-mesa-glx, ntp | time-daemon | ntp-simple
-Pre-Depends: gdm
-Recommends: mytharchive, mythphone, mythgame, mythmusic, mythcontrols, mythflix, mythnews, mythweather, mythtv-themes, mythbrowser, mythgallery, mythvideo, mythstream
-Description: Metapackage to setup and configure a "Frontend" profile of MythTV.
- This package will install and configure all necessary packages for this machine
- to behave as a standalone Frontend for a mythtv network.  This package is intended
- to be installed after a backend has been configured on the network.  Also, this
- package is intended for usage on a standalone machine only running MythTV.  A machine already
- configured as a desktop should install mythtv-frontend instead.  Without a running and
- accessible backend, this package will not properly function.
