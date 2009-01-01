@@ -1,3 +1,10 @@
+mythtv (0.21.0+fixes19136-0ubuntu3) hardy; urgency=low
+
+  * Drop debian/patches/28_fix_v4l.dpatch because upstream fixed this properly
+    in r19250
+
+ -- Michael Haas <laga@laga.ath.cx>  Thu, 01 Jan 2009 13:54:02 +0100
+
 mythtv (0.21.0+fixes19136-0ubuntu2) jaunty; urgency=low
 
   * Add 30_2.6.28_support.dpatch.  Fixes FTBFS when

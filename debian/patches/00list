@@ -8,5 +8,4 @@
 16_hal_shutdown
 24_fix_h264_frame_counting
 25_skiploop_option
-28_fix_v4l
 30_2.6.28_support.dpatch
