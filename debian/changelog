@@ -1,13 +1,13 @@
-mythtv (0.21.0+fixes19136-0ubuntu3) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes19136-0ubuntu3) jaunty; urgency=low
 
   [ Michael Haas ]
-  * Drop debian/patches/28_fix_v4l.dpatch because upstream fixed this properly
-    in r19250.
+  * Drop debian/patches/28_fix_v4l.dpatch because upstream 
+    fixed this properly in r19250.
 
   [ Mario Limonciello ]
   * debian/mythtv-database.postinst:
     - Don't reset the backend IPs unless you
-      are loading a database (LP: #XXXXXX)
+      are loading a database
     - Pre-set mythbuntu theme.  If mythbuntu theme isn't
       around, G.A.N.T. gets loaded instead, so no expected
       regresssions.
@@ -17,10 +17,12 @@ mythtv (0.21.0+fixes19136-0ubuntu3) UNRELEASED; urgency=low
     - Check if mysql binary is around before repeatedly
       asking questions.
    - Check if localhost that mysqld is running.  If it's
-      not, then don't keep asking questions. (LP: #XXXXXXX)
+      not, then don't keep asking questions.
     - Pass on failed answer to postinst (don't reset)
   * debian/mythtv-common.config:
     - Display the password that is set, not just "value set"
+  * debian/mythtv-common.postinst:
+    - Only create a user if it doesn't already exist. (LP: #280974)
   * debian/rules:
     - Unset executable permissions on .sh and .d files in clean
       section. (LP: #311573)
@@ -42,7 +44,7 @@ mythtv (0.21.0+fixes19136-0ubuntu3) UNRELEASED; urgency=low
     - Cleanup files that upstream is forgetting to clean between builds.
       (LP: #311552)
 
- -- Michael Haas <laga@laga.ath.cx>  Thu, 01 Jan 2009 13:54:02 +0100
+ -- Mario Limonciello <mario_limonciello@dell.com>  Fri, 02 Jan 2009 14:28:58 -0600
 
 mythtv (0.21.0+fixes19136-0ubuntu2) jaunty; urgency=low
 
