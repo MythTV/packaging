@@ -1,7 +1,27 @@
-mythtv (0.21.0+fixes19136-0ubuntu3) hardy; urgency=low
+mythtv (0.21.0+fixes19136-0ubuntu3) UNRELEASED; urgency=low
 
+  [ Michael Haas ]
   * Drop debian/patches/28_fix_v4l.dpatch because upstream fixed this properly
-    in r19250
+    in r19250.
+
+  [ Mario Limonciello ]
+   * debian/mythtv-database.postinst:
+     - Don't reset the backend IPs unless you
+       are loading a database (LP: #XXXXXX)
+     - Pre-set mythbuntu theme.  If mythbuntu theme isn't
+       around, G.A.N.T. gets loaded instead, so no expected
+       regresssions.
+   * debian/mythtv-database.config:
+     - Try to get answer from mysql-server config if possible
+       this avoids asking admin pass question twice.
+     - Check if mysql binary is around before repeatedly
+       asking questions.
+     - Check if localhost that mysqld is running.  If it's
+       not, then don't keep asking questions. (LP: #XXXXXXX)
+     - Pass on failed answer to postinst (don't reset)
+   * debian/mythtv-common.config:
+     - Display the password that is set, not just "value set"
+
 
  -- Michael Haas <laga@laga.ath.cx>  Thu, 01 Jan 2009 13:54:02 +0100
 
