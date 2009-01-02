@@ -228,7 +228,7 @@ binary-arch: build install
 	dh_installexamples -a
 	dh_installmenu -a
 	dh_installlogrotate -a
-	dh_installinit -a -- defaults 24 16
+	dh_installinit -a -r -- defaults 24 16
 	dh_installcron -a
 	dh_installinfo -a
 	dh_installchangelogs  -a

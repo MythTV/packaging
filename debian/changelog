@@ -24,6 +24,11 @@ mythtv (0.21.0+fixes19136-0ubuntu3) UNRELEASED; urgency=low
   * debian/rules:
     - Unset executable permissions on .sh and .d files in clean
       section. (LP: #311573)
+    - Don't restart mythtv-backend on upgrade of packages.
+      Unexpected behavior might happen depending on what other packages
+      are installed at that time and what will still be installed.
+      The common use case for a problem here is dist-upgrades.
+      (LP: #298914)
   * Store .sh and .d files as non executable in bzr to better reflect
     flat packaging as seen in the archive.
   * debian/patches/24_fix_h264_frame_counting.dpatch:
