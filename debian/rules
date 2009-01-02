@@ -123,10 +123,13 @@ clean:
 	debian/rules unpatch
 
 	dh_clean Makefile config.log setup/Makefile programs/mythbackend/version.cpp \
-	programs/mythfrontend/version.cpp
+	programs/mythfrontend/version.cpp 
+
+	# complete the clean-up + 
+	dh_clean libs/libmythupnp/version.cpp bindings/perl/Makefile.perl.old 
+	rm -rf bindings/python/build
 
 	chmod a-x debian/*.sh debian/*.d
-
 install: build
 	dh_testdir
 	dh_testroot
