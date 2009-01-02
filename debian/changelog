@@ -21,7 +21,11 @@ mythtv (0.21.0+fixes19136-0ubuntu3) UNRELEASED; urgency=low
      - Pass on failed answer to postinst (don't reset)
    * debian/mythtv-common.config:
      - Display the password that is set, not just "value set"
-
+   * debian/rules:
+     - Unset executable permissions on .sh and .d files in clean
+       section. (LP: #311573)
+   * Store .sh and .d files as non executable in bzr to better reflect
+     flat packaging as seen in the archive.
 
  -- Michael Haas <laga@laga.ath.cx>  Thu, 01 Jan 2009 13:54:02 +0100
 

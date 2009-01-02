@@ -125,6 +125,8 @@ clean:
 	dh_clean Makefile config.log setup/Makefile programs/mythbackend/version.cpp \
 	programs/mythfrontend/version.cpp
 
+	chmod a-x debian/*.sh debian/*.d
+
 install: build
 	dh_testdir
 	dh_testroot
