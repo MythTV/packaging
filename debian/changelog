@@ -26,6 +26,8 @@ mythtv (0.21.0+fixes19136-0ubuntu3) UNRELEASED; urgency=low
        section. (LP: #311573)
    * Store .sh and .d files as non executable in bzr to better reflect
      flat packaging as seen in the archive.
+   * debian/patches/24_fix_h264_frame_counting.dpatch:
+     - Remove .orig file from the patch as it's unnecessary (LP: #311549)
 
  -- Michael Haas <laga@laga.ath.cx>  Thu, 01 Jan 2009 13:54:02 +0100
 
