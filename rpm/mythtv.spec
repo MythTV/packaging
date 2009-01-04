@@ -66,7 +66,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r19390
+%define _svnrev r19556
 %define branch trunk
 
 #
@@ -167,7 +167,7 @@ BuildRequires:  qt4-devel
 
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
-BuildRequires:  nasm, yasm-devel
+BuildRequires:  nasm
 
 # X, and Xv video support
 BuildRequires:  libXmu-devel
@@ -185,7 +185,6 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-BuildRequires:  a52dec-devel
 BuildRequires:  faac-devel
 BuildRequires:  faad2-devel
 BuildRequires:  fftw2-devel < 3
@@ -194,7 +193,6 @@ BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  gsm-devel
 BuildRequires:  lame-devel
 BuildRequires:  libdca-devel
-# libdvdcss will be dynamically loaded if installed
 #BuildRequires:  libdvdcss-devel >= 1.2.7
 BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
@@ -400,7 +398,6 @@ Requires:  xorg-x11-drv-openchrome-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-Requires:  a52dec-devel
 Requires:  faac-devel
 Requires:  faad2-devel
 Requires:  fftw2-devel < 3
@@ -775,6 +772,7 @@ Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  mplayer
 Requires:  transcode >= 0.6.8
+Requires:  python-imdb
 
 Provides:  mythdvd = %{version}-%{release}
 Obsoletes: mythdvd < %{version}-%{release}
@@ -959,7 +957,6 @@ cd mythtv-%{version}
     --enable-dvb                                \
     --enable-libfaac                            \
     --enable-libfaad --enable-libfaad --enable-libfaadbin \
-    --enable-liba52                             \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
@@ -1271,7 +1268,6 @@ fi
 %files common
 %defattr(-,root,root,-)
 %dir %{_sysconfdir}/mythtv
-%dir %{_datadir}/mythtv
 %config(noreplace) %{_sysconfdir}/mythtv/mysql.txt
 %config(noreplace) %{_sysconfdir}/mythtv/config.xml
 %{_bindir}/mythcommflag
@@ -1329,9 +1325,7 @@ fi
 %{_bindir}/mythlcdserver
 %{_bindir}/mythshutdown
 %{_bindir}/mythwelcome
-%dir %{_libdir}/mythtv
-%dir %{_libdir}/mythtv/filters
-%{_libdir}/mythtv/filters/*
+%{_libdir}/mythtv/filters
 %dir %{_libdir}/mythtv/plugins
 %{_datadir}/mythtv/*.ttf
 %dir %{_datadir}/mythtv/i18n
@@ -1353,7 +1347,6 @@ fi
 %{_includedir}/*
 %{_libdir}/*.so
 %exclude %{_libdir}/*.a
-%dir %{_datadir}/mythtv/build
 %{_datadir}/mythtv/build/settings.pro
 
 %if %{with_perl}
@@ -1362,8 +1355,6 @@ fi
 %{perl_vendorlib}/MythTV.pm
 %dir %{perl_vendorlib}/MythTV
 %{perl_vendorlib}/MythTV/*.pm
-%dir %{perl_vendorlib}/IO/Socket
-%dir %{perl_vendorlib}/IO/Socket/INET
 %{perl_vendorlib}/IO/Socket/INET/MythTV.pm
 %exclude %{perl_vendorarch}/auto/MythTV/.packlist
 %endif
@@ -1392,7 +1383,7 @@ fi
 %doc mythplugins-%{version}/mytharchive/TODO
 %{_bindir}/mytharchivehelper
 %{_libdir}/mythtv/plugins/libmytharchive.so
-#{_datadir}/mythtv/archiveformat.xml
+%{_datadir}/mythtv/archiveformat.xml
 %{_datadir}/mythtv/archivemenu.xml
 %{_datadir}/mythtv/archiveutils.xml
 %{_datadir}/mythtv/mytharchive
@@ -1558,10 +1549,6 @@ fi
 ################################################################################
 
 %changelog
-* Wed Dec 17 2008 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn
-- Drop BR: on libdvdcss, it will be dynamically loaded if its installed
-- Clean up some file/directory ownership issues
-- Add BR: yasm-devel to enable yasm-specific enhancements
 
 * Sat Nov 01 2008 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
 - Add a --without plugins option to disable all plugin builds
