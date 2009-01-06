@@ -130,7 +130,7 @@
 
 # Build MythTV
     rpmbuild -bb "$ABSPATH"/mythtv.spec \
-        --define "_sourcedir $ABSPATH/mythtv"
+        --define "_sourcedir $ABSPATH/mythtv" \
         --with debug            \
         --without mytharchive   \
         --without mythgallery   \
