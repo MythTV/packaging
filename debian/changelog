@@ -1,4 +1,4 @@
-mythtv (0.22.0~trunk19374-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.21.0+trunk19374-0ubuntu1) UNRELEASED; urgency=low
 
   [ Thomas Mashos ]
   * Remove arts support
