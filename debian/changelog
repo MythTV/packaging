@@ -1,10 +1,14 @@
-mythtv (0.21.0+trunk19592-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.21.0+trunk19600-0ubuntu0) UNRELEASED; urgency=low
 
   [ Thomas Mashos ]
   * Remove arts support
   * Add libqt4-opengl-dev as build dep
 
- -- Mario Limonciello <superm1@ubuntu.com>  Sat, 13 Dec 2008 21:32:03 -0600
+  [ Mario Limonciello ]
+  * debian/control: Build depend on nvidia 180
+  * debian/rules: enable vdpau
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Jan 2009 01:02:49 -0600
 
 mythtv (0.21.0+fixes19136-0ubuntu2) jaunty; urgency=low
 
