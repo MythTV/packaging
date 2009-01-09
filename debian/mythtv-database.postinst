@@ -20,8 +20,21 @@ prepare_database() {
        EXT3=1
     fi
 
-    cat $MYSQL | sed -e "s/OLDHOSTNAME/$LOCALHOSTNAME/g; s/127.0.0.1/$NEWIP/g; s/Slowly','0/Slowly','$EXT3/g;" |\
+    #Preload tables and default values
+    cat $MYSQL | sed -e "s/G.A.N.T/Mythbuntu-8.04/g; s/OLDHOSTNAME/$LOCALHOSTNAME/g; s/127.0.0.1/$NEWIP/g; s/Slowly','0/Slowly','$EXT3/g;" |\
         mysql -h $hostname -u $admin_username $admin_password $database
+
+    #Set up local IP and hostname
+    if ! echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'BackendServerIP' AND settings.hostname = '$LOCALHOSTNAME';" | \
+        mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
+        fail_database
+    fi
+
+    #Set up master IP and hostname
+    if ! echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'MasterServerIP';" | \
+        mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
+        fail_database
+    fi
 }
 
 #Used to fail at some point but not abort postinst
@@ -40,6 +53,17 @@ fail_database() {
     exit 0
 }
 
+#ask the root password a few times if it's still not working
+ask_root_pw() {
+    db_input high mythtv/mysql_admin_password || true
+    db_go
+    db_get mythtv/mysql_admin_password
+    admin_password="$RET"
+    if [ "$admin_password" != "" ]; then
+        admin_password="-p$admin_password"
+    fi
+}
+
 update_database() {
     #Set up privs for mythtv@localhost
     if ! echo "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@localhost IDENTIFIED BY '$mythtv_password';" | \
@@ -49,18 +73,6 @@ update_database() {
 
     #Set up privs for mythtv@network
     if ! echo "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@'%' IDENTIFIED BY '$mythtv_password';" | \
-        mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
-        fail_database
-    fi
-    
-    #Set up local IP and hostname
-    if ! echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'BackendServerIP' AND settings.hostname = '$LOCALHOSTNAME';" | \
-        mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
-        fail_database
-    fi
-
-    #Set up master IP and hostname
-    if ! echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'MasterServerIP';" | \
         mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
         fail_database
     fi
@@ -116,19 +128,24 @@ case "$1" in
     #Check for existing database
     if ! echo "SELECT NULL;" | mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
         #No existing database, create a database
-        if ! echo "CREATE DATABASE $database;" | mysql --host="$hostname" --user="$admin_username" $admin_password >/dev/null 2>&1; then
-            fail_database
-        fi
+        i=1
+        while ! echo "CREATE DATABASE $database;" | mysql --host="$hostname" --user="$admin_username" $admin_password >/dev/null 2>&1; do
+            if [ $i -ge 5 ]; then
+                fail_database
+            fi
+            ask_root_pw
+            i=$(($i+1))
+        done
     fi
 
     #Preload tables
     if ! echo "SELECT value FROM settings LIMIT 1, 1;" | mysql --host="$hostname" --user="$admin_username" $admin_password "$database" >/dev/null 2>&1; then
         prepare_database
     fi
-    
-    #Update IP and permissions
+
+    #Update Permissions
     update_database
-    
+
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

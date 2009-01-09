@@ -4,8 +4,11 @@ case "$1" in
     configure)
     . /usr/share/debconf/confmodule
 
-    adduser --quiet --system --group --disabled-password --system \
+    #only create a user if they don't already exist
+    if ! getent passwd mythtv 1>/dev/null; then
+        adduser --quiet --system --group --disabled-password --system \
             --shell /bin/sh mythtv
+    fi
     adduser --quiet mythtv video
     adduser --quiet mythtv audio
     adduser --quiet mythtv cdrom

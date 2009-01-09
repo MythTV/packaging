@@ -10,6 +10,72 @@ mythtv (0.21.0+trunk19600-0ubuntu0) UNRELEASED; urgency=low
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Jan 2009 01:02:49 -0600
 
+mythtv (0.21.0+fixes19556-0ubuntu2) jaunty; urgency=low
+
+  * Re-upload last version with proper pull from bzr.
+    For some reason a lot of things got were missing
+    due to a broken merge.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 08 Jan 2009 22:31:26 -0600
+
+mythtv (0.21.0+fixes19556-0ubuntu1) jaunty; urgency=low
+
+  * New upstream fixes snapshot.
+    - Provides some UPNP fixes.
+  * debian/control:
+    - Promote pwgen to pre-depends for mythtv-common
+      so that it can be used in the .config.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 08 Jan 2009 21:55:34 -0600
+
+mythtv (0.21.0+fixes19136-0ubuntu3) jaunty; urgency=low
+
+  [ Michael Haas ]
+  * Drop debian/patches/28_fix_v4l.dpatch because upstream 
+    fixed this properly in r19250.
+
+  [ Mario Limonciello ]
+  * debian/mythtv-database.postinst:
+    - Don't reset the backend IPs unless you
+      are loading a database
+    - Pre-set mythbuntu theme.  If mythbuntu theme isn't
+      around, G.A.N.T. gets loaded instead, so no expected
+      regresssions.
+  * debian/mythtv-database.config:
+    - Try to get answer from mysql-server config if possible
+      this avoids asking admin pass question twice.
+    - Check if mysql binary is around before repeatedly
+      asking questions.
+   - Check if localhost that mysqld is running.  If it's
+      not, then don't keep asking questions.
+    - Pass on failed answer to postinst (don't reset)
+  * debian/mythtv-common.config:
+    - Display the password that is set, not just "value set"
+  * debian/mythtv-common.postinst:
+    - Only create a user if it doesn't already exist. (LP: #280974)
+  * debian/rules:
+    - Unset executable permissions on .sh and .d files in clean
+      section. (LP: #311573)
+    - Don't restart mythtv-backend on upgrade of packages.
+      Unexpected behavior might happen depending on what other packages
+      are installed at that time and what will still be installed.
+      The common use case for a problem here is dist-upgrades.
+      (LP: #298914)
+  * Store .sh and .d files as non executable in bzr to better reflect
+    flat packaging as seen in the archive.
+  * debian/patches/24_fix_h264_frame_counting.dpatch:
+    - Remove .orig file from the patch as it's unnecessary (LP: #311549)
+  * debian/mythtv-backend.postinst:
+    - If we are mounted on NFS, changing permissions will fail.  Don't
+      fail the postinst in this case. (LP: #299352)
+
+  [ TJ ]
+  * debian/rules:
+    - Cleanup files that upstream is forgetting to clean between builds.
+      (LP: #311552)
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Fri, 02 Jan 2009 14:28:58 -0600
+
 mythtv (0.21.0+fixes19136-0ubuntu2) jaunty; urgency=low
 
   * Add 30_2.6.28_support.dpatch.  Fixes FTBFS when
