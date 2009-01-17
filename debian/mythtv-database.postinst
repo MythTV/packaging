@@ -154,6 +154,7 @@ case "$1" in
     *)
     echo "postinst called with unknown argument \`$1'" >&2
     db_set mythtv/mysql_admin_password ""
+    db_set mythtv/mysql_mythtv_password ""
     exit 1
     ;;
 esac
@@ -161,4 +162,5 @@ esac
 #DEBHELPER#
 
 db_set mythtv/mysql_admin_password ""
+db_set mythtv/mysql_mythtv_password ""
 exit 0
