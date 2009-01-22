@@ -39,7 +39,6 @@
 #
 # --without mytharchive
 # --without mythbrowser
-# --without mythcontrols
 # --without mythflix
 # --without mythgallery
 # --without mythgame
@@ -66,7 +65,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r19556
+%define _svnrev r19778
 %define branch trunk
 
 #
@@ -112,7 +111,6 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
 %define with_mytharchive    %{?_without_mytharchive:    0} %{!?_without_mytharchive:     1}
 %define with_mythbrowser    %{?_without_mythbrowser:    0} %{!?_without_mythbrowser:     1}
-%define with_mythcontrols   %{?_without_mythcontrols:   0} %{!?_without_mythcontrols:    1}
 %define with_mythflix       %{?_without_mythflix:       0} %{!?_without_mythflix:        1}
 %define with_mythgallery    %{?_without_mythgallery:    0} %{!?_without_mythgallery:     1}
 %define with_mythgame       %{?_without_mythgame:       0} %{!?_without_mythgame:        1}
@@ -583,7 +581,6 @@ Requires:  mythgame       = %{version}-%{release}
 Requires:  mythnews       = %{version}-%{release}
 Requires:  mythbrowser    = %{version}-%{release}
 Requires:  mythphone      = %{version}-%{release}
-Requires:  mythcontrols   = %{version}-%{release}
 Requires:  mythflix       = %{version}-%{release}
 Requires:  mytharchive    = %{version}-%{release}
 Requires:  mythzoneminder = %{version}-%{release}
@@ -635,18 +632,6 @@ navigation (right mouse opens and clos es the popup menu).
 
 MythBrowser also contains a BookmarkManager to manage the website
 links in a simple mythplugin.
-
-%endif
-################################################################################
-%if %{with_mythcontrols}
-
-%package -n mythcontrols
-Summary:   A key bindings editor for MythTV
-Group:     Applications/Multimedia
-Requires:  mythtv-frontend-api = %{mythfeapiver}
-
-%description -n mythcontrols
-MythControls is a key bindings editor for MythTV.
 
 %endif
 ################################################################################
@@ -1044,11 +1029,6 @@ cd mythplugins-%{version}
     %else
         --disable-mythbrowser \
     %endif
-    %if %{with_mythcontrols}
-        --enable-mythcontrols \
-    %else
-        --disable-mythcontrols \
-    %endif
     %if %{with_mythflix}
         --enable-mythflix \
     %else
@@ -1401,17 +1381,6 @@ fi
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
 %endif
 
-%if %{with_mythcontrols}
-%files -n mythcontrols
-%defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythcontrols/AUTHORS
-%doc mythplugins-%{version}/mythcontrols/COPYING
-%doc mythplugins-%{version}/mythcontrols/README
-%doc mythplugins-%{version}/mythcontrols/TODO
-%{_libdir}/mythtv/plugins/libmythcontrols.so
-%{_datadir}/mythtv/i18n/mythcontrols_*.qm
-%endif
-
 %if %{with_mythflix}
 %files -n mythflix
 %defattr(-,root,root,-)
@@ -1549,6 +1518,9 @@ fi
 ################################################################################
 
 %changelog
+
+* Wed Jan 21 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
+- Remove mythcontrols, which no longer exists
 
 * Sat Nov 01 2008 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
 - Add a --without plugins option to disable all plugin builds

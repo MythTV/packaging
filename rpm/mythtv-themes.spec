@@ -17,7 +17,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r19556
+%define _svnrev r19708
 %define branch trunk
 
 #
