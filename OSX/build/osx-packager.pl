@@ -244,11 +244,8 @@ our %depend = (
   
   'exif' =>
   {
-    'url'  => "$sourceforge/sourceforge/libexif/libexif-0.6.13.tar.bz2",
-    'conf' => [ '--disable-nls' ],
-    'post-conf' => 'echo "install-apidocs:
-install-apidocs-internals:
-" >> doc/Makefile.in'
+    'url'  => "$sourceforge/sourceforge/libexif/libexif-0.6.17.tar.bz2",
+    'conf' => [ '--disable-docs' ]
   }
 );
 
