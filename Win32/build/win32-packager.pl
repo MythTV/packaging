@@ -475,25 +475,25 @@ push @{$expect},
              'MySQL-5.1/mysql-essential-5.1.30-win32.msi',
   comment => 'fetch mysql binaries - this is a big download(23MB) '.
              'so it might take a while' ],
-[ file    => "c:/Program Files/MySQL/MySQL Server 5.0/bin/libmySQL.dll",
+[ file    => "c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll",
   exec    => $dossources.'mysql-essential-5.1.30-win32.msi INSTALLLEVEL=2',
   comment => 'Install mysql - be sure to choose to do a "COMPLETE" install. '.
              'You should also choose NOT to "configure the server now" ' ],
 
 # after mysql install 
 [ filesame => [$mingw.'bin/libmySQL.dll',
-               'c:/Program Files/MySQL/MySQL Server 5.0/bin/libmySQL.dll'],  
+               'c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll'],  
   copy     => [''=>'',
   comment  => 'post-mysql-install'] ],
 [ filesame => [$mingw.'lib/libmySQL.dll',
-               'c:/Program Files/MySQL/MySQL Server 5.0/bin/libmySQL.dll'],  
+               'c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll'],  
   copy     => [''=>'',
   comment  => 'post-mysql-install'] ],
 [ filesame => [$mingw.'lib/libmysql.lib',
-               'c:/Program Files/MySQL/MySQL Server 5.0/lib/opt/libmysql.lib'],
+               'c:/Program Files/MySQL/MySQL Server 5.1/lib/opt/libmysql.lib'],
   copy     => [''=>''] ],
 [ file     => $mingw.'include/mysql.h'  ,   
-  exec     => 'copy /Y "c:\Program Files\MySQL\MySQL Server 5.0\include\*" '.
+  exec     => 'copy /Y "c:\Program Files\MySQL\MySQL Server 5.1\include\*" '.
               $dosmingw."include" ],
   
   
@@ -1896,7 +1896,7 @@ push @{$expect},
 ;
 
  
-#execute and capture output: C:\Program Files\MySQL\MySQL Server 5.0\bin\
+#execute and capture output: C:\Program Files\MySQL\MySQL Server 5.1\bin\
 #                            mysqlshow.exe -u mythtv --password=mythtv
 # example response:
 # mysqlshow.exe: Can't connect to MySQL server on 'localhost' (10061)
@@ -1908,7 +1908,7 @@ push @{$expect},
 [ grep   => ['SERVICE_NAME',$mythtv.'testmysqlsrv.bat'],
   exec   => ['sc start mysql','nocheck']],
 [ grep   => ['does not exist',$mythtv.'testmysqlsrv.bat'],
-  exec   => ['C:\Program Files\MySQL\MySQL Server 5.0\bin\MySQLd-nt.exe'.
+  exec   => ['C:\Program Files\MySQL\MySQL Server 5.1\bin\MySQLd-nt.exe'.
              ' --standalone  -console','nocheck']],
 
  
@@ -1918,7 +1918,7 @@ push @{$expect},
 echo testing connection to a local mysql server...
 sleep 5
 del '.$dosmythtv.'_mysqlshow_err.txt
-"C:\Program Files\MySQL\MySQL Server 5.0\bin\mysqlshow.exe" -u mythtv --password=mythtv 2> '.$dosmythtv.'_mysqlshow_err.txt  > '.$dosmythtv.'_mysqlshow_out.txt 
+"C:\Program Files\MySQL\MySQL Server 5.1\bin\mysqlshow.exe" -u mythtv --password=mythtv 2> '.$dosmythtv.'_mysqlshow_err.txt  > '.$dosmythtv.'_mysqlshow_out.txt 
 type '.$dosmythtv.'_mysqlshow_out.txt >> '.$dosmythtv.'_mysqlshow_err.txt 
 del '.$dosmythtv.'_mysqlshow_out.txt
 sleep 1
@@ -1936,7 +1936,7 @@ sleep 1
 # was there, there's no need to reconfigure the server!
 [ grep    => ['(\+--------------------\+|Access denied for user)',
               $mythtv.'_mysqlshow_err.txt'], 
-  exec    => ['C:\Program Files\MySQL\MySQL Server 5.0\bin\MySQLd-nt.exe '.
+  exec    => ['C:\Program Files\MySQL\MySQL Server 5.1\bin\MySQLd-nt.exe '.
               '--standalone  -console', 'nocheck'], 
   comment => 'See if we couldnt connect to a local mysql server. '.
              'Please re-configure the MySQL server to start as a service.'],
@@ -1964,7 +1964,7 @@ echo REPLACE INTO user VALUES ('localhost','mythtv', PASSWORD('mythtv'),'Y','Y',
 echo INSERT IGNORE INTO user VALUES ('\%\%','mythtv', PASSWORD('mythtv'),'Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','','','','',0,0,0,0); >>resetmythtv.sql
 echo REPLACE INTO user VALUES ('\%\%','mythtv', PASSWORD('mythtv'),'Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','','','','',0,0,0,0); >>resetmythtv.sql
 echo trying to reset mythtv/mythtv passwords:
-\"C:\\Program Files\\MySQL\\MySQL Server 5.0\\bin\\mysqld-nt.exe\" --no-defaults --bind-address=127.0.0.1 --bootstrap --console --skip-grant-tables --skip-innodb --standalone <resetmythtv.sql
+\"C:\\Program Files\\MySQL\\MySQL Server 5.1\\bin\\mysqld-nt.exe\" --no-defaults --bind-address=127.0.0.1 --bootstrap --console --skip-grant-tables --skip-innodb --standalone <resetmythtv.sql
 del resetmythtv.sql
 echo trying to re-start mysql
 rem net stop MySQL
@@ -2000,7 +2000,7 @@ echo.
 # instantly reflect in the .txt file we are looking at:
 [ grep    => ['mythconverg',$mythtv.'_mysqlshow_err.txt'], 
   exec    => [ 'echo create database mythconverg;'.
-               ' | "C:\Program Files\MySQL\MySQL Server 5.0\bin\mysql.exe" '.
+               ' | "C:\Program Files\MySQL\MySQL Server 5.1\bin\mysql.exe" '.
                ' -u mythtv --password=mythtv','nocheck'], 
   comment => 'does the mythconverg database exist? (and can this user see it?)'
 ],
