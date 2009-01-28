@@ -566,26 +566,26 @@ push @{$expect},
 
 #[ pause => 'check  patch.... press [enter] to continue !'],
 
-## apply stdlib.h patch
-#[ file    => $mingw.'include/stdlib_h.patch', 
-#  write   => [$mingw.'include/stdlib_h.patch',
-#'--- include/stdlib.h.org	Thu Dec  4 11:11:40 2008
-#+++ include/stdlib.h	Thu Dec  4 11:12:46 2008
-#@@ -314,7 +314,7 @@
-# #else
-# static
-# #endif /* Not __cplusplus */
-#-inline double __cdecl __MINGW_NOTHROW strtod (const char* __restrict__ __nptr, char** __restrict__ __endptr)
-#+__inline__ double __cdecl __MINGW_NOTHROW strtod (const char* __restrict__ __nptr, char** __restrict__ __endptr)
-# { return __strtod(__nptr, __endptr); }
-# float __cdecl __MINGW_NOTHROW strtof (const char * __restrict__, char ** __restrict__);
-# long double __cdecl __MINGW_NOTHROW strtold (const char * __restrict__, char ** __restrict__);
-#' ],comment => 'write the patch for the the stdlib.h file'],
-## apply it!?
-#[ grep    => ['__inline__ double __cdecl __MINGW_NOTHROW strtod ',$mingw.'include/stdlib.h'], 
-#  shell   => ["cd /mingw/include","patch -p1 < stdlib_h.patch"],
-#  comment => 'Apply sspi.h patch file, if not already applied....' ],
-#
+# apply stdlib.h patch
+[ file    => $mingw.'include/stdlib_h.patch', 
+  write   => [$mingw.'include/stdlib_h.patch',
+'--- include/stdlib.h.org	Thu Dec  4 11:11:40 2008
++++ include/stdlib.h	Thu Dec  4 11:12:46 2008
+@@ -314,7 +314,7 @@
+ #else
+ static
+ #endif /* Not __cplusplus */
+-inline double __cdecl __MINGW_NOTHROW strtod (const char* __restrict__ __nptr, char** __restrict__ __endptr)
++__inline__ double __cdecl __MINGW_NOTHROW strtod (const char* __restrict__ __nptr, char** __restrict__ __endptr)
+ { return __strtod(__nptr, __endptr); }
+ float __cdecl __MINGW_NOTHROW strtof (const char * __restrict__, char ** __restrict__);
+ long double __cdecl __MINGW_NOTHROW strtold (const char * __restrict__, char ** __restrict__);
+' ],comment => 'write the patch for the the stdlib.h file'],
+# apply it!?
+[ grep    => ['__inline__ double __cdecl __MINGW_NOTHROW strtod ',$mingw.'include/stdlib.h'], 
+  shell   => ["cd /mingw/include","patch -p1 < stdlib_h.patch"],
+  comment => 'Apply stdlib.h patch file, if not already applied....' ],
+
 #[ pause => 'check  patch.... press [enter] to continue !'],
 
 # fetch it
