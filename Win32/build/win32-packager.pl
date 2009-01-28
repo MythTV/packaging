@@ -521,12 +521,12 @@ push @{$expect},
   write   => [$mingw.'include/mysql___h.patch',
 '--- mysql.h_orig	Fri Jan  4 19:35:33 2008
 +++ mysql.h	Tue Jan  8 14:48:36 2008
-@@ -41,11 +41,9 @@
+@@ -45,11 +45,9 @@
 
  #ifndef _global_h				/* If not standard header */
  #include <sys/types.h>
 -#ifdef __LCC__
- #include <winsock.h>				/* For windows */
+ #include <winsock2.h>				/* For windows */
 -#endif
  typedef char my_bool;
 -#if (defined(_WIN32) || defined(_WIN64)) && !defined(__WIN__)
@@ -534,8 +534,7 @@ push @{$expect},
  #define __WIN__
  #endif
  #if !defined(__WIN__)
- 
- ' ],comment => 'write the patch for the the mysql.h file'],
+' ],comment => 'write the patch for the the mysql.h file'],
 # apply it!?
 [ grep    => ['\|\| defined\(__MINGW32__\)',$mingw.'include/mysql.h'], 
   shell   => ["cd /mingw/include","patch -p0 < mysql___h.patch"],
