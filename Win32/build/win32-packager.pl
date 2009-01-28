@@ -914,35 +914,35 @@ push @{$expect},
   comment => 'building and installing: msys flac/FLAC' ],
  
  
-[ archive => $sources.'libcdaudio-0.99.12p2.tar.gz',
-  fetch   => 'http://'.$sourceforge.
-             '/sourceforge/libcdaudio/libcdaudio-0.99.12p2.tar.gz'],
-[ dir     => $sources.'libcdaudio-0.99.12p2', 
-  extract => $sources.'libcdaudio-0.99.12p2.tar' ],
-
-[ archive => $sources.'libcdaudio-0.99.12p2-WIN32-support.patch',  
-  fetch   => 'http://sourceforge.net/tracker/download.php?'.
-             'group_id=27134&atid=389444&file_id=286748&aid=2035008'],
-  
-[ grep => ['ifdef __WIN32', $sources.'libcdaudio-0.99.12p2/src/cddb.c'], 
-  shell => ["cd ".$sources.'libcdaudio-0.99.12p2',
-            "patch -p1 < ".$unixsources
-            .'libcdaudio-0.99.12p2-WIN32-support.patch'] ],
- 
-[ file    => $msys.'bin/libcdaudio-config', 
-  shell   => ["cd ".$unixsources."libcdaudio-0.99.12p2",
-              "./configure --prefix=/usr",
-              "make",
-              "make install"],
-  comment => 'building and installing:  msys libcdaudio' ],  
-
-# mingw version is needed, or mythmusic won't build
-[ file    => $mingw.'bin/libcdaudio-config', 
-  shell   => ["cd ".$unixsources."libcdaudio-0.99.12p2",
-              "./configure --prefix=/mingw",
-              "make",
-              "make install"],
-  comment => 'building and installing:  mingw libcdaudio' ],  
+#[ archive => $sources.'libcdaudio-0.99.12p2.tar.gz',
+#  fetch   => 'http://'.$sourceforge.
+#             '/sourceforge/libcdaudio/libcdaudio-0.99.12p2.tar.gz'],
+#[ dir     => $sources.'libcdaudio-0.99.12p2', 
+#  extract => $sources.'libcdaudio-0.99.12p2.tar' ],
+#
+#[ archive => $sources.'libcdaudio-0.99.12p2-WIN32-support.patch',  
+#  fetch   => 'http://sourceforge.net/tracker/download.php?'.
+#             'group_id=27134&atid=389444&file_id=286748&aid=2035008'],
+#  
+#[ grep => ['ifdef __WIN32', $sources.'libcdaudio-0.99.12p2/src/cddb.c'], 
+#  shell => ["cd ".$sources.'libcdaudio-0.99.12p2',
+#            "patch -p1 < ".$unixsources
+#            .'libcdaudio-0.99.12p2-WIN32-support.patch'] ],
+# 
+#[ file    => $msys.'bin/libcdaudio-config', 
+#  shell   => ["cd ".$unixsources."libcdaudio-0.99.12p2",
+#              "./configure --prefix=/usr",
+#              "make",
+#              "make install"],
+#  comment => 'building and installing:  msys libcdaudio' ],  
+#
+## mingw version is needed, or mythmusic won't build
+#[ file    => $mingw.'bin/libcdaudio-config', 
+#  shell   => ["cd ".$unixsources."libcdaudio-0.99.12p2",
+#              "./configure --prefix=/mingw",
+#              "make",
+#              "make install"],
+#  comment => 'building and installing:  mingw libcdaudio' ],  
   
 #[ pause => 'flac, taglib, lame all done.... press [enter] to continue !'],
 
