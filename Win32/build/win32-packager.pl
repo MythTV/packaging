@@ -742,7 +742,7 @@ if ($package == 1) {
 push @{$expect},
 [ archive => $sources.'freetype-2.3.5.tar.gz',  
   fetch   => 'http://download.savannah.nongnu.org'.
-             'releases/freetype/freetype-2.3.5.tar.gz'],
+             '/releases/freetype/freetype-2.3.5.tar.gz'],
 [ dir     => $sources.'freetype-2.3.5', 
   extract => $sources.'freetype-2.3.5.tar' ],
 # caution... freetype comes with a Makefile in the .tar.gz, so work around it!
