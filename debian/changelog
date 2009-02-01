@@ -3,8 +3,12 @@ mythtv (0.21.0+fixes19556-0ubuntuX) UNRELEASED; urgency=low
   * debian/mythtv-database.postinst:
     - Clear out mythtv/mysql_mythtv_password when we've read
       it from /etc/mythtv/mysql.txt.
+  * debian/patches/00list:
+    - actually apply 29_fix_mythwelcome.dpatch
+  * debian/patches/29_fix_mythwelcome.dpatch
+    - clean up .orig file and related mess
 
- -- Mario Limonciello <superm1@ubuntu.com>  Sat, 17 Jan 2009 11:35:18 -0600
+ -- Michael Haas <laga@laga.ath.cx>  Sun, 01 Feb 2009 13:10:24 +0100
 
 mythtv (0.21.0+fixes19556-0ubuntu2) jaunty; urgency=low
 
