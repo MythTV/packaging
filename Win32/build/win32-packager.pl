@@ -13,14 +13,14 @@
 ### =examples
 ### win32-packager.pl -h
 ###      => Print usage
-### win32-packager.pl   
+### win32-packager.pl
 ###      => based on latest "tested" SVN trunk (ie a known-good win32 build)
 ### win32-packager.pl -r head
 ###      => based on trunk head
 ### win32-packager.pl -b
 ###      => based on release-021-fixes branch
-### win32-packager.pl -b -t 
-###      => include some known patches which are not accepted and needed for Win32 
+### win32-packager.pl -b -t
+###      => include some patches which are not accepted, but needed for Win32
 ### win32-packager.pl -b -t -k
 ###      =>Same but package and create setup.exe at the end
 ###
@@ -46,7 +46,7 @@ $| = 1; # autoflush stdout;
 #my $SVNRELEASE = '16789'; # This is the last version that was Qt 3 based.
                            # Qt 4 merges began immediately after.
 #my $SVNRELEASE = '18442'; # Recent 0-21-fixes
-my $SVNRELEASE = '19821'; # Recent trunk
+my $SVNRELEASE = '19910'; # Recent trunk
 #my $SVNRELEASE = 'HEAD'; # If you are game, go forth and test the latest!
 
 
@@ -56,7 +56,7 @@ my $sourceforge = 'downloads.sourceforge.net';     # auto-redirect to a
                                                    # mirror of SF's choosing,
                                                    # hopefully close to you
 # alternatively you can choose your own mirror:
-#my $sourceforge = 'optusnet.dl.sourceforge.net';  # Australia 
+#my $sourceforge = 'optusnet.dl.sourceforge.net';  # Australia
 #my $sourceforge = 'internap.dl.sourceforge.net';  # USA,California
 #my $sourceforge = 'easynews.dl.sourceforge.net';  # USA,Arizona,Phoenix,
 #my $sourceforge = 'jaist.dl.sourceforge.net';     # Japan
@@ -82,7 +82,7 @@ my $makeclean = 0;          # Flag to make clean
 my $svnlocation = "trunk";  # defaults to trunk unless -b specified
 my $qtver = 3;              # default to 3 until we can test otherwise below,
                             #  do not change this here.
-my $continuous = 0 ;        # by default the app pauses to notify you what 
+my $continuous = 0 ;        # by default the app pauses to notify you what
                             #  it's about to do, -y overrides for batch usage.
 
 ##############################################################################
@@ -112,7 +112,6 @@ if (defined $opt{b}) {
     my @num = split /\./, $version;
     $svnlocation = "branches/release-$num[0]-$num[1]-fixes";
     print "NOT using SVN 'trunk', using '$svnlocation'\n";
-    
 } else {
     $svnlocation = "trunk";
 }
@@ -149,7 +148,7 @@ getc() unless $continuous;
 # this will be used to test if we the same
 # basic build type/layout as previously.
 my $is_same = "$compile_type-$svnlocation-$qtver.same";
-$is_same =~ s#/#-#g; # don't put dir slashes in a filename! 
+$is_same =~ s#/#-#g; # don't put dir slashes in a filename!
 
 # this list defines the components to build , to build everything, leave as-is
 my @components = ( 'mythtv', 'myththemes', 'mythplugins', 'packaging' );
@@ -162,7 +161,7 @@ my @components = ( 'mythtv', 'myththemes', 'mythplugins', 'packaging' );
 #  my $sources = $ENV{SOURCES};
 # TODO - although theoretically possible to change these paths,
 #        it has NOT been tested much,
-#        and will with HIGH PROBABILITY fail somewhere. 
+#        and will with HIGH PROBABILITY fail somewhere.
 #      - Only $mingw is tested and most likely is safe to change.
 
 # Perl compatible paths. DOS style, but forward slashes, and must end in slash:
@@ -175,15 +174,15 @@ my $mythtv  = 'C:/mythtv/';       # this is where the entire SVN checkout lives
                                   # so c:/mythtv/mythtv/ is the main codebase.
 my $build   = 'C:/mythtv/build/'; # where 'make install' installs into
 
-# Where is the users home? 
+# Where is the users home?
 # Script later creates $home\.mythtv\mysql.txt
 my $doshome = '';
-if ( ! exists $ENV{'HOMEPATH'} || $ENV{'HOMEPATH'} eq '\\' ) {   
-  $doshome = $ENV{'USERPROFILE'};  
+if ( ! exists $ENV{'HOMEPATH'} || $ENV{'HOMEPATH'} eq '\\' ) {
+  $doshome = $ENV{'USERPROFILE'};
 } else {
   $doshome = $ENV{HOMEDRIVE}.$ENV{HOMEPATH};
 }
-my $home = $doshome; 
+my $home = $doshome;
 $home =~ s#\\#/#g;
 $home =~ s/ /\\ /g;
 $home .= '/'; # all paths should end in a slash
@@ -192,7 +191,7 @@ $home .= '/'; # all paths should end in a slash
 # DOS executable CMD.exe versions of the paths (for when we shell to DOS mode):
 my $dosmsys    = perl2dos($msys);
 my $dossources = perl2dos($sources);
-my $dosmingw   = perl2dos($mingw); 
+my $dosmingw   = perl2dos($mingw);
 my $dosmythtv  = perl2dos($mythtv);
 
 # Unix/MSys equiv. versions of the paths (for when we shell to MSYS/UNIX mode):
@@ -225,7 +224,7 @@ my $installMinGW   = $dossources.$MinGWinstaller;
 #      [shell]  actions should always refer to $unixXXX path  variables
 #      [dir],[file],[mkdirs],[archive] actions should always refer to
 #      default perl compatible paths
-# NOTE:  The architecture of this script is based on cause-and-event.  
+# NOTE:  The architecture of this script is based on cause-and-event.
 #        There are a number of "causes" (or expectations) that can trigger
 #        an event/action.
 #        There are a number of different actions that can be taken.
@@ -251,7 +250,7 @@ my $installMinGW   = $dossources.$MinGWinstaller;
 #    it causes the action to trigger.
 #  test the first file is newer(mtime) than the second one           [newer]
 #  - if given 2 existing files, not necessarily same size/content,
-#    and the first one isn't newer, execute the action!. 
+#    and the first one isn't newer, execute the action!
 #    If the first file is ABSENT, run the action too.
 #  execute the action only if a file or directory exists             [exists]
 #  stop the run, useful for script debugging                         [stop]
@@ -268,7 +267,7 @@ my $installMinGW   = $dossources.$MinGWinstaller;
 #  - (note that .gz and .bz2 are thought equivalent)
 #  write a small patch/config/script file directly to disk           [write]
 #  make directory tree upto the path specified                       [mkdirs]
-#  copy a new version of a file, set mtime to the original           [copy] 
+#  copy a new version of a file, set mtime to the original           [copy]
 
 #TODO:
 #  copy a set of files (path/filespec,  destination)               not-yet-impl
@@ -280,7 +279,7 @@ my $installMinGW   = $dossources.$MinGWinstaller;
 #                     exec => shell 'patch < etc to replace it'
 
 
-# NOTES on specific actions: 
+# NOTES on specific actions:
 # 'extract' now requires all paths to be perl compatible (like all other
 # commands) If not supplied, it extracts into the folder the .tar.gz is in.
 # 'exec' actually runs all your commands inside a single cmd.exe
@@ -301,20 +300,20 @@ my $expect;
 
 push @{$expect},
 
-[ dir => [$sources] , 
-  mkdirs  => [$sources], 
+[ dir => [$sources] ,
+  mkdirs  => [$sources],
   comment => 'We download all the files from the web, and save them here:'],
 
 
-[ archive => $sources.$MinGWinstaller, 
+[ archive => $sources.$MinGWinstaller,
   'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw/'.$MinGWinstaller,
   comment => 'Get mingw and addons first, or we cant do [shell] requests!' ],
-[ archive => $sources.'mingw-utils-0.3.tar.gz', 
+[ archive => $sources.'mingw-utils-0.3.tar.gz',
   'fetch' => 'http://'.$sourceforge.
               '/sourceforge/mingw/mingw-utils-0.3.tar.gz' ],
 
 
-[ dir     => $mingw, 
+[ dir     => $mingw,
   exec    => $installMinGW,
   comment => 'install MinGW (be sure to install g++, g77 and ming '.
              'make too. Leave the default directory at c:\mingw ) '.
@@ -322,35 +321,35 @@ push @{$expect},
              'but once completed, will return control to us....' ],
 
 # interactive, supposed to install g++ and ming make too,
-# but people forget to select them? 
+# but people forget to select them?
 
-[ file    => $mingw."bin/gcc.exe", 
+[ file    => $mingw."bin/gcc.exe",
   exec    => $installMinGW,
   comment => 'unable to find a gcc.exe where expected, '.
-             'rerunning MinGW installer!' ], 
+             'rerunning MinGW installer!' ],
 
-[ archive => $sources.'MSYS-1.0.10.exe', 
+[ archive => $sources.'MSYS-1.0.10.exe',
   'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw/MSYS-1.0.10.exe',
   comment => 'Get the MSYS and addons:' ] ,
-[ archive => $sources.'bash-3.1-MSYS-1.0.11-1.tar.bz2', 
+[ archive => $sources.'bash-3.1-MSYS-1.0.11-1.tar.bz2',
   'fetch' => 'http://'.$sourceforge.
              '/sourceforge/mingw/bash-3.1-MSYS-1.0.11-1.tar.bz2' ] ,
-[ archive => $sources.'zlib-1.2.3-MSYS-1.0.11.tar.bz2', 
+[ archive => $sources.'zlib-1.2.3-MSYS-1.0.11.tar.bz2',
   'fetch' => 'http://easynews.dl.sourceforge.net'.
              '/sourceforge/mingw/zlib-1.2.3-MSYS-1.0.11.tar.bz2' ] ,
-[ archive => $sources.'coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2', 
+[ archive => $sources.'coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2',
   'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw'.
              '/coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2' ] ,
 
 # install MSYS, it supplies the 'tar' executable, among others:
-[ file    => $msys.'bin/tar.exe', 
+[ file    => $msys.'bin/tar.exe',
   exec    => $dossources.'MSYS-1.0.10.exe',
   comment => 'Install MSYS, it supplies the tar executable, among others. You '.
-             'should follow prompts, AND do post-install in DOS box.' ] , 
+             'should follow prompts, AND do post-install in DOS box.' ] ,
 
 #  don't use the [shell] or [copy] actions here,
 # as neither are avail til bash is installed!
-[ file    => $msys.'bin/sh2.exe', 
+[ file    => $msys.'bin/sh2.exe',
   exec    => 'copy /Y '.$dosmsys.'bin\sh.exe '.$dosmsys.'bin\sh2.exe',
   comment => 'make a copy of the sh.exe so that we can '.
              'utilise it when we extract later stuff' ],
@@ -359,17 +358,17 @@ push @{$expect},
 
 # if you did a default-install of MingW, then you need to try again, as we
 # really need g++ and mingw32-make, and g77 is needed for fftw
-[ file    => $mingw.'bin/mingw32-make.exe',  
+[ file    => $mingw.'bin/mingw32-make.exe',
   exec    => $installMinGW,
   comment => 'Seriously?  You must have done a default install of MinGW.  '.
              'go try again! You MUST choose the custom installed and select '.
              'the mingw make, g++ and g77 optional packages.' ],
-[ file    => $mingw.'bin/g++.exe', 
+[ file    => $mingw.'bin/g++.exe',
   exec    => $installMinGW,
   comment => 'Seriously?  You must have done a default install of MinGW.  '.
              'go try again! You MUST choose the custom installed and select '.
              'the mingw make, g++ and g77 optional packages.' ],
-[ file    => $mingw.'bin/g77.exe', 
+[ file    => $mingw.'bin/g77.exe',
   exec    => $installMinGW,
    comment => 'Seriously?  You must have done a default install of MinGW.  '.
               'go try again! You MUST choose the custom installed and select '.
@@ -380,55 +379,55 @@ push @{$expect},
 #mingw32-make from here
 
 # now that we have the 'extract' feature, we can finish ...
-[ file    => $mingw.'/bin/reimp.exe',  
+[ file    => $mingw.'/bin/reimp.exe',
   extract => [$sources.'mingw-utils-0.3.tar', $mingw],
   comment => 'Now we can finish all the mingw and msys addons:' ],
-[ file    => $msys.'bin/bash.exe',  
+[ file    => $msys.'bin/bash.exe',
   extract => [$sources.'bash-3.1-MSYS-1.0.11-1.tar', $msys] ],
-[ dir     => $sources.'coreutils-5.97',  
+[ dir     => $sources.'coreutils-5.97',
   extract => [$sources.'coreutils-5.97-MSYS-1.0.11-snapshot.tar'] ],
-[ file    => $msys.'bin/pr.exe', 
+[ file    => $msys.'bin/pr.exe',
   shell   => ["cd ".$unixsources."coreutils-5.97","cp -r * / "] ],
 
 [ dir     => $msys."lib" ,  mkdirs => $msys.'lib' ],
 [ dir     => $msys."include" ,  mkdirs => $msys.'include' ],
 
 #get gdb
-[ archive => $sources.'gdb-6.7.50.20071127-mingw.tar.bz2', 
+[ archive => $sources.'gdb-6.7.50.20071127-mingw.tar.bz2',
   'fetch' => 'http://'.$sourceforge.
              '/sourceforge/mingw/gdb-6.7.50.20071127-mingw.tar.bz2',
   comment => 'Get gdb for possible debugging later' ],
-[ file    => $msys.'bin/gdb.exe',  
+[ file    => $msys.'bin/gdb.exe',
   extract => [$sources.'gdb-6.7.50.20071127-mingw.tar.bz2', $msys] ],
 
 
 # (alternate would be from the gnuwin32 project,
 #  which is actually from same source)
 #  run it into a 'unzip' folder, because it doesn't extract to a folder:
-[ dir     => $sources."unzip" ,  
+[ dir     => $sources."unzip",
   mkdirs  => $sources.'unzip',
   comment => 'unzip.exe - Get a precompiled '.
              'native Win32 version from InfoZip' ],
-[ archive => $sources.'unzip/unz552xN.exe',  
+[ archive => $sources.'unzip/unz552xN.exe',
   'fetch' => 'ftp://tug.ctan.org/tex-archive'.
              '/tools/zip/info-zip/WIN32/unz552xN.exe'],
-[ file    => $sources.'unzip/unzip.exe', 
+[ file    => $sources.'unzip/unzip.exe',
   exec    => 'chdir '.$dossources.'unzip && '.
              $dossources.'unzip/unz552xN.exe' ],
 # we could probably put the unzip.exe into the path...
 
 
 # we now use SVN 1.5.x
-[ archive => $sources.'svn-win32-1.5.1.zip',  
+[ archive => $sources.'svn-win32-1.5.1.zip',
   'fetch' => 'http://subversion.tigris.org/files/'.
              'documents/15/43251/svn-win32-1.5.1.zip',
   comment => 'Subversion comes as a zip file, so it '.
              'cant be done earlier than the unzip tool!'],
-[ dir     => $sources.'svn-win32-1.5.1', 
+[ dir     => $sources.'svn-win32-1.5.1',
   extract => $sources.'svn-win32-1.5.1.zip' ],
 
 
-[ file    => $msys.'bin/svn151_.exe', 
+[ file    => $msys.'bin/svn151_.exe',
   shell   => [ "cp -R $unixsources/svn-win32-1.5.1/* ".$unixmsys,
                "cp $unixsources/svn-win32-1.5.1/bin/svn.exe ".
                    $unixmsys."bin/svn151.exe",
@@ -441,26 +440,26 @@ push @{$expect},
              'so we can use it easily later!' ],
 
 # :
-[ dir     => $sources."zlib" ,  
+[ dir     => $sources."zlib",
   mkdirs  => $sources.'zlib',
   comment => 'the zlib download is a bit messed-up, and needs some TLC '.
              'to put everything in the right place' ],
-[ dir     => $sources."zlib/usr",  
+[ dir     => $sources."zlib/usr",
   extract => [$sources.'zlib-1.2.3-MSYS-1.0.11.tar', $sources."zlib"] ],
 # install to /usr:
-[ file    => $msys.'lib/libz.a',      
-  exec    => ["copy /Y ".$dossources.'zlib\usr\lib\* '.$dosmsys."lib"] ], 
-[ file    => $msys.'bin/msys-z.dll',  
+[ file    => $msys.'lib/libz.a',
+  exec    => ["copy /Y ".$dossources.'zlib\usr\lib\* '.$dosmsys."lib"] ],
+[ file    => $msys.'bin/msys-z.dll',
   exec    => ["copy /Y ".$dossources.'zlib\usr\bin\* '.$dosmsys."bin"] ],
-[ file    => $msys.'include/zlib.h',  
+[ file    => $msys.'include/zlib.h',
   exec    => ["copy /Y ".$dossources.'zlib\usr\include\* '.
               $dosmsys."include"] ],
-# taglib also requires zlib in /mingw , so we'll put it there too, why not! 
-[ file    => $mingw.'lib/libz.a',     
+# taglib also requires zlib in /mingw , so we'll put it there too, why not!
+[ file    => $mingw.'lib/libz.a',
   exec    => ["copy /Y ".$dossources.'zlib\usr\lib\* '.$dosmingw."lib"] ],
-[ file    => $mingw.'bin/msys-z.dll', 
+[ file    => $mingw.'bin/msys-z.dll',
   exec    => ["copy /Y ".$dossources.'zlib\usr\bin\* '. $dosmingw."bin"] ],
-[ file    => $mingw.'include/zlib.h', 
+[ file    => $mingw.'include/zlib.h',
   exec    => ["copy /Y ".$dossources.'zlib\usr\include\* '.
               $dosmingw."include"] ],
 
@@ -470,7 +469,7 @@ push @{$expect},
 #     mysql-essential-5.1.30-win32.msi/from/http://mysql.mirrors.ilisys.com.au/
 # alternate: http://mysql.mirrors.ilisys.com.au/Downloads/MySQL-5.1/
 #     mysql-essential-5.1.30-win32.msi
-[ archive => $sources.'mysql-essential-5.1.30-win32.msi', 
+[ archive => $sources.'mysql-essential-5.1.30-win32.msi',
   'fetch' => 'http://mysql.mirrors.ilisys.com.au/Downloads/'.
              'MySQL-5.1/mysql-essential-5.1.30-win32.msi',
   comment => 'fetch mysql binaries - this is a big download(23MB) '.
@@ -480,27 +479,27 @@ push @{$expect},
   comment => 'Install mysql - be sure to choose to do a "COMPLETE" install. '.
              'You should also choose NOT to "configure the server now" ' ],
 
-# after mysql install 
+# after mysql install
 [ filesame => [$mingw.'bin/libmySQL.dll',
-               'c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll'],  
+               'c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll'],
   copy     => [''=>'',
   comment  => 'post-mysql-install'] ],
 [ filesame => [$mingw.'lib/libmySQL.dll',
-               'c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll'],  
+               'c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll'],
   copy     => [''=>'',
   comment  => 'post-mysql-install'] ],
 [ filesame => [$mingw.'lib/libmysql.lib',
                'c:/Program Files/MySQL/MySQL Server 5.1/lib/opt/libmysql.lib'],
   copy     => [''=>''] ],
-[ file     => $mingw.'include/mysql.h'  ,   
+[ file     => $mingw.'include/mysql.h',
   exec     => 'copy /Y "c:\Program Files\MySQL\MySQL Server 5.1\include\*" '.
               $dosmingw."include" ],
-  
-  
+
+
 # make sure that /mingw is mounted in MSYS properly before trying
 # to use the /mingw folder.  this is supposed to happen as part
 # of the MSYS post-install, but doesnt always work.
-[ file    => $msys.'etc/fstab', 
+[ file    => $msys.'etc/fstab',
   write   => [$msys.'etc/fstab',
 "$mingw /mingw
 " ],
@@ -508,7 +507,7 @@ push @{$expect},
 
 #
 # TIP: we use a special file (with two extra _'s )
-#      as a marker to say this acton is already done! 
+#      as a marker to say this acton is already done!
 [ file    => $mingw.'lib/libmysql.lib__',
   shell   => ["cd /mingw/lib","reimp -d libmysql.lib",
            "dlltool -k --input-def libmysql.def --dllname libmysql.dll".
@@ -517,7 +516,7 @@ push @{$expect},
   comment => ' rebuild libmysql.a' ],
 
 # grep    => [pattern,file] , actions/etc
-[ file    => $mingw.'include/mysql___h.patch', 
+[ file    => $mingw.'include/mysql___h.patch',
   write   => [$mingw.'include/mysql___h.patch',
 '--- mysql.h_orig	Fri Jan  4 19:35:33 2008
 +++ mysql.h	Tue Jan  8 14:48:36 2008
@@ -536,13 +535,13 @@ push @{$expect},
  #if !defined(__WIN__)
 ' ],comment => 'write the patch for the the mysql.h file'],
 # apply it!?
-[ grep    => ['\|\| defined\(__MINGW32__\)',$mingw.'include/mysql.h'], 
+[ grep    => ['\|\| defined\(__MINGW32__\)',$mingw.'include/mysql.h'],
   shell   => ["cd /mingw/include","patch -p0 < mysql___h.patch"],
   comment => 'Apply mysql.h patch file, if not already applied....' ],
 
 
 # apply sspi.h patch
-[ file    => $mingw.'include/sspi_h.patch', 
+[ file    => $mingw.'include/sspi_h.patch',
   write   => [$mingw.'include/sspi_h.patch',
 '*** sspi.h      Sun Jan 25 17:55:57 2009
 --- sspi.h.new  Sun Jan 25 17:55:51 2009
