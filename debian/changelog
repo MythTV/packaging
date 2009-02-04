@@ -1,3 +1,15 @@
+mythtv (0.21.0+fixes19556-0ubuntu6) jaunty; urgency=low
+
+  [ Thomas Mashos ]
+  * debian/control, debian/rules:
+    - Disable arts support as it's no longer part of jaunty. (LP: #320915)
+
+  [ Mario Limonciello ]
+  * debian/control, debian/rules:
+    - Drop external x264 support.  It's causing a FTBFS.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Wed, 04 Feb 2009 11:09:10 -0600
+
 mythtv (0.21.0+fixes19556-0ubuntu5) jaunty; urgency=low
 
   * No-change rebuild against libx264-65
