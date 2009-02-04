@@ -1,3 +1,9 @@
+mythtv (0.21.0+fixes19556-0ubuntu5) jaunty; urgency=low
+
+  * No-change rebuild against libx264-65
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Wed, 04 Feb 2009 10:04:20 +0000
+
 mythtv (0.21.0+fixes19556-0ubuntu4) jaunty; urgency=low
 
   * debian/mythtv-database.postinst:
