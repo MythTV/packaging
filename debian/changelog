@@ -1,3 +1,9 @@
+mythtv (0.21.0+fixes19943-0ubuntu2~ppa0) intrepid; urgency=low
+
+  * config.xml test 
+ 
+ -- John Baab <john.baab@gmail.com>  Thu, 05 Feb 2009 20:21:00 +0500
+
 mythtv (0.21.0+fixes19556-0ubuntuX) UNRELEASED; urgency=low
 
   * debian/mythtv-database.postinst:

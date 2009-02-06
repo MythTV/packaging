@@ -18,6 +18,10 @@ mkdir -p $HOME/.mythtv
 if [ ! -e $HOME/.mythtv/mysql.txt ]; then
 	ln -s /etc/mythtv/mysql.txt $HOME/.mythtv/mysql.txt
 fi
+#symlink config.xml so the bindings can have a place to locate it
+#if [ ! -e /etc/mythtv/config.xml ]; then
+#	ln -s $HOME/.mythtv/mysql.txt /etc/mythtv/config.xml
+#fi
 
 if [ "$1" = "--service" ]; then
     #source frontend session settings

@@ -53,6 +53,10 @@ chown -R $USER $USER_HOME/.mythtv
 if [ ! -e $USER_HOME/.mythtv/mysql.txt ]; then
         ln -s /etc/mythtv/mysql.txt $USER_HOME/.mythtv/mysql.txt
 fi
+#create config.xml for bindings
+if [ ! -e $USER_HOME/.mythtv/config.xml ]; then
+        ln -s /etc/mythtv/config.xml $USER_HOME/.mythtv/config.xml
+fi
 
 case "$1" in
   start)
