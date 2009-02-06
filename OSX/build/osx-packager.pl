@@ -307,15 +307,14 @@ Building two snapshots, one with plugins and one without:
   osx-packager.pl -nohead
   mv MythFrontend.app MythFrontend-noplugins.app
 
-Building a 0.17 release build:
-
-  osx-packager.pl -distclean
-  osx-packager.pl -svntag release-0-17 -noversion
-
 Building a "fixes" branch:
 
   osx-packager.pl -distclean
-  osx-packager.pl -svnbranch release-0-18-fixes
+  osx-packager.pl -svnbranch release-0-22-fixes
+
+Note that this script will not build old branches.
+Please try the branched version instead. e.g.
+http://svn.mythtv.org/svn/branches/release-0-21-fixes/mythtv/contrib/OSX/osx-packager.pl
 
 =head1 CREDITS
 
@@ -408,6 +407,16 @@ rule is only for the build process itself.
 
 END
   die;
+}
+
+if ( $OPT{'svnbranch'} )
+{
+    &Complain(<<END);
+Note that this script can not build old branches.
+Please try the branched version instead. e.g.
+http://svn.mythtv.org/svn/branches/release-0-21-fixes/mythtv/contrib/OSX/osx-packager.pl
+END
+    die;
 }
 
 our $WORKDIR = "$SCRIPTDIR/.osx-packager";
@@ -752,6 +761,9 @@ my @svnrevision   = ();
 if ( $OPT{'svnbranch'} )
 {
   $svnrepository .= 'branches/' . $OPT{'svnbranch'} . '/';
+Die("Note that this script will not build old branches.
+Please try the branched version instead. e.g.
+http://svn.mythtv.org/svn/branches/release-0-21-fixes/mythtv/contrib/OSX/osx-packager.pl");
 }
 elsif ( $OPT{'svntag'} )
 {
