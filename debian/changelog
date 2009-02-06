@@ -1,4 +1,4 @@
-mythtv (0.21.0+fixes19556-0ubuntuX) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes19929-0ubuntuX) UNRELEASED; urgency=low
 
   * debian/mythtv-database.postinst:
     - Clear out mythtv/mysql_mythtv_password when we've read
