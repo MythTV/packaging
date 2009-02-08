@@ -16,15 +16,19 @@ case "$1" in
 
     db_get mythtv/mysql_host
     hostname="$RET"
+    export hostname
 
     db_get mythtv/mysql_mythtv_dbname
     database="$RET"
+    export database
 
     db_get mythtv/mysql_mythtv_user
     mythtv_username="$RET"
+    export mythtv_username
 
     db_get mythtv/mysql_mythtv_password
     mythtv_password="$RET"
+    export mythtv_password
 
     NEW=$(mktemp -t mysql.txt-XXXXXX)
     if [ -s /etc/mythtv/mysql.txt ]; then
@@ -45,30 +49,32 @@ s/^\(\(str  *\)\?DBName\)=.*$/\1=$database/g;" > $NEW
 DBPassword=$mythtv_password
 EOF
 
-    NEW=$(mktemp -t config.xml-XXXXXX)
-        if [ -s /etc/mythtv/config.xml ]; then
-            INPUT=/etc/mythtv/config.xml
-            chown --reference="$INPUT" "$NEW"
-            chmod --reference="$INPUT" "$NEW"
-        else
-            INPUT=/usr/share/mythtv/config.xml.dist
-            chown mythtv:mythtv "$NEW"
-            chmod 660 "$NEW"
-        fi
-
-        cat $INPUT | grep -v '<DBPassword>' | sed -e "
-    s/^\(\(str  *\)\?<DBHostName>\).*\(</DBHostName>\)$/\1=$hostname/g;
-    s/^\(\(str  *\)\?<DBUserName>\).*\(</DBUserName>\)$/\1=$mythtv_username/g;
-    s/^\(\(str  *\)\?<DBName>\).*\(</DBName>\)$/\1=$database/g;" > $NEW
-            cat <<EOF >> $NEW
-    <DBPassword>$mythtv_password</DBPassword>
-    EOF
-
     mv $NEW /etc/mythtv/mysql.txt
+    
+    NEW=$(mktemp -t config.xml-XXXXXX)
+    if [ -s /etc/mythtv/config.xml ]; then
+        INPUT=/etc/mythtv/config.xml
+        chown --reference="$INPUT" "$NEW"
+        chmod --reference="$INPUT" "$NEW"
+    else
+        INPUT=/usr/share/mythtv/config.xml
+        chown mythtv:mythtv "$NEW"
+        chmod 660 "$NEW"
+    fi
+
+    cat $INPUT > $NEW 
+
+    perl -pi -e 's/(<DBHostName>).*?(<\/DBHostName>)/$1$ENV{'hostname'}$2/;' $NEW
+    perl -pi -e 's/(<DBUserName>).*?(<\/DBUserName>)/$1$ENV{'mythtv_username'}$2/;' $NEW
+    perl -pi -e 's/(<DBPassword>).*?(<\/DBPassword>)/$1$ENV{'mythtv_password'}$2/;' $NEW
+    perl -pi -e 's/(<DBName>).*?(<\/DBName>)/$1$ENV{'database'}$2/;' $NEW
+    perl -pi -e 's/^\s+<LocalHostName>.*?<\/LocalHostName>\n//m;' $NEW
+
+    mv $NEW /etc/mythtv/config.xml
+
     if [ ! -e /root/.mythtv/config.xml ]; then
         ln -s /etc/mythtv/config.xml /root/.mythtv/config.xml
     fi
-
 
     ;;
 

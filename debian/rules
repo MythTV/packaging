@@ -7,7 +7,7 @@ SVN_PACKAGE+=mythtv
 SVN_TYPE+=fixes
 SVN_MAJOR_RELEASE+=21
 SVN_MINOR_RELEASE+=0
-SVN_REVISION+=19136
+SVN_REVISION:=$(shell dpkg-parsechangelog | sed -ne 's/^Version: *............\(.*\)-.*/\1/p')
 SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
 #SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)/$(SVN_PACKAGE)
 GREATER+=true
@@ -145,7 +145,7 @@ install: build
 	dh_install -pmythtv-frontend debian/session-settings etc/mythtv
 	dh_install -pmythtv-backend debian/mythtv-setup.sh usr/share/mythtv
 	dh_install -pmythtv-common   debian/dialog_functions.sh usr/share/mythtv
-	dh_install -pmythtv-common   contrib/config.xm etc/mythtv
+	dh_install -pmythtv-common   contrib/config.xml usr/share/mythtv
 	dh_install -pmythtv-common debian/mysql.txt.dist debian/myth-halt.sh debian/myth-reboot.sh debian/myth-hibernate.sh usr/share/mythtv
 
 	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/mythtv

@@ -1,10 +1,10 @@
-mythtv (0.21.0+fixes19943-0ubuntu2~ppa0) intrepid; urgency=low
+mythtv (0.21.0+fixes19943-0ubuntuX) UNRELEASED; urgency=low
 
-  * config.xml test 
+  * Fixes missing config.xml issue (LP: #220604) 
  
  -- John Baab <john.baab@gmail.com>  Thu, 05 Feb 2009 20:21:00 +0500
 
-mythtv (0.21.0+fixes19556-0ubuntuX) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes19929-0ubuntuX) UNRELEASED; urgency=low
 
   * debian/mythtv-database.postinst:
     - Clear out mythtv/mysql_mythtv_password when we've read
