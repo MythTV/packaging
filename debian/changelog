@@ -1,4 +1,4 @@
-mythtv (0.21.0+fixes19961-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes19961-0ubuntu1) jaunty; urgency=low
 
   [ John Baab ]
   * Fixes missing config.xml issue (LP: #220604)
@@ -9,7 +9,7 @@ mythtv (0.21.0+fixes19961-0ubuntu1) UNRELEASED; urgency=low
   * Update branch to release-0-21-fixes rev #19961.  Pulls in
     fix related to channel scanning and setting number correctly. (LP: #323769)
  
- -- John Baab <john.baab@gmail.com>  Thu, 05 Feb 2009 20:21:00 +0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 09 Feb 2009 08:49:29 -0600
 
 mythtv (0.21.0+fixes19556-0ubuntu6) jaunty; urgency=low
 
