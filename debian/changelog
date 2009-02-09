@@ -1,4 +1,4 @@
-mythtv (0.21.0+fixes19943-0ubuntuX) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes19961-0ubuntu1) UNRELEASED; urgency=low
 
   [ John Baab ]
   * Fixes missing config.xml issue (LP: #220604)
@@ -6,6 +6,8 @@ mythtv (0.21.0+fixes19943-0ubuntuX) UNRELEASED; urgency=low
   [ Mario Limonciello ]
   * Check whether $USER_HOME exists in mythtv-backend init
     script before continuing on. Thanks Will Uther. (LP: #326702)
+  * Update branch to release-0-21-fixes rev #19961.  Pulls in
+    fix related to channel scanning and setting number correctly. (LP: #323769)
  
  -- John Baab <john.baab@gmail.com>  Thu, 05 Feb 2009 20:21:00 +0500
 
