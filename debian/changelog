@@ -1,7 +1,11 @@
 mythtv (0.21.0+fixes19943-0ubuntuX) UNRELEASED; urgency=low
 
   [ John Baab ]
-  * Fixes missing config.xml issue (LP: #220604) 
+  * Fixes missing config.xml issue (LP: #220604)
+
+  [ Mario Limonciello ]
+  * Check whether $USER_HOME exists in mythtv-backend init
+    script before continuing on. Thanks Will Uther. (LP: #326702)
  
  -- John Baab <john.baab@gmail.com>  Thu, 05 Feb 2009 20:21:00 +0500
 

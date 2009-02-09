@@ -47,6 +47,11 @@ chown -R $USER $RUNDIR
 unset DISPLAY
 unset SESSION_MANAGER
 
+if [ ! -d $USER_HOME ]; then
+	log_failure_msg "MythTV home directory, $USER_HOME does not exist."
+	exit 1
+fi
+
 #create a symbolic link for mysql.txt so it can't be overwritten
 mkdir -p $USER_HOME/.mythtv
 chown -R $USER $USER_HOME/.mythtv
