@@ -13,6 +13,8 @@ SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$
 GREATER+=true
 TAGGED_RELEASE+=
 
+LSB:=$(shell lsb_release -cs)
+
 ifneq "$(SVN_MINOR_RELEASE)" ""
 	SVN_RELEASE+=0.$(SVN_MAJOR_RELEASE).$(SVN_MINOR_RELEASE)
 else
@@ -26,6 +28,14 @@ ifeq "$(TAGGED_RELEASE)" ""
 	endif
 endif
 TARFILE+=$(SVN_PACKAGE)_$(SVN_RELEASE)$(SUFFIX).orig.tar.gz
+
+ifeq "$(LSB)" "intrepid"
+	UDEV="etc"
+else ifeq "$(LSB)" "hardy"
+	UDEV="etc"
+else
+	UDEV="lib"
+endif
 
 get-orig-source:
 	svn export -r $(SVN_REVISION) $(SVN_BRANCH) $(SVN_PACKAGE)-$(SVN_RELEASE)$(SUFFIX)
@@ -54,7 +64,7 @@ CONFIGURE_OPTS += --compile-type=profile
 
 #These aren't mentioned in ./configure --help
 TOP_SECRET_OPTS += --enable-libfaad --enable-libfaac --enable-libmp3lame \
-                   --enable-libx264 --enable-libxvid --enable-libfftw3
+                   --enable-libxvid --enable-libfftw3
 
 # --enable-glx-procaddrarb is a top secret option, but it's currently only 
 #  useful with Nvidia drivers which is why we only add it to amd64 and i386
@@ -81,7 +91,10 @@ configure-stamp: patch-stamp
 
 	#give us firewire testing support (from contrib)
 	ln -sf ../../contrib/firewire_tester.c programs/firewire_tester
-	
+
+	#for a udev transition in the making
+	[ $(UDEV) = "lib" ] && ln -s mythtv-backend.preinst.in debian/mythtv-backend.preinst
+
 	#update SVN REVISION to show the right version
 	sed -i -e "s/\`(svnversion \$$\$${SVNTREEDIR} 2>\/dev\/null) || echo Unknown\`/$(SVN_REVISION)/" version.pro
 
@@ -116,6 +129,9 @@ clean:
 	rm -f config.mak config.h
 	rm -rf debian/shlibs.local
 
+	#might have been made as udev transition
+	rm -f debian/mythtv-backend.preinst
+
 	#this is a symlink manually added in
 	rm -f programs/firewire_tester.c
 	rm -f programs/firewire_tester/firewire_tester.c
@@ -139,7 +155,7 @@ install: build
 	chmod a+x debian/*.sh debian/*.d
 	dh_install -pmythtv-frontend debian/mythtv.desktop usr/share/applications
 	dh_install -pmythtv-backend debian/mythtv-setup.desktop usr/share/applications
-	dh_install -pmythtv-backend debian/41-mythtv-permissions.rules etc/udev/rules.d
+	dh_install -pmythtv-backend debian/41-mythtv-permissions.rules $(UDEV)/udev/rules.d
 	dh_install -pmythtv-backend debian/mythtv-backend.if-up.d etc/network/if-up.d
 	dh_install -pmythtv-frontend debian/mythfrontend.sh usr/share/mythtv
 	dh_install -pmythtv-frontend debian/session-settings etc/mythtv
