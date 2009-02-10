@@ -10,6 +10,57 @@ mythtv (0.21.0+trunk19951-0ubuntu0) UNRELEASED; urgency=low
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Jan 2009 01:02:49 -0600
 
+mythtv (0.21.0+fixes19961-0ubuntu1) jaunty; urgency=low
+
+  [ John Baab ]
+  * Fixes missing config.xml issue (LP: #220604)
+
+  [ Mario Limonciello ]
+  * Check whether $USER_HOME exists in mythtv-backend init
+    script before continuing on. Thanks Will Uther. (LP: #326702)
+  * Update branch to release-0-21-fixes rev #19961.  Pulls in
+    fix related to channel scanning and setting number correctly. (LP: #323769)
+ 
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 09 Feb 2009 08:49:29 -0600
+
+mythtv (0.21.0+fixes19556-0ubuntu6) jaunty; urgency=low
+
+  [ Thomas Mashos ]
+  * debian/control, debian/rules:
+    - Disable arts support as it's no longer part of jaunty. (LP: #320915)
+
+  [ Mario Limonciello ]
+  * debian/control, debian/rules:
+    - Drop external x264 support.  It's causing a FTBFS.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Wed, 04 Feb 2009 11:09:10 -0600
+
+mythtv (0.21.0+fixes19556-0ubuntu5) jaunty; urgency=low
+
+  * No-change rebuild against libx264-65
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Wed, 04 Feb 2009 10:04:20 +0000
+
+mythtv (0.21.0+fixes19556-0ubuntu4) jaunty; urgency=low
+
+  * debian/mythtv-database.postinst:
+    - Clear out mythtv/mysql_mythtv_password when we've read
+      it from /etc/mythtv/mysql.txt.
+  * debian/patches/00list:
+    - actually apply 29_fix_mythwelcome.dpatch
+  * debian/patches/29_fix_mythwelcome.dpatch
+    - clean up .orig file and related mess
+
+ -- Michael Haas <laga@laga.ath.cx>  Sun, 01 Feb 2009 13:10:24 +0100
+
+mythtv (0.21.0+fixes19556-0ubuntu3) jaunty; urgency=low
+
+  * debian/rules: Install udev rules into /lib/udev/rules.d
+  * debian/mythtv-backend.rules: Remove old rules if unchanged
+  * debian/control: Add breaks to ensure the right version of udev is used.
+
+ -- Scott James Remnant <scott@ubuntu.com>  Mon, 12 Jan 2009 18:20:17 +0000
+
 mythtv (0.21.0+fixes19556-0ubuntu2) jaunty; urgency=low
 
   * Re-upload last version with proper pull from bzr.

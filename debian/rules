@@ -7,12 +7,13 @@ SVN_PACKAGE+=mythtv
 SVN_TYPE+=trunk
 SVN_MAJOR_RELEASE+=21
 SVN_MINOR_RELEASE+=0
-REVNUM:=$(shell dpkg-parsechangelog | sed -ne 's/^Version: *............\(.*\)-.*/\1/p')
-SVN_REVISION+=$(REVNUM)
-#SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
-SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)/$(SVN_PACKAGE)
+SVN_REVISION:=$(shell dpkg-parsechangelog | sed -ne 's/^Version: *............\(.*\)-.*/\1/p')
+SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
+#SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)/$(SVN_PACKAGE)
 GREATER+=true
 TAGGED_RELEASE+=
+
+LSB:=$(shell lsb_release -cs)
 
 ifneq "$(SVN_MINOR_RELEASE)" ""
 	SVN_RELEASE+=0.$(SVN_MAJOR_RELEASE).$(SVN_MINOR_RELEASE)
@@ -27,6 +28,14 @@ ifeq "$(TAGGED_RELEASE)" ""
 	endif
 endif
 TARFILE+=$(SVN_PACKAGE)_$(SVN_RELEASE)$(SUFFIX).orig.tar.gz
+
+ifeq "$(LSB)" "intrepid"
+	UDEV="etc"
+else ifeq "$(LSB)" "hardy"
+	UDEV="etc"
+else
+	UDEV="lib"
+endif
 
 get-orig-source:
 	svn export -r $(SVN_REVISION) $(SVN_BRANCH) $(SVN_PACKAGE)-$(SVN_RELEASE)$(SUFFIX)
@@ -81,8 +90,11 @@ configure-stamp: patch-stamp
 	dh_testdir
 
 	#give us firewire testing support (from contrib)
-	ln -sf ../../contrib/development/firewire_tester/firewire_tester.c programs/firewire_tester
-	
+	ln -sf ../../contrib/firewire_tester.c programs/firewire_tester
+
+	#for a udev transition in the making
+	[ $(UDEV) = "lib" ] && ln -s mythtv-backend.preinst.in debian/mythtv-backend.preinst || true
+
 	#update SVN REVISION to show the right version
 	sed -i -e "s/\`(svnversion \$$\$${SVNTREEDIR} 2>\/dev\/null) || echo Unknown\`/$(SVN_REVISION)/" version.pro
 
@@ -117,8 +129,12 @@ clean:
 	rm -f config.mak config.h
 	rm -rf debian/shlibs.local
 
+	#might have been made as udev transition
+	rm -f debian/mythtv-backend.preinst
+
 	#this is a symlink manually added in
 	rm -f programs/firewire_tester.c
+	rm -f programs/firewire_tester/firewire_tester.c
 
 	debian/rules unpatch
 
@@ -139,12 +155,13 @@ install: build
 	chmod a+x debian/*.sh debian/*.d
 	dh_install -pmythtv-frontend debian/mythtv.desktop usr/share/applications
 	dh_install -pmythtv-backend debian/mythtv-setup.desktop usr/share/applications
-	dh_install -pmythtv-backend debian/41-mythtv-permissions.rules etc/udev/rules.d
+	dh_install -pmythtv-backend debian/41-mythtv-permissions.rules $(UDEV)/udev/rules.d
 	dh_install -pmythtv-backend debian/mythtv-backend.if-up.d etc/network/if-up.d
 	dh_install -pmythtv-frontend debian/mythfrontend.sh usr/share/mythtv
 	dh_install -pmythtv-frontend debian/session-settings etc/mythtv
 	dh_install -pmythtv-backend debian/mythtv-setup.sh usr/share/mythtv
 	dh_install -pmythtv-common   debian/dialog_functions.sh usr/share/mythtv
+	dh_install -pmythtv-common   contrib/config.xml usr/share/mythtv
 	dh_install -pmythtv-common debian/mysql.txt.dist debian/myth-halt.sh debian/myth-reboot.sh debian/myth-hibernate.sh usr/share/mythtv
 
 	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/mythtv
