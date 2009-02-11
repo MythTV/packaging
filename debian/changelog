@@ -4,7 +4,7 @@ mythtv (0.21.0+fixes19961-0ubuntu2) jaunty; urgency=low
 
  -- John Baab <john.baab@gmail.com>  Tue, 10 Feb 2009 17:08:38 -0500
 
-mythtv (0.21.0+fixes19961-0ubuntu1~ppa1) intrepid; urgency=low
+mythtv (0.21.0+fixes19961-0ubuntu1) intrepid; urgency=low
 
   [ John Baab ]
   * Fixes missing config.xml issue (LP: #220604)
