@@ -10,6 +10,12 @@ mythtv (0.21.0+trunk19951-0ubuntu0) UNRELEASED; urgency=low
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Jan 2009 01:02:49 -0600
 
+mythtv (0.21.0+fixes19961-0ubuntu2) jaunty; urgency=low
+
+  * Fixed symlinking config.xml issue (LP: #327534) 
+
+ -- John Baab <john.baab@gmail.com>  Tue, 10 Feb 2009 17:08:38 -0500
+
 mythtv (0.21.0+fixes19961-0ubuntu1) jaunty; urgency=low
 
   [ John Baab ]

@@ -72,6 +72,8 @@ EOF
 
     mv $NEW /etc/mythtv/config.xml
 
+    mkdir -p /root/.mythtv
+
     if [ ! -e /root/.mythtv/config.xml ]; then
         ln -s /etc/mythtv/config.xml /root/.mythtv/config.xml
     fi
