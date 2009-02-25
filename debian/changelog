@@ -1,3 +1,10 @@
+mythtv (0.21.0+fixes19961-0ubuntu3) jaunty; urgency=low
+
+  * Don't display an update-notifier message about failing to reconfigure
+    database.  This doesn't get along well with live disks. (LP: 334547)
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Wed, 25 Feb 2009 15:46:22 -0600
+
 mythtv (0.21.0+fixes19961-0ubuntu2) jaunty; urgency=low
 
   * Fixed symlinking config.xml issue (LP: #327534) 
