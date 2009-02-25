@@ -210,7 +210,6 @@ install: build
 
 	dh_install --exclude=configfiles --exclude=.svn -pmythtv-backend contrib usr/share/doc/mythtv-backend/
 
-	dh_install -pmythtv-database debian/mythtv-reconfigure-required.update-notifier usr/share/mythtv
 	dh_install -pmythtv-database debian/mythtv.cnf etc/mysql/conf.d
 	dh_install -pmythtv-database debian/*.sql usr/share/mythtv/sql
 # Build architecture-independent files here.
