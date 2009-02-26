@@ -1,3 +1,9 @@
+mythtv (0.21.0+fixes19961-0ubuntu5) jaunty; urgency=low
+
+  * fixed backend init script to correctly detect if a backend is running. 
+
+ -- John Baab <john.baab@gmail.com>  Thu, 26 Feb 2009 00:54:27 -0500
+
 mythtv (0.21.0+fixes19961-0ubuntu4) jaunty; urgency=low
 
   * debian/rules:
