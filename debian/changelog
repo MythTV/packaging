@@ -10,6 +10,27 @@ mythtv (0.21.0+trunk19951-0ubuntu0) UNRELEASED; urgency=low
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Jan 2009 01:02:49 -0600
 
+mythtv (0.21.0+fixes19961-0ubuntu5) jaunty; urgency=low
+
+  * fixed backend init script to correctly detect if a backend is running. 
+
+ -- John Baab <john.baab@gmail.com>  Thu, 26 Feb 2009 00:54:27 -0500
+
+mythtv (0.21.0+fixes19961-0ubuntu4) jaunty; urgency=low
+
+  * debian/rules:
+    - Drop old references to update-notifier that got missed from building
+      in an unclean tree.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 25 Feb 2009 17:07:19 -0600
+
+mythtv (0.21.0+fixes19961-0ubuntu3) jaunty; urgency=low
+
+  * Don't display an update-notifier message about failing to reconfigure
+    database.  This doesn't get along well with live disks. (LP: 334547)
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Wed, 25 Feb 2009 15:46:22 -0600
+
 mythtv (0.21.0+fixes19961-0ubuntu2) jaunty; urgency=low
 
   * Fixed symlinking config.xml issue (LP: #327534) 

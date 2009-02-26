@@ -67,7 +67,7 @@ case "$1" in
   start)
 	if [ -e $RUNDIR/$NAME.pid ]; then
 		PIDDIR=/proc/$(cat $RUNDIR/$NAME.pid)
-		if [ -d ${RUNDIR} -a "$(readlink -f ${RUNDIR}/exe)" = "${DAEMON}" ]; then
+		if [ -d ${RUNDIR} -a "$(readlink -f ${PIDDIR}/exe)" = "${DAEMON}" ]; then
 			log_success_msg "$DESC already started; use restart instead."
 			exit 1
 		else

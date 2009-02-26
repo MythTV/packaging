@@ -43,12 +43,6 @@ fail_database() {
     echo "Try:" >&2
     echo "sudo dpkg-reconfigure mythtv-database" >&2
 
-    # silently exit, instead pop up a notification for user indicating this
-    unud=/var/lib/update-notifier/user.d
-    if test -d $unud; then
-        cp -f /usr/share/mythtv/mythtv-reconfigure-required.update-notifier \
-            /var/lib/update-notifier/user.d/mythtv-reconfigure-required
-    fi
     db_set mythtv/mysql_admin_password ""
     exit 0
 }
