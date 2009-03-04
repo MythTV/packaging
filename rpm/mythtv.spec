@@ -45,15 +45,10 @@
 # --without mythmovies
 # --without mythmusic
 # --without mythnews
-# --without mythphone
 # --without mythvideo
 # --without mythweather
 # --without mythzoneminder
 # --without mythweb
-#
-# The following options are disabled by default.  Use these options to enable:
-#
-# --with festival           Enable festival/festvox support in MythPhone
 #
 
 ################################################################################
@@ -65,7 +60,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r19778
+%define _svnrev r20105
 %define branch trunk
 
 #
@@ -117,16 +112,10 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_mythmovies     %{?_without_mythmovies:     0} %{!?_without_mythmovies:      1}
 %define with_mythmusic      %{?_without_mythmusic:      0} %{!?_without_mythmusic:       1}
 %define with_mythnews       %{?_without_mythnews:       0} %{!?_without_mythnews:        1}
-%define with_mythphone      %{?_without_mythphone:      0} %{!?_without_mythphone:       1}
 %define with_mythvideo      %{?_without_mythvideo:      0} %{!?_without_mythvideo:       1}
 %define with_mythweather    %{?_without_mythweather:    0} %{!?_without_mythweather:     1}
 %define with_mythweb        %{?_without_mythweb:        0} %{!?_without_mythweb:         1}
 %define with_mythzoneminder %{?_without_mythzoneminder: 0} %{!?_without_mythzoneminder:  1}
-
-# The following plugin options are disabled by default.  Use --with to enable them
-
-# MythPhone
-%define with_festival       %{?_with_festival:      1} %{!?_with_festival:      0}
 
 ################################################################################
 
@@ -165,7 +154,7 @@ BuildRequires:  qt4-devel
 
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
-BuildRequires:  nasm
+BuildRequires:  nasm, yasm-devel
 
 # X, and Xv video support
 BuildRequires:  libXmu-devel
@@ -183,6 +172,7 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
+BuildRequires:  a52dec-devel
 BuildRequires:  faac-devel
 BuildRequires:  faad2-devel
 BuildRequires:  fftw2-devel < 3
@@ -191,6 +181,7 @@ BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  gsm-devel
 BuildRequires:  lame-devel
 BuildRequires:  libdca-devel
+# libdvdcss will be dynamically loaded if installed
 #BuildRequires:  libdvdcss-devel >= 1.2.7
 BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
@@ -264,15 +255,10 @@ BuildRequires:  SDL-devel
 %if %{with_mythnews}
 %endif
 
-%if %{with_mythphone}
-%endif
 %if 0%{?fedora} >= 9
 BuildRequires: ncurses-devel
 %else
 BuildRequires: libtermcap-devel
-%endif
-%if %{with_festival}
-BuildRequires:  festival-devel
 %endif
 
 %if %{with_mythvideo}
@@ -396,6 +382,7 @@ Requires:  xorg-x11-drv-openchrome-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
+Requires:  a52dec-devel
 Requires:  faac-devel
 Requires:  faad2-devel
 Requires:  fftw2-devel < 3
@@ -580,7 +567,6 @@ Requires:  mythgallery    = %{version}-%{release}
 Requires:  mythgame       = %{version}-%{release}
 Requires:  mythnews       = %{version}-%{release}
 Requires:  mythbrowser    = %{version}-%{release}
-Requires:  mythphone      = %{version}-%{release}
 Requires:  mythflix       = %{version}-%{release}
 Requires:  mytharchive    = %{version}-%{release}
 Requires:  mythzoneminder = %{version}-%{release}
@@ -670,27 +656,27 @@ Requires:  mythtv-frontend-api = %{mythfeapiver}
 A game frontend (xmame, nes, snes, pc) for MythTV.
 
 ################################################################################
-%package -n mythgame-emulators
-Summary:   Meta-package requiring emulators for game types mythgame knows about
-Group:     Applications/Multimedia
-Requires:  mythgame = %{version}-%{release}
+#package -n mythgame-emulators
+#Summary:   Meta-package requiring emulators for game types mythgame knows about
+#Group:     Applications/Multimedia
+#Requires:  mythgame = %{version}-%{release}
 # Multi Arcade Machine Emulator, Amiga, Atari 2600
-Requires:  sdlmame
-Requires:  e-uae
-Requires:  stella
+#Requires:  sdlmame
+#Requires:  e-uae
+#Requires:  stella
 # Nintendo, Super Nintendo, Nintendo 64
-Requires:  fceultra
-Requires:  zsnes
-Requires:  mupen64, mupen64-ricevideo
+#Requires:  fceultra
+#Requires:  zsnes
+#Requires:  mupen64, mupen64-ricevideo
 # Sega Genesis, Sega Master System, Game Gear
-Requires:  gens
-Requires:  dega-sdl
-Requires:  osmose
+#Requires:  gens
+#Requires:  dega-sdl
+#Requires:  osmose
 # TurboGraphx 16 (and others)
-Requires:  mednafen
+#Requires:  mednafen
 
-%description -n mythgame-emulators
-Meta-package requiring emulators for game types mythgame knows about.
+#description -n mythgame-emulators
+#Meta-package requiring emulators for game types mythgame knows about.
 
 %endif
 ################################################################################
@@ -731,21 +717,6 @@ Requires:  mythtv-frontend-api = %{mythfeapiver}
 
 %description -n mythnews
 An RSS news feed reader plugin for MythTV.
-
-%endif
-################################################################################
-%if %{with_mythphone}
-
-%package -n mythphone
-Summary:   A video conferencing module for MythTV
-Group:     Applications/Multimedia
-Requires:  mythtv-frontend-api = %{mythfeapiver}
-
-%description -n mythphone
-Mythphone is a phone and videophone capability on MYTH using the
-standard SIP protocol.  It is compatible with Microsoft XP Messenger
-and with SIP Service Providers such as Free World Dialup
-(fwd.pulver.com).
 
 %endif
 ################################################################################
@@ -923,7 +894,7 @@ cd mythtv-%{version}
     --libdir=%{_libdir}                         \
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
---disable-iptv \
+    --enable-iptv				\
     --enable-pthreads                           \
     --enable-ffmpeg-pthreads                    \
     --enable-joystick-menu                      \
@@ -942,6 +913,7 @@ cd mythtv-%{version}
     --enable-dvb                                \
     --enable-libfaac                            \
     --enable-libfaad --enable-libfaad --enable-libfaadbin \
+    --enable-liba52                             \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
@@ -1060,11 +1032,6 @@ cd mythplugins-%{version}
         --enable-mythnews \
     %else
         --disable-mythnews \
-    %endif
-    %if %{with_mythphone}
-        --enable-mythphone \
-    %else
-        --disable-mythphone \
     %endif
     %if %{with_mythvideo}
         --enable-mythvideo \
@@ -1211,16 +1178,14 @@ rm -rf %{buildroot}
 
 ################################################################################
 
-%pre
-# Add the "mythtv" user
-/usr/sbin/useradd -c "mythtvbackend User" \
-    -s /sbin/nologin -r -d %{_varlibdir}/mythtv mythtv 2> /dev/null || :
-
-%post
-
 %post -n libmyth -p /sbin/ldconfig
 
 %postun -n libmyth -p /sbin/ldconfig
+
+%pre backend
+# Add the "mythtv" user
+/usr/sbin/useradd -c "mythtvbackend User" \
+    -s /sbin/nologin -r -d %{_varlibdir}/mythtv mythtv 2> /dev/null || :
 
 %post backend
 /sbin/chkconfig --add mythbackend
@@ -1248,6 +1213,7 @@ fi
 %files common
 %defattr(-,root,root,-)
 %dir %{_sysconfdir}/mythtv
+%dir %{_datadir}/mythtv
 %config(noreplace) %{_sysconfdir}/mythtv/mysql.txt
 %config(noreplace) %{_sysconfdir}/mythtv/config.xml
 %{_bindir}/mythcommflag
@@ -1283,29 +1249,16 @@ fi
 %{_datadir}/mythtv/MSRR_scpd.xml
 %{_datadir}/mythtv/devicemaster.xml
 %{_datadir}/mythtv/deviceslave.xml
-%{_datadir}/mythtv/info_menu.xml
-%{_datadir}/mythtv/info_settings.xml
-%{_datadir}/mythtv/library.xml
-%{_datadir}/mythtv/main_settings.xml
-%{_datadir}/mythtv/mainmenu.xml
-%{_datadir}/mythtv/manage_recordings.xml
-%{_datadir}/mythtv/media_settings.xml
-%{_datadir}/mythtv/optical_menu.xml
-%{_datadir}/mythtv/recpriorities_settings.xml
 %{_datadir}/mythtv/setup.xml
-%{_datadir}/mythtv/tv_lists.xml
-%{_datadir}/mythtv/tv_schedule.xml
-%{_datadir}/mythtv/tv_search.xml
-%{_datadir}/mythtv/tv_settings.xml
-%{_datadir}/mythtv/tvmenu.xml
-%{_datadir}/mythtv/util_menu.xml
 %{_bindir}/mythfrontend
 %{_bindir}/mythtv
 %{_bindir}/mythtvosd
 %{_bindir}/mythlcdserver
 %{_bindir}/mythshutdown
 %{_bindir}/mythwelcome
-%{_libdir}/mythtv/filters
+%dir %{_libdir}/mythtv
+%dir %{_libdir}/mythtv/filters
+%{_libdir}/mythtv/filters/*
 %dir %{_libdir}/mythtv/plugins
 %{_datadir}/mythtv/*.ttf
 %dir %{_datadir}/mythtv/i18n
@@ -1327,6 +1280,7 @@ fi
 %{_includedir}/*
 %{_libdir}/*.so
 %exclude %{_libdir}/*.a
+%dir %{_datadir}/mythtv/build
 %{_datadir}/mythtv/build/settings.pro
 
 %if %{with_perl}
@@ -1335,6 +1289,8 @@ fi
 %{perl_vendorlib}/MythTV.pm
 %dir %{perl_vendorlib}/MythTV
 %{perl_vendorlib}/MythTV/*.pm
+%dir %{perl_vendorlib}/IO/Socket
+%dir %{perl_vendorlib}/IO/Socket/INET
 %{perl_vendorlib}/IO/Socket/INET/MythTV.pm
 %exclude %{perl_vendorarch}/auto/MythTV/.packlist
 %endif
@@ -1363,7 +1319,6 @@ fi
 %doc mythplugins-%{version}/mytharchive/TODO
 %{_bindir}/mytharchivehelper
 %{_libdir}/mythtv/plugins/libmytharchive.so
-%{_datadir}/mythtv/archiveformat.xml
 %{_datadir}/mythtv/archivemenu.xml
 %{_datadir}/mythtv/archiveutils.xml
 %{_datadir}/mythtv/mytharchive
@@ -1412,15 +1367,17 @@ fi
 %config(noreplace) %{_sysconfdir}/mythgame/gamelist.xml
 %{_libdir}/mythtv/plugins/libmythgame.so
 %{_datadir}/mythtv/games
-%exclude %{_datadir}/mythtv/games/xmame
+%dir %{_datadir}/mythtv/games/xmame
+%dir %{_datadir}/mame/screens
+%dir %{_datadir}/mame/flyers
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
 
-%files -n mythgame-emulators
-%defattr(-,root,root,-)
-%{_datadir}/mythtv/games/xmame
-%{_datadir}/mame/screens
-%{_datadir}/mame/flyers
+#files -n mythgame-emulators
+#defattr(-,root,root,-)
+#{_datadir}/mythtv/games/xmame
+#{_datadir}/mame/screens
+#{_datadir}/mame/flyers
 %endif
 
 %if %{with_mythmovies}
@@ -1456,17 +1413,6 @@ fi
 %{_libdir}/mythtv/plugins/libmythnews.so
 %{_datadir}/mythtv/mythnews
 %{_datadir}/mythtv/i18n/mythnews_*.qm
-%endif
-
-%if %{with_mythphone}
-%files -n mythphone
-%defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythphone/AUTHORS
-%doc mythplugins-%{version}/mythphone/COPYING
-%doc mythplugins-%{version}/mythphone/README
-%doc mythplugins-%{version}/mythphone/TODO
-%{_libdir}/mythtv/plugins/libmythphone.so
-%{_datadir}/mythtv/i18n/mythphone_*.qm
 %endif
 
 %if %{with_mythvideo}
@@ -1518,6 +1464,9 @@ fi
 ################################################################################
 
 %changelog
+* Wed Mar 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn
+- Resync with RPM Fusion spec to pick up packaging fix-ups and
+  kill off the defunct mythphone plugin
 
 * Wed Jan 21 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
 - Remove mythcontrols, which no longer exists
