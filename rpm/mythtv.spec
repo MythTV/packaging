@@ -60,7 +60,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r20105
+%define _svnrev r20107
 %define branch trunk
 
 #
@@ -455,6 +455,8 @@ Requires:  freetype, lame
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
 Provides:  mythtv-frontend-api = %{mythfeapiver}
+Obsoletes: mythcontrols < %{version}-%{release}
+Provides:  mythcontrols = %{version}-%{release}
 
 %description frontend
 MythTV provides a unified graphical interface for recording and viewing
@@ -1054,11 +1056,6 @@ cd mythplugins-%{version}
         --enable-mythzoneminder \
     %else
         --disable-mythzoneminder \
-    %endif
-    %if %{with_festival}
-        --enable-festival \
-    %else
-        --disable-festival \
     %endif
         --enable-opengl \
         --enable-libvisual \
