@@ -49,7 +49,7 @@ unset SESSION_MANAGER
 
 if [ ! -d $USER_HOME ]; then
 	log_failure_msg "MythTV home directory, $USER_HOME does not exist."
-	exit 1
+	exit 0
 fi
 
 #create a symbolic link for mysql.txt so it can't be overwritten
