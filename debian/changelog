@@ -10,6 +10,12 @@ mythtv (0.21.0+trunk19951-0ubuntu0) UNRELEASED; urgency=low
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Jan 2009 01:02:49 -0600
 
+mythtv (0.21.0+fixes19961-0ubuntu6) jaunty; urgency=low
+
+  * Fixed problem where init script errors on install 
+
+ -- John Baab <john.baab@gmail.com>  Fri, 13 Mar 2009 15:52:09 -0400
+
 mythtv (0.21.0+fixes19961-0ubuntu5) jaunty; urgency=low
 
   * fixed backend init script to correctly detect if a backend is running. 
@@ -37,7 +43,7 @@ mythtv (0.21.0+fixes19961-0ubuntu2) jaunty; urgency=low
 
  -- John Baab <john.baab@gmail.com>  Tue, 10 Feb 2009 17:08:38 -0500
 
-mythtv (0.21.0+fixes19961-0ubuntu1) jaunty; urgency=low
+mythtv (0.21.0+fixes19961-0ubuntu1) intrepid; urgency=low
 
   [ John Baab ]
   * Fixes missing config.xml issue (LP: #220604)
@@ -189,7 +195,7 @@ mythtv (0.21.0+fixes19136-0ubuntu2) jaunty; urgency=low
   * debian/debian/README.Debian:
     - Drop.  The comments in here are pretty old and dated.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Sat, 13 Dec 2008 21:32:03 -0600
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 14 Dec 2008 00:32:34 -0600
 
 mythtv (0.21.0+fixes19136-0ubuntu1) jaunty; urgency=low
 
