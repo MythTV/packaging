@@ -224,8 +224,7 @@ binary-indep: build install
 	dh_installexamples -pmythtv-doc contrib/configfiles/*
 	dh_installcron -i
 	dh_installchangelogs  -i
-	dh_pysupport -plibmyth-python
-	find debian/libmyth-python -name *.pyc | xargs rm || true
+	dh_pycentral -plibmyth-python
 	dh_link -i
 	dh_perl -i
 	dh_compress -i
