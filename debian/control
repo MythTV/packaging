@@ -39,6 +39,7 @@ Build-Depends:  debhelper (>> 5.0.0),
                 libdts-dev,
                 libxvidcore4-dev,
                 libfftw3-dev | fftw3-dev,
+		lsb-release,
                 xserver-xorg-video-openchrome [i386 amd64] | libchromexvmc1 [i386 amd64],
                 xserver-xorg-video-openchrome [i386 amd64] | libchromexvmcpro1 [i386 amd64]
 
