@@ -1,8 +1,9 @@
-mythtv (0.21.0+fixes19961-0ubuntu7) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes19961-0ubuntu7) jaunty; urgency=low
 
   * debian/control:
     - Depends on lsb-release.
   * Add 30_python26_transition.dpatch to allow python 2.6 builds to work.
+    (LP: #342870)
   * debian/control, debian/rules:
     - Use python-central instead of python-support.
 
