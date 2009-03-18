@@ -95,6 +95,9 @@ configure-stamp: patch-stamp
 	#for a udev transition in the making
 	[ $(UDEV) = "lib" ] && ln -s mythtv-backend.preinst.in debian/mythtv-backend.preinst || true
 
+	#on releases BEFORE python 2.6 transition, we need to remove a patch. ugly ugly ugly!
+	[ $(UDEV) = "etc" ] && [ -f debian/patches/30_python26_transition.dpatch ] && dpatch deapply 30_python26_transition.dpatch || true
+
 	#update SVN REVISION to show the right version
 	sed -i -e "s/\`(svnversion \$$\$${SVNTREEDIR} 2>\/dev\/null) || echo Unknown\`/$(SVN_REVISION)/" version.pro
 

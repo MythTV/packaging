@@ -1,5 +1,7 @@
 mythtv (0.21.0+fixes19961-0ubuntu7) UNRELEASED; urgency=low
 
+  * debian/control:
+    - Depends on lsb-release.
   * Add 30_python26_transition.dpatch to allow python 2.6 builds to work.
   * debian/control, debian/rules:
     - Use python-central instead of python-support.
