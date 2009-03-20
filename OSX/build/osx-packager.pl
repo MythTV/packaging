@@ -453,7 +453,7 @@ our %conf = (
         '--enable-exif',
         '--enable-new-exif',
         '--disable-mythgame',
-        '--disable-mythphone',
+        '--disable-mythmusic',
         '--disable-mythzoneminder',
       ],
   'myththemes'
