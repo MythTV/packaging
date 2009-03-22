@@ -9,7 +9,8 @@ Standards-Version: 3.8.0
 Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~ubuntu-mythtv/mythtv/mythtv-trunk-022
 Vcs-Browser: http://bazaar.launchpad.net/~ubuntu-mythtv/mythtv-trunk-022
 Build-Conflicts: libmyth-0.20-dev,
-                 libmyth-dev
+                 libmyth-dev,
+                 libqt3-mt-dev
 Build-Depends:  debhelper (>> 5.0.0),
                 dpatch,
                 ccache,
