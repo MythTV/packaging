@@ -49,7 +49,7 @@ unset SESSION_MANAGER
 
 if [ ! -d $USER_HOME ]; then
 	log_failure_msg "MythTV home directory, $USER_HOME does not exist."
-	exit 0
+	exit 1
 fi
 
 #create a symbolic link for mysql.txt so it can't be overwritten
@@ -69,7 +69,7 @@ case "$1" in
 		PIDDIR=/proc/$(cat $RUNDIR/$NAME.pid)
 		if [ -d ${RUNDIR} -a "$(readlink -f ${PIDDIR}/exe)" = "${DAEMON}" ]; then
 			log_success_msg "$DESC already started; use restart instead."
-			exit 1
+			exit 0
 		else
 			log_success_msg "Removing stale PID file $RUNDIR/$NAME"
 			rm -f $RUNDIR/$NAME.pid
