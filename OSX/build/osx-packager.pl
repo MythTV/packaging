@@ -441,11 +441,16 @@ mkdir $SRCDIR;
 
 our $SVNDIR = "$SRCDIR/myth-svn";
 
-# configure mythplugins, and mythtv, etc
-our %conf = (
-  'mythplugins'
-  =>  [
-        '--prefix=' . $PREFIX,
+our @pluginConf;
+if ( $OPT{plugins} )
+{
+    @pluginConf = split /,/, $OPT{plugins};
+    @pluginConf = grep(s/^/--enable-/, @pluginConf);
+    unshift @pluginConf, '--disable-all';
+}
+else
+{
+    @pluginConf = (
         '--enable-opengl',
         '--disable-mythbrowser',
         '--disable-transcode',
@@ -455,6 +460,16 @@ our %conf = (
         '--disable-mythgame',
         '--disable-mythmusic',
         '--disable-mythzoneminder',
+    );
+}
+
+
+# configure mythplugins, and mythtv, etc
+our %conf = (
+  'mythplugins'
+  =>  [
+        '--prefix=' . $PREFIX,
+        @pluginConf
       ],
   'myththemes'
   =>  [
