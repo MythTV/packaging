@@ -95,6 +95,9 @@ configure-stamp: patch-stamp
 	#for a udev transition in the making
 	[ $(UDEV) = "lib" ] && ln -s mythtv-backend.preinst.in debian/mythtv-backend.preinst || true
 
+	#on releases BEFORE python 2.6 transition, we need to remove a patch. ugly ugly ugly!
+	[ $(UDEV) = "etc" ] && [ -f debian/patches/30_python26_transition.dpatch ] && dpatch deapply 30_python26_transition.dpatch || true
+
 	#update SVN REVISION to show the right version
 	sed -i -e "s/\`(svnversion \$$\$${SVNTREEDIR} 2>\/dev\/null) || echo Unknown\`/$(SVN_REVISION)/" version.pro
 
@@ -224,8 +227,7 @@ binary-indep: build install
 	dh_installexamples -pmythtv-doc contrib/config_files/*
 	dh_installcron -i
 	dh_installchangelogs  -i
-	dh_pysupport -plibmyth-python
-	find debian/libmyth-python -name *.pyc | xargs rm || true
+	dh_pycentral -plibmyth-python
 	dh_link -i
 	dh_perl -i
 	dh_compress -i
