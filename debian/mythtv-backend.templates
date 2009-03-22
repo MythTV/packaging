@@ -1,8 +1,3 @@
-Template: mythtv/create_v4l_devs
-Type: boolean
-Default: true
-_Description: Is it OK to create the video4linux device nodes?
-
 Template: mythtv/run_setup
 Type: note
 _Description: mythtv-setup must be run in order to complete MythTV installation

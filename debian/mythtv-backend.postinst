@@ -2,14 +2,6 @@
 
 case "$1" in
     configure)
-        if [ ! -e /dev/.devfsd ]; then
-            . /usr/share/debconf/confmodule
-
-            db_get mythtv/create_v4l_devs
-            if [ "$RET" = "true" ]; then
-                (cd /dev && MAKEDEV v4l)
-            fi
-        fi
 
         for dir in /var/log/mythtv /var/lib/mythtv/recordings /var/cache/mythtv; do
 	    if [ -d "$dir" ] && ! dpkg-statoverride --list "$dir" >/dev/null; then
