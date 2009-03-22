@@ -1,10 +1,10 @@
-mythtv (0.21.0+fixes19961-0ubuntu8) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes19961-0ubuntu8) jaunty; urgency=low
 
   * Remove any references to creating V4L devices.  Not necessary
     since Ubuntu is exclusively UDEV.
-  * Correct the exit code in another portion of the init script.
+  * Correct the exit code in another portion of the init script. (LP: #346694)
 
- -- Mario Limonciello <superm1@ubuntu.com>  Sun, 22 Mar 2009 17:44:07 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 22 Mar 2009 17:53:24 -0500
 
 mythtv (0.21.0+fixes19961-0ubuntu7) jaunty; urgency=low
 
