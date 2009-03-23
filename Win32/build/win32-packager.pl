@@ -112,6 +112,15 @@ if (defined $opt{b}) {
     my @num = split /\./, $version;
     $svnlocation = "branches/release-$num[0]-$num[1]-fixes";
     print "NOT using SVN 'trunk', using '$svnlocation'\n";
+
+    print "\nWARNING: This is unlikely to build successfully.\n\n";
+    print "SVN trunk changes frequently, and this version of the\n";
+    print "build script has had many changes to keep up with it.\n";
+    print "Maybe try the version from the branch instead! e.g.\n";
+    print "http://svn.mythtv.org/svn/branches/release-0-21-fixes/mythtv/contrib/Win32/win32-packager.pl\n\n";
+#    [ pause => 'press [enter] to continue !'],
+    print 'Press [enter] to continue !';
+    my $temp = getc();
 } else {
     $svnlocation = "trunk";
 }
