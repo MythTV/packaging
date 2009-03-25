@@ -478,13 +478,13 @@ push @{$expect},
 #     mysql-essential-5.1.30-win32.msi/from/http://mysql.mirrors.ilisys.com.au/
 # alternate: http://mysql.mirrors.ilisys.com.au/Downloads/MySQL-5.1/
 #     mysql-essential-5.1.30-win32.msi
-[ archive => $sources.'mysql-essential-5.1.30-win32.msi',
+[ archive => $sources.'mysql-essential-5.1.31-win32.msi',
   'fetch' => 'http://mysql.mirrors.ilisys.com.au/Downloads/'.
-             'MySQL-5.1/mysql-essential-5.1.30-win32.msi',
-  comment => 'fetch mysql binaries - this is a big download(23MB) '.
+             'MySQL-5.1/mysql-essential-5.1.31-win32.msi',
+  comment => 'fetch mysql binaries - this is a big download(35MB) '.
              'so it might take a while' ],
 [ file    => "c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll",
-  exec    => $dossources.'mysql-essential-5.1.30-win32.msi INSTALLLEVEL=2',
+  exec    => $dossources.'mysql-essential-5.1.31-win32.msi INSTALLLEVEL=2',
   comment => 'Install mysql - be sure to choose to do a "COMPLETE" install. '.
              'You should also choose NOT to "configure the server now" ' ],
 
@@ -1013,18 +1013,18 @@ push @{$expect},
   comment => 'building and installing: libvisual' ],
 
 
-[ archive => $sources.'fftw-3.2.tar.gz',  
-  fetch   => 'http://www.fftw.org/fftw-3.2.tar.gz'],
-[ dir     => $sources.'fftw-3.2', 
-  extract => $sources.'fftw-3.2.tar' ],
+[ archive => $sources.'fftw-3.2.1.tar.gz',  
+  fetch   => 'http://www.fftw.org/fftw-3.2.1.tar.gz'],
+[ dir     => $sources.'fftw-3.2.1', 
+  extract => $sources.'fftw-3.2.1.tar' ],
 [ file    => $msys.'lib/libfftw3.a', 
-  shell  => ["cd $unixsources/fftw-3.2",
+  shell  => ["cd $unixsources/fftw-3.2.1",
              "./configure --prefix=/usr",
              "make",
              "make install"],
   comment => 'building and installing: msys fftw' ],
 [ file    => $mingw.'lib/libfftw3.a', 
-  shell  => ["cd $unixsources/fftw-3.2",
+  shell  => ["cd $unixsources/fftw-3.2.1",
              "./configure --prefix=/mingw",
              "make",
              "make install"],
