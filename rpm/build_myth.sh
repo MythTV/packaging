@@ -131,7 +131,6 @@ EOF
             --without mytharchive   \
             --without mythgallery   \
             --without mythgame      \
-            --without mythphone     \
             --without mythbrowser   \
             --without mythmovies    \
             --without mythnews      \
