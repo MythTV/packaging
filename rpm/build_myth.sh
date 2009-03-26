@@ -69,6 +69,7 @@ EOF
 # Update to the latest/requested SVN version
     function updatesvn {
         PKG="$1"
+        REV="$2"
         if [ -z "$REV" -o 0"$REV" -lt 1 ]; then
             echo "Updating svn checkout for $PKG"
             REL=`svn up "$SVNDIR"/"$PKG" 2>/dev/null`
