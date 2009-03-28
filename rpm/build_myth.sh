@@ -101,6 +101,7 @@ EOF
     function buildmyth {
     # Update the SVN checkout
         updatesvn mythtv "$1"
+        updatesvn mythplugins "$1"
     # Remove the existing libmyth-devel so it doesn't confuse qmake
     # (we can't override the order of the include file path)
         PKG=`rpm -q libmyth-devel`
