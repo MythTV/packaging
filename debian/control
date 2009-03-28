@@ -82,8 +82,8 @@ Architecture: all
 Pre-Depends: pwgen
 Depends: adduser, mysql-client, ttf-freefont, ${misc:Depends}
 Suggests: mythtv-doc (= ${source:Version})
-Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393)
-Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.15-3), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500)
+Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols
+Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.15-3), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols
 Description: A personal video recorder application (common data)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.

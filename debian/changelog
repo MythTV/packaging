@@ -6,6 +6,7 @@ mythtv (0.21.0+trunk20202-0ubuntu0) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * debian/control: Build depend on nvidia 180
+  * debian/control: Conflicts/Replaces on mythcontrols
   * debian/rules: enable vdpau
 
  -- Build Machine <build@me.com>  Wed, 07 Jan 2009 01:02:49 -0600
