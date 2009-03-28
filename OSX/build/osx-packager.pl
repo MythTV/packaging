@@ -60,6 +60,7 @@ our %patches = ();
 our %depend_order = (
   'mythtv'
   =>  [
+        'faad2',
         'freetype',
         'lame',
         'mysqlclient',
@@ -104,9 +105,14 @@ our %depend = (
     #=> 'yes'
   },
 
+  'faad2' => 
+  { 
+    'url' => "$sourceforge/sourceforge/faac/faad2-2.7.tar.gz", 
+  }, 
+
   'freetype' =>
   {
-    'url' =>  "$sourceforge/sourceforge/freetype/freetype-2.1.10.tar.gz",
+    'url' => "$sourceforge/sourceforge/freetype/freetype-2.1.10.tar.gz",
   },
 
   'lame' =>
@@ -479,6 +485,7 @@ our %conf = (
   =>  [
         '--prefix=' . $PREFIX,
         '--runprefix=../Resources',
+        '--enable-libfaad',
         # To "cross compile" something for a lesser Mac:
         #'--tune=G3',
         #'--disable-altivec',
