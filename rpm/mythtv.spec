@@ -172,7 +172,7 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-BuildRequires:  a52dec-devel
+#BuildRequires:  a52dec-devel
 BuildRequires:  faac-devel
 BuildRequires:  faad2-devel
 BuildRequires:  fftw2-devel < 3
@@ -382,7 +382,7 @@ Requires:  xorg-x11-drv-openchrome-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-Requires:  a52dec-devel
+#Requires:  a52dec-devel
 Requires:  faac-devel
 Requires:  faad2-devel
 Requires:  fftw2-devel < 3
@@ -915,7 +915,7 @@ cd mythtv-%{version}
     --enable-dvb                                \
     --enable-libfaac                            \
     --enable-libfaad --enable-libfaad --enable-libfaadbin \
-    --enable-liba52                             \
+    --disable-liba52                            \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
@@ -1461,6 +1461,11 @@ fi
 ################################################################################
 
 %changelog
+
+* Fri Apr 10 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
+- Disable liba52 options because they seem to cause no end of trouble
+  with AC3 recordings from hdhomerun/firewire.
+
 * Wed Mar 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn
 - Resync with RPM Fusion spec to pick up packaging fix-ups and
   kill off the defunct mythphone plugin
