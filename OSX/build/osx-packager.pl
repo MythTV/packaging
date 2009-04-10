@@ -65,6 +65,7 @@ our %depend_order = (
         'lame',
         'mysqlclient',
         'qt',
+        #'qt-4.4',
       ],
   'mythplugins'
   =>  [
@@ -183,8 +184,6 @@ our %depend = (
     =>  'ftp://ftp.trolltech.com/qt/source/qt-mac-opensource-src-4.3.4.tar.gz',
     'url'
     =>  'http://wftp.tu-chemnitz.de/pub/Qt/qt/source/qt-mac-opensource-src-4.3.4.tar.gz',
-    #'url'
-    #=>  'http://ftp3.ie.freebsd.org/pub/trolltech/pub/qt/source/qt-mac-opensource-src-4.4.0.tar.bz2',
     'conf-cmd'
     =>  'echo yes | MAKEFLAGS=$parallel_make_flags ./configure',
     'conf'
@@ -244,6 +243,61 @@ our %depend = (
                    'ln -sf libQtGui.dylib      libQtGui_debug.dylib      ; '.
                    'ln -sf libQtNetwork.dylib  libQtNetwork_debug.dylib  ; '.
                    'ln -sf libQtCore.dylib     libQtCore_debug.dylib     ; '.
+                   '',
+    'parallel-make' => 'yes'
+  },
+
+  'qt-4.4'
+  =>
+  {
+    'url'
+    => 'ftp://ftp.trolltech.no/qt/source/qt-mac-opensource-src-4.4.3.tar.gz',
+    'conf-cmd'
+    =>  'echo yes | MAKEFLAGS=$parallel_make_flags ./configure',
+    'conf'
+    =>  [
+          '-prefix', '"$PREFIX"',
+          '-release',
+          '-fast',
+          '-no-exceptions',
+          '-no-accessibility',
+          '-no-stl',
+          # When MythTV all ported:  '-no-qt3support',
+          '-I"$PREFIX/include/mysql"',
+          '-L"$PREFIX/lib/mysql"',
+          '-qt-sql-mysql',
+          '-no-sql-sqlite',
+          '-no-sql-odbc',
+          '-system-zlib',
+          '-no-libtiff',
+          '-no-libmng',
+          '-nomake examples -nomake demos',
+          '-no-nis',
+          '-no-cups',
+          '-no-qdbus',
+          '-no-framework',
+          #'-no-xmlpatterns',
+          #'-no-phonon',
+          #'-no-svg',
+       ],
+    'make'
+    =>  [
+          'sub-webkit-install_subtargets-ordered',
+          'install_qmake',
+          'install_mkspecs',
+        ],
+    # Using configure -release saves a lot of space and time,
+    # but by default, debug builds of mythtv try to link against
+    # debug libraries of Qt. This works around that:
+    'post-conf' => 'cd $PREFIX/lib ; '.
+                   'ln -sf libQt3Support.dylib libQt3Support_debug.dylib ; '.
+                   'ln -sf libQtSql.dylib      libQtSql_debug.dylib      ; '.
+                   'ln -sf libQtXml.dylib      libQtXml_debug.dylib      ; '.
+                   'ln -sf libQtOpenGL.dylib   libQtOpenGL_debug.dylib   ; '.
+                   'ln -sf libQtGui.dylib      libQtGui_debug.dylib      ; '.
+                   'ln -sf libQtNetwork.dylib  libQtNetwork_debug.dylib  ; '.
+                   'ln -sf libQtCore.dylib     libQtCore_debug.dylib     ; '.
+                   'ln -sf libQtWebKit.dylib   libQtWebKit_debug.dylib   ; '.
                    '',
     'parallel-make' => 'yes'
   },
@@ -486,6 +540,7 @@ our %conf = (
         '--prefix=' . $PREFIX,
         '--runprefix=../Resources',
         '--enable-libfaad',
+        #'--without-bindings=perl,python',
         # To "cross compile" something for a lesser Mac:
         #'--tune=G3',
         #'--disable-altivec',
