@@ -1,3 +1,10 @@
+mythtv (0.21.0+fixes19961-0ubuntu9) UNRELEASED; urgency=low
+
+  * debian/control:
+    - Build depends on libpulse0 so that pulseaudio disabling code works.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 26 Apr 2009 09:27:16 -0500
+
 mythtv (0.21.0+fixes19961-0ubuntu8) jaunty; urgency=low
 
   * Remove any references to creating V4L devices.  Not necessary
