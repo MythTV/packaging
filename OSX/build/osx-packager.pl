@@ -64,8 +64,8 @@ our %depend_order = (
         'freetype',
         'lame',
         'mysqlclient',
-        'qt',
-        #'qt-4.4',
+        #'qt', 4.3 or earlier
+        'qt-4.4',
       ],
   'mythplugins'
   =>  [
@@ -540,7 +540,7 @@ our %conf = (
         '--prefix=' . $PREFIX,
         '--runprefix=../Resources',
         '--enable-libfaad',
-        #'--without-bindings=perl,python',
+        '--without-bindings=perl,python',
         # To "cross compile" something for a lesser Mac:
         #'--tune=G3',
         #'--disable-altivec',
