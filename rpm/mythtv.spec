@@ -150,7 +150,7 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  gcc-c++
 BuildRequires:  mysql-devel >= 5
-BuildRequires:  qt4-devel
+BuildRequires:  qt4-devel >= 4.4
 
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
@@ -344,7 +344,7 @@ Group:     System Environment/Libraries
 
 Requires:  freetype >= 2
 Requires:  lame
-Requires:  qt4
+Requires:  qt4 >= 4.4
 Requires:  qt4-MySQL
 
 %description -n libmyth
@@ -362,7 +362,7 @@ Requires:  libmyth = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
 Requires:  mysql-devel >= 5
-Requires:  qt4-devel
+Requires:  qt4-devel >= 4.4
 Requires:  lm_sensors-devel
 Requires:  lirc-devel
 
@@ -1461,6 +1461,9 @@ fi
 ################################################################################
 
 %changelog
+
+* Mon May 04 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
+- Require Qt >= 4.4
 
 * Fri Apr 10 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
 - Disable liba52 options because they seem to cause no end of trouble
