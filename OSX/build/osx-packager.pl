@@ -540,7 +540,7 @@ our %conf = (
         '--prefix=' . $PREFIX,
         '--runprefix=../Resources',
         '--enable-libfaad',
-        '--without-bindings=perl,python',
+        #'--without-bindings=perl,python',
         # To "cross compile" something for a lesser Mac:
         #'--tune=G3',
         #'--disable-altivec',
