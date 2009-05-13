@@ -60,6 +60,7 @@ our %patches = ();
 our %depend_order = (
   'mythtv'
   =>  [
+        'dvdcss',
         'faad2',
         'freetype',
         'lame',
@@ -70,7 +71,6 @@ our %depend_order = (
   'mythplugins'
   =>  [
         'exif',
-        'dvdcss',
 # MythMusic needs these:
         'libmad',
         'taglib',
@@ -1094,6 +1094,10 @@ foreach my $target ( @targets )
         &AddFakeBinDir($finalTarget);
       }
     }
+
+    # Allow playback of region encoded DVDs
+    &Syscall([ 'cp', "$PREFIX/lib/libdvdcss.2.dylib",
+                     "$finalTarget/Contents/Plugins" ]) or die;
   }
 }
 
