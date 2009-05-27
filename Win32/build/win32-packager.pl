@@ -335,7 +335,20 @@ push @{$expect},
 [ file    => $mingw."bin/gcc.exe",
   exec    => $installMinGW,
   comment => 'unable to find a gcc.exe where expected, '.
-             'rerunning MinGW installer!' ],
+             'rerunning MinGW installer!' ];
+
+# sanity check - building 0.21 with mingwrt != 3.14 is guaranteed FAIL
+if ($version == '0.21') {
+   push @{$expect}, 
+     [grep    => ['runtime=mingw-runtime-3.14.tar.gz',$mingw.'installed.ini'],
+      Died_Because_Wrong_MinGW_Version => 'Intentional script failure',
+      comment => $version.' must be built with (old) MinGW runtime 3.14. '.
+                 '"Current" MinGW releases will NOT work. If the script '.
+                 'dies here, uninstall MinGW and next time, choose the '.
+                 '"Previous" MinGW package in the Automated Installer.']; 
+}
+
+push @{$expect},
 
 [ archive => $sources.'MSYS-1.0.10.exe',
   'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw/MSYS-1.0.10.exe',
@@ -478,13 +491,13 @@ push @{$expect},
 #     mysql-essential-5.1.30-win32.msi/from/http://mysql.mirrors.ilisys.com.au/
 # alternate: http://mysql.mirrors.ilisys.com.au/Downloads/MySQL-5.1/
 #     mysql-essential-5.1.30-win32.msi
-[ archive => $sources.'mysql-essential-5.1.31-win32.msi',
+[ archive => $sources.'mysql-essential-5.1.34-win32.msi',
   'fetch' => 'http://mysql.mirrors.ilisys.com.au/Downloads/'.
-             'MySQL-5.1/mysql-essential-5.1.31-win32.msi',
+             'MySQL-5.1/mysql-essential-5.1.34-win32.msi',
   comment => 'fetch mysql binaries - this is a big download(35MB) '.
              'so it might take a while' ],
 [ file    => "c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll",
-  exec    => $dossources.'mysql-essential-5.1.31-win32.msi INSTALLLEVEL=2',
+  exec    => $dossources.'mysql-essential-5.1.34-win32.msi INSTALLLEVEL=2',
   comment => 'Install mysql - be sure to choose to do a "COMPLETE" install. '.
              'You should also choose NOT to "configure the server now" ' ],
 
@@ -574,25 +587,25 @@ push @{$expect},
 
 #[ pause => 'check  patch.... press [enter] to continue !'],
 
-# apply stdlib.h patch
-[ file    => $mingw.'include/stdlib_h.patch', 
-  write   => [$mingw.'include/stdlib_h.patch',
-'--- include/stdlib.h.org	Thu Dec  4 11:11:40 2008
-+++ include/stdlib.h	Thu Dec  4 11:12:46 2008
-@@ -314,7 +314,7 @@
- #else
- static
- #endif /* Not __cplusplus */
--inline double __cdecl __MINGW_NOTHROW strtod (const char* __restrict__ __nptr, char** __restrict__ __endptr)
-+__inline__ double __cdecl __MINGW_NOTHROW strtod (const char* __restrict__ __nptr, char** __restrict__ __endptr)
- { return __strtod(__nptr, __endptr); }
- float __cdecl __MINGW_NOTHROW strtof (const char * __restrict__, char ** __restrict__);
- long double __cdecl __MINGW_NOTHROW strtold (const char * __restrict__, char ** __restrict__);
-' ],comment => 'write the patch for the the stdlib.h file'],
-# apply it!?
-[ grep    => ['__inline__ double __cdecl __MINGW_NOTHROW strtod ',$mingw.'include/stdlib.h'], 
-  shell   => ["cd /mingw/include","patch -p1 < stdlib_h.patch"],
-  comment => 'Apply stdlib.h patch file, if not already applied....' ],
+# apply stdlib.h patch - no longer needed as of MinGW runtime 3.15.2
+#[ file    => $mingw.'include/stdlib_h.patch', 
+#  write   => [$mingw.'include/stdlib_h.patch',
+#'--- include/stdlib.h.org	Thu Dec  4 11:11:40 2008
+#+++ include/stdlib.h	Thu Dec  4 11:12:46 2008
+#@@ -314,7 +314,7 @@
+# #else
+# static
+# #endif /* Not __cplusplus */
+#-inline double __cdecl __MINGW_NOTHROW strtod (const char* __restrict__ __nptr, char** __restrict__ __endptr)
+#+__inline__ double __cdecl __MINGW_NOTHROW strtod (const char* __restrict__ __nptr, char** __restrict__ __endptr)
+# { return __strtod(__nptr, __endptr); }
+# float __cdecl __MINGW_NOTHROW strtof (const char * __restrict__, char ** __restrict__);
+# long double __cdecl __MINGW_NOTHROW strtold (const char * __restrict__, char ** __restrict__);
+#' ],comment => 'write the patch for the the stdlib.h file'],
+## apply it!?
+#[ grep    => ['__inline__ double __cdecl __MINGW_NOTHROW',$mingw.'include/stdlib.h'], 
+#  shell   => ["cd /mingw/include","patch -p1 < stdlib_h.patch"],
+#  comment => 'Apply stdlib.h patch file, if not already applied....' ],
 
 #[ pause => 'check  patch.... press [enter] to continue !'],
 
@@ -640,7 +653,7 @@ push @{$expect},
   write   => [$mingw.'include/sched_h.patch',
 "--- include/sched.h.org	Thu Dec  4 12:00:16 2008
 +++ include/sched.h	Wed Dec  3 13:42:54 2008
-@@ -124,8 +124,16 @@
+@@ -124,8 +124,17 @@
  typedef int pid_t;
  #endif
  
@@ -650,6 +663,7 @@ push @{$expect},
 +/* Define to `int' if <sys/types.h> does not define. */
 +/* GCC 4.x reportedly defines pid_t. */
 +#ifndef _PID_T_
++#define _PID_T_
 +#define pid_t int
 +#endif
 +#endif
@@ -1836,7 +1850,9 @@ echo Creating build-folder Directories...
 mkdir '.$unixmythtv.'/build/bin/sqldrivers
 echo Copying QT plugin required dlls....
 cp '.$unixmsys.'qt-3.3.x-p8/plugins/sqldrivers/libqsqlmysql.dll '.$unixmythtv.'build/bin/sqldrivers 
-cp '.$unixmsys.'qt-win-opensource-src-4.4.3/plugins/sqldrivers/qsqlmysql4.dll '.$unixmythtv.'build/bin/sqldrivers 
+cp '.$unixmsys.'qt-win-opensource-src-4.4.3/plugins/sqldrivers/*.dll '.$unixmythtv.'build/bin/sqldrivers 
+cp '.$unixmsys.'qt-win-opensource-src-4.4.3/plugins/codecs/*.a '.$unixmythtv.'build/lib/ 
+cp '.$unixmsys.'qt-win-opensource-src-4.4.3/plugins/codecs/*.dll '.$unixmythtv.'build/bin/ 
 echo Copying ming and msys dlls to build folder.....
 # pthread dlls and mingwm10.dll are copied from here:
 cp /mingw/bin/*.dll '.$unixmythtv.'build/bin
