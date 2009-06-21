@@ -60,7 +60,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r20280
+%define _svnrev r20729
 %define branch trunk
 
 #
@@ -231,10 +231,6 @@ BuildRequires:  python-devel
 # Plugin Build Requirements
 
 %if %{with_plugins}
-
-%if %{with_mythbrowser}
-BuildRequires:  kdelibs3-devel
-%endif
 
 %if %{with_mythgallery}
 BuildRequires:  libtiff-devel
@@ -1461,11 +1457,13 @@ fi
 ################################################################################
 
 %changelog
+* Sat Jun 20 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn
+- Drop kdelibs3-devel BR for MythBrowser, its been ported to qt4 now
 
-* Mon May 04 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
+* Mon May 04 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
 - Require Qt >= 4.4
 
-* Fri Apr 10 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
+* Fri Apr 10 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
 - Disable liba52 options because they seem to cause no end of trouble
   with AC3 recordings from hdhomerun/firewire.
 
