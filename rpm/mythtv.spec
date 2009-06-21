@@ -764,6 +764,7 @@ Group:     Applications/Multimedia
 Requires:  httpd >= 1.3.26
 Requires:  php >= 5.1
 Requires:  php-mysql
+Requires:  php-process
 
 %description -n mythweb
 The web interface to MythTV.
@@ -1459,6 +1460,7 @@ fi
 %changelog
 * Sat Jun 20 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn
 - Drop kdelibs3-devel BR for MythBrowser, its been ported to qt4 now
+- Add Requires: php-process (needed for posix_get*() functions)
 
 * Mon May 04 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
 - Require Qt >= 4.4
