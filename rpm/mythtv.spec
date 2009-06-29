@@ -74,7 +74,7 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version: 0.22
 %if "%{branch}" == "trunk"
-Release: 0.1.svn.%{_svnrev}%{?dist}
+Release: 0.3.svn.%{_svnrev}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
