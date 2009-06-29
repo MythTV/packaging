@@ -60,7 +60,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r20754
+%define _svnrev r20755
 %define branch trunk
 
 #
@@ -195,6 +195,7 @@ BuildRequires:  taglib-devel >= 1.4
 BuildRequires:  transcode >= 0.6.8
 BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
+BuildRequires:  pulseaudio-libs-devel
 
 # Audio framework support
 BuildRequires:  alsa-lib-devel
@@ -1458,6 +1459,7 @@ fi
 
 * Sun Jun 28 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
 - Remove xvmc-opengl references that were removed in r20723
+- Add requirement for pulseaudio-libs-devel now that some distros are requiring it
 
 * Sat Jun 20 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn
 - Drop kdelibs3-devel BR for MythBrowser, its been ported to qt4 now
