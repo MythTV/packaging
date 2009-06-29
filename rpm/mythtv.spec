@@ -60,7 +60,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r20729
+%define _svnrev r20754
 %define branch trunk
 
 #
@@ -918,9 +918,6 @@ cd mythtv-%{version}
     --enable-libxvid                            \
 %if %{with_xvmcnvidia}
     --xvmc-lib=XvMCNVIDIA_dynamic               \
-    --enable-xvmc-opengl                        \
-%else
-    --disable-xvmc-opengl                       \
 %endif
 %if %{with_directfb}
     --enable-directfb                           \
@@ -1458,6 +1455,10 @@ fi
 ################################################################################
 
 %changelog
+
+* Sun Jun 28 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
+- Remove xvmc-opengl references that were removed in r20723
+
 * Sat Jun 20 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn
 - Drop kdelibs3-devel BR for MythBrowser, its been ported to qt4 now
 - Add Requires: php-process (needed for posix_get*() functions)
