@@ -63,7 +63,7 @@ CFLAGS += -fPIC -DPIC
 CONFIGURE_OPTS += --compile-type=profile
 
 #These aren't mentioned in ./configure --help
-TOP_SECRET_OPTS += --enable-libfaad --enable-libfaac --enable-libmp3lame \
+TOP_SECRET_OPTS += --enable-libfaad --enable-libmp3lame \
                    --enable-libxvid --enable-libfftw3
 
 # --enable-glx-procaddrarb is a top secret option, but it's currently only 
