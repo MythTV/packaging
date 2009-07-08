@@ -62,7 +62,8 @@ CONFIGURE_OPTS += --compile-type=profile
 
 #These aren't mentioned in ./configure --help
 TOP_SECRET_OPTS += --enable-libfaad --enable-libmp3lame \
-                   --enable-libxvid --enable-libfftw3
+                   --enable-libxvid --enable-libfftw3 \
+                   --enable-runtime-cpudetect
 
 # --enable-glx-procaddrarb is a top secret option, but it's currently only 
 #  useful with Nvidia drivers which is why we only add it to amd64 and i386
