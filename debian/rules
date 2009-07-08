@@ -58,8 +58,6 @@ DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 
 include /usr/share/dpatch/dpatch.make
 
-CFLAGS += -fPIC -DPIC
-
 CONFIGURE_OPTS += --compile-type=profile
 
 #These aren't mentioned in ./configure --help
@@ -101,7 +99,7 @@ configure-stamp: patch-stamp
 	#update SVN REVISION to show the right version
 	sed -i -e "s/\`(svnversion \$$\$${SVNTREEDIR} 2>\/dev\/null) || echo Unknown\`/$(SVN_REVISION)/" version.pro
 
-	CFLAGS="$(CFLAGS)" ./configure --prefix=/usr --runprefix=/usr --enable-lirc --enable-audio-alsa \
+	./configure --prefix=/usr --runprefix=/usr --enable-lirc --enable-audio-alsa \
 	--enable-audio-oss --enable-audio-jack --enable-dvb \
 	--enable-ivtv --enable-firewire --enable-joystick-menu \
 	--enable-opengl-vsync --with-bindings=perl --enable-opengl-video \
