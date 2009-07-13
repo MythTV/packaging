@@ -1076,7 +1076,7 @@ foreach my $target ( @targets )
                 &Syscall([ 'cp', "$PREFIX/bin/$extra",
                            "$finalTarget/Contents/MacOS" ]) or die;
 
-                &Verbose('Updating lib paths of'
+                &Verbose('Updating lib paths of',
                          "$finalTarget/Contents/MacOS/$extra");
                 &Syscall([ @bundler, "$finalTarget/Contents/MacOS/$extra" ])
                     or die;
