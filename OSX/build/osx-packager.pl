@@ -1088,6 +1088,16 @@ foreach my $target ( @targets )
         &Syscall([ 'cp', "$PREFIX/lib/libdvdcss.2.dylib",
                          "$finalTarget/Contents/Plugins" ]) or die;
     }
+
+    # Run 'rebase' on all the frameworks:
+    my @libs = glob "$finalTarget/Contents/Frameworks/*";
+    @libs = grep(s,(.*/)(\w+).framework$,$1$2.framework/$2, , @libs);
+    # and all the filters/plugins:
+    push(@libs, glob "$finalTarget/Contents/Resources/lib/mythtv/*/*");
+    if ( $OPT{'verbose'} )
+    {   &Syscall([ 'rebase', '-v', @libs ]) or die   }
+    else
+    {   &Syscall([ 'rebase', @libs ]) or die   }
 }
 
 if ( $backend && grep(m/MythBackend/, @targets) )
