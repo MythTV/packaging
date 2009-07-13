@@ -46,7 +46,7 @@ $| = 1; # autoflush stdout;
 #my $SVNRELEASE = '16789'; # This is the last version that was Qt 3 based.
                            # Qt 4 merges began immediately after.
 #my $SVNRELEASE = '18442'; # Recent 0-21-fixes
-my $SVNRELEASE = '19910'; # Recent trunk
+my $SVNRELEASE = '20847'; # Recent trunk
 #my $SVNRELEASE = 'HEAD'; # If you are game, go forth and test the latest!
 
 
@@ -73,7 +73,7 @@ my $version = '0.22';       # Main mythtv version - used to name dlls
 my $package = 0;            # Create a Win32 Distribution package? 1 for yes
 my $update  = 0;            # Revert instead of checkout.
                             #  Careful, will destruct local copy!
-my $compile_type = "debug"; # compile options: debug, profile or release
+my $compile_type = "profile"; # compile options: debug, profile or release
 my $tickets = 0;            # Apply specific win32 tickets -
                             #  usually those not merged into SVN
 my $dbconf = 0;             # Configure MySQL as part of the build process.
@@ -219,6 +219,10 @@ my $unixbuild   = perl2unix($build);
 my $MinGWinstaller = 'MinGW-5.1.4.exe';
 my $installMinGW   = $dossources.$MinGWinstaller;
 
+# Qt4 directory
+my $qt4dir = '/qt/4.5.1/';
+my $dosqt4dir = perl2dos($qt4dir);
+my $unixqt4dir = '/c'.perl2unix($qt4dir);
 
 #NOTE: IT'S IMPORTANT that the PATHS use the correct SLASH-ing method for
 #the type of action:
@@ -320,6 +324,14 @@ push @{$expect},
 [ archive => $sources.'mingw-utils-0.3.tar.gz',
   'fetch' => 'http://'.$sourceforge.
               '/sourceforge/mingw/mingw-utils-0.3.tar.gz' ],
+# ffmpeg complains if gcc < 4.2, so download a newer version
+# As of 20090626 MinGW gcc >= 4.3 do NOT work with ffmpeg (MinGW bug #2812588)
+ [ archive => $sources.'gcc-4.2.4-tdm-1-core.tar.gz',
+   'fetch' => 'http://'.$sourceforge.
+              '/sourceforge/tdm-gcc/gcc-4.2.4-tdm-1-core.tar.gz' ],
+ [ archive => $sources.'gcc-4.2.4-tdm-1-g++.tar.gz',
+   'fetch' => 'http://'.$sourceforge.
+              '/sourceforge/tdm-gcc/gcc-4.2.4-tdm-1-g++.tar.gz' ],
 
 
 [ dir     => $mingw,
@@ -406,6 +418,10 @@ push @{$expect},
   comment => 'Now we can finish all the mingw and msys addons:' ],
 [ file    => $msys.'bin/bash.exe',
   extract => [$sources.'bash-3.1-MSYS-1.0.11-1.tar', $msys] ],
+[ file    => $mingw.'bin/mingw32-gcc-4.2.4.exe',
+  extract => [$sources.'gcc-4.2.4-tdm-1-core.tar', $mingw] ],
+[ file    => $mingw.'include/c++/4.2.4/cstdlib',
+  extract => [$sources.'gcc-4.2.4-tdm-1-g++.tar', $mingw] ],
 [ dir     => $sources.'coreutils-5.97',
   extract => [$sources.'coreutils-5.97-MSYS-1.0.11-snapshot.tar'] ],
 [ file    => $msys.'bin/pr.exe',
@@ -415,12 +431,12 @@ push @{$expect},
 [ dir     => $msys."include" ,  mkdirs => $msys.'include' ],
 
 #get gdb
-[ archive => $sources.'gdb-6.7.50.20071127-mingw.tar.bz2',
+[ archive => $sources.'gdb-6.8-mingw-3.tar.bz2',
   'fetch' => 'http://'.$sourceforge.
-             '/sourceforge/mingw/gdb-6.7.50.20071127-mingw.tar.bz2',
+             '/sourceforge/mingw/gdb-6.8-mingw-3.tar.bz2',
   comment => 'Get gdb for possible debugging later' ],
 [ file    => $msys.'bin/gdb.exe',
-  extract => [$sources.'gdb-6.7.50.20071127-mingw.tar.bz2', $msys] ],
+  extract => [$sources.'gdb-6.8-mingw-3.tar.bz2', $msys] ],
 
 
 # (alternate would be from the gnuwin32 project,
@@ -491,13 +507,13 @@ push @{$expect},
 #     mysql-essential-5.1.30-win32.msi/from/http://mysql.mirrors.ilisys.com.au/
 # alternate: http://mysql.mirrors.ilisys.com.au/Downloads/MySQL-5.1/
 #     mysql-essential-5.1.30-win32.msi
-[ archive => $sources.'mysql-essential-5.1.34-win32.msi',
+[ archive => $sources.'mysql-essential-5.1.36-win32.msi',
   'fetch' => 'http://mysql.mirrors.ilisys.com.au/Downloads/'.
-             'MySQL-5.1/mysql-essential-5.1.34-win32.msi',
+             'MySQL-5.1/mysql-essential-5.1.36-win32.msi',
   comment => 'fetch mysql binaries - this is a big download(35MB) '.
              'so it might take a while' ],
 [ file    => "c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll",
-  exec    => $dossources.'mysql-essential-5.1.34-win32.msi INSTALLLEVEL=2',
+  exec    => $dossources.'mysql-essential-5.1.36-win32.msi INSTALLLEVEL=2',
   comment => 'Install mysql - be sure to choose to do a "COMPLETE" install. '.
              'You should also choose NOT to "configure the server now" ' ],
 
@@ -587,67 +603,6 @@ push @{$expect},
 
 #[ pause => 'check  patch.... press [enter] to continue !'],
 
-# apply stdlib.h patch - no longer needed as of MinGW runtime 3.15.2
-#[ file    => $mingw.'include/stdlib_h.patch', 
-#  write   => [$mingw.'include/stdlib_h.patch',
-#'--- include/stdlib.h.org	Thu Dec  4 11:11:40 2008
-#+++ include/stdlib.h	Thu Dec  4 11:12:46 2008
-#@@ -314,7 +314,7 @@
-# #else
-# static
-# #endif /* Not __cplusplus */
-#-inline double __cdecl __MINGW_NOTHROW strtod (const char* __restrict__ __nptr, char** __restrict__ __endptr)
-#+__inline__ double __cdecl __MINGW_NOTHROW strtod (const char* __restrict__ __nptr, char** __restrict__ __endptr)
-# { return __strtod(__nptr, __endptr); }
-# float __cdecl __MINGW_NOTHROW strtof (const char * __restrict__, char ** __restrict__);
-# long double __cdecl __MINGW_NOTHROW strtold (const char * __restrict__, char ** __restrict__);
-#' ],comment => 'write the patch for the the stdlib.h file'],
-## apply it!?
-#[ grep    => ['__inline__ double __cdecl __MINGW_NOTHROW',$mingw.'include/stdlib.h'], 
-#  shell   => ["cd /mingw/include","patch -p1 < stdlib_h.patch"],
-#  comment => 'Apply stdlib.h patch file, if not already applied....' ],
-
-#[ pause => 'check  patch.... press [enter] to continue !'],
-
-# fetch it
-[ dir     => $sources.'pthread', 
-  mkdirs  => $sources.'pthread' ],
-[ archive => $sources.'pthread/libpthread.a',   
-  'fetch' => 'ftp://sources.redhat.com/pub/pthreads-win32/'.
-             'dll-latest/lib/libpthreadGC2.a',
-  comment => 'libpthread is precompiled, we just download it to the right place'
-],
-[ archive => $sources.'pthread/pthreadGC2.dll', 
-  'fetch' => 'ftp://sources.redhat.com/pub/pthreads-win32/'.
-             'dll-latest/lib/pthreadGC2.dll' ],
-[ filesame => [$sources.'pthread/pthread.dll',
-               $sources."pthread/pthreadGC2.dll"],
-  copy    => [''=>''] ],
-[ archive => $sources.'pthread/pthread.h',  
-  'fetch' => 'ftp://sources.redhat.com/pub/pthreads-win32/'.
-             'dll-latest/include/pthread.h' ],
-[ archive => $sources.'pthread/sched.h',    
-  'fetch' => 'ftp://sources.redhat.com/pub/pthreads-win32/'.
-             'dll-latest/include/sched.h' ],
-[ archive => $sources.'pthread/semaphore.h',
-  'fetch' => 'ftp://sources.redhat.com/pub/pthreads-win32/'.
-             'dll-latest/include/semaphore.h' ],
-# install it:
-[ filesame => [$mingw.'lib/libpthread.a',   $sources."pthread/libpthread.a"],  
-  copy     => [''=>'',
-  comment  => 'install pthread'] ],
-[ filesame => [$mingw.'bin/pthreadGC2.dll', $sources."pthread/pthreadGC2.dll"],
-  copy     => [''=>''] ],
-[ filesame => [$mingw.'bin/pthread.dll',    $sources."pthread/pthread.dll"],   
-  copy     => [''=>''] ],
-[ filesame => [$mingw.'include/pthread.h',  $sources."pthread/pthread.h"],     
-  copy     => [''=>''] ],
-[ filesame => [$mingw.'include/sched.h',    $sources."pthread/sched.h"],       
-  copy     => [''=>''] ],
-[ filesame => [$mingw.'include/semaphore.h',$sources."pthread/semaphore.h"],   
-  copy     => [''=>''] ],
-
-
 # apply sched.h patch
 [ always    => $mingw.'include/sched_h.patch', 
   write   => [$mingw.'include/sched_h.patch',
@@ -677,13 +632,6 @@ push @{$expect},
 [ grep    => ['GCC 4.x reportedly defines pid_t',$mingw.'include/sched.h'], 
   shell   => ["cd /mingw/include","patch -p1 < sched_h.patch"],
   comment => 'Apply sched.h patch file, if not already applied....' ],
-# apply it to the sources we downloaded too, so that we don't try to copy the 
-#  original file over the new one again, next time!
-[ grep    => ['GCC 4.x reportedly defines pid_t',$sources."pthread/sched.h"], 
-  shell   => ["cd ".$unixsources."pthread",
-              "patch -p1 < ".$unixmingw.'include/sched_h.patch'],
-  comment => 'Apply sched.h patch file (twice!) , if not already applied....' ],
-
 
 #[ pause => 'check  patch.... press [enter] to continue !'],
 
@@ -750,6 +698,22 @@ if ($package == 1) {
 
 
 #----------------------------------------
+# Install QT4 binaries now to get interactive elements out of the way
+#----------------------------------------
+if ( $qtver == 4  ) {
+push @{$expect}, 
+[ archive => $sources.'qt-win-opensource-4.5.1-mingw.exe',  
+    fetch => 'ftp://ftp.qtsoftware.com/packages/qt/source/'.
+             'qt-win-opensource-4.5.1-mingw.exe'],
+[ file => $qt4dir.'bin/QtCore4.dll', 
+  exec => $dossources.'qt-win-opensource-4.5.1-mingw.exe',
+  comment => 'Install Qt - use default options.  '.
+             'Ignore the warning about w32api version.' ],
+;
+} # end of QT4 install - we will patch and build mysql driver later
+
+
+#----------------------------------------
 # now we do each of the source library dependencies in turn:
 # download,extract,build/install
 # TODO - ( and just pray that they all work?)  These should really be more
@@ -763,8 +727,8 @@ if ($package == 1) {
 # but this requires that the .tar.gz didn't come with a Makefile in it.
 push @{$expect},
 [ archive => $sources.'freetype-2.3.5.tar.gz',  
-  fetch   => 'http://download.savannah.nongnu.org'.
-             '/releases/freetype/freetype-2.3.5.tar.gz'],
+  fetch   => 'http://download.savannah.gnu.org'.
+             '/releases-noredirect/freetype/freetype-2.3.5.tar.gz'],
 [ dir     => $sources.'freetype-2.3.5', 
   extract => $sources.'freetype-2.3.5.tar' ],
 # caution... freetype comes with a Makefile in the .tar.gz, so work around it!
@@ -976,15 +940,13 @@ push @{$expect},
 #  extract => $sources.'pthreads-w32-2-8-0-release.tar' ],
 
 # confirmed latest source version as at 26-12-2008:
-[ archive => $sources.'SDL-1.2.13.tar.gz',  
-  fetch   => 'http://www.libsdl.org/release/SDL-1.2.13.tar.gz'],
+[ archive => $sources.'SDL-devel-1.2.13-mingw32.tar.gz',  
+  fetch   => 'http://www.libsdl.org/release/SDL-devel-1.2.13-mingw32.tar.gz'],
 [ dir     => $sources.'SDL-1.2.13', 
-  extract => $sources.'SDL-1.2.13.tar.gz' ],
-[ file    => $sources.'SDL-1.2.13/Makefile', 
+  extract => $sources.'SDL-devel-1.2.13-mingw32.tar.gz' ],
+[ file    => $msys.'bin/SDL.dll', 
   shell   => ["cd $unixsources/SDL-1.2.13",
-              "./configure --prefix=/usr",
-              "make",
-              "make install"],
+              "make install-sdl prefix=/usr"],
   comment => 'building and installing: SDL' ],
 
 #  as at 26-12-2008 3.8.2 is latest stable. 
@@ -1019,8 +981,36 @@ push @{$expect},
              '/sourceforge/libvisual/libvisual-0.4.0.tar.gz'],
 [ dir     => $sources.'libvisual-0.4.0', 
   extract => $sources.'libvisual-0.4.0.tar' ],
-[ file    => $sources.'libvisual-0.4.0/Makefile', 
+[ file  => $sources.'libvisual.patch',
+  write => [$sources.'libvisual.patch',
+"--- lv_os.c~	Thu Jan 26 09:13:37 2006
++++ lv_os.c	Fri May  8 22:45:58 2009
+@@ -59,7 +59,7 @@
+ 	attr.sched_priority = 99;
+ 
+ 	/* FIXME: Do we want RR or FIFO here ? */
+-	ret = sched_setscheduler (getpid (), SCHED_FIFO, &attr);
++	ret = sched_setscheduler (getpid (), SCHED_FIFO);
+ 
+ 	return ret >= 0 ? VISUAL_OK : -VISUAL_ERROR_OS_SCHED;
+ #else
+@@ -77,7 +77,7 @@
+ 	int ret;
+ 	attr.sched_priority = 0;
+ 
+-	ret = sched_setscheduler (getpid (), SCHED_OTHER, &attr);
++	ret = sched_setscheduler (getpid (), SCHED_OTHER);
+ 
+ 	return ret >= 0 ? VISUAL_OK : -VISUAL_ERROR_OS_SCHED;
+ #else
+"], comment => 'Create patch for libvisual'],
+[ grep  => ['sched_setscheduler \(getpid \(\), SCHED_OTHER\);',
+            $sources.'libvisual-0.4.0/libvisual/lv_os.c'], 
+  shell => ["cd $unixsources/libvisual-0.4.0/libvisual",
+            'patch -p0 < '.$sources.'libvisual.patch'] ],
+[ file   => $sources.'libvisual-0.4.0/Makefile', 
   shell  => ["cd $unixsources/libvisual-0.4.0",
+             "export LIBS=-lpthread",
              "./configure --prefix=/usr",
              "make",
              "make install"],
@@ -1173,18 +1163,11 @@ if ( $qtver == 4  ) {
 push @{$expect}, 
 #[ pause => 'press [enter] to extract and patch QT4 next!'],
 
-[ archive => $sources.'qt-win-opensource-src-4.4.3.zip',  
-  fetch => 'http://ftp.icm.edu.pl/packages/qt/source/'.
-           'qt-win-opensource-src-4.4.3.zip'],
-[ dir => $msys.'qt-win-opensource-src-4.4.3', 
-  extract => [$sources.'qt-win-opensource-src-4.4.3.zip', $msys] ],
-
 [ always => [],
-  write => [$sources.'qt-4.4.3.patch1',
-"diff -u qt-win-opensource-src-4.4.3/qmake/option.cpp.orig qt-win-opensource-src-4.4.3/qmake/option.cpp
---- qt-win-opensource-src-4.4.3/qmake/option.cpp.orig	Wed Feb 20 04:35:22 2008
-+++ qt-win-opensource-src-4.4.3/qmake/option.cpp	Sun May 18 12:12:51 2008
-@@ -619,7 +613,10 @@
+  write => [$sources.'qt-4.5.1.patch1',
+"--- 4.5.1/qmake/option.cpp.bak	2009-06-28 16:35:29 -0500
++++ 4.5.1/qmake/option.cpp	2009-06-28 16:35:47 -0500
+@@ -619,7 +619,10 @@
      Q_ASSERT(!((flags & Option::FixPathToLocalSeparators) && (flags & Option::FixPathToTargetSeparators)));
      if(flags & Option::FixPathToLocalSeparators) {
  #if defined(Q_OS_WIN32)
@@ -1197,18 +1180,17 @@ push @{$expect},
          string = string.replace('\\\\', '/');
  #endif
 "], comment => 'Create patch1 for QT4'],
-
 [ grep  => ['Option::shellPath.isEmpty',
-            $msys.'qt-win-opensource-src-4.4.3/qmake/option.cpp'], 
-  shell => ['cd '.$unixmsys, 'patch -p0 < '.$sources.'qt-4.4.3.patch1'] ],
+            $qt4dir.'qmake/option.cpp'], 
+  shell => ['cd '.$unixqt4dir, 'dos2unix qmake/option.cpp', 
+            'patch -p1 < '.$sources.'qt-4.5.1.patch1'] ],
 
 
 [ always => [],
-  write => [$sources.'qt-4.4.3.patch2',
-"diff -ru qt-win-opensource-src-4.4.3/mkspecs/win32-g++/qmake.conf.orig qt-win-opensource-src-4.4.3/mkspecs/win32-g++/qmake.conf
---- qt-win-opensource-src-4.4.3/mkspecs/win32-g++/qmake.conf.orig	Wed Feb 20 04:34:58 2008
-+++ qt-win-opensource-src-4.4.3/mkspecs/win32-g++/qmake.conf	Sun May 18 21:10:57 2008
-@@ -75,12 +75,15 @@
+  write => [$sources.'qt-4.5.1.patch2',
+"--- 4.5.1/mkspecs/win32-g++/qmake.conf.bak	2009-06-28 14:58:42 -0500
++++ 4.5.1/mkspecs/win32-g++/qmake.conf	2009-06-28 14:59:01 -0500
+@@ -76,12 +76,15 @@
      MINGW_IN_SHELL      = 1
  	QMAKE_DIR_SEP		= /
  	QMAKE_COPY		= cp
@@ -1226,7 +1208,7 @@ push @{$expect},
  } else {
  	QMAKE_COPY		= copy /y
  	QMAKE_COPY_DIR		= xcopy /s /q /y /i
-@@ -89,11 +92,10 @@
+@@ -90,12 +93,11 @@
  	QMAKE_MKDIR		= mkdir
  	QMAKE_DEL_DIR		= rmdir
      QMAKE_CHK_DIR_EXISTS	= if not exist
@@ -1234,140 +1216,54 @@ push @{$expect},
 +    QMAKE_UIC		= \$\$[QT_INSTALL_BINS]\$\${DIR_SEPARATOR}uic.exe
 +    QMAKE_IDC		= \$\$[QT_INSTALL_BINS]\$\${DIR_SEPARATOR}idc.exe
  }
--
+ 
 -QMAKE_MOC		= \$\$[QT_INSTALL_BINS]\$\${DIR_SEPARATOR}moc.exe
 -QMAKE_UIC		= \$\$[QT_INSTALL_BINS]\$\${DIR_SEPARATOR}uic.exe
 -QMAKE_IDC		= \$\$[QT_INSTALL_BINS]\$\${DIR_SEPARATOR}idc.exe
- 
+-
  QMAKE_IDL		= midl
  QMAKE_LIB		= ar -ru
+ QMAKE_RC		= windres
 "], comment => 'Create patch2 for QT4'],
-
 [ grep  => ['QMAKE_COPY_DIR.*?= cp -r',
-            $msys.'qt-win-opensource-src-4.4.3/mkspecs/win32-g++/qmake.conf'], 
-  shell => ['cd '.$unixmsys, 'patch -p0 < '.$sources.'qt-4.4.3.patch2'] ],
+            $qt4dir.'mkspecs/win32-g++/qmake.conf'], 
+  shell => ['cd '.$unixqt4dir, 'dos2unix mkspecs/win32-g++/qmake.conf',
+            'patch -p1 < '.$sources.'qt-4.5.1.patch2'] ],
 
-
-[ always => [],
-  write => [$sources.'qt-4.4.3.patch3', 
-"diff -ur qt-win-opensource-src-4.4.3.orig/src/corelib/kernel/qobjectdefs.h qt-win-opensource-src-4.4.3/src/corelib/kernel/qobjectdefs.h
---- qt-win-opensource-src-4.4.3.orig/src/corelib/kernel/qobjectdefs.h Mon Jun 30 20:25:04 2008
-+++ qt-win-opensource-src-4.4.3/src/corelib/kernel/qobjectdefs.h Mon Jun 30 16:25:50 2008
-@@ -149,7 +149,7 @@
- #define Q_OBJECT \
- public: \\
-     Q_OBJECT_CHECK \\
--    static const QMetaObject staticMetaObject; \\
-+    static QMetaObject staticMetaObject; \\
-     virtual const QMetaObject *metaObject() const; \\
-     virtual void *qt_metacast(const char *); \\
-     QT_TR_FUNCTIONS \\
-@@ -160,7 +160,7 @@
- /* tmake ignore Q_GADGET */
- #define Q_GADGET \\
- public: \\
--    static const QMetaObject staticMetaObject; \\
-+    static QMetaObject staticMetaObject; \\
- private:
- #else // Q_MOC_RUN
- #define slots slots
-"], comment => 'Create patch3 for QT4'],
-
-[ grep  => ['static QMetaObject staticMetaObject',
-            $msys.'qt-win-opensource-src-4.4.3/src/corelib/kernel/qobjectdefs.h'], 
-  shell => ['cd '.$unixmsys, 'patch -p0 < '.$sources.'qt-4.4.3.patch3'] ],
-
-
-[ always => [],
-  write => [$sources.'qt-4.4.3.patch4', 
-"diff -ur qt-win-opensource-src-4.4.3.orig/src/tools/moc/generator.cpp qt-win-opensource-src-4.4.3/src/tools/moc/generator.cpp
---- qt-win-opensource-src-4.4.3.orig/src/tools/moc/generator.cpp Mon Jun 30 20:25:24 2008
-+++ qt-win-opensource-src-4.4.3/src/tools/moc/generator.cpp Mon Jun 30 16:16:08 2008
-@@ -319,7 +319,7 @@
-     if (isQt)
-         fprintf(out, \"const QMetaObject QObject::staticQtMetaObject = {\\n\");
-     else
--        fprintf(out, \"const QMetaObject \%s::staticMetaObject = {\\n\", cdef->qualified.constData());
-+        fprintf(out, \"QMetaObject \%s::staticMetaObject = {\\n\", cdef->qualified.constData());
-
-     if (isQObject)
-         fprintf(out, \"    { 0, \");
-"], comment => 'Create patch4 for QT4'],
-
-[ grep  => ['fprintf\(out, \"QMetaObject \%s::staticMetaObject',
-            $msys.'qt-win-opensource-src-4.4.3/src/tools/moc/generator.cpp'], 
-  shell => ['cd '.$unixmsys, 'patch -p0 < '.$sources.'qt-4.4.3.patch4'] ],
-
-
-
-[ always => [],
-  write => [$sources.'qatomic_windows.h', 
-'--- src/corelib/arch/qatomic_windows.h.org	Thu Dec  4 11:35:46 2008
-+++ src/corelib/arch/qatomic_windows.h	Wed Dec  3 22:47:04 2008
-@@ -383,6 +383,9 @@
- 
- #else
- 
-+#ifndef __INTERLOCKED_DECLARED
-+#define __INTERLOCKED_DECLARED
-+
- extern "C" {
-     __declspec(dllimport) long __stdcall InterlockedCompareExchange(long *, long, long);
-     __declspec(dllimport) long __stdcall InterlockedIncrement(long *);
-@@ -390,6 +393,8 @@
-     __declspec(dllimport) long __stdcall InterlockedExchange(long *, long);
-     __declspec(dllimport) long __stdcall InterlockedExchangeAdd(long *, long);
- }
-+
-+#endif
- 
- inline bool QBasicAtomicInt::ref()
- {
-'], comment => 'Create patch3 for QT4'],
-[ grep  => ['#define __INTERLOCKED_DECLARED',
-            $msys.'qt-win-opensource-src-4.4.3/src/corelib/arch/qatomic_windows.h'], 
-  shell => ['cd '.$msys."qt-win-opensource-src-4.4.3", 'patch -p0 < '.$sources.'qatomic_windows.h'] ],
-
-
-
-
-
-#[ pause => 'press [enter] to build QT4 !'],
-
-# Trolltech USED TO recommend NOT having sh.exe in the path when building QT
-# ( at least under QT4 )
-#[ file   => $msys.'bin/sh_.exe',
-# shell   => ["mv ".$unixmsys."bin/sh.exe ".$unixmsys."bin/sh_.exe"],
-# comment => 'rename msys sh.exe out of the way before building QT! ' ] ,
-#[ exists => $mingw.'bin/sh.exe',
-#   shell => ["mv ".$unixmingw."bin/sh.exe ".$unixmingw."bin/sh_.exe"],
-# comment => 'rename mingw sh.exe out of the way before building QT! ' ] ,
 
 # Write a batch script for the QT environment under DOS:
-[ always => [], write => [$msys.'qt-win-opensource-src-4.4.3/qt4_env.bat',
+[ always => [], write => [$qt4dir.'qt4_env.bat',
 'rem a batch script for building the QT environment under DOS:
-set QTDIR='.$dosmsys.'qt-win-opensource-src-4.4.3
+set QTDIR='.$dosqt4dir.'
 set MINGW='.$dosmingw.'
-set PATH=%QTDIR%\bin;%MINGW%\bin;%PATH%
+set PATH=%QTDIR%\bin;%MINGW%\bin;%SystemRoot%\System32
 set QMAKESPEC=win32-g++
 cd %QTDIR%
-goto SMALL
+goto SQLONLY
 
 rem This would do a full build:
-'.$dosmsys.'bin\yes | configure -plugin-sql-mysql -no-sql-sqlite -debug-and-release -fast -no-sql-odbc -no-qdbus
+'.$dosmsys.'bin\yes | configure -opensource -plugin-sql-mysql -no-sql-sqlite -debug-and-release -fast -no-sql-odbc -no-qdbus
 mingw32-make -j '.($numCPU + 1).'
 goto END
 
 :SMALL
 rem This cuts out the examples and demos:
-'.$dosmsys.'bin\yes | configure -plugin-sql-mysql -no-sql-sqlite -debug-and-release -fast -no-sql-odbc -no-qdbus
+'.$dosmsys.'bin\yes | configure -opensource -plugin-sql-mysql -no-sql-sqlite -debug-and-release -fast -no-sql-odbc -no-qdbus
 bin\qmake projects.pro
 mingw32-make -j '.($numCPU + 1).' sub-plugins-make_default-ordered
 goto END
 
+:SQLONLY
+rem This compiles only the sqldrivers folder:
+'.$dosmsys.'bin\yes | configure -opensource -plugin-sql-mysql -no-sql-sqlite -debug-and-release -fast -no-sql-odbc -no-qdbus
+cd %QTDIR%\src\plugins\sqldrivers
+%QTDIR%\bin\qmake
+mingw32-make -j '.($numCPU + 1).'
+goto END
+
 :NODEBUGSMALL
 rem This cuts out the examples and demos, and only builds release libs
-'.$dosmsys.'bin\yes | configure -plugin-sql-mysql -no-sql-sqlite -release -fast -no-sql-odbc -no-qdbus
+'.$dosmsys.'bin\yes | configure -opensource -plugin-sql-mysql -no-sql-sqlite -release -fast -no-sql-odbc -no-qdbus
 bin\qmake projects.pro
 mingw32-make -j '.($numCPU + 1).' sub-plugins-make_default-ordered
 rem
@@ -1387,42 +1283,15 @@ copy libqtmain.a     libqtmaind.a
 ],comment=>'write a batch script for the QT4 environment under DOS'],
 
 # test if the core .dll is built, and build QT if it isn't! 
-[ file    => $msys.'qt-win-opensource-src-4.4.3/lib/QtCore4.dll',
-  exec    => $dosmsys.'qt-win-opensource-src-4.4.3\qt4_env.bat',
+[ file    => $qt4dir.'plugins/sqldrivers/qsqlmysql4.dll', 
+  exec    => $dosqt4dir.'qt4_env.bat',
   comment => 'Execute qt4_env.bat to actually build QT now!  - '.
-             'ie configures qt and also makes it, hopefully! '.
-             'WARNING SLOW (MAY TAKE HOURS!)' ],
-
-# For now, we will just test if it built, and abort if it didn't!
-[ file    => $msys.
-             'qt-win-opensource-src-4.4.3/plugins/sqldrivers/qsqlmysql4.dll', 
+             'ie configures qt and also makes it, hopefully! '  ],
+[ file    => $qt4dir.'plugins/sqldrivers/qsqlmysql4.dll', 
   exec    => '', 
-  comment => 'lib\libqsqlmysql4.dll - here we are just validating some basics '.
+  comment => 'plugins\sqldrivers\qsqlmysql4.dll - validating some basics '.
              'of the QT4 install, and if any of these components are missing, '.
              'the build must have failed (is the sql driver built properly?) '],
-[ file    => $msys.'qt-win-opensource-src-4.4.3/bin/qmake.exe', 
-  exec    => '', 
-  comment => 'bin\qmake.exe - here we are just validating some basics of '.
-             'the QT4 install, and if any of these components are missing, '.
-             'the build must have failed (is the sql driver built properly?) '],
-[ file    => $msys.'qt-win-opensource-src-4.4.3/bin/moc.exe', 
-  exec    => '', 
-  comment => 'bin\moc.exe - here we are just validating some basics of '.
-             'the QT4 install, and if any of these components are missing, '.
-             'the build must have failed (is the sql driver built properly?) '],
-[ file    => $msys.'qt-win-opensource-src-4.4.3/bin/uic.exe', 
-  exec    => '', 
-  comment => 'bin\uic.exe - here we are just validating some basics of '.
-             'the QT4 install, and if any of these components are missing, '.
-             'the build must have failed (is the sql driver built properly?) '],
-
-#  move it (back to sh.exe ) now that we are done !
-#[ file    => $msys.'bin/sh.exe',
-#  shell   => ["mv ".$unixmsys."bin/sh_.exe ".$unixmsys."bin/sh.exe"],
-#  comment => 'rename msys sh_.exe back again!' ] ,
-#[ exists  => $mingw.'bin/sh_.exe',
-#  shell   => ["mv ".$unixmingw."bin/sh_.exe ".$unixmingw."bin/sh.exe"],
-#s  comment => 'rename mingw sh_.exe back again!' ] ,
 
 ;
 } # end of QT4 install
@@ -1492,7 +1361,7 @@ export PATH=$QTDIR/bin:/usr/local/bin:$PATH
 # Qt4
 [ always => [], 
   write => [$mythtv.'qt4_env.sh',
-'export QTDIR='.$unixmsys.'qt-win-opensource-src-4.4.3
+'export QTDIR='.$unixqt4dir.'
 export QMAKESPEC=$QTDIR/mkspecs/win32-g++
 export LD_LIBRARY_PATH=$QTDIR/lib:/usr/lib:/mingw/lib:/lib
 export PATH=$QTDIR/bin:/usr/local/bin:$PATH
@@ -1605,9 +1474,8 @@ push @{$expect},
 [ filesame => [$mythtv.'mythtv/svn_info.txt',$mythtv.'mythtv/svn_info.new'], 
   shell => ['source '.$unixmythtv.'make_clean.sh',
             'touch '.$unixmythtv.'mythtv/last_build.txt',
-            'cat '.$unixmythtv.'mythtv/svn_info.new >'.$unixmythtv.'mythtv/svn_info.txt',
-            'touch -r '.$unixmythtv.'mythtv/svn_info.txt '.$unixmythtv.'mythtv/svn_info.new',
-            'sleep 5'], 
+            'cp -p '.$unixmythtv.'mythtv/svn_info.new '
+             .$unixmythtv.'mythtv/svn_info.txt'],
   comment => 'if the SVN number is changed, then remember that, AND arrange for a full re-make of mythtv. (overkill, I know, but safer)' ], 
 
 # open up the permissions:
@@ -1758,7 +1626,7 @@ push @{$expect},
             ' --disable-dbox2 --disable-hdhomerun'.
             ' --disable-iptv --disable-joystick-menu --disable-xvmc-vld'.
             ' --disable-xvmc --enable-directx --disable-lirc'.
-            ' --cpu=k8 --compile-type='.$compile_type],
+            ' --cpu=pentium4 --compile-type='.$compile_type],
   comment => 'do we already have a Makefile for mythtv?' ],
 
 # make
@@ -1836,7 +1704,7 @@ echo copying main QT dlls to build folder...
 # mythtv probably needs the qt3 dlls at runtime:
 cp '.$unixmsys.'qt-3.3.x-p8/lib/*.dll '.$unixmythtv.'build/bin
 # mythtv needs the qt4 dlls at runtime:
-cp '.$unixmsys.'qt-win-opensource-src-4.4.3/lib/*.dll '.$unixmythtv.'build/bin
+cp '.$unixqt4dir.'bin/*.dll '.$unixmythtv.'build/bin
 # qt mysql connection dll has to exist in a subfolder called sqldrivers:
 echo Creating build-folder Directories...
 # Assumptions
@@ -1850,9 +1718,7 @@ echo Creating build-folder Directories...
 mkdir '.$unixmythtv.'/build/bin/sqldrivers
 echo Copying QT plugin required dlls....
 cp '.$unixmsys.'qt-3.3.x-p8/plugins/sqldrivers/libqsqlmysql.dll '.$unixmythtv.'build/bin/sqldrivers 
-cp '.$unixmsys.'qt-win-opensource-src-4.4.3/plugins/sqldrivers/*.dll '.$unixmythtv.'build/bin/sqldrivers 
-cp '.$unixmsys.'qt-win-opensource-src-4.4.3/plugins/codecs/*.a '.$unixmythtv.'build/lib/ 
-cp '.$unixmsys.'qt-win-opensource-src-4.4.3/plugins/codecs/*.dll '.$unixmythtv.'build/bin/ 
+cp '.$unixqt4dir.'plugins/sqldrivers/qsqlmysql*.dll '.$unixmythtv.'build/bin/sqldrivers 
 echo Copying ming and msys dlls to build folder.....
 # pthread dlls and mingwm10.dll are copied from here:
 cp /mingw/bin/*.dll '.$unixmythtv.'build/bin
@@ -1861,7 +1727,6 @@ cp /bin/msys-1.0.dll '.$unixmythtv.'build/bin
 echo copying lib files...
 mv '.$unixmythtv.'build/lib/*.dll '.$unixmythtv.'build/bin/
 mv '.$unixmythtv.'build/bin/*.a '.$unixmythtv.'build/lib/
-mv '.$unixmythtv.'build/lib/mythtv/filters/*.dll '.$unixmythtv.'build/bin/
 
 # because the install process failes to copy the .mak file (needed by the plugins), we copy it manually.
 cp '.$unixmythtv.'mythtv/libs/libmyth/mythconfig.mak '.$unixmythtv.'build//include/mythtv/
@@ -2188,15 +2053,16 @@ push @{$expect},
 # Get any extra Themes
 #
 
-[ archive => $sources.'MePo-wide-0.45.tar.gz',  
-  fetch   => 'http://home.comcast.net/~zdzisekg/'.
-             'download/MePo-wide-0.45.tar.gz'],
-[ dir     => $sources.'MePo-wide', 
-  extract => $sources.'MePo-wide-0.45.tar.gz' ],
-[ file    => $mythtv.'build/share/mythtv/themes/MePo-wide/ui.xml', 
-  shell   => ['cp -fr '.$unixsources.'MePo-wide '.
-                      $unixmythtv.'build/share/mythtv/themes','nocheck'], 
-  comment => 'install MePo-wide'],
+# MePo is currently incompatilble with trunk but is left here as a template
+#[ archive => $sources.'MePo-wide-0.50.tar.gz',  
+#  fetch   => 'http://home.comcast.net/~zdzisekg/'.
+#             'download/MePo-wide-0.50.tar.gz'],
+#[ dir     => $sources.'MePo-wide', 
+#  extract => $sources.'MePo-wide-0.50.tar.gz' ],
+#[ file    => $mythtv.'build/share/mythtv/themes/MePo-wide/ui.xml', 
+#  shell   => ['cp -fr '.$unixsources.'MePo-wide '.
+#                      $unixmythtv.'build/share/mythtv/themes','nocheck'], 
+#  comment => 'install MePo-wide'],
 
 # Move ttf fonts to font directory
 [ always  => [],
