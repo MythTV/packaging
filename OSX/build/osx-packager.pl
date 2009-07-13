@@ -41,7 +41,7 @@ our $jobtools = 0;
 #$ENV{'DISTCC_HOSTS'}   = "localhost 192.168.0.6";
 #$ENV{'DISTCC_VERBOSE'} = '1';
 
-# Start with a generic address and let sourceforge 
+# Start with a generic address and let sourceforge
 # figure out which mirror is closest to us.
 #
 our $sourceforge = 'http://downloads.sourceforge.net';
@@ -55,7 +55,7 @@ our @targetsBE = ( 'MythBackend',   'MythFillDatabase',
                    'MythTranscode', 'MythTV-Setup');
 
 # Patches for MythTV source
-our %patches = (); 
+our %patches = ();
 
 our %depend_order = (
   'mythtv'
@@ -106,10 +106,10 @@ our %depend = (
     #=> 'yes'
   },
 
-  'faad2' => 
-  { 
-    'url' => "$sourceforge/sourceforge/faac/faad2-2.7.tar.gz", 
-  }, 
+  'faad2' =>
+  {
+    'url' => "$sourceforge/sourceforge/faac/faad2-2.7.tar.gz",
+  },
 
   'freetype' =>
   {
@@ -161,7 +161,7 @@ our %depend = (
 
   'mysqlclient' =>
   {
-    'url' 
+    'url'
     => 'http://mysql.mirrors.pair.com/Downloads/MySQL-5.0/mysql-5.0.83.tar.gz',
     'conf'
     =>  [
@@ -174,7 +174,7 @@ our %depend = (
           '--without-extra-tools',
         ],
   },
-  
+
   'qt'
   =>
   {
@@ -301,7 +301,7 @@ our %depend = (
                    '',
     'parallel-make' => 'yes'
   },
-  
+
   'exif' =>
   {
     'url'  => "$sourceforge/sourceforge/libexif/libexif-0.6.17.tar.bz2",
@@ -317,7 +317,7 @@ osx-packager.pl - build OS X binary packages for MythTV
 =head1 SYNOPSIS
 
  osx-packager.pl [options]
- 
+
  Options:
    -help            print the usage message
    -man             print full documentation
@@ -349,7 +349,7 @@ osx-packager.pl - build OS X binary packages for MythTV
 =head1 DESCRIPTION
 
 This script builds a MythTV frontend and all necessary dependencies, along
-with plugins as specified, as a standalone binary package for Mac OS X. 
+with plugins as specified, as a standalone binary package for Mac OS X.
 
 It was designed for building daily CVS (now Subversion) snapshots,
 but can also be used to create release builds with the '-svntag' option.
@@ -430,18 +430,16 @@ if ( $OPT{'enable-jobtools'} )
 # Get version string sorted out
 if ($OPT{'svntag'} && !$OPT{'version'})
 {
-  $OPT{'version'} = $OPT{'svntag'};
-  $OPT{'version'} =~ s/-r *//;
-  $OPT{'version'} =~ s/--revision *//;
+    $OPT{'version'} = $OPT{'svntag'};
+    $OPT{'version'} =~ s/-r *//;
+    $OPT{'version'} =~ s/--revision *//;
 }
 $OPT{'version'} = '' if $OPT{'noversion'};
 unless (defined $OPT{'version'})
 {
-  my @lt = gmtime(time);
-  $OPT{'version'} = sprintf('svn%04d%02d%02d',
-                            $lt[5] + 1900,
-                            $lt[4] + 1,
-                            $lt[3]);
+    my @lt = gmtime(time);
+    $OPT{'version'} = sprintf('svn%04d%02d%02d',
+                              $lt[5] + 1900, $lt[4] + 1, $lt[3]);
 }
 
 # Fold nocvs to nohead
@@ -451,7 +449,7 @@ $OPT{'nohead'} = 1 if $OPT{'nocvs'};
 our $SCRIPTDIR = Cwd::abs_path(Cwd::getcwd());
 if ($SCRIPTDIR =~ /\s/)
 {
-  &Complain(<<END);
+    &Complain(<<END);
 Working directory contains spaces
 
 Error: Your current working path:
@@ -466,7 +464,7 @@ The application produced will run from any directory, the no-spaces
 rule is only for the build process itself.
 
 END
-  die;
+    die;
 }
 
 if ( $OPT{'svnbranch'} )
@@ -486,12 +484,12 @@ mkdir $WORKDIR;
 if (0 &&       # No. MythTV source doesn't require it at the moment.
     !$OPT{usehdimage} && !CaseSensitiveFilesystem())
 {
-  Verbose("Forcing -usehdimage due to case-insensitive filesystem");
-  $OPT{usehdimage} = 1;
+    Verbose("Forcing -usehdimage due to case-insensitive filesystem");
+    $OPT{usehdimage} = 1;
 }
 
 if ($OPT{usehdimage})
-{  MountHDImage()  }
+{   MountHDImage()   }
 
 our $PREFIX = "$WORKDIR/build";
 mkdir $PREFIX;
@@ -581,11 +579,11 @@ our $parallel_make_flags = '';
 
 if ( $ENV{'DISTCC_HOSTS'} )
 {
-  my @hosts = split m/\s+/, $ENV{'DISTCC_HOSTS'};
-  my $numhosts = $#hosts + 1;
-  &Verbose("Using ", $numhosts * 2, " DistCC jobs on $numhosts build hosts:",
-           join ', ', @hosts);
-  $parallel_make_flags = '-j' . $numhosts * 2;
+    my @hosts = split m/\s+/, $ENV{'DISTCC_HOSTS'};
+    my $numhosts = $#hosts + 1;
+    &Verbose("Using ", $numhosts * 2, " DistCC jobs on $numhosts build hosts:",
+             join ', ', @hosts);
+    $parallel_make_flags = '-j' . $numhosts * 2;
 }
 
 # Ditto for multi-cpu setups:
@@ -595,9 +593,9 @@ my $cpus = `$cmd`; chomp $cpus;
 $cpus =~ s/.*, (\d+) processors$/$1/;
 if ( $cpus gt 1 )
 {
-  &Verbose("Using", $cpus+1, "jobs on $cpus parallel CPUs");
-  ++$cpus;
-  $parallel_make_flags = "-j$cpus";
+    &Verbose("Using", $cpus+1, "jobs on $cpus parallel CPUs");
+    ++$cpus;
+    $parallel_make_flags = "-j$cpus";
 }
 
 $parallel_make .= " $parallel_make_flags";
@@ -605,23 +603,23 @@ $parallel_make .= " $parallel_make_flags";
 ### Distclean?
 if ($OPT{'distclean'})
 {
-  &Syscall([ '/bin/rm', '-f',       '$PREFIX/bin/myth*'    ]);
-  &Syscall([ '/bin/rm', '-f', '-r', '$PREFIX/lib/libmyth*' ]);
-  &Syscall([ '/bin/rm', '-f', '-r', '$PREFIX/lib/mythtv'   ]);
-  &Syscall([ '/bin/rm', '-f', '-r', '$PREFIX/share/mythtv' ]);
-  &Syscall([ 'find', $SVNDIR, '-name', '*.o',     '-delete' ]);
-  &Syscall([ 'find', $SVNDIR, '-name', '*.a',     '-delete' ]);
-  &Syscall([ 'find', $SVNDIR, '-name', '*.dylib', '-delete' ]);
-  &Syscall([ 'find', $SVNDIR, '-name', '*.orig',  '-delete' ]);
-  &Syscall([ 'find', $SVNDIR, '-name', '*.rej',   '-delete' ]);
-  exit;
+    &Syscall([ '/bin/rm', '-f',       '$PREFIX/bin/myth*'    ]);
+    &Syscall([ '/bin/rm', '-f', '-r', '$PREFIX/lib/libmyth*' ]);
+    &Syscall([ '/bin/rm', '-f', '-r', '$PREFIX/lib/mythtv'   ]);
+    &Syscall([ '/bin/rm', '-f', '-r', '$PREFIX/share/mythtv' ]);
+    &Syscall([ 'find', $SVNDIR, '-name', '*.o',     '-delete' ]);
+    &Syscall([ 'find', $SVNDIR, '-name', '*.a',     '-delete' ]);
+    &Syscall([ 'find', $SVNDIR, '-name', '*.dylib', '-delete' ]);
+    &Syscall([ 'find', $SVNDIR, '-name', '*.orig',  '-delete' ]);
+    &Syscall([ 'find', $SVNDIR, '-name', '*.rej',   '-delete' ]);
+    exit;
 }
 
 ### Check for app present in target location
 our $MFE = "$SCRIPTDIR/MythFrontend.app";
 if (-d $MFE)
 {
-  &Complain(<<END);
+    &Complain(<<END);
 $MFE already exists
 
 Error: a MythFrontend application exists where we were planning
@@ -629,7 +627,7 @@ to build one. Please move this application away before running
 this script.
 
 END
-  exit;
+    exit;
 }
 
 ### Third party packages
@@ -646,8 +644,8 @@ if ( $OPT{'themeskip'} )
 
 if ( ! @comps )
 {
-  &Complain("Nothing to build! Too many ...skip arguments?");
-  exit;
+    &Complain("Nothing to build! Too many ...skip arguments?");
+    exit;
 }
 
 &Verbose("Including components:", @comps);
@@ -655,152 +653,139 @@ if ( ! @comps )
 # If no SubVersion in path, and we are checking something out, build SVN:
 if ( $svn =~ m/no svn in / && ! $OPT{'nohead'} )
 {
-  $svn = "$PREFIX/bin/svn";
-  @build_depends = ('svndeps', 'svn');
+    $svn = "$PREFIX/bin/svn";
+    @build_depends = ('svndeps', 'svn');
 }
 
 foreach my $comp (@comps)
 {
-  foreach my $dep (@{ $depend_order{$comp} })
-  {
-    unless (exists $seen_depends{$dep})
+    foreach my $dep (@{ $depend_order{$comp} })
     {
-      push(@build_depends, $dep);
-      $seen_depends{$dep} = 1;
+        unless (exists $seen_depends{$dep})
+        {
+            push(@build_depends, $dep);
+            $seen_depends{$dep} = 1;
+        }
     }
-  }
 }
 foreach my $sw (@build_depends)
 {
-  # Get info about this package
-  my $pkg = $depend{$sw};
-  my $url = $pkg->{'url'};
-  my $filename = $url;
-  $filename =~ s|^.+/([^/]+)$|$1|;
-  my $dirname = $filename;
-  $dirname =~ s|\.tar\.gz$||;
-  $dirname =~ s|\.tar\.bz2$||;
+    # Get info about this package
+    my $pkg = $depend{$sw};
+    my $url = $pkg->{'url'};
+    my $filename = $url;
+    $filename =~ s|^.+/([^/]+)$|$1|;
+    my $dirname = $filename;
+    $dirname =~ s|\.tar\.gz$||;
+    $dirname =~ s|\.tar\.bz2$||;
 
-  chdir($SRCDIR);
-  
-  # Download and decompress
-  unless (-e $filename)
-  {
-    &Verbose("Downloading $sw");
-    unless (&Syscall([ '/usr/bin/curl', '-f', '-L', $url, '>', $filename ],
-                     'munge' => 1))
+    chdir($SRCDIR);
+
+    # Download and decompress
+    unless (-e $filename)
     {
-      &Syscall([ '/bin/rm', $filename ]) if (-e $filename);
-      die;
+        &Verbose("Downloading $sw");
+        unless (&Syscall([ '/usr/bin/curl', '-f', '-L', $url, '>', $filename ],
+                         'munge' => 1))
+        {
+            &Syscall([ '/bin/rm', $filename ]) if (-e $filename);
+            die;
+        }
     }
-  }
-  else
-  {
-    &Verbose("Using previously downloaded $sw");
-  }
-  
-  if ($pkg->{'skip'})
-  { next }
+    else
+    {   &Verbose("Using previously downloaded $sw")   }
 
-  if ( -d $dirname )
-  {
-   if ( $OPT{'thirdclean'} )
-   {
-    &Verbose("Removing previous build of $sw");
-    &Syscall([ '/bin/rm', '-f', '-r', $dirname ]) or die;
-   }
+    if ($pkg->{'skip'})
+    {   next   }
 
-   if ( $OPT{'thirdskip'} )
-   {
-    &Verbose("Using previous build of $sw");
-    next;
-   }
-
-    &Verbose("Using previously unpacked $sw");
-  }
-  else
-  {
-    &Verbose("Unpacking $sw");
-    if ( substr($filename,-3) eq ".gz" )
+    if ( -d $dirname )
     {
-      &Syscall([ '/usr/bin/tar', '-xzf', $filename ]) or die;
-    }
-    elsif ( substr($filename,-4) eq ".bz2" )
-    {
-      &Syscall([ '/usr/bin/tar', '-xjf', $filename ]) or die;
+        if ( $OPT{'thirdclean'} )
+        {
+            &Verbose("Removing previous build of $sw");
+            &Syscall([ '/bin/rm', '-f', '-r', $dirname ]) or die;
+        }
+
+        if ( $OPT{'thirdskip'} )
+        {
+            &Verbose("Using previous build of $sw");
+            next;
+        }
+
+        &Verbose("Using previously unpacked $sw");
     }
     else
     {
-      &Complain("Cannot unpack file $filename");
-      exit;
-    }
-  }
-  
-  # Configure
-  chdir($dirname);
-  unless (-e '.osx-config')
-  {
-    &Verbose("Configuring $sw");
-    if ($pkg->{'pre-conf'})
-    { 
-      &Syscall([ $pkg->{'pre-conf'} ], 'munge' => 1) or die;
+        &Verbose("Unpacking $sw");
+        if ( substr($filename,-3) eq ".gz" )
+        {   &Syscall([ '/usr/bin/tar', '-xzf', $filename ]) or die   }
+        elsif ( substr($filename,-4) eq ".bz2" )
+        {   &Syscall([ '/usr/bin/tar', '-xjf', $filename ]) or die   }
+        else
+        {
+            &Complain("Cannot unpack file $filename");
+            exit;
+        }
     }
 
-    my (@configure, $munge);
-    
-    if ($pkg->{'conf-cmd'})
+    # Configure
+    chdir($dirname);
+    unless (-e '.osx-config')
     {
-      push(@configure, $pkg->{'conf-cmd'});
-      $munge = 1;
-    }
-    else
-    {
-      push(@configure, './configure',
+        &Verbose("Configuring $sw");
+        if ($pkg->{'pre-conf'})
+        {   &Syscall([ $pkg->{'pre-conf'} ], 'munge' => 1) or die   }
+
+        my (@configure, $munge);
+
+        if ($pkg->{'conf-cmd'})
+        {
+            push(@configure, $pkg->{'conf-cmd'});
+            $munge = 1;
+        }
+        else
+        {
+            push(@configure, './configure',
                        '--prefix=$PREFIX',
                        '--disable-static',
                        '--enable-shared');
+        }
+        if ($pkg->{'conf'})
+        {
+            push(@configure, @{ $pkg->{'conf'} });
+        }
+        &Syscall(\@configure, 'interpolate' => 1, 'munge' => $munge) or die;
+        if ($pkg->{'post-conf'})
+        {
+            &Syscall([ $pkg->{'post-conf'} ], 'munge' => 1) or die;
+        }
+        &Syscall([ '/usr/bin/touch', '.osx-config' ]) or die;
     }
-    if ($pkg->{'conf'})
-    {
-      push(@configure, @{ $pkg->{'conf'} });
-    }
-    &Syscall(\@configure, 'interpolate' => 1, 'munge' => $munge) or die;
-    if ($pkg->{'post-conf'})
-    {
-      &Syscall([ $pkg->{'post-conf'} ], 'munge' => 1) or die;
-    }
-    &Syscall([ '/usr/bin/touch', '.osx-config' ]) or die;
-  }
-  else
-  {
-    &Verbose("Using previously configured $sw");
-  }
-  
-  # Build and install
-  unless (-e '.osx-built')
-  {
-    &Verbose("Making $sw");
-    my (@make);
-    
-    push(@make, $standard_make);
-    if ($pkg->{'parallel-make'} && $parallel_make_flags)
-    { push(@make, $parallel_make_flags) }
+    else
+    {   &Verbose("Using previously configured $sw")   }
 
-    if ($pkg->{'make'})
+    # Build and install
+    unless (-e '.osx-built')
     {
-      push(@make, @{ $pkg->{'make'} });
+        &Verbose("Making $sw");
+        my (@make);
+
+        push(@make, $standard_make);
+        if ($pkg->{'parallel-make'} && $parallel_make_flags)
+        {   push(@make, $parallel_make_flags)   }
+
+        if ($pkg->{'make'})
+        {   push(@make, @{ $pkg->{'make'} })   }
+        else
+        {   push(@make, 'all', 'install')   }
+
+        &Syscall(\@make) or die;
+        &Syscall([ '/usr/bin/touch', '.osx-built' ]) or die;
     }
     else
     {
-      push(@make, 'all', 'install');
+        &Verbose("Using previously built $sw");
     }
-    &Syscall(\@make) or die;
-    &Syscall([ '/usr/bin/touch', '.osx-built' ]) or die;
-  }
-  else
-  {
-    &Verbose("Using previously built $sw");
-  }
 }
 
 
@@ -809,24 +794,24 @@ foreach my $sw (@build_depends)
 # Clean any previously installed libraries
 if ( $cleanLibs )
 {
-  if ( $OPT{'mythtvskip'} )
-  {
-    &Complain("Cannot skip building mythtv src if also cleaning");
-    exit;
-  }
-&Verbose("Cleaning previous installs of MythTV");
-my @mythlibs = glob "$PREFIX/lib/libmyth*";
-if (scalar @mythlibs)
-{
-  &Syscall([ '/bin/rm', @mythlibs ]) or die;
-}
-foreach my $dir ('include', 'lib', 'share')
-{
-  if (-d "$PREFIX/$dir/mythtv")
-  {
-    &Syscall([ '/bin/rm', '-f', '-r', "$PREFIX/$dir/mythtv" ]) or die;
-  }
-}
+    if ( $OPT{'mythtvskip'} )
+    {
+        &Complain("Cannot skip building mythtv src if also cleaning");
+        exit;
+    }
+    &Verbose("Cleaning previous installs of MythTV");
+    my @mythlibs = glob "$PREFIX/lib/libmyth*";
+    if (scalar @mythlibs)
+    {
+        &Syscall([ '/bin/rm', @mythlibs ]) or die;
+    }
+    foreach my $dir ('include', 'lib', 'share')
+    {
+        if (-d "$PREFIX/$dir/mythtv")
+        {
+            &Syscall([ '/bin/rm', '-f', '-r', "$PREFIX/$dir/mythtv" ]) or die;
+        }
+    }
 }
 
 mkdir $SVNDIR;
@@ -837,167 +822,165 @@ my @svnrevision   = ();
 
 if ( $OPT{'svnbranch'} )
 {
-  $svnrepository .= 'branches/' . $OPT{'svnbranch'} . '/';
-Die("Note that this script will not build old branches.
+    $svnrepository .= 'branches/' . $OPT{'svnbranch'} . '/';
+    Die("Note that this script will not build old branches.
 Please try the branched version instead. e.g.
 http://svn.mythtv.org/svn/branches/release-0-21-fixes/mythtv/contrib/OSX/osx-packager.pl");
 }
 elsif ( $OPT{'svntag'} )
 {
-  $svnrepository .= 'tags/' . $OPT{'svntag'} . '/';
+    $svnrepository .= 'tags/' . $OPT{'svntag'} . '/';
 }
 elsif ( $OPT{'svnrev'} )
 {
-  $svnrepository .= 'trunk/';
+    $svnrepository .= 'trunk/';
 
-  # This arg. could be '1234', '-r 1234', or '--revision 1234'
-  # If the user just specified a number, add appropriate flag:
-  if ( $OPT{'svnrev'} =~ m/^\d+$/ )
-  {
-    push @svnrevision, '--revision';
-  }
+    # This arg. could be '1234', '-r 1234', or '--revision 1234'
+    # If the user just specified a number, add appropriate flag:
+    if ( $OPT{'svnrev'} =~ m/^\d+$/ )
+    {
+        push @svnrevision, '--revision';
+    }
 
-  push @svnrevision, $OPT{'svnrev'};
+    push @svnrevision, $OPT{'svnrev'};
 }
 elsif ( ! $OPT{'nohead'} )
 {
-  # Lookup and use the HEAD revision so we are guaranteed consistent source
-  my $cmd = "$svn log $svnrepository --revision HEAD --xml | grep revision";
-  &Verbose($cmd);
-  my $rev = `$cmd`;
+    # Lookup and use the HEAD revision so we are guaranteed consistent source
+    my $cmd = "$svn log $svnrepository --revision HEAD --xml | grep revision";
+    &Verbose($cmd);
+    my $rev = `$cmd`;
 
-  if ( $rev =~ m/revision="(\d+)">/ )
-  {
-    $svnrepository .= 'trunk/';
-    @svnrevision = ('--revision', $1);
-  }
-  else
-  {
-    &Complain("Cannot get head revision - Got '$rev'");
-    die;
-  }
+    if ( $rev =~ m/revision="(\d+)">/ )
+    {
+        $svnrepository .= 'trunk/';
+        @svnrevision = ('--revision', $1);
+    }
+    else
+    {
+        &Complain("Cannot get head revision - Got '$rev'");
+        die;
+    }
 }
 
 # Retrieve source
 if (! $OPT{'nohead'})
 {
-  # Empty subdirectory 'config' sometimes causes checkout problems
-  &Syscall(['rm', '-fr', $SVNDIR . '/mythtv/config']);
-  Verbose("Checking out source code");
-  &Syscall([ $svn, 'co', @svnrevision,
-            map($svnrepository . $_, @comps), $SVNDIR ]) or die;
+    # Empty subdirectory 'config' sometimes causes checkout problems
+    &Syscall(['rm', '-fr', $SVNDIR . '/mythtv/config']);
+    Verbose("Checking out source code");
+    &Syscall([ $svn, 'co', @svnrevision,
+              map($svnrepository . $_, @comps), $SVNDIR ]) or die;
 }
 else
-{
-  &Syscall("mkdir -p $SVNDIR/mythtv/config")
-}
+{   &Syscall("mkdir -p $SVNDIR/mythtv/config")   }
 
 # Build MythTV and any plugins
 foreach my $comp (@comps)
 {
-  my $compdir = "$SVNDIR/$comp/" ;
+    my $compdir = "$SVNDIR/$comp/" ;
 
-  chdir $compdir;
+    chdir $compdir;
 
-  if ( ! -e "$comp.pro" )
-  {
-    &Complain("$compdir/$comp.pro does not exist.",
-              'You must be building really old source?');
-    next;
-  }
-  
-  if ($OPT{'clean'} && -e 'Makefile')
-  {
-    &Verbose("Cleaning $comp");
-    &Syscall([ $standard_make, 'distclean' ]) or die;
-  }
-  else
-  {
-    # clean the Makefiles, as process requires PREFIX hacking
+    if ( ! -e "$comp.pro" )
+    {
+        &Complain("$compdir/$comp.pro does not exist.",
+                  'You must be building really old source?');
+        next;
+    }
+
+    if ($OPT{'clean'} && -e 'Makefile')
+    {
+        &Verbose("Cleaning $comp");
+        &Syscall([ $standard_make, 'distclean' ]) or die;
+    }
+    else
+    {
+        # clean the Makefiles, as process requires PREFIX hacking
+        &CleanMakefiles();
+    }
+
+    # Apply any nasty mac-specific patches
+    if ($patches{$comp})
+    {
+        &Syscall([ "echo '$patches{$comp}' | patch -p0 --forward" ]);
+    }
+
+    # configure and make
+    if ( $makecleanopt{$comp} && -e 'Makefile' )
+    {
+        my @makecleancom = $standard_make;
+        push(@makecleancom, @{ $makecleanopt{$comp} }) if $makecleanopt{$comp};
+        &Syscall([ @makecleancom ]) or die;
+    }
+    if (-e 'configure')
+    {
+        &Verbose("Configuring $comp");
+        my @config = './configure';
+        push(@config, @{ $conf{$comp} }) if $conf{$comp};
+        if ( $comp eq 'mythtv' && $backend )
+        {
+            push @config, '--enable-backend'
+        }
+        if ( $OPT{'profile'} )
+        {
+            push @config, '--compile-type=profile'
+        }
+        if ( $OPT{'debug'} )
+        {
+            push @config, '--compile-type=debug'
+        }
+        if ( $comp eq 'mythtv' && ! $ENV{'DISTCC_HOSTS'} )
+        {
+            push @config, '--disable-distcc'
+        }
+        &Syscall([ @config ]) or die;
+    }
+    &Verbose("Running qmake for $comp");
+    my @qmake_opts = (
+        'QMAKE_LFLAGS+=-Wl,-search_paths_first',
+        'INCLUDEPATH+="' . $PREFIX . '/include"',
+        'LIBS+=-L/usr/lib -L"' . $PREFIX . '/lib"'
+        );
+    &Syscall([ $PREFIX . '/bin/qmake',
+               'PREFIX=../Resources',
+               @qmake_opts,
+               "$comp.pro" ]) or die;
+
+    if ($comp eq 'mythtv')
+    {
+        # Remove/add Nigel's frontend building speedup hack
+        &DoSpeedupHacks('programs/programs.pro', 'mythfrontend mythtv');
+    }
+
+    &Verbose("Making $comp");
+    &Syscall([ $parallel_make ]) or die;
+    # install
+    # This requires a change from the compiled-in relative
+    # PREFIX to our absolute path of the temp install location.
     &CleanMakefiles();
-  }
- 
-  # Apply any nasty mac-specific patches 
-  if ($patches{$comp})
-  {
-    &Syscall([ "echo '$patches{$comp}' | patch -p0 --forward" ]);
-  }
-  
-  # configure and make
-  if ( $makecleanopt{$comp} && -e 'Makefile' )
-  {
-    my @makecleancom = $standard_make;
-    push(@makecleancom, @{ $makecleanopt{$comp} }) if $makecleanopt{$comp};
-    &Syscall([ @makecleancom ]) or die;
-  }
-  if (-e 'configure')
-  {
-    &Verbose("Configuring $comp");
-    my @config = './configure';
-    push(@config, @{ $conf{$comp} }) if $conf{$comp};
-    if ( $comp eq 'mythtv' && $backend )
-    {
-      push @config, '--enable-backend'
-    }
-    if ( $OPT{'profile'} )
-    {
-      push @config, '--compile-type=profile'
-    }
-    if ( $OPT{'debug'} )
-    {
-      push @config, '--compile-type=debug'
-    }
-    if ( $comp eq 'mythtv' && ! $ENV{'DISTCC_HOSTS'} )
-    {
-      push @config, '--disable-distcc'
-    }
-    &Syscall([ @config ]) or die;
-  }
-  &Verbose("Running qmake for $comp");
-  my @qmake_opts = (
-    'QMAKE_LFLAGS+=-Wl,-search_paths_first',
-    'INCLUDEPATH+="' . $PREFIX . '/include"',
-    'LIBS+=-L/usr/lib -L"' . $PREFIX . '/lib"'
-   );
-  &Syscall([ $PREFIX . '/bin/qmake',
-             'PREFIX=../Resources',
-             @qmake_opts,
-             "$comp.pro" ]) or die;
+    &Verbose("Running qmake for $comp install");
+    &Syscall([ $PREFIX . '/bin/qmake',
+               'PREFIX=' . $PREFIX,
+               @qmake_opts,
+               "$comp.pro" ]) or die;
+    &Verbose("Installing $comp");
+    &Syscall([ $standard_make,
+               'install' ]) or die;
 
-  if ($comp eq 'mythtv')
-  {
-    # Remove/add Nigel's frontend building speedup hack
-    &DoSpeedupHacks('programs/programs.pro', 'mythfrontend mythtv');
-  }
-  
-  &Verbose("Making $comp");
-  &Syscall([ $parallel_make ]) or die;
-  # install
-  # This requires a change from the compiled-in relative
-  # PREFIX to our absolute path of the temp install location.
-  &CleanMakefiles();
-  &Verbose("Running qmake for $comp install");
-  &Syscall([ $PREFIX . '/bin/qmake',
-             'PREFIX=' . $PREFIX,
-             @qmake_opts,
-             "$comp.pro" ]) or die;
-  &Verbose("Installing $comp");
-  &Syscall([ $standard_make,
-             'install' ]) or die;
-
-  if ($cleanLibs && $comp eq 'mythtv')
-  {
-    # If we cleaned the libs, make install will have recopied them,
-    # which means any dynamic libraries that the static libraries depend on
-    # are newer than the table of contents. Hence we need to regenerate it:
-    my @mythlibs = glob "$PREFIX/lib/libmyth*.a";
-    if (scalar @mythlibs)
+    if ($cleanLibs && $comp eq 'mythtv')
     {
-      &Verbose("Running ranlib on reinstalled static libraries");
-      foreach my $lib (@mythlibs)
-      { &Syscall("ranlib $lib") or die }
+        # If we cleaned the libs, make install will have recopied them,
+        # which means any dynamic libraries that the static libraries depend on
+        # are newer than the table of contents. Hence we need to regenerate it:
+        my @mythlibs = glob "$PREFIX/lib/libmyth*.a";
+        if (scalar @mythlibs)
+        {
+            &Verbose("Running ranlib on reinstalled static libraries");
+            foreach my $lib (@mythlibs)
+            {   &Syscall("ranlib $lib") or die }
+        }
     }
-  }
 }
 
 ### Build version string
@@ -1032,118 +1015,121 @@ if ( $backend )
 
 foreach my $target ( @targets )
 {
-  my $finalTarget = "$SCRIPTDIR/$target.app";
-  my $builtTarget = lc $target;
+    my $finalTarget = "$SCRIPTDIR/$target.app";
+    my $builtTarget = lc $target;
 
-  # Get a fresh copy of the binary
-  &Verbose("Building self-contained $target");
-  &Syscall([ 'rm', '-fr', $finalTarget ]) or die;
-  &Syscall([ 'cp',  "$SVNDIR/mythtv/programs/$builtTarget/$builtTarget",
-             "$SCRIPTDIR/$target" ]) or die;
+    # Get a fresh copy of the binary
+    &Verbose("Building self-contained $target");
+    &Syscall([ 'rm', '-fr', $finalTarget ]) or die;
+    &Syscall([ 'cp',  "$SVNDIR/mythtv/programs/$builtTarget/$builtTarget",
+                      "$SCRIPTDIR/$target" ]) or die;
 
-  # Convert it to a bundled .app
-  &Syscall([ @bundler, "$SCRIPTDIR/$target",
-             "$PREFIX/lib/", "$PREFIX/lib/mysql" ])
-      or die;
+    # Convert it to a bundled .app
+    &Syscall([ @bundler, "$SCRIPTDIR/$target",
+               "$PREFIX/lib/", "$PREFIX/lib/mysql" ]) or die;
 
-  # Remove copy of binary
-  unlink "$SCRIPTDIR/$target" or die;
+    # Remove copy of binary
+    unlink "$SCRIPTDIR/$target" or die;
 
-  if ( $AVCfw )
-  {  &RecursiveCopy($AVCfw, "$finalTarget/Contents/Frameworks")  }
+    if ( $AVCfw )
+    {   &RecursiveCopy($AVCfw, "$finalTarget/Contents/Frameworks")   }
 
- if ( $target eq "MythFrontend" or $target =~ m/^MythTV/ )
- {
-  my $res  = "$finalTarget/Contents/Resources";
-  my $libs = "$res/lib";
-  my $plug = "$libs/mythtv/plugins";
-
-  # Install themes, filters, etc.
-  &Verbose("Installing resources into $target");
-  mkdir $res; mkdir $libs;
-  &RecursiveCopy("$PREFIX/lib/mythtv", $libs);
-  mkdir "$res/share";
-  &RecursiveCopy("$PREFIX/share/mythtv", "$res/share");
-
-  # Correct the library paths for the filters and plugins
-  foreach my $lib ( glob "$libs/mythtv/*/*" )
-  {   &Syscall([ @bundler, $lib ]) or die   }
-
-  if ( -e $plug )
-  {
-    # Allow Finder's 'Get Info' to manage plugin list:
-    &Syscall([ 'mv', $plug, "$finalTarget/Contents/Plugins" ]) or die;
-    &Syscall([ 'ln', '-s', "../../../Plugins", $plug ]) or die;
-  }
-
-  # The icon
-  &Syscall([ 'cp',  "$SVNDIR/mythtv/programs/mythfrontend/mythfrontend.icns",
-             "$res/application.icns" ]) or die;
-  &Syscall([ '/Developer/Tools/SetFile', '-a', 'C', $finalTarget ]) or die;
- }
-
-  if ( $target eq "MythFrontend" )
-  {
-    foreach my $extra ( 'ignyte', 'mtd' )
+    if ( $target eq "MythFrontend" or $target =~ m/^MythTV/ )
     {
-      if ( -e "$PREFIX/bin/$extra" )
-      {
-        &Verbose("Installing $extra into $target");
-        &Syscall([ 'cp', "$PREFIX/bin/$extra",
-                   "$finalTarget/Contents/MacOS" ]) or die;
+        my $res  = "$finalTarget/Contents/Resources";
+        my $libs = "$res/lib";
+        my $plug = "$libs/mythtv/plugins";
 
-        &Verbose("Updating lib paths of $finalTarget/Contents/MacOS/$extra");
-        &Syscall([ @bundler, "$finalTarget/Contents/MacOS/$extra" ]) or die;
-        &AddFakeBinDir($finalTarget);
-      }
+        # Install themes, filters, etc.
+        &Verbose("Installing resources into $target");
+        mkdir $res; mkdir $libs;
+        &RecursiveCopy("$PREFIX/lib/mythtv", $libs);
+        mkdir "$res/share";
+        &RecursiveCopy("$PREFIX/share/mythtv", "$res/share");
+
+        # Correct the library paths for the filters and plugins
+        foreach my $lib ( glob "$libs/mythtv/*/*" )
+        {   &Syscall([ @bundler, $lib ]) or die   }
+
+        if ( -e $plug )
+        {
+            # Allow Finder's 'Get Info' to manage plugin list:
+            &Syscall([ 'mv', $plug, "$finalTarget/Contents/Plugins" ]) or die;
+            &Syscall([ 'ln', '-s', "../../../Plugins", $plug ]) or die;
+        }
+
+        # The icon
+        &Syscall([ 'cp',
+                   "$SVNDIR/mythtv/programs/mythfrontend/mythfrontend.icns",
+                   "$res/application.icns" ]) or die;
+        &Syscall([ '/Developer/Tools/SetFile', '-a', 'C', $finalTarget ])
+            or die;
     }
 
-    # Allow playback of region encoded DVDs
-    &Syscall([ 'cp', "$PREFIX/lib/libdvdcss.2.dylib",
-                     "$finalTarget/Contents/Plugins" ]) or die;
-  }
+    if ( $target eq "MythFrontend" )
+    {
+        foreach my $extra ( 'ignyte', 'mtd' )
+        {
+            if ( -e "$PREFIX/bin/$extra" )
+            {
+                &Verbose("Installing $extra into $target");
+                &Syscall([ 'cp', "$PREFIX/bin/$extra",
+                           "$finalTarget/Contents/MacOS" ]) or die;
+
+                &Verbose('Updating lib paths of'
+                         "$finalTarget/Contents/MacOS/$extra");
+                &Syscall([ @bundler, "$finalTarget/Contents/MacOS/$extra" ])
+                    or die;
+                &AddFakeBinDir($finalTarget);
+            }
+        }
+
+        # Allow playback of region encoded DVDs
+        &Syscall([ 'cp', "$PREFIX/lib/libdvdcss.2.dylib",
+                         "$finalTarget/Contents/Plugins" ]) or die;
+    }
 }
 
 if ( $backend && grep(m/MythBackend/, @targets) )
 {
-  my $BE = "$SCRIPTDIR/MythBackend.app";
+    my $BE = "$SCRIPTDIR/MythBackend.app";
 
-  # The backend gets all the useful binaries it might call:
-  foreach my $binary ( 'mythjobqueue', 'mythcommflag', 'mythtranscode' )
-  {
-    my $SRC  = "$PREFIX/bin/$binary";
-    if ( -e $SRC )
+    # The backend gets all the useful binaries it might call:
+    foreach my $binary ( 'mythjobqueue', 'mythcommflag', 'mythtranscode' )
     {
-      &Verbose("Installing $SRC into $BE");
-      &Syscall([ '/bin/cp', $SRC, "$BE/Contents/MacOS" ]) or die;
+        my $SRC  = "$PREFIX/bin/$binary";
+        if ( -e $SRC )
+        {
+            &Verbose("Installing $SRC into $BE");
+            &Syscall([ '/bin/cp', $SRC, "$BE/Contents/MacOS" ]) or die;
 
-      &Verbose("Updating lib paths of $BE/Contents/MacOS/$binary");
-      &Syscall([ @bundler, "$BE/Contents/MacOS/$binary" ]) or die;
+            &Verbose("Updating lib paths of $BE/Contents/MacOS/$binary");
+            &Syscall([ @bundler, "$BE/Contents/MacOS/$binary" ]) or die;
+        }
     }
-  }
-  &AddFakeBinDir($BE);
+    &AddFakeBinDir($BE);
 }
 
 if ( $jobtools )
 {
-  # JobQueue also gets some binaries it might call:
-  my $JQ   = "$SCRIPTDIR/MythJobQueue.app";
-  my $DEST = "$JQ/Contents/MacOS";
-  my $SRC  = "$PREFIX/bin/mythcommflag";
+    # JobQueue also gets some binaries it might call:
+    my $JQ   = "$SCRIPTDIR/MythJobQueue.app";
+    my $DEST = "$JQ/Contents/MacOS";
+    my $SRC  = "$PREFIX/bin/mythcommflag";
 
-  &Syscall([ '/bin/cp', $SRC, $DEST ]) or die;
-  &AddFakeBinDir($JQ);
-  &Verbose("Updating lib paths of $DEST/mythcommflag");
-  &Syscall([ @bundler, "$DEST/mythcommflag" ]) or die;
+    &Syscall([ '/bin/cp', $SRC, $DEST ]) or die;
+    &AddFakeBinDir($JQ);
+    &Verbose("Updating lib paths of $DEST/mythcommflag");
+    &Syscall([ @bundler, "$DEST/mythcommflag" ]) or die;
 
-  $SRC  = "$PREFIX/bin/mythtranscode.app/Contents/MacOS/mythtranscode";
-  if ( -e $SRC )
-  {
-      &Verbose("Installing $SRC into $JQ");
-      &Syscall([ '/bin/cp', $SRC, $DEST ]) or die;
-      &Verbose("Updating lib paths of $DEST/mythtranscode");
-      &Syscall([ @bundler, "$DEST/mythtranscode" ]) or die;
-  }
+    $SRC  = "$PREFIX/bin/mythtranscode.app/Contents/MacOS/mythtranscode";
+    if ( -e $SRC )
+    {
+        &Verbose("Installing $SRC into $JQ");
+        &Syscall([ '/bin/cp', $SRC, $DEST ]) or die;
+        &Verbose("Updating lib paths of $DEST/mythtranscode");
+        &Syscall([ @bundler, "$DEST/mythtranscode" ]) or die;
+    }
 }
 
 # Clean tmp files. Most of these are leftovers from configure:
@@ -1200,9 +1186,9 @@ sub RecursiveCopy($$)
 
 sub CleanMakefiles
 {
-  &Verbose("Cleaning MythTV makefiles containing PREFIX");
-  &Syscall([ 'find', '.', '-name', 'Makefile', '-exec',
-             'egrep', '-q', 'qmake.*PREFIX', '{}', ';', '-delete' ]) or die;
+    &Verbose("Cleaning MythTV makefiles containing PREFIX");
+    &Syscall([ 'find', '.', '-name', 'Makefile', '-exec',
+               'egrep', '-q', 'qmake.*PREFIX', '{}', ';', '-delete' ]) or die;
 } # end CleanMakefiles
 
 
@@ -1214,37 +1200,37 @@ sub CleanMakefiles
 
 sub Syscall($%)
 {
-  my ($arglist, %opts) = @_;
-  
-  unless (ref $arglist)
-  {
-    $arglist = [ $arglist ];
-  }
-  if ($opts{'interpolate'})
-  {
-    my @args;
-    foreach my $arg (@$arglist)
+    my ($arglist, %opts) = @_;
+
+    unless (ref $arglist)
     {
-      $arg =~ s/\$PREFIX/$PREFIX/ge;
-      $arg =~ s/\$parallel_make_flags/$parallel_make_flags/ge;
-      push(@args, $arg);
+        $arglist = [ $arglist ];
     }
-    $arglist = \@args;
-  } 
-  if ($opts{'munge'})
-  {
-    $arglist = [ join(' ', @$arglist) ];
-  }
-  # clean out any null arguments
-  $arglist = [ map $_, @$arglist ];
-  &Verbose(@$arglist);
-  my $ret = system(@$arglist);
-  if ($ret)
-  {
-    &Complain('Failed system call: "', @$arglist,
-              '" with error code', $ret >> 8);
-  }
-  return ($ret == 0);
+    if ($opts{'interpolate'})
+    {
+        my @args;
+        foreach my $arg (@$arglist)
+        {
+            $arg =~ s/\$PREFIX/$PREFIX/ge;
+            $arg =~ s/\$parallel_make_flags/$parallel_make_flags/ge;
+            push(@args, $arg);
+        }
+        $arglist = \@args;
+    }
+    if ($opts{'munge'})
+    {
+        $arglist = [ join(' ', @$arglist) ];
+    }
+    # clean out any null arguments
+    $arglist = [ map $_, @$arglist ];
+    &Verbose(@$arglist);
+    my $ret = system(@$arglist);
+    if ($ret)
+    {
+        &Complain('Failed system call: "', @$arglist,
+                  '" with error code', $ret >> 8);
+    }
+    return ($ret == 0);
 } # end Syscall
 
 
@@ -1255,8 +1241,8 @@ sub Syscall($%)
 
 sub Verbose
 {
-  print STDERR '[osx-pkg] ' . join(' ', @_) . "\n"
-      if $OPT{'verbose'};
+    print STDERR '[osx-pkg] ' . join(' ', @_) . "\n"
+        if $OPT{'verbose'};
 } # end Verbose
 
 
@@ -1267,7 +1253,7 @@ sub Verbose
 
 sub Complain
 {
-  print STDERR '[osx-pkg] ' . join(' ', @_) . "\n";
+    print STDERR '[osx-pkg] ' . join(' ', @_) . "\n";
 } # end Complain
 
 
@@ -1320,15 +1306,15 @@ sub HDImageDevice
 
 sub CaseSensitiveFilesystem
 {
-  my $funky = $SCRIPTDIR . "/.osx-packager.FunkyStuff";
-  my $unfunky = substr($funky, 0, -10) . "FUNKySTuFF";
+    my $funky = $SCRIPTDIR . "/.osx-packager.FunkyStuff";
+    my $unfunky = substr($funky, 0, -10) . "FUNKySTuFF";
 
-  unlink $funky if -e $funky;
-  `touch $funky`;
-  my $sensitivity = ! -e $unfunky;
-  unlink $funky;
+    unlink $funky if -e $funky;
+    `touch $funky`;
+    my $sensitivity = ! -e $unfunky;
+    unlink $funky;
 
-  return $sensitivity;
+    return $sensitivity;
 }
 
 
@@ -1338,26 +1324,26 @@ sub CaseSensitiveFilesystem
 
 sub DoSpeedupHacks($$)
 {
-  my ($file, $subdirs) = @_;
+    my ($file, $subdirs) = @_;
 
-  &Verbose("Removing Nigel's hacks from file $file");
+    &Verbose("Removing Nigel's hacks from file $file");
 
-  open(IN,  $file)         or die;
-  open(OUT, ">$file.orig") or die;
-  while ( <IN> )
-  {
-    if ( m/^# Nigel/ )  # Skip
-    {  last  }
-    print OUT;
-  }
-  if ( ! $backend && ! $jobtools )
-  {
-    # Nigel's hack to speedup building
-    print OUT "# Nigel\'s speedup hack:\n";
-    print OUT "SUBDIRS = $subdirs\n";
-  }
-  close IN; close OUT;
-  rename("$file.orig", $file);
+    open(IN,  $file)         or die;
+    open(OUT, ">$file.orig") or die;
+    while ( <IN> )
+    {
+        if ( m/^# Nigel/ )  # Skip
+        {  last  }
+        print OUT;
+    }
+    if ( ! $backend && ! $jobtools )
+    {
+        # Nigel's hack to speedup building
+        print OUT "# Nigel\'s speedup hack:\n";
+        print OUT "SUBDIRS = $subdirs\n";
+    }
+    close IN; close OUT;
+    rename("$file.orig", $file);
 }
 
 #######################################################
@@ -1368,10 +1354,10 @@ sub DoSpeedupHacks($$)
 
 sub AddFakeBinDir($)
 {
-  my ($target) = @_;
+    my ($target) = @_;
 
-  &Syscall("mkdir -p $target/Contents/Resources");
-  &Syscall(['ln', '-sf', '../MacOS', "$target/Contents/Resources/bin"]);
+    &Syscall("mkdir -p $target/Contents/Resources");
+    &Syscall(['ln', '-sf', '../MacOS', "$target/Contents/Resources/bin"]);
 }
 
 ### end file
