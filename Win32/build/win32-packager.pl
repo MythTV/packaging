@@ -665,7 +665,7 @@ if ($package == 1) {
    comment => 'fetch inno setup setup' ],
  [ file    => "C:/Program Files/Inno Setup 5/iscc.exe",
    exec    => $dossources.'isetup-5.2.3.exe', #/silent is broken! 
-   comment => 'Install innosetup - install ISTool, ',
+   comment => 'Install innosetup - install ISTool, '.
               'ISSP, AND encryption support.' ],
  # Get advanced uninstall
  [ archive => $sources.'UninsHs.rar',
@@ -703,7 +703,7 @@ if ($package == 1) {
 if ( $qtver == 4  ) {
 push @{$expect}, 
 [ archive => $sources.'qt-win-opensource-4.5.1-mingw.exe',  
-    fetch => 'ftp://ftp.qtsoftware.com/packages/qt/source/'.
+    fetch => 'ftp://ftp.qtsoftware.com/qt/source/'.
              'qt-win-opensource-4.5.1-mingw.exe'],
 [ file => $qt4dir.'bin/QtCore4.dll', 
   exec => $dossources.'qt-win-opensource-4.5.1-mingw.exe',
@@ -2138,7 +2138,8 @@ if ($package == 1) {
                  $dosmythtv.'build\isfiles\isxdl.dll',
       comment => 'Copy isxdl.dll to setup directory' ],
     [ file    => $mythtv."build/isfiles/WizModernSmallImage-IS.bmp",
-      exec    => 'copy /Y "C:\Program Files\Inno Setup 5\'WizModernSmallImage-IS.bmp" '.
+      exec    => 'copy /Y "C:\Program Files\Inno Setup 5'.
+                 '\WizModernSmallImage-IS.bmp" '.
                  $dosmythtv.'build\isfiles\WizModernSmallImage-IS.bmp',
       comment => 'Copy WizModernSmallImage-IS.bmp to setup directory' ],
     # Copy required files from sources or packaging to setup directory:
