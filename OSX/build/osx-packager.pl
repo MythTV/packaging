@@ -510,14 +510,9 @@ else
 {
     @pluginConf = (
         '--enable-opengl',
-        '--disable-mythbrowser',
-        '--disable-transcode',
         '--enable-mythgallery',
         '--enable-exif',
         '--enable-new-exif',
-        '--disable-mythgame',
-        '--disable-mythmusic',
-        '--disable-mythzoneminder',
     );
 }
 
