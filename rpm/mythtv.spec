@@ -60,7 +60,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r20755
+%define _svnrev r21011
 %define branch trunk
 
 #
@@ -172,7 +172,6 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-#BuildRequires:  a52dec-devel
 BuildRequires:  faac-devel
 BuildRequires:  faad2-devel
 BuildRequires:  fftw2-devel < 3
@@ -379,7 +378,6 @@ Requires:  xorg-x11-drv-openchrome-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-#Requires:  a52dec-devel
 Requires:  faac-devel
 Requires:  faad2-devel
 Requires:  fftw2-devel < 3
@@ -913,7 +911,6 @@ cd mythtv-%{version}
     --enable-dvb                                \
     --enable-libfaac                            \
     --enable-libfaad --enable-libfaad --enable-libfaadbin \
-    --disable-liba52                            \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
@@ -1456,6 +1453,9 @@ fi
 ################################################################################
 
 %changelog
+
+* Sat Jul 25 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
+- Remove all a52 references because ./configure no longer accepts even "disable"
 
 * Sun Jun 28 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
 - Remove xvmc-opengl references that were removed in r20723
