@@ -60,7 +60,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r21012
+%define _svnrev r21013
 %define branch trunk
 
 #
@@ -172,7 +172,6 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-BuildRequires:  faac-devel
 BuildRequires:  faad2-devel
 BuildRequires:  fftw2-devel < 3
 BuildRequires:  fftw2-devel >= 2.1.3
@@ -378,7 +377,6 @@ Requires:  xorg-x11-drv-openchrome-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-Requires:  faac-devel
 Requires:  faad2-devel
 Requires:  fftw2-devel < 3
 Requires:  fftw2-devel >= 2.1.3
@@ -892,7 +890,6 @@ cd mythtv-%{version}
     --libdir=%{_libdir}                         \
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
-    --enable-nonfree                            \
     --enable-iptv				\
     --enable-pthreads                           \
     --enable-ffmpeg-pthreads                    \
@@ -910,7 +907,6 @@ cd mythtv-%{version}
     --enable-ivtv                               \
     --enable-firewire                           \
     --enable-dvb                                \
-    --enable-libfaac                            \
     --enable-libfaad --enable-libfaad --enable-libfaadbin \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
@@ -1457,7 +1453,7 @@ fi
 
 * Sat Jul 25 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
 - Remove all a52 references because ./configure no longer accepts even "disable"
-- Add --enable-nonfree
+- Remove non-GPL libfaac options (not really used by MythTV anyway)
 
 * Sun Jun 28 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
 - Remove xvmc-opengl references that were removed in r20723
