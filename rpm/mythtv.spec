@@ -60,7 +60,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r21011
+%define _svnrev r21012
 %define branch trunk
 
 #
@@ -892,6 +892,7 @@ cd mythtv-%{version}
     --libdir=%{_libdir}                         \
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
+    --enable-nonfree                            \
     --enable-iptv				\
     --enable-pthreads                           \
     --enable-ffmpeg-pthreads                    \
@@ -1456,6 +1457,7 @@ fi
 
 * Sat Jul 25 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
 - Remove all a52 references because ./configure no longer accepts even "disable"
+- Add --enable-nonfree
 
 * Sun Jun 28 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
 - Remove xvmc-opengl references that were removed in r20723
