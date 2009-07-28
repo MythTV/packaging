@@ -31,7 +31,7 @@
 #
 # The following options are enabled by default.  Use these options to disable:
 #
-# --without xvmcnvidia      Disable NVidia XvMC support
+# --without nvidia          Disable NVidia XvMC and VDPAU support
 # --without perl            Disable building of the perl bindings
 # --without python          Disable building of the python bindings
 #
@@ -97,10 +97,10 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 # The following options are enabled by default.  Use --without to disable them
 %define with_perl          %{?_without_perl:        0} %{!?_without_perl:       1}
 %define with_python        %{?_without_python:      0} %{!?_without_python:     1}
+%define with_nvidia        %{?_without_nvidia:      0} %{?!_without_nvidia:     1}
 
 # The following options are disabled by default.  Use --with to enable them
 %define with_directfb      %{?_with_directfb:       1} %{!?_with_directfb:      0}
-%define with_xvmcnvidia    %{?_with_xvmcnvidia:     1} %{?!_with_xvmcnvidia:    0}
 
 # All plugins get built by default, but you can disable them as you wish
 %define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
@@ -212,7 +212,7 @@ BuildRequires:  libraw1394-devel
 BuildRequires:  directfb-devel
 %endif
 
-%if %{with_xvmcnvidia}
+%if %{with_nvidia}
 BuildRequires:  xorg-x11-drv-nvidia-devel
 %endif
 
@@ -415,7 +415,7 @@ Requires:  libraw1394-devel
 Requires:  directfb-devel
 %endif
 
-%if %{with_xvmcnvidia}
+%if %{with_nvidia}
 Requires:  xorg-x11-drv-nvidia-devel
 %endif
 
@@ -911,8 +911,11 @@ cd mythtv-%{version}
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
-%if %{with_xvmcnvidia}
+%if %{with_nvidia}
     --xvmc-lib=XvMCNVIDIA_dynamic               \
+    --enable-vdpau                              \
+%else
+    --disable-vdpau                             \
 %endif
 %if %{with_directfb}
     --enable-directfb                           \
@@ -1450,6 +1453,9 @@ fi
 ################################################################################
 
 %changelog
+
+* Mon Jul 27 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
+- Rename xvmcnvidia stuff to just nvidia, and add vdpau options to it
 
 * Sat Jul 25 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
 - Remove all a52 references because ./configure no longer accepts even "disable"
