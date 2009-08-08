@@ -133,7 +133,7 @@ our %depend = (
 
   'taglib' =>
   {
-    'url' => 'http://developer.kde.org/~wheeler/files/src/taglib-1.4.tar.gz',
+    'url' => 'http://developer.kde.org/~wheeler/files/src/taglib-1.5.tar.gz',
   },
 
   'libogg' =>
