@@ -46,7 +46,7 @@ $| = 1; # autoflush stdout;
 #my $SVNRELEASE = '16789'; # This is the last version that was Qt 3 based.
                            # Qt 4 merges began immediately after.
 #my $SVNRELEASE = '18442'; # Recent 0-21-fixes
-my $SVNRELEASE = '20847'; # Recent trunk
+my $SVNRELEASE = '21155'; # Recent trunk
 #my $SVNRELEASE = 'HEAD'; # If you are game, go forth and test the latest!
 
 
@@ -374,6 +374,9 @@ push @{$expect},
 [ archive => $sources.'coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2',
   'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw'.
              '/coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2' ] ,
+[ archive => $sources.'mktemp-1.5-MSYS.tar.bz2',
+  'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw'.
+             '/mktemp-1.5-MSYS.tar.bz2' ] ,
 
 # install MSYS, it supplies the 'tar' executable, among others:
 [ file    => $msys.'bin/tar.exe',
@@ -426,6 +429,8 @@ push @{$expect},
   extract => [$sources.'coreutils-5.97-MSYS-1.0.11-snapshot.tar'] ],
 [ file    => $msys.'bin/pr.exe',
   shell   => ["cd ".$unixsources."coreutils-5.97","cp -r * / "] ],
+[ file    => $msys.'bin/mktemp.exe',
+  extract => [$sources.'mktemp-1.5-MSYS.tar', $msys] ],
 
 [ dir     => $msys."lib" ,  mkdirs => $msys.'lib' ],
 [ dir     => $msys."include" ,  mkdirs => $msys.'include' ],
