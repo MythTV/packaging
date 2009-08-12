@@ -13,46 +13,47 @@ Echo.
 ::
 :gdbcommands
 ::
-:: Check for and Create if needed the .\gdbcommands.txt 
+:: Check for and Create if needed the .\gdbcommands-backend.txt 
 ::
 :: syntax taken from [ http://www.mythtv.org/docs/mythtv-HOWTO.html#toc22.2 ] 
 ::
-if not exist ./gdbcommands.txt (
-    echo handle SIGPIPE nostop noprint > .\gdbcommands.txt
-    echo handle SIG33   nostop noprint >> .\gdbcommands.txt
-    echo set logging on     >> .\gdbcommands.txt
-    echo set pagination off >> .\gdbcommands.txt
-    echo set args -l myth.log --noupnp --nosched --nojobqueue --nohousekeeper --noautoexpire -v all >> .\gdbcommands.txt
-    echo run >> .\gdbcommands.txt
-    echo thread apply all bt full >> .\gdbcommands.txt
-    echo set logging off >> .\gdbcommands.txt )
+if not exist ./gdbcommands-backend.txt (
+    echo handle SIGPIPE nostop noprint > .\gdbcommands-backend.txt
+    echo handle SIG33   nostop noprint >> .\gdbcommands-backend.txt
+    echo set logging on     >> .\gdbcommands-backend.txt
+    echo set pagination off >> .\gdbcommands-backend.txt
+REM    echo set args -l myth.log --noupnp --nosched --nojobqueue --nohousekeeper --noautoexpire -v all >> .\gdbcommands.txt
+    echo set args -l mythtv-backend.log -v all >> .\gdbcommands-backend.txt
+    echo run >> .\gdbcommands-backend.txt
+    echo thread apply all bt full >> .\gdbcommands-backend.txt
+    echo set logging off >> .\gdbcommands-backend.txt )
 @Echo off
 
 Echo COMMENTS: --------------------------------------
-Echo COMMENTS: Clearing old gdb.txt before running gdb again.
+Echo COMMENTS: Clearing old gdb-backend.txt before running gdb again.
 Echo COMMENTS: --------------------------------------
 Echo. 
 ::
 :: add current data/time to gdb.txt 
 :: will this be a bad idea? who knows? =) 
 ::
-date /t > .\gdb.txt
-time /t >> .\gdb.txt
+date /t > .\gdb-backend.txt
+time /t >> .\gdb-backend.txt
 
 :gdb
 ::
 :: gdb should be in the path. 
 ::
 Echo COMMENTS: --------------------------------------
-Echo COMMENTS: If you need to add any switches to mythbackend edit gdbcommands.txt
+Echo COMMENTS: If you need to add any switches to mythbackend edit gdbcommands-backend.txt
 Echo COMMENTS: see: "mythbackend.exe --help" for options
 Echo COMMENTS: --------------------------------------
 Echo.
 Echo COMMENTS: --------------------------------------
 Echo COMMENTS: Starting: gdb
 Echo COMMENTS: --------------------------------------
-gdb .\mythbackend.exe -x .\gdbcommands.txt
+gdb .\mythbackend.exe -x .\gdbcommands-backend.txt
 
 Echo.
-Echo The backtrace can be found in .\gdb.txt
+Echo The backtrace can be found in .\gdb-backend.txt
 Echo.
