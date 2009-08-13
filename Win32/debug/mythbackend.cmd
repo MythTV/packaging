@@ -15,18 +15,19 @@ Echo.
 ::
 :: Check for and Create if needed the .\gdbcommands-backend.txt 
 ::
-:: syntax taken from [ http://www.mythtv.org/docs/mythtv-HOWTO.html#toc22.2 ] 
+:: syntax taken from [ http://www.mythtv.org/docs/mythtv-HOWTO-22.html#ss22.2 ]
 ::
 if not exist ./gdbcommands-backend.txt (
-    echo handle SIGPIPE nostop noprint > .\gdbcommands-backend.txt
-    echo handle SIG33   nostop noprint >> .\gdbcommands-backend.txt
-    echo set logging on     >> .\gdbcommands-backend.txt
-    echo set pagination off >> .\gdbcommands-backend.txt
-REM    echo set args -l myth.log --noupnp --nosched --nojobqueue --nohousekeeper --noautoexpire -v all >> .\gdbcommands.txt
-    echo set args -l mythtv-backend.log -v all >> .\gdbcommands-backend.txt
-    echo run >> .\gdbcommands-backend.txt
-    echo thread apply all bt full >> .\gdbcommands-backend.txt
-    echo set logging off >> .\gdbcommands-backend.txt )
+    echo handle SIGPIPE nostop noprint           >  .\gdbcommands-backend.txt
+    echo handle SIG33   nostop noprint           >> .\gdbcommands-backend.txt
+    echo set logging on                          >> .\gdbcommands-backend.txt
+    echo set pagination off                      >> .\gdbcommands-backend.txt
+    echo set breakpoint pending on               >> .\gdbcommands-backend.txt
+    echo break qFatal                            >> .\gdbcommands-backend.txt
+    echo set args -l mythtv-backend.log -v all   >> .\gdbcommands-backend.txt
+    echo run                                     >> .\gdbcommands-backend.txt
+    echo thread apply all bt full                >> .\gdbcommands-backend.txt
+    echo set logging off                         >> .\gdbcommands-backend.txt )
 @Echo off
 
 Echo COMMENTS: --------------------------------------
@@ -35,7 +36,6 @@ Echo COMMENTS: --------------------------------------
 Echo. 
 ::
 :: add current data/time to gdb.txt 
-:: will this be a bad idea? who knows? =) 
 ::
 date /t > .\gdb-backend.txt
 time /t >> .\gdb-backend.txt
