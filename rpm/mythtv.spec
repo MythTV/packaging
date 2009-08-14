@@ -60,7 +60,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r21013
+%define _svnrev r21243
 %define branch trunk
 
 #
@@ -257,6 +257,7 @@ BuildRequires: libtermcap-devel
 %endif
 
 %if %{with_mythvideo}
+Requires:       perl(XML::Simple)
 %endif
 
 %if %{with_mythweather}
@@ -912,7 +913,6 @@ cd mythtv-%{version}
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
 %if %{with_nvidia}
-    --xvmc-lib=XvMCNVIDIA_dynamic               \
     --enable-vdpau                              \
 %else
     --disable-vdpau                             \
@@ -1453,6 +1453,9 @@ fi
 ################################################################################
 
 %changelog
+
+* Thu Aug 13 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
+- Add XML::Simple requirement for mythvideo (for tmdb.pl)
 
 * Mon Jul 27 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
 - Rename xvmcnvidia stuff to just nvidia, and add vdpau options to it
