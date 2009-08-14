@@ -1456,6 +1456,7 @@ fi
 
 * Thu Aug 13 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
 - Add XML::Simple requirement for mythvideo (for tmdb.pl)
+- Remove now-deprecated call for XvMCNVIDIA_dynamic
 
 * Mon Jul 27 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
 - Rename xvmcnvidia stuff to just nvidia, and add vdpau options to it
