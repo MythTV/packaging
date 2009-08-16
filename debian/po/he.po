@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mythtv\n"
-"Report-Msgid-Bugs-To: ubuntu-mythtv@lists.ubuntu.com\n"
-"POT-Creation-Date: 2007-08-08 01:37+0200\n"
+"Report-Msgid-Bugs-To: Source: mythtv@packages.debian.org\n"
+"POT-Creation-Date: 2009-03-22 17:53-0500\n"
 "PO-Revision-Date: 2007-09-08 21:57+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -17,22 +17,15 @@ msgstr ""
 "X-Launchpad-Export-Date: 2007-10-05 08:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#. Type: boolean
-#. Description
-#: ../mythtv-backend.templates:1001
-#, fuzzy
-msgid "Is it OK to create the video4linux device nodes?"
-msgstr "האם זה בסדר ליצור את הקשרים להתקן video4linux?"
-
 #. Type: note
 #. Description
-#: ../mythtv-backend.templates:2001 ../mythtv-common.templates:5001
+#: ../mythtv-backend.templates:1001 ../mythtv-common.templates:5001
 msgid "mythtv-setup must be run in order to complete MythTV installation"
 msgstr "עליך להריץ את mythtv-setup על מנת להשלים את התקנת MythTV"
 
 #. Type: note
 #. Description
-#: ../mythtv-backend.templates:2001
+#: ../mythtv-backend.templates:1001
 msgid ""
 "You must run mythtv-setup as a user in the 'mythtv' group in order to "
 "complete  mythtv configuration.  Note that this program requires an X "
@@ -45,13 +38,13 @@ msgstr ""
 
 #. Type: note
 #. Description
-#: ../mythtv-backend.templates:2001
+#: ../mythtv-backend.templates:1001
 msgid "You must complete all four steps presented in the program."
 msgstr "עליך להשלים את כל ארבעת הצעדים המוצגים בתוכנה."
 
 #. Type: note
 #. Description
-#: ../mythtv-backend.templates:2001
+#: ../mythtv-backend.templates:1001
 msgid ""
 "Once you have done this, you may start the backend by executing the "
 "following command:"
@@ -59,7 +52,7 @@ msgstr "לאחר שעשית זאת, תוכל להתחיל את מנוע הרקע
 
 #. Type: note
 #. Description
-#: ../mythtv-backend.templates:2001
+#: ../mythtv-backend.templates:1001
 msgid "sudo /etc/init.d/mythtv-backend start"
 msgstr "sudo /etc/init.d/mythtv-backend start"
 
@@ -381,3 +374,7 @@ msgstr "מהו שם המארח של המערכת בה מותקן מנוע הרק
 #: ../mythtv-frontend.templates:2001
 msgid "On what port number is the MythTV server listening:"
 msgstr "לאיזה מספר יציאה מאזין שרת ה-MythTV:"
+
+#, fuzzy
+#~ msgid "Is it OK to create the video4linux device nodes?"
+#~ msgstr "האם זה בסדר ליצור את הקשרים להתקן video4linux?"
