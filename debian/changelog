@@ -4,6 +4,8 @@ mythtv (0.21.0+fixes21261-0ubuntu1) UNRELEASED; urgency=low
     - Fixes HDHomerun compatibility issues with reboot. (LP: #384556)
   * debian/control:
     - Build depends on libpulse0 so that pulseaudio disabling code works.
+  * debian/rules:
+    - Don't compress perl and python scripts that are installed. (LP: #380812)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sat, 15 Aug 2009 23:25:16 -0500
 
