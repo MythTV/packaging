@@ -1,4 +1,4 @@
-mythtv (0.21.0+fixes21261-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes21261-0ubuntu1) karmic; urgency=low
 
   * New upstream -fixes snapshot (21261)
     - Fixes HDHomerun compatibility issues with reboot. (LP: #384556)
@@ -10,7 +10,7 @@ mythtv (0.21.0+fixes21261-0ubuntu1) UNRELEASED; urgency=low
   * debian/mythtv-backend.init:
     - If for some reason $USER_HOME doesn't exist, make it. (LP: #326702)
 
- -- Mario Limonciello <superm1@ubuntu.com>  Sat, 15 Aug 2009 23:25:16 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 16 Aug 2009 00:26:55 -0500
 
 mythtv (0.21.0+fixes19961-0ubuntu8) jaunty; urgency=low
 
