@@ -2,6 +2,7 @@ mythtv (0.21.0+fixes21261-0ubuntu1) UNRELEASED; urgency=low
 
   * New upstream -fixes snapshot (21261)
     - Fixes HDHomerun compatibility issues with reboot. (LP: #384556)
+    - LCDproc compatibility. (LP: #392362)
   * debian/control:
     - Build depends on libpulse0 so that pulseaudio disabling code works.
   * debian/rules:
