@@ -7,6 +7,8 @@ mythtv (0.21.0+fixes21261-0ubuntu1) UNRELEASED; urgency=low
     - Build depends on libpulse0 so that pulseaudio disabling code works.
   * debian/rules:
     - Don't compress perl and python scripts that are installed. (LP: #380812)
+  * debian/mythtv-backend.init:
+    - If for some reason $USER_HOME doesn't exist, make it. (LP: #326702)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sat, 15 Aug 2009 23:25:16 -0500
 
