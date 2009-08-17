@@ -5,12 +5,12 @@
 # Watch out for superfluous whitespaces here!
 SVN_PACKAGE+=mythtv
 SVN_TYPE+=trunk
-SVN_MAJOR_RELEASE+=21
+SVN_MAJOR_RELEASE+=22
 SVN_MINOR_RELEASE+=0
 SVN_REVISION:=$(shell dpkg-parsechangelog | sed -ne 's/^Version: *............\(.*\)-.*/\1/p')
 SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
 #SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)/$(SVN_PACKAGE)
-GREATER+=true
+GREATER+=false
 TAGGED_RELEASE+=
 
 LSB:=$(shell lsb_release -cs)
@@ -229,7 +229,7 @@ binary-indep: build install
 	dh_pycentral -plibmyth-python
 	dh_link -i
 	dh_perl -i
-	dh_compress -i
+	dh_compress -i -X.pl -X.py
 	dh_fixperms -i
 	dh_installdeb -i
 	dh_gencontrol -i
@@ -251,7 +251,7 @@ binary-arch: build install
 	dh_installchangelogs  -a
 	dh_strip -a
 	dh_link -a
-	dh_compress -a
+	dh_compress -a -X.pl -X.py
 	dh_fixperms -a
 	dh_makeshlibs -a -V -Xusr/lib/mythtv/filters
 	dh_installdeb -a

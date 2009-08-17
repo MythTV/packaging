@@ -1,4 +1,4 @@
-mythtv (0.21.0+trunk20202-0ubuntu0) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk21327-0ubuntu0) UNRELEASED; urgency=low
 
   [ Thomas Mashos ]
   * Remove arts support
@@ -11,12 +11,19 @@ mythtv (0.21.0+trunk20202-0ubuntu0) UNRELEASED; urgency=low
 
  -- Build Machine <build@me.com>  Wed, 07 Jan 2009 01:02:49 -0600
 
-mythtv (0.21.0+fixes19961-0ubuntu9) UNRELEASED; urgency=low
+mythtv (0.21.0+fixes21261-0ubuntu1) karmic; urgency=low
 
+  * New upstream -fixes snapshot (21261)
+    - Fixes HDHomerun compatibility issues with reboot. (LP: #384556)
+    - LCDproc compatibility. (LP: #392362)
   * debian/control:
     - Build depends on libpulse0 so that pulseaudio disabling code works.
+  * debian/rules:
+    - Don't compress perl and python scripts that are installed. (LP: #380812)
+  * debian/mythtv-backend.init:
+    - If for some reason $USER_HOME doesn't exist, make it. (LP: #326702)
 
- -- Mario Limonciello <superm1@ubuntu.com>  Sun, 26 Apr 2009 09:27:16 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 16 Aug 2009 00:26:55 -0500
 
 mythtv (0.21.0+fixes19961-0ubuntu8) jaunty; urgency=low
 

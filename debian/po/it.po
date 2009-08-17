@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mythtv\n"
-"Report-Msgid-Bugs-To: ubuntu-mythtv@lists.ubuntu.com\n"
-"POT-Creation-Date: 2007-08-08 01:37+0200\n"
+"Report-Msgid-Bugs-To: Source: mythtv@packages.debian.org\n"
+"POT-Creation-Date: 2009-03-22 17:53-0500\n"
 "PO-Revision-Date: 2007-09-27 09:35+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Italian <it@li.org>\n"
@@ -17,22 +17,16 @@ msgstr ""
 "X-Launchpad-Export-Date: 2007-10-05 08:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#. Type: boolean
-#. Description
-#: ../mythtv-backend.templates:1001
-msgid "Is it OK to create the video4linux device nodes?"
-msgstr "Creare i nodi per il device video4linux?"
-
 #. Type: note
 #. Description
-#: ../mythtv-backend.templates:2001 ../mythtv-common.templates:5001
+#: ../mythtv-backend.templates:1001 ../mythtv-common.templates:5001
 msgid "mythtv-setup must be run in order to complete MythTV installation"
 msgstr ""
 "mythtv-setup deve essere eseguito per completare l'installazione di MythTV"
 
 #. Type: note
 #. Description
-#: ../mythtv-backend.templates:2001
+#: ../mythtv-backend.templates:1001
 msgid ""
 "You must run mythtv-setup as a user in the 'mythtv' group in order to "
 "complete  mythtv configuration.  Note that this program requires an X "
@@ -47,7 +41,7 @@ msgstr ""
 
 #. Type: note
 #. Description
-#: ../mythtv-backend.templates:2001
+#: ../mythtv-backend.templates:1001
 msgid "You must complete all four steps presented in the program."
 msgstr ""
 "È necessario completare tutti e quattro i passi presentati in questo "
@@ -55,7 +49,7 @@ msgstr ""
 
 #. Type: note
 #. Description
-#: ../mythtv-backend.templates:2001
+#: ../mythtv-backend.templates:1001
 msgid ""
 "Once you have done this, you may start the backend by executing the "
 "following command:"
@@ -65,7 +59,7 @@ msgstr ""
 
 #. Type: note
 #. Description
-#: ../mythtv-backend.templates:2001
+#: ../mythtv-backend.templates:1001
 msgid "sudo /etc/init.d/mythtv-backend start"
 msgstr "sudo /etc/init.d/mythtv-backend start"
 
@@ -404,3 +398,6 @@ msgstr "Nome dell'host del sistema in cui è installato il backend MythTV:"
 #: ../mythtv-frontend.templates:2001
 msgid "On what port number is the MythTV server listening:"
 msgstr "Porta di ascolto del server MythTV:"
+
+#~ msgid "Is it OK to create the video4linux device nodes?"
+#~ msgstr "Creare i nodi per il device video4linux?"
