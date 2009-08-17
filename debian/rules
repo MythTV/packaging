@@ -183,7 +183,7 @@ install: build
 	rm -f debian/mythtv/usr/share/mythtv/setup.xml
 
 	find debian/mythtv/usr/share -type f -exec chmod 0644 {} \;
-	chmod +x debian/mythtv/usr/share/mythtv/mythconverg_backup.pl
+	chmod +x debian/mythtv/usr/share/mythtv/*.pl
 
 	dh_movefiles --sourcedir=debian/mythtv
 
