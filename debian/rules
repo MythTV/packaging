@@ -98,7 +98,7 @@ configure-stamp: patch-stamp
 	[ $(UDEV) = "etc" ] && [ -f debian/patches/30_python26_transition.dpatch ] && dpatch deapply 30_python26_transition.dpatch || true
 
 	#update SVN REVISION to show the right version
-	sed -i -e "s/\`(svnversion \$$\$${SVNTREEDIR} 2>\/dev\/null) || echo Unknown\`/$(SVN_REVISION)/" version.pro
+	sed -i -e "s/^\(\(str  *\)\?SOURCE_VERSION\)=.*$/\1=$(SVN_REVISION)/g;" version.sh
 
 	./configure --prefix=/usr --runprefix=/usr --enable-lirc --enable-audio-alsa \
 	--enable-audio-oss --enable-audio-jack --enable-dvb \
