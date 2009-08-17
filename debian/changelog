@@ -1,16 +1,16 @@
-mythtv (0.22.0~trunk21333-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk21333-0ubuntu1) karmic; urgency=low
 
   * New upstream checkout (21333)
     - Fixes crash with linearblend filter. (LP: #414870)
   * mythtv_0.21.0.sql:
     - Set to default to Mythbuntu-9.10 theme for new installs.
   * rules:
-    - Set the /usr/share/mythtv/mythconverg_backup.pl file to be
+    - Set the /usr/share/mythtv/*.pl file to be
       executable as the backend wants to run it regularly.
     - Update SOURCE_VERSION in version.sh as it's not in version.pro
       anymore.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Mon, 17 Aug 2009 09:53:26 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 17 Aug 2009 11:32:56 -0500
 
 mythtv (0.22.0~trunk21328-0ubuntu0) karmic; urgency=low
 
