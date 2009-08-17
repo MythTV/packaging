@@ -1,15 +1,17 @@
-mythtv (0.22.0~trunk21327-0ubuntu0) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk21328-0ubuntu0) karmic; urgency=low
 
   [ Thomas Mashos ]
   * Remove arts support
   * Add libqt4-opengl-dev as build dep
 
   [ Mario Limonciello ]
+  * New upstream snapshot.  Switch to 0.22 based builds in preparation
+    for upstream's 0.22 release, which should be ready before karmic.
   * debian/control: Build depend on nvidia 180
   * debian/control: Conflicts/Replaces on mythcontrols
   * debian/rules: enable vdpau
 
- -- Build Machine <build@me.com>  Wed, 07 Jan 2009 01:02:49 -0600
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 17 Aug 2009 01:23:08 -0500
 
 mythtv (0.21.0+fixes21261-0ubuntu1) karmic; urgency=low
 
