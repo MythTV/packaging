@@ -2,6 +2,9 @@ mythtv (0.22.0~trunk21328-0ubuntu1) UNRELEASED; urgency=low
 
   * mythtv_0.21.0.sql:
     - Set to default to Mythbuntu-9.10 theme for new installs.
+  * rules:
+    - Set the /usr/share/mythtv/mythconverg_backup.pl file to be
+      executable as the backend wants to run it regularly.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Mon, 17 Aug 2009 09:53:26 -0500
 
