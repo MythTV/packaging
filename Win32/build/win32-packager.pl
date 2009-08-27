@@ -1628,7 +1628,7 @@ push @{$expect},
   shell  => ['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
             'cd '.$unixmythtv.'mythtv',
             './configure --prefix='.$unixbuild.' --runprefix=..'.
-            ' --disable-dbox2 --disable-hdhomerun'.
+            ' --disable-dbox2'.
             ' --disable-iptv --disable-joystick-menu --disable-xvmc-vld'.
             ' --disable-xvmc --enable-directx --disable-lirc'.
             ' --cpu=pentium4 --compile-type='.$compile_type],
