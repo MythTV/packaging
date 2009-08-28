@@ -1,4 +1,4 @@
-mythtv (0.22.0~trunk21556-0ubuntu2) karmic; urgency=low
+mythtv (0.22.0~trunk21556-0ubuntu1) karmic; urgency=low
 
   * New upstream checkout. (r21556)
     - Fixes memory leaks with UPNP enabled. (LP: #200761)
