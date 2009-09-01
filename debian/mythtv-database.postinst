@@ -21,7 +21,7 @@ prepare_database() {
     fi
 
     #Preload tables and default values
-    cat $MYSQL | sed -e "s/G.A.N.T/Mythbuntu-8.04/g; s/OLDHOSTNAME/$LOCALHOSTNAME/g; s/127.0.0.1/$NEWIP/g; s/Slowly','0/Slowly','$EXT3/g;" |\
+    cat $MYSQL | sed -e "s/G.A.N.T/Mythbuntu-9.10/g; s/OLDHOSTNAME/$LOCALHOSTNAME/g; s/127.0.0.1/$NEWIP/g; s/Slowly','0/Slowly','$EXT3/g; s/blueosd/BlackCurves-OSD/g" |\
         mysql -h $hostname -u $admin_username $admin_password $database
 
     #Set up local IP and hostname
