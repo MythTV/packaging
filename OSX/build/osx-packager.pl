@@ -467,7 +467,17 @@ END
     die;
 }
 
-if ( $OPT{'svnbranch'} )
+if ( $OPT{'nohead'} ) 
+{ 
+    my $SVNTOP="$SCRIPTDIR/.osx-packager/src/myth-svn/mythtv/.svn"; 
+ 
+    if ( ! -d $SVNTOP ) 
+    {   die "No source code to build?"   } 
+   
+    if ( ! `grep svn/trunk/mythtv $SVNTOP/entries` ) 
+    {   die "Source code does not match SVN trunk"   } 
+} 
+elsif ( $OPT{'svnbranch'} )
 {
     &Complain(<<END);
 Note that this script can not build old branches.
