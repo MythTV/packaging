@@ -1,11 +1,11 @@
-mythtv (0.22.0~trunk21556-0ubuntu2) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk21556-0ubuntu2) karmic; urgency=low
 
   * debian/mythtv-database.postinst:
      - Set BlackCuves as default OSD and Mythbuntu-9.10 as default theme.
   * debian/mythtv_0.22.0.sql:
      - Update to the current database schema (1242)
 
- -- Mario Limonciello <superm1@ubuntu.com>  Tue, 01 Sep 2009 17:51:03 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 02 Sep 2009 10:09:26 -0500
 
 mythtv (0.22.0~trunk21556-0ubuntu1) karmic; urgency=low
 
