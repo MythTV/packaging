@@ -1,4 +1,4 @@
-mythtv (0.22.0~trunk21556-0ubuntu3) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk21556-0ubuntu3) karmic; urgency=low
 
   * debian/mythtv-database.postinst:
     - Don't hardcode the location of SQL database to a particular filename.
