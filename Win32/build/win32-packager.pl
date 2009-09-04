@@ -40,6 +40,7 @@ use Getopt::Std;
 use Digest::MD5;
 
 
+$SIG{INT} = sub { die "Interrupted\n"; };
 $| = 1; # autoflush stdout;
 
 # this script was last tested to work with this version, on other versions YMMV.
@@ -708,8 +709,9 @@ if ($package == 1) {
 if ( $qtver == 4  ) {
 push @{$expect}, 
 [ archive => $sources.'qt-win-opensource-4.5.1-mingw.exe',  
-    fetch => 'ftp://ftp.qtsoftware.com/qt/source/'.
-             'qt-win-opensource-4.5.1-mingw.exe'],
+    fetch => 'http://get.qt.nokia.com/qt/source/'.
+             'qt-win-opensource-4.5.1-mingw.exe',
+    comment => 'Downloading QT binaries; this will take a LONG time (165MB)' ],
 [ file => $qt4dir.'bin/QtCore4.dll', 
   exec => $dossources.'qt-win-opensource-4.5.1-mingw.exe',
   comment => 'Install Qt - use default options.  '.
@@ -947,7 +949,7 @@ push @{$expect},
 # confirmed latest source version as at 26-12-2008:
 [ archive => $sources.'SDL-devel-1.2.13-mingw32.tar.gz',  
   fetch   => 'http://www.libsdl.org/release/SDL-devel-1.2.13-mingw32.tar.gz'],
-[ dir     => $sources.'SDL-1.2.13', 
+[ file    => $sources.'SDL-1.2.13/bin/SDL.dll', 
   extract => $sources.'SDL-devel-1.2.13-mingw32.tar.gz' ],
 [ file    => $msys.'bin/SDL.dll', 
   shell   => ["cd $unixsources/SDL-1.2.13",
@@ -2578,15 +2580,23 @@ sub _fetch {
     my $ua = LWP::UserAgent->new;
     $ua->proxy(['http', 'ftp'], $proxy);
 
-    my $req = HTTP::Request->new(GET => $url);
-    my $res = $ua->request($req);
-
-    if ($res->is_success) {
-        my $f = new IO::File "> $file" || die "_fetch: $!\n";
-        $f->binmode();
-        $f->print($res->content);
-        $f->close();
+    my $res = $ua->request(HTTP::Request->new(GET => $url),
+      sub {
+          if (! -f $file) {
+              open(FILE, ">$file") || die "_fetch can't open $file: $!\n";
+              binmode FILE;
+          }
+          print FILE $_[0] or die "_fetch can't write to $file: $!\n";
+      }
+    );
+    close(FILE) || die "_fetch can't close $file: $!\n";
+    if (my $mtime = $res->last_modified) {
+        utime time, $mtime, $file;
     }
+    if ($res->header("X-Died") || !$res->is_success) {
+        unlink($file) && print "Transfer failed.  File deleted.\n";
+    }
+
     if ( ! -s $file ) {
       die ('ERR: Unable to automatically fetch file!\nPerhaps manually '.
            'downloading from the URL to the filename (both listed above) '.
