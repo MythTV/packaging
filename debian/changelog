@@ -1,3 +1,10 @@
+mythtv (0.22.0~trunk21742-0ubuntu2) UNRELEASED; urgency=low
+
+  * debian/control:
+    - Conflicts for mythstream on mythtv-frontend (LP: #415922)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 09 Sep 2009 09:13:30 -0500
+
 mythtv (0.22.0~trunk21742-0ubuntu1) karmic; urgency=low
 
   * New upstream checkout (21742)

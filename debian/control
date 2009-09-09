@@ -153,7 +153,7 @@ Package: mythtv-frontend
 Architecture: any
 Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, ${misc:Depends}
 Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, mythstream, ntp | time-daemon | ntp-simple
-Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0)
+Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.22)
 Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0)
 Description: A personal video recorder application (client)
  MythTV provides a unified graphical interface for recording and viewing
