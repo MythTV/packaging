@@ -3,7 +3,7 @@ mythtv (0.22.0~trunk21742-0ubuntu2) UNRELEASED; urgency=low
   * debian/control:
     - Conflicts for mythstream on mythtv-frontend (LP: #415922)
   * debian/mythtv-backened.postinst, debian/mythtv-backend.dirs:
-    - Create Fanart, Screenshots, and Banners directories so jamu
+    - Create Coverart, Fanart, Screenshots, and Banners directories so jamu
       can have somewhere to store stuff to.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 09 Sep 2009 09:13:30 -0500
