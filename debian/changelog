@@ -1,3 +1,10 @@
+mythtv (0.22.0~trunk21742-0ubuntu1) UNRELEASED; urgency=low
+
+  * New upstream checkout (21742)
+    - Fixes FTBFS on PPC. See changeset 21571 for more details.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 08 Sep 2009 23:08:37 -0500
+
 mythtv (0.22.0~trunk21556-0ubuntu3) karmic; urgency=low
 
   * debian/mythtv-database.postinst:
