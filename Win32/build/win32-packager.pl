@@ -1632,7 +1632,7 @@ push @{$expect},
             './configure --prefix='.$unixbuild.' --runprefix=..'.
             ' --disable-dbox2'.
             ' --disable-iptv --disable-joystick-menu --disable-xvmc-vld'.
-            ' --disable-xvmc --enable-directx --disable-lirc'.
+            ' --disable-xvmc --disable-lirc'.
             ' --cpu=pentium4 --compile-type='.$compile_type],
   comment => 'do we already have a Makefile for mythtv?' ],
 
