@@ -2406,7 +2406,7 @@ CREATE TABLE `storagegroup` (
 
 LOCK TABLES `storagegroup` WRITE;
 /*!40000 ALTER TABLE `storagegroup` DISABLE KEYS */;
-INSERT INTO `storagegroup` VALUES (1,'Default','OLDHOSTNAME','/var/lib/mythtv/recordings');
+INSERT INTO `storagegroup` VALUES (1,'Default','OLDHOSTNAME','/var/lib/mythtv/recordings'),(2,'Videos','OLDHOSTNAME','/var/lib/mythtv/videos/'),(3,'Fanart','OLDHOSTNAME','/var/lib/mythtv/fanart/'),(4,'Trailers','OLDHOSTNAME','/var/lib/mythtv/trailers/'),(5,'Coverart','OLDHOSTNAME','/var/lib/mythtv/coverart/'),(7,'Screenshots','OLDHOSTNAME','/var/lib/mythtv/screenshots/'),(8,'Banners','OLDHOSTNAME','/var/lib/mythtv/banners/'),(9,'DB Backups','OLDHOSTNAME','/var/lib/mythtv/db_backups/'),(10,'LiveTV','OLDHOSTNAME','/var/lib/mythtv/livetv/');
 /*!40000 ALTER TABLE `storagegroup` ENABLE KEYS */;
 UNLOCK TABLES;
 
