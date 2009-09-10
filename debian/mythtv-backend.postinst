@@ -7,7 +7,7 @@ case "$1" in
                    /var/lib/mythtv/recordings \
                    /var/cache/mythtv \
                    /var/lib/mythtv/banners \
-                   /var/lib/mythv/screenshots \
+                   /var/lib/mythtv/screenshots \
                    /var/lib/mythtv/fanart \
                    /var/lib/mythtv/coverart \
                    /var/lib/mythtv/db_backups \

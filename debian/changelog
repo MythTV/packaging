@@ -1,3 +1,10 @@
+mythtv (0.22.0~trunk21742-0ubuntu3) UNRELEASED; urgency=low
+
+  * debian/mythtv-backend.postinst:
+    - Correct a typo in the postinst.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 10 Sep 2009 14:12:20 -0500
+
 mythtv (0.22.0~trunk21742-0ubuntu2) karmic; urgency=low
 
   * debian/control:
