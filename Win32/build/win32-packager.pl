@@ -2078,14 +2078,6 @@ push @{$expect},
             'find '.$unixmythtv.'build/share/mythtv/themes/ -name "*.ttf"'.
             ' | xargs -n1 -i__ cp __ '.$unixmythtv.'build/share/mythtv'],
   comment => 'move ttf files'],
-  
-  
-# install fixup for redundant themes folders/folders/folders:
-[ always => '',
-  shell => [ "cd $unixbuild/share/mythtv/themes",
-             'for f in *; do mv $f/$f/* ./$f; done' ],
-  comment => 'relocate badly installed THEMES! ' ],
-
 ;
 }
 
