@@ -3,6 +3,8 @@ mythtv (0.22.0~trunk21742-0ubuntu3) UNRELEASED; urgency=low
   [ Mario Limonciello ]
   * debian/mythtv-backend.postinst:
     - Correct a typo in the postinst.
+  * debian/mythtv-common.postinst:
+    - Don't fail on actions that happen to /root (LP: #399120)
 
   [ Thomas Mashos ]
   * Removed default media directory db setting

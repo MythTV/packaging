@@ -72,10 +72,10 @@ EOF
 
     mv $NEW /etc/mythtv/config.xml
 
-    mkdir -p /root/.mythtv
+    mkdir -p /root/.mythtv || true
 
     if [ ! -e /root/.mythtv/config.xml ]; then
-        ln -s /etc/mythtv/config.xml /root/.mythtv/config.xml
+        ln -s /etc/mythtv/config.xml /root/.mythtv/config.xml || true
     fi
 
     ;;
