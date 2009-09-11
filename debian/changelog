@@ -1,7 +1,11 @@
 mythtv (0.22.0~trunk21742-0ubuntu3) UNRELEASED; urgency=low
 
+  [ Mario Limonciello ]
   * debian/mythtv-backend.postinst:
     - Correct a typo in the postinst.
+
+  [ Thomas Mashos ]
+  * Removed default media directory db setting
 
  -- Mario Limonciello <superm1@ubuntu.com>  Thu, 10 Sep 2009 14:12:20 -0500
 
