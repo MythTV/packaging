@@ -161,7 +161,7 @@ my $is_same = "$compile_type-$svnlocation-$qtver.same";
 $is_same =~ s#/#-#g; # don't put dir slashes in a filename!
 
 # this list defines the components to build , to build everything, leave as-is
-my @components = ( 'mythtv', 'myththemes', 'mythplugins', 'packaging' );
+my @components = ( 'mythtv', 'oldthemes', 'mythplugins', 'packaging' );
 
 
 # TODO - we should try to autodetect these paths, rather than assuming
@@ -1396,7 +1396,7 @@ rm Makefile
 cd '.$unixmythtv.'mythplugins
 make clean
 rm Makefile
-cd '.$unixmythtv.'myththemes
+cd '.$unixmythtv.'oldthemes
 make clean
 rm Makefile
 cd '.$unixmythtv.'
@@ -2021,30 +2021,30 @@ push @{$expect},
 }
 
 
-if ( grep m/myththemes/, @components ) {
+if ( grep m/oldthemes/, @components ) {
 # -------------------------------
 # Make themes
 # -------------------------------
 push @{$expect},
 ## config:
-[ file    => $mythtv.'myththemes/Makefile',
+[ file    => $mythtv.'oldthemes/Makefile',
   shell   => ['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
-            'cd '.$unixmythtv.'myththemes','./configure --prefix='.$unixbuild],
-  comment => 'do we already have a Makefile for myththemes?' ],
+            'cd '.$unixmythtv.'oldthemes','./configure --prefix='.$unixbuild],
+  comment => 'do we already have a Makefile for oldthemes?' ],
 
-## fix myththemes.pro
-[ grep    => ['^win32:QMAKE_INSTALL_DIR', $mythtv.'myththemes/myththemes.pro'], 
+## fix oldthemes.pro
+[ grep    => ['^win32:QMAKE_INSTALL_DIR', $mythtv.'oldthemes/oldthemes.pro'], 
   shell   => ['echo \'win32:QMAKE_INSTALL_DIR = sh ./cpsvndir\' >> '.
-              $mythtv.'myththemes/myththemes.pro','nocheck'], 
-  comment => 'fix myththemes.pro' ],
-[ grep    => ['win32:DEPENDS', $mythtv.'myththemes/myththemes.pro'], 
+              $mythtv.'oldthemes/oldthemes.pro','nocheck'], 
+  comment => 'fix oldthemes.pro' ],
+[ grep    => ['win32:DEPENDS', $mythtv.'oldthemes/oldthemes.pro'], 
   shell   => ['echo \'win32:DEPENDS += ./\' >> '.
-              $mythtv.'myththemes/myththemes.pro','nocheck'], 
-  comment => 'fix myththemes.pro' ],
+              $mythtv.'oldthemes/oldthemes.pro','nocheck'], 
+  comment => 'fix oldthemes.pro' ],
 
 #hack mythconfig.mak to remove /usr
-[ grep    => ['LIBDIR=/lib', $mythtv.'myththemes/mythconfig.mak'], 
-  shell   => ['cd '.$unixmythtv.'myththemes',
+[ grep    => ['LIBDIR=/lib', $mythtv.'oldthemes/mythconfig.mak'], 
+  shell   => ['cd '.$unixmythtv.'oldthemes',
              'sed -e \'s|/usr||\' mythconfig.mak > mythconfig2.mak',
              'cp mythconfig2.mak mythconfig.mak', 'nocheck'], 
   comment => 'hack mythconfig.mak'],
@@ -2052,7 +2052,7 @@ push @{$expect},
 ## make
 [ dir     => [$mythtv.'/build/share/mythtv/themes/Retro'], 
   shell   => ['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
-              'cd '.$unixmythtv.'myththemes','make', 'make install'], 
+              'cd '.$unixmythtv.'oldthemes','make', 'make install'], 
   comment => 'THEMES! redo make if we need to '.
              '(see the  last_build.txt identifier)' ],
   
@@ -2074,7 +2074,7 @@ push @{$expect},
 # Move ttf fonts to font directory
 [ always  => [],
   shell   => ['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
-            'cd '.$unixmythtv.'myththemes',
+            'cd '.$unixmythtv.'oldthemes',
             'find '.$unixmythtv.'build/share/mythtv/themes/ -name "*.ttf"'.
             ' | xargs -n1 -i__ cp __ '.$unixmythtv.'build/share/mythtv'],
   comment => 'move ttf files'],
@@ -2723,7 +2723,7 @@ sub usage {
 
 -h             This message
 -v             Verbose output
--u all|mythtv|mythplugins|myththemes
+-u all|mythtv|mythplugins|oldthemes
                Revert instead of checkout !!
 -k             Package win32 distribution
 -p proxy:port  Your proxy
