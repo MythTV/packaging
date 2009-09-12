@@ -1,4 +1,4 @@
-mythtv (0.22.0~trunk21785-0ubuntu2) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk21785-0ubuntu2) karmic; urgency=low
 
   * debian/control:
     - Conflicts/replaces for mythcenter themes. (LP: #428211)
