@@ -1,4 +1,4 @@
-mythtv (0.22.0~trunk21785-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk21785-0ubuntu1) karmic; urgency=low
 
   [ Mario Limonciello ]
   * New upstream checkout (r21785)
@@ -6,9 +6,6 @@ mythtv (0.22.0~trunk21785-0ubuntu1) UNRELEASED; urgency=low
     - Correct a typo in the postinst.
   * debian/mythtv-common.postinst:
     - Don't fail on actions that happen to /root (LP: #399120)
-
-  [ Thomas Mashos ]
-  * Removed default media directory db setting
 
   [ Thomas Mashos ]
   * Removed default media directory db setting
