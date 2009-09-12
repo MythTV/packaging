@@ -1,6 +1,7 @@
-mythtv (0.22.0~trunk21742-0ubuntu3) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk21785-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
+  * New upstream checkout (r21785)
   * debian/mythtv-backend.postinst:
     - Correct a typo in the postinst.
   * debian/mythtv-common.postinst:
@@ -12,7 +13,7 @@ mythtv (0.22.0~trunk21742-0ubuntu3) UNRELEASED; urgency=low
   [ Thomas Mashos ]
   * Removed default media directory db setting
 
- -- Mario Limonciello <superm1@ubuntu.com>  Thu, 10 Sep 2009 14:12:20 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 11 Sep 2009 19:17:47 -0500
 
 mythtv (0.22.0~trunk21742-0ubuntu2) karmic; urgency=low
 
