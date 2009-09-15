@@ -1,3 +1,10 @@
+mythtv (0.22.0~trunk21785-0ubuntu3) UNRELEASED; urgency=low
+
+  * debian/mythtv.desktop:
+    - Use a real icon.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 14 Sep 2009 19:37:41 -0500
+
 mythtv (0.22.0~trunk21785-0ubuntu2) karmic; urgency=low
 
   * debian/control:

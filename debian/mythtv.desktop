@@ -5,6 +5,6 @@ GenericName=MythTV Viewer
 Exec=mythfrontend --service
 Type=Application
 Encoding=UTF-8
-Icon=/usr/share/mythtv/themes/blue/myth_tv_logo.png
+Icon=/usr/share/mythtv/themes/MythCenter-wide/ui/mythtv_logo.png
 Categories=GNOME;Application;AudioVideo;Audio;Video
 X-AppInstall-Package=mythtv
