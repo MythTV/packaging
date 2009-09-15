@@ -1977,7 +1977,7 @@ push @{$expect},
 #  comment => 'make cleanup.pro'],
 
 # make install
-[ newer   => [$mythtv.'build/bin/mythtv/plugins/libmythmovies.dll',
+[ newer   => [$mythtv.'build/lib/mythtv/plugins/libmythmovies.dll',
               $mythtv.'mythplugins/mythmovies/mythmovies/libmythmovies.dll'],
   shell   => ['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
               'cd '.$unixmythtv.'mythplugins','make install'],
