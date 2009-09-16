@@ -535,7 +535,7 @@ push @{$expect},
 [ filesame => [$mingw.'lib/libmysql.lib', $mysql.'lib/opt/libmysql.lib'],
   copy     => [''=>''] ],
 [ file     => $mingw.'include/mysql.h',
-  exec     => 'copy /Y "'.$mysql.'include\*" '.$dosmingw.'include' ],
+  exec     => 'copy /Y "'.$dosmysql.'include\*" '.$dosmingw.'include' ],
 
 
 # make sure that /mingw is mounted in MSYS properly before trying
