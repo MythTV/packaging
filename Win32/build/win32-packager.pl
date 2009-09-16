@@ -183,6 +183,7 @@ my $mingw   = 'C:/MinGW/';
 my $mythtv  = 'C:/mythtv/';       # this is where the entire SVN checkout lives
                                   # so c:/mythtv/mythtv/ is the main codebase.
 my $build   = 'C:/mythtv/build/'; # where 'make install' installs into
+my $mysql   = 'C:/Program Files/MySQL/MySQL Server 5.1/';
 
 # Where is the users home?
 # Script later creates $home\.mythtv\mysql.txt
@@ -203,6 +204,7 @@ my $dosmsys    = perl2dos($msys);
 my $dossources = perl2dos($sources);
 my $dosmingw   = perl2dos($mingw);
 my $dosmythtv  = perl2dos($mythtv);
+my $dosmysql   = perl2dos($mysql);
 
 # Unix/MSys equiv. versions of the paths (for when we shell to MSYS/UNIX mode):
 my $unixmsys  = '/';       # MSys root is always mounted here,
@@ -518,26 +520,22 @@ push @{$expect},
              'MySQL-5.1/mysql-essential-5.1.36-win32.msi',
   comment => 'fetch mysql binaries - this is a big download(35MB) '.
              'so it might take a while' ],
-[ file    => "c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll",
+[ file    => $mysql.'bin/libmySQL.dll',
   exec    => $dossources.'mysql-essential-5.1.36-win32.msi INSTALLLEVEL=2',
   comment => 'Install mysql - be sure to choose to do a "COMPLETE" install. '.
              'You should also choose NOT to "configure the server now" ' ],
 
 # after mysql install
-[ filesame => [$mingw.'bin/libmySQL.dll',
-               'c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll'],
+[ filesame => [$mingw.'bin/libmySQL.dll', $mysql.'bin/libmySQL.dll'],
   copy     => [''=>'',
   comment  => 'post-mysql-install'] ],
-[ filesame => [$mingw.'lib/libmySQL.dll',
-               'c:/Program Files/MySQL/MySQL Server 5.1/bin/libmySQL.dll'],
+[ filesame => [$mingw.'lib/libmySQL.dll', $mysql.'bin/libmySQL.dll'],
   copy     => [''=>'',
   comment  => 'post-mysql-install'] ],
-[ filesame => [$mingw.'lib/libmysql.lib',
-               'c:/Program Files/MySQL/MySQL Server 5.1/lib/opt/libmysql.lib'],
+[ filesame => [$mingw.'lib/libmysql.lib', $mysql.'lib/opt/libmysql.lib'],
   copy     => [''=>''] ],
 [ file     => $mingw.'include/mysql.h',
-  exec     => 'copy /Y "c:\Program Files\MySQL\MySQL Server 5.1\include\*" '.
-              $dosmingw."include" ],
+  exec     => 'copy /Y "'.$mysql.'include\*" '.$dosmingw.'include' ],
 
 
 # make sure that /mingw is mounted in MSYS properly before trying
