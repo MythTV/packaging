@@ -970,7 +970,7 @@ cd mythplugins-%{version}
     echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
     find . -name \*.pro \
         -exec sed -i -e "s,INCLUDEPATH += .\+/include/mythtv,INCLUDEPATH += $temp%{_includedir}/mythtv," {} \; \
-        -exec sed -i -e "s,TARGETDEPS += \$\${LIBDIR}/libmyth,TARGETDEPS += $temp%{_libdir}/libmyth," {} \; \
+        -exec sed -i -e "s,DEPLIBS = \$\${LIBDIR},DEPLIBS = $temp%{_libdir}," {} \; \
         -exec sed -i -e "s,\$\${PREFIX}/include/mythtv,$temp%{_includedir}/mythtv," {} \;
     echo "INCLUDEPATH -= \$\${PREFIX}/include" >> settings.pro
     echo "INCLUDEPATH -= %{_includedir}"       >> settings.pro
