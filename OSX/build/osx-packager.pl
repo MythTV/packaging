@@ -955,7 +955,7 @@ foreach my $comp (@comps)
     if ($comp eq 'mythtv')
     {
         # Remove/add Nigel's frontend building speedup hack
-        &DoSpeedupHacks('programs/programs.pro', 'mythfrontend mythtv');
+        &DoSpeedupHacks('programs/programs.pro', 'mythfrontend mythavtest');
     }
 
     &Verbose("Making $comp");
