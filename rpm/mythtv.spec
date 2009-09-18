@@ -9,13 +9,17 @@
 #     David Bussenschutt <buzz@oska.com>
 #     and others; see changelog at bottom for details.
 #
-# The latest version of this file can be found at:
+# The latest canonical upstream version of this file can be found at:
 #
-#     http://www.mythtv.org/wiki/index.php/Mythtv-svn-rpmbuild.spec
+#     http://svn.mythtv.org/svn/trunk/packaging/rpm/mythtv.spec
+#
+# The latest RPM Fusion version can be found at:
+#
+#     http://cvs.rpmfusion.org/viewvc/rpms/mythtv/devel/?root=free
 #
 # Note:
 #
-#     This spec relies upon several files included in the RPMFusion mythtv
+#     This spec relies upon several files included in the RPM Fusion mythtv
 #     src.rpm file.  Please install it into your build tree before trying to
 #     build anything with this spec.
 #
@@ -31,7 +35,8 @@
 #
 # The following options are enabled by default.  Use these options to disable:
 #
-# --without nvidia          Disable NVidia XvMC and VDPAU support
+# --without vdpau           Disable VDPAU support
+# --without xvmc            Disable XvMC support
 # --without perl            Disable building of the perl bindings
 # --without python          Disable building of the python bindings
 #
@@ -60,21 +65,21 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r21243
+%define _svnrev r21937
 %define branch trunk
 
 #
 # Basic descriptive tags for this package:
 #
 Name:           mythtv
-Summary:        A digital video recorder (DVR) application.
+Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
 Version: 0.22
 %if "%{branch}" == "trunk"
-Release: 0.3.svn.%{_svnrev}%{?dist}
+Release: 0.4.svn.%{_svnrev}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -89,18 +94,20 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 # processor-specific optimizations.  It seems to cause compile problems on many
 # systems (particularly x86_64), so it is classified by the MythTV developers
 # as "use at your own risk."
-%define with_proc_opt      %{?_with_proc_opt:       1} %{!?_with_proc_opt:      0}
+%define with_proc_opt      %{?_with_proc_opt:      1} %{!?_with_proc_opt:      0}
 
 # Set "--with debug" to enable MythTV debug compile mode
-%define with_debug         %{?_with_debug:          1} %{?!_with_debug:         0}
+%define with_debug         %{?_with_debug:         1} %{?!_with_debug:         0}
 
 # The following options are enabled by default.  Use --without to disable them
-%define with_perl          %{?_without_perl:        0} %{!?_without_perl:       1}
-%define with_python        %{?_without_python:      0} %{!?_without_python:     1}
-%define with_nvidia        %{?_without_nvidia:      0} %{?!_without_nvidia:     1}
+%define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
+%define with_xvmc          %{?_without_xvmc:       0} %{?!_without_xvmc:       1}
+%define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
+%define with_python        %{?_without_python:     0} %{!?_without_python:     1}
+%define with_pulseaudio    %{?_without_pulseaudio: 0} %{!?_without_pulseaudio: 1}
 
 # The following options are disabled by default.  Use --with to enable them
-%define with_directfb      %{?_with_directfb:       1} %{!?_with_directfb:      0}
+%define with_directfb      %{?_with_directfb:      1} %{!?_with_directfb:      0}
 
 # All plugins get built by default, but you can disable them as you wish
 %define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
@@ -151,6 +158,7 @@ BuildRequires:  freetype-devel >= 2
 BuildRequires:  gcc-c++
 BuildRequires:  mysql-devel >= 5
 BuildRequires:  qt4-devel >= 4.4
+BuildRequires:  phonon-devel
 
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
@@ -164,7 +172,7 @@ BuildRequires:  libXxf86vm-devel
 BuildRequires:  mesa-libGLU-devel
 BuildRequires:  xorg-x11-proto-devel
 %ifarch %{ix86} x86_64
-BuildRequires:  xorg-x11-drv-i810-devel
+BuildRequires:  xorg-x11-drv-intel-devel
 BuildRequires:  xorg-x11-drv-openchrome-devel
 %endif
 
@@ -172,6 +180,7 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
+BuildRequires:  faac-devel
 BuildRequires:  faad2-devel
 BuildRequires:  fftw2-devel < 3
 BuildRequires:  fftw2-devel >= 2.1.3
@@ -179,10 +188,9 @@ BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  gsm-devel
 BuildRequires:  lame-devel
 BuildRequires:  libdca-devel
-# libdvdcss will be dynamically loaded if installed
-#BuildRequires:  libdvdcss-devel >= 1.2.7
 BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
+# nb: libdvdcss will be dynamically loaded if installed
 BuildRequires:  libfame-devel >= 0.9.0
 BuildRequires:  libmad-devel
 BuildRequires:  libogg-devel
@@ -193,12 +201,14 @@ BuildRequires:  taglib-devel >= 1.4
 BuildRequires:  transcode >= 0.6.8
 BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
-BuildRequires:  pulseaudio-libs-devel
 
 # Audio framework support
 BuildRequires:  alsa-lib-devel
 BuildRequires:  arts-devel
 BuildRequires:  jack-audio-connection-kit-devel
+%if %{with_pulseaudio}
+BuildRequires:  pulseaudio-libs-devel
+%endif
 
 # Need dvb headers to build in dvb support
 BuildRequires: kernel-headers
@@ -212,8 +222,8 @@ BuildRequires:  libraw1394-devel
 BuildRequires:  directfb-devel
 %endif
 
-%if %{with_nvidia}
-BuildRequires:  xorg-x11-drv-nvidia-devel
+%if %{with_vdpau}
+BuildRequires: libvdpau-devel
 %endif
 
 # API Build Requirements
@@ -290,10 +300,6 @@ Requires:  mythtv-themes      = %{version}
 Requires:  mysql-server >= 5, mysql >= 5
 # XMLTV is not yet packaged for rpmfusion
 #Requires: xmltv
-Requires:  wget >= 1.9.1
-
-# faad2-devel.ppc64 is not available, so:
-ExcludeArch: ppc64
 
 # Generate the required mythtv-frontend-api version string here so we only
 # have to do it once.
@@ -335,7 +341,7 @@ and miscellaneous other bits and pieces.
 ################################################################################
 
 %package -n libmyth
-Summary:   Library providing mythtv support.
+Summary:   Library providing mythtv support
 Group:     System Environment/Libraries
 
 Requires:  freetype >= 2
@@ -351,7 +357,7 @@ television programs.  Refer to the mythtv package for more information.
 ################################################################################
 
 %package -n libmyth-devel
-Summary:   Development files for libmyth.
+Summary:   Development files for libmyth
 Group:     Development/Libraries
 
 Requires:  libmyth = %{version}-%{release}
@@ -378,6 +384,7 @@ Requires:  xorg-x11-drv-openchrome-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
+Requires:  faac-devel
 Requires:  faad2-devel
 Requires:  fftw2-devel < 3
 Requires:  fftw2-devel >= 2.1.3
@@ -385,7 +392,6 @@ Requires:  flac-devel >= 1.0.4
 Requires:  gsm-devel
 Requires:  lame-devel
 Requires:  libdca-devel
-#Requires:  libdvdcss-devel >= 1.2.7
 Requires:  libdvdnav-devel
 Requires:  libdvdread-devel >= 0.9.4
 Requires:  libfame-devel >= 0.9.0
@@ -403,6 +409,9 @@ Requires:  xvidcore-devel >= 0.9.1
 Requires:  alsa-lib-devel
 Requires:  arts-devel
 Requires:  jack-audio-connection-kit-devel
+%if %{with_pulseaudio}
+Requires:  pulseaudio-libs-devel
+%endif
 
 # Need dvb headers for dvb support
 Requires:  kernel-headers
@@ -416,9 +425,10 @@ Requires:  libraw1394-devel
 Requires:  directfb-devel
 %endif
 
-%if %{with_nvidia}
-Requires:  xorg-x11-drv-nvidia-devel
+%if %{with_vdpau}
+Requires: libvdpau-devel
 %endif
+
 
 %description -n libmyth-devel
 This package contains the header files and libraries for developing
@@ -468,6 +478,7 @@ Summary:    Server component of mythtv (a DVR)
 Group:      Applications/Multimedia
 Requires:   lame
 Requires:   mythtv-common = %{version}-%{release}
+Requires:   wget
 Conflicts:  xmltv-grabbers < 0.5.37
 
 %description backend
@@ -487,6 +498,7 @@ Group:     Applications/Multimedia
 Requires:  freetype
 Requires:  mythtv-backend = %{version}-%{release}
 Requires:  mythtv-base-themes = %{version}
+Requires:  wget
 
 %description setup
 MythTV provides a unified graphical interface for recording and viewing
@@ -500,6 +512,9 @@ mythtv backend.
 %package common
 Summary: Common components needed by multiple other MythTV components
 Group: Applications/Multimedia
+# mythphone is now DOA, but we need this for upgrade path preservation.
+Provides: mythphone = %{version}-%{release}
+Obsoletes: mythphone < %{version}-%{release}
 
 %description common
 MythTV provides a unified graphical interface for recording and viewing
@@ -519,10 +534,8 @@ Group:          Development/Languages
 
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       perl(DBD::mysql)
-# Disabled because there are no RPM packages for these yet,
-# and RPM doesn't seem to be picking up on CPAN versions
-#Requires:       perl(Net::UPnP)
-#Requires:       perl(Net::UPnP::ControlPoint)
+Requires:       perl(Net::UPnP)
+Requires:       perl(Net::UPnP::ControlPoint)
 
 %description -n perl-MythTV
 Provides a perl-based interface to interacting with MythTV.
@@ -796,8 +809,8 @@ and replay recorded events.
 # Replace static lib paths with %{_lib} so we build properly on x86_64
 # systems, where the libs are actually in lib64.
     if [ "%{_lib}" != "lib" ]; then
-        grep -rlZ /lib/   . | xargs -r0 sed -i -e 's,/lib/,/%{_lib}/,g'
-        grep -rlZ /lib$   . | xargs -r0 sed -i -e 's,/lib$,/%{_lib},'
+        grep -rlZ '/lib/' . | xargs -r0 sed -i -e 's,/lib/,/%{_lib}/,g'
+        grep -rlZ '/lib$' . | xargs -r0 sed -i -e 's,/lib$,/%{_lib},'
         grep -rlZ '/lib ' . | xargs -r0 sed -i -e 's,/lib ,/%{_lib} ,g'
     fi
 
@@ -807,6 +820,8 @@ cd mythtv-%{version}
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
+# And drop execute bit on theme html files
+    chmod -x themes/default/htmls/*.html
 
 # Nuke Windows and Mac OS X build scripts
     rm -rf contrib/Win32 contrib/OSX
@@ -844,7 +859,7 @@ cd mythtv-%{version}
     sed -i -e 's,VENDOR_XVMC_LIBS="-lXvMCNVIDIA",VENDOR_XVMC_LIBS="-lXvMCNVIDIA -lXv",' configure
 
 # On to mythplugins
-    cd ..
+cd ..
 
 ##### MythPlugins
 %if %{with_plugins}
@@ -866,13 +881,13 @@ cd mythplugins-%{version}
     chmod -R g-w ./*
     cd ..
 
-# Prevent all of those nasty installs to ../../../../../bin/whatever
-#    echo "QMAKE_PROJECT_DEPTH = 0" >> mythtv.pro
-#    echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
-#    chmod 644 settings.pro
+# Add execute bits to mythvideo python helper scripts
+    chmod +x mythvideo/scripts/ttvdb/*.py
+# Remove execute bits from some php mythweb files
+    chmod -x mythweb/classes/*.php
 
 # And back to the compile root
-    cd ..
+cd ..
 
 %endif
 
@@ -891,7 +906,7 @@ cd mythtv-%{version}
     --libdir=%{_libdir}                         \
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
-    --enable-iptv				\
+    --enable-iptv                               \
     --enable-pthreads                           \
     --enable-ffmpeg-pthreads                    \
     --enable-joystick-menu                      \
@@ -908,14 +923,16 @@ cd mythtv-%{version}
     --enable-ivtv                               \
     --enable-firewire                           \
     --enable-dvb                                \
+    --enable-libfaac --enable-nonfree           \
     --enable-libfaad --enable-libfaad --enable-libfaadbin \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
-%if %{with_nvidia}
+%if %{with_vdpau}
     --enable-vdpau                              \
-%else
-    --disable-vdpau                             \
+%endif
+%if !%{with_xvmc}
+    --disable-xvmcw                             \
 %endif
 %if %{with_directfb}
     --enable-directfb                           \
@@ -947,7 +964,6 @@ cd mythtv-%{version}
     --compile-type=release                      \
 %endif
     --enable-debug
-###    --enable-libx264                            \
 
 # Insert rpm version-release for mythbackend --version output
     find . -name version.pro -exec sed -i -e 's,svnversion \$\${SVNTREEDIR},echo "%{version}-%{release}",g' {} \;
@@ -1146,8 +1162,6 @@ cd mythplugins-%{version}
     mkdir -p %{buildroot}%{_datadir}/mythweb
     cp -a * %{buildroot}%{_datadir}/mythweb/
     mkdir -p %{buildroot}%{_datadir}/mythweb/{image_cache,php_sessions}
-# fix up permissions
-    chmod -R g-x %{buildroot}%{_datadir}/mythweb
 
     mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
     cp %{SOURCE401} %{buildroot}%{_sysconfdir}/httpd/conf.d/
@@ -1172,9 +1186,9 @@ rm -rf %{buildroot}
 %postun -n libmyth -p /sbin/ldconfig
 
 %pre backend
-# Add the "mythtv" user
+# Add the "mythtv" user, with membership in the video group
 /usr/sbin/useradd -c "mythtvbackend User" \
-    -s /sbin/nologin -r -d %{_varlibdir}/mythtv mythtv 2> /dev/null || :
+    -s /sbin/nologin -r -d %{_varlibdir}/mythtv -G video mythtv 2> /dev/null || :
 
 %post backend
 /sbin/chkconfig --add mythbackend
@@ -1239,8 +1253,8 @@ fi
 %{_datadir}/mythtv/devicemaster.xml
 %{_datadir}/mythtv/deviceslave.xml
 %{_datadir}/mythtv/setup.xml
+%{_bindir}/mythavtest
 %{_bindir}/mythfrontend
-%{_bindir}/mythtv
 %{_bindir}/mythtvosd
 %{_bindir}/mythlcdserver
 %{_bindir}/mythshutdown
@@ -1320,8 +1334,7 @@ fi
 %doc mythplugins-%{version}/mythbrowser/AUTHORS
 %doc mythplugins-%{version}/mythbrowser/COPYING
 %doc mythplugins-%{version}/mythbrowser/README
-%{_bindir}/mythbrowser
-%{_libdir}/mythtv/plugins/libmythbookmarkmanager.so
+%{_libdir}/mythtv/plugins/libmythbrowser.so
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
 %endif
 
@@ -1453,19 +1466,24 @@ fi
 ################################################################################
 
 %changelog
+* Fri Sep 18 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn
+- Resync with build fixes from RPM Fusion
+- Remove BR: on xorg-x11-drv-nvidia-devel, just use XvMC wrapper
+- Rename option to build VDPAU support, since its not nVidia-specific
+- Add assorted cleanups from James Twyford (via trac ticket #7090)
 
-* Thu Aug 13 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
+* Thu Aug 13 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
 - Add XML::Simple requirement for mythvideo (for tmdb.pl)
 - Remove now-deprecated call for XvMCNVIDIA_dynamic
 
-* Mon Jul 27 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
+* Mon Jul 27 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
 - Rename xvmcnvidia stuff to just nvidia, and add vdpau options to it
 
-* Sat Jul 25 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
+* Sat Jul 25 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
 - Remove all a52 references because ./configure no longer accepts even "disable"
 - Remove non-GPL libfaac options (not really used by MythTV anyway)
 
-* Sun Jun 28 2009 Chris Petersen <rpm@forevermore.net> 0.22-01.svn
+* Sun Jun 28 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
 - Remove xvmc-opengl references that were removed in r20723
 - Add requirement for pulseaudio-libs-devel now that some distros are requiring it
 
