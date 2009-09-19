@@ -882,7 +882,7 @@ cd mythplugins-%{version}
     cd ..
 
 # Add execute bits to mythvideo python helper scripts
-    chmod +x mythvideo/scripts/ttvdb/*.py
+    chmod +x mythvideo/mythvideo/scripts/ttvdb/*.py
 # Remove execute bits from some php mythweb files
     chmod -x mythweb/classes/*.php
 
