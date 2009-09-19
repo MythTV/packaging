@@ -65,7 +65,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r21937
+%define _svnrev r21953
 %define branch trunk
 
 #
@@ -79,7 +79,7 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version: 0.22
 %if "%{branch}" == "trunk"
-Release: 0.4.svn.%{_svnrev}%{?dist}
+Release: 0.5.svn.%{_svnrev}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -180,7 +180,6 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-BuildRequires:  faac-devel
 BuildRequires:  faad2-devel
 BuildRequires:  fftw2-devel < 3
 BuildRequires:  fftw2-devel >= 2.1.3
@@ -384,7 +383,6 @@ Requires:  xorg-x11-drv-openchrome-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-Requires:  faac-devel
 Requires:  faad2-devel
 Requires:  fftw2-devel < 3
 Requires:  fftw2-devel >= 2.1.3
@@ -923,7 +921,6 @@ cd mythtv-%{version}
     --enable-ivtv                               \
     --enable-firewire                           \
     --enable-dvb                                \
-    --enable-libfaac --enable-nonfree           \
     --enable-libfaad --enable-libfaad --enable-libfaadbin \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
@@ -1466,6 +1463,10 @@ fi
 ################################################################################
 
 %changelog
+
+* Sat Sep 19 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.5.svn
+- Re-remove non-GPL libfaac options (not really used by MythTV anyway)
+
 * Fri Sep 18 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn
 - Resync with build fixes from RPM Fusion
 - Remove BR: on xorg-x11-drv-nvidia-devel, just use XvMC wrapper
