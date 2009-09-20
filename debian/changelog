@@ -1,4 +1,4 @@
-mythtv (0.22.0~trunk21954-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk21954-0ubuntu1) karmic; urgency=low
 
   * New upstream checkout (r21954)
   * debian/mythtv_0.22.sql:
@@ -8,7 +8,7 @@ mythtv (0.22.0~trunk21954-0ubuntu1) UNRELEASED; urgency=low
   * debian/mythtv-frontend.files:
     - Rename mythtv to mythavtest (see upstream 21904 for details)
 
- -- Mario Limonciello <superm1@ubuntu.com>  Mon, 14 Sep 2009 19:37:41 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 20 Sep 2009 02:13:10 -0500
 
 mythtv (0.22.0~trunk21785-0ubuntu2) karmic; urgency=low
 
