@@ -1,5 +1,6 @@
-mythtv (0.22.0~trunk21785-0ubuntu3) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk21954-0ubuntu1) UNRELEASED; urgency=low
 
+  * New upstream checkout (r21954)
   * debian/mythtv.desktop:
     - Use a real icon.
   * debian/mythtv-frontend.files:
