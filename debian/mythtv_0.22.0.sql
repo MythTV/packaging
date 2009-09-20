@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: mythconverg
 -- ------------------------------------------------------
--- Server version	5.1.37-1ubuntu2
+-- Server version	5.1.37-1ubuntu4
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,19 +24,26 @@ DROP TABLE IF EXISTS `archiveitems`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `archiveitems` (
   `intid` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type` set('Recording','Video','File') DEFAULT NULL,
+  `type` set('Recording','Video','File') CHARACTER SET latin1 DEFAULT NULL,
   `title` varchar(128) DEFAULT NULL,
   `subtitle` varchar(128) DEFAULT NULL,
   `description` text,
   `startdate` varchar(30) DEFAULT NULL,
   `starttime` varchar(30) DEFAULT NULL,
-  `size` int(10) unsigned NOT NULL,
+  `size` bigint(20) unsigned NOT NULL,
   `filename` text NOT NULL,
   `hascutlist` tinyint(1) NOT NULL DEFAULT '0',
   `cutlist` text,
+  `duration` int(10) unsigned NOT NULL DEFAULT '0',
+  `cutduration` int(10) unsigned NOT NULL DEFAULT '0',
+  `videowidth` int(10) unsigned NOT NULL DEFAULT '0',
+  `videoheight` int(10) unsigned NOT NULL DEFAULT '0',
+  `filecodec` varchar(50) NOT NULL DEFAULT '',
+  `videocodec` varchar(50) NOT NULL DEFAULT '',
+  `encoderprofile` varchar(50) NOT NULL DEFAULT 'NONE',
   PRIMARY KEY (`intid`),
   KEY `title` (`title`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -533,7 +540,7 @@ CREATE TABLE `displayprofilegroups` (
   `profilegroupid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`name`,`hostname`),
   UNIQUE KEY `profilegroupid` (`profilegroupid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -542,6 +549,7 @@ CREATE TABLE `displayprofilegroups` (
 
 LOCK TABLES `displayprofilegroups` WRITE;
 /*!40000 ALTER TABLE `displayprofilegroups` DISABLE KEYS */;
+INSERT INTO `displayprofilegroups` VALUES ('CPU++','OLDHOSTNAME',1),('CPU+','OLDHOSTNAME',2),('CPU--','OLDHOSTNAME',3),('High Quality','OLDHOSTNAME',4),('Normal','OLDHOSTNAME',5),('Slim','OLDHOSTNAME',6);
 /*!40000 ALTER TABLE `displayprofilegroups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -560,7 +568,7 @@ CREATE TABLE `displayprofiles` (
   KEY `profilegroupid` (`profilegroupid`),
   KEY `profileid` (`profileid`,`value`),
   KEY `profileid_2` (`profileid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -569,6 +577,7 @@ CREATE TABLE `displayprofiles` (
 
 LOCK TABLES `displayprofiles` WRITE;
 /*!40000 ALTER TABLE `displayprofiles` DISABLE KEYS */;
+INSERT INTO `displayprofiles` VALUES (1,1,'pref_priority','1'),(1,1,'pref_cmp0','> 0 0'),(1,1,'pref_decoder','ffmpeg'),(1,1,'pref_max_cpus','1'),(1,1,'pref_videorenderer','xv-blit'),(1,1,'pref_osdrenderer','softblend'),(1,1,'pref_osdfade','1'),(1,1,'pref_deint0','bobdeint'),(1,1,'pref_deint1','linearblend'),(1,1,'pref_filters',''),(1,2,'pref_priority','2'),(1,2,'pref_cmp0','> 0 0'),(1,2,'pref_decoder','ffmpeg'),(1,2,'pref_max_cpus','1'),(1,2,'pref_videorenderer','quartz-blit'),(1,2,'pref_osdrenderer','softblend'),(1,2,'pref_osdfade','1'),(1,2,'pref_deint0','linearblend'),(1,2,'pref_deint1','linearblend'),(1,2,'pref_filters',''),(2,3,'pref_priority','1'),(2,3,'pref_cmp0','<= 720 576'),(2,3,'pref_cmp1','> 0 0'),(2,3,'pref_decoder','ffmpeg'),(2,3,'pref_max_cpus','1'),(2,3,'pref_videorenderer','xv-blit'),(2,3,'pref_osdrenderer','softblend'),(2,3,'pref_osdfade','1'),(2,3,'pref_deint0','bobdeint'),(2,3,'pref_deint1','linearblend'),(2,3,'pref_filters',''),(2,4,'pref_priority','2'),(2,4,'pref_cmp0','<= 1280 720'),(2,4,'pref_cmp1','> 720 576'),(2,4,'pref_decoder','xvmc'),(2,4,'pref_max_cpus','1'),(2,4,'pref_videorenderer','xvmc-blit'),(2,4,'pref_osdrenderer','opengl'),(2,4,'pref_osdfade','1'),(2,4,'pref_deint0','bobdeint'),(2,4,'pref_deint1','onefield'),(2,4,'pref_filters',''),(2,5,'pref_priority','3'),(2,5,'pref_cmp0','<= 1280 720'),(2,5,'pref_cmp1','> 720 576'),(2,5,'pref_decoder','libmpeg2'),(2,5,'pref_max_cpus','1'),(2,5,'pref_videorenderer','xv-blit'),(2,5,'pref_osdrenderer','softblend'),(2,5,'pref_osdfade','1'),(2,5,'pref_deint0','bobdeint'),(2,5,'pref_deint1','onefield'),(2,5,'pref_filters',''),(2,6,'pref_priority','4'),(2,6,'pref_cmp0','> 0 0'),(2,6,'pref_decoder','xvmc'),(2,6,'pref_max_cpus','1'),(2,6,'pref_videorenderer','xvmc-blit'),(2,6,'pref_osdrenderer','ia44blend'),(2,6,'pref_osdfade','0'),(2,6,'pref_deint0','bobdeint'),(2,6,'pref_deint1','onefield'),(2,6,'pref_filters',''),(2,7,'pref_priority','5'),(2,7,'pref_cmp0','> 0 0'),(2,7,'pref_decoder','libmpeg2'),(2,7,'pref_max_cpus','1'),(2,7,'pref_videorenderer','xv-blit'),(2,7,'pref_osdrenderer','chromakey'),(2,7,'pref_osdfade','0'),(2,7,'pref_deint0','bobdeint'),(2,7,'pref_deint1','onefield'),(2,7,'pref_filters',''),(3,8,'pref_priority','1'),(3,8,'pref_cmp0','<= 720 576'),(3,8,'pref_cmp1','> 0 0'),(3,8,'pref_decoder','ivtv'),(3,8,'pref_max_cpus','1'),(3,8,'pref_videorenderer','ivtv'),(3,8,'pref_osdrenderer','ivtv'),(3,8,'pref_osdfade','1'),(3,8,'pref_deint0','none'),(3,8,'pref_deint1','none'),(3,8,'pref_filters',''),(3,9,'pref_priority','2'),(3,9,'pref_cmp0','<= 720 576'),(3,9,'pref_cmp1','> 0 0'),(3,9,'pref_decoder','xvmc'),(3,9,'pref_max_cpus','1'),(3,9,'pref_videorenderer','xvmc-blit'),(3,9,'pref_osdrenderer','ia44blend'),(3,9,'pref_osdfade','0'),(3,9,'pref_deint0','bobdeint'),(3,9,'pref_deint1','onefield'),(3,9,'pref_filters',''),(3,10,'pref_priority','3'),(3,10,'pref_cmp0','<= 1280 720'),(3,10,'pref_cmp1','> 720 576'),(3,10,'pref_decoder','xvmc'),(3,10,'pref_max_cpus','1'),(3,10,'pref_videorenderer','xvmc-blit'),(3,10,'pref_osdrenderer','ia44blend'),(3,10,'pref_osdfade','0'),(3,10,'pref_deint0','bobdeint'),(3,10,'pref_deint1','onefield'),(3,10,'pref_filters',''),(3,11,'pref_priority','4'),(3,11,'pref_cmp0','> 0 0'),(3,11,'pref_decoder','xvmc'),(3,11,'pref_max_cpus','1'),(3,11,'pref_videorenderer','xvmc-blit'),(3,11,'pref_osdrenderer','ia44blend'),(3,11,'pref_osdfade','0'),(3,11,'pref_deint0','bobdeint'),(3,11,'pref_deint1','onefield'),(3,11,'pref_filters',''),(3,12,'pref_priority','5'),(3,12,'pref_cmp0','> 0 0'),(3,12,'pref_decoder','libmpeg2'),(3,12,'pref_max_cpus','1'),(3,12,'pref_videorenderer','xv-blit'),(3,12,'pref_osdrenderer','chromakey'),(3,12,'pref_osdfade','0'),(3,12,'pref_deint0','none'),(3,12,'pref_deint1','none'),(3,12,'pref_filters',''),(4,13,'pref_priority','1'),(4,13,'pref_cmp0','>= 1920 1080'),(4,13,'pref_decoder','ffmpeg'),(4,13,'pref_max_cpus','2'),(4,13,'pref_videorenderer','xv-blit'),(4,13,'pref_osdrenderer','softblend'),(4,13,'pref_osdfade','1'),(4,13,'pref_deint0','linearblend'),(4,13,'pref_deint1','linearblend'),(4,13,'pref_filters',''),(4,14,'pref_priority','2'),(4,14,'pref_cmp0','> 0 0'),(4,14,'pref_decoder','ffmpeg'),(4,14,'pref_max_cpus','1'),(4,14,'pref_videorenderer','xv-blit'),(4,14,'pref_osdrenderer','softblend'),(4,14,'pref_osdfade','1'),(4,14,'pref_deint0','yadifdoubleprocessdeint'),(4,14,'pref_deint1','yadifdeint'),(4,14,'pref_filters',''),(4,15,'pref_priority','3'),(4,15,'pref_cmp0','>= 1920 1080'),(4,15,'pref_decoder','ffmpeg'),(4,15,'pref_max_cpus','2'),(4,15,'pref_videorenderer','quartz-blit'),(4,15,'pref_osdrenderer','softblend'),(4,15,'pref_osdfade','1'),(4,15,'pref_deint0','linearblend'),(4,15,'pref_deint1','linearblend'),(4,15,'pref_filters',''),(4,16,'pref_priority','4'),(4,16,'pref_cmp0','> 0 0'),(4,16,'pref_decoder','ffmpeg'),(4,16,'pref_max_cpus','1'),(4,16,'pref_videorenderer','quartz-blit'),(4,16,'pref_osdrenderer','softblend'),(4,16,'pref_osdfade','1'),(4,16,'pref_deint0','yadifdoubleprocessdeint'),(4,16,'pref_deint1','yadifdeint'),(4,16,'pref_filters',''),(5,17,'pref_priority','1'),(5,17,'pref_cmp0','>= 1280 720'),(5,17,'pref_decoder','ffmpeg'),(5,17,'pref_max_cpus','1'),(5,17,'pref_videorenderer','xv-blit'),(5,17,'pref_osdrenderer','softblend'),(5,17,'pref_osdfade','0'),(5,17,'pref_deint0','linearblend'),(5,17,'pref_deint1','linearblend'),(5,17,'pref_filters',''),(5,18,'pref_priority','2'),(5,18,'pref_cmp0','> 0 0'),(5,18,'pref_decoder','ffmpeg'),(5,18,'pref_max_cpus','1'),(5,18,'pref_videorenderer','xv-blit'),(5,18,'pref_osdrenderer','softblend'),(5,18,'pref_osdfade','1'),(5,18,'pref_deint0','greedyhdoubleprocessdeint'),(5,18,'pref_deint1','kerneldeint'),(5,18,'pref_filters',''),(5,19,'pref_priority','3'),(5,19,'pref_cmp0','>= 1280 720'),(5,19,'pref_decoder','ffmpeg'),(5,19,'pref_max_cpus','1'),(5,19,'pref_videorenderer','quartz-blit'),(5,19,'pref_osdrenderer','softblend'),(5,19,'pref_osdfade','0'),(5,19,'pref_deint0','linearblend'),(5,19,'pref_deint1','linearblend'),(5,19,'pref_filters',''),(5,20,'pref_priority','4'),(5,20,'pref_cmp0','> 0 0'),(5,20,'pref_decoder','ffmpeg'),(5,20,'pref_max_cpus','1'),(5,20,'pref_videorenderer','quartz-blit'),(5,20,'pref_osdrenderer','softblend'),(5,20,'pref_osdfade','1'),(5,20,'pref_deint0','greedyhdoubleprocessdeint'),(5,20,'pref_deint1','kerneldeint'),(5,20,'pref_filters',''),(6,21,'pref_priority','1'),(6,21,'pref_cmp0','>= 1280 720'),(6,21,'pref_decoder','ffmpeg'),(6,21,'pref_max_cpus','1'),(6,21,'pref_videorenderer','xv-blit'),(6,21,'pref_osdrenderer','softblend'),(6,21,'pref_osdfade','0'),(6,21,'pref_deint0','onefield'),(6,21,'pref_deint1','onefield'),(6,21,'pref_filters',''),(6,22,'pref_priority','2'),(6,22,'pref_cmp0','> 0 0'),(6,22,'pref_decoder','ffmpeg'),(6,22,'pref_max_cpus','1'),(6,22,'pref_videorenderer','xv-blit'),(6,22,'pref_osdrenderer','softblend'),(6,22,'pref_osdfade','1'),(6,22,'pref_deint0','linearblend'),(6,22,'pref_deint1','linearblend'),(6,22,'pref_filters',''),(6,23,'pref_priority','3'),(6,23,'pref_cmp0','>= 1280 720'),(6,23,'pref_decoder','ffmpeg'),(6,23,'pref_max_cpus','1'),(6,23,'pref_videorenderer','quartz-blit'),(6,23,'pref_osdrenderer','softblend'),(6,23,'pref_osdfade','0'),(6,23,'pref_deint0','onefield'),(6,23,'pref_deint1','onefield'),(6,23,'pref_filters',''),(6,24,'pref_priority','4'),(6,24,'pref_cmp0','> 0 0'),(6,24,'pref_decoder','ffmpeg'),(6,24,'pref_max_cpus','1'),(6,24,'pref_videorenderer','quartz-blit'),(6,24,'pref_osdrenderer','softblend'),(6,24,'pref_osdfade','1'),(6,24,'pref_deint0','linearblend'),(6,24,'pref_deint1','linearblend'),(6,24,'pref_filters','');
 /*!40000 ALTER TABLE `displayprofiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -687,7 +696,7 @@ CREATE TABLE `dvdinput` (
   `letterbox` tinyint(1) DEFAULT NULL,
   `v_format` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`intid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -735,7 +744,7 @@ CREATE TABLE `dvdtranscode` (
   `two_pass` tinyint(1) DEFAULT NULL,
   `tc_param` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`intid`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -784,10 +793,11 @@ DROP TABLE IF EXISTS `filemarkup`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `filemarkup` (
   `filename` text NOT NULL,
-  `mark` bigint(20) NOT NULL,
-  `offset` varchar(32) DEFAULT NULL,
-  `type` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `mark` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `offset` bigint(20) unsigned DEFAULT NULL,
+  `type` tinyint(4) NOT NULL DEFAULT '0',
+  KEY `filename` (`filename`(255))
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -807,10 +817,10 @@ DROP TABLE IF EXISTS `gallerymetadata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `gallerymetadata` (
-  `image` varchar(255) NOT NULL,
+  `image` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `angle` int(11) NOT NULL,
   PRIMARY KEY (`image`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -912,7 +922,7 @@ CREATE TABLE `housekeeping` (
 
 LOCK TABLES `housekeeping` WRITE;
 /*!40000 ALTER TABLE `housekeeping` DISABLE KEYS */;
-INSERT INTO `housekeeping` VALUES ('DailyCleanup','2007-06-27 20:33:37'),('JobQueueRecover-OLDHOSTNAME','2007-06-27 20:33:37'),('BackupDB','2009-09-01 12:23:06');
+INSERT INTO `housekeeping` VALUES ('DailyCleanup','2007-06-27 20:33:37'),('JobQueueRecover-OLDHOSTNAME','2007-06-27 20:33:37'),('BackupDB','2009-09-20 01:56:29'),('DBCleanup','2009-09-20 01:56:39');
 /*!40000 ALTER TABLE `housekeeping` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1025,7 +1035,7 @@ CREATE TABLE `jumppoints` (
 
 LOCK TABLES `jumppoints` WRITE;
 /*!40000 ALTER TABLE `jumppoints` DISABLE KEYS */;
-INSERT INTO `jumppoints` VALUES ('Reload Theme',NULL,'','OLDHOSTNAME'),('Main Menu',NULL,'','OLDHOSTNAME'),('Program Guide',NULL,'','OLDHOSTNAME'),('Program Finder',NULL,'','OLDHOSTNAME'),('Manage Recordings / Fix Conflicts',NULL,'','OLDHOSTNAME'),('Program Recording Priorities',NULL,'','OLDHOSTNAME'),('Channel Recording Priorities',NULL,'','OLDHOSTNAME'),('TV Recording Playback',NULL,'','OLDHOSTNAME'),('TV Recording Deletion',NULL,'','OLDHOSTNAME'),('Live TV',NULL,'','OLDHOSTNAME'),('Live TV In Guide',NULL,'','OLDHOSTNAME'),('Manual Record Scheduling',NULL,'','OLDHOSTNAME'),('Status Screen',NULL,'','OLDHOSTNAME'),('Previously Recorded',NULL,'','OLDHOSTNAME'),('Play DVD',NULL,'','OLDHOSTNAME'),('Play VCD',NULL,'','OLDHOSTNAME'),('Rip DVD',NULL,'','OLDHOSTNAME'),('Netflix Browser',NULL,'','OLDHOSTNAME'),('Netflix Queue',NULL,'','OLDHOSTNAME'),('Netflix History',NULL,'','OLDHOSTNAME'),('MythGallery',NULL,'','OLDHOSTNAME'),('MythGame',NULL,'','OLDHOSTNAME'),('Play music',NULL,'','OLDHOSTNAME'),('Select music playlists',NULL,'','OLDHOSTNAME'),('Rip CD',NULL,'','OLDHOSTNAME'),('Scan music',NULL,'','OLDHOSTNAME'),('MythNews',NULL,'','OLDHOSTNAME'),('MythVideo',NULL,'','OLDHOSTNAME'),('Video Manager',NULL,'','OLDHOSTNAME'),('Video Browser',NULL,'','OLDHOSTNAME'),('Video Listings',NULL,'','OLDHOSTNAME'),('Video Gallery',NULL,'','OLDHOSTNAME'),('MythWeather',NULL,'','OLDHOSTNAME');
+INSERT INTO `jumppoints` VALUES ('Reload Theme',NULL,'','OLDHOSTNAME'),('Main Menu',NULL,'','OLDHOSTNAME'),('Program Guide',NULL,'','OLDHOSTNAME'),('Program Finder',NULL,'','OLDHOSTNAME'),('Manage Recordings / Fix Conflicts',NULL,'','OLDHOSTNAME'),('Program Recording Priorities',NULL,'','OLDHOSTNAME'),('Channel Recording Priorities',NULL,'','OLDHOSTNAME'),('TV Recording Playback',NULL,'','OLDHOSTNAME'),('TV Recording Deletion',NULL,'','OLDHOSTNAME'),('Live TV',NULL,'','OLDHOSTNAME'),('Live TV In Guide',NULL,'','OLDHOSTNAME'),('Manual Record Scheduling',NULL,'','OLDHOSTNAME'),('Status Screen',NULL,'','OLDHOSTNAME'),('Previously Recorded',NULL,'','OLDHOSTNAME'),('Play DVD',NULL,'','OLDHOSTNAME'),('Play VCD',NULL,'','OLDHOSTNAME'),('Rip DVD',NULL,'','OLDHOSTNAME'),('Netflix Browser',NULL,'','OLDHOSTNAME'),('Netflix Queue',NULL,'','OLDHOSTNAME'),('Netflix History',NULL,'','OLDHOSTNAME'),('MythGallery',NULL,'','OLDHOSTNAME'),('MythGame',NULL,'','OLDHOSTNAME'),('Play music',NULL,'','OLDHOSTNAME'),('Select music playlists',NULL,'','OLDHOSTNAME'),('Rip CD',NULL,'','OLDHOSTNAME'),('Scan music',NULL,'','OLDHOSTNAME'),('MythNews',NULL,'','OLDHOSTNAME'),('MythVideo',NULL,'','OLDHOSTNAME'),('Video Manager',NULL,'','OLDHOSTNAME'),('Video Browser',NULL,'','OLDHOSTNAME'),('Video Listings',NULL,'','OLDHOSTNAME'),('Video Gallery',NULL,'','OLDHOSTNAME'),('MythWeather',NULL,'','OLDHOSTNAME'),('Manage Recording Rules','','','OLDHOSTNAME'),('ScreenShot','','','OLDHOSTNAME'),('Create DVD','','','OLDHOSTNAME'),('Create Archive','','','OLDHOSTNAME'),('Import Archive','','','OLDHOSTNAME'),('View Archive Log','','','OLDHOSTNAME'),('Play Created DVD','','','OLDHOSTNAME'),('Burn DVD','','','OLDHOSTNAME'),('Show Music Miniplayer','','','OLDHOSTNAME');
 /*!40000 ALTER TABLE `jumppoints` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1052,7 +1062,7 @@ CREATE TABLE `keybindings` (
 
 LOCK TABLES `keybindings` WRITE;
 /*!40000 ALTER TABLE `keybindings` DISABLE KEYS */;
-INSERT INTO `keybindings` VALUES ('Global','UP','Up Arrow','Up','OLDHOSTNAME'),('Global','DOWN','Down Arrow','Down','OLDHOSTNAME'),('Global','LEFT','Left Arrow','Left','OLDHOSTNAME'),('Global','RIGHT','Right Arrow','Right','OLDHOSTNAME'),('Global','SELECT','Select','Return,Enter,Space','OLDHOSTNAME'),('Global','ESCAPE','Escape','Esc','OLDHOSTNAME'),('Global','MENU','Pop-up menu','M','OLDHOSTNAME'),('Global','INFO','More information','I','OLDHOSTNAME'),('Global','PAGEUP','Page Up','PgUp','OLDHOSTNAME'),('Global','PAGEDOWN','Page Down','PgDown','OLDHOSTNAME'),('Global','PREVVIEW','Previous View','Home','OLDHOSTNAME'),('Global','NEXTVIEW','Next View','End','OLDHOSTNAME'),('Global','HELP','Help','F1','OLDHOSTNAME'),('Global','EJECT','Eject Removable Media','','OLDHOSTNAME'),('Global','0','0','0','OLDHOSTNAME'),('Global','1','1','1','OLDHOSTNAME'),('Global','2','2','2','OLDHOSTNAME'),('Global','3','3','3','OLDHOSTNAME'),('Global','4','4','4','OLDHOSTNAME'),('Global','5','5','5','OLDHOSTNAME'),('Global','6','6','6','OLDHOSTNAME'),('Global','7','7','7','OLDHOSTNAME'),('Global','8','8','8','OLDHOSTNAME'),('Global','9','9','9','OLDHOSTNAME'),('qt','DELETE','Delete','D','OLDHOSTNAME'),('qt','EDIT','Edit','E','OLDHOSTNAME'),('TV Frontend','PAGEUP','Page Up','3','OLDHOSTNAME'),('TV Frontend','PAGEDOWN','Page Down','9','OLDHOSTNAME'),('TV Frontend','DELETE','Delete Program','D','OLDHOSTNAME'),('TV Frontend','PLAYBACK','Play Program','P','OLDHOSTNAME'),('TV Frontend','TOGGLERECORD','Toggle recording status of current program','R','OLDHOSTNAME'),('TV Frontend','DAYLEFT','Page the program guide back one day','Home,7','OLDHOSTNAME'),('TV Frontend','DAYRIGHT','Page the program guide forward one day','End,1','OLDHOSTNAME'),('TV Frontend','PAGELEFT','Page the program guide left',',,<','OLDHOSTNAME'),('TV Frontend','PAGERIGHT','Page the program guide right','>,.','OLDHOSTNAME'),('TV Frontend','TOGGLEFAV','Toggle the current channel as a favorite','?','OLDHOSTNAME'),('TV Frontend','NEXTFAV','Toggle showing all channels or just favorites in the program guide.','/','OLDHOSTNAME'),('TV Frontend','CHANUPDATE','Switch channels without exiting guide in Live TV mode.','X','OLDHOSTNAME'),('TV Frontend','RANKINC','Increase program or channel rank','Right','OLDHOSTNAME'),('TV Frontend','RANKDEC','Decrease program or channel rank','Left','OLDHOSTNAME'),('TV Frontend','UPCOMING','List upcoming episodes','O','OLDHOSTNAME'),('TV Frontend','DETAILS','Show program details','U','OLDHOSTNAME'),('TV Frontend','VIEWCARD','Switch Capture Card view','Y','OLDHOSTNAME'),('TV Frontend','CUSTOMEDIT','Edit Custom Record Rule','E','OLDHOSTNAME'),('TV Playback','CLEAROSD','Clear OSD','Backspace','OLDHOSTNAME'),('TV Playback','PAUSE','Pause','P','OLDHOSTNAME'),('TV Playback','DELETE','Delete Program','D','OLDHOSTNAME'),('TV Playback','SEEKFFWD','Fast Forward','Right','OLDHOSTNAME'),('TV Playback','SEEKRWND','Rewind','Left','OLDHOSTNAME'),('TV Playback','ARBSEEK','Arbitrary Seek','*','OLDHOSTNAME'),('TV Playback','CHANNELUP','Channel up','Up','OLDHOSTNAME'),('TV Playback','CHANNELDOWN','Channel down','Down','OLDHOSTNAME'),('TV Playback','NEXTFAV','Switch to the next favorite channel','/','OLDHOSTNAME'),('TV Playback','PREVCHAN','Switch to the previous channel','H','OLDHOSTNAME'),('TV Playback','JUMPFFWD','Jump ahead','PgDown','OLDHOSTNAME'),('TV Playback','JUMPRWND','Jump back','PgUp','OLDHOSTNAME'),('TV Playback','JUMPBKMRK','Jump to bookmark','K','OLDHOSTNAME'),('TV Playback','FFWDSTICKY','Fast Forward (Sticky) or Forward one frame while paused','>,.','OLDHOSTNAME'),('TV Playback','RWNDSTICKY','Rewind (Sticky) or Rewind one frame while paused',',,<','OLDHOSTNAME'),('TV Playback','SKIPCOMMERCIAL','Skip Commercial','Z,End','OLDHOSTNAME'),('TV Playback','SKIPCOMMBACK','Skip Commercial (Reverse)','Q,Home','OLDHOSTNAME'),('TV Playback','JUMPSTART','Jump to the start of the recording.','Ctrl+B','OLDHOSTNAME'),('TV Playback','TOGGLEBROWSE','Toggle channel browse mode','O','OLDHOSTNAME'),('TV Playback','TOGGLERECORD','Toggle recording status of current program','R','OLDHOSTNAME'),('TV Playback','TOGGLEFAV','Toggle the current channel as a favorite','?','OLDHOSTNAME'),('TV Playback','VOLUMEDOWN','Volume down','[,{,F10,Volume Down','OLDHOSTNAME'),('TV Playback','VOLUMEUP','Volume up','],},F11,Volume Up','OLDHOSTNAME'),('TV Playback','MUTE','Mute','|,\\,F9,Volume Mute','OLDHOSTNAME'),('TV Playback','TOGGLEPIPMODE','Toggle Picture-in-Picture mode','V','OLDHOSTNAME'),('TV Playback','TOGGLEPIPWINDOW','Toggle active PiP window','B','OLDHOSTNAME'),('TV Playback','SWAPPIP','Swap PiP/Main','N','OLDHOSTNAME'),('TV Playback','TOGGLECC','Toggle any captions','T','OLDHOSTNAME'),('TV Playback','TOGGLETTC','Toggle Teletext Captions','','OLDHOSTNAME'),('TV Playback','TOGGLESUBTITLE','Toggle Subtitles','','OLDHOSTNAME'),('TV Playback','TOGGLECC608','Toggle VBI CC','','OLDHOSTNAME'),('TV Playback','TOGGLECC708','Toggle ATSC CC','','OLDHOSTNAME'),('TV Playback','TOGGLETTM','Toggle Teletext Menu','','OLDHOSTNAME'),('TV Playback','SELECTAUDIO_0','Play audio track 1','','OLDHOSTNAME'),('TV Playback','SELECTAUDIO_1','Play audio track 2','','OLDHOSTNAME'),('TV Playback','SELECTSUBTITLE_0','Display subtitle 1','','OLDHOSTNAME'),('TV Playback','SELECTSUBTITLE_1','Display subtitle 2','','OLDHOSTNAME'),('TV Playback','SELECTCC608_0','Display VBI CC1','','OLDHOSTNAME'),('TV Playback','SELECTCC608_1','Display VBI CC2','','OLDHOSTNAME'),('TV Playback','SELECTCC608_2','Display VBI CC3','','OLDHOSTNAME'),('TV Playback','SELECTCC608_3','Display VBI CC4','','OLDHOSTNAME'),('TV Playback','SELECTCC708_0','Display ATSC CC1','','OLDHOSTNAME'),('TV Playback','SELECTCC708_1','Display ATSC CC2','','OLDHOSTNAME'),('TV Playback','SELECTCC708_2','Display ATSC CC3','','OLDHOSTNAME'),('TV Playback','SELECTCC708_3','Display ATSC CC4','','OLDHOSTNAME'),('TV Playback','NEXTAUDIO','Next audio track','+','OLDHOSTNAME'),('TV Playback','PREVAUDIO','Previous audio track','-','OLDHOSTNAME'),('TV Playback','NEXTSUBTITLE','Next subtitle track','','OLDHOSTNAME'),('TV Playback','PREVSUBTITLE','Previous subtitle track','','OLDHOSTNAME'),('TV Playback','NEXTCC608','Next VBI CC track','','OLDHOSTNAME'),('TV Playback','PREVCC608','Previous VBI CC track','','OLDHOSTNAME'),('TV Playback','NEXTCC708','Next ATSC CC track','','OLDHOSTNAME'),('TV Playback','PREVCC708','Previous ATSC CC track','','OLDHOSTNAME'),('TV Playback','NEXTCC','Next of any captions','','OLDHOSTNAME'),('TV Playback','NEXTSCAN','Next video scan overidemode','','OLDHOSTNAME'),('TV Playback','QUEUETRANSCODE','Queue the current recording for transcoding','X','OLDHOSTNAME'),('TV Playback','SPEEDINC','Increase the playback speed','U','OLDHOSTNAME'),('TV Playback','SPEEDDEC','Decrease the playback speed','J','OLDHOSTNAME'),('TV Playback','ADJUSTSTRETCH','Turn on time stretch control','A','OLDHOSTNAME'),('TV Playback','STRETCHINC','Increase time stretch speed','','OLDHOSTNAME'),('TV Playback','STRETCHDEC','Decrease time stretch speed','','OLDHOSTNAME'),('TV Playback','TOGGLESTRETCH','Toggle time stretch speed','','OLDHOSTNAME'),('TV Playback','TOGGLEAUDIOSYNC','Turn on audio sync adjustment controls','','OLDHOSTNAME'),('TV Playback','TOGGLEPICCONTROLS','Playback picture adjustments','F','OLDHOSTNAME'),('TV Playback','TOGGLECHANCONTROLS','Recording picture adjustments for this channel','Ctrl+G','OLDHOSTNAME'),('TV Playback','TOGGLERECCONTROLS','Recording picture adjustments for this recorder','G','OLDHOSTNAME'),('TV Playback','TOGGLEEDIT','Start Edit Mode','E','OLDHOSTNAME'),('TV Playback','CYCLECOMMSKIPMODE','Cycle Commercial Skip mode','','OLDHOSTNAME'),('TV Playback','GUIDE','Show the Program Guide','S','OLDHOSTNAME'),('TV Playback','FINDER','Show the Program Finder','#','OLDHOSTNAME'),('TV Playback','TOGGLESLEEP','Toggle the Sleep Timer','F8','OLDHOSTNAME'),('TV Playback','PLAY','Play','Ctrl+P','OLDHOSTNAME'),('TV Playback','JUMPPREV','Jump to previously played recording','','OLDHOSTNAME'),('TV Playback','JUMPREC','Display menu of recorded programs to jump to','','OLDHOSTNAME'),('TV Playback','JUMPTODVDROOTMENU','Jump to the DVD Root Menu','','OLDHOSTNAME'),('TV Editing','CLEARMAP','Clear editing cut points','C,Q,Home','OLDHOSTNAME'),('TV Editing','INVERTMAP','Invert Begin/End cut points','I','OLDHOSTNAME'),('TV Editing','LOADCOMMSKIP','Load cut list from commercial skips','Z,End','OLDHOSTNAME'),('TV Editing','NEXTCUT','Jump to the next cut point','PgDown','OLDHOSTNAME'),('TV Editing','PREVCUT','Jump to the previous cut point','PgUp','OLDHOSTNAME'),('TV Editing','BIGJUMPREW','Jump back 10x the normal amount',',,<','OLDHOSTNAME'),('TV Editing','BIGJUMPFWD','Jump forward 10x the normal amount','>,.','OLDHOSTNAME'),('TV Editing','TOGGLEEDIT','Exit out of Edit Mode','E','OLDHOSTNAME'),('Teletext Menu','NEXTPAGE','Next Page','Down','OLDHOSTNAME'),('Teletext Menu','PREVPAGE','Previous Page','Up','OLDHOSTNAME'),('Teletext Menu','NEXTSUBPAGE','Next Subpage','Right','OLDHOSTNAME'),('Teletext Menu','PREVSUBPAGE','Previous Subpage','Left','OLDHOSTNAME'),('Teletext Menu','TOGGLETT','Toggle Teletext','T','OLDHOSTNAME'),('Teletext Menu','MENURED','Menu Red','F2','OLDHOSTNAME'),('Teletext Menu','MENUGREEN','Menu Green','F3','OLDHOSTNAME'),('Teletext Menu','MENUYELLOW','Menu Yellow','F4','OLDHOSTNAME'),('Teletext Menu','MENUBLUE','Menu Blue','F5','OLDHOSTNAME'),('Teletext Menu','MENUWHITE','Menu White','F6','OLDHOSTNAME'),('Teletext Menu','TOGGLEBACKGROUND','Toggle Background','F7','OLDHOSTNAME'),('Teletext Menu','REVEAL','Reveal hidden Text','F8','OLDHOSTNAME'),('TV Playback','MENURED','Menu Red','F2','OLDHOSTNAME'),('TV Playback','MENUGREEN','Menu Green','F3','OLDHOSTNAME'),('TV Playback','MENUYELLOW','Menu Yellow','F4','OLDHOSTNAME'),('TV Playback','MENUBLUE','Menu Blue','F5','OLDHOSTNAME'),('TV Playback','TEXTEXIT','Menu Exit','F6','OLDHOSTNAME'),('TV Playback','MENUTEXT','Menu Text','F7','OLDHOSTNAME'),('TV Playback','MENUEPG','Menu EPG','F12','OLDHOSTNAME'),('Archive','TOGGLECUT','Toggle use cut list state for selected program','C','OLDHOSTNAME'),('NetFlix','MOVETOTOP','Moves movie to top of queue','1','OLDHOSTNAME'),('NetFlix','REMOVE','Removes movie from queue','D','OLDHOSTNAME'),('Gallery','PLAY','Start/Stop Slideshow','P','OLDHOSTNAME'),('Gallery','HOME','Go to the first image in thumbnail view','Home','OLDHOSTNAME'),('Gallery','END','Go to the last image in thumbnail view','End','OLDHOSTNAME'),('Gallery','MENU','Toggle activating menu in thumbnail view','M','OLDHOSTNAME'),('Gallery','SLIDESHOW','Start Slideshow in thumbnail view','S','OLDHOSTNAME'),('Gallery','RANDOMSHOW','Start Random Slideshow in thumbnail view','R','OLDHOSTNAME'),('Gallery','ROTRIGHT','Rotate image right 90 degrees','],3','OLDHOSTNAME'),('Gallery','ROTLEFT','Rotate image left 90 degrees','[,1','OLDHOSTNAME'),('Gallery','ZOOMOUT','Zoom image out','7','OLDHOSTNAME'),('Gallery','ZOOMIN','Zoom image in','9','OLDHOSTNAME'),('Gallery','SCROLLUP','Scroll image up','2','OLDHOSTNAME'),('Gallery','SCROLLLEFT','Scroll image left','4','OLDHOSTNAME'),('Gallery','SCROLLRIGHT','Scroll image right','6','OLDHOSTNAME'),('Gallery','SCROLLDOWN','Scroll image down','8','OLDHOSTNAME'),('Gallery','RECENTER','Recenter image','5','OLDHOSTNAME'),('Gallery','FULLSIZE','Full-size (un-zoom) image','0','OLDHOSTNAME'),('Gallery','UPLEFT','Go to the upper-left corner of the image','PgUp','OLDHOSTNAME'),('Gallery','LOWRIGHT','Go to the lower-right corner of the image','PgDown','OLDHOSTNAME'),('Gallery','INFO','Toggle Showing Information about Image','I','OLDHOSTNAME'),('Gallery','DELETE','Delete marked images or current image if none are marked','D','OLDHOSTNAME'),('Gallery','MARK','Mark image','T','OLDHOSTNAME'),('Game','TOGGLEFAV','Toggle the current game as a favorite','?,/','OLDHOSTNAME'),('Game','INCSEARCH','Show incremental search dialog','Ctrl+S','OLDHOSTNAME'),('Game','INCSEARCHNEXT','Incremental search find next match','Ctrl+N','OLDHOSTNAME'),('Music','DELETE','Delete track from playlist','D','OLDHOSTNAME'),('Music','NEXTTRACK','Move to the next track','>,.,Z,End','OLDHOSTNAME'),('Music','PREVTRACK','Move to the previous track',',,<,Q,Home','OLDHOSTNAME'),('Music','FFWD','Fast forward','PgDown','OLDHOSTNAME'),('Music','RWND','Rewind','PgUp','OLDHOSTNAME'),('Music','PAUSE','Pause/Start playback','P','OLDHOSTNAME'),('Music','STOP','Stop playback','O','OLDHOSTNAME'),('Music','VOLUMEDOWN','Volume down','[,{,F10,Volume Down','OLDHOSTNAME'),('Music','VOLUMEUP','Volume up','],},F11,Volume Up','OLDHOSTNAME'),('Music','MUTE','Mute','|,\\,F9,Volume Mute','OLDHOSTNAME'),('Music','CYCLEVIS','Cycle visualizer mode','6','OLDHOSTNAME'),('Music','BLANKSCR','Blank screen','5','OLDHOSTNAME'),('Music','THMBUP','Increase rating','9','OLDHOSTNAME'),('Music','THMBDOWN','Decrease rating','7','OLDHOSTNAME'),('Music','REFRESH','Refresh music tree','8','OLDHOSTNAME'),('Music','FILTER','Filter All My Music','F','OLDHOSTNAME'),('Music','INCSEARCH','Show incremental search dialog','Ctrl+S','OLDHOSTNAME'),('Music','INCSEARCHNEXT','Incremental search find next match','Ctrl+N','OLDHOSTNAME'),('News','RETRIEVENEWS','Update news items','I','OLDHOSTNAME'),('News','FORCERETRIEVE','Force update news items','M','OLDHOSTNAME'),('News','CANCEL','Cancel news item updating','C','OLDHOSTNAME'),('Phone','0','0','0','OLDHOSTNAME'),('Phone','1','1','1','OLDHOSTNAME'),('Phone','2','2','2','OLDHOSTNAME'),('Phone','3','3','3','OLDHOSTNAME'),('Phone','4','4','4','OLDHOSTNAME'),('Phone','5','5','5','OLDHOSTNAME'),('Phone','6','6','6','OLDHOSTNAME'),('Phone','7','7','7','OLDHOSTNAME'),('Phone','8','8','8','OLDHOSTNAME'),('Phone','9','9','9','OLDHOSTNAME'),('Phone','HASH','HASH','#','OLDHOSTNAME'),('Phone','STAR','STAR','*','OLDHOSTNAME'),('Phone','Up','Up','Up','OLDHOSTNAME'),('Phone','Down','Down','Down','OLDHOSTNAME'),('Phone','Left','Left','Left','OLDHOSTNAME'),('Phone','Right','Right','Right','OLDHOSTNAME'),('Phone','VOLUMEDOWN','Volume down','[,{,F10,Volume Down','OLDHOSTNAME'),('Phone','VOLUMEUP','Volume up','],},F11,Volume Up','OLDHOSTNAME'),('Phone','ZOOMIN','Zoom the video window in','>,.,Z,End','OLDHOSTNAME'),('Phone','ZOOMOUT','Zoom the video window out',',,<,Q,Home','OLDHOSTNAME'),('Phone','FULLSCRN','Show received video full-screen','P','OLDHOSTNAME'),('Phone','HANGUP','Hangup an active call','O','OLDHOSTNAME'),('Phone','MUTE','Mute','|,\\,F9,Volume Mute','OLDHOSTNAME'),('Phone','LOOPBACK','Loopback Video','L','OLDHOSTNAME'),('Video','FILTER','Open video filter dialog','F','OLDHOSTNAME'),('Video','DELETE','Delete video','D','OLDHOSTNAME'),('Video','BROWSE','Change browsable in video manager','B','OLDHOSTNAME'),('Video','INCPARENT','Increase Parental Level','],},F11','OLDHOSTNAME'),('Video','DECPARENT','Decrease Parental Level','[,{,F10','OLDHOSTNAME'),('Video','HOME','Go to the first video','Home','OLDHOSTNAME'),('Video','END','Go to the last video','End','OLDHOSTNAME'),('Weather','PAUSE','Pause current page','P','OLDHOSTNAME'),('Global','NEXT','Move to next widget','Tab','OLDHOSTNAME'),('Global','PREVIOUS','Move to preview widget','Backtab','OLDHOSTNAME'),('Global','BACKSPACE','Backspace','Backspace','OLDHOSTNAME'),('Global','DELETE','Delete','D','OLDHOSTNAME'),('Global','EDIT','Edit','E','OLDHOSTNAME'),('Browser','ZOOMIN','Zoom in on browser window','.,>','OLDHOSTNAME'),('Browser','ZOOMOUT','Zoom out on browser window',',,<','OLDHOSTNAME'),('Browser','TOGGLEINPUT','Toggle where keyboard input goes to','F1','OLDHOSTNAME'),('Browser','MOUSEUP','Move mouse pointer up','2','OLDHOSTNAME'),('Browser','MOUSEDOWN','Move mouse pointer down','8','OLDHOSTNAME'),('Browser','MOUSELEFT','Move mouse pointer left','4','OLDHOSTNAME'),('Browser','MOUSERIGHT','Move mouse pointer right','6','OLDHOSTNAME'),('Browser','MOUSELEFTBUTTON','Mouse Left button click','5','OLDHOSTNAME'),('Browser','PAGEDOWN','Scroll down half a page','9','OLDHOSTNAME'),('Browser','PAGEUP','Scroll up half a page','3','OLDHOSTNAME'),('Browser','PAGELEFT','Scroll left half a page','7','OLDHOSTNAME'),('Browser','PAGERIGHT','Scroll right half a page','1','OLDHOSTNAME'),('Browser','NEXTLINK','Move selection to next link','Z','OLDHOSTNAME'),('Browser','PREVIOUSLINK','Move selection to previous link','Q','OLDHOSTNAME'),('Browser','FOLLOWLINK','Follow selected link','Return,Space,Enter','OLDHOSTNAME'),('Browser','HISTORYBACK','Go back to previous page','R,Backspace','OLDHOSTNAME'),('Browser','HISTORYFORWARD','Go forward to previous page','F','OLDHOSTNAME');
+INSERT INTO `keybindings` VALUES ('Global','UP','Up Arrow','Up','OLDHOSTNAME'),('Global','DOWN','Down Arrow','Down','OLDHOSTNAME'),('Global','LEFT','Left Arrow','Left','OLDHOSTNAME'),('Global','RIGHT','Right Arrow','Right','OLDHOSTNAME'),('Global','SELECT','Select','Return,Enter,Space','OLDHOSTNAME'),('Global','ESCAPE','Escape','Esc','OLDHOSTNAME'),('Global','MENU','Pop-up menu','M','OLDHOSTNAME'),('Global','INFO','More information','I','OLDHOSTNAME'),('Global','PAGEUP','Page Up','PgUp','OLDHOSTNAME'),('Global','PAGEDOWN','Page Down','PgDown','OLDHOSTNAME'),('Global','PREVVIEW','Previous View','Home','OLDHOSTNAME'),('Global','NEXTVIEW','Next View','End','OLDHOSTNAME'),('Global','HELP','Help','F1','OLDHOSTNAME'),('Global','EJECT','Eject Removable Media','','OLDHOSTNAME'),('Global','0','0','0','OLDHOSTNAME'),('Global','1','1','1','OLDHOSTNAME'),('Global','2','2','2','OLDHOSTNAME'),('Global','3','3','3','OLDHOSTNAME'),('Global','4','4','4','OLDHOSTNAME'),('Global','5','5','5','OLDHOSTNAME'),('Global','6','6','6','OLDHOSTNAME'),('Global','7','7','7','OLDHOSTNAME'),('Global','8','8','8','OLDHOSTNAME'),('Global','9','9','9','OLDHOSTNAME'),('TV Frontend','GUIDE','Show the Program Guide','S','OLDHOSTNAME'),('TV Frontend','PAGEUP','Page Up','3','OLDHOSTNAME'),('TV Frontend','PAGEDOWN','Page Down','9','OLDHOSTNAME'),('TV Frontend','FINDER','Show the Program Finder','#','OLDHOSTNAME'),('TV Frontend','PLAYBACK','Play Program','P','OLDHOSTNAME'),('TV Frontend','TOGGLERECORD','Toggle recording status of current program','R','OLDHOSTNAME'),('TV Frontend','DAYLEFT','Page the program guide back one day','Home,7','OLDHOSTNAME'),('TV Frontend','DAYRIGHT','Page the program guide forward one day','End,1','OLDHOSTNAME'),('TV Frontend','PAGELEFT','Page the program guide left',',,<','OLDHOSTNAME'),('TV Frontend','PAGERIGHT','Page the program guide right','>,.','OLDHOSTNAME'),('TV Frontend','TOGGLEFAV','Toggle the current channel as a favorite','?','OLDHOSTNAME'),('TV Frontend','NEXTFAV','Cycle through channel groups and all channels in the program guide.','/','OLDHOSTNAME'),('TV Frontend','CHANUPDATE','Switch channels without exiting guide in Live TV mode.','X','OLDHOSTNAME'),('TV Frontend','RANKINC','Increase program or channel rank','Right','OLDHOSTNAME'),('TV Frontend','RANKDEC','Decrease program or channel rank','Left','OLDHOSTNAME'),('TV Frontend','UPCOMING','List upcoming episodes','O','OLDHOSTNAME'),('TV Frontend','DETAILS','Show program details','U','OLDHOSTNAME'),('TV Frontend','VIEWCARD','Switch Capture Card view','Y','OLDHOSTNAME'),('TV Frontend','CUSTOMEDIT','Edit Custom Record Rule','E','OLDHOSTNAME'),('TV Playback','CLEAROSD','Clear OSD','Backspace','OLDHOSTNAME'),('TV Playback','PAUSE','Pause','P','OLDHOSTNAME'),('TV Playback','SEEKFFWD','Fast Forward','Right','OLDHOSTNAME'),('TV Playback','SEEKRWND','Rewind','Left','OLDHOSTNAME'),('TV Playback','ARBSEEK','Arbitrary Seek','*','OLDHOSTNAME'),('TV Playback','CHANNELUP','Channel up','Up','OLDHOSTNAME'),('TV Playback','CHANNELDOWN','Channel down','Down','OLDHOSTNAME'),('TV Playback','NEXTFAV','Switch to the next favorite channel','/','OLDHOSTNAME'),('TV Playback','PREVCHAN','Switch to the previous channel','H','OLDHOSTNAME'),('TV Playback','JUMPFFWD','Jump ahead','PgDown','OLDHOSTNAME'),('TV Playback','JUMPRWND','Jump back','PgUp','OLDHOSTNAME'),('TV Playback','JUMPBKMRK','Jump to bookmark','K','OLDHOSTNAME'),('TV Playback','FFWDSTICKY','Fast Forward (Sticky) or Forward one frame while paused','>,.','OLDHOSTNAME'),('TV Playback','RWNDSTICKY','Rewind (Sticky) or Rewind one frame while paused',',,<','OLDHOSTNAME'),('TV Playback','SKIPCOMMERCIAL','Skip Commercial','Z,End','OLDHOSTNAME'),('TV Playback','SKIPCOMMBACK','Skip Commercial (Reverse)','Q,Home','OLDHOSTNAME'),('TV Playback','JUMPSTART','Jump to the start of the recording.','Ctrl+B','OLDHOSTNAME'),('TV Playback','TOGGLEBROWSE','Toggle channel browse mode','O','OLDHOSTNAME'),('TV Playback','TOGGLERECORD','Toggle recording status of current program','R','OLDHOSTNAME'),('TV Playback','TOGGLEFAV','Toggle the current channel as a favorite','?','OLDHOSTNAME'),('TV Playback','VOLUMEDOWN','Volume down','[,{,F10,Volume Down','OLDHOSTNAME'),('TV Playback','VOLUMEUP','Volume up','],},F11,Volume Up','OLDHOSTNAME'),('TV Playback','MUTE','Mute','|,\\,F9,Volume Mute','OLDHOSTNAME'),('TV Playback','TOGGLEPIPMODE','Toggle Picture-in-Picture view','V','OLDHOSTNAME'),('TV Playback','TOGGLEPIPWINDOW','Toggle active PiP window','B','OLDHOSTNAME'),('TV Playback','SWAPPIP','Swap PBP/PIP Windows','N','OLDHOSTNAME'),('TV Playback','TOGGLECC','Toggle any captions','T','OLDHOSTNAME'),('TV Playback','TOGGLETTC','Toggle Teletext Captions','','OLDHOSTNAME'),('TV Playback','TOGGLESUBTITLE','Toggle Subtitles','','OLDHOSTNAME'),('TV Playback','TOGGLECC608','Toggle VBI CC','','OLDHOSTNAME'),('TV Playback','TOGGLECC708','Toggle ATSC CC','','OLDHOSTNAME'),('TV Playback','TOGGLETTM','Toggle Teletext Menu','','OLDHOSTNAME'),('TV Playback','SELECTAUDIO_0','Play audio track 1','','OLDHOSTNAME'),('TV Playback','SELECTAUDIO_1','Play audio track 2','','OLDHOSTNAME'),('TV Playback','SELECTSUBTITLE_0','Display subtitle 1','','OLDHOSTNAME'),('TV Playback','SELECTSUBTITLE_1','Display subtitle 2','','OLDHOSTNAME'),('TV Playback','SELECTCC608_0','Display VBI CC1','','OLDHOSTNAME'),('TV Playback','SELECTCC608_1','Display VBI CC2','','OLDHOSTNAME'),('TV Playback','SELECTCC608_2','Display VBI CC3','','OLDHOSTNAME'),('TV Playback','SELECTCC608_3','Display VBI CC4','','OLDHOSTNAME'),('TV Playback','SELECTCC708_0','Display ATSC CC1','','OLDHOSTNAME'),('TV Playback','SELECTCC708_1','Display ATSC CC2','','OLDHOSTNAME'),('TV Playback','SELECTCC708_2','Display ATSC CC3','','OLDHOSTNAME'),('TV Playback','SELECTCC708_3','Display ATSC CC4','','OLDHOSTNAME'),('TV Playback','NEXTAUDIO','Next audio track','+','OLDHOSTNAME'),('TV Playback','PREVAUDIO','Previous audio track','-','OLDHOSTNAME'),('TV Playback','NEXTSUBTITLE','Next subtitle track','','OLDHOSTNAME'),('TV Playback','PREVSUBTITLE','Previous subtitle track','','OLDHOSTNAME'),('TV Playback','NEXTCC608','Next VBI CC track','','OLDHOSTNAME'),('TV Playback','PREVCC608','Previous VBI CC track','','OLDHOSTNAME'),('TV Playback','NEXTCC708','Next ATSC CC track','','OLDHOSTNAME'),('TV Playback','PREVCC708','Previous ATSC CC track','','OLDHOSTNAME'),('TV Playback','NEXTCC','Next of any captions','','OLDHOSTNAME'),('TV Playback','NEXTSCAN','Next video scan overidemode','','OLDHOSTNAME'),('TV Playback','QUEUETRANSCODE','Queue the current recording for transcoding','X','OLDHOSTNAME'),('TV Playback','SPEEDINC','Increase the playback speed','U','OLDHOSTNAME'),('TV Playback','SPEEDDEC','Decrease the playback speed','J','OLDHOSTNAME'),('TV Playback','ADJUSTSTRETCH','Turn on time stretch control','A','OLDHOSTNAME'),('TV Playback','STRETCHINC','Increase time stretch speed','','OLDHOSTNAME'),('TV Playback','STRETCHDEC','Decrease time stretch speed','','OLDHOSTNAME'),('TV Playback','TOGGLESTRETCH','Toggle time stretch speed','','OLDHOSTNAME'),('TV Playback','TOGGLEAUDIOSYNC','Turn on audio sync adjustment controls','','OLDHOSTNAME'),('TV Playback','TOGGLEPICCONTROLS','Playback picture adjustments','F','OLDHOSTNAME'),('TV Playback','TOGGLECHANCONTROLS','Recording picture adjustments for this channel','Ctrl+G','OLDHOSTNAME'),('TV Playback','TOGGLERECCONTROLS','Recording picture adjustments for this recorder','G','OLDHOSTNAME'),('TV Frontend','TOGGLEEPGORDER','Reverse the channel order in the program guide','0','OLDHOSTNAME'),('TV Playback','CYCLECOMMSKIPMODE','Cycle Commercial Skip mode','','OLDHOSTNAME'),('TV Playback','GUIDE','Show the Program Guide','S','OLDHOSTNAME'),('TV Playback','FINDER','Show the Program Finder','#','OLDHOSTNAME'),('TV Playback','TOGGLESLEEP','Toggle the Sleep Timer','F8','OLDHOSTNAME'),('TV Playback','PLAY','Play','Ctrl+P','OLDHOSTNAME'),('TV Playback','JUMPPREV','Jump to previously played recording','','OLDHOSTNAME'),('TV Playback','JUMPREC','Display menu of recorded programs to jump to','','OLDHOSTNAME'),('TV Playback','JUMPTODVDROOTMENU','Jump to the DVD Root Menu','','OLDHOSTNAME'),('TV Editing','CLEARMAP','Clear editing cut points','C,Q,Home','OLDHOSTNAME'),('TV Editing','INVERTMAP','Invert Begin/End cut points','I','OLDHOSTNAME'),('TV Editing','LOADCOMMSKIP','Load cut list from commercial skips','Z,End','OLDHOSTNAME'),('TV Editing','NEXTCUT','Jump to the next cut point','PgDown','OLDHOSTNAME'),('TV Editing','PREVCUT','Jump to the previous cut point','PgUp','OLDHOSTNAME'),('TV Editing','BIGJUMPREW','Jump back 10x the normal amount',',,<','OLDHOSTNAME'),('TV Editing','BIGJUMPFWD','Jump forward 10x the normal amount','>,.','OLDHOSTNAME'),('Teletext Menu','NEXTPAGE','Next Page','Down','OLDHOSTNAME'),('Teletext Menu','PREVPAGE','Previous Page','Up','OLDHOSTNAME'),('Teletext Menu','NEXTSUBPAGE','Next Subpage','Right','OLDHOSTNAME'),('Teletext Menu','PREVSUBPAGE','Previous Subpage','Left','OLDHOSTNAME'),('Teletext Menu','TOGGLETT','Toggle Teletext','T','OLDHOSTNAME'),('Teletext Menu','MENURED','Menu Red','F2','OLDHOSTNAME'),('Teletext Menu','MENUGREEN','Menu Green','F3','OLDHOSTNAME'),('Teletext Menu','MENUYELLOW','Menu Yellow','F4','OLDHOSTNAME'),('Teletext Menu','MENUBLUE','Menu Blue','F5','OLDHOSTNAME'),('Teletext Menu','MENUWHITE','Menu White','F6','OLDHOSTNAME'),('Teletext Menu','TOGGLEBACKGROUND','Toggle Background','F7','OLDHOSTNAME'),('Teletext Menu','REVEAL','Reveal hidden Text','F8','OLDHOSTNAME'),('TV Playback','MENURED','Menu Red','F2','OLDHOSTNAME'),('TV Playback','MENUGREEN','Menu Green','F3','OLDHOSTNAME'),('TV Playback','MENUYELLOW','Menu Yellow','F4','OLDHOSTNAME'),('TV Playback','MENUBLUE','Menu Blue','F5','OLDHOSTNAME'),('TV Playback','TEXTEXIT','Menu Exit','F6','OLDHOSTNAME'),('TV Playback','MENUTEXT','Menu Text','F7','OLDHOSTNAME'),('TV Playback','MENUEPG','Menu EPG','F12','OLDHOSTNAME'),('Archive','TOGGLECUT','Toggle use cut list state for selected program','C','OLDHOSTNAME'),('NetFlix','MOVETOTOP','Moves movie to top of queue','1','OLDHOSTNAME'),('NetFlix','REMOVE','Removes movie from queue','D','OLDHOSTNAME'),('Gallery','PLAY','Start/Stop Slideshow','P','OLDHOSTNAME'),('Gallery','HOME','Go to the first image in thumbnail view','Home','OLDHOSTNAME'),('Gallery','END','Go to the last image in thumbnail view','End','OLDHOSTNAME'),('Gallery','MENU','Toggle activating menu in thumbnail view','M','OLDHOSTNAME'),('Gallery','SLIDESHOW','Start Slideshow in thumbnail view','S','OLDHOSTNAME'),('Gallery','RANDOMSHOW','Start Random Slideshow in thumbnail view','R','OLDHOSTNAME'),('Gallery','ROTRIGHT','Rotate image right 90 degrees','],3','OLDHOSTNAME'),('Gallery','ROTLEFT','Rotate image left 90 degrees','[,1','OLDHOSTNAME'),('Gallery','ZOOMOUT','Zoom image out','7','OLDHOSTNAME'),('Gallery','ZOOMIN','Zoom image in','9','OLDHOSTNAME'),('Gallery','SCROLLUP','Scroll image up','2','OLDHOSTNAME'),('Gallery','SCROLLLEFT','Scroll image left','4','OLDHOSTNAME'),('Gallery','SCROLLRIGHT','Scroll image right','6','OLDHOSTNAME'),('Gallery','SCROLLDOWN','Scroll image down','8','OLDHOSTNAME'),('Gallery','RECENTER','Recenter image','5','OLDHOSTNAME'),('Gallery','FULLSIZE','Full-size (un-zoom) image','0','OLDHOSTNAME'),('Gallery','UPLEFT','Go to the upper-left corner of the image','PgUp','OLDHOSTNAME'),('Gallery','LOWRIGHT','Go to the lower-right corner of the image','PgDown','OLDHOSTNAME'),('Gallery','INFO','Toggle Showing Information about Image','I','OLDHOSTNAME'),('Gallery','FULLSCREEN','Toggle scale to fullscreen/scale to fit','W','OLDHOSTNAME'),('Gallery','MARK','Mark image','T','OLDHOSTNAME'),('Game','TOGGLEFAV','Toggle the current game as a favorite','?,/','OLDHOSTNAME'),('Game','INCSEARCH','Show incremental search dialog','Ctrl+S','OLDHOSTNAME'),('Game','INCSEARCHNEXT','Incremental search find next match','Ctrl+N','OLDHOSTNAME'),('Music','PLAY','Start playback','','OLDHOSTNAME'),('Music','NEXTTRACK','Move to the next track','>,.,Z,End','OLDHOSTNAME'),('Music','PREVTRACK','Move to the previous track',',,<,Q,Home','OLDHOSTNAME'),('Music','FFWD','Fast forward','PgDown','OLDHOSTNAME'),('Music','RWND','Rewind','PgUp','OLDHOSTNAME'),('Music','PAUSE','Pause/Start playback','P','OLDHOSTNAME'),('Music','STOP','Stop playback','O','OLDHOSTNAME'),('Music','VOLUMEDOWN','Volume down','[,{,F10,Volume Down','OLDHOSTNAME'),('Music','VOLUMEUP','Volume up','],},F11,Volume Up','OLDHOSTNAME'),('Music','MUTE','Mute','|,\\,F9,Volume Mute','OLDHOSTNAME'),('Music','CYCLEVIS','Cycle visualizer mode','6','OLDHOSTNAME'),('Music','BLANKSCR','Blank screen','5','OLDHOSTNAME'),('Music','THMBUP','Increase rating','9','OLDHOSTNAME'),('Music','THMBDOWN','Decrease rating','7','OLDHOSTNAME'),('Music','REFRESH','Refresh music tree','8','OLDHOSTNAME'),('Music','FILTER','Filter All My Music','F','OLDHOSTNAME'),('Music','INCSEARCH','Show incremental search dialog','Ctrl+S','OLDHOSTNAME'),('Music','INCSEARCHNEXT','Incremental search find next match','Ctrl+N','OLDHOSTNAME'),('News','RETRIEVENEWS','Update news items','I','OLDHOSTNAME'),('News','FORCERETRIEVE','Force update news items','M','OLDHOSTNAME'),('News','CANCEL','Cancel news item updating','C','OLDHOSTNAME'),('Phone','0','0','0','OLDHOSTNAME'),('Phone','1','1','1','OLDHOSTNAME'),('Phone','2','2','2','OLDHOSTNAME'),('Phone','3','3','3','OLDHOSTNAME'),('Phone','4','4','4','OLDHOSTNAME'),('Phone','5','5','5','OLDHOSTNAME'),('Phone','6','6','6','OLDHOSTNAME'),('Phone','7','7','7','OLDHOSTNAME'),('Phone','8','8','8','OLDHOSTNAME'),('Phone','9','9','9','OLDHOSTNAME'),('Phone','HASH','HASH','#','OLDHOSTNAME'),('Phone','STAR','STAR','*','OLDHOSTNAME'),('Phone','Up','Up','Up','OLDHOSTNAME'),('Phone','Down','Down','Down','OLDHOSTNAME'),('Phone','Left','Left','Left','OLDHOSTNAME'),('Phone','Right','Right','Right','OLDHOSTNAME'),('Phone','VOLUMEDOWN','Volume down','[,{,F10,Volume Down','OLDHOSTNAME'),('Phone','VOLUMEUP','Volume up','],},F11,Volume Up','OLDHOSTNAME'),('Phone','ZOOMIN','Zoom the video window in','>,.,Z,End','OLDHOSTNAME'),('Phone','ZOOMOUT','Zoom the video window out',',,<,Q,Home','OLDHOSTNAME'),('Phone','FULLSCRN','Show received video full-screen','P','OLDHOSTNAME'),('Phone','HANGUP','Hangup an active call','O','OLDHOSTNAME'),('Phone','MUTE','Mute','|,\\,F9,Volume Mute','OLDHOSTNAME'),('Phone','LOOPBACK','Loopback Video','L','OLDHOSTNAME'),('Video','FILTER','Open video filter dialog','F','OLDHOSTNAME'),('Global','PAGETOP','Page to top of list','','OLDHOSTNAME'),('Video','BROWSE','Change browsable in video manager','B','OLDHOSTNAME'),('Video','INCPARENT','Increase Parental Level','],},F11','OLDHOSTNAME'),('Video','DECPARENT','Decrease Parental Level','[,{,F10','OLDHOSTNAME'),('Video','HOME','Go to the first video','Home','OLDHOSTNAME'),('Video','END','Go to the last video','End','OLDHOSTNAME'),('Weather','PAUSE','Pause current page','P','OLDHOSTNAME'),('Global','NEXT','Move to next widget','Tab','OLDHOSTNAME'),('Global','PREVIOUS','Move to preview widget','Backtab','OLDHOSTNAME'),('Global','BACKSPACE','Backspace','Backspace','OLDHOSTNAME'),('Global','DELETE','Delete','D','OLDHOSTNAME'),('Global','EDIT','Edit','E','OLDHOSTNAME'),('Browser','ZOOMIN','Zoom in on browser window','.,>','OLDHOSTNAME'),('Browser','ZOOMOUT','Zoom out on browser window',',,<','OLDHOSTNAME'),('Browser','TOGGLEINPUT','Toggle where keyboard input goes to','F1','OLDHOSTNAME'),('Browser','MOUSEUP','Move mouse pointer up','2','OLDHOSTNAME'),('Browser','MOUSEDOWN','Move mouse pointer down','8','OLDHOSTNAME'),('Browser','MOUSELEFT','Move mouse pointer left','4','OLDHOSTNAME'),('Browser','MOUSERIGHT','Move mouse pointer right','6','OLDHOSTNAME'),('Browser','MOUSELEFTBUTTON','Mouse Left button click','5','OLDHOSTNAME'),('Browser','PAGEDOWN','Scroll down half a page','9','OLDHOSTNAME'),('Browser','PAGEUP','Scroll up half a page','3','OLDHOSTNAME'),('Browser','PAGELEFT','Scroll left half a page','7','OLDHOSTNAME'),('Browser','PAGERIGHT','Scroll right half a page','1','OLDHOSTNAME'),('Browser','NEXTLINK','Move selection to next link','Z','OLDHOSTNAME'),('Browser','PREVIOUSLINK','Move selection to previous link','Q','OLDHOSTNAME'),('Browser','FOLLOWLINK','Follow selected link','Return,Space,Enter','OLDHOSTNAME'),('Browser','HISTORYBACK','Go back to previous page','R,Backspace','OLDHOSTNAME'),('Browser','HISTORYFORWARD','Go forward to previous page','F','OLDHOSTNAME'),('Global','PAGEMIDDLE','Page to middle of list','','OLDHOSTNAME'),('Global','PAGEBOTTOM','Page to bottom of list','','OLDHOSTNAME'),('TV Frontend','VOLUMEDOWN','Volume down','[,{,F10,Volume Down','OLDHOSTNAME'),('TV Frontend','VOLUMEUP','Volume up','],},F11,Volume Up','OLDHOSTNAME'),('TV Frontend','MUTE','Mute','|,\\,F9,Volume Mute','OLDHOSTNAME'),('TV Frontend','VIEWINPUT','Switch Capture Card view','C','OLDHOSTNAME'),('TV Frontend','CHANGERECGROUP','Change Recording Group','','OLDHOSTNAME'),('TV Frontend','CHANGEGROUPVIEW','Change Group View','','OLDHOSTNAME'),('TV Playback','NEXTSOURCE','Next Video Source','Y','OLDHOSTNAME'),('TV Playback','PREVSOURCE','Previous Video Source','Ctrl+Y','OLDHOSTNAME'),('TV Playback','NEXTINPUT','Next Input','C','OLDHOSTNAME'),('TV Playback','NEXTCARD','Next Card','','OLDHOSTNAME'),('TV Playback','TOGGLEPBPMODE','Toggle Picture-by-Picture view','Ctrl+V','OLDHOSTNAME'),('TV Playback','CREATEPIPVIEW','Create Picture-in-Picture view','','OLDHOSTNAME'),('TV Playback','CREATEPBPVIEW','Create Picture-by-Picture view','','OLDHOSTNAME'),('TV Playback','NEXTPIPWINDOW','Toggle active PIP/PBP window','B','OLDHOSTNAME'),('TV Playback','TOGGLEPIPSTATE','Change PxP view','','OLDHOSTNAME'),('TV Playback','TOGGLEASPECT','Toggle the video aspect ratio','Ctrl+W','OLDHOSTNAME'),('TV Playback','TOGGLEFILL','Next Preconfigured Zoom mode','W','OLDHOSTNAME'),('TV Playback','VIEWSCHEDULED','Display scheduled recording list','','OLDHOSTNAME'),('TV Playback','SIGNALMON','Monitor Signal Quality','Alt+F7','OLDHOSTNAME'),('TV Playback','EXITSHOWNOPROMPTS','Exit Show without any prompts','','OLDHOSTNAME'),('TV Playback','SCREENSHOT','Save screenshot of current video frame','','OLDHOSTNAME'),('Music','SPEEDUP','Increase Play Speed','W','OLDHOSTNAME'),('Music','SPEEDDOWN','Decrease Play Speed','X','OLDHOSTNAME'),('Video','PLAYALT','Play selected item in alternate player','ALT+P','OLDHOSTNAME'),('Video','INCSEARCH','Show Incremental Search Dialog','Ctrl+S','OLDHOSTNAME'),('Video','DOWNLOADDATA','Download metadata for current item','W','OLDHOSTNAME'),('Video','ITEMDETAIL','Display Item Detail Popup','','OLDHOSTNAME'),('Weather','SEARCH','Search List','/','OLDHOSTNAME'),('Weather','NEXTSEARCH','Search List','n','OLDHOSTNAME'),('Weather','UPDATE','Search List','u','OLDHOSTNAME');
 /*!40000 ALTER TABLE `keybindings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1080,6 +1090,107 @@ LOCK TABLES `keyword` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `movies_movies`
+--
+
+DROP TABLE IF EXISTS `movies_movies`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `movies_movies` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `moviename` varchar(255) DEFAULT NULL,
+  `rating` varchar(10) DEFAULT NULL,
+  `runningtime` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `movies_movies`
+--
+
+LOCK TABLES `movies_movies` WRITE;
+/*!40000 ALTER TABLE `movies_movies` DISABLE KEYS */;
+/*!40000 ALTER TABLE `movies_movies` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `movies_showtimes`
+--
+
+DROP TABLE IF EXISTS `movies_showtimes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `movies_showtimes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `theaterid` int(11) NOT NULL,
+  `movieid` int(11) NOT NULL,
+  `showtimes` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `movies_showtimes`
+--
+
+LOCK TABLES `movies_showtimes` WRITE;
+/*!40000 ALTER TABLE `movies_showtimes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `movies_showtimes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `movies_theaters`
+--
+
+DROP TABLE IF EXISTS `movies_theaters`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `movies_theaters` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `theatername` varchar(100) DEFAULT NULL,
+  `theateraddress` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `movies_theaters`
+--
+
+LOCK TABLES `movies_theaters` WRITE;
+/*!40000 ALTER TABLE `movies_theaters` DISABLE KEYS */;
+/*!40000 ALTER TABLE `movies_theaters` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `music_albumart`
+--
+
+DROP TABLE IF EXISTS `music_albumart`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `music_albumart` (
+  `albumart_id` int(20) NOT NULL AUTO_INCREMENT,
+  `filename` varchar(255) NOT NULL DEFAULT '',
+  `directory_id` int(20) NOT NULL DEFAULT '0',
+  `imagetype` tinyint(3) NOT NULL DEFAULT '0',
+  `song_id` int(11) NOT NULL DEFAULT '0',
+  `embedded` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`albumart_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `music_albumart`
+--
+
+LOCK TABLES `music_albumart` WRITE;
+/*!40000 ALTER TABLE `music_albumart` DISABLE KEYS */;
+/*!40000 ALTER TABLE `music_albumart` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `music_albums`
 --
 
@@ -1094,7 +1205,7 @@ CREATE TABLE `music_albums` (
   `compilation` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`album_id`),
   KEY `idx_album_name` (`album_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1118,7 +1229,7 @@ CREATE TABLE `music_artists` (
   `artist_name` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`artist_id`),
   KEY `idx_artist_name` (`artist_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1131,6 +1242,30 @@ LOCK TABLES `music_artists` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `music_directories`
+--
+
+DROP TABLE IF EXISTS `music_directories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `music_directories` (
+  `directory_id` int(20) NOT NULL AUTO_INCREMENT,
+  `path` text NOT NULL,
+  `parent_id` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`directory_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `music_directories`
+--
+
+LOCK TABLES `music_directories` WRITE;
+/*!40000 ALTER TABLE `music_directories` DISABLE KEYS */;
+/*!40000 ALTER TABLE `music_directories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `music_genres`
 --
 
@@ -1139,10 +1274,10 @@ DROP TABLE IF EXISTS `music_genres`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `music_genres` (
   `genre_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `genre` varchar(25) NOT NULL DEFAULT '',
+  `genre` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`genre_id`),
   KEY `idx_genre` (`genre`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1168,9 +1303,9 @@ CREATE TABLE `music_playlists` (
   `last_accessed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `length` int(11) unsigned NOT NULL DEFAULT '0',
   `songcount` smallint(8) unsigned NOT NULL DEFAULT '0',
-  `hostname` varchar(255) NOT NULL DEFAULT '',
+  `hostname` varchar(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`playlist_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1194,7 +1329,7 @@ CREATE TABLE `music_smartplaylist_categories` (
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`categoryid`),
   KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1223,7 +1358,7 @@ CREATE TABLE `music_smartplaylist_items` (
   `value2` varchar(255) NOT NULL,
   PRIMARY KEY (`smartplaylistitemid`),
   KEY `smartplaylistid` (`smartplaylistid`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1247,13 +1382,13 @@ CREATE TABLE `music_smartplaylists` (
   `smartplaylistid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
   `categoryid` int(10) unsigned NOT NULL,
-  `matchtype` set('All','Any') NOT NULL DEFAULT 'All',
+  `matchtype` set('All','Any') CHARACTER SET latin1 NOT NULL DEFAULT 'All',
   `orderby` varchar(128) NOT NULL DEFAULT '',
   `limitto` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`smartplaylistid`),
   KEY `name` (`name`),
   KEY `categoryid` (`categoryid`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1285,7 +1420,7 @@ CREATE TABLE `music_songs` (
   `length` int(11) unsigned NOT NULL DEFAULT '0',
   `numplays` int(11) unsigned NOT NULL DEFAULT '0',
   `rating` tinyint(4) unsigned NOT NULL DEFAULT '0',
-  `lastplay` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `lastplay` datetime DEFAULT NULL,
   `date_entered` datetime DEFAULT NULL,
   `date_modified` datetime DEFAULT NULL,
   `format` varchar(4) NOT NULL DEFAULT '0',
@@ -1303,10 +1438,15 @@ CREATE TABLE `music_songs` (
   `sample_rate` int(10) unsigned DEFAULT '0',
   `bitrate` int(10) unsigned DEFAULT '0',
   `bpm` smallint(5) unsigned DEFAULT NULL,
+  `directory_id` int(20) NOT NULL DEFAULT '0',
   PRIMARY KEY (`song_id`),
   KEY `idx_name` (`name`),
-  KEY `idx_mythdigest` (`mythdigest`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  KEY `idx_mythdigest` (`mythdigest`),
+  KEY `directory_id` (`directory_id`),
+  KEY `album_id` (`album_id`),
+  KEY `genre_id` (`genre_id`),
+  KEY `artist_id` (`artist_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1332,7 +1472,7 @@ CREATE TABLE `music_stats` (
   `num_genres` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `total_time` varchar(12) NOT NULL DEFAULT '0',
   `total_size` varchar(10) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1342,89 +1482,6 @@ CREATE TABLE `music_stats` (
 LOCK TABLES `music_stats` WRITE;
 /*!40000 ALTER TABLE `music_stats` DISABLE KEYS */;
 /*!40000 ALTER TABLE `music_stats` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `musicmetadata`
---
-
-DROP TABLE IF EXISTS `musicmetadata`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `musicmetadata` (
-  `intid` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `artist` varchar(128) NOT NULL,
-  `compilation_artist` varchar(128) NOT NULL,
-  `album` varchar(128) NOT NULL,
-  `title` varchar(128) NOT NULL,
-  `genre` varchar(128) NOT NULL,
-  `year` int(10) unsigned NOT NULL,
-  `tracknum` int(10) unsigned NOT NULL,
-  `length` int(10) unsigned NOT NULL,
-  `filename` text NOT NULL,
-  `rating` int(10) unsigned NOT NULL DEFAULT '5',
-  `lastplay` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `playcount` int(10) unsigned NOT NULL DEFAULT '0',
-  `mythdigest` varchar(255) DEFAULT NULL,
-  `size` bigint(20) unsigned DEFAULT NULL,
-  `date_added` datetime DEFAULT NULL,
-  `date_modified` datetime DEFAULT NULL,
-  `format` varchar(4) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `comment` varchar(255) DEFAULT NULL,
-  `compilation` tinyint(4) DEFAULT '0',
-  `composer` varchar(255) DEFAULT NULL,
-  `disc_count` smallint(5) unsigned DEFAULT '0',
-  `disc_number` smallint(5) unsigned DEFAULT '0',
-  `track_count` smallint(5) unsigned DEFAULT '0',
-  `start_time` int(10) unsigned DEFAULT '0',
-  `stop_time` int(10) unsigned DEFAULT NULL,
-  `eq_preset` varchar(255) DEFAULT NULL,
-  `relative_volume` tinyint(4) DEFAULT '0',
-  `sample_rate` int(10) unsigned DEFAULT NULL,
-  `bpm` smallint(5) unsigned DEFAULT NULL,
-  PRIMARY KEY (`intid`),
-  KEY `artist` (`artist`),
-  KEY `album` (`album`),
-  KEY `title` (`title`),
-  KEY `genre` (`genre`),
-  KEY `mythdigest` (`mythdigest`),
-  KEY `compilation_artist` (`compilation_artist`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `musicmetadata`
---
-
-LOCK TABLES `musicmetadata` WRITE;
-/*!40000 ALTER TABLE `musicmetadata` DISABLE KEYS */;
-/*!40000 ALTER TABLE `musicmetadata` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `musicplaylist`
---
-
-DROP TABLE IF EXISTS `musicplaylist`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `musicplaylist` (
-  `playlistid` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) NOT NULL,
-  `hostname` varchar(255) DEFAULT NULL,
-  `songlist` text NOT NULL,
-  PRIMARY KEY (`playlistid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `musicplaylist`
---
-
-LOCK TABLES `musicplaylist` WRITE;
-/*!40000 ALTER TABLE `musicplaylist` DISABLE KEYS */;
-/*!40000 ALTER TABLE `musicplaylist` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2378,7 +2435,7 @@ CREATE TABLE `settings` (
 
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES ('mythfilldatabaseLastRunStart',NULL,NULL),('mythfilldatabaseLastRunEnd',NULL,NULL),('mythfilldatabaseLastRunStatus',NULL,NULL),('DataDirectMessage',NULL,NULL),('HaveRepeats','0',NULL),('DBSchemaVer','1242',NULL),('DefaultTranscoder','0',NULL),('MythFillSuggestedRunTime','1970-01-01T00:00:00',NULL),('MythFillGrabberSuggestsTime','1',NULL),('BackendServerIP','127.0.0.1','OLDHOSTNAME'),('BackendServerPort','6543','OLDHOSTNAME'),('BackendStatusPort','6544','OLDHOSTNAME'),('MasterServerIP','127.0.0.1',NULL),('MasterServerPort','6543',NULL),('RecordFilePrefix','/var/lib/mythtv/recordings','OLDHOSTNAME'),('TruncateDeletesSlowly','1','OLDHOSTNAME'),('TVFormat','NTSC',NULL),('VbiFormat','None',NULL),('FreqTable','us-bcast',NULL),('TimeOffset','None',NULL),('MasterBackendOverride','1',NULL),('DeletesFollowLinks','0',NULL),('EITTimeOffset','Auto',NULL),('EITTransportTimeout','5',NULL),('EITIgnoresSource','0',NULL),('EITCrawIdleStart','60',NULL),('startupCommand','',NULL),('blockSDWUwithoutClient','1',NULL),('idleTimeoutSecs','0',NULL),('idleWaitForRecordingTime','15',NULL),('StartupSecsBeforeRecording','120',NULL),('WakeupTimeFormat','hh:mm yyyy-MM-dd',NULL),('SetWakeuptimeCommand','',NULL),('ServerHaltCommand','sudo /sbin/halt -p',NULL),('preSDWUCheckCommand','',NULL),('WOLbackendReconnectWaitTime','0',NULL),('WOLbackendConnectRetry','5',NULL),('WOLbackendCommand','',NULL),('WOLslaveBackendsCommand','',NULL),('JobQueueMaxSimultaneousJobs','1','OLDHOSTNAME'),('JobQueueCheckFrequency','60','OLDHOSTNAME'),('JobQueueWindowStart','00:00','OLDHOSTNAME'),('JobQueueWindowEnd','23:59','OLDHOSTNAME'),('JobQueueCPU','0','OLDHOSTNAME'),('JobAllowCommFlag','1','OLDHOSTNAME'),('JobAllowTranscode','1','OLDHOSTNAME'),('JobAllowUserJob1','0','OLDHOSTNAME'),('JobAllowUserJob2','0','OLDHOSTNAME'),('JobAllowUserJob3','0','OLDHOSTNAME'),('JobAllowUserJob4','0','OLDHOSTNAME'),('JobsRunOnRecordHost','0',NULL),('AutoCommflagWhileRecording','0',NULL),('JobQueueCommFlagCommand','mythcommflag',NULL),('JobQueueTranscodeCommand','mythtranscode',NULL),('AutoTranscodeBeforeAutoCommflag','0',NULL),('SaveTranscoding','0',NULL),('UserJobDesc1','User Job #1',NULL),('UserJob1','',NULL),('UserJobDesc2','User Job #2',NULL),('UserJob2','',NULL),('UserJobDesc3','User Job #3',NULL),('UserJob3','',NULL),('UserJobDesc4','User Job #4',NULL),('UserJob4','',NULL),('upnp:UDN:urn:schemas-upnp-org:device:MediaServer:1','256a89b4-1266-49ca-9ac7-f0b4b4641e7f','OLDHOSTNAME'),('Deinterlace','0','OLDHOSTNAME'),('DeinterlaceFilter','linearblend','OLDHOSTNAME'),('CustomFilters','','OLDHOSTNAME'),('PreferredMPEG2Decoder','ffmpeg','OLDHOSTNAME'),('UseOpenGLVSync','0','OLDHOSTNAME'),('RealtimePriority','1','OLDHOSTNAME'),('UseVideoTimebase','0','OLDHOSTNAME'),('DecodeExtraAudio','1','OLDHOSTNAME'),('AspectOverride','0','OLDHOSTNAME'),('PIPLocation','0','OLDHOSTNAME'),('PlaybackExitPrompt','0','OLDHOSTNAME'),('EndOfRecordingExitPrompt','0','OLDHOSTNAME'),('ClearSavedPosition','1','OLDHOSTNAME'),('AltClearSavedPosition','1','OLDHOSTNAME'),('UseOutputPictureControls','0','OLDHOSTNAME'),('AudioNag','1','OLDHOSTNAME'),('UDPNotifyPort','6948','OLDHOSTNAME'),('PlayBoxOrdering','1','OLDHOSTNAME'),('PlayBoxEpisodeSort','Date','OLDHOSTNAME'),('GeneratePreviewPixmaps','0','OLDHOSTNAME'),('PreviewPixmapOffset','64',NULL),('PreviewFromBookmark','1','OLDHOSTNAME'),('PlaybackPreview','1','OLDHOSTNAME'),('PlaybackPreviewLowCPU','0','OLDHOSTNAME'),('PlaybackBoxStartInTitle','1','OLDHOSTNAME'),('ShowGroupInfo','0','OLDHOSTNAME'),('AllRecGroupPassword','',NULL),('DisplayRecGroup','All Programs','OLDHOSTNAME'),('QueryInitialFilter','0','OLDHOSTNAME'),('RememberRecGroup','1','OLDHOSTNAME'),('DispRecGroupAsAllProg','0','OLDHOSTNAME'),('LiveTVInAllPrograms','0','OLDHOSTNAME'),('DisplayGroupDefaultView','0','OLDHOSTNAME'),('DisplayGroupTitleSort','0','OLDHOSTNAME'),('PVR350OutputEnable','0','OLDHOSTNAME'),('PVR350VideoDev','/dev/video16','OLDHOSTNAME'),('PVR350EPGAlphaValue','164','OLDHOSTNAME'),('PVR350InternalAudioOnly','0','OLDHOSTNAME'),('SmartForward','0','OLDHOSTNAME'),('StickyKeys','0','OLDHOSTNAME'),('FFRewReposTime','100','OLDHOSTNAME'),('FFRewReverse','1','OLDHOSTNAME'),('ExactSeeking','0','OLDHOSTNAME'),('AutoCommercialSkip','0','OLDHOSTNAME'),('CommRewindAmount','0','OLDHOSTNAME'),('CommNotifyAmount','0','OLDHOSTNAME'),('MaximumCommercialSkip','3600',NULL),('CommSkipAllBlanks','1',NULL),('VertScanPercentage','0','OLDHOSTNAME'),('HorizScanPercentage','0','OLDHOSTNAME'),('XScanDisplacement','0','OLDHOSTNAME'),('YScanDisplacement','0','OLDHOSTNAME'),('OSDTheme','blueosd','OLDHOSTNAME'),('OSDGeneralTimeout','2','OLDHOSTNAME'),('OSDProgramInfoTimeout','3','OLDHOSTNAME'),('OSDNotifyTimeout','5','OLDHOSTNAME'),('OSDFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCCFont','FreeMono.ttf','OLDHOSTNAME'),('OSDThemeFontSizeType','default','OLDHOSTNAME'),('CCBackground','0','OLDHOSTNAME'),('DefaultCCMode','0','OLDHOSTNAME'),('PersistentBrowseMode','1','OLDHOSTNAME'),('EnableMHEG','0','OLDHOSTNAME'),('OSDCC708TextZoom','100','OLDHOSTNAME'),('OSDCC708DefaultFontType','MonoSerif','OLDHOSTNAME'),('OSDCC708MonoSerifFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708PropSerifFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708MonoSansSerifFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708PropSansSerifFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708CasualFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708CursiveFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708CapitalsFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708MonoSerifItalicFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708PropSerifItalicFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708MonoSansSerifItalicFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708PropSansSerifItalicFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708CasualItalicFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708CursiveItalicFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708CapitalsItalicFont','FreeMono.ttf','OLDHOSTNAME'),('ChannelOrdering','channum','OLDHOSTNAME'),('ChannelFormat','<num> <sign>','OLDHOSTNAME'),('LongChannelFormat','<num> <name>','OLDHOSTNAME'),('SmartChannelChange','0','OLDHOSTNAME'),('LastFreeCard','0',NULL),('AutoExpireMethod','2',NULL),('AutoExpireDayPriority','3',NULL),('AutoExpireDefault','1',NULL),('AutoExpireLiveTVMaxAge','1',NULL),('AutoExpireExtraSpace','1',NULL),('AutoCommercialFlag','1',NULL),('CommercialSkipMethod','7',NULL),('AggressiveCommDetect','1',NULL),('AutoTranscode','0',NULL),('AutoRunUserJob1','0',NULL),('AutoRunUserJob2','0',NULL),('AutoRunUserJob3','0',NULL),('AutoRunUserJob4','0',NULL),('RecordPreRoll','0',NULL),('RecordOverTime','0',NULL),('OverTimeCategory','category name',NULL),('CategoryOverTime','30',NULL),('ATSCCheckSignalThreshold','65',NULL),('ATSCCheckSignalWait','5000',NULL),('HDRingbufferSize','9400',NULL),('EPGFillType','10','OLDHOSTNAME'),('EPGShowCategoryColors','1','OLDHOSTNAME'),('EPGShowCategoryText','1','OLDHOSTNAME'),('EPGScrollType','1','OLDHOSTNAME'),('EPGShowChannelIcon','1','OLDHOSTNAME'),('EPGShowFavorites','0','OLDHOSTNAME'),('WatchTVGuide','0','OLDHOSTNAME'),('chanPerPage','5','OLDHOSTNAME'),('timePerPage','4','OLDHOSTNAME'),('UnknownTitle','Unknown','OLDHOSTNAME'),('UnknownCategory','Unknown','OLDHOSTNAME'),('DefaultTVChannel','3','OLDHOSTNAME'),('SelectChangesChannel','0','OLDHOSTNAME'),('SelChangeRecThreshold','16','OLDHOSTNAME'),('EPGEnableJumpToChannel','0',NULL),('ThemePainter','qt','OLDHOSTNAME'),('Style','','OLDHOSTNAME'),('ThemeFontSizeType','default','OLDHOSTNAME'),('RandomTheme','0','OLDHOSTNAME'),('MenuTheme','default','OLDHOSTNAME'),('XineramaScreen','0','OLDHOSTNAME'),('XineramaMonitorAspectRatio','1.3333','OLDHOSTNAME'),('GuiWidth','0','OLDHOSTNAME'),('GuiHeight','0','OLDHOSTNAME'),('GuiOffsetX','0','OLDHOSTNAME'),('GuiOffsetY','0','OLDHOSTNAME'),('GuiSizeForTV','1','OLDHOSTNAME'),('HideMouseCursor','1','OLDHOSTNAME'),('RunFrontendInWindow','0','OLDHOSTNAME'),('UseVideoModes','0','OLDHOSTNAME'),('GuiVidModeResolution','640x480','OLDHOSTNAME'),('TVVidModeResolution','640x480','OLDHOSTNAME'),('TVVidModeForceAspect','0.0','OLDHOSTNAME'),('VidModeWidth0','0','OLDHOSTNAME'),('VidModeHeight0','0','OLDHOSTNAME'),('TVVidModeResolution0','640x480','OLDHOSTNAME'),('TVVidModeForceAspect0','0.0','OLDHOSTNAME'),('VidModeWidth1','0','OLDHOSTNAME'),('VidModeHeight1','0','OLDHOSTNAME'),('TVVidModeResolution1','640x480','OLDHOSTNAME'),('TVVidModeForceAspect1','0.0','OLDHOSTNAME'),('VidModeWidth2','0','OLDHOSTNAME'),('VidModeHeight2','0','OLDHOSTNAME'),('TVVidModeResolution2','640x480','OLDHOSTNAME'),('TVVidModeForceAspect2','0.0','OLDHOSTNAME'),('ISO639Language0','eng','OLDHOSTNAME'),('ISO639Language1','eng','OLDHOSTNAME'),('DateFormat','ddd MMM d','OLDHOSTNAME'),('ShortDateFormat','M/d','OLDHOSTNAME'),('TimeFormat','h:mm AP','OLDHOSTNAME'),('QtFontSmall','12','OLDHOSTNAME'),('QtFontMedium','16','OLDHOSTNAME'),('QtFontBig','25','OLDHOSTNAME'),('PlayBoxTransparency','1','OLDHOSTNAME'),('PlayBoxShading','0','OLDHOSTNAME'),('UseVirtualKeyboard','1','OLDHOSTNAME'),('LCDEnable','0','OLDHOSTNAME'),('LCDShowTime','1','OLDHOSTNAME'),('LCDShowMenu','1','OLDHOSTNAME'),('LCDShowMusic','1','OLDHOSTNAME'),('LCDShowMusicItems','ArtistTitle','OLDHOSTNAME'),('LCDShowChannel','1','OLDHOSTNAME'),('LCDShowRecStatus','0','OLDHOSTNAME'),('LCDShowVolume','1','OLDHOSTNAME'),('LCDShowGeneric','1','OLDHOSTNAME'),('LCDBacklightOn','1','OLDHOSTNAME'),('LCDHeartBeatOn','0','OLDHOSTNAME'),('LCDBigClock','0','OLDHOSTNAME'),('LCDKeyString','ABCDEF','OLDHOSTNAME'),('LCDPopupTime','5','OLDHOSTNAME'),('AudioOutputDevice','ALSA:default','OLDHOSTNAME'),('PassThruOutputDevice','Default','OLDHOSTNAME'),('AC3PassThru','0','OLDHOSTNAME'),('DTSPassThru','0','OLDHOSTNAME'),('AggressiveSoundcardBuffer','0','OLDHOSTNAME'),('MythControlsVolume','1','OLDHOSTNAME'),('MixerDevice','default','OLDHOSTNAME'),('MixerControl','PCM','OLDHOSTNAME'),('MasterMixerVolume','70','OLDHOSTNAME'),('PCMMixerVolume','70','OLDHOSTNAME'),('IndividualMuteControl','0','OLDHOSTNAME'),('AllowQuitShutdown','4','OLDHOSTNAME'),('NoPromptOnExit','1','OLDHOSTNAME'),('HaltCommand','halt','OLDHOSTNAME'),('LircKeyPressedApp','','OLDHOSTNAME'),('UseArrowAccels','1','OLDHOSTNAME'),('NetworkControlEnabled','0','OLDHOSTNAME'),('NetworkControlPort','6546','OLDHOSTNAME'),('SetupPinCodeRequired','0','OLDHOSTNAME'),('MonitorDrives','0','OLDHOSTNAME'),('EnableXbox','0','OLDHOSTNAME'),('LogEnabled','0',NULL),('LogPrintLevel','8','OLDHOSTNAME'),('LogCleanEnabled','0','OLDHOSTNAME'),('LogCleanPeriod','14','OLDHOSTNAME'),('LogCleanDays','14','OLDHOSTNAME'),('LogCleanMax','30','OLDHOSTNAME'),('LogMaxCount','100','OLDHOSTNAME'),('MythFillEnabled','0',NULL),('MythFillDatabasePath','/usr/bin/mythfilldatabase',NULL),('MythFillDatabaseArgs','',NULL),('MythFillDatabaseLog','',NULL),('MythFillPeriod','1',NULL),('MythFillMinHour','2',NULL),('MythFillMaxHour','5',NULL),('SchedMoveHigher','1',NULL),('DefaultStartOffset','0',NULL),('DefaultEndOffset','0',NULL),('ComplexPriority','0',NULL),('PrefInputPriority','2',NULL),('OnceRecPriority','0',NULL),('HDTVRecPriority','0',NULL),('CCRecPriority','0',NULL),('SingleRecordRecPriority','1',NULL),('OverrideRecordRecPriority','0',NULL),('FindOneRecordRecPriority','-1',NULL),('WeekslotRecordRecPriority','0',NULL),('TimeslotRecordRecPriority','0',NULL),('ChannelRecordRecPriority','0',NULL),('AllRecordRecPriority','0',NULL),('ArchiveDBSchemaVer','1000',NULL),('MythArchiveTempDir','','OLDHOSTNAME'),('MythArchiveShareDir','/usr/share/mythtv/mytharchive/','OLDHOSTNAME'),('MythArchiveVideoFormat','PAL','OLDHOSTNAME'),('MythArchiveFileFilter','*.mpg *.mov *.avi *.mpeg *.nuv','OLDHOSTNAME'),('MythArchiveDVDLocation','/dev/dvd','OLDHOSTNAME'),('MythArchiveEncodeToAc3','0','OLDHOSTNAME'),('MythArchiveCopyRemoteFiles','0','OLDHOSTNAME'),('MythArchiveAlwaysUseMythTranscode','1','OLDHOSTNAME'),('MythArchiveUseFIFO','1','OLDHOSTNAME'),('MythArchiveMainMenuAR','16:9','OLDHOSTNAME'),('MythArchiveChapterMenuAR','Video','OLDHOSTNAME'),('MythArchiveDateFormat','%a  %b  %d','OLDHOSTNAME'),('MythArchiveTimeFormat','%I:%M %p','OLDHOSTNAME'),('MythArchiveFfmpegCmd','ffmpeg','OLDHOSTNAME'),('MythArchiveMplexCmd','mplex','OLDHOSTNAME'),('MythArchiveDvdauthorCmd','dvdauthor','OLDHOSTNAME'),('MythArchiveSpumuxCmd','spumux','OLDHOSTNAME'),('MythArchiveMpeg2encCmd','mpeg2enc','OLDHOSTNAME'),('MythArchiveMkisofsCmd','mkisofs','OLDHOSTNAME'),('MythArchiveGrowisofsCmd','growisofs','OLDHOSTNAME'),('MythArchiveTcrequantCmd','tcrequant','OLDHOSTNAME'),('MythArchivePng2yuvCmd','png2yuv','OLDHOSTNAME'),('DVDDBSchemaVer','1002',NULL),('DVDDeviceLocation','/dev/dvd','OLDHOSTNAME'),('VCDDeviceLocation','/dev/cdrom','OLDHOSTNAME'),('DVDOnInsertDVD','1','OLDHOSTNAME'),('mythdvd.DVDPlayerCommand','Internal','OLDHOSTNAME'),('VCDPlayerCommand','mplayer vcd:// -cdrom-device %d -fs -zoom -vo xv','OLDHOSTNAME'),('DVDRipLocation','/var/lib/mythdvd/temp','OLDHOSTNAME'),('TitlePlayCommand','mplayer dvd://%t -dvd-device %d -fs -zoom -vo xv -aid %a -channels %c','OLDHOSTNAME'),('SubTitleCommand','-sid %s','OLDHOSTNAME'),('TranscodeCommand','transcode','OLDHOSTNAME'),('MTDPort','2442','OLDHOSTNAME'),('MTDNiceLevel','20','OLDHOSTNAME'),('MTDConcurrentTranscodes','1','OLDHOSTNAME'),('MTDRipSize','0','OLDHOSTNAME'),('MTDLogFlag','0','OLDHOSTNAME'),('MTDac3Flag','0','OLDHOSTNAME'),('MTDxvidFlag','1','OLDHOSTNAME'),('mythvideo.TrustTranscodeFRDetect','1','OLDHOSTNAME'),('GalleryDBSchemaVer','1000',NULL),('GalleryDir','/var/lib/mythtv/pictures','OLDHOSTNAME'),('GalleryThumbnailLocation','1','OLDHOSTNAME'),('GallerySortOrder','20','OLDHOSTNAME'),('GalleryImportDirs','/media/cdrom:/media/usbdisk','OLDHOSTNAME'),('GalleryMoviePlayerCmd','mplayer -fs %s','OLDHOSTNAME'),('SlideshowOpenGLTransition','none','OLDHOSTNAME'),('SlideshowOpenGLTransitionLength','2000','OLDHOSTNAME'),('GalleryOverlayCaption','0','OLDHOSTNAME'),('SlideshowTransition','none','OLDHOSTNAME'),('SlideshowBackground','','OLDHOSTNAME'),('SlideshowDelay','5','OLDHOSTNAME'),('GameDBSchemaVer','1012',NULL),('MusicDBSchemaVer','1006',NULL),('MusicLocation','/var/lib/mythtv/music/','OLDHOSTNAME'),('MusicAudioDevice','default','OLDHOSTNAME'),('CDDevice','/dev/cdrom','OLDHOSTNAME'),('TreeLevels','splitartist artist album title','OLDHOSTNAME'),('NonID3FileNameFormat','GENRE/ARTIST/ALBUM/TRACK_TITLE','OLDHOSTNAME'),('Ignore_ID3','0','OLDHOSTNAME'),('AutoLookupCD','1','OLDHOSTNAME'),('AutoPlayCD','0','OLDHOSTNAME'),('KeyboardAccelerators','1','OLDHOSTNAME'),('CDWriterEnabled','1','OLDHOSTNAME'),('CDDiskSize','1','OLDHOSTNAME'),('CDCreateDir','1','OLDHOSTNAME'),('CDWriteSpeed','0','OLDHOSTNAME'),('CDBlankType','fast','OLDHOSTNAME'),('PlayMode','Normal','OLDHOSTNAME'),('IntelliRatingWeight','35','OLDHOSTNAME'),('IntelliPlayCountWeight','25','OLDHOSTNAME'),('IntelliLastPlayWeight','25','OLDHOSTNAME'),('IntelliRandomWeight','15','OLDHOSTNAME'),('MusicShowRatings','0','OLDHOSTNAME'),('ShowWholeTree','0','OLDHOSTNAME'),('ListAsShuffled','0','OLDHOSTNAME'),('VisualMode','Random','OLDHOSTNAME'),('VisualCycleOnSongChange','0','OLDHOSTNAME'),('VisualModeDelay','0','OLDHOSTNAME'),('VisualScaleWidth','1','OLDHOSTNAME'),('VisualScaleHeight','1','OLDHOSTNAME'),('ParanoiaLevel','Full','OLDHOSTNAME'),('FilenameTemplate','ARTIST/ALBUM/TRACK-TITLE','OLDHOSTNAME'),('TagSeparator',' - ','OLDHOSTNAME'),('NoWhitespace','0','OLDHOSTNAME'),('PostCDRipScript','','OLDHOSTNAME'),('EjectCDAfterRipping','1','OLDHOSTNAME'),('OnlyImportNewMusic','0','OLDHOSTNAME'),('EncoderType','ogg','OLDHOSTNAME'),('DefaultRipQuality','0','OLDHOSTNAME'),('Mp3UseVBR','0','OLDHOSTNAME'),('PhoneDBSchemaVer','1001',NULL),('SipRegisterWithProxy','1','OLDHOSTNAME'),('SipProxyName','fwd.pulver.com','OLDHOSTNAME'),('SipProxyAuthName','','OLDHOSTNAME'),('SipProxyAuthPassword','','OLDHOSTNAME'),('MySipName','Me','OLDHOSTNAME'),('SipAutoanswer','0','OLDHOSTNAME'),('SipBindInterface','eth0','OLDHOSTNAME'),('SipLocalPort','5060','OLDHOSTNAME'),('NatTraversalMethod','None','OLDHOSTNAME'),('NatIpAddress','http://checkip.dyndns.org','OLDHOSTNAME'),('AudioLocalPort','21232','OLDHOSTNAME'),('VideoLocalPort','21234','OLDHOSTNAME'),('MicrophoneDevice','None','OLDHOSTNAME'),('CodecPriorityList','GSM;G.711u;G.711a','OLDHOSTNAME'),('PlayoutAudioCall','40','OLDHOSTNAME'),('PlayoutVideoCall','110','OLDHOSTNAME'),('TxResolution','176x144','OLDHOSTNAME'),('TransmitFPS','5','OLDHOSTNAME'),('TransmitBandwidth','256','OLDHOSTNAME'),('CaptureResolution','352x288','OLDHOSTNAME'),('TimeToAnswer','10','OLDHOSTNAME'),('DefaultVxmlUrl','http://127.0.0.1/vxml/index.vxml','OLDHOSTNAME'),('DefaultVoicemailPrompt','I am not at home, please leave a message after the tone','OLDHOSTNAME'),('VideoDBSchemaVer','1010',NULL),('VideoStartupDir','','OLDHOSTNAME'),('VideoArtworkDir','','OLDHOSTNAME'),('VideoDefaultParentalLevel','4','OLDHOSTNAME'),('VideoAggressivePC','0','OLDHOSTNAME'),('Default MythVideo View','1','OLDHOSTNAME'),('VideoListUnknownFiletypes','1','OLDHOSTNAME'),('VideoBrowserNoDB','0','OLDHOSTNAME'),('VideoGalleryNoDB','0','OLDHOSTNAME'),('VideoTreeNoDB','0','OLDHOSTNAME'),('VideoTreeLoadMetaData','1','OLDHOSTNAME'),('VideoNewBrowsable','1','OLDHOSTNAME'),('mythvideo.sort_ignores_case','1','OLDHOSTNAME'),('mythvideo.db_folder_view','1','OLDHOSTNAME'),('mythvideo.ImageCacheSize','50','OLDHOSTNAME'),('MovieListCommandLine','/usr/share/mythtv/mythvideo/scripts/imdb.pl -M tv=no;video=no','OLDHOSTNAME'),('MoviePosterCommandLine','/usr/share/mythtv/mythvideo/scripts/imdb.pl -P','OLDHOSTNAME'),('MovieDataCommandLine','/usr/share/mythtv/mythvideo/scripts/imdb.pl -D','OLDHOSTNAME'),('VideoGalleryColsPerPage','4','OLDHOSTNAME'),('VideoGalleryRowsPerPage','3','OLDHOSTNAME'),('VideoGallerySubtitle','1','OLDHOSTNAME'),('VideoGalleryAspectRatio','1','OLDHOSTNAME'),('VideoDefaultPlayer','mplayer -fs -zoom -quiet -vo xv %s','OLDHOSTNAME'),('MythFillFixProgramIDsHasRunOnce','1','OLDHOSTNAME'),('DisplayGroupDefaultViewMask','32769','OLDHOSTNAME'),('SecurityPin','','OLDHOSTNAME'),('MiscStatusScript','','OLDHOSTNAME'),('DisableFirewireReset','0','OLDHOSTNAME'),('Theme','G.A.N.T','localhost'),('Theme','G.A.N.T','OLDHOSTNAME'),('MythFillFixProgramIDsHasRunOnce','1','OLDHOSTNAME'),('BackupDBLastRunStart','2009-09-01 16:23:05',NULL),('BackupDBLastRunEnd','2009-09-01 16:23:06',NULL),('Language','EN_US','OLDHOSTNAME'),('BackendServerIP','127.0.0.1','OLDHOSTNAME'),('BackendServerPort','6543','OLDHOSTNAME'),('BackendStatusPort','6544','OLDHOSTNAME'),('SecurityPin','','OLDHOSTNAME'),('TruncateDeletesSlowly','0','OLDHOSTNAME'),('MiscStatusScript','','OLDHOSTNAME'),('DisableFirewireReset','0','OLDHOSTNAME'),('JobQueueMaxSimultaneousJobs','1','OLDHOSTNAME'),('JobQueueCheckFrequency','60','OLDHOSTNAME'),('JobQueueWindowStart','00:00','OLDHOSTNAME'),('JobQueueWindowEnd','23:59','OLDHOSTNAME'),('JobQueueCPU','0','OLDHOSTNAME'),('JobAllowCommFlag','1','OLDHOSTNAME'),('JobAllowTranscode','1','OLDHOSTNAME'),('JobAllowUserJob1','0','OLDHOSTNAME'),('JobAllowUserJob2','0','OLDHOSTNAME'),('JobAllowUserJob3','0','OLDHOSTNAME'),('JobAllowUserJob4','0','OLDHOSTNAME'),('StorageScheduler','Combination',NULL);
+INSERT INTO `settings` VALUES ('mythfilldatabaseLastRunStart',NULL,NULL),('mythfilldatabaseLastRunEnd',NULL,NULL),('mythfilldatabaseLastRunStatus',NULL,NULL),('DataDirectMessage',NULL,NULL),('HaveRepeats','0',NULL),('DBSchemaVer','1244',NULL),('DefaultTranscoder','0',NULL),('MythFillSuggestedRunTime','1970-01-01T00:00:00',NULL),('MythFillGrabberSuggestsTime','1',NULL),('BackendServerIP','127.0.0.1','OLDHOSTNAME'),('BackendServerPort','6543','OLDHOSTNAME'),('BackendStatusPort','6544','OLDHOSTNAME'),('MasterServerIP','127.0.0.1',NULL),('MasterServerPort','6543',NULL),('RecordFilePrefix','/var/lib/mythtv/recordings','OLDHOSTNAME'),('TruncateDeletesSlowly','1','OLDHOSTNAME'),('TVFormat','NTSC',NULL),('VbiFormat','None',NULL),('FreqTable','us-bcast',NULL),('TimeOffset','None',NULL),('MasterBackendOverride','1',NULL),('DeletesFollowLinks','0',NULL),('EITTimeOffset','Auto',NULL),('EITTransportTimeout','5',NULL),('EITIgnoresSource','0',NULL),('EITCrawIdleStart','60',NULL),('startupCommand','',NULL),('blockSDWUwithoutClient','1',NULL),('idleTimeoutSecs','0',NULL),('idleWaitForRecordingTime','15',NULL),('StartupSecsBeforeRecording','120',NULL),('WakeupTimeFormat','hh:mm yyyy-MM-dd',NULL),('SetWakeuptimeCommand','',NULL),('ServerHaltCommand','sudo /sbin/halt -p',NULL),('preSDWUCheckCommand','',NULL),('WOLbackendReconnectWaitTime','0',NULL),('WOLbackendConnectRetry','5',NULL),('WOLbackendCommand','',NULL),('WOLslaveBackendsCommand','',NULL),('JobQueueMaxSimultaneousJobs','1','OLDHOSTNAME'),('JobQueueCheckFrequency','60','OLDHOSTNAME'),('JobQueueWindowStart','00:00','OLDHOSTNAME'),('JobQueueWindowEnd','23:59','OLDHOSTNAME'),('JobQueueCPU','0','OLDHOSTNAME'),('JobAllowCommFlag','1','OLDHOSTNAME'),('JobAllowTranscode','1','OLDHOSTNAME'),('JobAllowUserJob1','0','OLDHOSTNAME'),('JobAllowUserJob2','0','OLDHOSTNAME'),('JobAllowUserJob3','0','OLDHOSTNAME'),('JobAllowUserJob4','0','OLDHOSTNAME'),('JobsRunOnRecordHost','0',NULL),('AutoCommflagWhileRecording','0',NULL),('JobQueueCommFlagCommand','mythcommflag',NULL),('JobQueueTranscodeCommand','mythtranscode',NULL),('AutoTranscodeBeforeAutoCommflag','0',NULL),('SaveTranscoding','0',NULL),('UserJobDesc1','User Job #1',NULL),('UserJob1','',NULL),('UserJobDesc2','User Job #2',NULL),('UserJob2','',NULL),('UserJobDesc3','User Job #3',NULL),('UserJob3','',NULL),('UserJobDesc4','User Job #4',NULL),('UserJob4','',NULL),('upnp:UDN:urn:schemas-upnp-org:device:MediaServer:1','256a89b4-1266-49ca-9ac7-f0b4b4641e7f','OLDHOSTNAME'),('Deinterlace','0','OLDHOSTNAME'),('DeinterlaceFilter','linearblend','OLDHOSTNAME'),('CustomFilters','','OLDHOSTNAME'),('PreferredMPEG2Decoder','ffmpeg','OLDHOSTNAME'),('UseOpenGLVSync','0','OLDHOSTNAME'),('RealtimePriority','1','OLDHOSTNAME'),('UseVideoTimebase','0','OLDHOSTNAME'),('DecodeExtraAudio','1','OLDHOSTNAME'),('AspectOverride','0','OLDHOSTNAME'),('PIPLocation','0','OLDHOSTNAME'),('PlaybackExitPrompt','0','OLDHOSTNAME'),('EndOfRecordingExitPrompt','0','OLDHOSTNAME'),('ClearSavedPosition','1','OLDHOSTNAME'),('AltClearSavedPosition','1','OLDHOSTNAME'),('UseOutputPictureControls','0','OLDHOSTNAME'),('AudioNag','1','OLDHOSTNAME'),('UDPNotifyPort','6948','OLDHOSTNAME'),('PlayBoxOrdering','1','OLDHOSTNAME'),('PlayBoxEpisodeSort','Date','OLDHOSTNAME'),('GeneratePreviewPixmaps','0','OLDHOSTNAME'),('PreviewPixmapOffset','64',NULL),('PreviewFromBookmark','1','OLDHOSTNAME'),('PlaybackPreview','1','OLDHOSTNAME'),('PlaybackPreviewLowCPU','0','OLDHOSTNAME'),('PlaybackBoxStartInTitle','1','OLDHOSTNAME'),('ShowGroupInfo','0','OLDHOSTNAME'),('AllRecGroupPassword','',NULL),('DisplayRecGroup','All Programs','OLDHOSTNAME'),('QueryInitialFilter','0','OLDHOSTNAME'),('RememberRecGroup','1','OLDHOSTNAME'),('DispRecGroupAsAllProg','0','OLDHOSTNAME'),('LiveTVInAllPrograms','0','OLDHOSTNAME'),('DisplayGroupDefaultView','0','OLDHOSTNAME'),('DisplayGroupTitleSort','0','OLDHOSTNAME'),('PVR350OutputEnable','0','OLDHOSTNAME'),('PVR350VideoDev','/dev/video16','OLDHOSTNAME'),('PVR350EPGAlphaValue','164','OLDHOSTNAME'),('PVR350InternalAudioOnly','0','OLDHOSTNAME'),('SmartForward','0','OLDHOSTNAME'),('StickyKeys','0','OLDHOSTNAME'),('FFRewReposTime','100','OLDHOSTNAME'),('FFRewReverse','1','OLDHOSTNAME'),('ExactSeeking','0','OLDHOSTNAME'),('AutoCommercialSkip','0','OLDHOSTNAME'),('CommRewindAmount','0','OLDHOSTNAME'),('CommNotifyAmount','0','OLDHOSTNAME'),('MaximumCommercialSkip','3600',NULL),('CommSkipAllBlanks','1',NULL),('VertScanPercentage','0','OLDHOSTNAME'),('HorizScanPercentage','0','OLDHOSTNAME'),('XScanDisplacement','0','OLDHOSTNAME'),('YScanDisplacement','0','OLDHOSTNAME'),('OSDTheme','BlackCurves-OSD','OLDHOSTNAME'),('OSDGeneralTimeout','2','OLDHOSTNAME'),('OSDProgramInfoTimeout','3','OLDHOSTNAME'),('OSDNotifyTimeout','5','OLDHOSTNAME'),('OSDFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCCFont','FreeMono.ttf','OLDHOSTNAME'),('OSDThemeFontSizeType','default','OLDHOSTNAME'),('CCBackground','0','OLDHOSTNAME'),('DefaultCCMode','0','OLDHOSTNAME'),('PersistentBrowseMode','1','OLDHOSTNAME'),('EnableMHEG','0','OLDHOSTNAME'),('OSDCC708TextZoom','100','OLDHOSTNAME'),('OSDCC708DefaultFontType','MonoSerif','OLDHOSTNAME'),('OSDCC708MonoSerifFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708PropSerifFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708MonoSansSerifFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708PropSansSerifFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708CasualFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708CursiveFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708CapitalsFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708MonoSerifItalicFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708PropSerifItalicFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708MonoSansSerifItalicFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708PropSansSerifItalicFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708CasualItalicFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708CursiveItalicFont','FreeMono.ttf','OLDHOSTNAME'),('OSDCC708CapitalsItalicFont','FreeMono.ttf','OLDHOSTNAME'),('ChannelOrdering','channum','OLDHOSTNAME'),('ChannelFormat','<num> <sign>','OLDHOSTNAME'),('LongChannelFormat','<num> <name>','OLDHOSTNAME'),('SmartChannelChange','0','OLDHOSTNAME'),('LastFreeCard','0',NULL),('AutoExpireMethod','2',NULL),('AutoExpireDayPriority','3',NULL),('AutoExpireDefault','1',NULL),('AutoExpireLiveTVMaxAge','1',NULL),('AutoExpireExtraSpace','1',NULL),('AutoCommercialFlag','1',NULL),('CommercialSkipMethod','7',NULL),('AggressiveCommDetect','1',NULL),('AutoTranscode','0',NULL),('AutoRunUserJob1','0',NULL),('AutoRunUserJob2','0',NULL),('AutoRunUserJob3','0',NULL),('AutoRunUserJob4','0',NULL),('RecordPreRoll','0',NULL),('RecordOverTime','0',NULL),('OverTimeCategory','category name',NULL),('CategoryOverTime','30',NULL),('ATSCCheckSignalThreshold','65',NULL),('ATSCCheckSignalWait','5000',NULL),('HDRingbufferSize','9400',NULL),('EPGFillType','10','OLDHOSTNAME'),('EPGShowCategoryColors','1','OLDHOSTNAME'),('EPGShowCategoryText','1','OLDHOSTNAME'),('EPGScrollType','1','OLDHOSTNAME'),('EPGShowChannelIcon','1','OLDHOSTNAME'),('EPGShowFavorites','0','OLDHOSTNAME'),('WatchTVGuide','0','OLDHOSTNAME'),('chanPerPage','5','OLDHOSTNAME'),('timePerPage','4','OLDHOSTNAME'),('UnknownTitle','Unknown','OLDHOSTNAME'),('UnknownCategory','Unknown','OLDHOSTNAME'),('DefaultTVChannel','3','OLDHOSTNAME'),('SelectChangesChannel','0','OLDHOSTNAME'),('SelChangeRecThreshold','16','OLDHOSTNAME'),('EPGEnableJumpToChannel','0',NULL),('ThemePainter','qt','OLDHOSTNAME'),('Style','','OLDHOSTNAME'),('ThemeFontSizeType','default','OLDHOSTNAME'),('RandomTheme','0','OLDHOSTNAME'),('MenuTheme','default','OLDHOSTNAME'),('XineramaScreen','0','OLDHOSTNAME'),('XineramaMonitorAspectRatio','1.3333','OLDHOSTNAME'),('GuiWidth','0','OLDHOSTNAME'),('GuiHeight','0','OLDHOSTNAME'),('GuiOffsetX','0','OLDHOSTNAME'),('GuiOffsetY','0','OLDHOSTNAME'),('GuiSizeForTV','1','OLDHOSTNAME'),('HideMouseCursor','1','OLDHOSTNAME'),('RunFrontendInWindow','0','OLDHOSTNAME'),('UseVideoModes','0','OLDHOSTNAME'),('GuiVidModeResolution','640x480','OLDHOSTNAME'),('TVVidModeResolution','640x480','OLDHOSTNAME'),('TVVidModeForceAspect','0.0','OLDHOSTNAME'),('VidModeWidth0','0','OLDHOSTNAME'),('VidModeHeight0','0','OLDHOSTNAME'),('TVVidModeResolution0','640x480','OLDHOSTNAME'),('TVVidModeForceAspect0','0.0','OLDHOSTNAME'),('VidModeWidth1','0','OLDHOSTNAME'),('VidModeHeight1','0','OLDHOSTNAME'),('TVVidModeResolution1','640x480','OLDHOSTNAME'),('TVVidModeForceAspect1','0.0','OLDHOSTNAME'),('VidModeWidth2','0','OLDHOSTNAME'),('VidModeHeight2','0','OLDHOSTNAME'),('TVVidModeResolution2','640x480','OLDHOSTNAME'),('TVVidModeForceAspect2','0.0','OLDHOSTNAME'),('ISO639Language0','eng','OLDHOSTNAME'),('ISO639Language1','eng','OLDHOSTNAME'),('DateFormat','ddd MMM d','OLDHOSTNAME'),('ShortDateFormat','M/d','OLDHOSTNAME'),('TimeFormat','h:mm AP','OLDHOSTNAME'),('QtFontSmall','12','OLDHOSTNAME'),('QtFontMedium','16','OLDHOSTNAME'),('QtFontBig','25','OLDHOSTNAME'),('PlayBoxTransparency','1','OLDHOSTNAME'),('PlayBoxShading','0','OLDHOSTNAME'),('UseVirtualKeyboard','1','OLDHOSTNAME'),('LCDEnable','0','OLDHOSTNAME'),('LCDShowTime','1','OLDHOSTNAME'),('LCDShowMenu','1','OLDHOSTNAME'),('LCDShowMusic','1','OLDHOSTNAME'),('LCDShowMusicItems','ArtistTitle','OLDHOSTNAME'),('LCDShowChannel','1','OLDHOSTNAME'),('LCDShowRecStatus','0','OLDHOSTNAME'),('LCDShowVolume','1','OLDHOSTNAME'),('LCDShowGeneric','1','OLDHOSTNAME'),('LCDBacklightOn','1','OLDHOSTNAME'),('LCDHeartBeatOn','0','OLDHOSTNAME'),('LCDBigClock','0','OLDHOSTNAME'),('LCDKeyString','ABCDEF','OLDHOSTNAME'),('LCDPopupTime','5','OLDHOSTNAME'),('AudioOutputDevice','ALSA:default','OLDHOSTNAME'),('PassThruOutputDevice','Default','OLDHOSTNAME'),('AC3PassThru','0','OLDHOSTNAME'),('DTSPassThru','0','OLDHOSTNAME'),('AggressiveSoundcardBuffer','0','OLDHOSTNAME'),('MythControlsVolume','1','OLDHOSTNAME'),('MixerDevice','default','OLDHOSTNAME'),('MixerControl','PCM','OLDHOSTNAME'),('MasterMixerVolume','70','OLDHOSTNAME'),('PCMMixerVolume','70','OLDHOSTNAME'),('IndividualMuteControl','0','OLDHOSTNAME'),('AllowQuitShutdown','4','OLDHOSTNAME'),('NoPromptOnExit','1','OLDHOSTNAME'),('HaltCommand','halt','OLDHOSTNAME'),('LircKeyPressedApp','','OLDHOSTNAME'),('UseArrowAccels','1','OLDHOSTNAME'),('NetworkControlEnabled','0','OLDHOSTNAME'),('NetworkControlPort','6546','OLDHOSTNAME'),('SetupPinCodeRequired','0','OLDHOSTNAME'),('MonitorDrives','0','OLDHOSTNAME'),('EnableXbox','0','OLDHOSTNAME'),('LogEnabled','0',NULL),('LogPrintLevel','8','OLDHOSTNAME'),('LogCleanEnabled','0','OLDHOSTNAME'),('LogCleanPeriod','14','OLDHOSTNAME'),('LogCleanDays','14','OLDHOSTNAME'),('LogCleanMax','30','OLDHOSTNAME'),('LogMaxCount','100','OLDHOSTNAME'),('MythFillEnabled','0',NULL),('MythFillDatabasePath','/usr/bin/mythfilldatabase',NULL),('MythFillDatabaseArgs','',NULL),('MythFillDatabaseLog','',NULL),('MythFillPeriod','1',NULL),('MythFillMinHour','2',NULL),('MythFillMaxHour','5',NULL),('SchedMoveHigher','1',NULL),('DefaultStartOffset','0',NULL),('DefaultEndOffset','0',NULL),('ComplexPriority','0',NULL),('PrefInputPriority','2',NULL),('OnceRecPriority','0',NULL),('HDTVRecPriority','0',NULL),('CCRecPriority','0',NULL),('SingleRecordRecPriority','1',NULL),('OverrideRecordRecPriority','0',NULL),('FindOneRecordRecPriority','-1',NULL),('WeekslotRecordRecPriority','0',NULL),('TimeslotRecordRecPriority','0',NULL),('ChannelRecordRecPriority','0',NULL),('AllRecordRecPriority','0',NULL),('ArchiveDBSchemaVer','1005',NULL),('MythArchiveTempDir','','OLDHOSTNAME'),('MythArchiveShareDir','/usr/share/mythtv/mytharchive/','OLDHOSTNAME'),('MythArchiveVideoFormat','PAL','OLDHOSTNAME'),('MythArchiveFileFilter','*.mpg *.mov *.avi *.mpeg *.nuv','OLDHOSTNAME'),('MythArchiveDVDLocation','/dev/dvd','OLDHOSTNAME'),('MythArchiveEncodeToAc3','0','OLDHOSTNAME'),('MythArchiveCopyRemoteFiles','0','OLDHOSTNAME'),('MythArchiveAlwaysUseMythTranscode','1','OLDHOSTNAME'),('MythArchiveUseFIFO','1','OLDHOSTNAME'),('MythArchiveMainMenuAR','16:9','OLDHOSTNAME'),('MythArchiveChapterMenuAR','Video','OLDHOSTNAME'),('MythArchiveDateFormat','%a  %b  %d','OLDHOSTNAME'),('MythArchiveTimeFormat','%I:%M %p','OLDHOSTNAME'),('MythArchiveFfmpegCmd','ffmpeg','OLDHOSTNAME'),('MythArchiveMplexCmd','mplex','OLDHOSTNAME'),('MythArchiveDvdauthorCmd','dvdauthor','OLDHOSTNAME'),('MythArchiveSpumuxCmd','spumux','OLDHOSTNAME'),('MythArchiveMpeg2encCmd','mpeg2enc','OLDHOSTNAME'),('MythArchiveMkisofsCmd','mkisofs','OLDHOSTNAME'),('MythArchiveGrowisofsCmd','growisofs','OLDHOSTNAME'),('MythArchiveTcrequantCmd','tcrequant','OLDHOSTNAME'),('MythArchivePng2yuvCmd','png2yuv','OLDHOSTNAME'),('mythvideo.DBSchemaVer','1027',NULL),('DVDDeviceLocation','/dev/dvd','OLDHOSTNAME'),('VCDDeviceLocation','/dev/cdrom','OLDHOSTNAME'),('DVDOnInsertDVD','1','OLDHOSTNAME'),('mythdvd.DVDPlayerCommand','Internal','OLDHOSTNAME'),('VCDPlayerCommand','mplayer vcd:// -cdrom-device %d -fs -zoom -vo xv','OLDHOSTNAME'),('DVDRipLocation','/var/lib/mythdvd/temp','OLDHOSTNAME'),('TitlePlayCommand','mplayer dvd://%t -dvd-device %d -fs -zoom -vo xv -aid %a -channels %c','OLDHOSTNAME'),('SubTitleCommand','-sid %s','OLDHOSTNAME'),('TranscodeCommand','transcode','OLDHOSTNAME'),('MTDPort','2442','OLDHOSTNAME'),('MTDNiceLevel','20','OLDHOSTNAME'),('MTDConcurrentTranscodes','1','OLDHOSTNAME'),('MTDRipSize','0','OLDHOSTNAME'),('MTDLogFlag','0','OLDHOSTNAME'),('MTDac3Flag','0','OLDHOSTNAME'),('MTDxvidFlag','1','OLDHOSTNAME'),('mythvideo.TrustTranscodeFRDetect','1','OLDHOSTNAME'),('GalleryDBSchemaVer','1003',NULL),('GalleryDir','/var/lib/mythtv/pictures','OLDHOSTNAME'),('GalleryThumbnailLocation','1','OLDHOSTNAME'),('GallerySortOrder','20','OLDHOSTNAME'),('GalleryImportDirs','/media/cdrom:/media/usbdisk','OLDHOSTNAME'),('GalleryMoviePlayerCmd','mplayer -fs %s','OLDHOSTNAME'),('SlideshowOpenGLTransition','none','OLDHOSTNAME'),('SlideshowOpenGLTransitionLength','2000','OLDHOSTNAME'),('GalleryOverlayCaption','0','OLDHOSTNAME'),('SlideshowTransition','none','OLDHOSTNAME'),('SlideshowBackground','','OLDHOSTNAME'),('SlideshowDelay','5','OLDHOSTNAME'),('GameDBSchemaVer','1012',NULL),('MusicDBSchemaVer','1017',NULL),('MusicLocation','/var/lib/mythtv/music/','OLDHOSTNAME'),('MusicAudioDevice','default','OLDHOSTNAME'),('CDDevice','/dev/cdrom','OLDHOSTNAME'),('TreeLevels','splitartist artist album title','OLDHOSTNAME'),('NonID3FileNameFormat','GENRE/ARTIST/ALBUM/TRACK_TITLE','OLDHOSTNAME'),('Ignore_ID3','0','OLDHOSTNAME'),('AutoLookupCD','1','OLDHOSTNAME'),('AutoPlayCD','0','OLDHOSTNAME'),('KeyboardAccelerators','1','OLDHOSTNAME'),('CDWriterEnabled','1','OLDHOSTNAME'),('CDDiskSize','1','OLDHOSTNAME'),('CDCreateDir','1','OLDHOSTNAME'),('CDWriteSpeed','0','OLDHOSTNAME'),('CDBlankType','fast','OLDHOSTNAME'),('PlayMode','Normal','OLDHOSTNAME'),('IntelliRatingWeight','35','OLDHOSTNAME'),('IntelliPlayCountWeight','25','OLDHOSTNAME'),('IntelliLastPlayWeight','25','OLDHOSTNAME'),('IntelliRandomWeight','15','OLDHOSTNAME'),('MusicShowRatings','0','OLDHOSTNAME'),('ShowWholeTree','0','OLDHOSTNAME'),('ListAsShuffled','0','OLDHOSTNAME'),('VisualMode','Random','OLDHOSTNAME'),('VisualCycleOnSongChange','0','OLDHOSTNAME'),('VisualModeDelay','0','OLDHOSTNAME'),('VisualScaleWidth','1','OLDHOSTNAME'),('VisualScaleHeight','1','OLDHOSTNAME'),('ParanoiaLevel','Full','OLDHOSTNAME'),('FilenameTemplate','ARTIST/ALBUM/TRACK-TITLE','OLDHOSTNAME'),('TagSeparator',' - ','OLDHOSTNAME'),('NoWhitespace','0','OLDHOSTNAME'),('PostCDRipScript','','OLDHOSTNAME'),('EjectCDAfterRipping','1','OLDHOSTNAME'),('OnlyImportNewMusic','0','OLDHOSTNAME'),('EncoderType','ogg','OLDHOSTNAME'),('DefaultRipQuality','0','OLDHOSTNAME'),('Mp3UseVBR','0','OLDHOSTNAME'),('PhoneDBSchemaVer','1001',NULL),('SipRegisterWithProxy','1','OLDHOSTNAME'),('SipProxyName','fwd.pulver.com','OLDHOSTNAME'),('SipProxyAuthName','','OLDHOSTNAME'),('SipProxyAuthPassword','','OLDHOSTNAME'),('MySipName','Me','OLDHOSTNAME'),('SipAutoanswer','0','OLDHOSTNAME'),('SipBindInterface','eth0','OLDHOSTNAME'),('SipLocalPort','5060','OLDHOSTNAME'),('NatTraversalMethod','None','OLDHOSTNAME'),('NatIpAddress','http://checkip.dyndns.org','OLDHOSTNAME'),('AudioLocalPort','21232','OLDHOSTNAME'),('VideoLocalPort','21234','OLDHOSTNAME'),('MicrophoneDevice','None','OLDHOSTNAME'),('CodecPriorityList','GSM;G.711u;G.711a','OLDHOSTNAME'),('PlayoutAudioCall','40','OLDHOSTNAME'),('PlayoutVideoCall','110','OLDHOSTNAME'),('TxResolution','176x144','OLDHOSTNAME'),('TransmitFPS','5','OLDHOSTNAME'),('TransmitBandwidth','256','OLDHOSTNAME'),('CaptureResolution','352x288','OLDHOSTNAME'),('TimeToAnswer','10','OLDHOSTNAME'),('DefaultVxmlUrl','http://127.0.0.1/vxml/index.vxml','OLDHOSTNAME'),('DefaultVoicemailPrompt','I am not at home, please leave a message after the tone','OLDHOSTNAME'),('VideoStartupDir','','OLDHOSTNAME'),('VideoArtworkDir','','OLDHOSTNAME'),('VideoDefaultParentalLevel','4','OLDHOSTNAME'),('VideoAggressivePC','0','OLDHOSTNAME'),('Default MythVideo View','2','OLDHOSTNAME'),('VideoListUnknownFiletypes','1','OLDHOSTNAME'),('VideoBrowserNoDB','0','OLDHOSTNAME'),('VideoGalleryNoDB','0','OLDHOSTNAME'),('VideoTreeNoDB','0','OLDHOSTNAME'),('VideoTreeLoadMetaData','1','OLDHOSTNAME'),('VideoNewBrowsable','1','OLDHOSTNAME'),('mythvideo.sort_ignores_case','1','OLDHOSTNAME'),('mythvideo.db_folder_view','1','OLDHOSTNAME'),('mythvideo.ImageCacheSize','50','OLDHOSTNAME'),('AutomaticSetWatched','0','OLDHOSTNAME'),('AlwaysStreamFiles','0','OLDHOSTNAME'),('DefaultVideoPlaybackProfile','CPU+','OLDHOSTNAME'),('JumpToProgramOSD','1','OLDHOSTNAME'),('ContinueEmbeddedTVPlay','0','OLDHOSTNAME'),('VideoGalleryColsPerPage','4','OLDHOSTNAME'),('VideoGalleryRowsPerPage','3','OLDHOSTNAME'),('VideoGallerySubtitle','1','OLDHOSTNAME'),('VideoGalleryAspectRatio','1','OLDHOSTNAME'),('VideoDefaultPlayer','mplayer -fs -zoom -quiet -vo xv %s','OLDHOSTNAME'),('MythFillFixProgramIDsHasRunOnce','1','OLDHOSTNAME'),('DisplayGroupDefaultViewMask','32777','OLDHOSTNAME'),('SecurityPin','','OLDHOSTNAME'),('MiscStatusScript','','OLDHOSTNAME'),('DisableFirewireReset','0','OLDHOSTNAME'),('Theme','Mythbuntu-9.10','localhost'),('Theme','Mythbuntu-9.10','OLDHOSTNAME'),('MythFillFixProgramIDsHasRunOnce','1','OLDHOSTNAME'),('BackupDBLastRunStart','2009-09-20 01:56:22',NULL),('BackupDBLastRunEnd','2009-09-20 01:56:29',NULL),('Language','EN_US','OLDHOSTNAME'),('BackendServerIP','127.0.0.1','OLDHOSTNAME'),('BackendServerPort','6543','OLDHOSTNAME'),('BackendStatusPort','6544','OLDHOSTNAME'),('SecurityPin','','OLDHOSTNAME'),('TruncateDeletesSlowly','0','OLDHOSTNAME'),('MiscStatusScript','','OLDHOSTNAME'),('DisableFirewireReset','0','OLDHOSTNAME'),('JobQueueMaxSimultaneousJobs','1','OLDHOSTNAME'),('JobQueueCheckFrequency','60','OLDHOSTNAME'),('JobQueueWindowStart','00:00','OLDHOSTNAME'),('JobQueueWindowEnd','23:59','OLDHOSTNAME'),('JobQueueCPU','0','OLDHOSTNAME'),('JobAllowCommFlag','1','OLDHOSTNAME'),('JobAllowTranscode','1','OLDHOSTNAME'),('JobAllowUserJob1','0','OLDHOSTNAME'),('JobAllowUserJob2','0','OLDHOSTNAME'),('JobAllowUserJob3','0','OLDHOSTNAME'),('JobAllowUserJob4','0','OLDHOSTNAME'),('StorageScheduler','Combination',NULL),('AdjustFill','6','OLDHOSTNAME'),('LetterboxColour','0','OLDHOSTNAME'),('GeneratePreviewRemotely','0','OLDHOSTNAME'),('HWAccelPlaybackPreview','0','OLDHOSTNAME'),('PlaybackWatchList','1','OLDHOSTNAME'),('PlaybackWLStart','0','OLDHOSTNAME'),('PlaybackWLAutoExpire','0','OLDHOSTNAME'),('PlaybackWLMaxAge','60','OLDHOSTNAME'),('PlaybackWLBlackOut','2','OLDHOSTNAME'),('BrowseAllTuners','0','OLDHOSTNAME'),('Prefer708Captions','1','OLDHOSTNAME'),('SubtitleCodec','UTF-8','OLDHOSTNAME'),('LiveTVPriority','0',NULL),('RerecordWatched','1',NULL),('AutoExpireWatchedPriority','0',NULL),('AutoExpireInsteadOfDelete','0',NULL),('DeletedFifoOrder','0',NULL),('ChannelGroupRememberLast','0','OLDHOSTNAME'),('ChannelGroupDefault','-1','OLDHOSTNAME'),('BrowseChannelGroup','0','OLDHOSTNAME'),('ThemeCacheSize','1','OLDHOSTNAME'),('UseFixedWindowSize','1','OLDHOSTNAME'),('TVVidModeRefreshRate','60.000','OLDHOSTNAME'),('TVVidModeRefreshRate0','60.000','OLDHOSTNAME'),('TVVidModeRefreshRate1','60.000','OLDHOSTNAME'),('TVVidModeRefreshRate2','60.000','OLDHOSTNAME'),('MaxChannels','2','OLDHOSTNAME'),('AudioUpmixType','0','OLDHOSTNAME'),('ScreenShotPath','/tmp/','OLDHOSTNAME'),('MediaChangeEvents','0','OLDHOSTNAME'),('OverrideExitMenu','0','OLDHOSTNAME'),('RebootCommand','/usr/share/mythtv/myth-reboot.sh','OLDHOSTNAME'),('LircSocket','/dev/lircd','OLDHOSTNAME'),('SchedOpenEnd','0',NULL),('MythArchiveDVDPlayerCmd','Internal','OLDHOSTNAME'),('MythArchiveUseProjectX','0','OLDHOSTNAME'),('MythArchiveAddSubtitles','0','OLDHOSTNAME'),('MythArchiveDefaultEncProfile','SP','OLDHOSTNAME'),('MythArchiveJpeg2yuvCmd','jpeg2yuv','OLDHOSTNAME'),('MythArchiveProjectXCmd','projectx','OLDHOSTNAME'),('SlideshowUseOpenGL','0','OLDHOSTNAME'),('MythMovies.LastGrabDate','','OLDHOSTNAME'),('MythMovies.DatabaseVersion','4','OLDHOSTNAME'),('ArtistTreeGroups','0','OLDHOSTNAME'),('MusicTagEncoding','utf16','OLDHOSTNAME'),('CDWriterDevice','default','OLDHOSTNAME'),('ResumeMode','off','OLDHOSTNAME'),('MusicExitAction','prompt','OLDHOSTNAME'),('MaxSearchResults','300','OLDHOSTNAME'),('VisualAlbumArtOnSongChange','0','OLDHOSTNAME'),('VisualRandomize','0','OLDHOSTNAME'),('mythvideo.screenshotDir','/home/test/.mythtv/MythVideo/Screenshots','OLDHOSTNAME'),('mythvideo.bannerDir','/home/test/.mythtv/MythVideo/Banners','OLDHOSTNAME'),('mythvideo.fanartDir','/home/test/.mythtv/MythVideo/Fanart','OLDHOSTNAME'),('mythvideo.db_group_view','1','OLDHOSTNAME'),('mythvideo.VideoTreeRemember','0','OLDHOSTNAME'),('mythvideo.db_group_type','0','OLDHOSTNAME'),('DVDDriveSpeed','12','OLDHOSTNAME'),('EnableDVDBookmark','0','OLDHOSTNAME'),('DVDBookmarkPrompt','0','OLDHOSTNAME'),('DVDBookmarkDays','10','OLDHOSTNAME'),('MovieListCommandLine','/usr/share/mythtv/mythvideo/scripts/tmdb.pl -M','OLDHOSTNAME'),('MoviePosterCommandLine','/usr/share/mythtv/mythvideo/scripts/tmdb.pl -P','OLDHOSTNAME'),('MovieFanartCommandLine','/usr/share/mythtv/mythvideo/scripts/tmdb.pl -B','OLDHOSTNAME'),('MovieDataCommandLine','/usr/share/mythtv/mythvideo/scripts/tmdb.pl -D','OLDHOSTNAME'),('mythvideo.ParentalLevelFromRating','0','OLDHOSTNAME'),('mythvideo.AutoR2PL1','G','OLDHOSTNAME'),('mythvideo.AutoR2PL2','PG','OLDHOSTNAME'),('mythvideo.AutoR2PL3','PG-13','OLDHOSTNAME'),('mythvideo.AutoR2PL4','R:NC-17','OLDHOSTNAME'),('mythvideo.TrailersDir','/home/test/.mythtv/MythVideo/Trailers','OLDHOSTNAME'),('mythvideo.TrailersRandomEnabled','0','OLDHOSTNAME'),('mythvideo.TrailersRandomCount','3','OLDHOSTNAME'),('mythvideo.TVListCommandLine','/usr/share/mythtv/mythvideo/scripts/ttvdb.py -M','OLDHOSTNAME'),('mythvideo.TVPosterCommandLine','/usr/share/mythtv/mythvideo/scripts/ttvdb.py -mP','OLDHOSTNAME'),('mythvideo.TVFanartCommandLine','/usr/share/mythtv/mythvideo/scripts/ttvdb.py -tF','OLDHOSTNAME'),('mythvideo.TVBannerCommandLine','/usr/share/mythtv/mythvideo/scripts/ttvdb.py -tB','OLDHOSTNAME'),('mythvideo.TVDataCommandLine','/usr/share/mythtv/mythvideo/scripts/ttvdb.py -D','OLDHOSTNAME'),('mythvideo.TVTitleSubCommandLine','/usr/share/mythtv/mythvideo/scripts/ttvdb.py -N','OLDHOSTNAME'),('mythvideo.TVScreenshotCommandLine','/usr/share/mythtv/mythvideo/scripts/ttvdb.py -S','OLDHOSTNAME'),('mythvideo.EnableAlternatePlayer','0','OLDHOSTNAME'),('mythvideo.VideoAlternatePlayer','Internal','OLDHOSTNAME'),('WeatherDBSchemaVer','1004',NULL);
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2397,7 +2454,7 @@ CREATE TABLE `storagegroup` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `grouphostdir` (`groupname`,`hostname`,`dirname`),
   KEY `hostname` (`hostname`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2503,6 +2560,29 @@ LOCK TABLES `upnpmedia` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `videocast`
+--
+
+DROP TABLE IF EXISTS `videocast`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `videocast` (
+  `intid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cast` varchar(128) NOT NULL,
+  PRIMARY KEY (`intid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `videocast`
+--
+
+LOCK TABLES `videocast` WRITE;
+/*!40000 ALTER TABLE `videocast` DISABLE KEYS */;
+/*!40000 ALTER TABLE `videocast` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `videocategory`
 --
 
@@ -2513,7 +2593,7 @@ CREATE TABLE `videocategory` (
   `intid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `category` varchar(128) NOT NULL,
   PRIMARY KEY (`intid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2536,7 +2616,7 @@ CREATE TABLE `videocountry` (
   `intid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `country` varchar(128) NOT NULL,
   PRIMARY KEY (`intid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2559,7 +2639,7 @@ CREATE TABLE `videogenre` (
   `intid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `genre` varchar(128) NOT NULL,
   PRIMARY KEY (`intid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2581,25 +2661,35 @@ DROP TABLE IF EXISTS `videometadata`;
 CREATE TABLE `videometadata` (
   `intid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(128) NOT NULL,
+  `subtitle` text NOT NULL,
   `director` varchar(128) NOT NULL,
   `plot` text,
   `rating` varchar(128) NOT NULL,
-  `inetref` varchar(32) NOT NULL,
+  `inetref` varchar(255) NOT NULL,
   `year` int(10) unsigned NOT NULL,
   `userrating` float NOT NULL,
   `length` int(10) unsigned NOT NULL,
+  `season` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `episode` smallint(5) unsigned NOT NULL DEFAULT '0',
   `showlevel` int(10) unsigned NOT NULL,
   `filename` text NOT NULL,
   `coverfile` text NOT NULL,
   `childid` int(11) NOT NULL DEFAULT '-1',
   `browse` tinyint(1) NOT NULL DEFAULT '1',
+  `watched` tinyint(1) NOT NULL DEFAULT '0',
   `playcommand` varchar(255) DEFAULT NULL,
   `category` int(10) unsigned NOT NULL DEFAULT '0',
+  `trailer` text,
+  `host` text NOT NULL,
+  `screenshot` text,
+  `banner` text,
+  `fanart` text,
+  `insertdate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`intid`),
   KEY `director` (`director`),
   KEY `title` (`title`),
   KEY `title_2` (`title`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2609,6 +2699,28 @@ CREATE TABLE `videometadata` (
 LOCK TABLES `videometadata` WRITE;
 /*!40000 ALTER TABLE `videometadata` DISABLE KEYS */;
 /*!40000 ALTER TABLE `videometadata` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `videometadatacast`
+--
+
+DROP TABLE IF EXISTS `videometadatacast`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `videometadatacast` (
+  `idvideo` int(10) unsigned NOT NULL,
+  `idcast` int(10) unsigned NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `videometadatacast`
+--
+
+LOCK TABLES `videometadatacast` WRITE;
+/*!40000 ALTER TABLE `videometadatacast` DISABLE KEYS */;
+/*!40000 ALTER TABLE `videometadatacast` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2623,7 +2735,7 @@ CREATE TABLE `videometadatacountry` (
   `idcountry` int(10) unsigned NOT NULL,
   KEY `idvideo` (`idvideo`),
   KEY `idcountry` (`idcountry`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2647,7 +2759,7 @@ CREATE TABLE `videometadatagenre` (
   `idgenre` int(10) unsigned NOT NULL,
   KEY `idvideo` (`idvideo`),
   KEY `idgenre` (`idgenre`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2704,7 +2816,7 @@ CREATE TABLE `videotypes` (
   `f_ignore` tinyint(1) DEFAULT NULL,
   `use_default` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`intid`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2713,8 +2825,95 @@ CREATE TABLE `videotypes` (
 
 LOCK TABLES `videotypes` WRITE;
 /*!40000 ALTER TABLE `videotypes` DISABLE KEYS */;
-INSERT INTO `videotypes` VALUES (1,'txt','',1,0),(2,'log','',1,0),(3,'mpg','Internal',0,0),(4,'avi','',0,1),(5,'vob','Internal',0,0),(6,'mpeg','Internal',0,0),(7,'VIDEO_TS','Internal',0,0),(8,'iso','Internal',0,0),(9,'img','Internal',0,0);
+INSERT INTO `videotypes` VALUES (1,'txt','',1,0),(2,'log','',1,0),(3,'mpg','Internal',0,0),(4,'avi','',0,1),(5,'vob','Internal',0,0),(6,'mpeg','Internal',0,0),(7,'VIDEO_TS','Internal',0,0),(8,'iso','Internal',0,0),(9,'img','Internal',0,0),(10,'mkv','Internal',0,0),(11,'mp4','Internal',0,0),(12,'m2ts','Internal',0,0),(13,'evo','Internal',0,0),(14,'divx','Internal',0,0),(15,'mov','Internal',0,0),(16,'qt','Internal',0,0),(17,'wmv','Internal',0,0),(18,'3gp','Internal',0,0),(19,'asf','Internal',0,0),(20,'ogg','Internal',0,0),(21,'ogm','Internal',0,0),(22,'flv','Internal',0,0);
 /*!40000 ALTER TABLE `videotypes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `weatherdatalayout`
+--
+
+DROP TABLE IF EXISTS `weatherdatalayout`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `weatherdatalayout` (
+  `location` varchar(64) NOT NULL,
+  `dataitem` varchar(64) NOT NULL,
+  `weatherscreens_screen_id` int(10) unsigned NOT NULL,
+  `weathersourcesettings_sourceid` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`location`,`dataitem`,`weatherscreens_screen_id`,`weathersourcesettings_sourceid`),
+  KEY `weatherdatalayout_FKIndex1` (`weatherscreens_screen_id`),
+  KEY `weatherdatalayout_FKIndex2` (`weathersourcesettings_sourceid`),
+  CONSTRAINT `weatherdatalayout_ibfk_1` FOREIGN KEY (`weatherscreens_screen_id`) REFERENCES `weatherscreens` (`screen_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `weatherdatalayout_ibfk_2` FOREIGN KEY (`weathersourcesettings_sourceid`) REFERENCES `weathersourcesettings` (`sourceid`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `weatherdatalayout`
+--
+
+LOCK TABLES `weatherdatalayout` WRITE;
+/*!40000 ALTER TABLE `weatherdatalayout` DISABLE KEYS */;
+/*!40000 ALTER TABLE `weatherdatalayout` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `weatherscreens`
+--
+
+DROP TABLE IF EXISTS `weatherscreens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `weatherscreens` (
+  `screen_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `draworder` int(10) unsigned NOT NULL,
+  `container` varchar(64) NOT NULL,
+  `hostname` varchar(64) DEFAULT NULL,
+  `units` tinyint(3) unsigned NOT NULL,
+  PRIMARY KEY (`screen_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `weatherscreens`
+--
+
+LOCK TABLES `weatherscreens` WRITE;
+/*!40000 ALTER TABLE `weatherscreens` DISABLE KEYS */;
+/*!40000 ALTER TABLE `weatherscreens` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `weathersourcesettings`
+--
+
+DROP TABLE IF EXISTS `weathersourcesettings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `weathersourcesettings` (
+  `sourceid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `source_name` varchar(64) NOT NULL,
+  `update_timeout` int(10) unsigned NOT NULL DEFAULT '600',
+  `retrieve_timeout` int(10) unsigned NOT NULL DEFAULT '60',
+  `hostname` varchar(64) DEFAULT NULL,
+  `path` varchar(255) DEFAULT NULL,
+  `author` varchar(128) DEFAULT NULL,
+  `version` varchar(32) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `types` mediumtext,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`sourceid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `weathersourcesettings`
+--
+
+LOCK TABLES `weathersourcesettings` WRITE;
+/*!40000 ALTER TABLE `weathersourcesettings` DISABLE KEYS */;
+/*!40000 ALTER TABLE `weathersourcesettings` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -2726,4 +2925,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2009-09-01 16:24:31
+-- Dump completed on 2009-09-20  3:02:16

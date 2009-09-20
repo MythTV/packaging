@@ -1,6 +1,8 @@
 mythtv (0.22.0~trunk21954-0ubuntu1) UNRELEASED; urgency=low
 
   * New upstream checkout (r21954)
+  * debian/mythtv_0.22.sql:
+    - Update to new schema, 1244.
   * debian/mythtv.desktop:
     - Use a real icon.
   * debian/mythtv-frontend.files:
