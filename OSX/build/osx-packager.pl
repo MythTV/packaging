@@ -282,7 +282,7 @@ our %depend = (
        ],
     'make'
     =>  [
-          'sub-webkit-install_subtargets-ordered',
+          'sub-plugins-install_subtargets-ordered',
           'install_qmake',
           'install_mkspecs',
         ],
