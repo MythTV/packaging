@@ -342,9 +342,6 @@ osx-packager.pl - build OS X binary packages for MythTV
    -profile         build with compile-type=profile
    -debug           build with compile-type=debug
    -plugins <str>   comma-separated list of plugins to include
-                      Available plugins:
-   mythbrowser mythcontrols mythdvd mythflix mythgallery mythgame
-   mythmusic mythnews mythphone mythvideo mythweather
 
 =head1 DESCRIPTION
 

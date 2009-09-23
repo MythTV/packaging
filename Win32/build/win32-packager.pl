@@ -1936,9 +1936,8 @@ push @{$expect},
              './configure --prefix='.$unixbuild.
              ' --disable-mythgallery --disable-mythmusic'.
              ' --disable-mytharchive --disable-mythbrowser --disable-mythflix'.
-             ' --disable-mythgame --disable-mythnews --disable-mythphone'.
-             ' --disable-mythcontrols'.
-             ' --disable-mythzoneminder --disable-mythweb --enable-aac'.
+             ' --disable-mythgame --disable-mythnews'.
+             ' --disable-mythzoneminder --enable-aac'.
              ' --enable-libvisual --enable-fftw --compile-type='.$compile_type,
              #'touch '.$unixmythtv.'mythplugins/cleanup/cleanup.pro'
              ], 
