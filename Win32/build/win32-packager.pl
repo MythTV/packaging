@@ -47,7 +47,7 @@ $| = 1; # autoflush stdout;
 #my $SVNRELEASE = '16789'; # This is the last version that was Qt 3 based.
                            # Qt 4 merges began immediately after.
 #my $SVNRELEASE = '18442'; # Recent 0-21-fixes
-my $SVNRELEASE = '21155'; # Recent trunk
+my $SVNRELEASE = '21995'; # Recent trunk
 #my $SVNRELEASE = 'HEAD'; # If you are game, go forth and test the latest!
 
 
@@ -1937,7 +1937,7 @@ push @{$expect},
   shell   => ['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
              'cd '.$unixmythtv.'mythplugins',
              './configure --prefix='.$unixbuild.
-             ' --disable-mythgallery --disable-mythmusic'.
+             ' --disable-mythmusic'.
              ' --disable-mytharchive --disable-mythbrowser --disable-mythflix'.
              ' --disable-mythgame --disable-mythnews'.
              ' --disable-mythzoneminder --enable-aac'.
