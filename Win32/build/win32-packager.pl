@@ -979,6 +979,9 @@ push @{$expect},
               "make",
               "make install"],
   comment => 'building and installing: libexif' ],
+[ file    => $msys.'bin/libexif.dll',
+  shell   => 'ln -s /bin/libexif-12.dll /bin/libexif.dll',
+  comment => 'correcting installed libexif name' ],
 
 # confirmed latest source version as at 26-12-2008
 [ archive => $sources.'libvisual-0.4.0.tar.gz',  
