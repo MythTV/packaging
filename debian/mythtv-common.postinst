@@ -78,6 +78,10 @@ EOF
         ln -s /etc/mythtv/config.xml /root/.mythtv/config.xml || true
     fi
 
+    if [ ! -e /home/mythtv/.mythtv/config.xml ]; then
+        ln -s /etc/mythtv/config.xml /home/mythtv/.mythtv/config.xml || true
+    fi
+
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

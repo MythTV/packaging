@@ -1,5 +1,6 @@
 mythtv (0.22.0~trunk21954-0ubuntu1) karmic; urgency=low
 
+  [ Mario Limonciello ]
   * New upstream checkout (r21954)
   * debian/mythtv_0.22.sql:
     - Update to new schema, 1244.
@@ -7,6 +8,10 @@ mythtv (0.22.0~trunk21954-0ubuntu1) karmic; urgency=low
     - Use a real icon.
   * debian/mythtv-frontend.files:
     - Rename mythtv to mythavtest (see upstream 21904 for details)
+
+  [ John Baab ]
+  * debian/mythtv-common.postinst:
+    - Added symlink for /home/mythtv/.mythtv/config.xml
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sun, 20 Sep 2009 02:13:10 -0500
 
