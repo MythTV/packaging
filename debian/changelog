@@ -2,6 +2,8 @@ mythtv (0.22.0~trunk22101-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * New upstream checkout (r22101)
+  * Try to guard and make sure that ~mythtv is read from /etc/passwd 
+    rather than assuming it's /home/mythtv.
 
   [ John Baab ]
   * debian/mythtv-common.postinst:
