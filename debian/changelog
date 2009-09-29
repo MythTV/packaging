@@ -1,3 +1,14 @@
+mythtv (0.22.0~trunk22101-0ubuntu1) UNRELEASED; urgency=low
+
+  [ Mario Limonciello ]
+  * New upstream checkout (r22101)
+
+  [ John Baab ]
+  * debian/mythtv-common.postinst:
+    - Added symlink for /home/mythtv/.mythtv/config.xml
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 29 Sep 2009 01:33:23 -0500
+
 mythtv (0.22.0~trunk21954-0ubuntu1) karmic; urgency=low
 
   [ Mario Limonciello ]
@@ -8,10 +19,6 @@ mythtv (0.22.0~trunk21954-0ubuntu1) karmic; urgency=low
     - Use a real icon.
   * debian/mythtv-frontend.files:
     - Rename mythtv to mythavtest (see upstream 21904 for details)
-
-  [ John Baab ]
-  * debian/mythtv-common.postinst:
-    - Added symlink for /home/mythtv/.mythtv/config.xml
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sun, 20 Sep 2009 02:13:10 -0500
 
