@@ -191,7 +191,6 @@ BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
 # nb: libdvdcss will be dynamically loaded if installed
 BuildRequires:  libfame-devel >= 0.9.0
-BuildRequires:  libmad-devel
 BuildRequires:  libogg-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel >= 1.0
@@ -393,7 +392,6 @@ Requires:  libdca-devel
 Requires:  libdvdnav-devel
 Requires:  libdvdread-devel >= 0.9.4
 Requires:  libfame-devel >= 0.9.0
-Requires:  libmad-devel
 Requires:  libogg-devel
 Requires:  libtheora-devel
 Requires:  libvorbis-devel >= 1.0
@@ -1463,6 +1461,8 @@ fi
 ################################################################################
 
 %changelog
+* Fri Oct 02 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.5.sv
+- Remove libmad BR, its not used at all any longer
 
 * Sat Sep 19 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.5.svn
 - Re-remove non-GPL libfaac options (not really used by MythTV anyway)
