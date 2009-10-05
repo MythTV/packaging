@@ -2,6 +2,9 @@ mythtv (0.22.0~trunk22242-0ubuntu1) UNRELEASED; urgency=low
 
   * New upstream checkout (r22242)
     - Fixes protocol mismatch in 22167 (LP: #440807)
+  * mythtv_0.22.0.sql:
+    - Set correct path for movie directories (LP: #440680)
+    - Set mytharchive work directory (LP: #439213)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sun, 04 Oct 2009 20:43:11 -0500
 
