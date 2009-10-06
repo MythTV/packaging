@@ -181,9 +181,7 @@ BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
 BuildRequires:  faad2-devel
-BuildRequires:  fftw2-devel < 3
-BuildRequires:  fftw2-devel >= 2.1.3
-BuildRequires:  flac-devel >= 1.0.4
+BuildRequires:  fftw-devel >= 3
 BuildRequires:  gsm-devel
 BuildRequires:  lame-devel
 BuildRequires:  libdca-devel
@@ -195,7 +193,7 @@ BuildRequires:  libogg-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel >= 1.0
 BuildRequires:  mjpegtools-devel >= 1.6.1
-BuildRequires:  taglib-devel >= 1.4
+BuildRequires:  taglib-devel >= 1.5
 BuildRequires:  transcode >= 0.6.8
 BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
@@ -240,7 +238,6 @@ BuildRequires:  python-devel
 %if %{with_plugins}
 
 %if %{with_mythgallery}
-BuildRequires:  libtiff-devel
 BuildRequires:  libexif-devel >= 0.6.9
 %endif
 
@@ -383,8 +380,7 @@ Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
 Requires:  faad2-devel
-Requires:  fftw2-devel < 3
-Requires:  fftw2-devel >= 2.1.3
+Requires:  fftw-devel >= 3
 Requires:  flac-devel >= 1.0.4
 Requires:  gsm-devel
 Requires:  lame-devel
@@ -396,7 +392,7 @@ Requires:  libogg-devel
 Requires:  libtheora-devel
 Requires:  libvorbis-devel >= 1.0
 Requires:  mjpegtools-devel >= 1.6.1
-Requires:  taglib-devel >= 1.4
+Requires:  taglib-devel >= 1.5
 Requires:  transcode >= 0.6.8
 Requires:  x264-devel
 Requires:  xvidcore-devel >= 0.9.1
@@ -910,6 +906,7 @@ cd mythtv-%{version}
     --enable-audio-alsa                         \
     --enable-audio-oss                          \
     --enable-audio-jack                         \
+    --enable-libfftw3                           \
     --enable-x11 --x11-path=%{_includedir}      \
     --enable-xv                                 \
     --enable-xvmc-vld --enable-xvmc-pro         \
@@ -919,7 +916,7 @@ cd mythtv-%{version}
     --enable-ivtv                               \
     --enable-firewire                           \
     --enable-dvb                                \
-    --enable-libfaad --enable-libfaad --enable-libfaadbin \
+    --enable-libfaad --enable-libfaadbin        \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
@@ -1386,6 +1383,7 @@ fi
 %{_bindir}/ignyte
 %{_datadir}/mythtv/themes/default/movies-ui.xml
 %{_libdir}/mythtv/plugins/libmythmovies.so
+%{_datadir}/mythtv/i18n/mythmovies_*.qm
 %endif
 
 %if %{with_mythmusic}
@@ -1454,6 +1452,7 @@ fi
 %{_libdir}/mythtv/plugins/libmythzoneminder.so
 %{_datadir}/mythtv/zonemindermenu.xml
 %{_bindir}/mythzmserver
+%{_datadir}/mythtv/i18n/mythzoneminder_*.qm
 %endif
 
 %endif
@@ -1461,7 +1460,13 @@ fi
 ################################################################################
 
 %changelog
-* Fri Oct 02 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.5.sv
+* Tue Oct 06 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.5.svn
+- Remove more obsolete BR
+- Switch from fftw v2 to fftw v3
+- Add mythmovies and mythzoneminder i18n files
+- Bump taglib version requires to >= 1.5
+
+* Fri Oct 02 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.5.svn
 - Remove libmad BR, its not used at all any longer
 
 * Sat Sep 19 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.5.svn
