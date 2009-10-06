@@ -182,6 +182,7 @@ BuildRequires:  libGL-devel, libGLU-devel
 # Misc A/V format support
 BuildRequires:  faad2-devel
 BuildRequires:  fftw-devel >= 3
+BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  gsm-devel
 BuildRequires:  lame-devel
 BuildRequires:  libdca-devel
