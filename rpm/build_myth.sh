@@ -7,7 +7,7 @@
 #
 # The latest version of this file can be found in mythtv svn:
 #
-#    $URL$
+# http://svn.mythtv.org/svn/trunk/packaging/rpm/build_myth.sh $
 #
 # See --help for usage instructions.
 #
