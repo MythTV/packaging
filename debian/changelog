@@ -10,6 +10,8 @@ mythtv (0.22.0~trunk22304-0ubuntu1) UNRELEASED; urgency=low
       (LP: #445984)
   * debian/patches/10_mythfilldatabase_log.dpatch:
     - Update to actually log to a file not a directory.
+  * debian/patches:
+    - Drop any patches that weren't actually being applied.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Oct 2009 01:36:54 -0500
 
