@@ -4,6 +4,10 @@ mythtv (0.22.0~trunk22304-0ubuntu1) UNRELEASED; urgency=low
     - Fixes crash during image loading of mythfrontend (LP: #445173)
     - Disables pulseaudio harder, fixing sound playback when it's installed.
       (LP: #436792)
+  * debian/mythtv_0.22.0.sql:
+    - Set Internal as the default player across the board.  Looks like some
+      areas were previously missed.  This only affects new installs.
+      (LP: #445984)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Oct 2009 01:36:54 -0500
 
