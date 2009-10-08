@@ -1,6 +1,6 @@
-mythtv (0.22.0~trunk22304-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk22304-0ubuntu1) karmic; urgency=low
 
-  * New upstream checkout (r22287)
+  * New upstream checkout (r22304)
     - Fixes crash during image loading of mythfrontend (LP: #445173)
     - Disables pulseaudio harder, fixing sound playback when it's installed.
       (LP: #436792)
@@ -13,7 +13,7 @@ mythtv (0.22.0~trunk22304-0ubuntu1) UNRELEASED; urgency=low
   * debian/patches:
     - Drop any patches that weren't actually being applied.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Oct 2009 01:36:54 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Oct 2009 23:20:15 -0500
 
 mythtv (0.22.0~trunk22242-0ubuntu1) karmic; urgency=low
 
