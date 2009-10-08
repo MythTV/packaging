@@ -2,25 +2,13 @@
 MYSQL="/usr/share/mythtv/sql/mythtv*.sql"
 MYSQLCONFIG="/etc/mysql/conf.d/mythtv.cnf"
 FSTAB="/etc/fstab"
-EXT3=0
 NEWIP="127.0.0.1"
 LOCALHOSTNAME=`cat /etc/hostname`
 
 prepare_database() {
-    if test -f $FSTAB &&
-       sed -e "/^$/d; /^#/d; /^proc/d; /swap/d; /nfs/d; s/\t/\ \ \ \ /g;" $FSTAB |\
-       grep ext3 |\
-       grep "/var/lib/mythtv/recordings\|\
-/var/lib/mythtv\|\
-/var/lib/mythtv\|\
-/var/lib\|\
-/var \|\
-/ "    >/dev/null; then
-       EXT3=1
-    fi
 
     #Preload tables and default values
-    cat $MYSQL | sed -e "s/Terra/Mythbuntu/g; s/OLDHOSTNAME/$LOCALHOSTNAME/g; s/127.0.0.1/$NEWIP/g; s/Slowly','0/Slowly','$EXT3/g; s/blueosd/BlackCurves-OSD/g" |\
+    cat $MYSQL | sed -e "s/Terra/Mythbuntu/g; s/OLDHOSTNAME/$LOCALHOSTNAME/g; s/127.0.0.1/$NEWIP/g; s/blueosd/BlackCurves-OSD/g" |\
         mysql $SECURITY_INFO $database
 
     #Set up local IP and hostname

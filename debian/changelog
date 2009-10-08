@@ -16,6 +16,7 @@ mythtv (0.22.0~trunk22304-0ubuntu1) UNRELEASED; urgency=low
     accepted it without a version number applied.
   * debian/mythtv-database.{postinst,config}:
     - Use the debian system maintainer account to set things up if possible.
+    - Drop broken logic for trying to detect when slow writes are needed.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Oct 2009 23:24:05 -0500
 
