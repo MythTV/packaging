@@ -13,7 +13,7 @@ diff -urNad mythtv-0.21.0~fixes16259~/programs/mythbackend/housekeeper.cpp mytht
      QString mfarg = gContext->GetSetting("MythFillDatabaseArgs", "");
      QString mflog = gContext->GetSetting("MythFillDatabaseLog",
 -                                         "/var/log/mythfilldatabase.log");
-+                                         "/var/log/mythtv");
++                                         "/var/log/mythtv/mythfilldatabase.log");
  
      if (mfpath == "mythfilldatabase")
          mfpath = gContext->GetInstallPrefix() + "/bin/mythfilldatabase";
