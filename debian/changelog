@@ -13,7 +13,7 @@ mythtv (0.22.0~trunk22304-0ubuntu1) karmic; urgency=low
   * debian/patches:
     - Drop any patches that weren't actually being applied.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Oct 2009 23:20:15 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Oct 2009 23:24:05 -0500
 
 mythtv (0.22.0~trunk22242-0ubuntu1) karmic; urgency=low
 
