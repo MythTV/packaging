@@ -1,4 +1,4 @@
-mythtv (0.22.0~trunk22287-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk22304-0ubuntu1) UNRELEASED; urgency=low
 
   * New upstream checkout (r22287)
     - Fixes crash during image loading of mythfrontend (LP: #445173)
