@@ -2,6 +2,8 @@ mythtv (0.22.0~trunk22287-0ubuntu1) UNRELEASED; urgency=low
 
   * New upstream checkout (r22287)
     - Fixes crash during image loading of mythfrontend (LP: #445173)
+    - Disables pulseaudio harder, fixing sound playback when it's installed.
+      (LP: #436792)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Oct 2009 01:36:54 -0500
 
