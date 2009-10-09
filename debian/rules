@@ -88,9 +88,6 @@ configure: configure-stamp
 configure-stamp: patch-stamp
 	dh_testdir
 
-	#give us firewire testing support (from contrib)
-	ln -sf ../../contrib/firewire_tester.c programs/firewire_tester
-
 	#for a udev transition in the making
 	[ $(UDEV) = "lib" ] && ln -s mythtv-backend.preinst.in debian/mythtv-backend.preinst || true
 
@@ -133,10 +130,6 @@ clean:
 
 	#might have been made as udev transition
 	rm -f debian/mythtv-backend.preinst
-
-	#this is a symlink manually added in
-	rm -f programs/firewire_tester.c
-	rm -f programs/firewire_tester/firewire_tester.c
 
 	debian/rules unpatch
 
@@ -224,7 +217,6 @@ binary-indep: build install
 	dh_testroot -i
 	dh_installdebconf -i
 	dh_installdocs -A README AUTHORS FAQ UPGRADING keys.txt
-	dh_installdocs -pmythtv-backend contrib/development/firewire_tester/README 
 	dh_installdocs -pmythtv-doc docs/mythtv-HOWTO*
 	dh_installexamples -pmythtv-doc contrib/config_files/*
 	dh_installcron -i
