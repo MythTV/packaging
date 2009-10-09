@@ -176,6 +176,8 @@ install: build
 	install -m 644 database/*.sql debian/mythtv/usr/share/mythtv/sql
 
 	rm -f debian/mythtv/usr/share/mythtv/FreeSans.ttf debian/mythtv/usr/share/mythtv/FreeMono.ttf
+	rm -f debian/mythtv/usr/share/mythtv/Gray-OSD/*.ttf
+	rm -f debian/mythtv/usr/share/mythtv/BlackCurves-OSD/*.ttf
 	dh_link -pmythtv-common usr/share/fonts/truetype/freefont/FreeSans.ttf usr/share/mythtv/FreeSans.ttf
 	dh_link -pmythtv-common usr/share/fonts/truetype/freefont/FreeMono.ttf usr/share/mythtv/FreeMono.ttf
 
