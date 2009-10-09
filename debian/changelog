@@ -1,4 +1,4 @@
-mythtv (0.22.0~trunk22323-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk22323-0ubuntu1) karmic; urgency=low
 
   * New upstream checkout (r22323)
     - Themes have been shuffled around a bunch.
