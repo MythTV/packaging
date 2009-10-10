@@ -5,13 +5,13 @@ Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
 XSBC-Original-Maintainer: Christian Marillat <marillat@debian.org>
 Bugs: mailto:ubuntu-mythtv@lists.ubuntu.com
 Homepage: http://www.mythtv.org
-Standards-Version: 3.8.0
+Standards-Version: 3.8.3
 Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~ubuntu-mythtv/mythtv/mythtv-trunk-022
 Vcs-Browser: http://bazaar.launchpad.net/~ubuntu-mythtv/mythtv-trunk-022
 Build-Conflicts: libmyth-0.20-dev,
                  libmyth-dev,
                  libqt3-mt-dev
-Build-Depends:  debhelper (>> 5.0.0),
+Build-Depends:  debhelper (>= 7.3.15ubuntu2),
                 dpatch,
                 ccache,
                 yasm,
