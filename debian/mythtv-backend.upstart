@@ -10,9 +10,7 @@ stop on starting shutdown
 respawn
 
 pre-start script	
-	if [ -f /etc/default/mythtv-backend ]; then
-		. /etc/default/mythtv-backend
-	fi
+	test -f /etc/default/mythtv-backend && . /etc/default/mythtv-backend || true
 end script
 
 exec /bin/su -c "/usr/bin/mythbackend $ARGS" $USER
