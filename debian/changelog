@@ -1,8 +1,9 @@
-mythtv (0.22.0~trunk22348-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk22359-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
-  * New upstream checkout (r22323)
+  * New upstream checkout (r22359)
     - Themes have been shuffled around a bunch.
+    - Fixes transcode arguments (LP: #429089)
   * debian/control:
     - Conflicts and replaces for themes that are now part of this package
   * debian/mythtv-setup.desktop:
