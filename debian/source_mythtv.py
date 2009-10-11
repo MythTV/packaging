@@ -16,6 +16,10 @@ def add_info(report):
     for log in logs:
         apport.hookutils.attach_file_if_exists(report, log)
 
+    report['MythTVDirectoryPermissions'] = apport.hookutils.command_output(['ls', '-l', '/var/lib/mythtv'])
+
+    apport.hookutils.attach_hardware(report)
+
     if is_ppa('mythtv-common'):
         report['CrashDB'] = 'mythbuntu'
 
