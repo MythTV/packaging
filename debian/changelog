@@ -1,4 +1,4 @@
-mythtv (0.22.0~trunk22359-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0~trunk22359-0ubuntu1) karmic; urgency=low
 
   [ Mario Limonciello ]
   * New upstream checkout (r22359)
@@ -29,7 +29,7 @@ mythtv (0.22.0~trunk22359-0ubuntu1) UNRELEASED; urgency=low
       - debian/mythtv-backend.upstart added.
     * Standards-Version bumped to 3.8.2.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Sat, 10 Oct 2009 11:26:14 +0100
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 11 Oct 2009 13:43:15 -0500
 
 mythtv (0.22.0~trunk22304-0ubuntu1) karmic; urgency=low
 
