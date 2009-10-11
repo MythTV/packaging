@@ -9,29 +9,10 @@ stop on starting shutdown
 #expect fork
 respawn
 
-pre-start script
-	
+pre-start script	
 	if [ -f /etc/default/mythtv-backend ]; then
 		. /etc/default/mythtv-backend
 	fi
-
-	USER_HOME=$(getent passwd $USER | awk -F : '{print $6}')
-
-	if [ -n "$USER" ] && [ ! -d $USER_HOME ]; then
-		mkdir -p $USER_HOME
-
-		#create a symbolic link for mysql.txt so it can't be overwritten
-		mkdir -p $USER_HOME/.mythtv
-		chown -R $USER $USER_HOME/.mythtv
-		if [ ! -e $USER_HOME/.mythtv/mysql.txt ]; then
-			ln -s /etc/mythtv/mysql.txt $USER_HOME/.mythtv/mysql.txt
-		fi
-		#create config.xml for bindings
-		if [ ! -e $USER_HOME/.mythtv/config.xml ]; then
-			ln -s /etc/mythtv/config.xml $USER_HOME/.mythtv/config.xml
-		fi
-	fi
-	
 end script
 
 exec /bin/su -c "/usr/bin/mythbackend $ARGS" $USER

@@ -20,7 +20,6 @@ test -x $DAEMON || exit 0
 set -e
 
 USER=mythtv
-USER_HOME=$(grep ^$USER /etc/passwd | awk -F : '{print $6}')
 RUNDIR=/var/run/mythtv
 ARGS="--daemon --logfile /var/log/mythtv/mythbackend.log --pidfile $RUNDIR/$NAME.pid"
 NICE=0
@@ -34,21 +33,6 @@ chown -R $USER $RUNDIR
 
 unset DISPLAY
 unset SESSION_MANAGER
-
-if [ ! -d $USER_HOME ]; then
-	mkdir -p $USER_HOME
-fi
-
-#create a symbolic link for mysql.txt so it can't be overwritten
-mkdir -p $USER_HOME/.mythtv
-chown -R $USER $USER_HOME/.mythtv
-if [ ! -e $USER_HOME/.mythtv/mysql.txt ]; then
-        ln -s /etc/mythtv/mysql.txt $USER_HOME/.mythtv/mysql.txt
-fi
-#create config.xml for bindings
-if [ ! -e $USER_HOME/.mythtv/config.xml ]; then
-        ln -s /etc/mythtv/config.xml $USER_HOME/.mythtv/config.xml
-fi
 
 case "$1" in
   start)

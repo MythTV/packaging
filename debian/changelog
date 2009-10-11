@@ -12,6 +12,8 @@ mythtv (0.22.0~trunk22348-0ubuntu1) UNRELEASED; urgency=low
   * debian/rules:
     - Remove references to firewire_tester.  We're not building it.
   * Simplify upstart script a bit.
+  * Drop old logic for checking that ~mythtv/.mythtv/mysql.txt exists, and move
+    it into the postinst.
 
   [ Dave Walker ]
     * Incremeted to new upstream version to current trunk head.

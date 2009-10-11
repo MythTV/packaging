@@ -86,6 +86,12 @@ EOF
         ln -s /etc/mythtv/config.xml $HOMEDIR/.mythtv/config.xml || true
     fi
 
+    if [ ! -e $HOMEDIR/.mythtv/mysql.txt ]; then
+        ln -s /etc/mythtv/mysql.txt $HOMEDIR/.mythtv/mysql.txt || true
+    fi
+
+
+
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
