@@ -14,6 +14,11 @@ mythtv (0.22.0~trunk22348-0ubuntu1) UNRELEASED; urgency=low
   * Simplify upstart script a bit.
   * Drop old logic for checking that ~mythtv/.mythtv/mysql.txt exists, and move
     it into the postinst.
+  * Ship a mythbuntu crashdb for apport to catch crashes and submit against the
+    mythbuntu project.
+  * Add an apport hook for mythtv packages.
+    - PPA builds will be directed at launchpad.net/mythbuntu
+    - Normal builds will end up against launchpad.net/ubuntu/+source/mythtv
 
   [ Dave Walker ]
     * Incremeted to new upstream version to current trunk head.
