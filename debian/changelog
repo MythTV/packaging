@@ -11,12 +11,13 @@ mythtv (0.22.0~trunk22348-0ubuntu1) UNRELEASED; urgency=low
     times.
   * debian/rules:
     - Remove references to firewire_tester.  We're not building it.
+  * Simplify upstart script a bit.
 
   [ Dave Walker ]
     * Incremeted to new upstream version to current trunk head.
     * Replaced sysv style init script with Upstart.
       - debian/control: Bump build-dependency on debhelper for Upstart-aware
-        dh_installinit (debhelper >=7.3.15ubuntu2). 
+        dh_installinit (debhelper >=7). 
       - debian/mythtv-backend.upstart added.
     * Standards-Version bumped to 3.8.2.
 

@@ -9,49 +9,29 @@ stop on starting shutdown
 #expect fork
 respawn
 
-env USER=mythtv
-env RUNDIR=/var/run/mythtv
-env ARGS="--logfile /var/log/mythtv/mythbackend.log --pidfile $RUNDIR/$NAME.pid"
-env EXTRA_ARGS=""
-env NICE=0
-
 pre-start script
-	USER_HOME=$(grep ^$USER /etc/passwd | awk -F : '{print $6}')
 	
 	if [ -f /etc/default/mythtv-backend ]; then
 		. /etc/default/mythtv-backend
 	fi
 
-	ARGS="$ARGS $EXTRA_ARGS"
+	USER_HOME=$(getent passwd $USER | awk -F : '{print $6}')
 
-	if [ "$ENABLE_FIREWIRE" = "TRUE" ]; then
-		log_daemon_msg "Priming Firewire "
-		su - $USER -c "/usr/bin/mythprime"
-		log_end_msg $?
-	fi
-
-	mkdir -p $RUNDIR
-	chown -R $USER $RUNDIR
-
-	unset DISPLAY
-	unset SESSION_MANAGER
-
-	if [ ! -d $USER_HOME ]; then
+	if [ -n "$USER" ] && [ ! -d $USER_HOME ]; then
 		mkdir -p $USER_HOME
+
+		#create a symbolic link for mysql.txt so it can't be overwritten
+		mkdir -p $USER_HOME/.mythtv
+		chown -R $USER $USER_HOME/.mythtv
+		if [ ! -e $USER_HOME/.mythtv/mysql.txt ]; then
+			ln -s /etc/mythtv/mysql.txt $USER_HOME/.mythtv/mysql.txt
+		fi
+		#create config.xml for bindings
+		if [ ! -e $USER_HOME/.mythtv/config.xml ]; then
+			ln -s /etc/mythtv/config.xml $USER_HOME/.mythtv/config.xml
+		fi
 	fi
 	
-	#create a symbolic link for mysql.txt so it can't be overwritten
-	mkdir -p $USER_HOME/.mythtv
-	chown -R $USER $USER_HOME/.mythtv
-	if [ ! -e $USER_HOME/.mythtv/mysql.txt ]; then
-		ln -s /etc/mythtv/mysql.txt $USER_HOME/.mythtv/mysql.txt
-	fi
-	#create config.xml for bindings
-	if [ ! -e $USER_HOME/.mythtv/config.xml ]; then
-		ln -s /etc/mythtv/config.xml $USER_HOME/.mythtv/config.xml
-	fi
-
-
 end script
 
 exec /bin/su -c "/usr/bin/mythbackend $ARGS" $USER

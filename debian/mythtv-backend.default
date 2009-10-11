@@ -1,14 +1,5 @@
 # User as which to run
-#USER=mythtv
+USER=mythtv
 
 # Replace all arguments to mythtv-backend
-#ARGS=""
-
-# Append additional arguments
-#EXTRA_ARGS="--verbose"
-
-# Set priority
-#NICE=-10
-
-# Enable firewire priming
-#ENABLE_FIREWIRE=FALSE
+ARGS="--logfile /var/log/mythtv/mythbackend.log"
