@@ -2,6 +2,8 @@
 # Mario Limonciello, March 2007
 # partially merged with startmythtv.sh by Michael Haas, October 2007
 
+pidof mythfrontend.real 2>&1 >/dev/null && wmctrl -a "MythTV Frontend" 2>/dev/null && exit 0
+
 #source our dialog functions
 . /usr/share/mythtv/dialog_functions.sh
 

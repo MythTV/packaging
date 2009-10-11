@@ -151,7 +151,7 @@ Description: Utilities used for transcoding MythTV tasks
 
 Package: mythtv-frontend
 Architecture: any
-Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, ${misc:Depends}
+Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts,wmctrl, ${misc:Depends}
 Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, mythstream, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0)
 Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0)

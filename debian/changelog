@@ -1,3 +1,13 @@
+mythtv (0.22.0~trunk22359-0ubuntu2) UNRELEASED; urgency=low
+
+  [ Gary Butters ]
+  * debian/control:
+    - Depends on wmctrl
+  * Add support to use wmctrl to bring mythfrontend to the foreground
+    if already running. (LP: #352077)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 11 Oct 2009 15:27:05 -0500
+
 mythtv (0.22.0~trunk22359-0ubuntu1) karmic; urgency=low
 
   [ Mario Limonciello ]
