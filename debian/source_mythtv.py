@@ -1,17 +1,12 @@
 import os.path, os
 import subprocess
 import apport.hookutils
-
-def is_ppa(pkg):
-    script = subprocess.Popen(['apt-cache', 'policy', pkg], stdout=subprocess.PIPE)
-    output = script.communicate()[0]
-    return 'mythbuntu' in output.split('\n')[1].replace("Installed: ", "")
+import apport.packaging
 
 def add_info(report):
     logs = [ '/var/log/mythtv/mythbackend.log',
              '/var/log/mythtv/mythfrontend.log',
              '/var/log/mythtv/jamu.log',
-             '/proc/cpuinfo'
            ]
     for log in logs:
         apport.hookutils.attach_file_if_exists(report, log)
@@ -20,7 +15,7 @@ def add_info(report):
 
     apport.hookutils.attach_hardware(report)
 
-    if is_ppa('mythtv-common'):
+    if report.has_key('Package') and not apport.packaging.is_distro_package(report['Package'].split()[0]):
         report['CrashDB'] = 'mythbuntu'
 
 ## DEBUGING ##

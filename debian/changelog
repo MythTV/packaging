@@ -9,6 +9,8 @@ mythtv (0.22.0~trunk22359-0ubuntu2) UNRELEASED; urgency=low
   [ Mario Limonciello ]
   * Add a bug_pattern_base to the mythbuntu crashdb.
   * Fix mythbuntu crashdb to refer to project not product.
+  * Simplify the apport hook so that we can catch on any set of non
+    distro packages.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sun, 11 Oct 2009 20:20:48 -0500
 
