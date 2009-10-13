@@ -768,7 +768,10 @@ Group:     Applications/Multimedia
 Requires:  httpd >= 1.3.26
 Requires:  php >= 5.1
 Requires:  php-mysql
+# php-process is broken out from main php package in Fedora 11 and later
+%if 0%{?fedora} >= 11
 Requires:  php-process
+%endif
 
 %description -n mythweb
 The web interface to MythTV.
