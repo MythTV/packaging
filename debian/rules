@@ -163,7 +163,7 @@ install: build
 
 	#upstart seems to not want to install this
 	dh_install -pmythtv-backend debian/mythtv-backend.default etc/default
-	mv etc/default/mythtv-backend.default etc/default/mythtv-backend
+	mv debian/mythtv-backend/etc/default/mythtv-backend.default etc/default/mythtv-backend
 
 	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/mythtv
 	mv debian/mythtv/usr/bin/mythfrontend debian/mythtv/usr/bin/mythfrontend.real
