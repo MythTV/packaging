@@ -1,3 +1,10 @@
+mythtv (0.22.0~trunk22413-0ubuntu2) UNRELEASED; urgency=low
+
+  * Legacy init script needs different arguments.  Only affects
+    Jaunty & earlier builds. (LP: #450278)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 13 Oct 2009 09:52:33 -0500
+
 mythtv (0.22.0~trunk22413-0ubuntu1) karmic; urgency=low
 
   [ Gary Butters ]

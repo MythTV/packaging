@@ -21,12 +21,13 @@ set -e
 
 USER=mythtv
 RUNDIR=/var/run/mythtv
-ARGS="--daemon --logfile /var/log/mythtv/mythbackend.log --pidfile $RUNDIR/$NAME.pid"
 NICE=0
 
 if [ -f /etc/default/mythtv-backend ]; then
   . /etc/default/mythtv-backend
 fi
+
+ARGS="$ARGS --daemon --pidfile $RUNDIR/$NAME.pid"
 
 mkdir -p $RUNDIR
 chown -R $USER $RUNDIR
