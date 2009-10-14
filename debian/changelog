@@ -1,3 +1,220 @@
+mythtv (0.22.0~trunk22413-0ubuntu2) UNRELEASED; urgency=low
+
+  * Legacy init script needs different arguments.  Only affects
+    Jaunty & earlier builds. (LP: #450278)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 13 Oct 2009 09:52:33 -0500
+
+mythtv (0.22.0~trunk22413-0ubuntu1) karmic; urgency=low
+
+  [ Gary Butters ]
+  * debian/control:
+    - Depends on wmctrl
+  * Add support to use wmctrl to bring mythfrontend to the foreground
+    if already running. (LP: #352077)
+
+  [ Mario Limonciello ]
+  * New upstream snapshot (r22413)
+  * Add a bug_pattern_base to the mythbuntu crashdb.
+  * Fix mythbuntu crashdb to refer to project not product.
+  * Simplify the apport hook so that we can catch on any set of non
+    distro packages.
+  * debian/rules:
+    - Make *sure* /etc/default/mythtv-backend is getting installed.
+      It seems that dh_installinit didn't want to install it when we use upstart.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Mon, 12 Oct 2009 17:13:20 -0500
+
+mythtv (0.22.0~trunk22359-0ubuntu1) karmic; urgency=low
+
+  [ Mario Limonciello ]
+  * New upstream checkout (r22359)
+    - Themes have been shuffled around a bunch.
+    - Fixes transcode arguments (LP: #429089)
+  * debian/control:
+    - Conflicts and replaces for themes that are now part of this package
+  * debian/mythtv-setup.desktop:
+    - Set to a real icon.
+  * Set up some symlinks for the dejavu fonts so they aren't installed several
+    times.
+  * debian/rules:
+    - Remove references to firewire_tester.  We're not building it.
+  * Simplify upstart script a bit.
+  * Drop old logic for checking that ~mythtv/.mythtv/mysql.txt exists, and move
+    it into the postinst.
+  * Ship a mythbuntu crashdb for apport to catch crashes and submit against the
+    mythbuntu project.
+  * Add an apport hook for mythtv packages.
+    - PPA builds will be directed at launchpad.net/mythbuntu
+    - Normal builds will end up against launchpad.net/ubuntu/+source/mythtv
+
+  [ Dave Walker ]
+    * Incremeted to new upstream version to current trunk head.
+    * Replaced sysv style init script with Upstart.
+      - debian/control: Bump build-dependency on debhelper for Upstart-aware
+        dh_installinit (debhelper >=7). 
+      - debian/mythtv-backend.upstart added.
+    * Standards-Version bumped to 3.8.2.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 11 Oct 2009 13:43:15 -0500
+
+mythtv (0.22.0~trunk22304-0ubuntu1) karmic; urgency=low
+
+  * New upstream checkout (r22304)
+    - Fixes crash during image loading of mythfrontend (LP: #445173)
+    - Disables pulseaudio harder, fixing sound playback when it's installed.
+      (LP: #436792)
+  * debian/mythtv_0.22.0.sql:
+    - Set Internal as the default player across the board.  Looks like some
+      areas were previously missed.  This only affects new installs.
+      (LP: #445984)
+  * debian/patches/10_mythfilldatabase_log.dpatch:
+    - Update to actually log to a file not a directory.
+  * debian/patches:
+    - Drop any patches that weren't actually being applied.
+  * Set default theme to Mythbuntu rather than Mythbuntu-9.10 since upstream
+    accepted it without a version number applied.
+  * debian/mythtv-database.{postinst,config}:
+    - Use the debian system maintainer account to set things up if possible.
+    - Drop broken logic for trying to detect when slow writes are needed.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 07 Oct 2009 23:24:05 -0500
+
+mythtv (0.22.0~trunk22242-0ubuntu1) karmic; urgency=low
+
+  * New upstream checkout (r22242)
+    - Fixes protocol mismatch in 22167 (LP: #440807)
+  * mythtv_0.22.0.sql:
+    - Set correct path for movie directories (LP: #440680)
+    - Set mytharchive work directory (LP: #439213)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 04 Oct 2009 20:43:11 -0500
+
+mythtv (0.22.0~trunk22167-0ubuntu1) karmic; urgency=low
+
+  * New upstream checkout (r22167).
+    - Fixes some segfaults.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 02 Oct 2009 00:23:18 -0500
+
+mythtv (0.22.0~trunk22101-0ubuntu1) karmic; urgency=low
+
+  [ Mario Limonciello ]
+  * New upstream checkout (r22101)
+  * Try to guard and make sure that ~mythtv is read from /etc/passwd 
+    rather than assuming it's /home/mythtv.
+
+  [ John Baab ]
+  * debian/mythtv-common.postinst:
+    - Added symlink for /home/mythtv/.mythtv/config.xml
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 29 Sep 2009 01:33:23 -0500
+
+mythtv (0.22.0~trunk21954-0ubuntu1) karmic; urgency=low
+
+  [ Mario Limonciello ]
+  * New upstream checkout (r21954)
+  * debian/mythtv_0.22.sql:
+    - Update to new schema, 1244.
+  * debian/mythtv.desktop:
+    - Use a real icon.
+  * debian/mythtv-frontend.files:
+    - Rename mythtv to mythavtest (see upstream 21904 for details)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 20 Sep 2009 02:13:10 -0500
+
+mythtv (0.22.0~trunk21785-0ubuntu2) karmic; urgency=low
+
+  * debian/control:
+    - Conflicts/replaces for mythcenter themes. (LP: #428211)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 11 Sep 2009 20:13:57 -0500
+
+mythtv (0.22.0~trunk21785-0ubuntu1) karmic; urgency=low
+
+  [ Mario Limonciello ]
+  * New upstream checkout (r21785)
+  * debian/mythtv-backend.postinst:
+    - Correct a typo in the postinst.
+  * debian/mythtv-common.postinst:
+    - Don't fail on actions that happen to /root (LP: #399120)
+
+  [ Thomas Mashos ]
+  * Removed default media directory db setting
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 11 Sep 2009 19:17:47 -0500
+
+mythtv (0.22.0~trunk21742-0ubuntu2) karmic; urgency=low
+
+  * debian/control:
+    - Conflicts for mythstream on mythtv-frontend (LP: #415922)
+  * debian/mythtv-backened.postinst, debian/mythtv-backend.dirs:
+    - Create Coverart, Fanart, Screenshots, and Banners directories so jamu
+      can have somewhere to store stuff to.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 10 Sep 2009 10:25:37 -0500
+
+mythtv (0.22.0~trunk21742-0ubuntu1) karmic; urgency=low
+
+  * New upstream checkout (21742)
+    - Fixes FTBFS on PPC. See changeset 21571 for more details.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 08 Sep 2009 23:08:37 -0500
+
+mythtv (0.22.0~trunk21556-0ubuntu3) karmic; urgency=low
+
+  * debian/mythtv-database.postinst:
+    - Don't hardcode the location of SQL database to a particular filename.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 02 Sep 2009 19:49:25 -0500
+
+mythtv (0.22.0~trunk21556-0ubuntu2) karmic; urgency=low
+
+  * debian/mythtv-database.postinst:
+     - Set BlackCuves as default OSD and Mythbuntu-9.10 as default theme.
+  * debian/mythtv_0.22.0.sql:
+     - Update to the current database schema (1242)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 02 Sep 2009 10:09:26 -0500
+
+mythtv (0.22.0~trunk21556-0ubuntu1) karmic; urgency=low
+
+  * New upstream checkout. (r21556)
+    - Fixes memory leaks with UPNP enabled. (LP: #200761)
+  * debian/control:
+    - Build depend on nvidia 185 or nvidia 180.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 23 Aug 2009 12:18:48 -0500
+
+mythtv (0.22.0~trunk21333-0ubuntu1) karmic; urgency=low
+
+  * New upstream checkout (21333)
+    - Fixes crash with linearblend filter. (LP: #414870)
+  * mythtv_0.21.0.sql:
+    - Set to default to Mythbuntu-9.10 theme for new installs.
+  * rules:
+    - Set the /usr/share/mythtv/*.pl file to be
+      executable as the backend wants to run it regularly.
+    - Update SOURCE_VERSION in version.sh as it's not in version.pro
+      anymore.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 17 Aug 2009 11:32:56 -0500
+
+mythtv (0.22.0~trunk21328-0ubuntu0) karmic; urgency=low
+
+  [ Thomas Mashos ]
+  * Remove arts support
+  * Add libqt4-opengl-dev as build dep
+
+  [ Mario Limonciello ]
+  * New upstream snapshot.  Switch to 0.22 based builds in preparation
+    for upstream's 0.22 release, which should be ready before karmic.
+  * debian/control: Build depend on nvidia 180
+  * debian/control: Conflicts/Replaces on mythcontrols
+  * debian/rules: enable vdpau
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 17 Aug 2009 01:23:08 -0500
+
 mythtv (0.21.0+fixes21261-0ubuntu1) karmic; urgency=low
 
   * New upstream -fixes snapshot (21261)

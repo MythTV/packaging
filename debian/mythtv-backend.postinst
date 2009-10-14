@@ -3,7 +3,17 @@
 case "$1" in
     configure)
 
-        for dir in /var/log/mythtv /var/lib/mythtv/recordings /var/cache/mythtv; do
+        for dir in /var/log/mythtv \
+                   /var/lib/mythtv/recordings \
+                   /var/cache/mythtv \
+                   /var/lib/mythtv/banners \
+                   /var/lib/mythtv/screenshots \
+                   /var/lib/mythtv/fanart \
+                   /var/lib/mythtv/coverart \
+                   /var/lib/mythtv/db_backups \
+                   /var/lib/mythtv/livetv \
+                   /var/lib/mythtv/trailers \
+                   /var/lib/mythtv/videos; do
 	    if [ -d "$dir" ] && ! dpkg-statoverride --list "$dir" >/dev/null; then
                 chown mythtv:mythtv "$dir" || true
                 chmod 2775 "$dir" || true

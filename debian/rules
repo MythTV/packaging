@@ -4,13 +4,13 @@
 
 # Watch out for superfluous whitespaces here!
 SVN_PACKAGE+=mythtv
-SVN_TYPE+=fixes
-SVN_MAJOR_RELEASE+=21
+SVN_TYPE+=trunk
+SVN_MAJOR_RELEASE+=22
 SVN_MINOR_RELEASE+=0
 SVN_REVISION:=$(shell dpkg-parsechangelog | sed -ne 's/^Version: *............\(.*\)-.*/\1/p')
-SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
-#SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)/$(SVN_PACKAGE)
-GREATER+=true
+#SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
+SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)/$(SVN_PACKAGE)
+GREATER+=false
 TAGGED_RELEASE+=
 
 LSB:=$(shell lsb_release -cs)
@@ -58,19 +58,18 @@ DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 
 include /usr/share/dpatch/dpatch.make
 
-CFLAGS += -fPIC -DPIC
-
 CONFIGURE_OPTS += --compile-type=profile
 
 #These aren't mentioned in ./configure --help
-TOP_SECRET_OPTS += --enable-libfaad --enable-libfaac --enable-libmp3lame \
-                   --enable-libxvid --enable-libfftw3
+TOP_SECRET_OPTS += --enable-libfaad --enable-libmp3lame \
+                   --enable-libxvid --enable-libfftw3 \
+                   --enable-runtime-cpudetect
 
 # --enable-glx-procaddrarb is a top secret option, but it's currently only 
 #  useful with Nvidia drivers which is why we only add it to amd64 and i386
 
 ifeq "$(DEB_BUILD_ARCH)" "i386"
-	CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-glx-procaddrarb
+	CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-glx-procaddrarb --enable-vdpau
 else
 ifeq "$(DEB_BUILD_ARCH)" "sparc"
 	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --extra-cflags="-mcpu=ultrasparc -mvis"
@@ -79,7 +78,7 @@ ifeq "$(DEB_BUILD_ARCH)" "powerpc"
 	CONFIGURE_OPTS +=
 else
 ifeq "$(DEB_BUILD_ARCH)" "amd64"
-	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-glx-procaddrarb
+	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-glx-procaddrarb --enable-vdpau
 endif
 endif
 endif
@@ -89,9 +88,6 @@ configure: configure-stamp
 configure-stamp: patch-stamp
 	dh_testdir
 
-	#give us firewire testing support (from contrib)
-	ln -sf ../../contrib/firewire_tester.c programs/firewire_tester
-
 	#for a udev transition in the making
 	[ $(UDEV) = "lib" ] && ln -s mythtv-backend.preinst.in debian/mythtv-backend.preinst || true
 
@@ -99,9 +95,9 @@ configure-stamp: patch-stamp
 	[ $(UDEV) = "etc" ] && [ -f debian/patches/30_python26_transition.dpatch ] && dpatch deapply 30_python26_transition.dpatch || true
 
 	#update SVN REVISION to show the right version
-	sed -i -e "s/\`(svnversion \$$\$${SVNTREEDIR} 2>\/dev\/null) || echo Unknown\`/$(SVN_REVISION)/" version.pro
+	sed -i -e "s/^\(\(str  *\)\?SOURCE_VERSION\)=.*$$/\1=$(SVN_REVISION)/g;" version.sh
 
-	CFLAGS="$(CFLAGS)" ./configure --prefix=/usr --enable-lirc --enable-audio-alsa \
+	./configure --prefix=/usr --runprefix=/usr --enable-lirc --enable-audio-alsa \
 	--enable-audio-oss --enable-audio-jack --enable-dvb \
 	--enable-ivtv --enable-firewire --enable-joystick-menu \
 	--enable-opengl-vsync --with-bindings=perl --enable-opengl-video \
@@ -135,10 +131,6 @@ clean:
 	#might have been made as udev transition
 	rm -f debian/mythtv-backend.preinst
 
-	#this is a symlink manually added in
-	rm -f programs/firewire_tester.c
-	rm -f programs/firewire_tester/firewire_tester.c
-
 	debian/rules unpatch
 
 	dh_clean Makefile config.log setup/Makefile programs/mythbackend/version.cpp \
@@ -164,8 +156,14 @@ install: build
 	dh_install -pmythtv-frontend debian/session-settings etc/mythtv
 	dh_install -pmythtv-backend debian/mythtv-setup.sh usr/share/mythtv
 	dh_install -pmythtv-common   debian/dialog_functions.sh usr/share/mythtv
-	dh_install -pmythtv-common   contrib/config.xml usr/share/mythtv
+	dh_install -pmythtv-common   contrib/config_files/config.xml usr/share/mythtv
 	dh_install -pmythtv-common debian/mysql.txt.dist debian/myth-halt.sh debian/myth-reboot.sh debian/myth-hibernate.sh usr/share/mythtv
+	dh_install -pmythtv-common debian/mythbuntu-crashdb.conf etc/apport/crashdb.conf.d
+	dh_install -pmythtv-common debian/source_mythtv.py usr/share/apport/package-hooks
+
+	#upstart seems to not want to install this
+	dh_install -pmythtv-backend debian/mythtv-backend.default etc/default
+	mv debian/mythtv-backend/etc/default/mythtv-backend.default debian/mythtv-backend/etc/default/mythtv-backend
 
 	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/mythtv
 	mv debian/mythtv/usr/bin/mythfrontend debian/mythtv/usr/bin/mythfrontend.real
@@ -177,6 +175,8 @@ install: build
 	install -m 644 database/*.sql debian/mythtv/usr/share/mythtv/sql
 
 	rm -f debian/mythtv/usr/share/mythtv/FreeSans.ttf debian/mythtv/usr/share/mythtv/FreeMono.ttf
+	rm -f debian/mythtv/usr/share/mythtv/Gray-OSD/*.ttf
+	rm -f debian/mythtv/usr/share/mythtv/BlackCurves-OSD/*.ttf
 	dh_link -pmythtv-common usr/share/fonts/truetype/freefont/FreeSans.ttf usr/share/mythtv/FreeSans.ttf
 	dh_link -pmythtv-common usr/share/fonts/truetype/freefont/FreeMono.ttf usr/share/mythtv/FreeMono.ttf
 
@@ -184,6 +184,7 @@ install: build
 	rm -f debian/mythtv/usr/share/mythtv/setup.xml
 
 	find debian/mythtv/usr/share -type f -exec chmod 0644 {} \;
+	chmod +x debian/mythtv/usr/share/mythtv/*.pl
 
 	dh_movefiles --sourcedir=debian/mythtv
 
@@ -222,9 +223,8 @@ binary-indep: build install
 	dh_testroot -i
 	dh_installdebconf -i
 	dh_installdocs -A README AUTHORS FAQ UPGRADING keys.txt
-	dh_installdocs -pmythtv-backend contrib/firewire_tester-README
 	dh_installdocs -pmythtv-doc docs/mythtv-HOWTO*
-	dh_installexamples -pmythtv-doc contrib/configfiles/*
+	dh_installexamples -pmythtv-doc contrib/config_files/*
 	dh_installcron -i
 	dh_installchangelogs  -i
 	dh_pycentral -plibmyth-python

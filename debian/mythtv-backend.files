@@ -2,8 +2,6 @@ usr/bin/mythbackend
 usr/bin/mythcommflag
 usr/bin/mythfilldatabase
 usr/bin/mythjobqueue
-usr/bin/mythprime
-usr/bin/firewire_tester
 usr/bin/mythtv-setup.real
 usr/share/mythtv/MSRR_scpd.xml
 usr/share/mythtv/CDS_scpd.xml

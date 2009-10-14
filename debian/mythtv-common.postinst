@@ -9,6 +9,8 @@ case "$1" in
         adduser --quiet --system --group --disabled-password --system \
             --shell /bin/sh mythtv
     fi
+    HOMEDIR=$(getent passwd mythtv | awk -F: '{ print $6 }')
+
     adduser --quiet mythtv video
     adduser --quiet mythtv audio
     adduser --quiet mythtv cdrom
@@ -72,11 +74,23 @@ EOF
 
     mv $NEW /etc/mythtv/config.xml
 
-    mkdir -p /root/.mythtv
+    mkdir -p /root/.mythtv || true
+    mkdir -p $HOMEDIR/.mythtv || true
+    chown mythtv:mythtv $HOMEDIR/.mythtv || true
 
     if [ ! -e /root/.mythtv/config.xml ]; then
-        ln -s /etc/mythtv/config.xml /root/.mythtv/config.xml
+        ln -s /etc/mythtv/config.xml /root/.mythtv/config.xml || true
     fi
+
+    if [ ! -e $HOMEDIR/.mythtv/config.xml ]; then
+        ln -s /etc/mythtv/config.xml $HOMEDIR/.mythtv/config.xml || true
+    fi
+
+    if [ ! -e $HOMEDIR/.mythtv/mysql.txt ]; then
+        ln -s /etc/mythtv/mysql.txt $HOMEDIR/.mythtv/mysql.txt || true
+    fi
+
+
 
     ;;
 

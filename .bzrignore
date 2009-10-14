@@ -19,3 +19,4 @@
 ./themes
 ./UPGRADING
 ./version.pro
+./version.sh

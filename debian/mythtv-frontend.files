@@ -2,7 +2,7 @@ usr/bin/mythfrontend.real
 usr/bin/mythlcdserver
 usr/bin/mythreplex
 usr/bin/mythshutdown
-usr/bin/mythtv
+usr/bin/mythavtest
 usr/bin/mythtvosd
 usr/bin/mythwelcome
 usr/lib/mythtv/filters

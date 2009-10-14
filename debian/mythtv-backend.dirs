@@ -2,3 +2,11 @@ usr/share/doc/mythtv-backend
 var/log/mythtv
 var/cache/mythtv
 var/lib/mythtv/recordings 
+var/lib/mythtv/videos
+var/lib/mythtv/fanart
+var/lib/mythtv/screenshots
+var/lib/mythtv/banners
+var/lib/mythtv/coverart
+var/lib/mythtv/db_backups
+var/lib/mythtv/livetv
+var/lib/mythtv/trailers

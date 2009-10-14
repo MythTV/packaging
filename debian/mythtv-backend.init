@@ -19,48 +19,21 @@ test -x $DAEMON || exit 0
 
 set -e
 
-prime_firewire()
-{
-    if [ "$ENABLE_FIREWIRE" = "TRUE" ]; then
-	log_daemon_msg "Priming Firewire "
-        su - $USER -c "/usr/bin/mythprime"
-	log_end_msg $?
-    fi
-}
-
 USER=mythtv
-USER_HOME=$(grep ^$USER /etc/passwd | awk -F : '{print $6}')
 RUNDIR=/var/run/mythtv
-ARGS="--daemon --logfile /var/log/mythtv/mythbackend.log --pidfile $RUNDIR/$NAME.pid"
-EXTRA_ARGS=""
 NICE=0
 
 if [ -f /etc/default/mythtv-backend ]; then
   . /etc/default/mythtv-backend
 fi
 
-ARGS="$ARGS $EXTRA_ARGS"
+ARGS="$ARGS --daemon --pidfile $RUNDIR/$NAME.pid"
 
 mkdir -p $RUNDIR
 chown -R $USER $RUNDIR
 
 unset DISPLAY
 unset SESSION_MANAGER
-
-if [ ! -d $USER_HOME ]; then
-	mkdir -p $USER_HOME
-fi
-
-#create a symbolic link for mysql.txt so it can't be overwritten
-mkdir -p $USER_HOME/.mythtv
-chown -R $USER $USER_HOME/.mythtv
-if [ ! -e $USER_HOME/.mythtv/mysql.txt ]; then
-        ln -s /etc/mythtv/mysql.txt $USER_HOME/.mythtv/mysql.txt
-fi
-#create config.xml for bindings
-if [ ! -e $USER_HOME/.mythtv/config.xml ]; then
-        ln -s /etc/mythtv/config.xml $USER_HOME/.mythtv/config.xml
-fi
 
 case "$1" in
   start)
@@ -74,7 +47,6 @@ case "$1" in
 			rm -f $RUNDIR/$NAME.pid
 		fi
 	fi
-	prime_firewire
 	log_daemon_msg "Starting $DESC: $NAME "
 	start-stop-daemon --start --pidfile $RUNDIR/$NAME.pid \
 		--chuid $USER --nicelevel $NICE --exec $DAEMON -- $ARGS
@@ -92,7 +64,6 @@ case "$1" in
 	start-stop-daemon --stop --oknodo --pidfile $RUNDIR/$NAME.pid \
                 --chuid $USER --exec $DAEMON -- $ARGS
 	sleep 3
-	prime_firewire
 	start-stop-daemon --start --pidfile $RUNDIR/$NAME.pid \
                 --chuid $USER --nicelevel $NICE --exec $DAEMON -- $ARGS
     log_end_msg $?

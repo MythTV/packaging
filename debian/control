@@ -5,15 +5,18 @@ Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
 XSBC-Original-Maintainer: Christian Marillat <marillat@debian.org>
 Bugs: mailto:ubuntu-mythtv@lists.ubuntu.com
 Homepage: http://www.mythtv.org
-Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~ubuntu-mythtv/mythtv/mythtv-fixes
-Vcs-Browser: http://bazaar.launchpad.net/~ubuntu-mythtv/mythtv-mythtv-fixes
-Standards-Version: 3.7.3
+Standards-Version: 3.8.3
+Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~ubuntu-mythtv/mythtv/mythtv-trunk-022
+Vcs-Browser: http://bazaar.launchpad.net/~ubuntu-mythtv/mythtv-trunk-022
 Build-Conflicts: libmyth-0.20-dev,
-                 libmyth-dev
-Build-Depends:  debhelper (>> 5.0.0),
+                 libmyth-dev,
+                 libqt3-mt-dev
+Build-Depends:  debhelper (>= 7),
                 dpatch,
                 ccache,
-                libqt3-mt-dev,
+                yasm,
+                libqt4-dev,
+                libqt4-opengl-dev,
                 libdvb-dev,
                 po-debconf,
                 texi2html,
@@ -33,7 +36,6 @@ Build-Depends:  debhelper (>> 5.0.0),
                 libasound2-dev,
                 libjack0.100.0-dev | libjack-dev,
                 libfaad-dev | libfaad2-dev,
-                libfaac-dev,
                 libmp3lame-dev | liblame-dev,
                 libvorbis-dev,
                 libdts-dev,
@@ -42,7 +44,8 @@ Build-Depends:  debhelper (>> 5.0.0),
                 lsb-release,
                 libpulse-dev,
                 xserver-xorg-video-openchrome [i386 amd64] | libchromexvmc1 [i386 amd64],
-                xserver-xorg-video-openchrome [i386 amd64] | libchromexvmcpro1 [i386 amd64]
+                xserver-xorg-video-openchrome [i386 amd64] | libchromexvmcpro1 [i386 amd64],
+		nvidia-185-libvdpau-dev [i386 amd64] | nvidia-180-libvdpau-dev [i386 amd64]
 
 Package: mythtv
 Architecture: all
@@ -80,8 +83,8 @@ Architecture: all
 Pre-Depends: pwgen
 Depends: adduser, mysql-client, ttf-freefont, ${misc:Depends}
 Suggests: mythtv-doc (= ${source:Version})
-Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393)
-Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.15-3), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393)
+Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-gray-osd, mythtv-theme-isthmus
+Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.15-3), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu
 Description: A personal video recorder application (common data)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -148,9 +151,9 @@ Description: Utilities used for transcoding MythTV tasks
 
 Package: mythtv-frontend
 Architecture: any
-Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, ${misc:Depends}
+Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts,wmctrl, ${misc:Depends}
 Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, mythstream, ntp | time-daemon | ntp-simple
-Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0)
+Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0)
 Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0)
 Description: A personal video recorder application (client)
  MythTV provides a unified graphical interface for recording and viewing
@@ -166,10 +169,10 @@ Description: A personal video recorder application (client)
  For a complete installation of all MythTV components, install the 'mythtv'
  package.
 
-Package: libmyth-0.21-0
+Package: libmyth-0.22-0
 Architecture: any
 Section: multiverse/libs
-Depends: ${shlibs:Depends}, libqt3-mt-mysql | libqt3c102-mt-mysql
+Depends: ${shlibs:Depends}, libqt4-sql-mysql
 Conflicts: mythtv (<< 0.7-5)
 Replaces: mythtv (<< 0.7-5)
 Description: Common library code for MythTV and add-on modules (runtime)
@@ -182,9 +185,9 @@ Description: Common library code for MythTV and add-on modules (runtime)
 Package: libmyth-dev
 Architecture: any
 Section: multiverse/libdevel
-Depends: libmyth-0.21-0 (= ${source:Version}), libqt3c102-mt-dev | libqt3-mt-dev
-Provides: libmyth-0.21-0-dev
-Conflicts: libmyth-0.21-dev
+Depends: libmyth-0.22-0 (= ${source:Version})
+Provides: libmyth-0.22-0-dev
+Conflicts: libmyth-0.22-dev
 Description: Common library code for MythTV and add-on modules (development)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
