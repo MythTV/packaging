@@ -1,3 +1,11 @@
+mythtv (0.22.0~zrc1-0ubuntu2) UNRELEASED; urgency=low
+
+  * debian/mythtv-backend.upstart:
+    - Stop on 016 rather than on "starting shutdown".
+      Prevents issues with the backend respawning during reboot.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 18 Oct 2009 12:57:26 -0500
+
 mythtv (0.22.0~zrc1-0ubuntu1) karmic; urgency=low
 
   * Upstream 0.22 rc1 snapshot.
