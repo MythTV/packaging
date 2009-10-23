@@ -5,6 +5,10 @@ mythtv (0.22.0~zrc1-0ubuntu2) UNRELEASED; urgency=low
       Prevents issues with the backend respawning during reboot.
   * debian/dialog.sh:
     - Use kdesudo rather than kdesu. (LP: #458177)
+  * debian/source_mythtv.py:
+    - Don't grab jamu or hardware logs.  Launchpad is timing out because
+      actual crashes are too big when uploaded, so we'll try to get these
+      pieces on a case by case basis instead.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Sun, 18 Oct 2009 12:57:26 -0500
 
