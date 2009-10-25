@@ -6,6 +6,8 @@ mythtv (0.22.0+fixes22594-0ubuntu1) UNRELEASED; urgency=low
       0.22 release.
     - Fixes upgrade scenarios from 0.21 where themes that previously
       existed are now gone.
+  * debian/patches/31_vdpau_profiles.dpatch:
+    - Backport of trunk 22466 to add VDPAU profiles for 0.22 by default.
   * debian/mythtv-backend.upstart:
     - Stop on 016 rather than on "starting shutdown".
       Prevents issues with the backend respawning during reboot.

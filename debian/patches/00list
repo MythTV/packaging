@@ -4,3 +4,4 @@
 10_mythfilldatabase_log
 16_hal_shutdown
 30_python26_transition
+31_vdpau_profiles.dpatch
