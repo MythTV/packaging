@@ -1,5 +1,11 @@
-mythtv (0.22.0~zrc1-0ubuntu2) UNRELEASED; urgency=low
+mythtv (0.22.0+fixes22594-0ubuntu1) UNRELEASED; urgency=low
 
+  * New upstream snapshot.  
+    - This should be the final one for Karmic.
+    - Unfortunately, this will be a commit or two shy of the actual
+      0.22 release.
+    - Fixes upgrade scenarios from 0.21 where themes that previously
+      existed are now gone.
   * debian/mythtv-backend.upstart:
     - Stop on 016 rather than on "starting shutdown".
       Prevents issues with the backend respawning during reboot.
