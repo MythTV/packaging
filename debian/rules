@@ -4,7 +4,7 @@
 
 # Watch out for superfluous whitespaces here!
 SVN_PACKAGE+=mythtv
-SVN_TYPE+=trunk
+SVN_TYPE+=fixes
 SVN_MAJOR_RELEASE+=22
 SVN_MINOR_RELEASE+=0
 SVN_REVISION:=$(shell dpkg-parsechangelog | sed -ne 's/^Version: *............\(.*\)-.*/\1/p')
