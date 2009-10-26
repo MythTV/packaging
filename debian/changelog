@@ -1,4 +1,4 @@
-mythtv (0.22.0+fixes22594-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0+fixes22594-0ubuntu1) karmic; urgency=low
 
   * New upstream snapshot.  
     - This should be the final one for Karmic.
