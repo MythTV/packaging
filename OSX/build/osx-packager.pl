@@ -464,6 +464,11 @@ END
     die;
 }
 
+#
+# When Trunk diverges from fixes, re-enable:
+#
+if ( 0 )
+{
 if ( $OPT{'nohead'} ) 
 { 
     my $SVNTOP="$SCRIPTDIR/.osx-packager/src/myth-svn/mythtv/.svn"; 
@@ -477,11 +482,48 @@ if ( $OPT{'nohead'} )
 elsif ( $OPT{'svnbranch'} )
 {
     &Complain(<<END);
-Note that this script can not build old branches.
+This version of this script can not build old branches.
+Please try the branched version instead. e.g.
+http://svn.mythtv.org/svn/branches/release-0-22-fixes/packaging/OSX/build/osx-packager.pl
+END
+    die;
+}
+}
+
+if ( $OPT{'svnbranch'} lt "release-0-22-fixes" )
+{
+    &Complain(<<END);
+This version of this script can not build old branches.
 Please try the branched version instead. e.g.
 http://svn.mythtv.org/svn/branches/release-0-21-fixes/mythtv/contrib/OSX/osx-packager.pl
 END
     die;
+}
+
+#
+# and put this in the fixes copy of the script:
+#
+if ( 0 )
+{
+if ( $OPT{'nohead'} )
+{
+    my $SVNTOP="$SCRIPTDIR/.osx-packager/src/myth-svn/mythtv/.svn";
+
+    if ( ! -d $SVNTOP )
+    {   die "No source code to build?"   }
+  
+    if ( ! `grep 0-22-fixes $SVNTOP/entries` )
+    {   die "Source code does not match release-0-22-fixes"   }
+}
+elsif ( ! $OPT{'svnbranch'} )
+{
+    &Complain(<<END);
+This script can only build branch release-0-22-fixes.
+To build SVN HEAD, please try the latest version instead. e.g.
+http://svn.mythtv.org/svn/trunk/packaging/OSX/build/osx-packager.pl
+END
+    die;
+}
 }
 
 our $WORKDIR = "$SCRIPTDIR/.osx-packager";
@@ -825,9 +867,13 @@ my @svnrevision   = ();
 if ( $OPT{'svnbranch'} )
 {
     $svnrepository .= 'branches/' . $OPT{'svnbranch'} . '/';
-    Die("Note that this script will not build old branches.
+# When Trunk diverges from fixes, re-enable this:
+#
+if ( 0 )
+{    die("Note that this script will not build old branches.
 Please try the branched version instead. e.g.
-http://svn.mythtv.org/svn/branches/release-0-21-fixes/mythtv/contrib/OSX/osx-packager.pl");
+http://svn.mythtv.org/svn/branches/release-0-22-fixes/mythtv/contrib/OSX/osx-packager.pl");
+}
 }
 elsif ( $OPT{'svntag'} )
 {
@@ -1007,7 +1053,7 @@ chop $AVCfw;
 ### Create each package.
 ### Note that this is a bit of a waste of disk space,
 ### because there are now multiple copies of each library.
-my @targets = ('MythFrontend', 'MythTV');
+my @targets = ('MythFrontend', 'MythAVTest');
 
 if ( $jobtools )
 {   push @targets, @targetsJT   }
