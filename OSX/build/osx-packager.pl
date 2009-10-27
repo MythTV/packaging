@@ -490,7 +490,7 @@ END
 }
 }
 
-if ( $OPT{'svnbranch'} lt "release-0-22-fixes" )
+if ( $OPT{'svnbranch'} && $OPT{'svnbranch'} lt "release-0-22-fixes" )
 {
     &Complain(<<END);
 This version of this script can not build old branches.
