@@ -1,3 +1,10 @@
+mythtv (0.22.0+fixes22594-0ubuntu2) UNRELEASED; urgency=low
+
+  * Install mythconverg_backup and mythconverg_restore scripts
+    in the mythtv-database package rather than mythtv package.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 30 Oct 2009 08:21:23 -0500
+
 mythtv (0.22.0+fixes22594-0ubuntu1) karmic; urgency=low
 
   * New upstream snapshot.  
