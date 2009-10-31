@@ -65,14 +65,13 @@ our %depend_order = (
         'freetype',
         'lame',
         'mysqlclient',
-        #'qt', 4.3 or earlier
+        #'qt-4.5',  # Needed for Mac OS X 10.6
         'qt-4.4',
       ],
   'mythplugins'
   =>  [
         'exif',
 # MythMusic needs these:
-        'libmad',
         'taglib',
         'libogg',
         'vorbis',
@@ -175,23 +174,20 @@ our %depend = (
         ],
   },
 
-  'qt'
+  'qt-4.5'
   =>
   {
     'url'
-    =>  'http://ftp.iasi.roedu.net/mirrors/ftp.trolltech.com/qt/source/qt-mac-opensource-src-4.3.1.tar.gz',
-    'url'
-    =>  'ftp://ftp.trolltech.com/qt/source/qt-mac-opensource-src-4.3.4.tar.gz',
-    'url'
-    =>  'http://wftp.tu-chemnitz.de/pub/Qt/qt/source/qt-mac-opensource-src-4.3.4.tar.gz',
+    => 'http://get.qt.nokia.com/qt/source/qt-mac-opensource-src-4.5.2.tar.gz',
     'conf-cmd'
     =>  'echo yes | MAKEFLAGS=$parallel_make_flags ./configure',
     'conf'
     =>  [
+          '-opensource',
           '-prefix', '"$PREFIX"',
           '-release',
           '-fast',
-          #'-no-exceptions',
+          '-no-exceptions',
           '-no-accessibility',
           '-no-stl',
           # When MythTV all ported:  '-no-qt3support',
@@ -201,7 +197,6 @@ our %depend = (
           '-no-sql-sqlite',
           '-no-sql-odbc',
           '-system-zlib',
-          '-qt-libjpeg',
           '-no-libtiff',
           '-no-libmng',
           '-nomake examples -nomake demos',
@@ -212,23 +207,7 @@ our %depend = (
        ],
     'make'
     =>  [
-                                               #'sub-moc',
-                                               #'sub-rcc',
-                                               #'sub-uic',
-                                               #'sub-corelib',
-                                               #'sub-xml',
-                                               #'sub-gui',
-                                               #'sub-sql',
-                                               #'sub-network',
-                                               #'sub-svg',
-                                               #'sub-script',
-                                               #'sub-opengl',
-          # When MythTV is all ported, change this to opengl?
-          'sub-qt3support-install_subtargets-ordered',
-                                               #'sub-uic3',
-                                               #'sub-plugins',
-          # For lupdate, et c.:
-          #'sub-tools-install_subtargets',     #'sub-tools',
+          'sub-plugins-install_subtargets-ordered',
           'install_qmake',
           'install_mkspecs',
         ],
@@ -243,6 +222,7 @@ our %depend = (
                    'ln -sf libQtGui.dylib      libQtGui_debug.dylib      ; '.
                    'ln -sf libQtNetwork.dylib  libQtNetwork_debug.dylib  ; '.
                    'ln -sf libQtCore.dylib     libQtCore_debug.dylib     ; '.
+                   'ln -sf libQtWebKit.dylib   libQtWebKit_debug.dylib   ; '.
                    '',
     'parallel-make' => 'yes'
   },
@@ -582,10 +562,14 @@ our %conf = (
         '--prefix=' . $PREFIX,
         '--runprefix=../Resources',
         '--enable-libfaad',
-        #'--without-bindings=perl,python',
+
         # To "cross compile" something for a lesser Mac:
         #'--tune=G3',
         #'--disable-altivec',
+
+        # Currently needed for Mac OS 10.6 builds:
+        #'--disable-mmx', '--enable-disable-mmx-for-debugging',
+        #'--disable-gpl', # plus comment out libfaad above
       ],
 );
 
