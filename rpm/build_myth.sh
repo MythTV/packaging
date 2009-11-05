@@ -187,21 +187,21 @@ EOF
     function installmyth {
         REL="$1"
         sudo rpm -Uvh --force --nodeps                                                   \
-            /usr/src/redhat/RPMS/x86_64/mythtv-docs-$VERSION-0.5.svn.r$REL.*.rpm         \
-            /usr/src/redhat/RPMS/x86_64/libmyth-$VERSION-0.5.svn.r$REL.*.rpm             \
-            /usr/src/redhat/RPMS/x86_64/libmyth-devel-$VERSION-0.5.svn.r$REL.*.rpm       \
-            /usr/src/redhat/RPMS/x86_64/mythtv-base-themes-$VERSION-0.5.svn.r$REL.*.rpm  \
-            /usr/src/redhat/RPMS/x86_64/mythtv-frontend-$VERSION-0.5.svn.r$REL.*.rpm     \
-            /usr/src/redhat/RPMS/x86_64/mythtv-backend-$VERSION-0.5.svn.r$REL.*.rpm      \
-            /usr/src/redhat/RPMS/x86_64/mythtv-setup-$VERSION-0.5.svn.r$REL.*.rpm        \
-            /usr/src/redhat/RPMS/x86_64/mythtv-common-$VERSION-0.5.svn.r$REL.*.rpm       \
-            /usr/src/redhat/RPMS/x86_64/perl-MythTV-$VERSION-0.5.svn.r$REL.*.rpm         \
-            /usr/src/redhat/RPMS/x86_64/python-MythTV-$VERSION-0.5.svn.r$REL.*.rpm       \
-            /usr/src/redhat/RPMS/x86_64/mythmusic-$VERSION-0.5.svn.r$REL.*.rpm           \
-            /usr/src/redhat/RPMS/x86_64/mythvideo-$VERSION-0.5.svn.r$REL.*.rpm           \
-            /usr/src/redhat/RPMS/x86_64/mythweather-$VERSION-0.5.svn.r$REL.*.rpm         \
-            /usr/src/redhat/RPMS/x86_64/mythtv-debuginfo-$VERSION-0.5.svn.r$REL.*.rpm
-            #/usr/src/redhat/RPMS/x86_64/mythtv-themes-$VERSION-0.5.svn.r$REL.*.rpm  \
+            /usr/src/redhat/RPMS/x86_64/mythtv-docs-$VERSION-0.6.svn.r$REL.*.rpm         \
+            /usr/src/redhat/RPMS/x86_64/libmyth-$VERSION-0.6.svn.r$REL.*.rpm             \
+            /usr/src/redhat/RPMS/x86_64/libmyth-devel-$VERSION-0.6.svn.r$REL.*.rpm       \
+            /usr/src/redhat/RPMS/x86_64/mythtv-base-themes-$VERSION-0.6.svn.r$REL.*.rpm  \
+            /usr/src/redhat/RPMS/x86_64/mythtv-frontend-$VERSION-0.6.svn.r$REL.*.rpm     \
+            /usr/src/redhat/RPMS/x86_64/mythtv-backend-$VERSION-0.6.svn.r$REL.*.rpm      \
+            /usr/src/redhat/RPMS/x86_64/mythtv-setup-$VERSION-0.6.svn.r$REL.*.rpm        \
+            /usr/src/redhat/RPMS/x86_64/mythtv-common-$VERSION-0.6.svn.r$REL.*.rpm       \
+            /usr/src/redhat/RPMS/x86_64/perl-MythTV-$VERSION-0.6.svn.r$REL.*.rpm         \
+            /usr/src/redhat/RPMS/x86_64/python-MythTV-$VERSION-0.6.svn.r$REL.*.rpm       \
+            /usr/src/redhat/RPMS/x86_64/mythmusic-$VERSION-0.6.svn.r$REL.*.rpm           \
+            /usr/src/redhat/RPMS/x86_64/mythvideo-$VERSION-0.6.svn.r$REL.*.rpm           \
+            /usr/src/redhat/RPMS/x86_64/mythweather-$VERSION-0.6.svn.r$REL.*.rpm         \
+            /usr/src/redhat/RPMS/x86_64/mythtv-debuginfo-$VERSION-0.6.svn.r$REL.*.rpm
+            #/usr/src/redhat/RPMS/x86_64/mythtv-themes-$VERSION-0.6.svn.r$REL.*.rpm  \
     }
 
 # And a function to install mythtv theme packages, since they need libmyth

@@ -65,7 +65,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r21953
+%define _svnrev r22707
 %define branch trunk
 
 #
@@ -79,7 +79,7 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version: 0.22
 %if "%{branch}" == "trunk"
-Release: 0.5.svn.%{_svnrev}%{?dist}
+Release: 0.6.svn.%{_svnrev}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -878,9 +878,9 @@ cd mythplugins-%{version}
     cd ..
 
 # Add execute bits to mythvideo python helper scripts
-    chmod +x mythvideo/mythvideo/scripts/ttvdb/*.py
-# Remove execute bits from some php mythweb files
-    chmod -x mythweb/classes/*.php
+    find mythvideo/mythvideo/scripts/ -name '*.py' -exec chmod +x "{}" \;
+# Remove unwanted execute bits from php mythweb files
+    find mythweb/ -name '*.php' -exec chmod -x "{}" \;
 
 # And back to the compile root
 cd ..
@@ -906,7 +906,6 @@ cd mythtv-%{version}
     --enable-pthreads                           \
     --enable-ffmpeg-pthreads                    \
     --enable-joystick-menu                      \
-    --enable-audio-arts                         \
     --enable-audio-alsa                         \
     --enable-audio-oss                          \
     --enable-audio-jack                         \
@@ -1464,6 +1463,12 @@ fi
 ################################################################################
 
 %changelog
+
+* Mon Nov 02 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.6.svn
+- Compensate for moved tvdb script directory
+- Make php chmod fix more robust
+- Remove --enable-audio-arts because it doesn't exist anymore
+
 * Tue Oct 06 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.5.svn
 - Remove more obsolete BR
 - Switch from fftw v2 to fftw v3
