@@ -2,6 +2,9 @@ mythtv (0.22.0+fixes22594-0ubuntu2) UNRELEASED; urgency=low
 
   * Install mythconverg_backup and mythconverg_restore scripts
     in the mythtv-database package rather than mythtv package.
+  * debian/control:
+    - Drop version number in dependencies to myth* to prevent
+      version skew from PPA builds.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Fri, 30 Oct 2009 08:21:23 -0500
 

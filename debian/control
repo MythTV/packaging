@@ -50,7 +50,7 @@ Build-Depends:  debhelper (>= 7),
 Package: mythtv
 Architecture: all
 Pre-Depends: mysql-server
-Depends: mythtv-database (= ${source:Version}), mythtv-frontend (= ${source:Version}), mythtv-backend (= ${source:Version}), ntp | time-daemon | ntp-simple
+Depends: mythtv-database, mythtv-frontend, mythtv-backend, ntp | time-daemon | ntp-simple
 Recommends: mythtv-themes
 Suggests: mythtv-doc
 Description: A personal video recorder application (client and server)
@@ -82,7 +82,7 @@ Package: mythtv-common
 Architecture: all
 Pre-Depends: pwgen
 Depends: adduser, mysql-client, ttf-freefont, ${misc:Depends}
-Suggests: mythtv-doc (= ${source:Version})
+Suggests: mythtv-doc
 Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-gray-osd, mythtv-theme-isthmus
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.15-3), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu
 Description: A personal video recorder application (common data)
@@ -105,7 +105,7 @@ Description: A personal video recorder application (documentation)
 
 Package: mythtv-database
 Architecture: all
-Depends: mythtv-common (= ${source:Version}), libdbd-mysql-perl, mysql-client, cron, ${misc:Depends}
+Depends: mythtv-common, libdbd-mysql-perl, mysql-client, cron, ${misc:Depends}
 Recommends: update-notifier | update-notifier-kde | adept-notifier
 Conflicts: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
 Replaces: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
@@ -118,7 +118,7 @@ Description: A personal video recorder application (database)
 
 Package: mythtv-backend
 Architecture: any
-Depends: mythtv-common (= ${source:Version}), mythtv-transcode-utils (= ${source:Version}), ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, libmyth-perl, xterm, ${misc:Depends}
+Depends: mythtv-common, mythtv-transcode-utils, ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, libmyth-perl, xterm, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
 Recommends: ntp | time-daemon | ntp-simple, logrotate
@@ -140,7 +140,7 @@ Description: A personal video recorder application (server)
 
 Package: mythtv-transcode-utils
 Architecture: any
-Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, transcode
+Depends: mythtv-common, ${shlibs:Depends}, transcode
 Conflicts: mythtv-backend (<< 0.20.2-0ubuntu1)
 Replaces: mythtv-backend (<< 0.20.2-0ubuntu1)
 Suggests: mythtv-backend, mytharchive
@@ -151,7 +151,7 @@ Description: Utilities used for transcoding MythTV tasks
 
 Package: mythtv-frontend
 Architecture: any
-Depends: mythtv-common (= ${source:Version}), ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts,wmctrl, ${misc:Depends}
+Depends: mythtv-common, ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts,wmctrl, ${misc:Depends}
 Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, mythstream, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0)
 Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0)
@@ -225,7 +225,7 @@ Package: mythtv-backend-master
 Architecture: all
 Section: multiverse/metapackages
 Pre-Depends: mysql-server
-Depends: ntp | time-daemon | ntp-simple, mythtv-database (= ${source:Version}), mythtv-backend (= ${source:Version})
+Depends: ntp | time-daemon | ntp-simple, mythtv-database, mythtv-backend
 Recommends: mythweb
 Description: Metapackage to setup and configure a "Master Backend" profile of MythTV.
  This package will install and configure all necessary packages for this machine
