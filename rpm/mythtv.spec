@@ -77,9 +77,9 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version: 0.22
+Version: 0.23
 %if "%{branch}" == "trunk"
-Release: 0.6.svn.%{_svnrev}%{?dist}
+Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1463,6 +1463,9 @@ fi
 ################################################################################
 
 %changelog
+
+* Sat Nov 07 2009 Chris Petersen <rpm@forevermore.net> 0.23-0.1.svn
+- New tags for trunk
 
 * Mon Nov 02 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.6.svn
 - Compensate for moved tvdb script directory
