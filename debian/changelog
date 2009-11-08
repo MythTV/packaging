@@ -1,5 +1,7 @@
-mythtv (0.22.0+fixes22594-0ubuntu2) UNRELEASED; urgency=low
+mythtv (0.22.0+fixes22772-0ubuntu1) UNRELEASED; urgency=low
 
+  * Update to 0.22 release (r22772).
+  * Drop 31_vdpau_profiles.dpatch as it's been merged upstream.
   * Install mythconverg_backup and mythconverg_restore scripts
     in the mythtv-database package rather than mythtv package.
   * debian/control:
