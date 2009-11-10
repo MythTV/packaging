@@ -7,6 +7,7 @@ mythtv (0.22.0+fixes22772-0ubuntu1) UNRELEASED; urgency=low
   * debian/control:
     - Drop version number in dependencies to myth* to prevent
       version skew from PPA builds.
+    - Build depends on open source libvdpau optionally.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Fri, 30 Oct 2009 08:21:23 -0500
 
