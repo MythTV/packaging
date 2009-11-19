@@ -233,3 +233,11 @@ Description: Metapackage to setup and configure a "Master Backend" profile of My
  be installed on the machine that will behave as the first (and possibly only)
  backend for the network.  Typically, this package will be installed on a server rather then a desktop.
  It makes no sense to install it on anything but the first backend machine on the network.
+
+Package: mythtv-dbg
+Architecture: any
+Section: multiverse/debug
+Recommends: libc6-dbg
+Description: Debug symbols for mythtv packages
+ This package provides all debug symbols for mythtv packages since ddebs
+ don't appear to always do the right thing.
