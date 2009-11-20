@@ -1,9 +1,49 @@
-mythtv (0.22.0~trunk22413-0ubuntu2) UNRELEASED; urgency=low
+mythtv (0.22.0+fixes22772-0ubuntu1) UNRELEASED; urgency=low
 
+  * Update to 0.22 release (r22772).
+  * Drop 31_vdpau_profiles.dpatch as it's been merged upstream.
+  * Install mythconverg_backup and mythconverg_restore scripts
+    in the mythtv-database package rather than mythtv package.
+  * debian/control:
+    - Drop version number in dependencies to myth* to prevent
+      version skew from PPA builds.
+    - Build depends on open source libvdpau optionally.
+  * Generate a -dbg package so that builds from a PPA can actually
+    be useful.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 30 Oct 2009 08:21:23 -0500
+
+mythtv (0.22.0+fixes22594-0ubuntu1) karmic; urgency=low
+
+  * New upstream snapshot.  
+    - This should be the final one for Karmic.
+    - Unfortunately, this will be a commit or two shy of the actual
+      0.22 release.
+    - Fixes upgrade scenarios from 0.21 where themes that previously
+      existed are now gone.
+  * debian/patches/31_vdpau_profiles.dpatch:
+    - Backport of trunk 22466 to add VDPAU profiles for 0.22 by default.
+  * debian/mythtv-backend.upstart:
+    - Stop on 016 rather than on "starting shutdown".
+      Prevents issues with the backend respawning during reboot.
+  * debian/dialog.sh:
+    - Use kdesudo rather than kdesu. (LP: #458177)
+  * debian/source_mythtv.py:
+    - Don't grab jamu or hardware logs.  Launchpad is timing out because
+      actual crashes are too big when uploaded, so we'll try to get these
+      pieces on a case by case basis instead.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 18 Oct 2009 12:57:26 -0500
+
+mythtv (0.22.0~zrc1-0ubuntu1) karmic; urgency=low
+
+  * Upstream 0.22 rc1 snapshot.
+    - Had to name the version funny because we've done builds with trunk in
+      the name and trunk is greater than rc. (zrc1 rather than rc1)
   * Legacy init script needs different arguments.  Only affects
     Jaunty & earlier builds. (LP: #450278)
 
- -- Mario Limonciello <superm1@ubuntu.com>  Tue, 13 Oct 2009 09:52:33 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 14 Oct 2009 21:18:18 -0500
 
 mythtv (0.22.0~trunk22413-0ubuntu1) karmic; urgency=low
 

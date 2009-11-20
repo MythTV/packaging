@@ -33,8 +33,8 @@ find_session()
 	DE=kde;
 	DIALOG=`which kdialog`;
 	DIALOG_TYPE=kdialog;
-        SU=`which kdesu`
-	SU_TYPE=kdesu	
+        SU=`which kdesudo`
+	SU_TYPE=kdesudo
     elif [ x"$GNOME_DESKTOP_SESSION_ID" != x"" ]; then 
 	DE=gnome;
 	DIALOG=`which zenity`;
