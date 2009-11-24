@@ -250,7 +250,7 @@ binary-arch: build install
 	dh_installcron -a
 	dh_installinfo -a
 	dh_installchangelogs  -a
-	dh_strip -a
+	dh_strip -a --dbg-package=mythtv-dbg
 	dh_link -a
 	dh_compress -a -X.pl -X.py
 	dh_fixperms -a
