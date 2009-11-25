@@ -1,6 +1,6 @@
-mythtv (0.22.0+fixes22772-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0+fixes22899-0ubuntu1) UNRELEASED; urgency=low
 
-  * Update to 0.22 release (r22772).
+  * Update to a snapshot post 0.22 release (r22899).
   * Drop 31_vdpau_profiles.dpatch as it's been merged upstream.
   * Install mythconverg_backup and mythconverg_restore scripts
     in the mythtv-database package rather than mythtv package.
