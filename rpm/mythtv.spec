@@ -44,7 +44,6 @@
 #
 # --without mytharchive
 # --without mythbrowser
-# --without mythflix
 # --without mythgallery
 # --without mythgame
 # --without mythmovies
@@ -65,7 +64,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r22707
+%define _svnrev r22952
 %define branch trunk
 
 #
@@ -113,7 +112,6 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
 %define with_mytharchive    %{?_without_mytharchive:    0} %{!?_without_mytharchive:     1}
 %define with_mythbrowser    %{?_without_mythbrowser:    0} %{!?_without_mythbrowser:     1}
-%define with_mythflix       %{?_without_mythflix:       0} %{!?_without_mythflix:        1}
 %define with_mythgallery    %{?_without_mythgallery:    0} %{!?_without_mythgallery:     1}
 %define with_mythgame       %{?_without_mythgame:       0} %{!?_without_mythgame:        1}
 %define with_mythmovies     %{?_without_mythmovies:     0} %{!?_without_mythmovies:      1}
@@ -569,7 +567,6 @@ Requires:  mythgallery    = %{version}-%{release}
 Requires:  mythgame       = %{version}-%{release}
 Requires:  mythnews       = %{version}-%{release}
 Requires:  mythbrowser    = %{version}-%{release}
-Requires:  mythflix       = %{version}-%{release}
 Requires:  mytharchive    = %{version}-%{release}
 Requires:  mythzoneminder = %{version}-%{release}
 Requires:  mythmovies     = %{version}-%{release}
@@ -620,18 +617,6 @@ navigation (right mouse opens and clos es the popup menu).
 
 MythBrowser also contains a BookmarkManager to manage the website
 links in a simple mythplugin.
-
-%endif
-################################################################################
-%if %{with_mythflix}
-
-%package -n mythflix
-Summary:   A NetFlix module for MythTV
-Group:     Applications/Multimedia
-Requires:  mythtv-frontend-api = %{mythfeapiver}
-
-%description -n mythflix
-MythFlix is a NetFlix queue manager for MythTV.
 
 %endif
 ################################################################################
@@ -1006,11 +991,6 @@ cd mythplugins-%{version}
     %else
         --disable-mythbrowser \
     %endif
-    %if %{with_mythflix}
-        --enable-mythflix \
-    %else
-        --disable-mythflix \
-    %endif
     %if %{with_mythgallery}
         --enable-mythgallery \
         --enable-exif \
@@ -1333,19 +1313,6 @@ fi
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
 %endif
 
-%if %{with_mythflix}
-%files -n mythflix
-%defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythflix/AUTHORS
-%doc mythplugins-%{version}/mythflix/COPYING
-%doc mythplugins-%{version}/mythflix/README
-%{_libdir}/mythtv/plugins/libmythflix.so
-%{_datadir}/mythtv/mythflix
-%{_datadir}/mythtv/i18n/mythflix_*.qm
-%{_datadir}/mythtv/i18n/mythflix_*.ts
-%{_datadir}/mythtv/netflix_menu.xml
-%endif
-
 %if %{with_mythgallery}
 %files -n mythgallery
 %defattr(-,root,root,-)
@@ -1463,6 +1430,9 @@ fi
 ################################################################################
 
 %changelog
+
+* Sat Dec 05 2009 Chris Petersen <rpm@forevermore.net> 0.23-0.1.svn
+- Remove MythFlix
 
 * Sat Nov 07 2009 Chris Petersen <rpm@forevermore.net> 0.23-0.1.svn
 - New tags for trunk
