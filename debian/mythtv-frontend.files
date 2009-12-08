@@ -1,7 +1,6 @@
 usr/bin/mythfrontend.real
 usr/bin/mythlcdserver
 usr/bin/mythreplex
-usr/bin/mythshutdown
 usr/bin/mythavtest
 usr/bin/mythtvosd
 usr/bin/mythwelcome

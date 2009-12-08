@@ -1,7 +1,12 @@
-mythtv (0.22.0+fixes22899-0ubuntu2) UNRELEASED; urgency=low
+mythtv (0.22.0+fixes22899-0ubuntu1+ppa1) karmic; urgency=low
 
   * debian/control:
     - Drop mythstream from suggests.
+    - Replaces on mythtv-frontend
+    - Make mythtv-common arch all.  All roles can support mythshutdown,
+      and this fixes the archive skew from an i386 and amd64 build being
+      out of sync.
+  * Move mythshutdown into mythtv-common.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Tue, 01 Dec 2009 23:25:51 -0600
 
