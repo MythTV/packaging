@@ -1,4 +1,4 @@
-mythtv (0.22.0+fixes22899-0ubuntu1+ppa1) karmic; urgency=low
+mythtv (0.22.0+fixes22899-0ubuntu1+ppa3) karmic; urgency=low
 
   * debian/control:
     - Drop mythstream from suggests.
@@ -6,7 +6,11 @@ mythtv (0.22.0+fixes22899-0ubuntu1+ppa1) karmic; urgency=low
     - Make mythtv-common arch all.  All roles can support mythshutdown,
       and this fixes the archive skew from an i386 and amd64 build being
       out of sync.
+    - Rename libmyth-perl to libmythtv-perl per debian request. (LP: #XXXXX)
   * Move mythshutdown into mythtv-common.
+  * debian/libmyth-perl.files, rename to libmythtv-perl.files
+  * debian/rules:
+    - Remove references to libmyth-perl
 
  -- Mario Limonciello <superm1@ubuntu.com>  Tue, 01 Dec 2009 23:25:51 -0600
 
