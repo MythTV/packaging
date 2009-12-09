@@ -1,4 +1,4 @@
-mythtv (0.22.0+fixes22957-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0+fixes22957-0ubuntu1) lucid; urgency=low
 
   * Update to a new snapshot. (r22957) (LP: #493405)
   * debian/control:
@@ -14,7 +14,7 @@ mythtv (0.22.0+fixes22957-0ubuntu1) UNRELEASED; urgency=low
     - Remove references to libmyth-perl
     - Set all perl and python scripts executable (LP: #482585)
 
- -- Mario Limonciello <superm1@ubuntu.com>  Tue, 01 Dec 2009 23:25:51 -0600
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 08 Dec 2009 19:45:24 -0600
 
 mythtv (0.22.0+fixes22899-0ubuntu1) lucid; urgency=low
 
