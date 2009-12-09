@@ -12,6 +12,7 @@ mythtv (0.22.0+fixes22957-0ubuntu1) UNRELEASED; urgency=low
   * debian/libmyth-perl.files, rename to libmythtv-perl.files
   * debian/rules:
     - Remove references to libmyth-perl
+    - Set all perl and python scripts executable (LP: #482585)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Tue, 01 Dec 2009 23:25:51 -0600
 

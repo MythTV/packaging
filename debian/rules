@@ -210,6 +210,7 @@ install: build
 # Install files in contrib directory.
 
 	dh_install --exclude=configfiles --exclude=.svn -pmythtv-backend contrib usr/share/doc/mythtv-backend/
+	find debian/usr/share/doc/mythtv-backend/contrib -name "*.p*" -type f -exec chmod +x {} \;
 
 	dh_install -pmythtv-database debian/mythtv.cnf etc/mysql/conf.d
 	dh_install -pmythtv-database debian/*.sql usr/share/mythtv/sql
