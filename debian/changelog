@@ -1,5 +1,6 @@
-mythtv (0.22.0+fixes22899-0ubuntu1+ppa3) karmic; urgency=low
+mythtv (0.22.0+fixes22957-0ubuntu1) UNRELEASED; urgency=low
 
+  * Update to a new snapshot. (r22957) (LP: #493405)
   * debian/control:
     - Drop mythstream from suggests.
     - Replaces on mythtv-frontend
