@@ -79,12 +79,12 @@ Description: A personal video recorder application (client and server)
  mythtv-backend (backend needing a remote database)
 
 Package: mythtv-common
-Architecture: all
+Architecture: any
 Pre-Depends: pwgen
 Depends: adduser, mysql-client, ttf-freefont, ${misc:Depends}
 Suggests: mythtv-doc
 Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-gray-osd, mythtv-theme-isthmus
-Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.15-3), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu
+Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.22.0+fixes22899), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu
 Description: A personal video recorder application (common data)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -118,7 +118,7 @@ Description: A personal video recorder application (database)
 
 Package: mythtv-backend
 Architecture: any
-Depends: mythtv-common, mythtv-transcode-utils, ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, libmyth-perl, xterm, ${misc:Depends}
+Depends: mythtv-common, mythtv-transcode-utils, ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts, libmythtv-perl, xterm, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
 Recommends: ntp | time-daemon | ntp-simple, logrotate
@@ -152,7 +152,7 @@ Description: Utilities used for transcoding MythTV tasks
 Package: mythtv-frontend
 Architecture: any
 Depends: mythtv-common, ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, ttf-liberation | msttcorefonts,wmctrl, ${misc:Depends}
-Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, mythstream, ntp | time-daemon | ntp-simple
+Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0)
 Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0)
 Description: A personal video recorder application (client)
@@ -198,9 +198,19 @@ Description: Common library code for MythTV and add-on modules (development)
 Package: libmyth-perl
 Architecture: all
 Section: multiverse/libs
+Depends: libmythtv-perl
+Description: Transitional package to move people to libmythtv-perl
+ This is a dummy package to help assist people with the transition
+ to the new package name for storing the mythtv perl bindings.
+ .
+ It can be safely removed from your system.
+
+Package: libmythtv-perl
+Architecture: all
+Section: multiverse/libs
 Depends: ${perl:Depends}, libdbi-perl, libdbd-mysql-perl, libnet-upnp-perl
-Replaces: mythtv-common (<< 0.20.98 )
-Conflicts: mythtv-common (<< 0.20.98 )
+Replaces: mythtv-common (<< 0.20.98 ), libmyth-perl
+Conflicts: mythtv-common (<< 0.20.98 ), libmyth-perl
 Description: A PERL library to access some MythTV features
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.

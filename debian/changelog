@@ -1,6 +1,24 @@
-mythtv (0.22.0+fixes22772-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0+fixes22957-0ubuntu1) lucid; urgency=low
 
-  * Update to 0.22 release (r22772).
+  * Update to a new snapshot. (r22957) (LP: #493405)
+  * debian/control:
+    - Drop mythstream from suggests.
+    - Replaces on mythtv-frontend
+    - Make mythtv-common arch all.  All roles can support mythshutdown,
+      and this fixes the archive skew from an i386 and amd64 build being
+      out of sync.
+    - Rename libmyth-perl to libmythtv-perl per debian request. (LP: #XXXXX)
+  * Move mythshutdown into mythtv-common.
+  * debian/libmyth-perl.files, rename to libmythtv-perl.files
+  * debian/rules:
+    - Remove references to libmyth-perl
+    - Set all perl and python scripts executable (LP: #482585)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 08 Dec 2009 19:45:24 -0600
+
+mythtv (0.22.0+fixes22899-0ubuntu1) lucid; urgency=low
+
+  * Update to a snapshot post 0.22 release (r22899).
   * Drop 31_vdpau_profiles.dpatch as it's been merged upstream.
   * Install mythconverg_backup and mythconverg_restore scripts
     in the mythtv-database package rather than mythtv package.
@@ -13,7 +31,7 @@ mythtv (0.22.0+fixes22772-0ubuntu1) UNRELEASED; urgency=low
   * Generate a -dbg package so that builds from a PPA can actually
     be useful.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Fri, 30 Oct 2009 08:21:23 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 24 Nov 2009 21:43:38 -0600
 
 mythtv (0.22.0+fixes22594-0ubuntu1) karmic; urgency=low
 
