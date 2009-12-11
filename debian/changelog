@@ -1,3 +1,12 @@
+mythtv (0.22.0+fixes22957-0ubuntu2) lucid; urgency=low
+
+  * debian/control:
+    - Actually do the replaces for anything below 22957 instead to cover any
+      PPA builds that people upgrade from or the very early lucid builds.
+      (LP: #494705)
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Wed, 09 Dec 2009 16:14:29 -0600
+
 mythtv (0.22.0+fixes22957-0ubuntu1) lucid; urgency=low
 
   * Update to a new snapshot. (r22957) (LP: #493405)
