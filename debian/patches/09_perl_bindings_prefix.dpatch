@@ -31,7 +31,7 @@ diff -urNad mythtv-0.21.0~fixes16127~/bindings/perl/perl.pro mythtv-0.21.0~fixes
  perl_install.target = install
  perl_install.depends = all
 -perl_install.commands = $(MAKE) -f Makefile.perl pure_install PERL_INSTALL_ROOT=\"$(INSTALL_ROOT)\"
-+perl_install.commands = $(MAKE) -f Makefile.perl pure_install INSTALLDIRS=vendor PREFIX="../../debian/libmyth-perl/usr"
++perl_install.commands = $(MAKE) -f Makefile.perl pure_install INSTALLDIRS=vendor PREFIX="../../debian/libmythtv-perl/usr"
  
  QMAKE_LINK=@-echo
  PRE_TARGETDEPS += perl_build

@@ -1,3 +1,11 @@
+mythtv (0.22.0+fixes22957-0ubuntu3) UNRELEASED; urgency=low
+
+  * debian/patches/09_perl:
+    - Correct the install path which broke when we renamed the packages.
+      (LP: #498355)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 21 Dec 2009 20:51:57 -0600
+
 mythtv (0.22.0+fixes22957-0ubuntu2) lucid; urgency=low
 
   * debian/control:
