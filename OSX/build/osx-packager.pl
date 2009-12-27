@@ -161,7 +161,7 @@ our %depend = (
   'mysqlclient' =>
   {
     'url'
-    => 'http://mysql.mirrors.pair.com/Downloads/MySQL-5.0/mysql-5.0.85.tar.gz',
+    => 'http://mysql.he.net/Downloads/MySQL-5.0/mysql-5.0.89.tar.gz',
     'conf'
     =>  [
           '--without-debug',
