@@ -6,6 +6,9 @@ mythtv (0.22.0+fixes22957-0ubuntu3) UNRELEASED; urgency=low
   * debian/control:
     - Do the replaces for anything below 22958 to cover other PPA builds
       too. (LP: #498810)
+  * debian/source_mythtv.py:
+    - Update the hook to indicate whether the user has installed mythtv-dbg
+      or mythplugins-dbg at the time of the crash.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Mon, 21 Dec 2009 20:51:57 -0600
 

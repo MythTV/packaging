@@ -12,6 +12,16 @@ def add_info(report):
 
     report['MythTVDirectoryPermissions'] = apport.hookutils.command_output(['ls', '-l', '/var/lib/mythtv'])
 
+    dbg_packages = [ 'mythtv-dbg',
+                     'mythplugins-dbg'
+                   ]
+    for dbg in dbg_packages:
+        try:
+            status = bool(apport.packaging.get_version(dbg))
+        except ValueError:
+            status = False
+        report["Installed_" + dbg] = status
+
     if report.has_key('Package') and not apport.packaging.is_distro_package(report['Package'].split()[0]):
         report['CrashDB'] = 'mythbuntu'
 
