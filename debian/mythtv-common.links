@@ -3,3 +3,5 @@ usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Oblique.ttf usr/share/mythtv/them
 usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf usr/share/mythtv/themes/Gray-OSD/DejaVuSans-Bold.ttf
 usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf usr/share/mythtv/themes/Gray-OSD/DejaVuSans.ttf
 usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Oblique.ttf usr/share/mythtv/themes/Gray-OSD/DejaVuSans-Oblique.ttf
+usr/share/apport/package-hooks/source_mythtv.py usr/share/apport/package-hooks/source_mythplugins.py
+usr/share/apport/package-hooks/source_mythtv.py usr/share/apport/package-hooks/source_myththemes.py
