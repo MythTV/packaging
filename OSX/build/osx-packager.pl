@@ -65,7 +65,7 @@ our %depend_order = (
         'freetype',
         'lame',
         'mysqlclient',
-        #'qt-4.5',  # Needed for Mac OS X 10.6
+        #'qt-4.6',  # Needed for Mac OS X 10.6
         'qt-4.4',
       ],
   'mythplugins'
@@ -174,11 +174,11 @@ our %depend = (
         ],
   },
 
-  'qt-4.5'
+  'qt-4.6'
   =>
   {
     'url'
-    => 'http://get.qt.nokia.com/qt/source/qt-mac-opensource-src-4.5.2.tar.gz',
+    => 'http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.0.tar.gz',
     'conf-cmd'
     =>  'echo yes | MAKEFLAGS=$parallel_make_flags ./configure',
     'conf'
@@ -187,7 +187,6 @@ our %depend = (
           '-prefix', '"$PREFIX"',
           '-release',
           '-fast',
-          '-no-exceptions',
           '-no-accessibility',
           '-no-stl',
           # When MythTV all ported:  '-no-qt3support',
@@ -204,6 +203,11 @@ our %depend = (
           '-no-cups',
           '-no-qdbus',
           '-no-framework',
+          '-no-multimedia',
+          '-no-phonon',
+          '-no-svg',
+          '-no-javascript-jit',
+          '-no-scripttools',
        ],
     'make'
     =>  [
