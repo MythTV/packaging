@@ -48,6 +48,7 @@
 # --without mythgame
 # --without mythmovies
 # --without mythmusic
+# --without mythnetvision
 # --without mythnews
 # --without mythvideo
 # --without mythweather
@@ -64,7 +65,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r22952
+%define _svnrev r23139
 %define branch trunk
 
 #
@@ -121,6 +122,7 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_mythweather    %{?_without_mythweather:    0} %{!?_without_mythweather:     1}
 %define with_mythweb        %{?_without_mythweb:        0} %{!?_without_mythweb:         1}
 %define with_mythzoneminder %{?_without_mythzoneminder: 0} %{!?_without_mythzoneminder:  1}
+%define with_mythnetvision %{?_without_mythnetvision: 0} %{!?_without_mythnetvision:  1}
 
 ################################################################################
 
@@ -271,6 +273,9 @@ Requires:       perl(LWP::Simple)
 %endif
 
 %if %{with_mythzoneminder}
+%endif
+
+%if %{with_mythnetvision}
 %endif
 
 %endif
@@ -571,6 +576,7 @@ Requires:  mytharchive    = %{version}-%{release}
 Requires:  mythzoneminder = %{version}-%{release}
 Requires:  mythmovies     = %{version}-%{release}
 Requires:  mythweb        = %{version}-%{release}
+Requires:  mythnetvision  = %{version}-%{release}
 
 %description -n mythplugins
 This is a consolidation of all the official MythTV plugins that used to be
@@ -735,7 +741,7 @@ transcode package.
 %if %{with_mythweather}
 
 %package -n mythweather
-Summary:   A MythTV module that displays a weather forcast
+Summary:   A MythTV module that displays a weather forecast
 Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  perl(XML::SAX::Base)
@@ -775,6 +781,19 @@ MythZoneMinder is a plugin to interface to some of the features of
 ZoneMinder. You can use it to view a status window similar to the
 console window in ZM. Also there are screens to view live camera shots
 and replay recorded events.
+
+%endif
+################################################################################
+%if %{with_mythnetvision}
+
+%package -n mythnetvision
+Summary:   A MythTV module for Internet video on demand
+Group:     Applications/Multimedia
+Requires:  mythtv-frontend-api = %{mythfeapiver}
+
+%description -n mythnetvision
+A MythTV module that supports searching and browsing of Internet video
+on demand content.
 
 %endif
 ################################################################################
@@ -1039,6 +1058,11 @@ cd mythplugins-%{version}
         --enable-mythzoneminder \
     %else
         --disable-mythzoneminder \
+    %endif
+    %if %{with_mythnetvision}
+        --enable-mythnetvision \
+    %else
+        --disable-mythnetvision \
     %endif
         --enable-opengl \
         --enable-libvisual \
@@ -1425,11 +1449,24 @@ fi
 %{_datadir}/mythtv/i18n/mythzoneminder_*.qm
 %endif
 
+%if %{with_mythnetvision}
+%files -n mythnetvision
+%defattr(-,root,root,-)
+%doc mythplugins-%{version}/mythnetvision/AUTHORS
+%doc mythplugins-%{version}/mythnetvision/ChangeLog
+%doc mythplugins-%{version}/mythnetvision/README
+%{_libdir}/mythtv/plugins/libmythnetvision.so
+%{_datadir}/mythtv/mythnetvision
+%endif
+
 %endif
 
 ################################################################################
 
 %changelog
+
+* Wed Jan 13 2010 Harry Orenstein <hospam@verizon.net> 0.23-0.1.svn
+- Add MythNetVision
 
 * Sat Dec 05 2009 Chris Petersen <rpm@forevermore.net> 0.23-0.1.svn
 - Remove MythFlix

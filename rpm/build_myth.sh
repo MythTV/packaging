@@ -198,6 +198,7 @@ EOF
             /usr/src/redhat/RPMS/x86_64/perl-MythTV-$VERSION-0.1.svn.r$REL.*.rpm         \
             /usr/src/redhat/RPMS/x86_64/python-MythTV-$VERSION-0.1.svn.r$REL.*.rpm       \
             /usr/src/redhat/RPMS/x86_64/mythmusic-$VERSION-0.1.svn.r$REL.*.rpm           \
+            /usr/src/redhat/RPMS/x86_64/mythnetvision-$VERSION-0.1.svn.r$REL.*.rpm       \
             /usr/src/redhat/RPMS/x86_64/mythvideo-$VERSION-0.1.svn.r$REL.*.rpm           \
             /usr/src/redhat/RPMS/x86_64/mythweather-$VERSION-0.1.svn.r$REL.*.rpm         \
             /usr/src/redhat/RPMS/x86_64/mythtv-debuginfo-$VERSION-0.1.svn.r$REL.*.rpm
