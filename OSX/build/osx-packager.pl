@@ -325,6 +325,7 @@ osx-packager.pl - build OS X binary packages for MythTV
    -enable-jobtools build commflag/jobqueue  as well as the frontend
    -profile         build with compile-type=profile
    -debug           build with compile-type=debug
+   -m32             build for a 32-bit environment
    -plugins <str>   comma-separated list of plugins to include
 
 =head1 DESCRIPTION
@@ -394,6 +395,7 @@ Getopt::Long::GetOptions(\%OPT,
                          'enable-jobtools',
                          'profile',
                          'debug',
+                         'm32',
                          'plugins=s',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
@@ -631,6 +633,18 @@ if ( $cpus gt 1 )
 }
 
 $parallel_make .= " $parallel_make_flags";
+
+# We set 32-bit mode via environment variables.
+# The messier alternative would be to tweak all the configure arguments.
+if ($OPT{'m32'})
+{
+    &Verbose('Forcing 32-bit mode');
+    $ENV{'CFLAGS'}    .= ' -m32';
+    $ENV{'CPPFLAGS'}  .= ' -m32';
+    $ENV{'CXXFLAGS'}  .= ' -m32';
+    $ENV{'ECXXFLAGS'} .= ' -m32';  # MythTV configure
+    $ENV{'LDFLAGS'}   .= ' -m32';
+}
 
 ### Distclean?
 if ($OPT{'distclean'})
