@@ -1,5 +1,6 @@
-mythtv (0.22.0+fixes22957-0ubuntu3) UNRELEASED; urgency=low
+mythtv (0.22.0+fixes23193-0ubuntu3) UNRELEASED; urgency=low
 
+  * New snapshot (r23193)
   * debian/patches/09_perl:
     - Correct the install path which broke when we renamed the packages.
       (LP: #498355)
