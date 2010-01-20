@@ -1,5 +1,6 @@
-mythtv (0.22.0+fixes22957-0ubuntu3) UNRELEASED; urgency=low
+mythtv (0.22.0+fixes23193-0ubuntu1) lucid; urgency=low
 
+  * New snapshot (r23193)
   * debian/patches/09_perl:
     - Correct the install path which broke when we renamed the packages.
       (LP: #498355)
@@ -9,8 +10,13 @@ mythtv (0.22.0+fixes22957-0ubuntu3) UNRELEASED; urgency=low
   * debian/source_mythtv.py:
     - Update the hook to indicate whether the user has installed mythtv-dbg
       or mythplugins-dbg at the time of the crash.
+  * debian/mythtv-common.links:
+    - Create symlinks for the mythplugins and myththemes source packages to
+      use the same apport hook as mythtv.
+  * debian/rules:
+    - Try harder to mark perl and python scripts executable.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Mon, 21 Dec 2009 20:51:57 -0600
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 19 Jan 2010 20:43:24 -0600
 
 mythtv (0.22.0+fixes22957-0ubuntu2) lucid; urgency=low
 

@@ -229,7 +229,7 @@ binary-indep: build install
 	dh_link -i
 	dh_perl -i
 	dh_compress -i -X.pl -X.py
-	dh_fixperms -i
+	dh_fixperms -i -X.pl -X.py
 	dh_installdeb -i
 	dh_gencontrol -i
 	dh_md5sums -i
@@ -251,7 +251,7 @@ binary-arch: build install
 	dh_strip -a --dbg-package=mythtv-dbg
 	dh_link -a
 	dh_compress -a -X.pl -X.py
-	dh_fixperms -a
+	dh_fixperms -a -X.pl -X.py
 	dh_makeshlibs -a -V -Xusr/lib/mythtv/filters
 	dh_installdeb -a
 	dh_shlibdeps -a
