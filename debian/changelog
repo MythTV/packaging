@@ -13,6 +13,8 @@ mythtv (0.22.0+fixes23193-0ubuntu3) UNRELEASED; urgency=low
   * debian/mythtv-common.links:
     - Create symlinks for the mythplugins and myththemes source packages to
       use the same apport hook as mythtv.
+  * debian/rules:
+    - Try harder to mark perl and python scripts executable.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Mon, 21 Dec 2009 20:51:57 -0600
 
