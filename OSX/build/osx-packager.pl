@@ -907,6 +907,9 @@ if (! $OPT{'nohead'})
 else
 {   &Syscall("mkdir -p $SVNDIR/mythtv/config")   }
 
+# Make a convenience (non-hidden) directory for editing src code:
+system("ln -sf $SVNDIR $SCRIPTDIR/src");
+
 # Build MythTV and any plugins
 foreach my $comp (@comps)
 {
