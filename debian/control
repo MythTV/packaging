@@ -6,8 +6,8 @@ XSBC-Original-Maintainer: Christian Marillat <marillat@debian.org>
 Bugs: mailto:ubuntu-mythtv@lists.ubuntu.com
 Homepage: http://www.mythtv.org
 Standards-Version: 3.8.3
-Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~ubuntu-mythtv/mythtv/mythtv-trunk-022
-Vcs-Browser: http://bazaar.launchpad.net/~ubuntu-mythtv/mythtv-trunk-022
+Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
+Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
 Build-Conflicts: libmyth-0.20-dev,
                  libmyth-dev,
                  libqt3-mt-dev
