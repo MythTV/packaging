@@ -1,3 +1,9 @@
+mythtv (0.23.0~trunk23193-0ubuntu1) UNRELEASED; urgency=low
+
+  * Bump builds to start with 0.23
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 21 Jan 2010 00:42:40 -0600
+
 mythtv (0.22.0+fixes23193-0ubuntu1) lucid; urgency=low
 
   * New snapshot (r23193)
