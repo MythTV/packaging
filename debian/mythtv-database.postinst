@@ -110,12 +110,14 @@ case "$1" in
 
     #For database fillings
     #and mysql binding checks
-    db_get mythtv/public_bind
-    if [ $RET = true ]; then
-        NEWIP=`ifconfig | grep "inet addr:" | grep --invert-match 127.0.0.1 | sed ' s/inet addr://g; s/^[ \t]*//;s/[ \t]*$//; q;' | awk '{print $1}'`
-        sed -i -e 's/^#bind/bind/' ${MYSQLCONFIG}
-    else
-        sed -i -e 's/^bind/#bind/' ${MYSQLCONFIG}
+    if [ -f "${MYSQLCONFIG}" ]; then
+        db_get mythtv/public_bind
+        if [ $RET = true ]; then
+            NEWIP=`ifconfig | grep "inet addr:" | grep --invert-match 127.0.0.1 | sed ' s/inet addr://g; s/^[ \t]*//;s/[ \t]*$//; q;' | awk '{print $1}'`
+            sed -i -e 's/^#bind/bind/' ${MYSQLCONFIG}
+        else
+            sed -i -e 's/^bind/#bind/' ${MYSQLCONFIG}
+        fi
     fi
 
     #Check for existing database
