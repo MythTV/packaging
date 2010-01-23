@@ -65,7 +65,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r23139
+%define _svnrev r23251
 %define branch trunk
 
 #
@@ -122,7 +122,7 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_mythweather    %{?_without_mythweather:    0} %{!?_without_mythweather:     1}
 %define with_mythweb        %{?_without_mythweb:        0} %{!?_without_mythweb:         1}
 %define with_mythzoneminder %{?_without_mythzoneminder: 0} %{!?_without_mythzoneminder:  1}
-%define with_mythnetvision %{?_without_mythnetvision: 0} %{!?_without_mythnetvision:  1}
+%define with_mythnetvision  %{?_without_mythnetvision:  0} %{!?_without_mythnetvision:   1}
 
 ################################################################################
 
@@ -790,6 +790,7 @@ and replay recorded events.
 Summary:   A MythTV module for Internet video on demand
 Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
+Requires:  mythbrowser = %{version}-%{release}
 
 %description -n mythnetvision
 A MythTV module that supports searching and browsing of Internet video
@@ -1464,6 +1465,9 @@ fi
 ################################################################################
 
 %changelog
+
+* Sat Jan 23 2010 Chris Petersen <rpm@forevermore.net> 0.23-0.1.svn
+- Add MythNetVision requirement for MythBrowser
 
 * Wed Jan 13 2010 Harry Orenstein <hospam@verizon.net> 0.23-0.1.svn
 - Add MythNetVision
