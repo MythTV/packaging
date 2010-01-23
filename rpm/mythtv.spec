@@ -65,7 +65,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r23251
+%define _svnrev r23252
 %define branch trunk
 
 #
@@ -1458,6 +1458,7 @@ fi
 %doc mythplugins-%{version}/mythnetvision/README
 %{_libdir}/mythtv/plugins/libmythnetvision.so
 %{_datadir}/mythtv/mythnetvision
+%{_datadir}/mythtv/netvisionmenu.xml
 %endif
 
 %endif
