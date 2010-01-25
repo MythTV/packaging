@@ -790,6 +790,17 @@ push @{$expect},
   shell   => ['cd '.$sources.'taglib-1.5-mingw-bin',
               "cp -vr * $unixmsys"],
   comment => 'installing: msys taglib' ],
+# Hack for mythplugins/configure to detect taglib version:
+[ file    => $mingw.'bin/taglib-config',
+  write   => [$mingw.'bin/taglib-config',
+'#!/bin/sh
+case $1 in
+  "--version") echo 1.5    ;;
+  "--prefix")  echo /mingw ;;
+esac'] ],
+[ always  => [],
+  shell   => ['chmod 755 '.$mingw.'bin/taglib-config'] ],
+  shell   => ["chmod 755 $mingw/bin/taglib-config"] ],
               
 # NOTE: --disable-fast-perl fixes makefiles that otherwise have bits like below:
 # INSTALL = ../C:/msys/1.0/bin/install -c -p
@@ -860,28 +871,6 @@ push @{$expect},
               "make install"],
   comment => 'building and installing: mingw libvorbis' ],
 
-# confirmed latest source version as at 26-12-2008 
-#( flac-win binary packages are unsuitable in this case)
-[ archive => $sources.'flac-1.2.1.tar.gz',  
-  fetch   => 'http://'.$sourceforge.'/sourceforge/flac/flac-1.2.1.tar.gz'],
-[ dir     => $sources.'flac-1.2.1', 
-  extract => $sources.'flac-1.2.1.tar' ],
-[ grep    => ['\#define SIZE_T_MAX UINT_MAX',$mingw.'include/limits.h'], 
-  shell   => "echo \\#define SIZE_T_MAX UINT_MAX >> $mingw/include/limits.h" ], 
-[ file    => $mingw.'lib/libFLAC.a', 
-  shell   => ["cd $unixsources/flac-1.2.1",
-              "./configure --prefix=/mingw",
-              "make",
-              "make install"],
-  comment => 'building and installing: mingw flac/FLAC' ],
-[ file    => $msys.'lib/libFLAC.a', 
-  shell   => ["cd $unixsources/flac-1.2.1",
-              "./configure --prefix=/usr",
-              "make",
-              "make install"],
-  comment => 'building and installing: msys flac/FLAC' ],
- 
- 
 #[ archive => $sources.'libcdaudio-0.99.12p2.tar.gz',
 #  fetch   => 'http://'.$sourceforge.
 #             '/sourceforge/libcdaudio/libcdaudio-0.99.12p2.tar.gz'],
@@ -930,19 +919,6 @@ push @{$expect},
   shell   => ["cd $unixsources/SDL-1.2.13",
               "make install-sdl prefix=/usr"],
   comment => 'building and installing: SDL' ],
-
-#  as at 26-12-2008 3.8.2 is latest stable. 
-# NOTE: 3.9.0 and 4.0.0 are in beta and alpha respectively.
-[ archive => $sources.'tiff-3.8.2.tar.gz',  
-  fetch   => 'ftp://ftp.remotesensing.org/pub/libtiff/tiff-3.8.2.tar.gz'],
-[ dir     => $sources.'tiff-3.8.2', 
-  extract => $sources.'tiff-3.8.2.tar' ],
-[ file    => $sources.'tiff-3.8.2/Makefile', 
-  shell   => ["cd $unixsources/tiff-3.8.2",
-              "./configure --prefix=/usr",
-              "make",
-              "make install"],
-  comment => 'building and installing: TIFF' ],
 
 # confirmed latest source version as at 26-12-2008
 [ archive => $sources.'libexif-0.6.17.tar.gz',  
