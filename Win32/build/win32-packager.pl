@@ -365,8 +365,8 @@ if ($version == '0.21') {
 
 push @{$expect},
 
-[ archive => $sources.'MSYS-1.0.10.exe',
-  'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw/MSYS-1.0.10.exe',
+[ archive => $sources.'MSYS-1.0.11.exe',
+  'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw/MSYS-1.0.11.exe',
   comment => 'Get the MSYS and addons:' ] ,
 [ archive => $sources.'bash-3.1-MSYS-1.0.11-1.tar.bz2',
   'fetch' => 'http://'.$sourceforge.
@@ -383,7 +383,7 @@ push @{$expect},
 
 # install MSYS, it supplies the 'tar' executable, among others:
 [ file    => $msys.'bin/tar.exe',
-  exec    => $dossources.'MSYS-1.0.10.exe',
+  exec    => $dossources.'MSYS-1.0.11.exe',
   comment => 'Install MSYS, it supplies the tar executable, among others. You '.
              'should follow prompts, AND do post-install in DOS box.' ] ,
 
