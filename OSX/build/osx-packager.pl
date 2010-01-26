@@ -190,9 +190,15 @@ our %depend = (
           '-no-accessibility',
           '-no-stl',
           # When MythTV all ported:  '-no-qt3support',
+
+          # When MySQL 5.1 is used, its plugin.h file clashes with Qt's.
+          # To work around that, replace these three lines:
           '-I"$PREFIX/include/mysql"',
           '-L"$PREFIX/lib/mysql"',
           '-qt-sql-mysql',
+          # with:
+          # '-qt-sql-mysql -mysql_config "$PREFIX/bin/mysql_config"',
+
           '-no-sql-sqlite',
           '-no-sql-odbc',
           '-system-zlib',
