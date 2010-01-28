@@ -1098,7 +1098,7 @@ cd mythtv-%{version}
     mkdir -p %{buildroot}%{_sysconfdir}/mythtv
 
 # Fix permissions on executable python bindings
-    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth{DB,TV}.py
+    chmod +x %{buildroot}%{python_sitelib}/MythTV/__init__.py
 
 # mysql.txt and other config/init files
     install -m 644 %{SOURCE110} %{buildroot}%{_sysconfdir}/mythtv/
