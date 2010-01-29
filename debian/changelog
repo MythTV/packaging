@@ -2,6 +2,9 @@ mythtv (0.22.0+fixes23193-0ubuntu2) UNRELEASED; urgency=low
 
   * debian/mythtv-database.postinst:
     - If the mythtv.cnf conffile is missing, don't freak out. (LP: #477926)
+  * debian/control:
+    - Build depends on libvdpau-dev for armel too.  We don't know if
+      tegra2's will be using VDPAU, but if they do, this will help.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Fri, 22 Jan 2010 00:30:28 -0600
 
