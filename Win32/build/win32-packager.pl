@@ -455,8 +455,7 @@ push @{$expect},
   comment => 'unzip.exe - Get a precompiled '.
              'native Win32 version from InfoZip' ],
 [ archive => $sources.'unzip/unz552xN.exe',
-  'fetch' => 'ftp://tug.ctan.org/tex-archive'.
-             '/tools/zip/info-zip/WIN32/unz552xN.exe'],
+  'fetch' => 'ftp://ftp.info-zip.org/pub/infozip/win32/unz552xn.exe'],
 [ file    => $sources.'unzip/unzip.exe',
   exec    => 'chdir '.$dossources.'unzip && '.
              $dossources.'unzip/unz552xN.exe' ],
