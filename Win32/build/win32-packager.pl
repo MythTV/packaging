@@ -799,7 +799,6 @@ case $1 in
   "--prefix")  echo /mingw ;;
 esac'] ],
 [ always  => [],
-  shell   => ['chmod 755 '.$mingw.'bin/taglib-config'] ],
   shell   => ["chmod 755 $mingw/bin/taglib-config"] ],
               
 # NOTE: --disable-fast-perl fixes makefiles that otherwise have bits like below:
