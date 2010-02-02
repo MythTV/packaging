@@ -510,17 +510,17 @@ push @{$expect},
 
 # fetch mysql
 # primary server site is:
-# http://dev.mysql.com/get/Downloads/MySQL-5.0/
-#     mysql-essential-5.1.30-win32.msi/from/http://mysql.mirrors.ilisys.com.au/
-# alternate: http://mysql.mirrors.ilisys.com.au/Downloads/MySQL-5.1/
-#     mysql-essential-5.1.30-win32.msi
-[ archive => $sources.'mysql-essential-5.1.36-win32.msi',
+# http://dev.mysql.com/downloads/mysql/5.1.html#downloads
+# but that has no mirror autoselection, so we have just picked one.
+# If this fails you, try another mirror, or maybe an archived version:
+# http://downloads.mysql.com/archives/mysql-5.1/mysql-essential-5.1.42-win32.msi
+[ archive => $sources.'mysql-essential-5.1.43-win32.msi',
   'fetch' => 'http://mysql.mirrors.ilisys.com.au/Downloads/'.
-             'MySQL-5.1/mysql-essential-5.1.36-win32.msi',
+             'MySQL-5.1/mysql-essential-5.1.43-win32.msi',
   comment => 'fetch mysql binaries - this is a big download(35MB) '.
              'so it might take a while' ],
 [ file    => $mysql.'bin/libmySQL.dll',
-  exec    => $dossources.'mysql-essential-5.1.36-win32.msi INSTALLLEVEL=2',
+  exec    => $dossources.'mysql-essential-5.1.43-win32.msi INSTALLLEVEL=2',
   comment => 'Install mysql - be sure to choose to do a "COMPLETE" install. '.
              'You should also choose NOT to "configure the server now" ' ],
 
@@ -601,7 +601,7 @@ push @{$expect},
 ' ],comment => 'write the patch for the the sspi.h file'],
 # apply it!?
 [ grep    => ['subauth.h',$mingw.'include/sspi.h'], 
-  shell   => ["cd /mingw/include","patch -p1 < sspi_h.patch"],
+  shell   => ["cd /mingw/include","patch -p0 < sspi_h.patch"],
   comment => 'Apply sspi.h patch file, if not already applied....' ],
 
 #[ pause => 'check  patch.... press [enter] to continue !'],
