@@ -1188,7 +1188,7 @@ rm -rf %{buildroot}
 %pre backend
 # Add the "mythtv" user, with membership in the video group
 /usr/sbin/useradd -c "mythtvbackend User" \
-    -s /sbin/nologin -r -d %{_varlibdir}/mythtv -G video mythtv 2> /dev/null || :
+    -s /sbin/nologin -r -d %{_localstatedir}/lib/mythtv -G video mythtv 2> /dev/null || :
 
 %post backend
 /sbin/chkconfig --add mythbackend
@@ -1303,9 +1303,7 @@ fi
 %defattr(-,root,root,-)
 %dir %{python_sitelib}/MythTV/
 %{python_sitelib}/MythTV/*
-%if 0%{?fedora} >= 9
 %{python_sitelib}/MythTV-*.egg-info
-%endif
 %endif
 
 %if %{with_plugins}
