@@ -131,6 +131,9 @@ clean:
 	#might have been made as udev transition
 	rm -f debian/mythtv-backend.preinst
 
+	#We copy the upstream script instead
+	rm -f debian/mythtv-backend.upstart
+
 	debian/rules unpatch
 
 	dh_clean Makefile config.log setup/Makefile programs/mythbackend/version.cpp \
@@ -208,6 +211,7 @@ install: build
 	dh_installdirs -pmythtv-common /etc/mythtv
 
 # Install files in contrib directory.
+	cp contrib/Linux/init_scripts/upstart.mythtv-backend.conf debian/mythtv-backend.upstart
 
 	dh_install --exclude=configfiles --exclude=.svn -pmythtv-backend contrib usr/share/doc/mythtv-backend/
 	find debian/mythtv-backend/usr/share/doc/mythtv-backend/contrib -name "*.p*" -type f -exec chmod +x {} \;
