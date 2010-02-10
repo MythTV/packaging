@@ -10,6 +10,8 @@ mythtv (0.23.0~trunk23193-0ubuntu1) UNRELEASED; urgency=low
     - Drop 16_hal_shutdown.  No longer necessary after r23518.
   * Allow shutdowns when mythtv is running (LP: #174712)
     - Comes from upstream changeset r23455.
+  * Mythbackend now supports the --user flag to drop permissions from
+    upstream changeset r23521.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Thu, 21 Jan 2010 00:42:40 -0600
 
