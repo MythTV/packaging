@@ -14,6 +14,7 @@ mythtv (0.23.0~trunk23193-0ubuntu1) UNRELEASED; urgency=low
     upstream changeset r23521.
   * Use the upstart script from the upstream contrib directory instead.
     Now uses the --user flag to drop permissions. (LP: #445953)
+  * Update 30_python26_transition for changes upstream.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Thu, 21 Jan 2010 00:42:40 -0600
 
