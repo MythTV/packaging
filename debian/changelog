@@ -4,6 +4,7 @@ mythtv (0.23.0~trunk23193-0ubuntu1) UNRELEASED; urgency=low
   * debian/control: 
     - Fix vcs-bzr
     - Update depends to include ttf-droid, ttf-liberation, and ttf-dejavu.
+      (LP: #224114)
   * Introduces stable pulseaudio support (In Theory! :)) (LP: #311328)
   * Print message to stdout for MythTV.pm (LP: #327406)
   * debian/patches:
