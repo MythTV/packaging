@@ -35,7 +35,7 @@ info:
 		"Delimitter: $(DELIMITTER)" \
 		"Branch: $(SVN_BRANCH)" \
 		"Suffix: $(SUFFIX)" \
-		"Tarfile: $(TARFILE)" 
+		"Tarfile: $(TARFILE)"
 
 #                                      #
 # Architecture Independent Build flags #
@@ -55,13 +55,6 @@ CONFIGURE_OPTS +=   --compile-type=profile \
 					--with-bindings=perl \
 					--enable-opengl-video \
 					--enable-ffmpeg-pthreads
-
-#                                              #
-# These aren't mentioned in ./configure --help #
-#                                              #
-TOP_SECRET_OPTS += --enable-libfaad --enable-libmp3lame \
-                   --enable-libxvid --enable-libfftw3 \
-                   --enable-runtime-cpudetect
 
 #                                    #
 # Architecture dependent build flags #
@@ -85,7 +78,7 @@ override_dh_auto_configure:
 	sed -i -e "s/^\(\(str  *\)\?SOURCE_VERSION\)=.*$$/\1=$(SVN_REVISION)/g;" version.sh
 
 	#Run configure
-	./configure $(CONFIGURE_OPTS) $(TOP_SECRET_OPTS)
+	./configure $(CONFIGURE_OPTS)
 
 override_dh_auto_build:
 	qmake -o Makefile PREFIX=/usr mythtv.pro
@@ -93,7 +86,7 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/tmp
-	
+
 	#Make sure python/perl scripts are executable
 	find debian/tmp/usr/share -name "*.p[y|l]" -type f -exec chmod 755 {} \;
 

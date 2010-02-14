@@ -34,6 +34,7 @@ mythtv (0.23.0~trunk23548-0ubuntu1) UNRELEASED; urgency=low
   * Convert all .files into .install.
   * Refresh patches as quilt format instead
   * Rewrite get-orig-source rules to parse the changelog for version info.
+  * Drop any of the Top Secret Options build flags
 
  -- Mario Limonciello <superm1@ubuntu.com>  Thu, 21 Jan 2010 00:42:40 -0600
 
