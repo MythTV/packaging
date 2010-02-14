@@ -33,6 +33,7 @@ mythtv (0.23.0~trunk23548-0ubuntu1) UNRELEASED; urgency=low
   * Add debian/README.source as a symlink to the quilt README.source
   * Convert all .files into .install.
   * Refresh patches as quilt format instead
+  * Rewrite get-orig-source rules to parse the changelog for version info.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Thu, 21 Jan 2010 00:42:40 -0600
 

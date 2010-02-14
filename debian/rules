@@ -1,28 +1,23 @@
 #!/usr/bin/make -f
 
-# Watch out for superfluous whitespaces here!
-SVN_PACKAGE+=mythtv
-SVN_TYPE+=trunk
-SVN_MAJOR_RELEASE+=23
-SVN_MINOR_RELEASE+=0
+#                 #
+# get-orig-source #
+#                 #
+SVN_PACKAGE+=$(shell dpkg-parsechangelog | sed -ne 's/^Source: *\(.*\)/\1/p')
+SVN_TYPE+=$(shell dpkg-parsechangelog | sed -rne 's/^Version: *.......(.*).....-.*/\1/p')
+SVN_MAJOR_RELEASE+=$(shell dpkg-parsechangelog | sed -rne 's/^Version: *..(.*).............-.*/\1/p')
+SVN_MINOR_RELEASE+=$(shell dpkg-parsechangelog | sed -rne 's/^Version: *.....(.*)...........-.*/\1/p')
 SVN_REVISION:=$(shell dpkg-parsechangelog | sed -ne 's/^Version: *............\(.*\)-.*/\1/p')
-#SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
-SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)/$(SVN_PACKAGE)
-GREATER+=false
-TAGGED_RELEASE+=
+DELIMITTER+=$(shell dpkg-parsechangelog | sed -rne 's/^Version: *......(.*)..........-.*/\1/p')
 
-ifneq "$(SVN_MINOR_RELEASE)" ""
-	SVN_RELEASE+=0.$(SVN_MAJOR_RELEASE).$(SVN_MINOR_RELEASE)
+ifeq "$(SVN_TYPE)" "trunk"
+	SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)/$(SVN_PACKAGE)
 else
-	SVN_RELEASE+=0.$(SVN_MAJOR_RELEASE)
+	SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)/$(SVN_PACKAGE)
 endif
-ifeq "$(TAGGED_RELEASE)" ""
-	ifeq "$(GREATER)" "true"
-		SUFFIX+="+$(SVN_TYPE)$(SVN_REVISION)"
-	else
-		SUFFIX+="~$(SVN_TYPE)$(SVN_REVISION)"
-	endif
-endif
+
+SVN_RELEASE=0.$(SVN_MAJOR_RELEASE).$(SVN_MINOR_RELEASE)
+SUFFIX+="$(DELIMITTER)$(SVN_TYPE)$(SVN_REVISION)"
 TARFILE+=$(SVN_PACKAGE)_$(SVN_RELEASE)$(SUFFIX).orig.tar.gz
 
 get-orig-source:
@@ -30,7 +25,21 @@ get-orig-source:
 	tar czf $(CURDIR)/../$(TARFILE) $(SVN_PACKAGE)-$(SVN_RELEASE)$(SUFFIX)
 	rm -rf $(CURDIR)/$(SVN_PACKAGE)-$(SVN_RELEASE)$(SUFFIX)
 
-#Architecture Independent Build flags
+info:
+	echo "Package: $(SVN_PACKAGE)" \
+		"Type: $(SVN_TYPE)" \
+		"Major Release: $(SVN_MAJOR_RELEASE)" \
+		"Minor Release: $(SVN_MINOR_RELEASE)" \
+		"Total Release: $(SVN_RELEASE)" \
+		"Rev: $(SVN_REVISION)" \
+		"Delimitter: $(DELIMITTER)" \
+		"Branch: $(SVN_BRANCH)" \
+		"Suffix: $(SUFFIX)" \
+		"Tarfile: $(TARFILE)" 
+
+#                                      #
+# Architecture Independent Build flags #
+#                                      #
 CONFIGURE_OPTS +=   --compile-type=profile \
 					--prefix=/usr \
 					--runprefix=/usr \
@@ -47,25 +56,25 @@ CONFIGURE_OPTS +=   --compile-type=profile \
 					--enable-opengl-video \
 					--enable-ffmpeg-pthreads
 
-#These aren't mentioned in ./configure --help
-# --enable-glx-procaddrarb is a top secret option, but it's currently only
-#  useful with Nvidia drivers which is why we only add it to amd64 and i386
+#                                              #
+# These aren't mentioned in ./configure --help #
+#                                              #
 TOP_SECRET_OPTS += --enable-libfaad --enable-libmp3lame \
                    --enable-libxvid --enable-libfftw3 \
                    --enable-runtime-cpudetect
 
-#Architecture dependent build flags
+#                                    #
+# Architecture dependent build flags #
+#                                    #
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq "$(DEB_BUILD_ARCH)" "i386"
 	CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-glx-procaddrarb --enable-vdpau
-else
+endif
 ifeq "$(DEB_BUILD_ARCH)" "sparc"
 	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --extra-cflags="-mcpu=ultrasparc -mvis"
-else
+endif
 ifeq "$(DEB_BUILD_ARCH)" "amd64"
 	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-glx-procaddrarb --enable-vdpau
-endif
-endif
 endif
 
 %:
