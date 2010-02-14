@@ -160,7 +160,7 @@ install: build
 	dh_install -pmythtv-backend debian/mythtv-setup.sh usr/share/mythtv
 	dh_install -pmythtv-common   debian/dialog_functions.sh usr/share/mythtv
 	dh_install -pmythtv-common   contrib/config_files/config.xml usr/share/mythtv
-	dh_install -pmythtv-common debian/mysql.txt.dist debian/myth-halt.sh debian/myth-reboot.sh debian/myth-hibernate.sh usr/share/mythtv
+	dh_install -pmythtv-common debian/mysql.txt.dist usr/share/mythtv
 	dh_install -pmythtv-common debian/mythbuntu-crashdb.conf etc/apport/crashdb.conf.d
 	dh_install -pmythtv-common debian/source_mythtv.py usr/share/apport/package-hooks
 
