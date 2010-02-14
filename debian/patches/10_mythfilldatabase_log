@@ -1,0 +1,26 @@
+Index: mythtv-trunk/programs/mythbackend/housekeeper.cpp
+===================================================================
+--- mythtv-trunk.orig/programs/mythbackend/housekeeper.cpp	2010-02-13 22:18:28.000000000 -0600
++++ mythtv-trunk/programs/mythbackend/housekeeper.cpp	2010-02-13 22:18:32.000000000 -0600
+@@ -326,7 +326,7 @@
+                                           "mythfilldatabase");
+     QString mfarg = gContext->GetSetting("MythFillDatabaseArgs", "");
+     QString mflog = gContext->GetSetting("MythFillDatabaseLog",
+-                                         "/var/log/mythfilldatabase.log");
++                                         "/var/log/mythtv/mythfilldatabase.log");
+ 
+     if (mfpath == "mythfilldatabase")
+         mfpath = GetInstallPrefix() + "/bin/mythfilldatabase";
+Index: mythtv-trunk/programs/mythwelcome/welcomedialog.cpp
+===================================================================
+--- mythtv-trunk.orig/programs/mythwelcome/welcomedialog.cpp	2010-02-13 22:18:16.000000000 -0600
++++ mythtv-trunk/programs/mythwelcome/welcomedialog.cpp	2010-02-13 22:18:32.000000000 -0600
+@@ -441,7 +441,7 @@
+                                           "mythfilldatabase");
+     QString mfarg = gContext->GetSetting("MythFillDatabaseArgs", "");
+     QString mflog = gContext->GetSetting("MythFillDatabaseLog",
+-                                         "/var/log/mythfilldatabase.log");
++                                         "/var/log/mythtv/mythfilldatabase.log");
+ 
+     if (mflog.isEmpty())
+         command = QString("%1 %2").arg(mfpath).arg(mfarg);

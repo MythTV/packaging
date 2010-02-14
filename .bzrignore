@@ -20,3 +20,5 @@
 ./UPGRADING
 ./version.pro
 ./version.sh
+debian/patches/.dpkg-source-applied
+.pc

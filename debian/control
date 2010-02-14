@@ -11,8 +11,8 @@ Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
 Build-Conflicts: libmyth-0.20-dev,
                  libmyth-dev,
                  libqt3-mt-dev
-Build-Depends:  debhelper (>= 7),
-                dpatch,
+Build-Depends:  debhelper (>= 7.0.50~),
+                quilt,
                 ccache,
                 yasm,
                 libqt4-dev,
@@ -45,12 +45,12 @@ Build-Depends:  debhelper (>= 7),
                 libpulse-dev,
                 xserver-xorg-video-openchrome [i386 amd64] | libchromexvmc1 [i386 amd64],
                 xserver-xorg-video-openchrome [i386 amd64] | libchromexvmcpro1 [i386 amd64],
-		libvdpau-dev [i386 amd64 armel] | nvidia-190-libvdpau-dev [i386 amd64] | nvidia-185-libvdpau-dev [i386 amd64] | nvidia-180-libvdpau-dev [i386 amd64]
+                libvdpau-dev [i386 amd64 armel] | nvidia-190-libvdpau-dev [i386 amd64] | nvidia-185-libvdpau-dev [i386 amd64] | nvidia-180-libvdpau-dev [i386 amd64]
 
 Package: mythtv
 Architecture: all
 Pre-Depends: mysql-server
-Depends: mythtv-database, mythtv-frontend, mythtv-backend, ntp | time-daemon | ntp-simple
+Depends: mythtv-database, mythtv-frontend, mythtv-backend, ntp | time-daemon | ntp-simple, ${misc:Depends}
 Recommends: mythtv-themes
 Suggests: mythtv-doc
 Description: A personal video recorder application (client and server)
@@ -97,6 +97,7 @@ Architecture: all
 Conflicts: mythtv (<< 0.8-1)
 Section: multiverse/doc
 Replaces: mythtv (<< 0.8-1)
+Depends: ${misc:Depends}
 Description: A personal video recorder application (documentation)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -140,7 +141,7 @@ Description: A personal video recorder application (server)
 
 Package: mythtv-transcode-utils
 Architecture: any
-Depends: mythtv-common, ${shlibs:Depends}, transcode
+Depends: mythtv-common, ${shlibs:Depends}, transcode, ${misc:Depends}
 Conflicts: mythtv-backend (<< 0.20.2-0ubuntu1)
 Replaces: mythtv-backend (<< 0.20.2-0ubuntu1)
 Suggests: mythtv-backend, mytharchive
@@ -169,10 +170,10 @@ Description: A personal video recorder application (client)
  For a complete installation of all MythTV components, install the 'mythtv'
  package.
 
-Package: libmyth-0.22-0
+Package: libmyth-0.23-0
 Architecture: any
 Section: multiverse/libs
-Depends: ${shlibs:Depends}, libqt4-sql-mysql
+Depends: ${shlibs:Depends}, libqt4-sql-mysql, ${misc:Depends}
 Conflicts: mythtv (<< 0.7-5)
 Replaces: mythtv (<< 0.7-5)
 Description: Common library code for MythTV and add-on modules (runtime)
@@ -185,9 +186,9 @@ Description: Common library code for MythTV and add-on modules (runtime)
 Package: libmyth-dev
 Architecture: any
 Section: multiverse/libdevel
-Depends: libmyth-0.22-0 (= ${source:Version})
-Provides: libmyth-0.22-0-dev
-Conflicts: libmyth-0.22-dev
+Depends: libmyth-0.23-0 (= ${binary:Version}), ${misc:Depends}
+Provides: libmyth-0.23-0-dev
+Conflicts: libmyth-0.23-dev
 Description: Common library code for MythTV and add-on modules (development)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -198,7 +199,7 @@ Description: Common library code for MythTV and add-on modules (development)
 Package: libmyth-perl
 Architecture: all
 Section: multiverse/libs
-Depends: libmythtv-perl
+Depends: libmythtv-perl, ${misc:Depends}
 Description: Transitional package to move people to libmythtv-perl
  This is a dummy package to help assist people with the transition
  to the new package name for storing the mythtv perl bindings.
@@ -208,7 +209,7 @@ Description: Transitional package to move people to libmythtv-perl
 Package: libmythtv-perl
 Architecture: all
 Section: multiverse/libs
-Depends: ${perl:Depends}, libdbi-perl, libdbd-mysql-perl, libnet-upnp-perl
+Depends: ${misc:Depends}, ${perl:Depends}, libdbi-perl, libdbd-mysql-perl, libnet-upnp-perl
 Replaces: mythtv-common (<< 0.20.98 ), libmyth-perl
 Conflicts: mythtv-common (<< 0.20.98 ), libmyth-perl
 Description: A PERL library to access some MythTV features
@@ -221,7 +222,7 @@ Description: A PERL library to access some MythTV features
 Package: libmyth-python
 Architecture: all
 Section: multiverse/libs
-Depends: ${python:Depends}, python-mysqldb
+Depends: ${python:Depends}, python-mysqldb, ${misc:Depends}
 Replaces: mythtv-common (<< 0.20.98 )
 Conflicts: mythtv-common (<< 0.20.98 )
 Description: A python library to access some MythTV features
@@ -235,7 +236,7 @@ Package: mythtv-backend-master
 Architecture: all
 Section: multiverse/metapackages
 Pre-Depends: mysql-server
-Depends: ntp | time-daemon | ntp-simple, mythtv-database, mythtv-backend
+Depends: ntp | time-daemon | ntp-simple, mythtv-database, mythtv-backend, ${misc:Depends}
 Recommends: mythweb
 Description: Metapackage to setup and configure a "Master Backend" profile of MythTV.
  This package will install and configure all necessary packages for this machine
@@ -248,6 +249,7 @@ Package: mythtv-dbg
 Architecture: any
 Section: multiverse/debug
 Recommends: libc6-dbg
+Depends: ${misc:Depends}, mythtv-backend (=${binary:Version}) | mythtv-frontend (=${binary:Version})
 Description: Debug symbols for mythtv packages
  This package provides all debug symbols for mythtv packages since ddebs
  don't appear to always do the right thing.

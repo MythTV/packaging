@@ -1,3 +1,4 @@
+#Come from make install
 usr/bin/mythbackend
 usr/bin/mythcommflag
 usr/bin/mythfilldatabase
@@ -9,3 +10,11 @@ usr/share/mythtv/CMGR_scpd.xml
 usr/share/mythtv/MXML_scpd.xml
 usr/share/mythtv/devicemaster.xml
 usr/share/mythtv/deviceslave.xml
+usr/share/mythtv/setup.xml
+
+
+#Copied in from debian/
+debian/mythtv-setup.desktop 			usr/share/applications
+debian/41-mythtv-permissions.rules		lib/udev/rules.d
+debian/mythtv-backend.if-up.d 			etc/network/if-up.d
+debian/mythtv-setup.sh				usr/share/mythtv

@@ -1,0 +1,13 @@
+Index: mythtv-trunk/libs/libmyth/storagegroup.cpp
+===================================================================
+--- mythtv-trunk.orig/libs/libmyth/storagegroup.cpp	2010-02-13 22:17:17.000000000 -0600
++++ mythtv-trunk/libs/libmyth/storagegroup.cpp	2010-02-13 22:17:22.000000000 -0600
+@@ -13,7 +13,7 @@
+ #define LOC_WARN QString("SG(%1) Warning: ").arg(m_groupname)
+ #define LOC_ERR QString("SG(%1) Error: ").arg(m_groupname)
+ 
+-const char *StorageGroup::kDefaultStorageDir = "/mnt/store";
++const char *StorageGroup::kDefaultStorageDir = "/var/lib/mythtv/recordings";
+ 
+ QMutex                 StorageGroup::s_groupToUseLock;
+ QHash<QString,QString> StorageGroup::s_groupToUseCache;

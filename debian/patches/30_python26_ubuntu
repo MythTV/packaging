@@ -1,13 +1,7 @@
-#! /bin/sh /usr/share/dpatch/dpatch-run
-## 30_python26_transition.dpatch by Mario Limonciello <superm1@ubuntu.com>
-##
-## All lines beginning with `## DP:' are a description of the patch.
-## DP: No description.
-
-@DPATCH@
-diff -urNad mythtv~/bindings/python/python.pro mythtv/bindings/python/python.pro
---- mythtv~/bindings/python/python.pro	2010-02-11 18:54:45.000000000 -0600
-+++ mythtv/bindings/python/python.pro	2010-02-11 18:57:07.000000000 -0600
+Index: mythtv-trunk/bindings/python/python.pro
+===================================================================
+--- mythtv-trunk.orig/bindings/python/python.pro	2010-02-13 22:19:53.000000000 -0600
++++ mythtv-trunk/bindings/python/python.pro	2010-02-13 22:20:17.000000000 -0600
 @@ -6,7 +6,7 @@
  
  python_install.target = python_install

@@ -1,4 +1,4 @@
-mythtv (0.23.0~trunk23193-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.0~trunk23548-0ubuntu1) UNRELEASED; urgency=low
 
   * Bump builds to start with 0.23
   * debian/control: 
@@ -22,6 +22,17 @@ mythtv (0.23.0~trunk23193-0ubuntu1) UNRELEASED; urgency=low
   * Helps with HDTV stuttering. (LP: #451394)
   * Drop old debian/myth-*.sh scripts since we now use dbus for shutdown
     and reboot etc.
+  * Drop old debian/mythtv-backend.default.  It's just available for upgrades.
+  * Drop old debian/mythtv-backend.init initscript.  We're only supporting
+    upstart going forward with these builds.
+  * Drop unnecessary patch, 02_settings_pro.dpatch
+  * Drop unused patch, 23_video_device_symlinks.dpatch
+  * Drop unused patch, 25_skiploop_option.dpatch
+  * Convert packaging to dh7.
+  * Convert packaging to source v3 (w/ quilt).
+  * Add debian/README.source as a symlink to the quilt README.source
+  * Convert all .files into .install.
+  * Refresh patches as quilt format instead
 
  -- Mario Limonciello <superm1@ubuntu.com>  Thu, 21 Jan 2010 00:42:40 -0600
 
@@ -59,8 +70,7 @@ mythtv (0.22.0+fixes22957-0ubuntu2) lucid; urgency=low
 
   * debian/control:
     - Actually do the replaces for anything below 22957 instead to cover any
-      PPA builds that people upgrade from or the very early lucid builds.
-      (LP: #494705)
+      PPA builds that people upgrade from or the very early lucid builds.      (LP: #494705)
 
  -- Mario Limonciello <mario_limonciello@dell.com>  Wed, 09 Dec 2009 16:14:29 -0600
 
