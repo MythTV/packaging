@@ -1,6 +1,7 @@
 #these came from make install
 usr/share/mythtv/themes
 usr/bin/mythshutdown
+usr/share/mythtv/*.xml
 
 #Other bits that we are gonna copy in that aren't part of make install
 contrib/config_files/config.xml usr/share/mythtv
