@@ -4,11 +4,11 @@
 # get-orig-source #
 #                 #
 SVN_PACKAGE+=$(shell dpkg-parsechangelog | sed -rne 's/^Source: *(.*)/\1/p')
-SVN_TYPE+=$(shell dpkg-parsechangelog | sed -rne 's/^Version: *.......(.*).....-.*/\1/p')
-SVN_MAJOR_RELEASE+=$(shell dpkg-parsechangelog | sed -rne 's/^Version: *..(.*).............-.*/\1/p')
-SVN_MINOR_RELEASE+=$(shell dpkg-parsechangelog | sed -rne 's/^Version: *.....(.*)...........-.*/\1/p')
-SVN_REVISION:=$(shell dpkg-parsechangelog | sed -rne 's/^Version: *............(.*)-.*/\1/p')
-DELIMITTER+=$(shell dpkg-parsechangelog | sed -rne 's/^Version: *......(.*)..........-.*/\1/p')
+SVN_TYPE+=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *.......(.*).....-.*/\1/p')
+SVN_MAJOR_RELEASE+=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *..(.*).............-.*/\1/p')
+SVN_MINOR_RELEASE+=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *.....(.*)...........-.*/\1/p')
+SVN_REVISION:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *............(.*)-.*/\1/p')
+DELIMITTER+=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *......(.*)..........-.*/\1/p')
 
 ifeq "$(SVN_TYPE)" "trunk"
 	SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)/$(SVN_PACKAGE)
