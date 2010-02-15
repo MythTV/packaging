@@ -1,4 +1,4 @@
-mythtv (0.22.0+fixes23527-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.22.0+fixes23527-0ubuntu1) lucid; urgency=low
 
   [ Mario Limonciello ]
   * New snapshot (r23527)
