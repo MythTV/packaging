@@ -8,8 +8,7 @@ Homepage: http://www.mythtv.org
 Standards-Version: 3.8.3
 Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
 Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
-Build-Conflicts: libmyth-0.20-dev,
-                 libmyth-dev,
+Build-Conflicts: libmyth-dev,
                  libqt3-mt-dev
 Build-Depends:  debhelper (>= 7.0.50~),
                 quilt,
@@ -172,7 +171,7 @@ Architecture: any
 Section: multiverse/libs
 Depends: ${shlibs:Depends}, libqt4-sql-mysql, ${misc:Depends}
 Conflicts: mythtv (<< 0.7-5)
-Replaces: mythtv (<< 0.7-5)
+Replaces: mythtv (<< 0.7-5), libmyth-0.22-0
 Description: Common library code for MythTV and add-on modules (runtime)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
