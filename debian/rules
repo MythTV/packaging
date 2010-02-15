@@ -110,7 +110,3 @@ override_dh_compress:
 
 override_dh_fixperms:
 	dh_fixperms -X.pl -X.py
-
-override_dh_clean:
-	debconf-updatepo
-	dh_clean
