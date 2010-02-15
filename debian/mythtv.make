@@ -36,3 +36,7 @@ info:
 		"Branch: $(SVN_BRANCH)" \
 		"Suffix: $(SUFFIX)" \
 		"Tarfile: $(TARFILE)"
+
+newest-revision:
+	svn info $(SVN_BRANCH) | grep "Last Changed Rev" | awk '{ print $$4 }'
+

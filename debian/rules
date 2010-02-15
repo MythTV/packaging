@@ -3,6 +3,7 @@
 #For our custom rules on all mythtv packages
 # get-orig-source
 # info
+# newest-revision
 include debian/mythtv.make
 
 #                                      #
