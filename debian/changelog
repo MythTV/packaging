@@ -1,12 +1,17 @@
-mythtv (0.22.0+fixes23193-0ubuntu2) UNRELEASED; urgency=low
+mythtv (0.22.0+fixes23527-0ubuntu1) UNRELEASED; urgency=low
 
+  [ Mario Limonciello ]
+  * New snapshot (r23527)
   * debian/mythtv-database.postinst:
     - If the mythtv.cnf conffile is missing, don't freak out. (LP: #477926)
   * debian/control:
     - Build depends on libvdpau-dev for armel too.  We don't know if
       tegra2's will be using VDPAU, but if they do, this will help.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Fri, 22 Jan 2010 00:30:28 -0600
+  [ Thomas Mashos ]
+  * Populate directories to hold videos in prefilled SQL file. (LP: #469583)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 14 Feb 2010 19:13:55 -0600
 
 mythtv (0.22.0+fixes23193-0ubuntu1) lucid; urgency=low
 
