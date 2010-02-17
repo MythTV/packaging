@@ -1,10 +1,12 @@
-mythtv (0.23.0~trunk23548-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.0~trunk23567-0ubuntu1) UNRELEASED; urgency=low
 
   * Bump builds to start with 0.23
   * debian/control: 
     - Fix vcs-bzr
     - Update depends to include ttf-droid, ttf-liberation, and ttf-dejavu.
       (LP: #224114)
+    - Drop quilt build-dep, it appears to be included w/ dh7
+    - Bump standards version
   * Introduces stable pulseaudio support (In Theory! :)) (LP: #311328)
   * Print message to stdout for MythTV.pm (LP: #327406)
   * debian/patches:
@@ -37,7 +39,7 @@ mythtv (0.23.0~trunk23548-0ubuntu1) UNRELEASED; urgency=low
   * Drop any of the Top Secret Options build flags
   * Include a custom snippet for debian/rules mythtv packages in libmyth-dev.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Thu, 21 Jan 2010 00:42:40 -0600
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 16 Feb 2010 21:23:04 -0600
 
 mythtv (0.22.0+fixes23527-0ubuntu1) lucid; urgency=low
 
