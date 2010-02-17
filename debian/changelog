@@ -38,6 +38,7 @@ mythtv (0.23.0~trunk23567-0ubuntu1) UNRELEASED; urgency=low
   * Rewrite get-orig-source rules to parse the changelog for version info.
   * Drop any of the Top Secret Options build flags
   * Include a custom snippet for debian/rules mythtv packages in libmyth-dev.
+  * Drop old, unused templates from debian/templates.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Tue, 16 Feb 2010 21:23:04 -0600
 

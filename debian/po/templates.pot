@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: mythtv@packages.debian.org\n"
-"POT-Creation-Date: 2010-02-13 23:05-0600\n"
+"POT-Creation-Date: 2010-02-16 21:32-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -139,112 +139,6 @@ msgstr ""
 msgid ""
 "In case you forget this password, it is also stored in '/etc/mythtv/mysql."
 "txt'."
-msgstr ""
-
-#. Type: select
-#. Choices
-#: ../mythtv-common.templates:7001
-msgid "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
-msgstr ""
-
-#. Type: select
-#. Description
-#: ../mythtv-common.templates:7002
-msgid "Which XMLTV grabber should be used to retrieve program listings:"
-msgstr ""
-
-#. Type: select
-#. Description
-#: ../mythtv-common.templates:7002
-msgid ""
-" - tv_grab_na retrieves listings for North America (US and Canada)\n"
-" - tv_grab_de retrieves listings for Germany and Austria\n"
-" - tv_grab_sn retrieves listings for Sweden or Norway\n"
-" - tv_grab_uk retrieves listings for the United Kingdom\n"
-" - tv_grab_uk_rt retrieves listings for the United Kingdom (alternate)"
-msgstr ""
-
-#. Type: select
-#. Description
-#: ../mythtv-common.templates:8001
-msgid "Which television standard should be used by MythTV:"
-msgstr ""
-
-#. Type: select
-#. Description
-#: ../mythtv-common.templates:9001
-msgid "Which channel frequency table should be used by MythTV:"
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:10001
-msgid "WARNING: old MythTV binaries found"
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:10001
-msgid ""
-"It appears that you have installed mythtv from source previously, and some "
-"files remain from the previous installation, including at least:"
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:10001
-msgid "${files}"
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:10001
-msgid ""
-"Installation of these packages should succeed, but you MUST remove these "
-"files in order for the packaged version of MythTV to work properly."
-msgstr ""
-
-#. Type: boolean
-#. Description
-#: ../mythtv-common.templates:11001
-msgid "Warning! These packages are experimental! Install?"
-msgstr ""
-
-#. Type: boolean
-#. Description
-#: ../mythtv-common.templates:11001
-msgid ""
-"You are about to install MythTV packages created from SVN trunk. These "
-"packages should be considered experimental and may well break your existing "
-"setup."
-msgstr ""
-
-#. Type: boolean
-#. Description
-#: ../mythtv-common.templates:11001
-msgid "Choose \"Yes\" if you want to proceed at your own risk."
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:12001
-msgid "Install canceled!"
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:12001
-msgid ""
-"You have chosen to cancel the installation of the experimental MythTV "
-"packages."
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:12001
-msgid ""
-"Please use your favourite package manager (e.g. adept, synaptic or aptitude) "
-"to remove these packages or to downgrade to a more stable version of MythTV."
 msgstr ""
 
 #. Type: string

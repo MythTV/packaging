@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mythtv\n"
 "Report-Msgid-Bugs-To: mythtv@packages.debian.org\n"
-"POT-Creation-Date: 2010-02-13 23:05-0600\n"
+"POT-Creation-Date: 2010-02-16 21:32-0600\n"
 "PO-Revision-Date: 2007-09-27 09:35+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Italian <it@li.org>\n"
@@ -166,124 +166,6 @@ msgstr ""
 "Nel caso in cui la password venga persa, è archiviata in \"/etc/mythtv/mysql."
 "txt\"."
 
-#. Type: select
-#. Choices
-#: ../mythtv-common.templates:7001
-msgid "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
-msgstr "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
-
-#. Type: select
-#. Description
-#: ../mythtv-common.templates:7002
-msgid "Which XMLTV grabber should be used to retrieve program listings:"
-msgstr ""
-"Quale strumento XMLTV usare per ottenere gli elenchi della programmazione:"
-
-#. Type: select
-#. Description
-#: ../mythtv-common.templates:7002
-msgid ""
-" - tv_grab_na retrieves listings for North America (US and Canada)\n"
-" - tv_grab_de retrieves listings for Germany and Austria\n"
-" - tv_grab_sn retrieves listings for Sweden or Norway\n"
-" - tv_grab_uk retrieves listings for the United Kingdom\n"
-" - tv_grab_uk_rt retrieves listings for the United Kingdom (alternate)"
-msgstr ""
-" - tv_grab_na recupera gli elenchi per il nord Americo (US e Canada)\n"
-" - tv_grab_de recupera gli elenchi per Germani e Austria\n"
-" - tv_grab_sn recupera gli elenchi per Svezia e Norvegia\n"
-" - tv_grab_uk recupera gli elenchi per la Gran Bretegna\n"
-" - tv_grab_uk_rt retrieves recupera gli elenchi per la Gran Bretagna "
-"(alternativo)"
-
-#. Type: select
-#. Description
-#: ../mythtv-common.templates:8001
-msgid "Which television standard should be used by MythTV:"
-msgstr "Lo standard televisivo da usaer con MythTV:"
-
-#. Type: select
-#. Description
-#: ../mythtv-common.templates:9001
-msgid "Which channel frequency table should be used by MythTV:"
-msgstr "La frequanza del canale da usare con MythTV:"
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:10001
-msgid "WARNING: old MythTV binaries found"
-msgstr "Attenzione: trovati binari di una vecchia versione di MythTV"
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:10001
-msgid ""
-"It appears that you have installed mythtv from source previously, and some "
-"files remain from the previous installation, including at least:"
-msgstr ""
-"Sembra che mythtv sia stato installato da sorgenti e sono rimasti alcuni "
-"file dell'installazione precedente, compresi:"
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:10001
-msgid "${files}"
-msgstr "${files}"
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:10001
-msgid ""
-"Installation of these packages should succeed, but you MUST remove these "
-"files in order for the packaged version of MythTV to work properly."
-msgstr ""
-"L'installazione di questi pacchetti dovrebbe avere successo, ma è necessario "
-"rimuovere questi file per fare in modo che la versione di MythTV "
-"pacchettizzata funzioni correttamente."
-
-#. Type: boolean
-#. Description
-#: ../mythtv-common.templates:11001
-msgid "Warning! These packages are experimental! Install?"
-msgstr ""
-
-#. Type: boolean
-#. Description
-#: ../mythtv-common.templates:11001
-msgid ""
-"You are about to install MythTV packages created from SVN trunk. These "
-"packages should be considered experimental and may well break your existing "
-"setup."
-msgstr ""
-
-#. Type: boolean
-#. Description
-#: ../mythtv-common.templates:11001
-msgid "Choose \"Yes\" if you want to proceed at your own risk."
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:12001
-msgid "Install canceled!"
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:12001
-msgid ""
-"You have chosen to cancel the installation of the experimental MythTV "
-"packages."
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:12001
-msgid ""
-"Please use your favourite package manager (e.g. adept, synaptic or aptitude) "
-"to remove these packages or to downgrade to a more stable version of MythTV."
-msgstr ""
-
 #. Type: string
 #. Description
 #: ../mythtv-database.templates:1001
@@ -398,6 +280,54 @@ msgstr "Nome dell'host del sistema in cui è installato il backend MythTV:"
 #: ../mythtv-frontend.templates:2001
 msgid "On what port number is the MythTV server listening:"
 msgstr "Porta di ascolto del server MythTV:"
+
+#~ msgid "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
+#~ msgstr "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
+
+#~ msgid "Which XMLTV grabber should be used to retrieve program listings:"
+#~ msgstr ""
+#~ "Quale strumento XMLTV usare per ottenere gli elenchi della programmazione:"
+
+#~ msgid ""
+#~ " - tv_grab_na retrieves listings for North America (US and Canada)\n"
+#~ " - tv_grab_de retrieves listings for Germany and Austria\n"
+#~ " - tv_grab_sn retrieves listings for Sweden or Norway\n"
+#~ " - tv_grab_uk retrieves listings for the United Kingdom\n"
+#~ " - tv_grab_uk_rt retrieves listings for the United Kingdom (alternate)"
+#~ msgstr ""
+#~ " - tv_grab_na recupera gli elenchi per il nord Americo (US e Canada)\n"
+#~ " - tv_grab_de recupera gli elenchi per Germani e Austria\n"
+#~ " - tv_grab_sn recupera gli elenchi per Svezia e Norvegia\n"
+#~ " - tv_grab_uk recupera gli elenchi per la Gran Bretegna\n"
+#~ " - tv_grab_uk_rt retrieves recupera gli elenchi per la Gran Bretagna "
+#~ "(alternativo)"
+
+#~ msgid "Which television standard should be used by MythTV:"
+#~ msgstr "Lo standard televisivo da usaer con MythTV:"
+
+#~ msgid "Which channel frequency table should be used by MythTV:"
+#~ msgstr "La frequanza del canale da usare con MythTV:"
+
+#~ msgid "WARNING: old MythTV binaries found"
+#~ msgstr "Attenzione: trovati binari di una vecchia versione di MythTV"
+
+#~ msgid ""
+#~ "It appears that you have installed mythtv from source previously, and "
+#~ "some files remain from the previous installation, including at least:"
+#~ msgstr ""
+#~ "Sembra che mythtv sia stato installato da sorgenti e sono rimasti alcuni "
+#~ "file dell'installazione precedente, compresi:"
+
+#~ msgid "${files}"
+#~ msgstr "${files}"
+
+#~ msgid ""
+#~ "Installation of these packages should succeed, but you MUST remove these "
+#~ "files in order for the packaged version of MythTV to work properly."
+#~ msgstr ""
+#~ "L'installazione di questi pacchetti dovrebbe avere successo, ma è "
+#~ "necessario rimuovere questi file per fare in modo che la versione di "
+#~ "MythTV pacchettizzata funzioni correttamente."
 
 #~ msgid "Is it OK to create the video4linux device nodes?"
 #~ msgstr "Creare i nodi per il device video4linux?"
