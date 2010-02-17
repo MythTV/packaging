@@ -170,7 +170,7 @@ Architecture: any
 Section: multiverse/libs
 Depends: ${shlibs:Depends}, libqt4-sql-mysql, ${misc:Depends}
 Conflicts: mythtv (<< 0.7-5)
-Replaces: mythtv (<< 0.7-5), libmyth-0.22-0
+Replaces: mythtv (<< 0.7-5)
 Description: Common library code for MythTV and add-on modules (runtime)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
