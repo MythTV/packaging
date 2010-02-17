@@ -40,7 +40,7 @@ ifeq "$(DEB_BUILD_ARCH)" "amd64"
 endif
 
 %:
-	dh --with quilt $@
+	dh $@
 
 override_dh_auto_configure:
 	#update SVN REVISION to show the right version
