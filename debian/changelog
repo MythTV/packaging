@@ -11,6 +11,7 @@ mythtv (0.23.0~trunk23567-0ubuntu2) lucid; urgency=low
       on armel and powerpc.
   * debian/mythtv_0.23.0.sql:
     - Update to the current schema in this build.
+    - Set default security pin so UPNP will work OOTB.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 17 Feb 2010 22:11:48 -0600
 
