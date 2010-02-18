@@ -1,3 +1,12 @@
+mythtv (0.23.0~trunk23567-0ubuntu2) lucid; urgency=low
+
+  * debian/mythtv-backend.preinst:
+    - Remove old /etc/default/mythtv-backend if not modified.  The upstart job
+      still optionally use it, but it will cause the backend to not drop
+      permissions with the old contents.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 17 Feb 2010 22:11:48 -0600
+
 mythtv (0.23.0~trunk23567-0ubuntu1) lucid; urgency=low
 
   * Bump builds to start with 0.23
