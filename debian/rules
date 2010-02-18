@@ -38,6 +38,12 @@ endif
 ifeq "$(DEB_BUILD_ARCH)" "amd64"
 	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-glx-procaddrarb --enable-vdpau
 endif
+ifeq "$(DEB_BUILD_ARCH)" "armel"
+	CONFIGURE_OPTS += --enable-vdpau --extra-cflags="-marm -fPIC -DPIC"
+endif
+ifeq "$(DEB_BUILD_ARCH)" "powerpc"
+	CONFIGURE_OPTS += --enable-altivec
+endif
 
 %:
 	dh $@
