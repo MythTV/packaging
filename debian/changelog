@@ -1,4 +1,4 @@
-mythtv (0.23.0~trunk23567-0ubuntu3) UNRELEASED; urgency=low
+mythtv (0.23.0~trunk23567-0ubuntu3) lucid; urgency=low
 
   * Rebuild for pulseaudio problems caused from an earlier libpulse-dev
     package. (LP: #524191)
