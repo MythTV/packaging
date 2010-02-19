@@ -2,6 +2,8 @@ mythtv (0.23.0~trunk23567-0ubuntu3) UNRELEASED; urgency=low
 
   * Rebuild for pulseaudio problems caused from an earlier libpulse-dev
     package. (LP: #524191)
+  * debian/mythtv-setup.sh:
+    - Fix an extra '-' that was included.
 
  -- Mario Limonciello <superm1@ubuntu.com>  Thu, 18 Feb 2010 22:54:59 -0600
 
