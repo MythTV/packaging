@@ -1,3 +1,10 @@
+mythtv (0.23.0~trunk23567-0ubuntu4) UNRELEASED; urgency=low
+
+  * debian/control:
+    - Build-depends on libxrandr-dev for xrandr support.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 19 Feb 2010 10:53:23 -0600
+
 mythtv (0.23.0~trunk23567-0ubuntu3) lucid; urgency=low
 
   * Rebuild for pulseaudio problems caused from an earlier libpulse-dev

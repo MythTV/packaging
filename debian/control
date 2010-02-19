@@ -38,6 +38,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 libdts-dev,
                 lsb-release,
                 libpulse-dev,
+                libxrandr-dev,
                 xserver-xorg-video-openchrome [i386 amd64] | libchromexvmc1 [i386 amd64],
                 xserver-xorg-video-openchrome [i386 amd64] | libchromexvmcpro1 [i386 amd64],
                 libvdpau-dev [i386 amd64 armel] | nvidia-190-libvdpau-dev [i386 amd64] | nvidia-185-libvdpau-dev [i386 amd64] | nvidia-180-libvdpau-dev [i386 amd64]
