@@ -17,9 +17,9 @@ def add_info(report):
                    ]
     for dbg in dbg_packages:
         try:
-            status = bool(apport.packaging.get_version(dbg))
+            status = apport.packaging.get_version(dbg)
         except ValueError:
-            status = False
+            status = '0.0'
         report["Installed_" + dbg] = status
 
     if report.has_key('Package') and not apport.packaging.is_distro_package(report['Package'].split()[0]):
