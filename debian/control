@@ -1,15 +1,14 @@
 Source: mythtv
-Section: multiverse/graphics
+Section: graphics
 Priority: optional
 Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
-XSBC-Original-Maintainer: Christian Marillat <marillat@debian.org>
-Bugs: mailto:ubuntu-mythtv@lists.ubuntu.com
+Uploaders: Mario Limonciello <superm1@ubuntu.com>,
+           Andres Mejia <mcitadel@gmail.com>,
 Homepage: http://www.mythtv.org
 Standards-Version: 3.8.4
 Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
 Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
-Build-Conflicts: libmyth-dev,
-                 libqt3-mt-dev
+Build-Conflicts: libqt3-mt-dev
 Build-Depends:  debhelper (>= 7.0.50~),
                 ccache,
                 yasm,
@@ -33,7 +32,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 libimlib2-dev,
                 libasound2-dev,
                 libjack0.100.0-dev | libjack-dev,
-		libmp3lame-dev | liblame-dev,
+                libmp3lame-dev | liblame-dev,
                 libvorbis-dev,
                 libdts-dev,
                 lsb-release,
@@ -92,7 +91,7 @@ Description: A personal video recorder application (common data)
 Package: mythtv-doc
 Architecture: all
 Conflicts: mythtv (<< 0.8-1)
-Section: multiverse/doc
+Section: doc
 Replaces: mythtv (<< 0.8-1)
 Depends: ${misc:Depends}
 Description: A personal video recorder application (documentation)
@@ -138,7 +137,7 @@ Description: A personal video recorder application (server)
 
 Package: mythtv-transcode-utils
 Architecture: any
-Depends: mythtv-common, ${shlibs:Depends}, transcode, ${misc:Depends}
+Depends: mythtv-common, ${shlibs:Depends}, ${misc:Depends}
 Conflicts: mythtv-backend (<< 0.20.2-0ubuntu1)
 Replaces: mythtv-backend (<< 0.20.2-0ubuntu1)
 Suggests: mythtv-backend, mytharchive
@@ -149,7 +148,7 @@ Description: Utilities used for transcoding MythTV tasks
 
 Package: mythtv-frontend
 Architecture: any
-Depends: mythtv-common, ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin,wmctrl, ${misc:Depends}
+Depends: mythtv-common, ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, wmctrl, ${misc:Depends}
 Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0)
 Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0)
@@ -169,7 +168,7 @@ Description: A personal video recorder application (client)
 
 Package: libmyth-0.23-0
 Architecture: any
-Section: multiverse/libs
+Section: libs
 Depends: ${shlibs:Depends}, libqt4-sql-mysql, ${misc:Depends}
 Conflicts: mythtv (<< 0.7-5)
 Replaces: mythtv (<< 0.7-5)
@@ -182,7 +181,7 @@ Description: Common library code for MythTV and add-on modules (runtime)
 
 Package: libmyth-dev
 Architecture: any
-Section: multiverse/libdevel
+Section: libdevel
 Depends: libmyth-0.23-0 (= ${binary:Version}), ${misc:Depends}
 Provides: libmyth-0.23-0-dev
 Conflicts: libmyth-0.23-dev
@@ -195,7 +194,7 @@ Description: Common library code for MythTV and add-on modules (development)
 
 Package: libmyth-perl
 Architecture: all
-Section: multiverse/libs
+Section: libs
 Depends: libmythtv-perl, ${misc:Depends}
 Description: Transitional package to move people to libmythtv-perl
  This is a dummy package to help assist people with the transition
@@ -205,7 +204,7 @@ Description: Transitional package to move people to libmythtv-perl
 
 Package: libmythtv-perl
 Architecture: all
-Section: multiverse/libs
+Section: libs
 Depends: ${misc:Depends}, ${perl:Depends}, libdbi-perl, libdbd-mysql-perl, libnet-upnp-perl
 Replaces: mythtv-common (<< 0.20.98 ), libmyth-perl
 Conflicts: mythtv-common (<< 0.20.98 ), libmyth-perl
@@ -218,7 +217,7 @@ Description: A PERL library to access some MythTV features
 
 Package: libmyth-python
 Architecture: all
-Section: multiverse/libs
+Section: libs
 Depends: ${python:Depends}, python-mysqldb, ${misc:Depends}
 Replaces: mythtv-common (<< 0.20.98 )
 Conflicts: mythtv-common (<< 0.20.98 )
@@ -231,7 +230,7 @@ Description: A python library to access some MythTV features
 
 Package: mythtv-backend-master
 Architecture: all
-Section: multiverse/metapackages
+Section: metapackages
 Pre-Depends: mysql-server
 Depends: ntp | time-daemon | ntp-simple, mythtv-database, mythtv-backend, ${misc:Depends}
 Recommends: mythweb
@@ -244,7 +243,7 @@ Description: Metapackage to setup and configure a "Master Backend" profile of My
 
 Package: mythtv-dbg
 Architecture: any
-Section: multiverse/debug
+Section: debug
 Recommends: libc6-dbg
 Depends: ${misc:Depends}, mythtv-backend (=${binary:Version}) | mythtv-frontend (=${binary:Version})
 Description: Debug symbols for mythtv packages

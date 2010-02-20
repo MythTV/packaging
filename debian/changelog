@@ -4,6 +4,13 @@ mythtv (0.23.0~trunk23567-0ubuntu4) UNRELEASED; urgency=low
     - Build-depends on libxrandr-dev for xrandr support.
     - Restore Build-depends on libfftw3-dev (not really a top secret option)
 
+  [ Andres Mejia ]
+  * Refresh all patches. Use '-p ab' format with no index or timestamps.
+  * Add comment for each patch.
+  * Update debian/control file for minor cosmetic changes.
+  * Don't depend on transcode for mythtv-transcode-utils since it's not needed.
+  * Don't Build-Depends-Conflicts on libmyth-dev.
+
  -- Mario Limonciello <superm1@ubuntu.com>  Fri, 19 Feb 2010 10:53:23 -0600
 
 mythtv (0.23.0~trunk23567-0ubuntu3) lucid; urgency=low

@@ -1,7 +1,7 @@
-Index: mythtv-trunk/bindings/perl/perl.pro
-===================================================================
---- mythtv-trunk.orig/bindings/perl/perl.pro	2010-02-14 13:19:05.000000000 -0600
-+++ mythtv-trunk/bindings/perl/perl.pro	2010-02-14 13:22:27.000000000 -0600
+Use prefix for Perl bindings.
+==========================================================================
+--- a/bindings/perl/perl.pro
++++ b/bindings/perl/perl.pro
 @@ -4,13 +4,7 @@
  
  mythperlbindings.target = Makefile.perl
