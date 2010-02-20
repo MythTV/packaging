@@ -1,5 +1,6 @@
 mythtv (0.23.0~trunk23567-0ubuntu4) UNRELEASED; urgency=low
 
+  [ Mario Limonciello ]
   * debian/control:
     - Build-depends on libxrandr-dev for xrandr support.
     - Restore Build-depends on libfftw3-dev (not really a top secret option)
