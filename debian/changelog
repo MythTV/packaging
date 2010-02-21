@@ -1,4 +1,4 @@
-mythtv (0.23.0~trunk23567-0ubuntu4) UNRELEASED; urgency=low
+mythtv (0.23.0~trunk23567-0ubuntu4) lucid; urgency=low
 
   [ Mario Limonciello ]
   * debian/control:
@@ -16,7 +16,7 @@ mythtv (0.23.0~trunk23567-0ubuntu4) UNRELEASED; urgency=low
   * Don't depend on transcode for mythtv-transcode-utils since it's not needed.
   * Don't Build-Depends-Conflicts on libmyth-dev.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Fri, 19 Feb 2010 10:53:23 -0600
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 21 Feb 2010 12:13:59 -0600
 
 mythtv (0.23.0~trunk23567-0ubuntu3) lucid; urgency=low
 
