@@ -6,6 +6,8 @@ mythtv (0.23.0~trunk23567-0ubuntu4) UNRELEASED; urgency=low
     - Restore Build-depends on libfftw3-dev (not really a top secret option)
   * debian/source_mythtv.py:
     - Don't use bool, apport doesn't like them.
+  * debian/patches/36_setgroups_too:
+    - Run setgroups() before setgid/setuid (LP: #524822)
 
   [ Andres Mejia ]
   * Refresh all patches. Use '-p ab' format with no index or timestamps.
