@@ -10,6 +10,7 @@ Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
 Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
 Build-Conflicts: libqt3-mt-dev
 Build-Depends:  debhelper (>= 7.0.50~),
+                quilt,
                 ccache,
                 yasm,
                 libqt4-dev,

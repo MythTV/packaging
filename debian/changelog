@@ -1,3 +1,10 @@
+mythtv (0.23.0~trunk23567-0ubuntu5) UNRELEASED; urgency=low
+
+  * debian/control:  Added quilt as a build-depends, primarily
+    for karmic builds.
+
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Tue, 23 Feb 2010 22:37:27 +0000
+
 mythtv (0.23.0~trunk23567-0ubuntu4) lucid; urgency=low
 
   [ Mario Limonciello ]
