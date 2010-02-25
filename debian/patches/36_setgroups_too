@@ -37,7 +37,7 @@ Author: Mario Limonciello <superm1@ubuntu.com>
 +                }
 +                getgrouplist(user_info->pw_name, user_info->pw_gid, groups, &ngroups);
 +            }
-+            if (setgroups(sizeof(groups), groups) == -1)
++            if (setgroups(ngroups, groups) == -1)
 +            {
 +                free(groups);
 +                VERBOSE(VB_IMPORTANT, "Error setting groups.");
