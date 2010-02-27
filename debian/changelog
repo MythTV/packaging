@@ -1,4 +1,4 @@
-mythtv (0.23.0~trunk23623-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 
   [ Dave Walker ]
   * debian/control:  Added quilt as a build-depends, primarily
@@ -15,7 +15,7 @@ mythtv (0.23.0~trunk23623-0ubuntu1) UNRELEASED; urgency=low
   * debian/control:
     - Correct the replaces statements. (LP: #527288)
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Tue, 23 Feb 2010 22:37:27 +0000
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 27 Feb 2010 14:33:45 -0600
 
 mythtv (0.23.0~trunk23567-0ubuntu4) lucid; urgency=low
 
