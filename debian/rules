@@ -85,6 +85,8 @@ override_dh_compress:
 
 override_dh_fixperms:
 	dh_fixperms -X.pl -X.py
+	#On karmic we don't necessarily have scripts set executable (due to non-v3)
+	find debian -name "*.sh" -type f -exec chmod 755 {} \;
 
 override_dh_auto_clean:
 	dh_auto_clean
