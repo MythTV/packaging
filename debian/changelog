@@ -10,6 +10,8 @@ mythtv (0.23.0~trunk23567-0ubuntu5) UNRELEASED; urgency=low
   * debian/rules:
     - Explicitly set all shell scripts executable.  Fixes problems on < lucid
       builds.
+  * debian/control:
+    - Correct the replaces statements. (LP: #527288)
 
  -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Tue, 23 Feb 2010 22:37:27 +0000
 
