@@ -1,3 +1,13 @@
+mythtv (0.23.0~trunk23623-0ubuntu2) UNRELEASED; urgency=low
+
+  * mythtv-{common,backend}.{config,templates,postinst}: (LP: #483748)
+    - Simplify debconf questions by avoiding showing the generated pw
+    - Don't warn about mythtv group.
+    - Don't notify about running mythtv-setup.  This is optional (but
+      of course encouraged!)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 01 Mar 2010 23:16:10 -0600
+
 mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 
   [ Dave Walker ]

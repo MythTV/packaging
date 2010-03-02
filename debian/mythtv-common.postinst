@@ -52,7 +52,7 @@ DBPassword=$mythtv_password
 EOF
 
     mv $NEW /etc/mythtv/mysql.txt
-    
+
     NEW=$(mktemp -t config.xml-XXXXXX)
     if [ -s /etc/mythtv/config.xml ]; then
         INPUT=/etc/mythtv/config.xml

@@ -20,23 +20,3 @@ Template: mythtv/mysql_host
 Type: string
 Default: localhost
 _Description: On what host does the MySQL server reside:
-
-Template: mythtv/run_setup
-Type: note
-_Description: mythtv-setup must be run in order to complete MythTV installation
- You must run mythtv-setup as a user in the 'mythtv' group in order to complete mythtv
- configuration.  
- .
- If you are not in the mythtv group when launching setup, you will be given 
- the opportunity to be automatically added.
-
-Template: mythtv/display_password
-Type: note
-_Description: The Ubuntu MythTV packages generate a random MySQL password.
- The generated password for this machine is '${password}'.  If you are
- adding this machine to an existing mythtv-network, you will want to update
- this password to the one in use by the network after completing installation.  
- .
- This can be done by: 'sudo dpkg-reconfigure mythtv-common'. 
- .
- In case you forget this password, it is also stored in '/etc/mythtv/mysql.txt'.
