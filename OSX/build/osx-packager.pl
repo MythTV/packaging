@@ -65,7 +65,7 @@ our %depend_order = (
         'freetype',
         'lame',
         'mysqlclient',
-        #'qt-4.5',  # Needed for Mac OS X 10.6
+        #'qt-4.6',  # Needed for Mac OS X 10.6
         'qt-4.4',
       ],
   'mythplugins'
@@ -161,7 +161,7 @@ our %depend = (
   'mysqlclient' =>
   {
     'url'
-    => 'http://mysql.mirrors.pair.com/Downloads/MySQL-5.0/mysql-5.0.85.tar.gz',
+    => 'http://mysql.he.net/Downloads/MySQL-5.0/mysql-5.0.89.tar.gz',
     'conf'
     =>  [
           '--without-debug',
@@ -174,11 +174,11 @@ our %depend = (
         ],
   },
 
-  'qt-4.5'
+  'qt-4.6'
   =>
   {
     'url'
-    => 'http://get.qt.nokia.com/qt/source/qt-mac-opensource-src-4.5.2.tar.gz',
+    => 'http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.0.tar.gz',
     'conf-cmd'
     =>  'echo yes | MAKEFLAGS=$parallel_make_flags ./configure',
     'conf'
@@ -187,13 +187,18 @@ our %depend = (
           '-prefix', '"$PREFIX"',
           '-release',
           '-fast',
-          '-no-exceptions',
           '-no-accessibility',
           '-no-stl',
           # When MythTV all ported:  '-no-qt3support',
+
+          # When MySQL 5.1 is used, its plugin.h file clashes with Qt's.
+          # To work around that, replace these three lines:
           '-I"$PREFIX/include/mysql"',
           '-L"$PREFIX/lib/mysql"',
           '-qt-sql-mysql',
+          # with:
+          # '-qt-sql-mysql -mysql_config "$PREFIX/bin/mysql_config"',
+
           '-no-sql-sqlite',
           '-no-sql-odbc',
           '-system-zlib',
@@ -204,6 +209,11 @@ our %depend = (
           '-no-cups',
           '-no-qdbus',
           '-no-framework',
+          '-no-multimedia',
+          '-no-phonon',
+          '-no-svg',
+          '-no-javascript-jit',
+          '-no-scripttools',
        ],
     'make'
     =>  [
@@ -321,6 +331,7 @@ osx-packager.pl - build OS X binary packages for MythTV
    -enable-jobtools build commflag/jobqueue  as well as the frontend
    -profile         build with compile-type=profile
    -debug           build with compile-type=debug
+   -m32             build for a 32-bit environment
    -plugins <str>   comma-separated list of plugins to include
 
 =head1 DESCRIPTION
@@ -390,6 +401,7 @@ Getopt::Long::GetOptions(\%OPT,
                          'enable-jobtools',
                          'profile',
                          'debug',
+                         'm32',
                          'plugins=s',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
@@ -627,6 +639,18 @@ if ( $cpus gt 1 )
 }
 
 $parallel_make .= " $parallel_make_flags";
+
+# We set 32-bit mode via environment variables.
+# The messier alternative would be to tweak all the configure arguments.
+if ($OPT{'m32'})
+{
+    &Verbose('Forcing 32-bit mode');
+    $ENV{'CFLAGS'}    .= ' -m32';
+    $ENV{'CPPFLAGS'}  .= ' -m32';
+    $ENV{'CXXFLAGS'}  .= ' -m32';
+    $ENV{'ECXXFLAGS'} .= ' -m32';  # MythTV configure
+    $ENV{'LDFLAGS'}   .= ' -m32';
+}
 
 ### Distclean?
 if ($OPT{'distclean'})
