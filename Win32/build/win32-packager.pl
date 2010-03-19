@@ -2650,7 +2650,7 @@ sub perl2unix  {
     $p =~ s#$msys#/#i;  # remove superfluous msys folders if they are there
 
     #change c:/ into /c  (or a D:)   so c:/msys becomes /c/msys etc.
-    $p =~ s#^([CD]):#/$1#ig;
+    $p =~ s#^([A_Z]):#/$1#ig;
     $p =~ s#//#/#ig; # reduce any double forward slashes to single ones.
     return $p;
 }
