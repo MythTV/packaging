@@ -641,7 +641,7 @@ push @{$expect},
 
 #   ( save bandwidth compare to the above full SDK where they came from:
 [ archive  => $sources.'DX9SDK_dsound_Include_subset.zip', 
-  'fetch'  => 'http://davidbuzz.googlepages.com/'.
+  'fetch'  => 'https://sites.google.com/site/davidbuzz/mythtv-files/'.
               'DX9SDK_dsound_Include_subset.zip',
   comment  => 'We download just the required Include files for DX9' ], 
 [ dir      => $sources.'DX9SDK_dsound_Include_subset', 
