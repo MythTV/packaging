@@ -92,3 +92,4 @@ override_dh_auto_clean:
 	dh_auto_clean
 	rm -f config.ep
 	rm -f config/*
+	debconf-updatepo
