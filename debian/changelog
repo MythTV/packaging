@@ -35,8 +35,10 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
   * Added holding debian/mythtv-frontend.config, mainly to appease lintian.
   * debian/mythtv-frontend.menu: Changed section to Applications/Graphics.
   * debian/mythtv-backend.postinst: Load debconf libraries.
+  * debian/source.lintian-overrides: Removes the unecessary override of the 
+    binNMU warnings.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 23:00:16 +0000
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 23:03:15 +0000
 
 mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 
