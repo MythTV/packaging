@@ -37,8 +37,9 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
   * debian/mythtv-backend.postinst: Load debconf libraries.
   * debian/source.lintian-overrides: Removes the unecessary override of the 
     binNMU warnings.
+  * Fix perl binding installation.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 23:03:15 +0000
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 23:07:33 +0000
 
 mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 

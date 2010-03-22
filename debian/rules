@@ -23,7 +23,8 @@ CONFIGURE_OPTS +=   --compile-type=profile \
 					--enable-opengl-vsync \
 					--with-bindings=perl \
 					--enable-opengl-video \
-					--enable-ffmpeg-pthreads
+					--enable-ffmpeg-pthreads \
+					--perl-config-opts="INSTALLDIRS=vendor"
 
 #                                    #
 # Architecture dependent build flags #
