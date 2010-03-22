@@ -17,6 +17,7 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
     - Set the debug package to Priority extra.
     - Change *-perl Section's from libs to perl
     - add ${shlibs:Depends} for mythtv-common Depends field
+    - Minor spelling fix.
   * debian/rules:
     - Use debconf-updatepo to update translations when required
     - Ensure license files are not included in the binary packages, except 
@@ -32,7 +33,7 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
   * Added holding debian/mythtv-frontend.config, mainly to appease lintian.
   * debian/mythtv-frontend.menu: Changed section to Applications/Graphics.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 22:56:39 +0000
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 22:57:22 +0000
 
 mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 

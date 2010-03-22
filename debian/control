@@ -141,7 +141,7 @@ Conflicts: mythtv-backend (<< 0.20.2-0ubuntu1)
 Replaces: mythtv-backend (<< 0.20.2-0ubuntu1)
 Suggests: mythtv-backend, mytharchive
 Description: Utilities used for transcoding MythTV tasks
- Some utilties are applicable for both a frontend or a backend machine.
+ Some utilities are applicable for both a frontend or a backend machine.
  This package provides utilities that can be used on both without
  requiring an entire backend to be installed.
 
