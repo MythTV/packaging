@@ -193,7 +193,7 @@ Description: Common library code for MythTV and add-on modules (development)
 
 Package: libmyth-perl
 Architecture: all
-Section: libs
+Section: perl
 Depends: libmythtv-perl, ${misc:Depends}
 Description: Transitional package to move people to libmythtv-perl
  This is a dummy package to help assist people with the transition
@@ -203,7 +203,7 @@ Description: Transitional package to move people to libmythtv-perl
 
 Package: libmythtv-perl
 Architecture: all
-Section: libs
+Section: perl
 Depends: ${misc:Depends}, ${perl:Depends}, libdbi-perl, libdbd-mysql-perl, libnet-upnp-perl
 Replaces: mythtv-common (<< 0.20.98 ), libmyth-perl
 Conflicts: mythtv-common (<< 0.20.98 ), libmyth-perl
