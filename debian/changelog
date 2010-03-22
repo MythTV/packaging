@@ -14,8 +14,10 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
   [ Dave Walker (Daviey) ]
   * debian/control:
     - Remove unnecessary and potentially problematic use of Pre-Depends.
+  * Prevent the maintainer scripts from failing in case any questions 
+    can't be displayed.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 21:36:07 +0000
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 21:59:13 +0000
 
 mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 

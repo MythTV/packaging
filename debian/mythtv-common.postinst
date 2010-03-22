@@ -34,7 +34,7 @@ case "$1" in
         db_set mythtv/mysql_mythtv_password "$mythtv_password"
         db_subst mythtv/display_password password "$mythtv_password"
         db_input high mythtv/display_password || true
-        db_go
+        db_go || true
     else
         mythtv_password="$RET"
     fi
