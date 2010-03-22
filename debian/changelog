@@ -16,10 +16,13 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
     - Remove unnecessary and potentially problematic use of Pre-Depends.
   * debian/rules:
     - Use debconf-updatepo to update translations when required
+  * debian/copyright:
+    - updated to reflect that mythtv is GPL-2 only.
+    - inserted better licence statement and Copyright reference.
   * Prevent the maintainer scripts from failing in case any questions 
     can't be displayed.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 22:01:40 +0000
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 22:30:47 +0000
 
 mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 
