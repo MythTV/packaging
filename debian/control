@@ -242,6 +242,7 @@ Description: Metapackage to setup and configure a "Master Backend" profile of My
 Package: mythtv-dbg
 Architecture: any
 Section: debug
+Priority: extra
 Recommends: libc6-dbg
 Depends: ${misc:Depends}, mythtv-backend (=${binary:Version}) | mythtv-frontend (=${binary:Version})
 Description: Debug symbols for mythtv packages
