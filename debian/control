@@ -234,10 +234,11 @@ Depends: mysql-server, ntp | time-daemon | ntp-simple, mythtv-database, mythtv-b
 Recommends: mythweb
 Description: Metapackage to setup and configure a "Master Backend" profile of MythTV.
  This package will install and configure all necessary packages for this machine
- to behave as a "Master" Backend for a mythtv network.  This package is intended to
- be installed on the machine that will behave as the first (and possibly only)
- backend for the network.  Typically, this package will be installed on a server rather then a desktop.
- It makes no sense to install it on anything but the first backend machine on the network.
+ to behave as a "Master" Backend for a mythtv network.  This package is intended
+ to be installed on the machine that will behave as the first (and possibly
+ only) backend for the network.  Typically, this package will be installed on a
+ server rather then a desktop. It makes no sense to install it on anything but
+ the first backend machine on the network.
 
 Package: mythtv-dbg
 Architecture: any
