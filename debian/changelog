@@ -34,8 +34,9 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
     can't be displayed.
   * Added holding debian/mythtv-frontend.config, mainly to appease lintian.
   * debian/mythtv-frontend.menu: Changed section to Applications/Graphics.
+  * debian/mythtv-backend.postinst: Load debconf libraries.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 22:58:30 +0000
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 23:00:16 +0000
 
 mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 
