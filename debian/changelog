@@ -19,6 +19,8 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
     - add ${shlibs:Depends} for mythtv-common Depends field
   * debian/rules:
     - Use debconf-updatepo to update translations when required
+    - Ensure license files are not included in the binary packages, except 
+      for debian/copyright.
   * debian/copyright:
     - updated to reflect that mythtv is GPL-2 only.
     - inserted better licence statement and Copyright reference.
@@ -27,7 +29,7 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
   * Prevent the maintainer scripts from failing in case any questions 
     can't be displayed.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 22:47:56 +0000
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 22:50:06 +0000
 
 mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 

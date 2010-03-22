@@ -74,6 +74,10 @@ override_dh_installinit:
 	cp contrib/Linux/init_scripts/upstart.mythtv-backend.conf debian/mythtv-backend.upstart
 	dh_installinit
 
+	#Remove license files
+	find debian/tmp -name "COPYING" -delete
+	find debian/tmp -name "README.license" -delete
+
 override_dh_strip:
 	dh_strip --dbg-package=mythtv-dbg
 
@@ -93,3 +97,9 @@ override_dh_auto_clean:
 	rm -f config.ep
 	rm -f config/*
 	debconf-updatepo
+
+override_dh_installdocs:
+	dh_installdocs
+	#Remove license files from contrib documentation.
+	find debian/mythtv-backend/usr/share/doc/mythtv-backend/contrib \
+		-name "COPYING" -delete
