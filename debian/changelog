@@ -11,7 +11,11 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
     - Don't notify about running mythtv-setup.  This is optional (but
       of course encouraged!)
 
- -- Mario Limonciello <superm1@ubuntu.com>  Fri, 12 Mar 2010 09:49:21 -0600
+  [ Dave Walker (Daviey) ]
+  * debian/control:
+    - Remove unnecessary and potentially problematic use of Pre-Depends.
+
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 21:36:07 +0000
 
 mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 

@@ -46,8 +46,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
 
 Package: mythtv
 Architecture: all
-Pre-Depends: mysql-server
-Depends: mythtv-database, mythtv-frontend, mythtv-backend, ntp | time-daemon | ntp-simple, ${misc:Depends}
+Depends: mysql-server, mythtv-database, mythtv-frontend, mythtv-backend, ntp | time-daemon | ntp-simple, ${misc:Depends}
 Recommends: mythtv-themes
 Suggests: mythtv-doc
 Description: A personal video recorder application (client and server)
@@ -77,8 +76,7 @@ Description: A personal video recorder application (client and server)
 
 Package: mythtv-common
 Architecture: any
-Pre-Depends: pwgen
-Depends: adduser, mysql-client, ttf-freefont, ttf-liberation, ttf-droid, ttf-dejavu, ${misc:Depends}
+Depends: pwgen, adduser, mysql-client, ttf-freefont, ttf-liberation, ttf-droid, ttf-dejavu, ${misc:Depends}
 Suggests: mythtv-doc
 Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-gray-osd, mythtv-theme-isthmus
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.23.0~trunk23548), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu, mythtv-backend (<< 0.23.0~trunk23549)
@@ -232,8 +230,7 @@ Description: A python library to access some MythTV features
 Package: mythtv-backend-master
 Architecture: all
 Section: metapackages
-Pre-Depends: mysql-server
-Depends: ntp | time-daemon | ntp-simple, mythtv-database, mythtv-backend, ${misc:Depends}
+Depends: mysql-server, ntp | time-daemon | ntp-simple, mythtv-database, mythtv-backend, ${misc:Depends}
 Recommends: mythweb
 Description: Metapackage to setup and configure a "Master Backend" profile of MythTV.
  This package will install and configure all necessary packages for this machine
