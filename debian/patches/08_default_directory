@@ -1,0 +1,13 @@
+Change location of default storage to somewhere in /var/lib.
+==========================================================================
+--- a/libs/libmyth/storagegroup.cpp
++++ b/libs/libmyth/storagegroup.cpp
+@@ -13,7 +13,7 @@
+ #define LOC_WARN QString("SG(%1) Warning: ").arg(m_groupname)
+ #define LOC_ERR QString("SG(%1) Error: ").arg(m_groupname)
+ 
+-const char *StorageGroup::kDefaultStorageDir = "/mnt/store";
++const char *StorageGroup::kDefaultStorageDir = "/var/lib/mythtv/recordings";
+ 
+ QMutex                 StorageGroup::s_groupToUseLock;
+ QHash<QString,QString> StorageGroup::s_groupToUseCache;

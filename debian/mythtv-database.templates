@@ -27,11 +27,3 @@ _Description: Will you be using other computers running MythTV?
  will be exposed. Be sure to place this machine behind a firewall.
  .
  If you have multiple interfaces, the first one listed in 'ifconfig' will be used.
-
-Template: mythtv/backup_db
-Type: note
-_Description: A backup of your database will be made
- We'll now make a backup of your "mythconverg" database which holds all
- your current settings. This database dump allows you to go back to
- your previous packages more easily in case something breaks.
- It can usually be found at /var/backups/mythconverg.sql.gz

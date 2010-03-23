@@ -1,0 +1,13 @@
+debian/shlibs.local
+debian/mythtv-backend.upstart
+config.mak
+config.h
+config.log
+Makefile
+setup/Makefile
+bindings/perl/Makefile.perl.old
+bindings/python/build
+programs/mythbackend/version.cpp
+programs/mythfrontend/version.cpp
+libs/libmythupnp/version.cpp
+.qmake*

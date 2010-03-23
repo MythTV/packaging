@@ -1,5 +1,0 @@
-# User as which to run
-USER=mythtv
-
-# Replace all arguments to mythtv-backend
-ARGS="--logfile /var/log/mythtv/mythbackend.log"

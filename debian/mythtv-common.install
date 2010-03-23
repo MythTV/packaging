@@ -1,0 +1,13 @@
+#these came from make install
+usr/share/mythtv/themes
+usr/bin/mythshutdown
+usr/share/mythtv/*.xml
+
+#Other bits that we are gonna copy in that aren't part of make install
+contrib/config_files/config.xml usr/share/mythtv
+
+#These are added in from debian/
+debian/dialog_functions.sh usr/share/mythtv
+debian/mysql.txt.dist usr/share/mythtv
+debian/mythbuntu-crashdb.conf etc/apport/crashdb.conf.d
+debian/source_mythtv.py usr/share/apport/package-hooks

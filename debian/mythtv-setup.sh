@@ -19,15 +19,15 @@ if [ "$IGNORE_NOT" = "0" ]; then
 	CLOSE_NOT=$?
 	if [ "$CLOSE_NOT" = "0" ]; then
 		if [ "$DE" = "kde" ]; then
-			$SU_TYPE /etc/init.d/mythtv-backend stop
+			$SU_TYPE stop mythtv-backend
 		else
-			$SU_TYPE /etc/init.d/mythtv-backend stop --message "Please enter your current login password to stop mythtv-backend."
+			$SU_TYPE stop mythtv-backend --message "Please enter your current login password to stop mythtv-backend."
 		fi
 		xterm -title "MythTV Setup Terminal" -e taskset -c 0 /usr/bin/mythtv-setup.real "$@"
 		if [ "$DE" = "kde" ]; then
-			$SU_TYPE /etc/init.d/mythtv-backend restart
+			$SU_TYPE start mythtv-backend
 		else
-			$SU_TYPE /etc/init.d/mythtv-backend restart --message "Please enter your current login password to start mythtv-backend."
+			$SU_TYPE start mythtv-backend --message "Please enter your current login password to start mythtv-backend."
 		fi
 		dialog_question "Fill Database?" "Would you like to run mythfilldatabase?"
 		DATABASE_NOT=$?

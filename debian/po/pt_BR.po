@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mythtv\n"
-"Report-Msgid-Bugs-To: Source: mythtv@packages.debian.org\n"
-"POT-Creation-Date: 2009-03-22 17:53-0500\n"
+"Report-Msgid-Bugs-To: mythtv@packages.debian.org\n"
+"POT-Creation-Date: 2010-02-16 21:32-0600\n"
 "PO-Revision-Date: 2007-08-31 15:38+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -143,112 +143,6 @@ msgid ""
 "txt'."
 msgstr ""
 
-#. Type: select
-#. Choices
-#: ../mythtv-common.templates:7001
-msgid "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
-msgstr "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
-
-#. Type: select
-#. Description
-#: ../mythtv-common.templates:7002
-msgid "Which XMLTV grabber should be used to retrieve program listings:"
-msgstr ""
-
-#. Type: select
-#. Description
-#: ../mythtv-common.templates:7002
-msgid ""
-" - tv_grab_na retrieves listings for North America (US and Canada)\n"
-" - tv_grab_de retrieves listings for Germany and Austria\n"
-" - tv_grab_sn retrieves listings for Sweden or Norway\n"
-" - tv_grab_uk retrieves listings for the United Kingdom\n"
-" - tv_grab_uk_rt retrieves listings for the United Kingdom (alternate)"
-msgstr ""
-
-#. Type: select
-#. Description
-#: ../mythtv-common.templates:8001
-msgid "Which television standard should be used by MythTV:"
-msgstr ""
-
-#. Type: select
-#. Description
-#: ../mythtv-common.templates:9001
-msgid "Which channel frequency table should be used by MythTV:"
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:10001
-msgid "WARNING: old MythTV binaries found"
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:10001
-msgid ""
-"It appears that you have installed mythtv from source previously, and some "
-"files remain from the previous installation, including at least:"
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:10001
-msgid "${files}"
-msgstr "${files}"
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:10001
-msgid ""
-"Installation of these packages should succeed, but you MUST remove these "
-"files in order for the packaged version of MythTV to work properly."
-msgstr ""
-
-#. Type: boolean
-#. Description
-#: ../mythtv-common.templates:11001
-msgid "Warning! These packages are experimental! Install?"
-msgstr ""
-
-#. Type: boolean
-#. Description
-#: ../mythtv-common.templates:11001
-msgid ""
-"You are about to install MythTV packages created from SVN trunk. These "
-"packages should be considered experimental and may well break your existing "
-"setup."
-msgstr ""
-
-#. Type: boolean
-#. Description
-#: ../mythtv-common.templates:11001
-msgid "Choose \"Yes\" if you want to proceed at your own risk."
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:12001
-msgid "Install canceled!"
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:12001
-msgid ""
-"You have chosen to cancel the installation of the experimental MythTV "
-"packages."
-msgstr ""
-
-#. Type: note
-#. Description
-#: ../mythtv-common.templates:12001
-msgid ""
-"Please use your favourite package manager (e.g. adept, synaptic or aptitude) "
-"to remove these packages or to downgrade to a more stable version of MythTV."
-msgstr ""
-
 #. Type: string
 #. Description
 #: ../mythtv-database.templates:1001
@@ -329,7 +223,7 @@ msgid ""
 "We'll now make a backup of your \"mythconverg\" database which holds all "
 "your current settings. This database dump allows you to go back to your "
 "previous packages more easily in case something breaks. It can usually be "
-"found at /var/backups/mythconverg.sql.gz"
+"found at /var/lib/mythtv/db_backups"
 msgstr ""
 
 #. Type: string
@@ -344,3 +238,9 @@ msgstr ""
 #: ../mythtv-frontend.templates:2001
 msgid "On what port number is the MythTV server listening:"
 msgstr ""
+
+#~ msgid "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
+#~ msgstr "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
+
+#~ msgid "${files}"
+#~ msgstr "${files}"

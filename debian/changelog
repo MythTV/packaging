@@ -1,3 +1,127 @@
+mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
+
+  [ Jamie Bennett ]
+  * Fix FTBFS on armel (LP: #537714)
+
+  [ Mario Limonciello ]
+  * New snapshot of trunk.
+  * mythtv-{common,backend}.{config,templates,postinst}: (LP: #483748)
+    - Simplify debconf questions by avoiding showing the generated pw
+    - Don't warn about mythtv group.
+    - Don't notify about running mythtv-setup.  This is optional (but
+      of course encouraged!)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 12 Mar 2010 09:49:21 -0600
+
+mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
+
+  [ Dave Walker ]
+  * debian/control:  Added quilt as a build-depends, primarily
+    for karmic builds.
+
+  [ Mario Limonciello ]
+  * New checkout (r23623).
+    - Fixes audio issues w/ ac3 audio.
+  * debian/patches/36_setgroups_too:
+    - Set the right args for setgroups. (LP: #524822)
+  * debian/rules:
+    - Explicitly set all shell scripts executable.  Fixes problems on < lucid
+      builds.
+  * debian/control:
+    - Correct the replaces statements. (LP: #527288)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 27 Feb 2010 14:33:45 -0600
+
+mythtv (0.23.0~trunk23567-0ubuntu4) lucid; urgency=low
+
+  [ Mario Limonciello ]
+  * debian/control:
+    - Build-depends on libxrandr-dev for xrandr support.
+    - Restore Build-depends on libfftw3-dev (not really a top secret option)
+  * debian/source_mythtv.py:
+    - Don't use bool, apport doesn't like them.
+  * debian/patches/36_setgroups_too:
+    - Run setgroups() before setgid/setuid (LP: #524822)
+
+  [ Andres Mejia ]
+  * Refresh all patches. Use '-p ab' format with no index or timestamps.
+  * Add comment for each patch.
+  * Update debian/control file for minor cosmetic changes.
+  * Don't depend on transcode for mythtv-transcode-utils since it's not needed.
+  * Don't Build-Depends-Conflicts on libmyth-dev.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 21 Feb 2010 12:13:59 -0600
+
+mythtv (0.23.0~trunk23567-0ubuntu3) lucid; urgency=low
+
+  * Rebuild for pulseaudio problems caused from an earlier libpulse-dev
+    package. (LP: #524191)
+  * debian/mythtv-setup.sh:
+    - Fix an extra '-' that was included.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 18 Feb 2010 22:54:59 -0600
+
+mythtv (0.23.0~trunk23567-0ubuntu2) lucid; urgency=low
+
+  * debian/mythtv-backend.preinst:
+    - Remove old /etc/default/mythtv-backend if not modified.  The upstart job
+      still optionally use it, but it will cause the backend to not drop
+      permissions with the old contents.
+  * debian/mythtv-database.templates:
+    - flush out unused templates.
+  * debian/rules:
+    - Add some confflags from ffmpeg's debian/rules to try a little harder
+      on armel and powerpc.
+  * debian/mythtv_0.23.0.sql:
+    - Update to the current schema in this build.
+    - Set default security pin so UPNP will work OOTB.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 18 Feb 2010 01:35:24 -0600
+
+mythtv (0.23.0~trunk23567-0ubuntu1) lucid; urgency=low
+
+  * Bump builds to start with 0.23
+  * debian/control: 
+    - Fix vcs-bzr
+    - Update depends to include ttf-droid, ttf-liberation, and ttf-dejavu.
+      (LP: #224114)
+    - Drop quilt build-dep, it appears to be included w/ dh7
+    - Bump standards version
+  * Introduces stable pulseaudio support (In Theory! :)) (LP: #311328)
+  * Print message to stdout for MythTV.pm (LP: #327406)
+  * debian/patches:
+    - Drop 16_hal_shutdown.  No longer necessary after r23518.
+  * Allow shutdowns when mythtv is running (LP: #174712)
+    - Comes from upstream changeset r23455.
+  * Mythbackend now supports the --user flag to drop permissions from
+    upstream changeset r23521.
+  * Use the upstart script from the upstream contrib directory instead.
+    Now uses the --user flag to drop permissions. (LP: #445953)
+  * Update 30_python26_transition for changes upstream.
+  * mythtv-database.templates:
+    - refer to the proper location for backups.
+  * Switch to use the upstream backup scripts. (LP: #469792)
+  * Helps with HDTV stuttering. (LP: #451394)
+  * Drop old debian/myth-*.sh scripts since we now use dbus for shutdown
+    and reboot etc.
+  * Drop old debian/mythtv-backend.default.  It's just available for upgrades.
+  * Drop old debian/mythtv-backend.init initscript.  We're only supporting
+    upstart going forward with these builds.
+  * Drop unnecessary patch, 02_settings_pro.dpatch
+  * Drop unused patch, 23_video_device_symlinks.dpatch
+  * Drop unused patch, 25_skiploop_option.dpatch
+  * Convert packaging to dh7.
+  * Convert packaging to source v3 (w/ quilt).
+  * Add debian/README.source as a symlink to the quilt README.source
+  * Convert all .files into .install.
+  * Refresh patches as quilt format instead
+  * Rewrite get-orig-source rules to parse the changelog for version info.
+  * Drop any of the Top Secret Options build flags
+  * Include a custom snippet for debian/rules mythtv packages in libmyth-dev.
+  * Drop old, unused templates from debian/templates.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 16 Feb 2010 21:23:04 -0600
+
 mythtv (0.22.0+fixes23527-0ubuntu1) lucid; urgency=low
 
   [ Mario Limonciello ]

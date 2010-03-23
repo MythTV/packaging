@@ -1,3 +1,4 @@
+#Come from make install
 usr/bin/mythfrontend.real
 usr/bin/mythlcdserver
 usr/bin/mythreplex
@@ -6,5 +7,8 @@ usr/bin/mythtvosd
 usr/bin/mythwelcome
 usr/lib/mythtv/filters
 usr/share/mythtv/i18n/mythfrontend_*
-usr/share/mythtv/*.ttf
-usr/share/mythtv/*.xml
+
+#Stuff we add from debian/
+debian/mythtv.desktop usr/share/applications
+debian/mythfrontend.sh usr/share/mythtv
+debian/session-settings etc/mythtv
