@@ -6,8 +6,8 @@ Uploaders: Mario Limonciello <superm1@ubuntu.com>,
            Andres Mejia <mcitadel@gmail.com>,
 Homepage: http://www.mythtv.org
 Standards-Version: 3.8.4
-Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
-Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
+Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-fixes
+Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-fixes
 Build-Conflicts: libqt3-mt-dev
 Build-Depends:  debhelper (>= 7.0.50~),
                 quilt,
@@ -149,7 +149,7 @@ Package: mythtv-frontend
 Architecture: any
 Depends: mythtv-common, ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, wmctrl, ${misc:Depends}
 Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, ntp | time-daemon | ntp-simple
-Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0)
+Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0), mythflix (<< 0.23.0)
 Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0)
 Description: A personal video recorder application (client)
  MythTV provides a unified graphical interface for recording and viewing
