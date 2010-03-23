@@ -29,7 +29,15 @@ case "$1" in
     export mythtv_username
 
     db_get mythtv/mysql_mythtv_password
-    mythtv_password="$RET"
+    if [ -z "$RET" ]; then
+        mythtv_password="$(pwgen -s 8)"
+        db_set mythtv/mysql_mythtv_password "$mythtv_password"
+        db_subst mythtv/display_password password "$mythtv_password"
+        db_input high mythtv/display_password || true
+        db_go || true
+    else
+        mythtv_password="$RET"
+    fi
     export mythtv_password
 
     NEW=$(mktemp -t mysql.txt-XXXXXX)
