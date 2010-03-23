@@ -223,8 +223,8 @@ my $MinGWinstaller = 'MinGW-5.1.4.exe';
 my $installMinGW   = $dossources.$MinGWinstaller;
 
 # Qt4 directory
-my $qt4dir = '/qt/4.5.1/';
-my $dosqt4dir = perl2dos($qt4dir);
+my $qt4dir     = 'C:/qt/4.5.1/';
+my $dosqt4dir  = perl2dos($qt4dir);
 my $unixqt4dir = '/c'.perl2unix($qt4dir);
 
 #NOTE: IT'S IMPORTANT that the PATHS use the correct SLASH-ing method for
