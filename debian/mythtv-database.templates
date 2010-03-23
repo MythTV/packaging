@@ -1,7 +1,7 @@
 Template: mythtv/mysql_admin_user
 Type: string
 Default: root
-_Description: What is the name of the MySQL administrator account:
+_Description: MySQL administrator account:
  This information will be used to create a database and user for MythTV.
  .
  Unless you have explicitly changed this on the MySQL server, and
@@ -9,7 +9,7 @@ _Description: What is the name of the MySQL administrator account:
 
 Template: mythtv/mysql_admin_password
 Type: password
-_Description: What is the password for the MySQL administrator account '${user}':
+_Description: Password for the MySQL administrator account '${user}':
  This information will be used to create a database and user for MythTV.
  .
  Unless you have explicitly changed the password on the MySQL server, leave
@@ -18,12 +18,13 @@ _Description: What is the password for the MySQL administrator account '${user}'
 Template: mythtv/public_bind
 Type: boolean
 Default: false
-_Description: Will you be using other computers running MythTV?
- If you will be using any other computers (that includes other Front End 
- machines) with MythTV, this computer needs to be configured to allow 
- remote connections. Do you want to enable remote connectivity? 
+_Description: Will other computers run MythTV?
+ If any other computers (that includes other Front End machines) with MythTV
+ will be used, this computer needs to be configured to allow remote connections.
  .
  Note that this is a security risk, as both the MythTV and MySQL services
  will be exposed. Be sure to place this machine behind a firewall.
  .
- If you have multiple interfaces, the first one listed in 'ifconfig' will be used.
+ If multiple interfaces are used, the first one listed in 'ifconfig' will be
+ used.
+

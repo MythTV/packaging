@@ -11,7 +11,35 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
     - Don't notify about running mythtv-setup.  This is optional (but
       of course encouraged!)
 
- -- Mario Limonciello <superm1@ubuntu.com>  Fri, 12 Mar 2010 09:49:21 -0600
+  [ Dave Walker (Daviey) ]
+  * debian/control:
+    - Remove unnecessary and potentially problematic use of Pre-Depends.
+    - Set the debug package to Priority extra.
+    - Change *-perl Section's from libs to perl
+    - add ${shlibs:Depends} for mythtv-common Depends field
+    - Minor spelling fix.
+    - Fixes the long description for one of the packages, ensuring the
+      description doesn't exceed 80 characters.
+  * debian/rules:
+    - Use debconf-updatepo to update translations when required
+    - Ensure license files are not included in the binary packages, except 
+      for debian/copyright.
+    - Fixes the permissions of certain files in the packaging.
+  * debian/copyright:
+    - updated to reflect that mythtv is GPL-2 only.
+    - inserted better licence statement and Copyright reference.
+  * debian/mythtv-*.templates
+    - Simplified strings; removed verbosity and improved readability.
+  * Prevent the maintainer scripts from failing in case any questions 
+    can't be displayed.
+  * Added holding debian/mythtv-frontend.config, mainly to appease lintian.
+  * debian/mythtv-frontend.menu: Changed section to Applications/Graphics.
+  * debian/mythtv-backend.postinst: Load debconf libraries.
+  * debian/source.lintian-overrides: Removes the unecessary override of the 
+    binNMU warnings.
+  * Fix perl binding installation.
+
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 23:07:33 +0000
 
 mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 

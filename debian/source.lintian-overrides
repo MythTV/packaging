@@ -1,9 +1,0 @@
-#Don't worry about these because Ubuntu doesn't do binary NMU's
-mythtv source: not-binnmuable-any-depends-all mythtv-transcode-utils -> mythtv-common
-mythtv source: not-binnmuable-any-depends-all mythtv-frontend -> mythtv-common
-mythtv source: not-binnmuable-all-depends-any mythtv-backend-master -> mythtv-backend
-mythtv source: not-binnmuable-any-depends-all mythtv-backend -> mythtv-common
-mythtv source: not-binnmuable-all-depends-any mythtv -> mythtv-backend
-mythtv source: not-binnmuable-all-depends-any mythtv -> mythtv-frontend
-mythtv source: not-binnmuable-any-depends-any libmyth-dev -> libmyth-0.22-0
-mythtv source: not-binnmuable-any-depends-any mythtv-backend -> mythtv-transcode-utils

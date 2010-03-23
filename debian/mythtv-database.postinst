@@ -39,7 +39,7 @@ ask_root_pw() {
     db_input high mythtv/mysql_host || true
     db_input high mythtv/mysql_admin_user || true
     db_input high mythtv/mysql_admin_password || true
-    db_go
+    db_go || true
     db_get mythtv/mysql_host
     hostname="$RET"
     db_get mythtv/mysql_admin_user

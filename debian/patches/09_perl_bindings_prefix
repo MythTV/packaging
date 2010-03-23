@@ -1,4 +1,5 @@
-Use prefix for Perl bindings.
+Use prefix for Perl bindings. Also allow more options to be passed when setting
+config options for Perl bindings.
 ==========================================================================
 --- a/bindings/perl/perl.pro
 +++ b/bindings/perl/perl.pro
@@ -13,7 +14,7 @@ Use prefix for Perl bindings.
 -    mythperlbindings.commands = perl Makefile.PL MAKEFILE=Makefile.perl PREFIX=$${PREFIX}
 -}
 -
-+mythperlbindings.commands = perl Makefile.PL MAKEFILE=Makefile.perl PREFIX=$${PREFIX}
++mythperlbindings.commands = perl Makefile.PL MAKEFILE=Makefile.perl PREFIX=$${PREFIX} $${PERL_CONFIG_OPTS}
  mythperbindingsbuild.target = perl_build
  mythperbindingsbuild.depends = Makefile.perl
  mythperbindingsbuild.commands = @-$(MAKE) -f Makefile.perl
@@ -26,3 +27,45 @@ Use prefix for Perl bindings.
  
  QMAKE_LINK=@-echo
  PRE_TARGETDEPS += perl_build
+--- a/configure
++++ b/configure
+@@ -141,6 +141,8 @@
+                            Supported bindings: perl, python
+                            comma-separated list
+   --python=PATH            Force a specific python executable to use [$python_default]
++  --perl-config-opts=OPTS  Additional options to pass when generating
++                           Makefile.perl for building Perl bindings.
+ EOF
+ 
+ #following is ffmpeg's configure help text
+@@ -2020,6 +2022,9 @@
+             fi
+         done
+     ;;
++    --perl-config-opts=*)
++      PERL_CONFIG_OPTS=`echo ${optval}`
++    ;;
+     --disable-devices) disable $INDEV_LIST $OUTDEV_LIST
+     ;;
+     --enable-debug=*) debuglevel="$optval"
+@@ -4250,6 +4255,9 @@
+ 
+ echo "# Bindings"
+ echo "bindings_perl             ${bindings_perl-no}"
++if test x"$PERL_CONFIG_OPTS" != x""; then
++  echo "Perl config options       $PERL_CONFIG_OPTS"
++fi
+ echo "bindings_python           ${bindings_python-no}"
+ echo ""
+ 
+@@ -4564,6 +4572,10 @@
+   echo "CONFIG_OPENGL_LIBS=-lGL -lGLU" >> $MYTH_CONFIG_MAK
+ fi
+ 
++if test x"$PERL_CONFIG_OPTS" != x"" ; then
++  echo "PERL_CONFIG_OPTS=$PERL_CONFIG_OPTS" >> $MYTH_CONFIG_MAK
++fi
++
+ if test x"$CCONFIG" != x"" ; then
+   echo "CCONFIG=$CCONFIG" >> $MYTH_CONFIG_MAK
+   echo "#define MYTH_BUILD_CONFIG \"$CCONFIG\"" >>$TMPH
