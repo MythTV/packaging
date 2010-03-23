@@ -1,10 +1,9 @@
-mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.0~fixes23786-0ubuntu1) UNRELEASED; urgency=low
 
   [ Jamie Bennett ]
   * Fix FTBFS on armel (LP: #537714)
 
   [ Mario Limonciello ]
-  * New snapshot of trunk.
   * mythtv-{common,backend}.{config,templates,postinst}: (LP: #483748)
     - Simplify debconf questions by avoiding showing the generated pw
     - Don't warn about mythtv group.
@@ -12,6 +11,7 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
       of course encouraged!)
 
   [ Dave Walker (Daviey) ]
+  * New snapshot (r23786), based from 0.23-fixes.
   * debian/control:
     - Remove unnecessary and potentially problematic use of Pre-Depends.
     - Set the debug package to Priority extra.
@@ -39,7 +39,7 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
     binNMU warnings.
   * Fix perl binding installation.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 23:07:33 +0000
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Tue, 23 Mar 2010 18:45:00 +0000
 
 mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 
