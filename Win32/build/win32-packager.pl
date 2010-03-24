@@ -44,10 +44,7 @@ $SIG{INT} = sub { die "Interrupted\n"; };
 $| = 1; # autoflush stdout;
 
 # this script was last tested to work with this version, on other versions YMMV.
-#my $SVNRELEASE = '16789'; # This is the last version that was Qt 3 based.
-                           # Qt 4 merges began immediately after.
-#my $SVNRELEASE = '18442'; # Recent 0-21-fixes
-my $SVNRELEASE = '21995'; # Recent trunk
+my $SVNRELEASE = '23037'; # Recent trunk
 #my $SVNRELEASE = 'HEAD'; # If you are game, go forth and test the latest!
 
 
@@ -72,8 +69,6 @@ my $proxy = '';
 my $NOISY   = 1;            # Set to 0 for less output to the screen
 my $version = '0.22';       # Main mythtv version - used to name dlls
 my $package = 0;            # Create a Win32 Distribution package? 1 for yes
-my $update  = 0;            # Revert instead of checkout.
-                            #  Careful, will destruct local copy!
 my $compile_type = "profile"; # compile options: debug, profile or release
 my $tickets = 0;            # Apply specific win32 tickets -
                             #  usually those not merged into SVN
@@ -81,19 +76,17 @@ my $dbconf = 0;             # Configure MySQL as part of the build process.
                             #  Required only for testing
 my $makeclean = 0;          # Flag to make clean
 my $svnlocation = "trunk";  # defaults to trunk unless -b specified
-my $qtver = 3;              # default to 3 until we can test otherwise below,
-                            #  do not change this here.
+my $qtver = 4;              # default to 4 until we can test otherwise
 my $continuous = 0 ;        # by default the app pauses to notify you what
                             #  it's about to do, -y overrides for batch usage.
 
 ##############################################################################
 # get command line options
-my $opt_string = 'vhu:kp:r:c:tldby';
+my $opt_string = 'vhogkp:r:c:tldby';
 my %opt = ();
 getopts( "$opt_string", \%opt );
 usage() if $opt{h};
 
-$update     = 1       if defined $opt{u};
 $package    = 1       if defined $opt{k};
 $NOISY      = 1       if defined $opt{v};
 $tickets    = 1       if defined $opt{t};
@@ -112,30 +105,8 @@ if (defined $opt{c}) {
 if (defined $opt{b}) {
     my @num = split /\./, $version;
     $svnlocation = "branches/release-$num[0]-$num[1]-fixes";
-    print "NOT using SVN 'trunk', using '$svnlocation'\n";
-
-    print "\nWARNING: This is unlikely to build successfully.\n\n";
-    print "SVN trunk changes frequently, and this version of the\n";
-    print "build script has had many changes to keep up with it.\n";
-    print "Maybe try the version from the branch instead! e.g.\n";
-    print "http://svn.mythtv.org/svn/branches/release-0-21-fixes/mythtv/contrib/Win32/win32-packager.pl\n\n";
-#    [ pause => 'press [enter] to continue !'],
-    print 'Press [enter] to continue !';
-    my $temp = getc();
 } else {
     $svnlocation = "trunk";
-}
-
-# force QT4 if we are on trunk above the point where QT4 patches were merged
-if ( $svnlocation eq 'trunk' &&
-     ($SVNRELEASE =~ m/^HEAD$/i || $SVNRELEASE > 16789) )
-{   $qtver = 4   }
-
-# 0.22-fixes doesn't exist yet.
-if ($svnlocation eq "branches/release-0-22-fixes") {
-    $version = '0.21';
-    $svnlocation = "branches/release-0-21-fixes";
-    $qtver = 3;
 }
 
 # Try to use parallel make
@@ -146,22 +117,25 @@ if ( $numCPU gt 1 ) {
     $parallelMake = 'make -j '. ($numCPU + 1);
 }
 
+# this list defines the components to build
+my @components = ( 'mythtv', 'packaging', 'myththemes' );
+push @components, 'oldthemes' if defined $opt{o};
+push @components, 'mythplugins' unless defined $opt{g};
 
 print "Config:\n\tQT version: $qtver\n\tDLLs will be labeled as: $version\n";
 if ( $numCPU gt 1 ) {
     print "\tBuilding with ", $numCPU, " processors\n";
 }
-print "\tSVN location is: $svnlocation\n\tSVN revision is: $SVNRELEASE\n\n";
-print "Press [enter] to continue, or [ctrl]-c to exit now....\n";
+print "\tSVN location is: $svnlocation\n\tSVN revision is: $SVNRELEASE\n";
+print "\tComponents to build: ";
+foreach my $comp( @components ) { print "$comp " }
+print "\n\nPress [enter] to continue, or [ctrl]-c to exit now....\n";
 getc() unless $continuous;
 
 # this will be used to test if we the same
 # basic build type/layout as previously.
 my $is_same = "$compile_type-$svnlocation-$qtver.same";
 $is_same =~ s#/#-#g; # don't put dir slashes in a filename!
-
-# this list defines the components to build , to build everything, leave as-is
-my @components = ( 'mythtv', 'oldthemes', 'mythplugins', 'packaging' );
 
 
 # TODO - we should try to autodetect these paths, rather than assuming
@@ -219,13 +193,13 @@ my $unixhome    = perl2unix($home);
 my $unixbuild   = perl2unix($build);
 
 # The installer for MinGW:
-my $MinGWinstaller = 'MinGW-5.1.4.exe';
+my $MinGWinstaller = 'MinGW-5.1.6.exe';
 my $installMinGW   = $dossources.$MinGWinstaller;
 
 # Qt4 directory
-my $qt4dir     = 'C:/qt/4.5.1/';
+my $qt4dir     = 'C:/qt/4.5.3/';
 my $dosqt4dir  = perl2dos($qt4dir);
-my $unixqt4dir = '/c'.perl2unix($qt4dir);
+my $unixqt4dir = perl2unix($qt4dir);
 
 #NOTE: IT'S IMPORTANT that the PATHS use the correct SLASH-ing method for
 #the type of action:
@@ -350,20 +324,7 @@ push @{$expect},
 [ file    => $mingw."bin/gcc.exe",
   exec    => $installMinGW,
   comment => 'unable to find a gcc.exe where expected, '.
-             'rerunning MinGW installer!' ];
-
-# sanity check - building 0.21 with mingwrt != 3.14 is guaranteed FAIL
-if ($version == '0.21') {
-   push @{$expect}, 
-     [grep    => ['runtime=mingw-runtime-3.14.tar.gz',$mingw.'installed.ini'],
-      Died_Because_Wrong_MinGW_Version => 'Intentional script failure',
-      comment => $version.' must be built with (old) MinGW runtime 3.14. '.
-                 '"Current" MinGW releases will NOT work. If the script '.
-                 'dies here, uninstall MinGW and next time, choose the '.
-                 '"Previous" MinGW package in the Automated Installer.']; 
-}
-
-push @{$expect},
+             'rerunning MinGW installer!' ],
 
 [ archive => $sources.'MSYS-1.0.11.exe',
   'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw/MSYS-1.0.11.exe',
@@ -471,18 +432,19 @@ push @{$expect},
 [ dir     => $sources.'svn-win32-1.5.1',
   extract => $sources.'svn-win32-1.5.1.zip' ],
 
-
-[ file    => $msys.'bin/svn151_.exe',
-  shell   => [ "cp -R $unixsources/svn-win32-1.5.1/* ".$unixmsys,
-               "cp $unixsources/svn-win32-1.5.1/bin/svn.exe ".
-                   $unixmsys."bin/svn151.exe",
-               "cp $unixsources/svn-win32-1.5.1/bin/svn.exe ".
-                   $unixmsys."bin/svn151_.exe",
-               "cp $unixsources/svn-win32-1.5.1/bin/intl3_svn.dll ".
-                   $unixmsys."bin"
-             ],
-  comment => 'put the svn.exe executable into the path, '.
+# link to svn instead of installing it, to avoid packaging its dlls later
+[ always  => $msys.'bin/svn.bat',
+  write   => [$msys.'bin/svn.bat',
+  '@'.$dossources.'svn-win32-1.5.1\bin\svn.exe %*' ],
+  comment => 'put svn.bat into the path, '.
              'so we can use it easily later!' ],
+
+[ always  => $msys.'bin/svnversion',
+  write   => [$msys.'bin/svnversion', 
+'#!/bin/sh
+'.$unixsources.'svn-win32-1.5.1/bin/svnversion.exe $*' ],
+  comment => 'put svnversion into the path, '.
+             'so mythtv can use it later!' ],
 
 # :
 [ dir     => $sources."zlib",
@@ -499,14 +461,6 @@ push @{$expect},
 [ file    => $msys.'include/zlib.h',
   exec    => ["copy /Y ".$dossources.'zlib\usr\include\* '.
               $dosmsys."include"] ],
-# taglib also requires zlib in /mingw , so we'll put it there too, why not!
-[ file    => $mingw.'lib/libz.a',
-  exec    => ["copy /Y ".$dossources.'zlib\usr\lib\* '.$dosmingw."lib"] ],
-[ file    => $mingw.'bin/msys-z.dll',
-  exec    => ["copy /Y ".$dossources.'zlib\usr\bin\* '. $dosmingw."bin"] ],
-[ file    => $mingw.'include/zlib.h',
-  exec    => ["copy /Y ".$dossources.'zlib\usr\include\* '.
-              $dosmingw."include"] ],
 
 # fetch mysql
 # primary server site is:
@@ -525,16 +479,16 @@ push @{$expect},
              'You should also choose NOT to "configure the server now" ' ],
 
 # after mysql install
-[ filesame => [$mingw.'bin/libmySQL.dll', $mysql.'bin/libmySQL.dll'],
+[ filesame => [$msys.'bin/libmySQL.dll', $mysql.'bin/libmySQL.dll'],
   copy     => [''=>'',
   comment  => 'post-mysql-install'] ],
-[ filesame => [$mingw.'lib/libmySQL.dll', $mysql.'bin/libmySQL.dll'],
+[ filesame => [$msys.'lib/libmySQL.dll', $mysql.'bin/libmySQL.dll'],
   copy     => [''=>'',
   comment  => 'post-mysql-install'] ],
-[ filesame => [$mingw.'lib/libmysql.lib', $mysql.'lib/opt/libmysql.lib'],
+[ filesame => [$msys.'lib/libmysql.lib', $mysql.'lib/opt/libmysql.lib'],
   copy     => [''=>''] ],
-[ file     => $mingw.'include/mysql.h',
-  exec     => 'copy /Y "'.$dosmysql.'include\*" '.$dosmingw.'include' ],
+[ file     => $msys.'include/mysql.h',
+  exec     => 'copy /Y "'.$dosmysql.'include\*" '.$dosmsys.'include' ],
 
 
 # make sure that /mingw is mounted in MSYS properly before trying
@@ -549,16 +503,16 @@ push @{$expect},
 #
 # TIP: we use a special file (with two extra _'s )
 #      as a marker to say this acton is already done!
-[ file    => $mingw.'lib/libmysql.lib__',
-  shell   => ["cd /mingw/lib","reimp -d libmysql.lib",
+[ file    => $msys.'lib/libmysql.lib__',
+  shell   => ["cd /usr/lib","reimp -d libmysql.lib",
            "dlltool -k --input-def libmysql.def --dllname libmysql.dll".
            " --output-lib libmysql.a",
-           "touch ".$unixmingw.'lib/libmysql.lib__'],
+           "touch ".$unixmsys.'lib/libmysql.lib__'],
   comment => ' rebuild libmysql.a' ],
 
 # grep    => [pattern,file] , actions/etc
-[ file    => $mingw.'include/mysql___h.patch',
-  write   => [$mingw.'include/mysql___h.patch',
+[ file    => $msys.'include/mysql___h.patch',
+  write   => [$msys.'include/mysql___h.patch',
 '--- mysql.h_orig	Fri Jan  4 19:35:33 2008
 +++ mysql.h	Tue Jan  8 14:48:36 2008
 @@ -45,11 +45,9 @@
@@ -576,8 +530,8 @@ push @{$expect},
  #if !defined(__WIN__)
 ' ],comment => 'write the patch for the the mysql.h file'],
 # apply it!?
-[ grep    => ['\|\| defined\(__MINGW32__\)',$mingw.'include/mysql.h'],
-  shell   => ["cd /mingw/include","patch -p0 < mysql___h.patch"],
+[ grep    => ['\|\| defined\(__MINGW32__\)',$msys.'include/mysql.h'],
+  shell   => ["cd /usr/include","patch -p0 < mysql___h.patch"],
   comment => 'Apply mysql.h patch file, if not already applied....' ],
 
 
@@ -705,12 +659,12 @@ if ($package == 1) {
 #----------------------------------------
 if ( $qtver == 4  ) {
 push @{$expect}, 
-[ archive => $sources.'qt-win-opensource-4.5.1-mingw.exe',  
+[ archive => $sources.'qt-win-opensource-4.5.3-mingw.exe',  
     fetch => 'http://get.qt.nokia.com/qt/source/'.
-             'qt-win-opensource-4.5.1-mingw.exe',
+             'qt-win-opensource-4.5.3-mingw.exe',
     comment => 'Downloading QT binaries; this will take a LONG time (165MB)' ],
 [ file => $qt4dir.'bin/QtCore4.dll', 
-  exec => $dossources.'qt-win-opensource-4.5.1-mingw.exe',
+  exec => $dossources.'qt-win-opensource-4.5.3-mingw.exe',
   comment => 'Install Qt - use default options.  '.
              'Ignore the warning about w32api version.' ],
 ;
@@ -736,10 +690,10 @@ push @{$expect},
 [ dir     => $sources.'freetype-2.3.5', 
   extract => $sources.'freetype-2.3.5.tar' ],
 # caution... freetype comes with a Makefile in the .tar.gz, so work around it!
-[ file    => $sources.'freetype-2.3.5/Makefile_', 
+[ file    => $sources.'freetype-2.3.5/Makefile__', 
   shell   => ["cd $unixsources/freetype-2.3.5",
-              "./configure --prefix=/mingw",
-              "touch $unixsources/freetype-2.3.5/Makefile_"],
+              "./configure --prefix=/usr",
+              "touch $unixsources/freetype-2.3.5/Makefile__"],
   comment => 'building freetype' ],
               
 # here's an example of specifying the make and make install steps separately, 
@@ -748,32 +702,29 @@ push @{$expect},
   shell   => ["cd $unixsources/freetype-2.3.5",
               "make"],
   comment => 'checking freetype' ],
-[ file    => $mingw.'lib/libfreetype.a', 
+[ file    => $msys.'lib/libfreetype.a', 
   shell   => ["cd $unixsources/freetype-2.3.5",
               "make install"],
   comment => 'installing freetype' ],
-[ file    => $mingw.'bin/libfreetype-6.dll', 
+[ file    => $msys.'bin/libfreetype-6.dll', 
   shell   => ["cp $unixsources/freetype-2.3.5/objs/.libs/libfreetype-6.dll ".
-              "$mingw/bin/"] ],
+              "$msys/bin/"] ],
 
 #eg: http://transact.dl.sourceforge.net/sourceforge/lame/lame-398-2.tar.gz
 [ archive => $sources.'lame-398-2.tar.gz',  
   fetch   => 'http://'.$sourceforge.'/sourceforge/lame/lame-398-2.tar.gz'],
 [ dir     => $sources.'lame-398-2', 
   extract => $sources.'lame-398-2.tar' ],
-[ file    => $mingw.'lib/libmp3lame.a', 
-  shell   => ["cd $unixsources/lame-398-2",
-              "./configure --prefix=/mingw",
-              "make",
-              "make install"],
-  comment => 'building and installing: mingw lame' ],
 [ file    => $msys.'lib/libmp3lame.a', 
   shell   => ["cd $unixsources/lame-398-2",
               "./configure --prefix=/usr",
               "make",
               "make install"],
   comment => 'building and installing: msys lame' ],
+;
 
+if ( grep m/mythplugins/, @components ) {
+push @{$expect},
 # taglib 1.5 sources changed it's build system under win32 to use 'cmake', 
 # which we don't have, however pre-compiled mingw 1.5 binaries are available:
 [ archive => $sources.'taglib-1.5-mingw-bin.zip',  
@@ -781,10 +732,6 @@ push @{$expect},
              '/users/luks/taglib/taglib-1.5-mingw-bin.zip'],
 [ dir     => $sources.'taglib-1.5-mingw-bin', 
   extract => $sources.'taglib-1.5-mingw-bin.zip' ],
-[ file    => $mingw.'lib/libtag.dll.a', 
-  shell   => ['cd '.$sources.'taglib-1.5-mingw-bin',
-              "cp -vr * $unixmingw"],
-  comment => 'installing: mingw taglib' ],
 [ file    => $msys.'lib/libtag.dll.a', 
   shell   => ['cd '.$sources.'taglib-1.5-mingw-bin',
               "cp -vr * $unixmsys"],
@@ -831,18 +778,6 @@ esac'] ],
               "make install"],
   comment => 'building and installing: msys libogg' ],
 
-#  need msys version of ogg for msys version of vorbis!
-[ archive => $sources.'libogg-1.1.3.tar.gz',  
-  fetch   => 'http://downloads.xiph.org/releases/ogg/libogg-1.1.3.tar.gz'],
-[ dir     => $sources.'libogg-1.1.3', 
-  extract => $sources.'libogg-1.1.3.tar' ],
-[ file    => $mingw.'bin/libogg-0.dll', 
-  shell   => ["cd $unixsources/libogg-1.1.3",
-              "./configure --prefix=/mingw",
-              "make",
-              "make install"],
-  comment => 'building and installing: mingw libogg' ],
-
 # confirmed latest version as at 26-12-2008:
 [ archive => $sources.'libvorbis-1.2.0.tar.gz',  
   fetch   => 'http://downloads.xiph.org/releases/'.
@@ -855,19 +790,6 @@ esac'] ],
               "make",
               "make install"],
   comment => 'building and installing: msys libvorbis' ],
-
-# definitely need mingw version for mythtv plugins to build
-[ archive => $sources.'libvorbis-1.2.0.tar.gz',  
-  fetch   => 'http://downloads.xiph.org/releases/'.
-             'vorbis/libvorbis-1.2.0.tar.gz'],
-[ dir     => $sources.'libvorbis-1.2.0', 
-  extract => $sources.'libvorbis-1.2.0.tar' ],
-[ file    => $mingw.'lib/libvorbis.a', 
-  shell   => ["cd $unixsources/libvorbis-1.2.0",
-              "./configure --prefix=/mingw --disable-shared",
-              "make",
-              "make install"],
-  comment => 'building and installing: mingw libvorbis' ],
 
 #[ archive => $sources.'libcdaudio-0.99.12p2.tar.gz',
 #  fetch   => 'http://'.$sourceforge.
@@ -890,23 +812,8 @@ esac'] ],
 #              "make",
 #              "make install"],
 #  comment => 'building and installing:  msys libcdaudio' ],  
-#
-## mingw version is needed, or mythmusic won't build
-#[ file    => $mingw.'bin/libcdaudio-config', 
-#  shell   => ["cd ".$unixsources."libcdaudio-0.99.12p2",
-#              "./configure --prefix=/mingw",
-#              "make",
-#              "make install"],
-#  comment => 'building and installing:  mingw libcdaudio' ],  
   
-#[ pause => 'flac, taglib, lame all done.... press [enter] to continue !'],
-
-# skip doing pthreads from source, we use binaries that were fetched earlier:
-#[ archive => $sources.'pthreads-w32-2-8-0-release.tar.gz',  
-#  fetch => 'ftp://sourceware.org/pub/pthreads-win32/'.
-#           'pthreads-w32-2-8-0-release.tar.gz'],
-#[ dir => $sources.'pthreads-w32-2-8-0-release', 
-#  extract => $sources.'pthreads-w32-2-8-0-release.tar' ],
+#[ pause => 'taglib, lame all done.... press [enter] to continue !'],
 
 # confirmed latest source version as at 26-12-2008:
 [ archive => $sources.'SDL-devel-1.2.13-mingw32.tar.gz',  
@@ -986,12 +893,6 @@ esac'] ],
              "make",
              "make install"],
   comment => 'building and installing: msys fftw' ],
-[ file    => $mingw.'lib/libfftw3.a', 
-  shell  => ["cd $unixsources/fftw-3.2.1",
-             "./configure --prefix=/mingw",
-             "make",
-             "make install"],
-  comment => 'building and installing: mingw fftw' ],
 
 # typical template:
 #[ archive => $sources.'xxx.tar.gz',  fetch => ''],
@@ -1002,117 +903,7 @@ esac'] ],
 #            "make",
 #            "make install"] ],
 
-#----------------------------------------
-# Building QT3 is complicated!
-#
-
-;
-
-if ( $qtver == 3  ) {
-push @{$expect}, 
-
-#[ pause => 'press [enter] to build QT3 next!'],
-[ archive => $sources.'qt-3.3.x-p8.tar.bz2',  
-  fetch => 'http://'.$sourceforge.'/sourceforge/qtwin/qt-3.3.x-p8.tar.bz2'],
-[ dir => $msys.'qt-3.3.x-p8',
-  extract => [$sources.'qt-3.3.x-p8.tar', $msys] ],
-
-
-# equivalent patch:
-[ archive => $sources.'qt.patch' ,
-  'fetch' => 'http://tanas.ca/qt.patch',
-  comment => ' patch the QT sources'],
-[ filesame => [$msys.'qt-3.3.x-p8/qt.patch',$sources."qt.patch"],
-  copy => [''=>''] ],
-[ grep => ["\-lws2_32", $msys.'qt-3.3.x-p8/mkspecs/win32-g++/qmake.conf'],
-  shell => ["cd ".$unixmsys."qt-3.3.x-p8/","patch -p1 < qt.patch"],
-  comment => 'patch the qt3 qmake.conf' ],
-
-
-[ file => $msys.'bin/sh_.exe',
-  shell => ["mv ".$unixmsys."bin/sh.exe ".$unixmsys."bin/sh_.exe"],
-  comment => 'rename msys sh.exe out of the way before building QT! ' ] ,
-
-# write a batch script for the QT environment under DOS:
-[ file => $msys.'qt-3.3.x-p8/qt3_env.bat',
-  write => [$msys.'qt-3.3.x-p8/qt3_env.bat',
-'rem a batch script for the QT environment under DOS:
-set QTDIR='.$dosmsys.'qt-3.3.x-p8
-set MINGW='.$dosmingw.'
-set PATH=%QTDIR%\bin;%MINGW%\bin;%PATH%
-set QMAKESPEC=win32-g++
-cd %QTDIR%
-'
-],comment=>'write a batch script for the QT3 environment under DOS'],
-
-
-[ file => $msys.'qt-3.3.x-p8/lib/libqt-mt3.dll', 
-  exec => $dosmsys.'qt-3.3.x-p8\qt3_env.bat && '.
-          'configure.bat -thread -plugin-sql-mysql -opengl -no-sql-sqlite',
-  comment => 'Execute qt3_env.bat  && the configure command to actually '.
-             'build QT now!  - ie configures qt and '.
-             'also makes it, hopefully! WARNING SLOW (MAY TAKE HOURS!)' ],
-[ exists => $mingw.'bin/sh.exe',
-   shell => ["mv ".$unixmingw."bin/sh.exe ".$unixmingw."bin/sh_.exe"],
- comment => 'rename mingw sh.exe out of the way before building QT! ' ] ,
-
-[ filesame => [$msys.'qt-3.3.x-p8/bin/libqt-mt3.dll',$msys.'qt-3.3.x-p8/lib/libqt-mt3.dll'], 
-  copy => [''=>''], 
-  comment => 'is there a libqt-mt3.dll in the "lib" folder of QT? if so, copy it to the the "bin" folder for uic.exe to use!' ],
-
-# did the configure finish?  - run mingw32-make to get it to finish
-# properly.
-# HINT: the very last file built in a successful QT build env is the C:\msys\1.0\qt-3.3.x-p8\examples\xml\tagreader-with-features\tagreader-with-features.exe
-#[ file => $msys.'qt-3.3.x-p8/examples/xml/tagreader-with-features/tagreader-with-features.exe', exec => $dosmsys.'qt-3.3.x-p8\qt3_env.bat && mingw32-make',comment => 'we try to finish the build of QT with mingw32-make, incase it was just a build dependancy issue? WARNING SLOW (MAY TAKE HOURS!)' ],
-
-# TODO - do we have an action we can take to build just this one file/dll if it fails?  
-# For now, we will just test if it built, and try to run 'make' again if it didn't!
-[ file => $msys.'qt-3.3.x-p8/plugins/sqldrivers/libqsqlmysql.dll',
-  exec => $dosmsys.'qt-3.3.x-p8\qt3_env.bat && mingw32-make -j',
-  comment => 'lib\libqsqlmysql.dll - we are just validating some basics of '.
-             'the QT install, and if any of these components are missing, '.
-             'the build must have failed (is the sql driver built properly?) '],
-[ file => $msys.'qt-3.3.x-p8/bin/qmake.exe',
-  exec => $dosmsys.'qt-3.3.x-p8\qt3_env.bat && mingw32-make',
-  comment => 'bin\qmake.exe - here we are just validating some basics of '.
-             'the QT install, and if any of these components are missing, '.
-             'the build must have failed (is the sql driver built properly?) '],
-[ file => $msys.'qt-3.3.x-p8/bin/moc.exe',
-  exec => $dosmsys.'qt-3.3.x-p8\qt3_env.bat && mingw32-make', 
-  comment => 'bin\moc.exe - here we are just validating some basics of '.
-             'the QT install, and if any of these components are missing, '.
-             'the build must have failed (is the sql driver built properly?) '],
-[ file => $msys.'qt-3.3.x-p8/bin/uic.exe',
-  exec => $dosmsys.'qt-3.3.x-p8\qt3_env.bat && mingw32-make', 
-  comment => 'bin\uic.exe - here we are just validating some basics of '.
-             'the QT install, and if any of these components are missing, '.
-             'the build must have failed (is the sql driver built properly?) '],
-[ file => $msys.'qt-3.3.x-p8/lib/libqt-mt3.dll',
-  exec => $dosmsys.'qt-3.3.x-p8\qt3_env.bat && mingw32-make',
-  comment => 'bin\libqt-mt3.dll - here we are just validating some basics of '.
-             'the QT install, and if any of these components are missing, '.
-             'the build must have failed (is the sql driver built properly?) '],
-
-# a manual method for "installing" QT would be to put all the 'bin' files
-# into /mingw/bin and similarly for the 'lib' and 'include' folders to their
-# respective mingw folders, but we don't.  we run it from the build location!
-
-
-#  (back to sh.exe ) now that we are done !
-[ file => $msys.'bin/sh.exe',
- shell => ["mv ".$unixmsys."bin/sh_.exe ".$unixmsys."bin/sh.exe"],
- comment => 'rename msys sh_.exe back again!' ] ,
-[ exists => $mingw.'bin/sh_.exe',
-   shell => ["mv ".$unixmingw."bin/sh_.exe ".$unixmingw."bin/sh.exe"],
- comment => 'rename mingw sh_.exe back again!' ] ,
-
-#Copy libqt-mt3.dll to libqt-mt.dll  , if there is any date/size change!
-[ filesame => [$msys.'qt-3.3.x-p8/lib/libqt-mt.dll',
-               $msys.'qt-3.3.x-p8/lib/libqt-mt3.dll'],
-  copy => [''=>''],
-  comment => 'Copy libqt-mt3.dll to libqt-mt.dll' ] ,
-;
-}
+;}
 
 # 
 #----------------------------------------
@@ -1123,9 +914,9 @@ push @{$expect},
 #[ pause => 'press [enter] to extract and patch QT4 next!'],
 
 [ always => [],
-  write => [$sources.'qt-4.5.1.patch1',
-"--- 4.5.1/qmake/option.cpp.bak	2009-06-28 16:35:29 -0500
-+++ 4.5.1/qmake/option.cpp	2009-06-28 16:35:47 -0500
+  write => [$sources.'qt-4.5.3.patch1',
+"--- 4.5.3/qmake/option.cpp.bak	2009-06-28 16:35:29 -0500
++++ 4.5.3/qmake/option.cpp	2009-06-28 16:35:47 -0500
 @@ -619,7 +619,10 @@
      Q_ASSERT(!((flags & Option::FixPathToLocalSeparators) && (flags & Option::FixPathToTargetSeparators)));
      if(flags & Option::FixPathToLocalSeparators) {
@@ -1142,13 +933,13 @@ push @{$expect},
 [ grep  => ['Option::shellPath.isEmpty',
             $qt4dir.'qmake/option.cpp'], 
   shell => ['cd '.$unixqt4dir, 'dos2unix qmake/option.cpp', 
-            'patch -p1 < '.$sources.'qt-4.5.1.patch1'] ],
+            'patch -p1 < '.$sources.'qt-4.5.3.patch1'] ],
 
 
 [ always => [],
-  write => [$sources.'qt-4.5.1.patch2',
-"--- 4.5.1/mkspecs/win32-g++/qmake.conf.bak	2009-06-28 14:58:42 -0500
-+++ 4.5.1/mkspecs/win32-g++/qmake.conf	2009-06-28 14:59:01 -0500
+  write => [$sources.'qt-4.5.3.patch2',
+"--- 4.5.3/mkspecs/win32-g++/qmake.conf.bak	2009-06-28 14:58:42 -0500
++++ 4.5.3/mkspecs/win32-g++/qmake.conf	2009-06-28 14:59:01 -0500
 @@ -76,12 +76,15 @@
      MINGW_IN_SHELL      = 1
  	QMAKE_DIR_SEP		= /
@@ -1187,7 +978,7 @@ push @{$expect},
 [ grep  => ['QMAKE_COPY_DIR.*?= cp -r',
             $qt4dir.'mkspecs/win32-g++/qmake.conf'], 
   shell => ['cd '.$unixqt4dir, 'dos2unix mkspecs/win32-g++/qmake.conf',
-            'patch -p1 < '.$sources.'qt-4.5.1.patch2'] ],
+            'patch -p1 < '.$sources.'qt-4.5.3.patch2'] ],
 
 
 # Write a batch script for the QT environment under DOS:
@@ -1197,6 +988,8 @@ set QTDIR='.$dosqt4dir.'
 set MINGW='.$dosmingw.'
 set PATH=%QTDIR%\bin;%MINGW%\bin;%SystemRoot%\System32
 set QMAKESPEC=win32-g++
+set LIBRARY_PATH='.$dosmsys.'\lib
+set CPATH='.$dosmsys.'\include
 cd %QTDIR%
 goto SQLONLY
 
@@ -1305,25 +1098,15 @@ foreach my $comp( @components ) {
 push @{$expect}, 
 # now lets write some build scripts to help with mythtv itself
 
-# Qt3
-[ always => [], 
-  write => [$mythtv.'qt3_env.sh',
-'export QTDIR='.$unixmsys.'qt-3.3.x-p8
-export QMAKESPEC=$QTDIR/mkspecs/win32-g++
-export LD_LIBRARY_PATH=$QTDIR/lib:/usr/lib:/mingw/lib:/lib
-export PATH=$QTDIR/bin:/usr/local/bin:$PATH
-' ],
-  comment => 'write a QT3 script that we can source later when inside msys '.
-             'to setup the environment variables'],
-
-
 # Qt4
 [ always => [], 
   write => [$mythtv.'qt4_env.sh',
 'export QTDIR='.$unixqt4dir.'
 export QMAKESPEC=$QTDIR/mkspecs/win32-g++
 export LD_LIBRARY_PATH=$QTDIR/lib:/usr/lib:/mingw/lib:/lib
-export PATH=$QTDIR/bin:/usr/local/bin:$PATH
+export LIBRARY_PATH=/usr/lib
+export CPATH=/usr/include
+export PATH=$QTDIR/bin:/usr/bin:$PATH
 ' ],
   comment => 'write a QT4 script that we can source later when inside msys '.
              'to setup the environment variables'],
@@ -1332,33 +1115,18 @@ export PATH=$QTDIR/bin:/usr/local/bin:$PATH
 [ always => [], 
   write => [$mythtv.'make_clean.sh',
 'source '.$unixmythtv.'qt'.$qtver.'_env.sh
-rm -f /usr/bin/myth*.exe
-rm -f /usr/bin/libmyth*.dll
-rm -f /usr/lib/libmyth*.*
-rm -f /usr/lib/liblibmyth*.*
-rm -fr /usr/include/mythtv
-rm -fr /usr/lib/mythtv
-rm -fr /usr/share/mythtv
-rm -fr /lib/mythtv
-rm -f /usr/bin/mtd.exe
-rm -f /usr/bin/ignyte.exe
 cd '.$unixmythtv.'mythtv
-make clean
-rm Makefile
+make distclean
 cd '.$unixmythtv.'mythplugins
-make clean
-rm Makefile
+make distclean
+cd '.$unixmythtv.'myththemes
+make distclean
 cd '.$unixmythtv.'oldthemes
-make clean
-rm Makefile
+make distclean
 cd '.$unixmythtv.'
-find . -type f -name \*.dll | grep -v build | grep -v setup | xargs -n1 rm
-find . -type f -name \*.exe | grep -v build | grep -v setup | xargs -n1 rm
-find . -type f -name \*.a | xargs -n1 rm
-find . -type f -name \*.o | xargs -n1 rm
-#find . -type f -name Makefile\.* | grep -v svn | xargs -n1 rm
-find . -type f -name moc_\*.cpp |  grep -v svn | xargs -n1 rm
-#rm -rf '.$unixmythtv.'mythtv/libs/libmythdb
+find . -type f -name \*.dll -o -name \*.exe -o -name \*.a \
+       -o -name \*.o -o -name moc_\*.cpp -o -name version.cpp \
+     | grep -v build | grep -v setup | grep -v svn | xargs -n1 rm -v
 rm -f '.$mythtv.'delete_to_do_make_clean.txt
 '], 
   comment => 'write a script to clean up myth environment'],
@@ -1411,7 +1179,7 @@ foreach my $comp( @components ) {
 # ... then SVN update every time, before patches
 
   [ always  => [],
-    exec    => [$dosmsys."bin\\svn.exe -r $SVNRELEASE update $dosmythtv$comp"],
+    exec    => [$dosmsys."bin\\svn -r $SVNRELEASE update $dosmythtv$comp"],
     comment => "Getting SVN updates for:$comp on $svnlocation" ];
 }
 
@@ -1420,7 +1188,7 @@ push @{$expect},
 # always get svn num
 [ always   => [],
   exec     => ['cd '.$dosmythtv.'mythtv && '.
-               $dosmsys.'bin\svn.exe info > '.$dosmythtv.'mythtv\svn_info.new'],
+               $dosmsys.'bin\svn info > '.$dosmythtv.'mythtv\svn_info.new'],
  comment   => 'fetching the SVN number to a text file, if we can'],
 [ filesame => [$mythtv.'mythtv/svn_info.txt',$mythtv.'mythtv/svn_info.new'],
   shell    => ['touch -r '.$unixmythtv.'mythtv/svn_info.txt '.
@@ -1437,18 +1205,6 @@ push @{$expect},
              .$unixmythtv.'mythtv/svn_info.txt'],
   comment => 'if the SVN number is changed, then remember that, AND arrange for a full re-make of mythtv. (overkill, I know, but safer)' ], 
 
-# open up the permissions:
-[ always   => [],
-  shell    => ['cd '.$unixmythtv.'mythtv',
-#TODO - reenable               'chmod -R 777 .'
-#               'cd '.$unixmythtv.'mythplugins',
-#               'chmod -R 777 .'
-#               'cd '.$unixmythtv.'mythtvthemes',
-#               'chmod -R 777 .'
-               ],
-  comment   => 'loosening permissions on source code:'],
-
-
 
 #  [ pause => 'press [enter] to continue !'],
   
@@ -1456,50 +1212,6 @@ push @{$expect},
 #----------------------------------------
 # expired patches
 #----------------------------------------
-
-# 15586 and earlier need this patch:
-#[ archive => $sources.'backend.patch.gz' , 'fetch' => 'http://svn.mythtv.org/trac/raw-attachment/ticket/4392/backend.patch.gz', comment => 'backend.patch.gz - apply any outstanding win32 patches - this section will be hard to keep up with HEAD/SVN'],
-#[ filesame => [$mythtv.'mythtv/backend.patch.gz',$sources."backend.patch.gz"], copy => [''=>'',comment => '4392: - backend connections being accepted patch '] ],
-#[ grep => ['unsigned\* Indexes = new unsigned\[n\]\;',$mythtv.'mythtv/libs/libmyth/mythsocket.cpp'], shell => ["cd ".$unixmythtv."mythtv/","gunzip -f backend.patch.gz","patch -p0 < backend.patch"] ],
-
-# these next 3 patches are needed for 15528 (and earlier)
-#[ archive => $sources.'importicons_windows_2.diff' , 'fetch' => 'http://svn.mythtv.org/trac/raw-attachment/ticket/3334/importicons_windows_2.diff', comment => 'importicons_windows_2.diff - apply any outstanding win32 patches - this section will be hard to keep up with HEAD/SVN'],
-#[ filesame => [$mythtv.'mythtv/importicons_windows_2.diff',$sources."importicons_windows_2.diff"], copy => [''=>'',comment => '3334 fixes error with mkdir() unknown.'] ],
-#
-#[ grep => ['\#include <qdir\.h>',$mythtv.'mythtv/libs/libmythtv/importicons.cpp'], shell => ["cd ".$unixmythtv."mythtv/","patch -p0 < importicons_windows_2.diff"] ],
-#[ archive => $sources.'mingw.patch' , 'fetch' => 'http://svn.mythtv.org/trac/raw-attachment/ticket/4516/mingw.patch', comment => 'mingw.patch - apply any outstanding win32 patches - this section will be hard to keep up with HEAD/SVN'],
-#[ filesame => [$mythtv.'mythtv/mingw.patch',$sources."mingw.patch"], copy => [''=>'',comment => '4516 fixes build'] ],
-#[ grep => ['LIBS \+= -lmyth-\$\$LIBVERSION',$mythtv.'mythtv/libs/libmythui/libmythui.pro'], shell => ["cd ".$unixmythtv."mythtv/","patch -p0 < mingw.patch"] ]
-#
-# (fixed in 15547)
-#[ archive => $sources.'util_win32.patch' , 'fetch' => 'http://svn.mythtv.org/trac/raw-attachment/ticket/4497/util_win32.patch', comment => 'util_win32.patch - apply any outstanding win32 patches - this section will be hard to keep up with HEAD/SVN'],
-#[ filesame => [$mythtv.'mythtv/util_win32.patch',$sources."util_win32.patch"], copy => [''=>'',comment => '4497 fixes build'] ],
-#[ grep => ['\#include "compat.h"',$mythtv.'mythtv/libs/libmyth/util.h'], shell => ["cd ".$unixmythtv."mythtv/libs/libmyth/","patch -p0 < ".$unixmythtv."mythtv/util_win32.patch"] ],
-
-# post 15528, pre 15568  needs this: equivalent to: svn merge -r 15541:15540 .
-#[ archive => $sources.'15541_undo.patch' , 'fetch' => 'http://svn.mythtv.org/trac/raw-attachment/ticket/XXXX/15541_undo.patch', comment => 'util_win32.patch - apply any outstanding win32 patches - this section will be hard to keep up with HEAD/SVN'],
-#[ filesame => [$mythtv.'mythtv/15541_undo.patch',$sources."15541_undo.patch"], copy => [''=>'',comment => 'XXXX'] ],
-#[ grep  => ['\#include \"compat.h\"',$mythtv.'mythtv/libs/libmythui/mythpainter.cpp'], shell => ["cd ".$unixmythtv."mythtv/libs/libmyth/","patch -p2 < ".$unixmythtv."mythtv/15541_undo.patch"] , comment => 'currently need this patch too, equivalemnt of: svn merge -r 15541:15540 .'],
-
-# Ticket 4984
-#[ archive => $sources.'4984_mythcontext.patch6' , 'fetch' => 'http://svn.mythtv.org/trac/raw-attachment/ticket/4984/mythcontext.patch6', comment => 'Applying Ticket 4984'],
-#[ filesame => [$mythtv.'mythtv/4984_mythcontext.patch6',$sources."4984_mythcontext.patch6"], copy => [''=>'',comment => 'XXXX'] ],
-#[ grep  => ['MYTHLIBDIR',$mythtv.'mythtv/libs/libmyth/mythcontext.cpp'], shell => ["cd ".$unixmythtv."mythtv/","patch -p0 < ".$unixmythtv."mythtv/4984_mythcontext.patch6"] , comment => ' 4984'],
-
-
-# Ticket 4699
-#[ archive => $sources.'4699_win32_fs.patch', 'fetch' => 'http://svn.mythtv.org/trac/raw-attachment/ticket/4699/win32_fs.patch', comment => 'win32_fs.patch'],
-#[ filesame => [$mythtv.'mythtv/4699_win32_fs.patch',$sources."4699_win32_fs.patch"], copy => [''=>'',comment => 'XXXX'] ],
-#[ grep  => ['setCaption',$mythtv.'mythtv/libs/libmythui/mythmainwindow.cpp'], shell => ["cd ".$unixmythtv."mythtv","patch -p0 < ".$unixmythtv."mythtv/4699_win32_fs.patch"] , comment => ' 4699'],
-
-#  4718
-#[ archive => $sources.'4718_undo.patch' , 'fetch' => 'http://svn.mythtv.org/trac/raw-attachment/ticket/4718/dvd_playback.patch', comment => 'Ticket 4718 dvdplayer.patch'],
-#[ filesame => [$mythtv.'mythtv/4718_undo.patch',$sources."4718_undo.patch"], copy => [''=>'',comment => 'XXXX'] ],
-#[ grep  => ['filename.right(filename.length() -  4)',$mythtv.'mythtv/libs/libmythtv/RingBuffer.cpp'], shell => ["cd ".$unixmythtv."mythtv/","patch -p0 < ".$unixmythtv."mythtv/4718_undo.patch"] , comment => ' .'],
-#[ archive => $sources.'4718_playback.patch' , 'fetch' => 'http://svn.mythtv.org/trac/raw-attachment/ticket/4718/dvd_playback_plugin.patch', comment => 'dvdplayer.patch - apply any outstanding win32 patches - this section will be hard to keep upwith HEAD/SVN'],
-#[ filesame => [$mythtv.'mythtv/4718_playback.patch',$sources."4718_playback.patch"], copy => [''=>'',comment => 'XXXX'] ],
-#[ grep  => ['gc->setValue\("D:',$mythtv.'mythplugins/mythvideo/mythvideo/globalsettings.cpp'], shell => ["cd ".$unixmythtv."mythplugins/mythvideo","patch -p0 < ".$unixmythtv."mythtv/4718_undo.patch"] , comment => ' .'],
-#[ grep  => ['\"dvd:\/\"',$mythtv.'mythplugins/mythvideo/mythvideo/main.cpp'], shell => ["cd ".$unixmythtv."mythplugins/mythvideo","patch -p1 < ".$unixmythtv."mythtv/4718_undo.patch"] , comment => ' 4718'],
 
 # Ticket 15831 
 #[ archive => $sources.'15831_win32_fs.patch', 'fetch' => 'http://svn.mythtv.org/trac/changeset/15831?format=diff&new=15831', comment => 'win32_fs.patch - apply any outstanding win32 patches - this section will be hard to keep upwith HEAD/SVN'],
@@ -1550,7 +1262,7 @@ push @{$expect},
 foreach my $comp( @components ) {
   push @{$expect}, 
   [ file    => $mythtv.'delete_to_do_make_clean.txt',
-    exec    => [$dosmsys."bin\\svn.exe -R revert $dosmythtv$comp", "nocheck"],
+    exec    => [$dosmsys."bin\\svn -R revert $dosmythtv$comp", "nocheck"],
     comment => "reverting any local MODS from SVN - $comp on $svnlocation" ],
     
 # this is now done as part of make_clean.sh, which happens EARLIER
@@ -1588,17 +1300,6 @@ push @{$expect},
   comment => 'do we already have a Makefile for mythtv?' ],
 
 # make
-
-# fix a bug in Makefile and make COPY_DIR cp -fr instead of cp -f
-# TODO Check if this is necessary. I suspect it was meant to fix #4949?
-#
-[ file => $mythtv.'mythtv/fix_makefile.sh', 
-  write => [$mythtv.'mythtv/fix_makefile.sh', 
-'cd '.$unixmythtv.'mythtv
-cat Makefile | sed  "s/\(^COPY_DIR\W*\=\W*cp\)\(\W\-f\)/\1 -fr/" > Makefile_new
-cp Makefile_new Makefile
-'],
-  comment => 'write a script to fix Makefile'],
 
 [ newer => [$mythtv."mythtv/libs/libmyth/libmyth-$version.dll",
             $mythtv.'mythtv/last_build.txt'],
@@ -1659,8 +1360,6 @@ cp Makefile_new Makefile
 source '.$unixmythtv.'qt'.$qtver.'_env.sh
 cd '.$unixmythtv.'
 echo copying main QT dlls to build folder...
-# mythtv probably needs the qt3 dlls at runtime:
-cp '.$unixmsys.'qt-3.3.x-p8/lib/*.dll '.$unixmythtv.'build/bin
 # mythtv needs the qt4 dlls at runtime:
 cp '.$unixqt4dir.'bin/*.dll '.$unixmythtv.'build/bin
 # qt mysql connection dll has to exist in a subfolder called sqldrivers:
@@ -1675,45 +1374,20 @@ echo Creating build-folder Directories...
 # translations go into <installprefix>/share/mythtv/i18n
 mkdir '.$unixmythtv.'/build/bin/sqldrivers
 echo Copying QT plugin required dlls....
-cp '.$unixmsys.'qt-3.3.x-p8/plugins/sqldrivers/libqsqlmysql.dll '.$unixmythtv.'build/bin/sqldrivers 
 cp '.$unixqt4dir.'plugins/sqldrivers/qsqlmysql*.dll '.$unixmythtv.'build/bin/sqldrivers 
 echo Copying ming and msys dlls to build folder.....
 # pthread dlls and mingwm10.dll are copied from here:
 cp /mingw/bin/*.dll '.$unixmythtv.'build/bin
-# msys-1.0.dll dll is copied from here:
-cp /bin/msys-1.0.dll '.$unixmythtv.'build/bin
+# msys-1.0.dll and library dlls are copied from here:
+cp /bin/*.dll '.$unixmythtv.'build/bin
 echo copying lib files...
 mv '.$unixmythtv.'build/lib/*.dll '.$unixmythtv.'build/bin/
 mv '.$unixmythtv.'build/bin/*.a '.$unixmythtv.'build/lib/
 
-# because the install process failes to copy the .mak file (needed by the plugins), we copy it manually.
-cp '.$unixmythtv.'mythtv/libs/libmyth/mythconfig.mak '.$unixmythtv.'build//include/mythtv/
-
 touch '.$unixmythtv.'/build/package_flag
-cp '.$unixmythtv.'gdb_*.bat '.$unixmythtv.'build/bin
 cp '.$unixmythtv.'packaging/Win32/debug/*.cmd '.$unixmythtv.'build/bin
 '],
   comment => 'write a script to install mythtv to build folder'],
-
-
-# Create file to install mythplugins
-[ always => [], 
-  write => [$mythtv.'setup_plugins.sh',
-'#!/bin/bash
-source '.$unixmythtv.'qt'.$qtver.'_env.sh
-cd '.$unixmythtv.'
-echo Copying exe files....
-find /usr/bin -name \\myth*.exe  | grep -v build | xargs -n1 -i__ cp __ ./build/
-echo Copying dll files....
-find /usr/bin -name \\libmyth*.dll  | grep -v build | xargs -n1 -i__ cp __ ./build/  
-find /usr/lib -name \\libmyth*.dll  | grep -v build | xargs -n1 -i__ cp __ ./build/  
-echo Copying share files...
-cp -ur /share/mythtv ./build/share/
-echo Copying lib files...
-cp -ur /lib/mythtv/* ./build/lib/mythtv
-cp -ur /usr/lib/mythtv/* ./build/lib/mythtv
-'],
-  comment => 'write a script to install plugins to build folder'],
 
 
 # chmod the shell scripts, everytime
@@ -1892,25 +1566,11 @@ push @{$expect},
              ' --disable-mythgame --disable-mythnews'.
              ' --disable-mythzoneminder --enable-aac'.
              ' --enable-libvisual --enable-fftw --compile-type='.$compile_type,
-             #'touch '.$unixmythtv.'mythplugins/cleanup/cleanup.pro'
              ], 
   comment => 'do we already have a Makefile for myth plugins?' ],
   
 #[ pause => 'how does the mythplugins Makefile look? '.
 #           '(did we get any errors on screen?)'],
-
-
-[ grep    => ['win32:DEPENDS', $mythtv.'mythplugins/settings.pro'], 
-  shell   => ['echo \'win32:DEPENDS += ./\' >> '.
-              $mythtv.'mythplugins/settings.pro','nocheck'], 
-  comment => 'fix settings.pro' ],
-
-#hack mythconfig.mak to remove /usr
-[ grep    => ['LIBDIR=/lib', $mythtv.'mythplugins/mythconfig.mak'], 
-  shell   => ['cd '.$unixmythtv.'mythplugins',
-              'sed -e \'s|/usr||\' mythconfig.mak > mythconfig2.mak',
-              'cp mythconfig2.mak mythconfig.mak', 'nocheck'], 
-  comment => 'hack mythconfig.mak'],
 
 # make
 [ newer   => [$mythtv.'mythplugins/mythmovies/mythmovies/libmythmovies.dll',
@@ -1920,12 +1580,6 @@ push @{$expect},
   comment => 'PLUGINS! redo make if we need to '.
              '(see the  last_build.txt identifier)' ],
 
-# make cleanup/cleanup.pro as install fails without it
-#[ file    => $mythtv.'mythplugins/cleanup/cleanup.pro', 
-#  shell   => ['touch '.$unixmythtv.'mythplugins/cleanup/cleanup.pro',
-#              'nocheck'], 
-#  comment => 'make cleanup.pro'],
-
 # make install
 [ newer   => [$mythtv.'build/lib/mythtv/plugins/libmythmovies.dll',
               $mythtv.'mythplugins/mythmovies/mythmovies/libmythmovies.dll'],
@@ -1933,80 +1587,33 @@ push @{$expect},
               'cd '.$unixmythtv.'mythplugins','make install'],
   comment => 'PLUGINS! make install' ],
 
-# Copy to build area
-#[ newer => [$mythtv.'build/lib/mythtv/plugins/libmythmovies.dll',
-#            $msys.'lib/mythtv/plugins/libmythmovies.dll'],
-#  shell => [$unixmythtv.'setup_plugins.sh'],
-#  comment => 'Copy mythplugins to ./build folder' ],
-
-# Qt3 can't cope with wildcards in the install targets:
-[ file   => $build.'/share/mythtv/videomenu.xml',
-  shell  => ['cd '.$unixmythtv.'mythplugins',
-             'cp mythcontrols/mythcontrols/controls-ui.xml'.
-             '   mythcontrols/images/*.png '.
-             '   mythvideo/theme/default/*.xml'.
-             '   mythvideo/theme/default/images/*.png'.
-             '   mythweather/mythweather/weather-ui.xml'.
-             '   mythweather/mythweather/images/*.png'.
-             ' '.$unixbuild.'/share/mythtv/themes/default',
-             'cp mythmovies/mythmovies/theme-wide/*.xml'.
-             '   mythvideo/theme/default-wide/*.xml'.
-             '   mythvideo/theme/default-wide/images/*.png'.
-             '   mythweather/mythweather/theme-wide/weather-ui.xml'.
-             '   mythweather/mythweather/theme-wide/images/*.png'.
-             ' '.$unixbuild.'/share/mythtv/themes/default-wide',
-             'cp mythweather/mythweather/weather_settings.xml'.
-             '   mythvideo/theme/menus/*.xml'.
-             ' '.$unixbuild.'/share/mythtv',
-             'mkdir -p '.$unixbuild.'/share/mythtv/mythvideo/scripts',
-             'cp mythvideo/mythvideo/scripts/*'.
-             ' '.$unixbuild.'/share/mythtv/mythvideo/scripts',
-             'mkdir -p '.$unixbuild.'/share/mythtv/mythweather/scripts',
-             'cp mythweather/mythweather/weather-screens.xml'.
-             ' '.$unixbuild.'/share/mythtv/mythweather',
-             'cp -pr mythweather/mythweather/scripts/* '.
-             ' '.$unixbuild.'/share/mythtv/mythweather/scripts']
-]
 ;
 }
 
 
-if ( grep m/oldthemes/, @components ) {
+foreach my $themecomp ( grep m/themes/, @components ) {
 # -------------------------------
 # Make themes
 # -------------------------------
 push @{$expect},
 ## config:
-[ file    => $mythtv.'oldthemes/Makefile',
+[ file    => $mythtv.$themecomp.'/Makefile',
   shell   => ['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
-            'cd '.$unixmythtv.'oldthemes','./configure --prefix='.$unixbuild],
-  comment => 'do we already have a Makefile for oldthemes?' ],
-
-## fix oldthemes.pro
-[ grep    => ['^win32:QMAKE_INSTALL_DIR', $mythtv.'oldthemes/oldthemes.pro'], 
-  shell   => ['echo \'win32:QMAKE_INSTALL_DIR = sh ./cpsvndir\' >> '.
-              $mythtv.'oldthemes/oldthemes.pro','nocheck'], 
-  comment => 'fix oldthemes.pro' ],
-[ grep    => ['win32:DEPENDS', $mythtv.'oldthemes/oldthemes.pro'], 
-  shell   => ['echo \'win32:DEPENDS += ./\' >> '.
-              $mythtv.'oldthemes/oldthemes.pro','nocheck'], 
-  comment => 'fix oldthemes.pro' ],
-
-#hack mythconfig.mak to remove /usr
-[ grep    => ['LIBDIR=/lib', $mythtv.'oldthemes/mythconfig.mak'], 
-  shell   => ['cd '.$unixmythtv.'oldthemes',
-             'sed -e \'s|/usr||\' mythconfig.mak > mythconfig2.mak',
-             'cp mythconfig2.mak mythconfig.mak', 'nocheck'], 
-  comment => 'hack mythconfig.mak'],
+            'cd '.$unixmythtv.$themecomp,'./configure --prefix='.$unixbuild],
+  comment => "do we already have a Makefile for $themecomp?" ],
 
 ## make
-[ dir     => [$mythtv.'/build/share/mythtv/themes/Retro'], 
+[ file    => [$mythtv.'build/share/'.$themecomp.'.installed'], 
   shell   => ['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
-              'cd '.$unixmythtv.'oldthemes','make', 'make install'], 
+              'cd '.$unixmythtv.$themecomp,'make', 'make install', 
+	      'touch '.$unixmythtv.'build/share/'.$themecomp.'.installed'], 
   comment => 'THEMES! redo make if we need to '.
              '(see the  last_build.txt identifier)' ],
-  
+;
+}
 
+if ( grep m/themes/, @components ) {
+push @{$expect},	
 # Get any extra Themes
 #
 
@@ -2024,7 +1631,7 @@ push @{$expect},
 # Move ttf fonts to font directory
 [ always  => [],
   shell   => ['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
-            'cd '.$unixmythtv.'oldthemes',
+            'cd '.$unixmythtv.'build',
             'find '.$unixmythtv.'build/share/mythtv/themes/ -name "*.ttf"'.
             ' | xargs -n1 -i__ cp __ '.$unixmythtv.'build/share/mythtv'],
   comment => 'move ttf files'],
@@ -2531,7 +2138,7 @@ sub _fetch {
           print FILE $_[0] or die "_fetch can't write to $file: $!\n";
       }
     );
-    close(FILE) || die "_fetch can't close $file: $!\n";
+    close(FILE) || print "_fetch can't close $file: $!\n";
     if (my $mtime = $res->last_modified) {
         utime time, $mtime, $file;
     }
@@ -2665,8 +2272,8 @@ sub usage {
 
 -h             This message
 -v             Verbose output
--u all|mythtv|mythplugins|oldthemes
-               Revert instead of checkout !!
+-o             Include oldthemes in the build [default off]
+-g             Exclude mythplugins from the build [default off]
 -k             Package win32 distribution
 -p proxy:port  Your proxy
 -r XXXX|head   Your prefered revision (to change revision)
