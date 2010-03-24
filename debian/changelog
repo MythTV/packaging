@@ -1,4 +1,4 @@
-mythtv (0.23.0~fixes23786-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.0~fixes23791-0ubuntu1) UNRELEASED; urgency=low
 
   [ Jamie Bennett ]
   * Fix FTBFS on armel (LP: #537714)
@@ -11,7 +11,7 @@ mythtv (0.23.0~fixes23786-0ubuntu1) UNRELEASED; urgency=low
       of course encouraged!)
 
   [ Dave Walker (Daviey) ]
-  * New snapshot (r23786), based from 0.23-fixes.
+  * New snapshot (r23791), based from 0.23-fixes.
   * debian/control:
     - mythtv-frontend set to Conflict with mythflix, as it's dropped
       upstream. (LP: #544521)
