@@ -157,7 +157,6 @@ my $mingw   = 'C:/MinGW/';
 my $mythtv  = 'C:/mythtv/';       # this is where the entire SVN checkout lives
                                   # so c:/mythtv/mythtv/ is the main codebase.
 my $build   = 'C:/mythtv/build/'; # where 'make install' installs into
-my $mysql   = 'C:/Program Files/MySQL/MySQL Server 5.1/';
 
 # Where is the users home?
 # Script later creates $home\.mythtv\mysql.txt
@@ -172,6 +171,17 @@ $home =~ s#\\#/#g;
 $home =~ s/ /\\ /g;
 $home .= '/'; # all paths should end in a slash
 
+# Where are program files (32-bit)?
+my $dosprogramfiles = '';
+if ( $ENV{'ProgramFiles(x86)'} ) {
+  $dosprogramfiles = $ENV{'ProgramFiles(x86)'};
+} else {
+  $dosprogramfiles = $ENV{'ProgramFiles'};
+}
+my $programfiles = $dosprogramfiles;
+$programfiles =~ s#\\#/#g;
+
+my $mysql   = $programfiles.'/MySQL/MySQL Server 5.1/';
 
 # DOS executable CMD.exe versions of the paths (for when we shell to DOS mode):
 my $dosmsys    = perl2dos($msys);
@@ -187,10 +197,11 @@ my $unixmingw = '/mingw/'; # MinGW is always mounted here under unix,
                            # if you setup mingw right in msys,
                            # so we will usually just say /mingw in the code,
                            # not '.$unixmingw.' or similar (see /etc/fstab)
-my $unixsources = perl2unix($sources);
-my $unixmythtv  = perl2unix($mythtv);
-my $unixhome    = perl2unix($home);
-my $unixbuild   = perl2unix($build);
+my $unixsources      = perl2unix($sources);
+my $unixmythtv       = perl2unix($mythtv);
+my $unixhome         = perl2unix($home);
+my $unixprogramfiles = perl2unix($programfiles);
+my $unixbuild        = perl2unix($build);
 
 # The installer for MinGW:
 my $MinGWinstaller = 'MinGW-5.1.6.exe';
@@ -620,7 +631,7 @@ if ($package == 1) {
  [ archive => $sources.'isetup-5.2.3.exe',
      fetch => 'http://files.jrsoftware.org/ispack/ispack-5.2.3.exe',
    comment => 'fetch inno setup setup' ],
- [ file    => "C:/Program Files/Inno Setup 5/iscc.exe",
+ [ file    => $programfiles.'/Inno Setup 5/iscc.exe',
    exec    => $dossources.'isetup-5.2.3.exe', #/silent is broken! 
    comment => 'Install innosetup - install ISTool, '.
               'ISSP, AND encryption support.' ],
@@ -633,15 +644,15 @@ if ($package == 1) {
    comment => 'fetching unrar'],
  [ file    => $sources.'bin/unrar.exe',
   shell    => ["cd ".$sources, "unzip/unzip.exe unrar-3.4.3-bin.zip"]],
- [ file    => 'C:/Program Files/Inno Setup 5/UninsHs.exe',
-  shell    => ['cd /c/program\ files/inno\ setup\ 5',
+ [ file    => $programfiles.'/Inno Setup 5/UninsHs.exe',
+  shell    => ['cd "'.$unixprogramfiles.'/inno setup 5"',
               $sources.'bin/unrar.exe e '.$sources.'UninsHs.rar'],
   comment  => 'Install innosetup' ],
  [ archive => $sources.'istool-5.2.1.exe',
      fetch => 'http://downloads.sourceforge.net/sourceforge'.
               '/istool/istool-5.2.1.exe',
    comment => 'fetching istool' ],
- [ file    => "c:/Program Files/ISTool/isxdl.dll",
+ [ file    => $programfiles.'/ISTool/isxdl.dll',
    exec    => $dossources.'istool-5.2.1.exe /silent',
    comment => 'Install istool'],
  [ archive => $sources.'logo_mysql_sun.gif',
@@ -1428,8 +1439,8 @@ push @{$expect},
 [ grep   => ['SERVICE_NAME',$mythtv.'testmysqlsrv.bat'],
   exec   => ['sc start mysql','nocheck']],
 [ grep   => ['does not exist',$mythtv.'testmysqlsrv.bat'],
-  exec   => ['C:\Program Files\MySQL\MySQL Server 5.1\bin\MySQLd-nt.exe'.
-             ' --standalone  -console','nocheck']],
+  exec   => [$dosprogramfiles.'\MySQL\MySQL Server 5.1\bin\MySQLd-nt.exe '.
+             '--standalone  -console','nocheck']],
 
  
 [ always => [], 
@@ -1438,7 +1449,7 @@ push @{$expect},
 echo testing connection to a local mysql server...
 sleep 5
 del '.$dosmythtv.'_mysqlshow_err.txt
-"C:\Program Files\MySQL\MySQL Server 5.1\bin\mysqlshow.exe" -u mythtv --password=mythtv 2> '.$dosmythtv.'_mysqlshow_err.txt  > '.$dosmythtv.'_mysqlshow_out.txt 
+"'.$dosprogramfiles.'\MySQL\MySQL Server 5.1\bin\mysqlshow.exe" -u mythtv --password=mythtv 2> '.$dosmythtv.'_mysqlshow_err.txt  > '.$dosmythtv.'_mysqlshow_out.txt 
 type '.$dosmythtv.'_mysqlshow_out.txt >> '.$dosmythtv.'_mysqlshow_err.txt 
 del '.$dosmythtv.'_mysqlshow_out.txt
 sleep 1
@@ -1456,7 +1467,7 @@ sleep 1
 # was there, there's no need to reconfigure the server!
 [ grep    => ['(\+--------------------\+|Access denied for user)',
               $mythtv.'_mysqlshow_err.txt'], 
-  exec    => ['C:\Program Files\MySQL\MySQL Server 5.1\bin\MySQLd-nt.exe '.
+  exec    => [$dosprogramfiles.'\MySQL\MySQL Server 5.1\bin\MySQLd-nt.exe '.
               '--standalone  -console', 'nocheck'], 
   comment => 'See if we couldnt connect to a local mysql server. '.
              'Please re-configure the MySQL server to start as a service.'],
@@ -1686,15 +1697,15 @@ if ($package == 1) {
       comment => 'Create Packaging directory'],
     # Move required files from inno setup to setup directory
     [ file    => $mythtv."build/isfiles/UninsHs.exe",
-      exec    => 'copy /Y "C:\Program Files\Inno Setup 5\UninsHs.exe" '.
+      exec    => 'copy /Y "'.$dosprogramfiles.'\Inno Setup 5\UninsHs.exe" '.
                  $dosmythtv.'build\isfiles\UninsHs.exe',
       comment => 'Copy UninsHs to setup directory' ],
     [ file    => $mythtv."build/isfiles/isxdl.dll",
-      exec    => 'copy /Y "C:\Program Files\ISTool\isxdl.dll" '.
+      exec    => 'copy /Y "'.$dosprogramfiles.'\ISTool\isxdl.dll" '.
                  $dosmythtv.'build\isfiles\isxdl.dll',
       comment => 'Copy isxdl.dll to setup directory' ],
     [ file    => $mythtv."build/isfiles/WizModernSmallImage-IS.bmp",
-      exec    => 'copy /Y "C:\Program Files\Inno Setup 5'.
+      exec    => 'copy /Y "'.$dosprogramfiles.'\Inno Setup 5'.
                  '\WizModernSmallImage-IS.bmp" '.
                  $dosmythtv.'build\isfiles\WizModernSmallImage-IS.bmp',
       comment => 'Copy WizModernSmallImage-IS.bmp to setup directory' ],
@@ -1734,12 +1745,12 @@ find . -type f -printf "Source: '.$mythtv.'build/%h/%f; Destdir: {app}/%h\n" | s
 # Run setup
 #    [ newer   => [$mythtv.'setup/MythTvSetup.exe',
 #                   $mythtv.'mythtv/last_build.txt'],
-#      exec    => ['"c:\Program Files\Inno Setup 5\Compil32.exe" /cc "'.
+#      exec    => ['"'.$dosprogramfiles.'\Inno Setup 5\Compil32.exe" /cc "'.
 #                  $dosmythtv.'build\isfiles\mythtvsetup.iss"' ]],
     [ newer    => [$mythtv.'setup/MythTvSetup.exe',
                     $mythtv.'mythtv/last_build.txt'],
       exec     => ['cd '.$dosmythtv.'build\isfiles && '.
-                   '"c:\Program Files\Inno Setup 5\iscc.exe" "'.
+                   '"'.$dosprogramfiles.'\Inno Setup 5\iscc.exe" "'.
                    $dosmythtv.'build\isfiles\mythtvsetup.iss"' ]],
 
     ;
