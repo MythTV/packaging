@@ -10,6 +10,7 @@ mythtv (0.23.0+fixes23789-0ubuntu1) UNRELEASED; urgency=low
     - Don't notify about running mythtv-setup.  This is optional (but
       of course encouraged!)
   * Set version to include a "+" delimitter.
+  * Restore libfaad-dev dependency. (LP: #546552)
 
   [ Dave Walker (Daviey) ]
   * New snapshot (r23789), based from 0.23-fixes.
