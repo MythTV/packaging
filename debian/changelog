@@ -1,4 +1,4 @@
-mythtv (0.23.0~fixes23789-0ubuntu1) lucid; urgency=low
+mythtv (0.23.0+fixes23789-0ubuntu1) UNRELEASED; urgency=low
 
   [ Jamie Bennett ]
   * Fix FTBFS on armel (LP: #537714)
@@ -9,6 +9,7 @@ mythtv (0.23.0~fixes23789-0ubuntu1) lucid; urgency=low
     - Don't warn about mythtv group.
     - Don't notify about running mythtv-setup.  This is optional (but
       of course encouraged!)
+  * Set version to include a "+" delimitter.
 
   [ Dave Walker (Daviey) ]
   * New snapshot (r23789), based from 0.23-fixes.
