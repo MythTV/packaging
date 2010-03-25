@@ -1495,7 +1495,7 @@ echo REPLACE INTO user VALUES ('localhost','mythtv', PASSWORD('mythtv'),'Y','Y',
 echo INSERT IGNORE INTO user VALUES ('\%\%','mythtv', PASSWORD('mythtv'),'Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','','','','',0,0,0,0); >>resetmythtv.sql
 echo REPLACE INTO user VALUES ('\%\%','mythtv', PASSWORD('mythtv'),'Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','','','','',0,0,0,0); >>resetmythtv.sql
 echo trying to reset mythtv/mythtv passwords:
-\"C:\\Program Files\\MySQL\\MySQL Server 5.1\\bin\\mysqld-nt.exe\" --no-defaults --bind-address=127.0.0.1 --bootstrap --console --skip-grant-tables --skip-innodb --standalone <resetmythtv.sql
+\"' . $mysql . 'bin\\mysqld-nt.exe\" --no-defaults --bind-address=127.0.0.1 --bootstrap --console --skip-grant-tables --skip-innodb --standalone <resetmythtv.sql
 del resetmythtv.sql
 echo trying to re-start mysql
 rem net stop MySQL
@@ -1531,7 +1531,7 @@ echo.
 # instantly reflect in the .txt file we are looking at:
 [ grep    => ['mythconverg',$mythtv.'_mysqlshow_err.txt'], 
   exec    => [ 'echo create database mythconverg;'.
-               ' | "C:\Program Files\MySQL\MySQL Server 5.1\bin\mysql.exe" '.
+               ' | "' . $mysql . '\bin\mysql.exe" '.
                ' -u mythtv --password=mythtv','nocheck'], 
   comment => 'does the mythconverg database exist? (and can this user see it?)'
 ],
