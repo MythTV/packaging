@@ -1,18 +1,22 @@
-mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.0+fixes23789-0ubuntu1) UNRELEASED; urgency=low
 
   [ Jamie Bennett ]
   * Fix FTBFS on armel (LP: #537714)
 
   [ Mario Limonciello ]
-  * New snapshot of trunk.
   * mythtv-{common,backend}.{config,templates,postinst}: (LP: #483748)
     - Simplify debconf questions by avoiding showing the generated pw
     - Don't warn about mythtv group.
     - Don't notify about running mythtv-setup.  This is optional (but
       of course encouraged!)
+  * Set version to include a "+" delimitter.
+  * Restore libfaad-dev dependency. (LP: #546552)
 
   [ Dave Walker (Daviey) ]
+  * New snapshot (r23789), based from 0.23-fixes.
   * debian/control:
+    - mythtv-frontend set to Conflict with mythflix, as it's dropped
+      upstream. (LP: #544521)
     - Remove unnecessary and potentially problematic use of Pre-Depends.
     - Set the debug package to Priority extra.
     - Change *-perl Section's from libs to perl
@@ -20,6 +24,7 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
     - Minor spelling fix.
     - Fixes the long description for one of the packages, ensuring the
       description doesn't exceed 80 characters.
+    - Vcs-* set to -fixes, rather than -trunk.
   * debian/rules:
     - Use debconf-updatepo to update translations when required
     - Ensure license files are not included in the binary packages, except 
@@ -39,7 +44,7 @@ mythtv (0.23.0~trunk23725-0ubuntu1) UNRELEASED; urgency=low
     binNMU warnings.
   * Fix perl binding installation.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Mon, 22 Mar 2010 23:07:33 +0000
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Tue, 23 Mar 2010 19:32:33 +0000
 
 mythtv (0.23.0~trunk23623-0ubuntu1) lucid; urgency=low
 
