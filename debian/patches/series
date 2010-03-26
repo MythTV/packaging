@@ -3,3 +3,4 @@
 09_perl_bindings_prefix
 30_python26_ubuntu
 36_setgroups_too
+40_libudev.patch

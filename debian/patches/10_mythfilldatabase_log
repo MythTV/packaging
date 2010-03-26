@@ -2,7 +2,7 @@ Use /var/log/mythtv instead of just /var/log for mythtv logs.
 ==========================================================================
 --- a/programs/mythbackend/housekeeper.cpp
 +++ b/programs/mythbackend/housekeeper.cpp
-@@ -324,7 +324,7 @@
+@@ -326,7 +326,7 @@
                                            "mythfilldatabase");
      QString mfarg = gContext->GetSetting("MythFillDatabaseArgs", "");
      QString mflog = gContext->GetSetting("MythFillDatabaseLog",
@@ -13,7 +13,7 @@ Use /var/log/mythtv instead of just /var/log for mythtv logs.
          mfpath = GetInstallPrefix() + "/bin/mythfilldatabase";
 --- a/programs/mythwelcome/welcomedialog.cpp
 +++ b/programs/mythwelcome/welcomedialog.cpp
-@@ -460,7 +460,7 @@
+@@ -441,7 +441,7 @@
                                            "mythfilldatabase");
      QString mfarg = gContext->GetSetting("MythFillDatabaseArgs", "");
      QString mflog = gContext->GetSetting("MythFillDatabaseLog",

@@ -2,8 +2,8 @@ setgroups() before setgid/setuid/home
 Author: Mario Limonciello <superm1@ubuntu.com>
 
 ---
---- mythtv-0.23.0~trunk23567.orig/programs/mythbackend/main.cpp
-+++ mythtv-0.23.0~trunk23567/programs/mythbackend/main.cpp
+--- a/programs/mythbackend/main.cpp
++++ b/programs/mythbackend/main.cpp
 @@ -7,6 +7,7 @@
  #include <libgen.h>
  #include <signal.h>
@@ -12,7 +12,7 @@ Author: Mario Limonciello <superm1@ubuntu.com>
  
  #include "mythconfig.h"
  #if CONFIG_DARWIN
-@@ -878,6 +879,34 @@ int main(int argc, char **argv)
+@@ -885,6 +886,34 @@
          }
          else if (!user_id && user_info)
          {
