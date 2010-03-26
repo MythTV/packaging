@@ -5,3 +5,12 @@
         notifempty
         copytruncate
 }
+
+/var/log/mythtv/mirobridge.log {
+        daily
+        size=10M
+        rotate 7
+        notifempty
+        copytruncate
+}
+
