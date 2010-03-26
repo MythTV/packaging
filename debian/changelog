@@ -1,9 +1,9 @@
-mythtv (0.23.0+fixes23789-0ubuntu2) UNRELEASED; urgency=low
+mythtv (0.23.0+fixes23789-0ubuntu2) lucid; urgency=low
 
   * debian/rules:
     - Compile-type=debug for better debugging purposes.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Thu, 25 Mar 2010 23:22:22 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 25 Mar 2010 23:22:48 -0500
 
 mythtv (0.23.0+fixes23789-0ubuntu1) lucid; urgency=low
 
