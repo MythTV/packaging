@@ -1,7 +1,7 @@
 ## Description: Use libudev instead of calling udevinfo 
 ## Origin/Author: Based on http://svn.mythtv.org/trac/attachment/ticket/6137/mythtv-libudev-1.patch
 ## Bug: https://bugs.launchpad.net/bugs/479509
-## Notes: The Build Depends of libudev-dev can be removed, if this patch is dropped. 
+## Notes: The Build Depends of libudev-dev & linux-libc-dev can be removed, if this patch is dropped. 
 --- a/configure
 +++ b/configure
 @@ -1291,6 +1291,7 @@
