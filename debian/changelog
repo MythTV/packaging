@@ -10,8 +10,10 @@ mythtv (0.23.0+fixes23820-0ubuntu1) UNRELEASED; urgency=low
     Install the Mythbuntu-Control-Centre plugin for mirobridge
     if mythtv-backend is installed. (LP: #520731)
   * Refreshed patches.
+  * debian/changelog: Fixed old entry that had a non-valid email address
+    causing lintian errors.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Sat, 27 Mar 2010 17:25:56 +0000
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Sat, 27 Mar 2010 19:18:15 +0000
 
 mythtv (0.23.0+fixes23789-0ubuntu2) lucid; urgency=low
 
@@ -788,7 +790,7 @@ mythtv (0.21.0+fixes18207-0ubuntu5) intrepid; urgency=low
   [ Mario Limonciello
   * Don't crash on init script installation. (LP: #261866)
 
- -- Michael Haas <laga@moar>  Mon, 01 Sep 2008 21:04:13 +0200
+ -- Michael Haas <laga@laga.ath.cx>  Mon, 01 Sep 2008 21:04:13 +0200
 
 mythtv (0.21.0+fixes18207-0ubuntu4) intrepid; urgency=low
 
