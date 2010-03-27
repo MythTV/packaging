@@ -4,6 +4,7 @@ mythtv (0.23.0+fixes23815-0ubuntu1) UNRELEASED; urgency=low
   * debian/patches/libudev.patch: Use libudev to get the information
     instead of calling udevinfo which has been superseded by udevadm,
     which is not compatiable.  (LP: #479509)
+  * debian/control: Added Build-Depends of libudev-dev.
   * debian/mcc-mirobridge/, debian/mythtv-backend.install:
     Install the Mythbuntu-Control-Centre plugin for mirobridge
     if mythtv-backend is installed. (LP: #520731)
