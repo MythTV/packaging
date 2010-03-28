@@ -38,7 +38,7 @@ config options for Perl bindings.
  EOF
  
  #following is ffmpeg's configure help text
-@@ -2020,6 +2022,9 @@
+@@ -2007,6 +2009,9 @@
              fi
          done
      ;;
@@ -48,7 +48,7 @@ config options for Perl bindings.
      --disable-devices) disable $INDEV_LIST $OUTDEV_LIST
      ;;
      --enable-debug=*) debuglevel="$optval"
-@@ -4250,6 +4255,9 @@
+@@ -4237,6 +4242,9 @@
  
  echo "# Bindings"
  echo "bindings_perl             ${bindings_perl-no}"
@@ -58,7 +58,7 @@ config options for Perl bindings.
  echo "bindings_python           ${bindings_python-no}"
  echo ""
  
-@@ -4564,6 +4572,10 @@
+@@ -4551,6 +4559,10 @@
    echo "CONFIG_OPENGL_LIBS=-lGL -lGLU" >> $MYTH_CONFIG_MAK
  fi
  
