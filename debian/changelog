@@ -1,3 +1,9 @@
+mythtv (0.23.0+fixes23820-0ubuntu2) UNRELEASED; urgency=low
+
+  * Drop 36_setgroups.  Been merged upstream.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 28 Mar 2010 15:05:56 -0500
+
 mythtv (0.23.0+fixes23820-0ubuntu1) lucid; urgency=low
 
   * New upstream snapshot (r23820)
