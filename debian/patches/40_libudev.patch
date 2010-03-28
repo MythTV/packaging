@@ -26,7 +26,7 @@
  
 +# Attempt to use libudev for mediamonitor
 +if test $target_os = linux; then
-+    check_lib2 libudev.h udev_new || disable libudev
++    check_lib2 libudev.h udev_new -ludev || disable libudev
 +fi
 +
  enabled ffmpeg_pthreads && enable pthreads

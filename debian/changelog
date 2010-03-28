@@ -1,8 +1,11 @@
 mythtv (0.23.0+fixes23820-0ubuntu2) UNRELEASED; urgency=low
 
-  * Drop 36_setgroups.  Been merged upstream.
+  * 40_libudev.path:
+    - Add -ludev to the library check.
+  * debian/control:
+    - Drop linux-libc-dev build-dep.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Sun, 28 Mar 2010 15:05:56 -0500
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 28 Mar 2010 18:24:43 -0500
 
 mythtv (0.23.0+fixes23820-0ubuntu1) lucid; urgency=low
 
