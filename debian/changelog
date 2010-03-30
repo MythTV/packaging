@@ -1,11 +1,16 @@
-mythtv (0.23.0+fixes23820-0ubuntu2) UNRELEASED; urgency=low
+mythtv (0.23.0+fixes23858-0ubuntu1) UNRELEASED; urgency=low
 
+  [ Dave Walker (Daviey) ]
+  * New upstream snapshot (23858)
+    - Fixes crash of mythfrontend.real when upconverting audio to 5.1. (LP: #550562)
+
+  [ Mario Limonciello ]  
   * 40_libudev.path:
     - Add -ludev to the library check.
   * debian/control:
     - Drop linux-libc-dev build-dep.
 
- -- Mario Limonciello <superm1@ubuntu.com>  Sun, 28 Mar 2010 18:24:43 -0500
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Tue, 30 Mar 2010 11:18:26 +0100
 
 mythtv (0.23.0+fixes23820-0ubuntu1) lucid; urgency=low
 
