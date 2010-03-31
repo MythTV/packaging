@@ -1,8 +1,10 @@
-mythtv (0.23.0+fixes23858-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.0+fixes23872-0ubuntu1) UNRELEASED; urgency=low
 
   [ Dave Walker (Daviey) ]
-  * New upstream snapshot (23858)
-    - Fixes crash of mythfrontend.real when upconverting audio to 5.1. (LP: #550562)
+  * New upstream snapshot (r23872)
+    - Fixes crash of mythfrontend when upconverting audio to 5.1 (LP: #550562)
+    - Upstream now supports dropping permissions (LP: #445953)
+    - Improve Jamu handling of invalid database data (LP: #549352)
 
   [ Mario Limonciello ]  
   * 40_libudev.path:
@@ -10,7 +12,7 @@ mythtv (0.23.0+fixes23858-0ubuntu1) UNRELEASED; urgency=low
   * debian/control:
     - Drop linux-libc-dev build-dep.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Tue, 30 Mar 2010 11:18:26 +0100
+ -- Marc Randolph <mrand@pobox.com>  Wed, 31 Mar 2010 09:05:27 -0500
 
 mythtv (0.23.0+fixes23820-0ubuntu1) lucid; urgency=low
 
