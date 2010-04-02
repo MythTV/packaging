@@ -5,6 +5,8 @@ mythtv (0.23.0+fixes23872-0ubuntu1) UNRELEASED; urgency=low
     - Fixes crash of mythfrontend when upconverting audio to 5.1 (LP: #550562)
     - Upstream now supports dropping permissions (LP: #445953)
     - Improve Jamu handling of invalid database data (LP: #549352)
+  * debian/mcc-mirobridge/*: New icon, UI alignment changes and description 
+    text added.  Courtesy of R. Doug Vaughan.
 
   [ Mario Limonciello ]  
   * 40_libudev.path:
@@ -12,7 +14,7 @@ mythtv (0.23.0+fixes23872-0ubuntu1) UNRELEASED; urgency=low
   * debian/control:
     - Drop linux-libc-dev build-dep.
 
- -- Marc Randolph <mrand@pobox.com>  Wed, 31 Mar 2010 09:05:27 -0500
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Fri, 02 Apr 2010 08:21:57 +0100
 
 mythtv (0.23.0+fixes23820-0ubuntu1) lucid; urgency=low
 
