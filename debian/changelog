@@ -13,6 +13,7 @@ mythtv (0.23.0+fixes23872-0ubuntu1) UNRELEASED; urgency=low
     - Add -ludev to the library check.
   * debian/control:
     - Drop linux-libc-dev build-dep.
+  * Actually disable halt and reboot commands by default.
 
  -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Fri, 02 Apr 2010 08:21:57 +0100
 
