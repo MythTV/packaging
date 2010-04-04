@@ -1,10 +1,11 @@
-mythtv (0.23.0+fixes23872-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.0+fixes23952-0ubuntu1) UNRELEASED; urgency=low
 
   [ Dave Walker (Daviey) ]
-  * New upstream snapshot (r23872)
+  * New upstream snapshot (r23952)
     - Fixes crash of mythfrontend when upconverting audio to 5.1 (LP: #550562)
-    - Upstream now supports dropping permissions (LP: #445953)
     - Improve Jamu handling of invalid database data (LP: #549352)
+    - Remove mythtranscode's internal copy of the slow-delete code and instead 
+      send a request to the backend to delete the file. (LP: #481104)
   * debian/mcc-mirobridge/*: New icon, UI alignment changes and description 
     text added.  Courtesy of R. Doug Vaughan.
 
@@ -15,7 +16,7 @@ mythtv (0.23.0+fixes23872-0ubuntu1) UNRELEASED; urgency=low
     - Drop linux-libc-dev build-dep.
   * Actually disable halt and reboot commands by default.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Fri, 02 Apr 2010 08:21:57 +0100
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Sun, 04 Apr 2010 10:02:30 +0100
 
 mythtv (0.23.0+fixes23820-0ubuntu1) lucid; urgency=low
 
