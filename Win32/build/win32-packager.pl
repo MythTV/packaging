@@ -67,7 +67,7 @@ my $proxy = '';
 # Subversion proxy settings are configured in %APPDATA%\Subversion\servers
 
 my $NOISY   = 1;            # Set to 0 for less output to the screen
-my $version = '0.22';       # Main mythtv version - used to name dlls
+my $version = '0.23';       # Main mythtv version - used to name dlls
 my $package = 0;            # Create a Win32 Distribution package? 1 for yes
 my $compile_type = "profile"; # compile options: debug, profile or release
 my $tickets = 0;            # Apply specific win32 tickets -
