@@ -57,6 +57,7 @@ case "$1" in
 	;;
   status)
 	status $prog
+	RETVAL=$?
 	;;
   *)
 	echo $"Usage: $prog {start|stop|status|restart}"
