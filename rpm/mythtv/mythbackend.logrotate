@@ -1,4 +1,4 @@
-@logdir@/mythtv/mythbackend.log {
+/var/log/mythtv/mythbackend.log {
     notifempty
     missingok
     compress

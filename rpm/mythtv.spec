@@ -129,9 +129,9 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
 Source10:  PACKAGE-LICENSING
-Source101: mythbackend.sysconfig.in
-Source102: mythbackend.init.in
-Source103: mythbackend.logrotate.in
+Source101: mythbackend.sysconfig
+Source102: mythbackend.init
+Source103: mythbackend.logrotate
 Source106: mythfrontend.png
 Source107: mythfrontend.desktop
 Source108: mythtv-setup.png
@@ -283,7 +283,7 @@ Requires:       perl(LWP::Simple)
 ################################################################################
 # Requirements for the mythtv meta package
 
-Requires:  libmyth            = %{version}-%{release}
+Requires:  mythtv-libs        = %{version}-%{release}
 Requires:  mythtv-backend     = %{version}-%{release}
 Requires:  mythtv-base-themes = %{version}-%{release}
 Requires:  mythtv-common      = %{version}-%{release}
@@ -339,27 +339,31 @@ and miscellaneous other bits and pieces.
 
 ################################################################################
 
-%package -n libmyth
+%package libs
 Summary:   Library providing mythtv support
 Group:     System Environment/Libraries
+Provides:  libmyth = %{version}-%{release}
+Obsoletes: libmyth < %{version}-%{release}
 
 Requires:  freetype >= 2
 Requires:  lame
 Requires:  qt4 >= 4.4
 Requires:  qt4-MySQL
 
-%description -n libmyth
+%description libs
 Common library code for MythTV and add-on modules (development)
 MythTV provides a unified graphical interface for recording and viewing
 television programs.  Refer to the mythtv package for more information.
 
 ################################################################################
 
-%package -n libmyth-devel
-Summary:   Development files for libmyth
+%package devel
+Summary:   Development files for mythtv
 Group:     Development/Libraries
+Provides:  libmyth-devel = %{version}-%{release}
+Obsoletes: libmyth-devel < %{version}-%{release}
 
-Requires:  libmyth = %{version}-%{release}
+Requires:  mythtv-libs = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
 Requires:  mysql-devel >= 5
@@ -425,8 +429,7 @@ Requires:  directfb-devel
 Requires: libvdpau-devel
 %endif
 
-
-%description -n libmyth-devel
+%description devel
 This package contains the header files and libraries for developing
 add-ons for mythtv.
 
@@ -511,6 +514,9 @@ Group: Applications/Multimedia
 # mythphone is now DOA, but we need this for upgrade path preservation.
 Provides: mythphone = %{version}-%{release}
 Obsoletes: mythphone < %{version}-%{release}
+# same deal for mythflix
+Provides: mythflix = %{version}-%{release}
+Obsoletes: mythflix < %{version}-%{release}
 
 %description common
 MythTV provides a unified graphical interface for recording and viewing
@@ -722,6 +728,7 @@ Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  mplayer
 Requires:  transcode >= 0.6.8
 Requires:  python-imdb
+Requires:  python-MythTV = %{version}-%{release}
 
 Provides:  mythdvd = %{version}-%{release}
 Obsoletes: mythdvd < %{version}-%{release}
@@ -747,7 +754,7 @@ Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  perl(XML::SAX::Base)
 
 %description -n mythweather
-A MythTV module that displays a weather forcast.
+A MythTV module that displays a weather forecast.
 
 %endif
 ################################################################################
@@ -791,6 +798,11 @@ Summary:   A MythTV module for Internet video on demand
 Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  mythbrowser = %{version}-%{release}
+Requires:  python-MythTV = %{version}-%{release}
+Requires:  python-pycurl
+Requires:  python >= 2.5
+# This is packaged in adobe's yum repo
+Requires:  flash-plugin
 
 %description -n mythnetvision
 A MythTV module that supports searching and browsing of Internet video
@@ -831,25 +843,9 @@ cd mythtv-%{version}
     sed -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"#' \
         bindings/perl/perl.pro
 
-# Install other source files, and fix pathnames
+# Install other source files
     cp -a %{SOURCE10} %{SOURCE101} %{SOURCE102} %{SOURCE103} .
     cp -a %{SOURCE106} %{SOURCE107} %{SOURCE108} %{SOURCE109} .
-    for file in mythbackend.init \
-                mythbackend.sysconfig \
-                mythbackend.logrotate; do
-        sed -e's|@logdir@|%{_localstatedir}/log|g' \
-            -e's|@rundir@|%{_localstatedir}/run|g' \
-            -e's|@sysconfdir@|%{_sysconfdir}|g' \
-            -e's|@sysconfigdir@|%{_sysconfdir}/sysconfig|g' \
-            -e's|@initdir@|%{_sysconfdir}/init.d|g' \
-            -e's|@bindir@|%{_bindir}|g' \
-            -e's|@sbindir@|%{_sbindir}|g' \
-            -e's|@subsysdir@|%{_localstatedir}/lock/subsys|g' \
-            -e's|@varlibdir@|%{_localstatedir}/lib|g' \
-            -e's|@varcachedir@|%{_localstatedir}/cache|g' \
-            -e's|@logrotatedir@|%{_sysconfdir}/logrotate.d|g' \
-            < $file.in > $file
-    done
 
 # Prevent all of those nasty installs to ../../../../../bin/whatever
 #    echo "QMAKE_PROJECT_DEPTH = 0" >> mythtv.pro
@@ -966,7 +962,7 @@ cd mythtv-%{version}
     --enable-debug
 
 # Insert rpm version-release for mythbackend --version output
-    find . -name version.pro -exec sed -i -e 's,svnversion \$\${SVNTREEDIR},echo "%{version}-%{release}",g' {} \;
+    sed -i -e 's,###SOURCE_VERSION###,%{version}-%{release} (%_svnrev),' version.sh
 
 # Make
     make %{?_smp_mflags}
@@ -982,7 +978,7 @@ cd mythtv-%{version}
 %if %{with_plugins}
 cd mythplugins-%{version}
 
-# Fix things up so they can find our "temp" install location for libmyth
+# Fix things up so they can find our "temp" install location for mythtv-libs
     echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
     find . -name \*.pro \
         -exec sed -i -e "s,INCLUDEPATH += .\+/include/mythtv,INCLUDEPATH += $temp%{_includedir}/mythtv," {} \; \
@@ -1098,7 +1094,7 @@ cd mythtv-%{version}
     mkdir -p %{buildroot}%{_sysconfdir}/mythtv
 
 # Fix permissions on executable python bindings
-    chmod +x %{buildroot}%{python_sitelib}/MythTV/__init__.py
+    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth*.py
 
 # mysql.txt and other config/init files
     install -m 644 %{SOURCE110} %{buildroot}%{_sysconfdir}/mythtv/
@@ -1181,9 +1177,9 @@ rm -rf %{buildroot}
 
 ################################################################################
 
-%post -n libmyth -p /sbin/ldconfig
+%post libs -p /sbin/ldconfig
 
-%postun -n libmyth -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %pre backend
 # Add the "mythtv" user, with membership in the video group
@@ -1274,11 +1270,11 @@ fi
 %dir %{_datadir}/mythtv/themes
 %{_datadir}/mythtv/themes/*
 
-%files -n libmyth
+%files libs
 %defattr(-,root,root,-)
 %{_libdir}/*.so.*
 
-%files -n libmyth-devel
+%files devel
 %defattr(-,root,root,-)
 %{_includedir}/*
 %{_libdir}/*.so
@@ -1457,6 +1453,7 @@ fi
 %{_libdir}/mythtv/plugins/libmythnetvision.so
 %{_datadir}/mythtv/mythnetvision
 %{_datadir}/mythtv/netvisionmenu.xml
+%{_datadir}/mythtv/i18n/mythnetvision_*.qm
 %endif
 
 %endif
