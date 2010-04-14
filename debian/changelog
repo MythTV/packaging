@@ -1,11 +1,12 @@
-mythtv (0.23.0+fixes24132-0ubuntu1) lucid; urgency=low
+mythtv (0.23.0+fixes24133-0ubuntu1) lucid; urgency=low
 
   [ Dave Walker (Daviey) ]
-  * New upstream snapshot (r24132)
+  * New upstream snapshot (r24133)
     - Fixes crash of mythfrontend when upconverting audio to 5.1 (LP: #550562)
     - Improve Jamu handling of invalid database data (LP: #549352)
     - Remove mythtranscode's internal copy of the slow-delete code and instead 
       send a request to the backend to delete the file. (LP: #481104)
+    - LiveTV & recording with V4L cards on 64-bit backend fixed. (LP: #562690)
   * debian/mcc-mirobridge/*: New icon, UI alignment changes and description 
     text added.  Courtesy of R. Doug Vaughan.
   * debian/rules: Added cxx option "-maltivec" to PowerPC specifc configure 
@@ -18,7 +19,7 @@ mythtv (0.23.0+fixes24132-0ubuntu1) lucid; urgency=low
     - Drop linux-libc-dev build-dep.
   * Actually disable halt and reboot commands by default.
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Wed, 14 Apr 2010 21:42:50 +0100
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Thu, 15 Apr 2010 00:04:14 +0100
 
 mythtv (0.23.0+fixes23820-0ubuntu1) lucid; urgency=low
 
