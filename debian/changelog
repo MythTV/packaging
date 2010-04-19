@@ -1,11 +1,11 @@
-mythtv (0.23.0+fixes24158-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.0+fixes24158-0ubuntu1) lucid; urgency=low
   
   * New upstream snapshot (r24158)
     - work around XMLtv bug causing obscenely poor response.
   * debian/control: Build-Depend on libmysqlclient16-dev, as previous 
     depends are being removed from the archive. (LP: #563053)
 
- -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Fri, 16 Apr 2010 16:29:02 +0100
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Fri, 16 Apr 2010 16:47:24 +0100
 
 mythtv (0.23.0+fixes24133-0ubuntu1) lucid; urgency=low
 
