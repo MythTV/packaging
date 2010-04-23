@@ -1,10 +1,10 @@
-mythtv (0.23.0+fixes24158-0ubuntu2) UNRELEASED; urgency=low
+mythtv (0.23.0+fixes24158-0ubuntu2) lucid; urgency=low
 
   * debian/patches/proper_shutdown_behavior_for_ubuntu.patch: 
     - Drop support for a configurable shutdown or reboot command in the GUI
     - Only use DBUS for shutdown and halt
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 23 Apr 2010 10:10:36 -0500
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 23 Apr 2010 10:56:00 -0500
 
 mythtv (0.23.0+fixes24158-0ubuntu1) lucid; urgency=low
   
