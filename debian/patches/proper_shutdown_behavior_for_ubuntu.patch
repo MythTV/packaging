@@ -1,0 +1,86 @@
+## Description: Fixes up the shutdown behavior so users can't break it
+## Origin/Author: Mario Limonciello
+Index: mythtv-fixes/programs/mythfrontend/exitprompt.cpp
+===================================================================
+--- mythtv-fixes.orig/programs/mythfrontend/exitprompt.cpp	2010-04-23 10:10:01.007730134 -0500
++++ mythtv-fixes/programs/mythfrontend/exitprompt.cpp	2010-04-23 10:09:55.006714154 -0500
+@@ -62,16 +62,7 @@
+ 
+ void ExitPrompter::halt()
+ {
+-
+-    QString halt_cmd = gContext->GetSetting("HaltCommand","");
+-    if (!halt_cmd.isEmpty()) /* Use user specified command if it exists */
+-    {
+-        myth_system(halt_cmd);
+-    } else if (!DBusHalt()) /* If supported, use DBus to shutdown */
+-    {
+-        myth_system("sudo /sbin/halt -p"); 
+-    }
+-
++    DBusHalt();
+ }
+ 
+ bool DBusReboot(void)
+@@ -118,16 +109,7 @@
+ 
+ void ExitPrompter::reboot()
+ {
+-
+-    QString reboot_cmd = gContext->GetSetting("RebootCommand","");
+-    if (!reboot_cmd.isEmpty()) /* Use user specified command if it exists */
+-    {
+-        myth_system(reboot_cmd);
+-    } else if (!DBusReboot()) /* If supported, use DBus to reboot */
+-    {
+-        myth_system("sudo /sbin/reboot");
+-    }
+-
++    DBusReboot();
+ }
+ 
+ void ExitPrompter::handleExit()
+Index: mythtv-fixes/programs/mythfrontend/globalsettings.cpp
+===================================================================
+--- mythtv-fixes.orig/programs/mythfrontend/globalsettings.cpp	2010-04-23 10:10:00.763759045 -0500
++++ mythtv-fixes/programs/mythfrontend/globalsettings.cpp	2010-04-23 10:07:19.190721556 -0500
+@@ -2249,30 +2249,6 @@
+     return gc;
+ }
+ 
+-static HostLineEdit *RebootCommand()
+-{
+-    HostLineEdit *ge = new HostLineEdit("RebootCommand");
+-    ge->setLabel(QObject::tr("Reboot command"));
+-    ge->setValue("reboot");
+-    ge->setHelpText(QObject::tr("Optional. Script to run if you select "
+-                    "the reboot option from the exit menu, if the option "
+-                    "is displayed. You must configure an exit key to "
+-                    "display the exit menu."));
+-    return ge;
+-}
+-
+-static HostLineEdit *HaltCommand()
+-{
+-    HostLineEdit *ge = new HostLineEdit("HaltCommand");
+-    ge->setLabel(QObject::tr("Halt command"));
+-    ge->setValue("halt");
+-    ge->setHelpText(QObject::tr("Optional. Script to run if you select "
+-                    "the shutdown option from the exit menu, if the option "
+-                    "is displayed. You must configure an exit key to "
+-                    "display the exit menu."));
+-    return ge;
+-}
+-
+ static HostLineEdit *LircDaemonDevice()
+ {
+     HostLineEdit *ge = new HostLineEdit("LircSocket");
+@@ -4233,8 +4209,6 @@
+         new VerticalConfigurationGroup(true, true, false, false);
+     shutdownSettings->setLabel(QObject::tr("Shutdown/Reboot Settings"));
+     shutdownSettings->addChild(OverrideExitMenu());
+-    shutdownSettings->addChild(HaltCommand());
+-    shutdownSettings->addChild(RebootCommand());
+     exit->addChild(ehor0);
+     exit->addChild(shutdownSettings);
+     addChild(exit);
