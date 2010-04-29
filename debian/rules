@@ -72,8 +72,6 @@ override_dh_auto_install:
 	mv debian/tmp/usr/bin/mythtv-setup debian/tmp/usr/bin/mythtv-setup.real
 
 override_dh_installinit:
-	# The upstart script comes from contrib
-	cp contrib/Linux/init_scripts/upstart.mythtv-backend.conf debian/mythtv-backend.upstart
 	dh_installinit
 
 	#Remove license files
