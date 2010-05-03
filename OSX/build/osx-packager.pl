@@ -277,6 +277,9 @@ osx-packager.pl - build OS X binary packages for MythTV
    -debug           build with compile-type=debug
    -m32             build for a 32-bit environment
    -plugins <str>   comma-separated list of plugins to include
+   -srcdir  <path>  build using provided root mythtv directory
+   -force           do not check for SVN validity
+   -noclean         use with -nohead, do not re-run configure nor clean
 
 =head1 DESCRIPTION
 
@@ -347,6 +350,9 @@ Getopt::Long::GetOptions(\%OPT,
                          'debug',
                          'm32',
                          'plugins=s',
+                         'srcdir=s',
+                         'force',
+                         'noclean',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -373,6 +379,12 @@ unless (defined $OPT{'version'})
     my @lt = gmtime(time);
     $OPT{'version'} = sprintf('svn%04d%02d%02d',
                               $lt[5] + 1900, $lt[4] + 1, $lt[3]);
+}
+
+if ( $OPT{'srcdir'} )
+{
+    $OPT{'nohead'} = 1;
+    $OPT{'svnbranch'} = 0;
 }
 
 # Fold nocvs to nohead
@@ -405,7 +417,7 @@ END
 #
 if ( 0 )
 {
-if ( $OPT{'nohead'} ) 
+if ( $OPT{'nohead'} && ! $OPT{'force'} )
 { 
     my $SVNTOP="$SCRIPTDIR/.osx-packager/src/myth-svn/mythtv/.svn"; 
  
@@ -441,17 +453,17 @@ END
 #
 if ( 0 )
 {
-if ( $OPT{'nohead'} )
+if ( $OPT{'nohead'} && ! $OPT{'force'})
 {
     my $SVNTOP="$SCRIPTDIR/.osx-packager/src/myth-svn/mythtv/.svn";
 
     if ( ! -d $SVNTOP )
-    {   die "No source code to build?"   }
+    {   die "No source code to build?" }
   
     if ( ! `grep 0-22-fixes $SVNTOP/entries` )
     {   die "Source code does not match release-0-22-fixes"   }
 }
-elsif ( ! $OPT{'svnbranch'} )
+elsif ( ! $OPT{'svnbranch'} && ! $OPT{'force'} )
 {
     &Complain(<<END);
 This script can only build branch release-0-22-fixes.
@@ -517,15 +529,15 @@ our %conf = (
   =>  [
         '--prefix=' . $PREFIX,
         '--runprefix=../Resources',
-        '--enable-libfaad',
+        #'--enable-libfaad',
 
         # To "cross compile" something for a lesser Mac:
         #'--tune=G3',
         #'--disable-altivec',
 
         # Currently needed for Mac OS 10.6 builds:
-        #'--disable-mmx', '--enable-disable-mmx-for-debugging',
-        #'--disable-gpl', # plus comment out libfaad above
+        '--disable-mmx', '--enable-disable-mmx-for-debugging',
+        '--disable-gpl', # plus comment out libfaad above
       ],
 );
 
@@ -812,69 +824,82 @@ if ( $cleanLibs )
 
 mkdir $SVNDIR;
 
-# Deal with Subversion branches, revisions and tags:
-my $svnrepository = 'http://svn.mythtv.org/svn/';
-my @svnrevision   = ();
-
-if ( $OPT{'svnbranch'} )
+if ( $OPT{'srcdir'} )
 {
-    $svnrepository .= 'branches/' . $OPT{'svnbranch'} . '/';
-# When Trunk diverges from fixes, re-enable this:
-#
-if ( 0 )
-{    die("Note that this script will not build old branches.
-Please try the branched version instead. e.g.
-http://svn.mythtv.org/svn/branches/release-0-22-fixes/mythtv/contrib/OSX/osx-packager.pl");
-}
-}
-elsif ( $OPT{'svntag'} )
-{
-    $svnrepository .= 'tags/' . $OPT{'svntag'} . '/';
-}
-elsif ( $OPT{'svnrev'} )
-{
-    $svnrepository .= 'trunk/';
-
-    # This arg. could be '1234', '-r 1234', or '--revision 1234'
-    # If the user just specified a number, add appropriate flag:
-    if ( $OPT{'svnrev'} =~ m/^\d+$/ )
+    chdir($SCRIPTDIR);
+    &Syscall(['rm', '-fr', $SVNDIR]);
+    &Syscall(['mkdir', '-p', $SVNDIR]);
+    foreach my $dir ('mythtv', 'mythplugins', 'myththemes', 'themes', 'packaging')
     {
-        push @svnrevision, '--revision';
+        &Syscall(['cp', '-pR', "$OPT{'srcdir'}/$dir", "$SVNDIR/$dir"]);
     }
-
-    push @svnrevision, $OPT{'svnrev'};
-}
-elsif ( ! $OPT{'nohead'} )
-{
-    # Lookup and use the HEAD revision so we are guaranteed consistent source
-    my $cmd = "$svn log $svnrepository --revision HEAD --xml | grep revision";
-    &Verbose($cmd);
-    my $rev = `$cmd`;
-
-    if ( $rev =~ m/revision="(\d+)">/ )
-    {
-        $svnrepository .= 'trunk/';
-        @svnrevision = ('--revision', $1);
-    }
-    else
-    {
-        &Complain("Cannot get head revision - Got '$rev'");
-        die;
-    }
-}
-
-# Retrieve source
-if (! $OPT{'nohead'})
-{
-    # Empty subdirectory 'config' sometimes causes checkout problems
-    &Syscall(['rm', '-fr', $SVNDIR . '/mythtv/config']);
-    Verbose("Checking out source code");
-    &Syscall([ $svn, 'co', @svnrevision,
-              map($svnrepository . $_, @comps), $SVNDIR ]) or die;
+    &Syscall("mkdir -p $SVNDIR/mythtv/config")
 }
 else
-{   &Syscall("mkdir -p $SVNDIR/mythtv/config")   }
+{
+    # Deal with Subversion branches, revisions and tags:
+    my $svnrepository = 'http://svn.mythtv.org/svn/';
+    my @svnrevision   = ();
 
+    if ( $OPT{'svnbranch'} )
+    {
+        $svnrepository .= 'branches/' . $OPT{'svnbranch'} . '/';
+    # When Trunk diverges from fixes, re-enable this:
+    #
+    if ( 0 )
+    {    die("Note that this script will not build old branches.
+    Please try the branched version instead. e.g.
+    http://svn.mythtv.org/svn/branches/release-0-22-fixes/mythtv/contrib/OSX/osx-packager.pl");
+    }
+    }
+    elsif ( $OPT{'svntag'} )
+    {
+        $svnrepository .= 'tags/' . $OPT{'svntag'} . '/';
+    }
+    elsif ( $OPT{'svnrev'} )
+    {
+        $svnrepository .= 'trunk/';
+
+        # This arg. could be '1234', '-r 1234', or '--revision 1234'
+        # If the user just specified a number, add appropriate flag:
+        if ( $OPT{'svnrev'} =~ m/^\d+$/ )
+        {
+            push @svnrevision, '--revision';
+        }
+
+        push @svnrevision, $OPT{'svnrev'};
+    }
+    elsif ( ! $OPT{'nohead'} )
+    {
+        # Lookup and use the HEAD revision so we are guaranteed consistent source
+        my $cmd = "$svn log $svnrepository --revision HEAD --xml | grep revision";
+        &Verbose($cmd);
+        my $rev = `$cmd`;
+
+        if ( $rev =~ m/revision="(\d+)">/ )
+        {
+            $svnrepository .= 'trunk/';
+            @svnrevision = ('--revision', $1);
+        }
+        else
+        {
+            &Complain("Cannot get head revision - Got '$rev'");
+            die;
+        }
+    }
+
+    # Retrieve source
+    if ( ! $OPT{'nohead'} && ! $OPT{'force'} )
+    {
+        # Empty subdirectory 'config' sometimes causes checkout problems
+        &Syscall(['rm', '-fr', $SVNDIR . '/mythtv/config']);
+        Verbose("Checking out source code");
+        &Syscall([ $svn, 'co', @svnrevision,
+                  map($svnrepository . $_, @comps), $SVNDIR ]) or die;
+    }
+    else
+    {   &Syscall("mkdir -p $SVNDIR/mythtv/config")   }
+}
 # Make a convenience (non-hidden) directory for editing src code:
 system("ln -sf $SVNDIR $SCRIPTDIR/src");
 
@@ -910,13 +935,13 @@ foreach my $comp (@comps)
     }
 
     # configure and make
-    if ( $makecleanopt{$comp} && -e 'Makefile' )
+    if ( $makecleanopt{$comp} && -e 'Makefile' && ! $OPT{'noclean'})
     {
         my @makecleancom = $standard_make;
         push(@makecleancom, @{ $makecleanopt{$comp} }) if $makecleanopt{$comp};
         &Syscall([ @makecleancom ]) or die;
     }
-    if (-e 'configure')
+    if (-e 'configure' && ! $OPT{'noclean'})
     {
         &Verbose("Configuring $comp");
         my @config = './configure';
@@ -1008,7 +1033,7 @@ chop $AVCfw;
 ### Create each package.
 ### Note that this is a bit of a waste of disk space,
 ### because there are now multiple copies of each library.
-my @targets = ('MythFrontend', 'MythAVTest');
+my @targets = ('MythFrontend', 'MythAVTest' );
 
 if ( $jobtools )
 {   push @targets, @targetsJT   }
@@ -1037,7 +1062,7 @@ foreach my $target ( @targets )
     if ( $AVCfw )
     {   &RecursiveCopy($AVCfw, "$finalTarget/Contents/Frameworks")   }
 
-    if ( $target eq "MythFrontend" or $target =~ m/^MythTV/ )
+    if ( $target eq "MythFrontend" )
     {
         my $res  = "$finalTarget/Contents/Resources";
         my $libs = "$res/lib";
@@ -1067,6 +1092,19 @@ foreach my $target ( @targets )
                    "$res/application.icns" ]) or die;
         &Syscall([ '/Developer/Tools/SetFile', '-a', 'C', $finalTarget ])
             or die;
+    }
+
+    if ( $target eq "MythAVTest" or $target =~ m/^MythTV/ )
+    {
+        my $res  = "$finalTarget/Contents/Resources";
+        my $libs = "$res/lib";
+        
+        # Install themes, filters, etc.
+        &Verbose("Installing resources into $target");
+        mkdir $res; mkdir $libs;
+        &RecursiveCopy("$PREFIX/lib/mythtv", $libs);
+        mkdir "$res/share";
+        &RecursiveCopy("$PREFIX/share/mythtv", "$res/share");
     }
 
     if ( $target eq "MythFrontend" )
