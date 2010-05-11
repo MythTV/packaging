@@ -913,7 +913,7 @@ cd mythtv-%{version}
     --enable-libfftw3                           \
     --enable-x11 --x11-path=%{_includedir}      \
     --enable-xv                                 \
-    --enable-xvmc-vld --enable-xvmc-pro         \
+    --enable-xvmc-vld                           \
     --enable-opengl-video --enable-opengl-vsync \
     --enable-xrandr                             \
     --enable-lirc                               \
