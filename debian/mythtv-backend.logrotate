@@ -12,5 +12,6 @@
         rotate 7
         notifempty
         copytruncate
+        missingok
 }
 
