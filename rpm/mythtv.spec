@@ -65,7 +65,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r23252
+%define _svnrev r24823
 %define branch trunk
 
 #
@@ -77,7 +77,7 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version: 0.23
+Version: 0.24
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
@@ -195,7 +195,6 @@ BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel >= 1.0
 BuildRequires:  mjpegtools-devel >= 1.6.1
 BuildRequires:  taglib-devel >= 1.5
-BuildRequires:  transcode >= 0.6.8
 BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
 
@@ -276,6 +275,9 @@ Requires:       perl(LWP::Simple)
 %endif
 
 %if %{with_mythnetvision}
+BuildRequires:  python-pycurl
+BuildRequires:  python-lxml
+BuildRequires:  python-oauth
 %endif
 
 %endif
@@ -401,7 +403,6 @@ Requires:  libtheora-devel
 Requires:  libvorbis-devel >= 1.0
 Requires:  mjpegtools-devel >= 1.6.1
 Requires:  taglib-devel >= 1.5
-Requires:  transcode >= 0.6.8
 Requires:  x264-devel
 Requires:  xvidcore-devel >= 0.9.1
 
@@ -605,7 +606,6 @@ Requires:  mjpegtools >= 1.6.2
 Requires:  mkisofs >= 2.01
 Requires:  python >= 2.3.5
 Requires:  python-imaging
-Requires:  transcode >= 1.0.2
 
 %description -n mytharchive
 MythArchive is a new plugin for MythTV that lets you create DVDs from
@@ -726,7 +726,6 @@ Summary:   A generic video player frontend module for MythTV
 Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  mplayer
-Requires:  transcode >= 0.6.8
 Requires:  python-imdb
 Requires:  python-MythTV = %{version}-%{release}
 
@@ -740,8 +739,7 @@ transcode their video and audio content to other (generally smaller)
 formats. The player can either use the MythTV internal software (which
 now supports DVD menus), or simply to invoke your favorite DVD/XVCD
 playing software (mplayer, ogle, xine, etc) as an external
-command. The transcoding is based on and derived from the excellent
-transcode package.
+command.
 
 %endif
 ################################################################################
@@ -1036,8 +1034,6 @@ cd mythplugins-%{version}
     %endif
     %if %{with_mythvideo}
         --enable-mythvideo \
-        --enable-transcode \
-        --enable-vcd \
     %else
         --disable-mythvideo \
     %endif
@@ -1045,11 +1041,6 @@ cd mythplugins-%{version}
         --enable-mythweather \
     %else
         --disable-mythweather \
-    %endif
-    %if %{with_mythweb}
-        --enable-mythweb \
-    %else
-        --disable-mythweb \
     %endif
     %if %{with_mythzoneminder}
         --enable-mythzoneminder \
@@ -1064,8 +1055,7 @@ cd mythplugins-%{version}
         --enable-opengl \
         --enable-libvisual \
         --enable-fftw \
-        --enable-sdl \
-        --enable-aac
+        --enable-sdl
 
     make %{?_smp_mflags}
 
@@ -1217,6 +1207,7 @@ fi
 %config(noreplace) %{_sysconfdir}/mythtv/config.xml
 %{_bindir}/mythcommflag
 %{_bindir}/mythtranscode
+%{_bindir}/mythwikiscripts
 %{_datadir}/mythtv/mythconverg*.pl
 
 %files backend
@@ -1298,6 +1289,7 @@ fi
 %files -n python-MythTV
 %defattr(-,root,root,-)
 %dir %{python_sitelib}/MythTV/
+%{_bindir}/mythpython
 %{python_sitelib}/MythTV/*
 %{python_sitelib}/MythTV-*.egg-info
 %endif
@@ -1450,8 +1442,10 @@ fi
 %doc mythplugins-%{version}/mythnetvision/AUTHORS
 %doc mythplugins-%{version}/mythnetvision/ChangeLog
 %doc mythplugins-%{version}/mythnetvision/README
+%{_bindir}/mythfillnetvision
 %{_libdir}/mythtv/plugins/libmythnetvision.so
 %{_datadir}/mythtv/mythnetvision
+%{_datadir}/mythtv/internetcontent
 %{_datadir}/mythtv/netvisionmenu.xml
 %{_datadir}/mythtv/i18n/mythnetvision_*.qm
 %endif
@@ -1461,6 +1455,13 @@ fi
 ################################################################################
 
 %changelog
+
+* Sun May 23 2010 Chris Petersen <rpm@forevermore.net> 0.24-0.1.svn
+- Bump version number
+- Remove legacy --enable-x configure flags
+- Add python builddeps for mythnetvision
+- Add new mythnetvision files
+- Rename libmyth to mythtv-libs
 
 * Sat Jan 23 2010 Chris Petersen <rpm@forevermore.net> 0.23-0.1.svn
 - Add MythNetVision requirement for MythBrowser

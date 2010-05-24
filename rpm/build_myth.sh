@@ -26,7 +26,7 @@
 ###############################################################################
 
 # Hard-code the version of MythTV
-    VERSION="0.23"
+    VERSION="0.24"
 
 # Branch should be "trunk" or "stable"
     BRANCH="trunk"
@@ -102,12 +102,12 @@ EOF
     # Update the SVN checkout
         updatesvn mythtv "$1"
         updatesvn mythplugins "$1"
-    # Remove the existing libmyth-devel so it doesn't confuse qmake
+    # Remove the existing mythtv-devel so it doesn't confuse qmake
     # (we can't override the order of the include file path)
-        PKG=`rpm -q libmyth-devel`
-        if [ `expr match "$PKG" 'libmyth.*'` -gt 0 ]; then
-            echo "Removing existing libmyth-devel package to avoid conflicts"
-            sudo rpm -e libmyth-devel.i386 libmyth-devel.x86_64 2>/dev/null
+        PKG=`rpm -q mythtv-devel`
+        if [ `expr match "$PKG" 'mythtv-libs.*'` -gt 0 ]; then
+            echo "Removing existing mythtv-devel package to avoid conflicts"
+            sudo rpm -e mythtv-devel.i386 mythtv-devel.x86_64 2>/dev/null
         fi
     # Update the spec
         updatespec $REL "$ABSPATH/mythtv.spec"
@@ -133,7 +133,6 @@ EOF
             --without mytharchive   \
             --without mythgallery   \
             --without mythgame      \
-            --without mythbrowser   \
             --without mythmovies    \
             --without mythnews      \
             --without mythzoneminder
@@ -171,7 +170,7 @@ EOF
             mv "$file-$VERSION" "$file"
             echo "$ABSPATH/mythtv-themes/$file-$VERSION.tar.bz2"
         done
-    # Disabled until I can clean this up later -- themes now require libmyth in
+    # Disabled until I can clean this up later -- themes now require mythtv-libs in
     # order to compile.
     #
     ## Build MythTV Themes
@@ -188,8 +187,8 @@ EOF
         REL="$1"
         sudo rpm -Uvh --force --nodeps                                                   \
             /usr/src/redhat/RPMS/x86_64/mythtv-docs-$VERSION-0.1.svn.r$REL.*.rpm         \
-            /usr/src/redhat/RPMS/x86_64/libmyth-$VERSION-0.1.svn.r$REL.*.rpm             \
-            /usr/src/redhat/RPMS/x86_64/libmyth-devel-$VERSION-0.1.svn.r$REL.*.rpm       \
+            /usr/src/redhat/RPMS/x86_64/mythtv-libs-$VERSION-0.1.svn.r$REL.*.rpm             \
+            /usr/src/redhat/RPMS/x86_64/mythtv-devel-$VERSION-0.1.svn.r$REL.*.rpm       \
             /usr/src/redhat/RPMS/x86_64/mythtv-base-themes-$VERSION-0.1.svn.r$REL.*.rpm  \
             /usr/src/redhat/RPMS/x86_64/mythtv-frontend-$VERSION-0.1.svn.r$REL.*.rpm     \
             /usr/src/redhat/RPMS/x86_64/mythtv-backend-$VERSION-0.1.svn.r$REL.*.rpm      \
@@ -206,7 +205,7 @@ EOF
             #/usr/src/redhat/RPMS/x86_64/mythtv-themes-$VERSION-0.1.svn.r$REL.*.rpm  \
     }
 
-# And a function to install mythtv theme packages, since they need libmyth
+# And a function to install mythtv theme packages, since they need mythtv-libs
 # to be already installed in order to build them
     function installthemes {
         REL="$1"
