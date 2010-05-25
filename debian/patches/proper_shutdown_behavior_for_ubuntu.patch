@@ -1,15 +1,15 @@
 ## Description: Fixes up the shutdown behavior so users can't break it
 ## Origin/Author: Mario Limonciello
-Index: mythtv-fixes/programs/mythfrontend/exitprompt.cpp
+Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
 ===================================================================
---- mythtv-fixes.orig/programs/mythfrontend/exitprompt.cpp	2010-04-23 10:10:01.007730134 -0500
-+++ mythtv-fixes/programs/mythfrontend/exitprompt.cpp	2010-04-23 10:09:55.006714154 -0500
+--- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-05-12 23:12:30.000000000 -0500
++++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-05-25 08:54:36.834165460 -0500
 @@ -62,16 +62,7 @@
  
  void ExitPrompter::halt()
  {
 -
--    QString halt_cmd = gContext->GetSetting("HaltCommand","");
+-    QString halt_cmd = gCoreContext->GetSetting("HaltCommand","");
 -    if (!halt_cmd.isEmpty()) /* Use user specified command if it exists */
 -    {
 -        myth_system(halt_cmd);
@@ -27,7 +27,7 @@ Index: mythtv-fixes/programs/mythfrontend/exitprompt.cpp
  void ExitPrompter::reboot()
  {
 -
--    QString reboot_cmd = gContext->GetSetting("RebootCommand","");
+-    QString reboot_cmd = gCoreContext->GetSetting("RebootCommand","");
 -    if (!reboot_cmd.isEmpty()) /* Use user specified command if it exists */
 -    {
 -        myth_system(reboot_cmd);
@@ -40,11 +40,11 @@ Index: mythtv-fixes/programs/mythfrontend/exitprompt.cpp
  }
  
  void ExitPrompter::handleExit()
-Index: mythtv-fixes/programs/mythfrontend/globalsettings.cpp
+Index: mythtv-trunk/programs/mythfrontend/globalsettings.cpp
 ===================================================================
---- mythtv-fixes.orig/programs/mythfrontend/globalsettings.cpp	2010-04-23 10:10:00.763759045 -0500
-+++ mythtv-fixes/programs/mythfrontend/globalsettings.cpp	2010-04-23 10:07:19.190721556 -0500
-@@ -2249,30 +2249,6 @@
+--- mythtv-trunk.orig/programs/mythfrontend/globalsettings.cpp	2010-05-24 22:17:44.000000000 -0500
++++ mythtv-trunk/programs/mythfrontend/globalsettings.cpp	2010-05-25 08:52:57.001204428 -0500
+@@ -2258,30 +2258,6 @@
      return gc;
  }
  
@@ -75,7 +75,7 @@ Index: mythtv-fixes/programs/mythfrontend/globalsettings.cpp
  static HostLineEdit *LircDaemonDevice()
  {
      HostLineEdit *ge = new HostLineEdit("LircSocket");
-@@ -4233,8 +4209,6 @@
+@@ -4252,8 +4228,6 @@
          new VerticalConfigurationGroup(true, true, false, false);
      shutdownSettings->setLabel(QObject::tr("Shutdown/Reboot Settings"));
      shutdownSettings->addChild(OverrideExitMenu());
