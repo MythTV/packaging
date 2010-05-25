@@ -227,6 +227,15 @@ BuildRequires: libvdpau-devel
 %if %{with_perl}
 BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Config)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(Fcntl)
+BuildRequires:  perl(File::Copy)
+BuildRequires:  perl(Sys::Hostname)
+BuildRequires:  perl(DBI)
+BuildRequires:  perl(HTTP::Request)
+BuildRequires:  perl(Net::UPnP::QueryResponse)
+BuildRequires:  perl(Net::UPnP::ControlPoint)
 %endif
 
 %if %{with_python}
@@ -1462,6 +1471,7 @@ fi
 - Add python builddeps for mythnetvision
 - Add new mythnetvision files
 - Rename libmyth to mythtv-libs
+- Add perl build deps
 
 * Sat Jan 23 2010 Chris Petersen <rpm@forevermore.net> 0.23-0.1.svn
 - Add MythNetVision requirement for MythBrowser
