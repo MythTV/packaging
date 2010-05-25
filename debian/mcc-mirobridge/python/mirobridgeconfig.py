@@ -25,10 +25,11 @@
 # Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ##################################################################################
 
-__version__ = u"0.1.1"
+__version__ = u"0.1.2"
 # 0.0.1 - Initial development
 # 0.1.0 - Public release
 # 0.1.1 - Added detection that the Live CD is being used and the plugin exists
+# 0.1.2 - Changed the gtk icon
 
 from MythbuntuControlCentre.plugin import MCCPlugin
 import gtk
@@ -57,7 +58,7 @@ class MirobridgeconfigPlugin(MCCPlugin):
         #Initialize parent class
         information = {}
         information["name"] = "Mirobridgeconfig"
-        information["icon"] = "gtk-add"
+        information["icon"] = "gtk-media-play-ltr"
         information["ui"] = "tab_mirobridge"
 
         #Detect if booted from Live CD, exit is this is true. This plugin cannot be run from a Live CD boot.

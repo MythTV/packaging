@@ -7,16 +7,83 @@
     <property name="border_width">6</property>
     <property name="orientation">vertical</property>
     <child>
-      <object class="GtkLabel" id="mirobridge_title">
+      <object class="GtkAlignment" id="headings_alignment">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="label" translatable="yes">&lt;b&gt;MiroBridge Installation and Configuration&lt;/b&gt;</property>
-        <property name="use_markup">True</property>
-        <property name="single_line_mode">True</property>
+        <property name="xalign">0</property>
+        <property name="yalign">0</property>
+        <property name="xscale">0</property>
+        <child>
+          <object class="GtkVBox" id="headings_vbox">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel" id="heading_label">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">&lt;big&gt;&lt;b&gt;MiroBridge Installation/Configuration&lt;/b&gt;&lt;/big&gt;</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHSeparator" id="headings_hseparator">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="desc_label">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Enjoy the best videos the Internet has to offer with
+MiroBridge providing an automated interface
+between Miro's videos and MythTV's
+Watch Recordings screen and MythVideo.</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLinkButton" id="wiki_linkbutton">
+                <property name="label" translatable="yes">MiroBridge Wiki</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="relief">none</property>
+                <property name="xalign">0</property>
+                <property name="uri">http://www.mythtv.org/wiki/MiroBridge</property>
+              </object>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLinkButton" id="miro_linkbutton">
+                <property name="label" translatable="yes">Miro</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="relief">none</property>
+                <property name="xalign">0</property>
+                <property name="uri">http://www.getmiro.com/</property>
+              </object>
+              <packing>
+                <property name="position">4</property>
+              </packing>
+            </child>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
-        <property name="fill">False</property>
         <property name="position">0</property>
       </packing>
     </child>
@@ -39,7 +106,10 @@
         <child>
           <object class="GtkAlignment" id="install_alignment">
             <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
             <property name="xscale">0</property>
+            <property name="left_padding">25</property>
             <child>
               <object class="GtkCheckButton" id="install_checkbutton">
                 <property name="label" translatable="yes">Step #1: Install Miro and/or dependancies</property>
@@ -70,9 +140,9 @@ This option will appear even after the initial install if individual components 
         <child>
           <object class="GtkAlignment" id="cronjobs_alignment">
             <property name="visible">True</property>
-            <property name="xalign">0.019999999552965164</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
             <property name="xscale">0</property>
-            <property name="left_padding">25</property>
             <child>
               <object class="GtkVBox" id="cronjobs_vbox">
                 <property name="visible">True</property>
@@ -80,9 +150,9 @@ This option will appear even after the initial install if individual components 
                 <child>
                   <object class="GtkAlignment" id="enable_disable_alignment">
                     <property name="visible">True</property>
-                    <property name="xalign">0.019999999552965164</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
                     <property name="xscale">0</property>
-                    <property name="left_padding">25</property>
                     <child>
                       <object class="GtkHBox" id="enable_disable_hbox">
                         <property name="visible">True</property>
@@ -134,9 +204,9 @@ This option will appear even after the initial install if individual components 
                 <child>
                   <object class="GtkAlignment" id="cronjob_freq_alignment">
                     <property name="visible">True</property>
-                    <property name="xalign">0.019999999552965164</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
                     <property name="xscale">0</property>
-                    <property name="left_padding">25</property>
                     <child>
                       <object class="GtkHBox" id="cronjob_freq_hbox">
                         <property name="visible">True</property>
@@ -196,7 +266,9 @@ This option will appear even after the initial install if individual components 
         <child>
           <object class="GtkAlignment" id="behavior_alignment">
             <property name="visible">True</property>
-            <property name="xscale">0.60000002384185791</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <object class="GtkVBox" id="behaviour_vbox1">
                 <property name="visible">True</property>
@@ -215,6 +287,8 @@ This option will appear even after the initial install if individual components 
                   <object class="GtkAlignment" id="behaviour_label_alignment">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="xscale">0</property>
                     <child>
                       <object class="GtkLabel" id="behaviour_label">
                         <property name="visible">True</property>
@@ -278,6 +352,9 @@ Force all Miro videos to be copied directly to MythVideo AFTER they have been wa
         <child>
           <object class="GtkAlignment" id="last_elems_alignment">
             <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <object class="GtkVBox" id="last_elems_vbox">
                 <property name="visible">True</property>
@@ -285,6 +362,7 @@ Force all Miro videos to be copied directly to MythVideo AFTER they have been wa
                 <child>
                   <object class="GtkLabel" id="config_miro_channels_label">
                     <property name="visible">True</property>
+                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">&lt;b&gt;Configure Miro Video Channels&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
@@ -319,7 +397,9 @@ Force all Miro videos to be copied directly to MythVideo AFTER they have been wa
                 <child>
                   <object class="GtkLabel" id="import_opml_label">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Import an OPML file (*.opml)</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Import an OPML file (*.opml)&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
                   </object>
                   <packing>
                     <property name="position">2</property>
@@ -328,6 +408,7 @@ Force all Miro videos to be copied directly to MythVideo AFTER they have been wa
                 <child>
                   <object class="GtkAlignment" id="import_opml_alignment">
                     <property name="visible">True</property>
+                    <property name="xalign">0</property>
                     <property name="xscale">0.60000002384185791</property>
                     <child>
                       <object class="GtkFileChooserButton" id="import_opml_filechooserbutton">
@@ -357,7 +438,10 @@ Import an OPML file that has been exported from a separate Miro configuration. T
                 <child>
                   <object class="GtkAlignment" id="uninstall_alignment">
                     <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
                     <property name="xscale">0</property>
+                    <property name="left_padding">25</property>
                     <child>
                       <object class="GtkCheckButton" id="uninstall_checkbutton">
                         <property name="label" translatable="yes">Uninstall MiroBridge</property>

@@ -44,7 +44,7 @@ ifeq "$(DEB_BUILD_ARCH)" "armel"
 	CONFIGURE_OPTS += --enable-vdpau --extra-cflags="-marm -fPIC -DPIC"
 endif
 ifeq "$(DEB_BUILD_ARCH)" "powerpc"
-	CONFIGURE_OPTS += --enable-altivec
+	CONFIGURE_OPTS += --enable-altivec --extra-cxxflags="-maltivec"
 endif
 
 %:

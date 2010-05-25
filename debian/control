@@ -27,7 +27,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 liblircclient-dev,
                 libxinerama-dev | xlibs-static-dev (<< 6.8.1-1),
                 libxxf86vm-dev | xlibs-static-dev (<< 6.8.1-1),
-                libmysqlclient15-dev | libmysqlclient12-dev,
+                libmysqlclient16-dev,
                 libxvmc-dev | xlibs-static-dev (<< 6.8.1-1),
                 libxext-dev | xlibs-static-dev (<< 6.8.1-1),
                 libimlib2-dev,
@@ -44,8 +44,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 xserver-xorg-video-openchrome [i386 amd64] | libchromexvmc1 [i386 amd64],
                 xserver-xorg-video-openchrome [i386 amd64] | libchromexvmcpro1 [i386 amd64],
                 libvdpau-dev [i386 amd64 armel] | nvidia-190-libvdpau-dev [i386 amd64] | nvidia-185-libvdpau-dev [i386 amd64] | nvidia-180-libvdpau-dev [i386 amd64],
-                libudev-dev,
-                linux-libc-dev
+                libudev-dev
 
 Package: mythtv
 Architecture: all

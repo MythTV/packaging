@@ -1,14 +1,53 @@
-mythtv (0.23.0+fixes23820-0ubuntu2) UNRELEASED; urgency=low
+mythtv (0.23.0+trunk24158-0ubuntu3) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * Drop 36_setgroups.  Been merged upstream.
   * Add upstart script into the packaging.  It's been dropped upstream.
     ref svn 24280 upstream.
 
-  [ Thomas Mashos ]
   * Added missingok for mirobridge log in logrotate (LP: #581283)
 
- -- Mario Limonciello <superm1@ubuntu.com>  Sun, 28 Mar 2010 15:05:56 -0500
+ -- Thomas Mashos <tgm4883@gmail.com>  Sun, 16 May 2010 12:18:13 -0700
+
+mythtv (0.23.0+fixes24158-0ubuntu2) lucid; urgency=low
+
+  * debian/patches/proper_shutdown_behavior_for_ubuntu.patch: 
+    - Drop support for a configurable shutdown or reboot command in the GUI
+    - Only use DBUS for shutdown and halt
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 23 Apr 2010 10:56:00 -0500
+
+mythtv (0.23.0+fixes24158-0ubuntu1) lucid; urgency=low
+  
+  * New upstream snapshot (r24158)
+    - work around XMLtv bug causing obscenely poor response.
+  * debian/control: Build-Depend on libmysqlclient16-dev, as previous 
+    depends are being removed from the archive. (LP: #563053)
+
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Fri, 16 Apr 2010 16:47:24 +0100
+
+mythtv (0.23.0+fixes24133-0ubuntu1) lucid; urgency=low
+
+  [ Dave Walker (Daviey) ]
+  * New upstream snapshot (r24133)
+    - Fixes crash of mythfrontend when upconverting audio to 5.1 (LP: #550562)
+    - Improve Jamu handling of invalid database data (LP: #549352)
+    - Remove mythtranscode's internal copy of the slow-delete code and instead 
+      send a request to the backend to delete the file. (LP: #481104)
+    - LiveTV & recording with V4L cards on 64-bit backend fixed. (LP: #562690)
+  * debian/mcc-mirobridge/*: New icon, UI alignment changes and description 
+    text added.  Courtesy of R. Doug Vaughan.
+  * debian/rules: Added cxx option "-maltivec" to PowerPC specifc configure 
+    option to fix FTBFS for that architecture. (LP: #559614)
+
+  [ Mario Limonciello ]  
+  * 40_libudev.path:
+    - Add -ludev to the library check.
+  * debian/control:
+    - Drop linux-libc-dev build-dep.
+  * Actually disable halt and reboot commands by default.
+
+ -- Dave Walker (Daviey) <DaveWalker@ubuntu.com>  Thu, 15 Apr 2010 00:04:14 +0100
 
 mythtv (0.23.0+fixes23820-0ubuntu1) lucid; urgency=low
 
