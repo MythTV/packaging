@@ -596,6 +596,13 @@ if ( $cpus gt 1 )
 
 $parallel_make .= " $parallel_make_flags";
 
+# Auto-disable mixed 64/32bit:
+if ( `sysctl -n hw.cpu64bit_capable` eq "1\n" )
+{
+    &Verbose('OS is 64bit. Disabling 64bit for this build...');
+    $OPT{'m32'} = 1;
+}
+
 # We set 32-bit mode via environment variables.
 # The messier alternative would be to tweak all the configure arguments.
 if ($OPT{'m32'})
