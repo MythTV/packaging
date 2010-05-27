@@ -277,7 +277,7 @@ osx-packager.pl - build OS X binary packages for MythTV
    -debug           build with compile-type=debug
    -m32             build for a 32-bit environment
    -plugins <str>   comma-separated list of plugins to include
-   -srcdir  <path>  build using provided root mythtv directory
+   -srcdir  <path>  build using (fresh copy of) provided root mythtv directory
    -force           do not check for SVN validity
    -noclean         use with -nohead, do not re-run configure nor clean
 
