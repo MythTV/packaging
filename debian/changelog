@@ -9,7 +9,9 @@ mythtv (0.24.0~trunk24856-0ubuntu1) UNRELEASED; urgency=low
     * Mythfilldatabase logging
     * Force dbus reboot/halt.
 
+  [ Thomas Mashos ]
   * Added missingok for mirobridge log in logrotate (LP: #581283)
+  * Updated perl bindings patch for upstream changes (LP: #586293)
 
  -- Thomas Mashos <tgm4883@gmail.com>  Sun, 16 May 2010 12:18:13 -0700
 
