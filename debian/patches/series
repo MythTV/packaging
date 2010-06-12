@@ -4,3 +4,5 @@
 30_python26_ubuntu
 40_libudev.patch
 proper_shutdown_behavior_for_ubuntu.patch
+41_detect_dbus
+
