@@ -1,5 +1,4 @@
 debian/shlibs.local
-debian/mythtv-backend.upstart
 config.mak
 config.h
 config.log
