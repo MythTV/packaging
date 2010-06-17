@@ -1069,7 +1069,10 @@ foreach my $target ( @targets )
     if ( $AVCfw )
     {   &RecursiveCopy($AVCfw, "$finalTarget/Contents/Frameworks")   }
 
-    if ( $target eq "MythFrontend" )
+    # Themes are required by all GUI apps. The filters and plugins are not
+    # used by mythtv-setup or mythwelcome, but for simplicity, do them all.
+    if ( $target eq "MythAVTest" or $target eq "MythFrontend" or
+         $target eq "MythWelcome" or $target =~ m/^MythTV-/ )
     {
         my $res  = "$finalTarget/Contents/Resources";
         my $libs = "$res/lib";
@@ -1099,19 +1102,6 @@ foreach my $target ( @targets )
                    "$res/application.icns" ]) or die;
         &Syscall([ '/Developer/Tools/SetFile', '-a', 'C', $finalTarget ])
             or die;
-    }
-
-    if ( $target eq "MythAVTest" or $target =~ m/^MythTV/ )
-    {
-        my $res  = "$finalTarget/Contents/Resources";
-        my $libs = "$res/lib";
-        
-        # Install themes, filters, etc.
-        &Verbose("Installing resources into $target");
-        mkdir $res; mkdir $libs;
-        &RecursiveCopy("$PREFIX/lib/mythtv", $libs);
-        mkdir "$res/share";
-        &RecursiveCopy("$PREFIX/share/mythtv", "$res/share");
     }
 
     if ( $target eq "MythFrontend" )
