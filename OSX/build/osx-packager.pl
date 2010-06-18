@@ -50,9 +50,11 @@ our $sourceforge = 'http://downloads.sourceforge.net';
 our @components = ( 'myththemes', 'mythplugins' );
 
 # The OS X programs that we are likely to be interested in.
+our @targets   = ( 'MythFrontend',  'MythAVTest',  'MythWelcome' );
 our @targetsJT = ( 'MythCommFlag',  'MythJobQueue');
 our @targetsBE = ( 'MythBackend',   'MythFillDatabase',
                    'MythTranscode', 'MythTV-Setup');
+
 
 # Patches for MythTV source
 our %patches = ();
@@ -1040,7 +1042,6 @@ chop $AVCfw;
 ### Create each package.
 ### Note that this is a bit of a waste of disk space,
 ### because there are now multiple copies of each library.
-my @targets = ('MythFrontend', 'MythAVTest' );
 
 if ( $jobtools )
 {   push @targets, @targetsJT   }
@@ -1125,6 +1126,21 @@ foreach my $target ( @targets )
         # Allow playback of region encoded DVDs
         &Syscall([ 'cp', "$PREFIX/lib/libdvdcss.2.dylib",
                          "$finalTarget/Contents/Plugins" ]) or die;
+    }
+
+    if ( $target eq "MythWelcome" )
+    {
+        &Verbose("Installing mythfrontend into $target");
+        &Syscall([ 'cp', "$PREFIX/bin/mythfrontend",
+                         "$finalTarget/Contents/MacOS" ]) or die;
+        &Syscall([ @bundler, "$finalTarget/Contents/MacOS/mythfrontend" ])
+            or die;
+        &AddFakeBinDir($finalTarget);
+
+        # For some unknown reason, mythfrontend looks here for support files:
+        &Syscall([ 'ln', '-s', "../Resources/share",   # themes
+                               "../Resources/lib",     # filters/plugins
+                   "$finalTarget/Contents/MacOS" ]) or die;
     }
 
     # Run 'rebase' on all the frameworks:
