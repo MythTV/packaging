@@ -1,4 +1,4 @@
-mythtv (0.23.0+fixes25138-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.0+fixes25138-0ubuntu1) maverick; urgency=low
 
   [ Mario Limonciello ]
   * new upstream checkout (25138)
@@ -8,7 +8,7 @@ mythtv (0.23.0+fixes25138-0ubuntu1) UNRELEASED; urgency=low
   * Backend now waits for udev to finish (LP: #556204)
   * Added patch to properly detect dbus during compile (LP: #574877)
 
- -- Thomas Mashos <tgm4883@gmail.com>  Sat, 12 Jun 2010 11:06:38 -0700
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sun, 20 Jun 2010 00:11:00 -0500
 
 mythtv (0.23.0+fixes24158-0ubuntu2) lucid; urgency=low
 
