@@ -1,8 +1,9 @@
 mythtv (0.23.0+fixes25138-0ubuntu2) UNRELEASED; urgency=low
 
   * Bumped version number for new changes
+  * Added libqt4-webkit-dev dependency to satisify maverick FTBFS
 
- -- Thomas Mashos <tgm4883@gmail.com>  Sat, 19 Jun 2010 23:19:46 -0700
+ -- Thomas Mashos <tgm4883@gmail.com>  Sat, 19 Jun 2010 23:27:52 -0700
 
 mythtv (0.23.0+fixes25138-0ubuntu1) maverick; urgency=low
 
@@ -13,7 +14,6 @@ mythtv (0.23.0+fixes25138-0ubuntu1) maverick; urgency=low
   * Added missingok for mirobridge log in logrotate (LP: #581283)
   * Backend now waits for udev to finish (LP: #556204)
   * Added patch to properly detect dbus during compile (LP: #574877)
-  * Added libqt4-webkit-dev dependency to satisify maverick FTBFS
 
  -- Thomas Mashos <tgm4883@gmail.com>  Sat, 19 Jun 2010 23:11:04 -0700
 
