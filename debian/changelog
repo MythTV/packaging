@@ -1,3 +1,9 @@
+mythtv (0.23.0+fixes25138-0ubuntu2) UNRELEASED; urgency=low
+
+  * Bumped version number for new changes
+
+ -- Thomas Mashos <tgm4883@gmail.com>  Sat, 19 Jun 2010 23:19:46 -0700
+
 mythtv (0.23.0+fixes25138-0ubuntu1) maverick; urgency=low
 
   [ Mario Limonciello ]
