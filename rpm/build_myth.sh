@@ -133,7 +133,6 @@ EOF
             --without mytharchive   \
             --without mythgallery   \
             --without mythgame      \
-            --without mythmovies    \
             --without mythnews      \
             --without mythzoneminder
     # Error?
