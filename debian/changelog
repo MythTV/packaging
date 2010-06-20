@@ -1,5 +1,9 @@
-mythtv (0.23.0+fixes24158-0ubuntu3) UNRELEASED; urgency=low
+mythtv (0.23.0+fixes25138-0ubuntu1) UNRELEASED; urgency=low
 
+  [ Mario Limonciello ]
+  * new upstream checkout (25138)
+
+  [ Thomas Mashos ]
   * Added missingok for mirobridge log in logrotate (LP: #581283)
   * Backend now waits for udev to finish (LP: #556204)
   * Added patch to properly detect dbus during compile (LP: #574877)
