@@ -1,3 +1,10 @@
+mythtv (0.24.0~trunk24856-0ubuntu2) lucid; urgency=low
+
+  * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
+    mythbackend install so they can be requeted by MythNetvision
+
+ -- Gerald Barker <geraldbarker@gmail.com>  Sun, 20 Jun 2010 14:21:24 +0100
+
 mythtv (0.24.0~trunk24856-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
