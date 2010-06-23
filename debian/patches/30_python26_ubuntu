@@ -1,13 +1,15 @@
 Patch to include layout option for python 2.6
 ==========================================================================
---- a/bindings/python/python.pro
-+++ b/bindings/python/python.pro
-@@ -6,7 +6,7 @@
+Index: mythtv-trunk/bindings/python/python.pro
+===================================================================
+--- mythtv-trunk.orig/bindings/python/python.pro	2010-06-22 19:11:24.361338697 -0500
++++ mythtv-trunk/bindings/python/python.pro	2010-06-22 19:12:34.798337665 -0500
+@@ -9,7 +9,7 @@
  
  python_install.target = python_install
  python_install.CONFIG = no_path
 -python_install.commands = $$PYTHON setup.py install --skip-build --root=\"$(if $(INSTALL_ROOT),$(INSTALL_ROOT),/)\"
 +python_install.commands = $$PYTHON setup.py install --skip-build --root=\"$(if $(INSTALL_ROOT),$(INSTALL_ROOT),/)\" --install-layout=deb
  
- # This is done so the default /usr/local prefix installs to the "normal"
- # /usr/lib/python{VER}/site-packages directory.
+ INSTALLS += python_install
+ 
