@@ -270,6 +270,8 @@ Requires:       perl(XML::Simple)
 Requires:       mythweather      >= %{version}
 Requires:       perl(XML::Simple)
 Requires:       perl(LWP::Simple)
+Requires:       perl(DateTime::Format::ISO8601)
+BuildRequires:  perl(DateTime::Format::ISO8601)
 %endif
 
 %if %{with_mythzoneminder}
