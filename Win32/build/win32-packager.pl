@@ -1575,7 +1575,7 @@ push @{$expect},
              ' --disable-mythmusic'.
              ' --disable-mytharchive --disable-mythbrowser --disable-mythflix'.
              ' --disable-mythgame --disable-mythnews'.
-             ' --disable-mythzoneminder --enable-aac'.
+             ' --disable-mythzoneminder'.
              ' --enable-libvisual --enable-fftw --compile-type='.$compile_type,
              ], 
   comment => 'do we already have a Makefile for myth plugins?' ],
@@ -1584,7 +1584,7 @@ push @{$expect},
 #           '(did we get any errors on screen?)'],
 
 # make
-[ newer   => [$mythtv.'mythplugins/mythmovies/mythmovies/libmythmovies.dll',
+[ newer   => [$mythtv.'mythplugins/mythvideo/mythvideo/libmythvideo.dll',
               $mythtv.'mythtv/last_build.txt'], 
   shell   => ['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
               'cd '.$unixmythtv.'mythplugins', $parallelMake], 
@@ -1592,8 +1592,8 @@ push @{$expect},
              '(see the  last_build.txt identifier)' ],
 
 # make install
-[ newer   => [$mythtv.'build/lib/mythtv/plugins/libmythmovies.dll',
-              $mythtv.'mythplugins/mythmovies/mythmovies/libmythmovies.dll'],
+[ newer   => [$mythtv.'build/lib/mythtv/plugins/libmythvideo.dll',
+              $mythtv.'mythplugins/mythvideo/mythvideo/libmythvideo.dll'],
   shell   => ['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
               'cd '.$unixmythtv.'mythplugins','make install'],
   comment => 'PLUGINS! make install' ],
