@@ -64,7 +64,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r25143
+%define _svnrev r25262
 %define branch trunk
 
 #
@@ -278,6 +278,8 @@ Requires:       perl(XML::Simple)
 Requires:       perl(LWP::Simple)
 Requires:       perl(DateTime::Format::ISO8601)
 BuildRequires:  perl(DateTime::Format::ISO8601)
+Requires:       perl(XML::XPath)
+BuildRequires:  perl(XML::XPath)
 %endif
 
 %if %{with_mythzoneminder}
@@ -870,6 +872,7 @@ cd mythplugins-%{version}
 
 # Add execute bits to mythvideo python helper scripts
     find mythvideo/mythvideo/scripts/ -name '*.py' -exec chmod +x "{}" \;
+
 # Remove unwanted execute bits from php mythweb files
     find mythweb/ -name '*.php' -exec chmod -x "{}" \;
 
@@ -1071,7 +1074,7 @@ cd mythtv-%{version}
     mkdir -p %{buildroot}%{_sysconfdir}/mythtv
 
 # Fix permissions on executable python bindings
-    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth*.py
+#    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth*.py
 
 # mysql.txt and other config/init files
     install -m 644 %{SOURCE110} %{buildroot}%{_sysconfdir}/mythtv/
