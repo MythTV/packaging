@@ -10,6 +10,7 @@ mythtv (0.24.0~trunk25161-0ubuntu1) UNRELEASED; urgency=low
     * Force dbus reboot/halt.
     * Default directories.
     * Python 2.6
+  * Drop 40_libudev.  Merged upstream.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
