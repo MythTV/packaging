@@ -14314,8 +14314,8 @@ Index: mythtv/i18n/mythfrontend_he.ts
 +        <translation>הקלטות נוכחיות</translation>
      </message>
      <message>
-         <source>Retrieving Recording Status ...</source>
--        <translation>Retrieving Recording Status ...</translation>
+         <source>Retrieving Recording Status...</source>
+-        <translation>Retrieving Recording Status...</translation>
 +        <translation>מאחזר מצב הקלטות ...</translation>
      </message>
      <message>
@@ -14324,8 +14324,8 @@ Index: mythtv/i18n/mythfrontend_he.ts
 +        <translation>הקלטות הבאות</translation>
      </message>
      <message>
-         <source>Retrieving Scheduled Recordings ...</source>
--        <translation>Retrieving Scheduled Recordings ...</translation>
+         <source>Retrieving Scheduled Recordings...</source>
+-        <translation>Retrieving Scheduled Recordings...</translation>
 +        <translation>מאחזר הקלטות שתוזמנו ...</translation>
      </message>
      <message>
@@ -14500,9 +14500,9 @@ Index: mythtv/i18n/mythfrontend_he.ts
 +        <translation type="unfinished">There are no scheduled recordings</translation>
      </message>
      <message>
-         <source>Please Wait ...</source>
--        <translation>Please Wait ...</translation>
-+        <translation type="unfinished">Please Wait ...</translation>
+         <source>Please Wait...</source>
+-        <translation>Please Wait...</translation>
++        <translation type="unfinished">Please Wait...</translation>
      </message>
      <message>
          <source>MythTV is about to start recording.</source>
