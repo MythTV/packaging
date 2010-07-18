@@ -2,8 +2,8 @@ Patch to include layout option for python 2.6
 ==========================================================================
 Index: mythtv-trunk/bindings/python/python.pro
 ===================================================================
---- mythtv-trunk.orig/bindings/python/python.pro	2010-06-22 19:11:24.361338697 -0500
-+++ mythtv-trunk/bindings/python/python.pro	2010-06-22 19:12:34.798337665 -0500
+--- mythtv-trunk.orig/bindings/python/python.pro	2010-06-20 20:21:47.000000000 -0400
++++ mythtv-trunk/bindings/python/python.pro	2010-07-17 12:33:22.000000000 -0400
 @@ -9,7 +9,7 @@
  
  python_install.target = python_install

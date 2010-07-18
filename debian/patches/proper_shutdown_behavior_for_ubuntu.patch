@@ -2,8 +2,8 @@
 ## Origin/Author: Mario Limonciello
 Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
 ===================================================================
---- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-05-12 23:12:30.000000000 -0500
-+++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-05-25 08:54:36.834165460 -0500
+--- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-05-13 00:12:30.000000000 -0400
++++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-07-17 12:33:23.000000000 -0400
 @@ -62,16 +62,7 @@
  
  void ExitPrompter::halt()
@@ -42,9 +42,9 @@ Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
  void ExitPrompter::handleExit()
 Index: mythtv-trunk/programs/mythfrontend/globalsettings.cpp
 ===================================================================
---- mythtv-trunk.orig/programs/mythfrontend/globalsettings.cpp	2010-05-24 22:17:44.000000000 -0500
-+++ mythtv-trunk/programs/mythfrontend/globalsettings.cpp	2010-05-25 08:52:57.001204428 -0500
-@@ -2258,30 +2258,6 @@
+--- mythtv-trunk.orig/programs/mythfrontend/globalsettings.cpp	2010-07-16 11:24:25.000000000 -0400
++++ mythtv-trunk/programs/mythfrontend/globalsettings.cpp	2010-07-17 12:33:23.000000000 -0400
+@@ -2318,30 +2318,6 @@
      return gc;
  }
  
@@ -75,7 +75,7 @@ Index: mythtv-trunk/programs/mythfrontend/globalsettings.cpp
  static HostLineEdit *LircDaemonDevice()
  {
      HostLineEdit *ge = new HostLineEdit("LircSocket");
-@@ -4252,8 +4228,6 @@
+@@ -4199,8 +4175,6 @@
          new VerticalConfigurationGroup(true, true, false, false);
      shutdownSettings->setLabel(QObject::tr("Shutdown/Reboot Settings"));
      shutdownSettings->addChild(OverrideExitMenu());

@@ -1,8 +1,10 @@
 Use prefix for Perl bindings. Also allow more options to be passed when setting
 config options for Perl bindings.
 ==========================================================================
---- a/bindings/perl/perl.pro
-+++ b/bindings/perl/perl.pro
+Index: mythtv-trunk/bindings/perl/perl.pro
+===================================================================
+--- mythtv-trunk.orig/bindings/perl/perl.pro	2008-12-29 14:22:56.000000000 -0500
++++ mythtv-trunk/bindings/perl/perl.pro	2010-07-17 12:33:22.000000000 -0400
 @@ -4,13 +4,7 @@
  
  mythperlbindings.target = Makefile.perl
@@ -27,8 +29,10 @@ config options for Perl bindings.
  
  QMAKE_LINK=@-echo
  PRE_TARGETDEPS += perl_build
---- a/configure
-+++ b/configure
+Index: mythtv-trunk/configure
+===================================================================
+--- mythtv-trunk.orig/configure	2010-07-09 13:10:32.000000000 -0400
++++ mythtv-trunk/configure	2010-07-17 12:33:22.000000000 -0400
 @@ -140,6 +140,8 @@
                             Supported bindings: perl, python
                             comma-separated list
@@ -48,7 +52,7 @@ config options for Perl bindings.
      --disable-devices) disable $INDEV_LIST $OUTDEV_LIST
      ;;
      --enable-debug=*) debuglevel="$optval"
-@@ -4242,6 +4247,9 @@
+@@ -4249,6 +4254,9 @@
  
  echo "# Bindings"
  echo "bindings_perl             ${bindings_perl-no}"
@@ -58,7 +62,7 @@ config options for Perl bindings.
  echo "bindings_python           ${bindings_python-no}"
  echo ""
  
-@@ -4554,6 +4562,10 @@
+@@ -4533,6 +4541,10 @@
    echo "CONFIG_OPENGL_LIBS=$gl_lib $glu_lib" >> $MYTH_CONFIG_MAK
  fi
  
