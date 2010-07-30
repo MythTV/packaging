@@ -1088,7 +1088,7 @@ foreach my $target ( @targets )
 
         # Correct the library paths for the filters and plugins
         foreach my $lib ( glob "$libs/mythtv/*/*" )
-        {   &Syscall([ @bundler, $lib ]) or die   }
+        {   &Syscall([ @bundler, $lib, "$PREFIX/lib/" ]) or die   }
 
         if ( -e $plug )
         {
