@@ -50,6 +50,7 @@ our $sourceforge = 'http://downloads.sourceforge.net';
 our @components = ( 'myththemes', 'mythplugins' );
 
 # The OS X programs that we are likely to be interested in.
+our @targets   = ( 'MythFrontend',  'MythAVTest',  'MythWelcome' );
 our @targetsJT = ( 'MythCommFlag',  'MythJobQueue');
 our @targetsBE = ( 'MythBackend',   'MythFillDatabase',
                    'MythTranscode', 'MythTV-Setup');
@@ -1064,7 +1065,6 @@ chop $AVCfw;
 ### Create each package.
 ### Note that this is a bit of a waste of disk space,
 ### because there are now multiple copies of each library.
-my @targets = ('MythFrontend', 'MythAVTest');
 
 if ( $jobtools )
 {   push @targets, @targetsJT   }
@@ -1093,7 +1093,10 @@ foreach my $target ( @targets )
     if ( $AVCfw )
     {   &RecursiveCopy($AVCfw, "$finalTarget/Contents/Frameworks")   }
 
-    if ( $target eq "MythFrontend" or $target =~ m/^MythTV/ )
+    # Themes are required by all GUI apps. The filters and plugins are not
+    # used by mythtv-setup or mythwelcome, but for simplicity, do them all.
+    if ( $target eq "MythAVTest" or $target eq "MythFrontend" or
+         $target eq "MythWelcome" or $target =~ m/^MythTV-/ )
     {
         my $res  = "$finalTarget/Contents/Resources";
         my $libs = "$res/lib";
@@ -1108,7 +1111,7 @@ foreach my $target ( @targets )
 
         # Correct the library paths for the filters and plugins
         foreach my $lib ( glob "$libs/mythtv/*/*" )
-        {   &Syscall([ @bundler, $lib ]) or die   }
+        {   &Syscall([ @bundler, $lib, "$PREFIX/lib/" ]) or die   }
 
         if ( -e $plug )
         {
@@ -1148,6 +1151,21 @@ foreach my $target ( @targets )
                          "$finalTarget/Contents/Plugins" ]) or die;
     }
 
+    if ( $target eq "MythWelcome" )
+    {
+        &Verbose("Installing mythfrontend into $target");
+        &Syscall([ 'cp', "$PREFIX/bin/mythfrontend",
+                         "$finalTarget/Contents/MacOS" ]) or die;
+        &Syscall([ @bundler, "$finalTarget/Contents/MacOS/mythfrontend" ])
+            or die;
+        &AddFakeBinDir($finalTarget);
+
+        # For some unknown reason, mythfrontend looks here for support files:
+        &Syscall([ 'ln', '-s', "../Resources/share",   # themes
+                               "../Resources/lib",     # filters/plugins
+                   "$finalTarget/Contents/MacOS" ]) or die;
+    }
+
     # Run 'rebase' on all the frameworks:
     my @libs = glob "$finalTarget/Contents/Frameworks/*";
     @libs = grep(s,(.*/)(\w+).framework$,$1$2.framework/$2, , @libs);
@@ -1163,9 +1181,9 @@ if ( $backend && grep(m/MythBackend/, @targets) )
 {
     my $BE = "$SCRIPTDIR/MythBackend.app";
 
-    # Copy XML files that UPnP requires: 
-    my $share = "$BE/Contents/Resources/share/mythtv"; 
-    &Syscall([ 'mkdir', '-p', $share ]) or die; 
+    # Copy XML files that UPnP requires:
+    my $share = "$BE/Contents/Resources/share/mythtv";
+    &Syscall([ 'mkdir', '-p', $share ]) or die;
     &Syscall([ 'cp', glob("$PREFIX/share/mythtv/*.xml"), $share ]) or die;
 
     # The backend gets all the useful binaries it might call:
