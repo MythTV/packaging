@@ -1,16 +1,17 @@
-mythtv (0.24.0~trunk25361-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.24.0~trunk25535-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * Drop 36_setgroups.  Been merged upstream.
   * Add upstart script into the packaging.  It's been dropped upstream.
     ref svn 24280 upstream.
-  * Bump version to 0.24 trunk r25161
+  * Bump version to 0.24 trunk r25535
   * Refresh patches due to upstream changes:
     * Mythfilldatabase logging
     * Force dbus reboot/halt.
     * Default directories.
     * Python 2.6
   * Drop 40_libudev.  Merged upstream.
+  * Drop 09_perl_bindings_prefix.  Merged upstream.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
