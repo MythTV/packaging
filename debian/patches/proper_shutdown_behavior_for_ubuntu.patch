@@ -2,8 +2,8 @@
 ## Origin/Author: Mario Limonciello
 Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
 ===================================================================
---- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-05-13 00:12:30.000000000 -0400
-+++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-07-17 12:33:23.000000000 -0400
+--- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-05-12 23:12:30.000000000 -0500
++++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-08-02 02:49:29.660622818 -0500
 @@ -62,16 +62,7 @@
  
  void ExitPrompter::halt()
@@ -40,47 +40,3 @@ Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
  }
  
  void ExitPrompter::handleExit()
-Index: mythtv-trunk/programs/mythfrontend/globalsettings.cpp
-===================================================================
---- mythtv-trunk.orig/programs/mythfrontend/globalsettings.cpp	2010-07-16 11:24:25.000000000 -0400
-+++ mythtv-trunk/programs/mythfrontend/globalsettings.cpp	2010-07-17 12:33:23.000000000 -0400
-@@ -2318,30 +2318,6 @@
-     return gc;
- }
- 
--static HostLineEdit *RebootCommand()
--{
--    HostLineEdit *ge = new HostLineEdit("RebootCommand");
--    ge->setLabel(QObject::tr("Reboot command"));
--    ge->setValue("reboot");
--    ge->setHelpText(QObject::tr("Optional. Script to run if you select "
--                    "the reboot option from the exit menu, if the option "
--                    "is displayed. You must configure an exit key to "
--                    "display the exit menu."));
--    return ge;
--}
--
--static HostLineEdit *HaltCommand()
--{
--    HostLineEdit *ge = new HostLineEdit("HaltCommand");
--    ge->setLabel(QObject::tr("Halt command"));
--    ge->setValue("halt");
--    ge->setHelpText(QObject::tr("Optional. Script to run if you select "
--                    "the shutdown option from the exit menu, if the option "
--                    "is displayed. You must configure an exit key to "
--                    "display the exit menu."));
--    return ge;
--}
--
- static HostLineEdit *LircDaemonDevice()
- {
-     HostLineEdit *ge = new HostLineEdit("LircSocket");
-@@ -4199,8 +4175,6 @@
-         new VerticalConfigurationGroup(true, true, false, false);
-     shutdownSettings->setLabel(QObject::tr("Shutdown/Reboot Settings"));
-     shutdownSettings->addChild(OverrideExitMenu());
--    shutdownSettings->addChild(HaltCommand());
--    shutdownSettings->addChild(RebootCommand());
-     exit->addChild(ehor0);
-     exit->addChild(shutdownSettings);
-     addChild(exit);

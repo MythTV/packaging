@@ -10,6 +10,7 @@ mythtv (0.24.0~trunk25535-0ubuntu1) UNRELEASED; urgency=low
     * Force dbus reboot/halt.
     * Default directories.
     * Python 2.6
+    * proper shutdown behavior for ubuntu.
   * Drop 40_libudev.  Merged upstream.
   * Drop 09_perl_bindings_prefix.  Merged upstream.
 
