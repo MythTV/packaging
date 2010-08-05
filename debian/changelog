@@ -1,4 +1,4 @@
-mythtv (0.24.0~trunk25535-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.24.0~trunk25542-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * Drop 36_setgroups.  Been merged upstream.
@@ -13,6 +13,7 @@ mythtv (0.24.0~trunk25535-0ubuntu1) UNRELEASED; urgency=low
     * proper shutdown behavior for ubuntu.
   * Drop 40_libudev.  Merged upstream.
   * Drop 09_perl_bindings_prefix.  Merged upstream.
+  * debian/rules: cleanup deprecated configure options.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of

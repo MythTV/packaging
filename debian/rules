@@ -32,13 +32,13 @@ CONFIGURE_OPTS +=   --compile-type=debug \
 #                                    #
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq "$(DEB_BUILD_ARCH)" "i386"
-	CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-glx-procaddrarb --enable-vdpau
+	CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --enable-xvmc --enable-xvmc-vld  --enable-vdpau
 endif
 ifeq "$(DEB_BUILD_ARCH)" "sparc"
-	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --extra-cflags="-mcpu=ultrasparc -mvis"
+	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --extra-cflags="-mcpu=ultrasparc -mvis"
 endif
 ifeq "$(DEB_BUILD_ARCH)" "amd64"
-	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-glx-procaddrarb --enable-vdpau
+	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-vdpau
 endif
 ifeq "$(DEB_BUILD_ARCH)" "armel"
 	CONFIGURE_OPTS += --enable-vdpau --extra-cflags="-marm -fPIC -DPIC"
