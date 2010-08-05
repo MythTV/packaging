@@ -64,7 +64,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r25262
+%define _svnrev r25566
 %define branch trunk
 
 #
@@ -1196,6 +1196,7 @@ fi
 %config(noreplace) %{_sysconfdir}/mythtv/mysql.txt
 %config(noreplace) %{_sysconfdir}/mythtv/config.xml
 %{_bindir}/mythcommflag
+%{_bindir}/mythpreviewgen
 %{_bindir}/mythtranscode
 %{_bindir}/mythwikiscripts
 %{_datadir}/mythtv/mythconverg*.pl
@@ -1435,6 +1436,9 @@ fi
 ################################################################################
 
 %changelog
+
+* Thu Aug 05 2010 Chris Petersen <rpm@forevermore.net> 0.24-0.1.svn
+- Add mythpreviewgen
 
 * Sun Jun 20 2010 Chris Petersen <rpm@forevermore.net> 0.24-0.1.svn
 - Add new MythWeather perl dep
