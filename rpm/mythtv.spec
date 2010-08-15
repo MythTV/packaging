@@ -64,7 +64,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r25566
+%define _svnrev r25638
 %define branch trunk
 
 #
@@ -238,6 +238,7 @@ BuildRequires:  perl(Net::UPnP::ControlPoint)
 
 %if %{with_python}
 BuildRequires:  python-devel
+BuildRequires:  MySQL-python
 %endif
 
 # Plugin Build Requirements
@@ -274,12 +275,19 @@ Requires:       perl(XML::Simple)
 
 %if %{with_mythweather}
 Requires:       mythweather      >= %{version}
+BuildRequires:  perl(XML::Simple)
 Requires:       perl(XML::Simple)
 Requires:       perl(LWP::Simple)
-Requires:       perl(DateTime::Format::ISO8601)
 BuildRequires:  perl(DateTime::Format::ISO8601)
-Requires:       perl(XML::XPath)
+Requires:       perl(DateTime::Format::ISO8601)
 BuildRequires:  perl(XML::XPath)
+Requires:       perl(XML::XPath)
+BuildRequires:  perl(Date::Manip)
+Requires:       perl(Date::Manip)
+BuildRequires:  perl(Image::Size)
+Requires:       perl(Image::Size)
+BuildRequires:  perl(SOAP::Lite)
+Requires:       perl(SOAP::Lite)
 %endif
 
 %if %{with_mythzoneminder}
@@ -990,8 +998,6 @@ cd mythplugins-%{version}
         --libdir-name=%{_lib} \
     %if %{with_mytharchive}
         --enable-mytharchive \
-        --enable-create-dvd \
-        --enable-create-archive \
     %else
         --disable-mytharchive \
     %endif
@@ -1200,6 +1206,8 @@ fi
 %{_bindir}/mythtranscode
 %{_bindir}/mythwikiscripts
 %{_datadir}/mythtv/mythconverg*.pl
+%dir %{_datadir}/mythtv/locales
+%{_datadir}/mythtv/locales/*
 
 %files backend
 %defattr(-,root,root,-)
@@ -1214,7 +1222,8 @@ fi
 %config(noreplace) %{_sysconfdir}/sysconfig/mythbackend
 %config(noreplace) %{_sysconfdir}/logrotate.d/mythbackend
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
-%{_datadir}/mythtv/internetcontent
+%dir %{_datadir}/mythtv/internetcontent
+%{_datadir}/mythtv/internetcontent/*
 
 %files setup
 %defattr(-,root,root,-)
@@ -1243,11 +1252,13 @@ fi
 %{_libdir}/mythtv/filters/*
 %dir %{_libdir}/mythtv/plugins
 %dir %{_datadir}/mythtv/i18n
+%dir %{_datadir}/mythtv/fonts
 %{_datadir}/mythtv/fonts/*.ttf
 %{_datadir}/mythtv/i18n/mythfrontend_*.qm
 %{_datadir}/applications/*mythfrontend.desktop
 %{_datadir}/pixmaps/myth*.png
-%{_datadir}/mythtv/metadata
+%dir %{_datadir}/mythtv/metadata
+%{_datadir}/mythtv/metadata/*
 
 %files base-themes
 %defattr(-,root,root,-)
@@ -1257,7 +1268,6 @@ fi
 %files libs
 %defattr(-,root,root,-)
 %{_libdir}/*.so.*
-%{_datadir}/mythtv/locales
 
 %files devel
 %defattr(-,root,root,-)
@@ -1335,8 +1345,8 @@ fi
 %dir %{_sysconfdir}/mythgame
 %config(noreplace) %{_sysconfdir}/mythgame/gamelist.xml
 %{_libdir}/mythtv/plugins/libmythgame.so
-%{_datadir}/mythtv/games
-%dir %{_datadir}/mythtv/games/xmame
+%dir %{_datadir}/mythtv/games
+%{_datadir}/mythtv/games/*
 %dir %{_datadir}/mame/screens
 %dir %{_datadir}/mame/flyers
 %{_datadir}/mythtv/game_settings.xml
@@ -1436,6 +1446,9 @@ fi
 ################################################################################
 
 %changelog
+* Sat Aug 14 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn
+- Resync with RPM Fusion spec, now builds cleanly again on a
+  Fedora 13 host
 
 * Thu Aug 05 2010 Chris Petersen <rpm@forevermore.net> 0.24-0.1.svn
 - Add mythpreviewgen
