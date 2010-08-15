@@ -1448,7 +1448,7 @@ fi
 %changelog
 * Sat Aug 14 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn
 - Resync with RPM Fusion spec, now builds cleanly again on a
-  Fedora 13 host
+  Fedora 13 host as of svn revision 25638
 
 * Thu Aug 05 2010 Chris Petersen <rpm@forevermore.net> 0.24-0.1.svn
 - Add mythpreviewgen
