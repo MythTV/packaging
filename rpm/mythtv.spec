@@ -155,7 +155,12 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  gcc-c++
 BuildRequires:  mysql-devel >= 5
+%if 0%{?fedora} >= 14
+BuildRequires:  qt-webkit-devel
+BuildRequires:  qt-devel >= 4.4
+%else
 BuildRequires:  qt4-devel >= 4.4
+%endif
 BuildRequires:  phonon-devel
 
 BuildRequires:  lm_sensors-devel
