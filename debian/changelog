@@ -14,6 +14,7 @@ mythtv (0.24.0~trunk25542-0ubuntu1) UNRELEASED; urgency=low
   * Drop 40_libudev.  Merged upstream.
   * Drop 09_perl_bindings_prefix.  Merged upstream.
   * debian/rules: cleanup deprecated configure options.
+  * Install mythpreviewgen into mythtv-frontend (LP: #616083)
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
