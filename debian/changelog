@@ -25,6 +25,7 @@ mythtv (0.24.0~trunk25542-0ubuntu1) UNRELEASED; urgency=low
   * Updated perl bindings patch for upstream changes (LP: #586293)
   * Added libqt4-webkit-dev dependency to satisify maverick FTBFS
   * Added new python and perl dependencies
+  * Moved backup and restore scripts from mythtv-database to mythtv-common
 
  -- Thomas Mashos <tgm4883@gmail.com>  Wed, 23 Jun 2010 21:28:44 -0700
 

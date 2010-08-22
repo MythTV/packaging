@@ -1,6 +1,3 @@
-#These were actually part of make install
-usr/share/mythtv/*.pl
-
 #are added in (not part of make install)
 database/*.sql usr/share/mythtv/sql
 
