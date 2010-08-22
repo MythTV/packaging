@@ -1,6 +1,7 @@
 mythtv (0.23.0+fixes25138-0ubuntu2) UNRELEASED; urgency=low
 
   * Added libqt4-webkit-dev dependency to satisify maverick FTBFS
+  * Moved backup and restore scripts to mythtv-common from mythtv-database
 
  -- Thomas Mashos <tgm4883@gmail.com>  Sat, 19 Jun 2010 23:52:56 -0700
 
