@@ -89,7 +89,7 @@ Architecture: any
 Depends: pwgen, adduser, mysql-client, ttf-freefont, ttf-liberation, ttf-droid, ttf-dejavu, ${shlibs:Depends}, ${misc:Depends}
 Suggests: mythtv-doc
 Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-gray-osd, mythtv-theme-isthmus
-Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.23.0~trunk23548), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu, mythtv-backend (<< 0.23.0~trunk23549)
+Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.23.0~trunk23548), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu, mythtv-backend (<< 0.23.0~trunk23549), mythtv-database (<< 0.24.0~trunk25638)
 Description: A personal video recorder application (common data)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
