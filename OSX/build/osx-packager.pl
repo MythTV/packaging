@@ -50,10 +50,9 @@ our $sourceforge = 'http://downloads.sourceforge.net';
 our @components = ( 'myththemes', 'mythplugins' );
 
 # The OS X programs that we are likely to be interested in.
-our @targets   = ( 'MythFrontend',  'MythAVTest',  'MythWelcome' );
-our @targetsJT = ( 'MythCommFlag',  'MythJobQueue');
-our @targetsBE = ( 'MythBackend',   'MythFillDatabase',
-                   'MythTranscode', 'MythTV-Setup');
+our @targets   = ( 'MythFrontend', 'MythAVTest',  'MythWelcome' );
+our @targetsJT = ( 'MythCommFlag', 'MythJobQueue');
+our @targetsBE = ( 'MythBackend',  'MythFillDatabase', MythTV-Setup');
 
 
 # Patches for MythTV source
