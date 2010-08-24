@@ -52,7 +52,7 @@ our @components = ( 'myththemes', 'mythplugins' );
 # The OS X programs that we are likely to be interested in.
 our @targets   = ( 'MythFrontend', 'MythAVTest',  'MythWelcome' );
 our @targetsJT = ( 'MythCommFlag', 'MythJobQueue');
-our @targetsBE = ( 'MythBackend',  'MythFillDatabase', MythTV-Setup');
+our @targetsBE = ( 'MythBackend',  'MythFillDatabase', 'MythTV-Setup');
 
 
 # Patches for MythTV source
@@ -413,15 +413,15 @@ END
 if ( 0 )
 {
 if ( $OPT{'nohead'} && ! $OPT{'force'} )
-{ 
-    my $SVNTOP="$SCRIPTDIR/.osx-packager/src/myth-svn/mythtv/.svn"; 
- 
-    if ( ! -d $SVNTOP ) 
-    {   die "No source code to build?"   } 
-   
-    if ( ! `grep svn/trunk/mythtv $SVNTOP/entries` ) 
-    {   die "Source code does not match SVN trunk"   } 
-} 
+{
+    my $SVNTOP="$SCRIPTDIR/.osx-packager/src/myth-svn/mythtv/.svn";
+
+    if ( ! -d $SVNTOP )
+    {   die "No source code to build?"   }
+
+    if ( ! `grep svn/trunk/mythtv $SVNTOP/entries` )
+    {   die "Source code does not match SVN trunk"   }
+}
 elsif ( $OPT{'svnbranch'} )
 {
     &Complain(<<END);
@@ -454,7 +454,7 @@ if ( $OPT{'nohead'} && ! $OPT{'force'})
 
     if ( ! -d $SVNTOP )
     {   die "No source code to build?" }
-  
+
     if ( ! `grep 0-22-fixes $SVNTOP/entries` )
     {   die "Source code does not match release-0-22-fixes"   }
 }
