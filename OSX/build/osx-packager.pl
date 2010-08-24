@@ -62,7 +62,6 @@ our %depend_order = (
   'mythtv'
   =>  [
         'dvdcss',
-        'faad2',
         'freetype',
         'lame',
         'mysqlclient',
@@ -103,11 +102,6 @@ our %depend = (
     # For some reason, this dies when the neon sub-make ends
     #'parallel-make'
     #=> 'yes'
-  },
-
-  'faad2' =>
-  {
-    'url' => "$sourceforge/sourceforge/faac/faad2-2.7.tar.gz",
   },
 
   'freetype' =>
@@ -530,15 +524,13 @@ our %conf = (
   =>  [
         '--prefix=' . $PREFIX,
         '--runprefix=../Resources',
-        #'--enable-libfaad',
 
         # To "cross compile" something for a lesser Mac:
         #'--tune=G3',
         #'--disable-altivec',
 
-        # Currently needed for Mac OS 10.6 builds:
+        # Currently needed for Mac OS 10.6 builds?
         '--disable-mmx', '--enable-disable-mmx-for-debugging',
-        '--disable-gpl', # plus comment out libfaad above
       ],
 );
 
