@@ -1,4 +1,4 @@
-mythtv (0.23.1+fixes25842-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.1+fixes25842-0ubuntu1) maverick; urgency=low
 
   [ Thomas Mashos ]
   * Added libqt4-webkit-dev dependency to satisify maverick FTBFS
@@ -15,7 +15,7 @@ mythtv (0.23.1+fixes25842-0ubuntu1) UNRELEASED; urgency=low
   * Only apply qt47_support.patch and missing_check.patch on Maverick
     to prevent potential issues on autobuilds for Lucid.
 
- -- Thomas Mashos <tgm4883@gmail.com>  Sat, 19 Jun 2010 23:52:56 -0700
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Wed, 25 Aug 2010 09:19:37 -0500
 
 mythtv (0.23.0+fixes25138-0ubuntu1) maverick; urgency=low
 
