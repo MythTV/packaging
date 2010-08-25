@@ -1,8 +1,8 @@
-Index: mythtv-fixes/configure
+Index: mythtv-trunk/configure
 ===================================================================
---- mythtv-fixes.orig/configure	2010-08-25 08:29:45.249145665 -0500
-+++ mythtv-fixes/configure	2010-08-25 08:30:33.961120797 -0500
-@@ -4662,6 +4662,7 @@
+--- mythtv-trunk.orig/configure	2010-08-25 09:57:29.718118588 -0500
++++ mythtv-trunk/configure	2010-08-25 10:26:41.470129064 -0500
+@@ -4787,6 +4787,7 @@
    mkdir config
  fi
  cat - > config/Makefile <<END
@@ -10,3 +10,16 @@ Index: mythtv-fixes/configure
  
  all:
  qmake_all:
+Index: mythtv-trunk/external/Makefile
+===================================================================
+--- mythtv-trunk.orig/external/Makefile	2010-08-25 10:29:23.930118883 -0500
++++ mythtv-trunk/external/Makefile	2010-08-25 10:29:30.577148874 -0500
+@@ -32,4 +32,6 @@
+ $(addsuffix _uninstall,$(SUBDIRS)):
+ 	$(MAKE) -C $(subst _uninstall,,$@) uninstall
+ 
+-uninstall: $(addsuffix _uninstall,$(SUBDIRS))
+\ No newline at end of file
++uninstall: $(addsuffix _uninstall,$(SUBDIRS))
++
++check:

@@ -1,7 +1,7 @@
-Index: mythtv-fixes/libs/libmyth/mythdeque.h
+Index: mythtv-trunk/libs/libmyth/mythdeque.h
 ===================================================================
---- mythtv-fixes.orig/libs/libmyth/mythdeque.h	2010-08-24 19:12:55.017128343 -0500
-+++ mythtv-fixes/libs/libmyth/mythdeque.h	2010-08-24 19:13:17.590120714 -0500
+--- mythtv-trunk.orig/libs/libmyth/mythdeque.h	2009-04-10 19:04:30.000000000 -0500
++++ mythtv-trunk/libs/libmyth/mythdeque.h	2010-08-25 09:56:11.233121070 -0500
 @@ -19,7 +19,7 @@
      T dequeue()
      {
@@ -11,10 +11,10 @@ Index: mythtv-fixes/libs/libmyth/mythdeque.h
          T item = deque<T>::front();
          deque<T>::pop_front();
          return item;
-Index: mythtv-fixes/libs/libmythtv/recordingprofile.h
+Index: mythtv-trunk/libs/libmythtv/recordingprofile.h
 ===================================================================
---- mythtv-fixes.orig/libs/libmythtv/recordingprofile.h	2010-08-24 19:13:05.190144174 -0500
-+++ mythtv-fixes/libs/libmythtv/recordingprofile.h	2010-08-24 19:13:17.610149724 -0500
+--- mythtv-trunk.orig/libs/libmythtv/recordingprofile.h	2010-05-16 09:23:11.000000000 -0500
++++ mythtv-trunk/libs/libmythtv/recordingprofile.h	2010-08-25 09:56:11.233121070 -0500
 @@ -84,7 +84,7 @@
  
    public:
@@ -24,11 +24,11 @@ Index: mythtv-fixes/libs/libmythtv/recordingprofile.h
      virtual void loadByID(int id);
      virtual bool loadByType(const QString &name, const QString &cardtype);
      virtual bool loadByGroup(const QString &name, const QString &group);
-Index: mythtv-fixes/libs/libmythtv/tv_rec.h
+Index: mythtv-trunk/libs/libmythtv/tv_rec.h
 ===================================================================
---- mythtv-fixes.orig/libs/libmythtv/tv_rec.h	2010-08-24 19:13:10.173137963 -0500
-+++ mythtv-fixes/libs/libmythtv/tv_rec.h	2010-08-24 19:13:17.622149153 -0500
-@@ -106,7 +106,7 @@
+--- mythtv-trunk.orig/libs/libmythtv/tv_rec.h	2010-08-23 16:11:09.000000000 -0500
++++ mythtv-trunk/libs/libmythtv/tv_rec.h	2010-08-25 09:56:11.233121070 -0500
+@@ -93,7 +93,7 @@
  class TuningRequest
  {
    public:
@@ -37,10 +37,10 @@ Index: mythtv-fixes/libs/libmythtv/tv_rec.h
          flags(f), program(NULL), channel(QString::null),
          input(QString::null), majorChan(0), minorChan(0), progNum(-1) {;}
      TuningRequest(uint f, RecordingInfo *p) :
-Index: mythtv-fixes/libs/libmythupnp/eventing.h
+Index: mythtv-trunk/libs/libmythupnp/eventing.h
 ===================================================================
---- mythtv-fixes.orig/libs/libmythupnp/eventing.h	2010-08-24 19:12:41.501129379 -0500
-+++ mythtv-fixes/libs/libmythupnp/eventing.h	2010-08-24 19:13:17.586121044 -0500
+--- mythtv-trunk.orig/libs/libmythupnp/eventing.h	2009-12-30 23:38:50.000000000 -0600
++++ mythtv-trunk/libs/libmythupnp/eventing.h	2010-08-25 09:56:11.233121070 -0500
 @@ -233,7 +233,7 @@
          {
              SVMap::iterator it = m_map.find(sName);
@@ -59,3 +59,16 @@ Index: mythtv-fixes/libs/libmythupnp/eventing.h
          }
  
          uint BuildNotifyBody(QTextStream &ts, TaskTime ttLastNotified) const;
+Index: mythtv-trunk/libs/libmyth/audiooutputbase.cpp
+===================================================================
+--- mythtv-trunk.orig/libs/libmyth/audiooutputbase.cpp	2010-08-25 09:56:53.405135316 -0500
++++ mythtv-trunk/libs/libmyth/audiooutputbase.cpp	2010-08-25 09:57:08.217149671 -0500
+@@ -75,7 +75,7 @@
+     source_bytes_per_frame(0),
+     needs_upmix(false),         needs_downmix(false),
+     surround_mode(QUALITY_LOW), old_stretchfactor(1.0f),
+-    volume(80),                 volumeControl(NULL),
++    volume(80),                 volumeControl(QString()),
+ 
+     processing(false),
+ 
