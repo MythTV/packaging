@@ -21,7 +21,6 @@ CONFIGURE_OPTS +=   --compile-type=debug \
 					--enable-firewire \
 					--enable-joystick-menu \
 					--enable-opengl-vsync \
-					--enable-libfaad \
 					--with-bindings=perl \
 					--enable-opengl-video \
 					--enable-ffmpeg-pthreads \
