@@ -6,3 +6,4 @@
 proper_shutdown_behavior_for_ubuntu.patch
 
 qt47_support.patch
+configure_missing_check.patch
