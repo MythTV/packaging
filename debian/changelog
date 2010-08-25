@@ -1,3 +1,10 @@
+mythtv (0.23.1+fixes25842-0ubuntu2) maverick; urgency=low
+
+  * Rebuild without accidentally added patch 
+    debian-changes-0.23.1+fixes25842-0ubuntu1.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Wed, 25 Aug 2010 12:10:29 -0500
+
 mythtv (0.23.1+fixes25842-0ubuntu1) maverick; urgency=low
 
   [ Thomas Mashos ]
