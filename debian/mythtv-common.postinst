@@ -1,8 +1,8 @@
 #!/bin/sh -e
+. /usr/share/debconf/confmodule
 
 case "$1" in
     configure)
-    . /usr/share/debconf/confmodule
 
     #only create a user if they don't already exist
     if ! getent passwd mythtv 1>/dev/null; then

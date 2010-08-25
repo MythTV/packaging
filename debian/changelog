@@ -10,6 +10,7 @@ mythtv (0.23.1+fixes25842-0ubuntu1) UNRELEASED; urgency=low
   * Update checkout to r25842
   * Update to 0.23.1 based checkouts.
   * Reverse build depends for libjack to fix virtual packages problems.
+  * Source debconf stuff in all scenarios for mythtv-common postinst.
 
  -- Thomas Mashos <tgm4883@gmail.com>  Sat, 19 Jun 2010 23:52:56 -0700
 
