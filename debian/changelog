@@ -12,6 +12,8 @@ mythtv (0.23.1+fixes25842-0ubuntu1) UNRELEASED; urgency=low
   * Reverse build depends for libjack to fix virtual packages problems.
   * Source debconf stuff in all scenarios for mythtv-common postinst.
   * Add configure_missing_check.patch to fix FTBFS on Maverick.
+  * Only apply qt47_support.patch and missing_check.patch on Maverick
+    to prevent potential issues on autobuilds for Lucid.
 
  -- Thomas Mashos <tgm4883@gmail.com>  Sat, 19 Jun 2010 23:52:56 -0700
 
