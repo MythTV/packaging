@@ -5,3 +5,4 @@
 40_libudev.patch
 proper_shutdown_behavior_for_ubuntu.patch
 
+qt47_support.patch
