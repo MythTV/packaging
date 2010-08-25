@@ -1,0 +1,12 @@
+Index: mythtv-fixes/configure
+===================================================================
+--- mythtv-fixes.orig/configure	2010-08-25 08:29:45.249145665 -0500
++++ mythtv-fixes/configure	2010-08-25 08:30:33.961120797 -0500
+@@ -4662,6 +4662,7 @@
+   mkdir config
+ fi
+ cat - > config/Makefile <<END
++check:
+ 
+ all:
+ qmake_all:

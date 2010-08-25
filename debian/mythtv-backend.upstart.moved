@@ -3,7 +3,7 @@
 description     "MythTV Backend"
 author          "Mario Limonciello <superm1@ubuntu.com>"
 
-start on (local-filesystems and net-device-up IFACE=lo)
+start on (local-filesystems and net-device-up IFACE=lo and started udev-finish)
 stop on starting shutdown
 
 #expect fork

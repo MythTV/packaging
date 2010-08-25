@@ -31,6 +31,37 @@ mythtv (0.24.0~trunk25542-0ubuntu1) UNRELEASED; urgency=low
 
  -- Thomas Mashos <tgm4883@gmail.com>  Wed, 23 Jun 2010 21:28:44 -0700
 
+mythtv (0.23.1+fixes25842-0ubuntu1) maverick; urgency=low
+
+  [ Thomas Mashos ]
+  * Added libqt4-webkit-dev dependency to satisify maverick FTBFS
+  * Moved backup and restore scripts to mythtv-common from mythtv-database
+  * Added Replaces for mythtv-common (LP: 622983)
+
+  [ Mario Limonciello ]
+  * Add qt47_support.patch to fix FTBFS on Maverick.
+  * Update checkout to r25842
+  * Update to 0.23.1 based checkouts.
+  * Reverse build depends for libjack to fix virtual packages problems.
+  * Source debconf stuff in all scenarios for mythtv-common postinst.
+  * Add configure_missing_check.patch to fix FTBFS on Maverick.
+  * Only apply qt47_support.patch and missing_check.patch on Maverick
+    to prevent potential issues on autobuilds for Lucid.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Wed, 25 Aug 2010 09:19:37 -0500
+
+mythtv (0.23.0+fixes25138-0ubuntu1) maverick; urgency=low
+
+  [ Mario Limonciello ]
+  * new upstream checkout (25138)
+
+  [ Thomas Mashos ]
+  * Added missingok for mirobridge log in logrotate (LP: #581283)
+  * Backend now waits for udev to finish (LP: #556204)
+  * Added patch to properly detect dbus during compile (LP: #574877)
+
+ -- Thomas Mashos <tgm4883@gmail.com>  Sat, 19 Jun 2010 23:11:04 -0700
+
 mythtv (0.23.0+fixes24158-0ubuntu2) lucid; urgency=low
 
   * debian/patches/proper_shutdown_behavior_for_ubuntu.patch: 
