@@ -700,14 +700,17 @@ push @{$expect},
 if ( grep m/mythplugins/, @components ) {
 push @{$expect},
 # taglib 1.6 sources changed it's build system under win32 to use 'cmake', 
-# which we don't have, however pre-compiled mingw 1.5 binaries are available:
+# which we don't have, however pre-compiled mingw 1.6 binaries are available:
 [ archive => $sources.'taglib-1.6.1-mingw-bin.zip',  
   fetch   => 'http://users.physik.fu-berlin.de'.
              '/~glaubitz/linux-minidisc/taglib-1.6.1-mingw-bin.zip'],
-[ dir     => $sources, 
-  extract => $sources.'taglib-1.6.1-mingw-bin.zip' ],
-[ file    => $msys.'lib/libtag.dll.a', 
-  shell   => ['cd '.$sources,
+[ dir     => $sources.'taglib-1.6.1-mingw-bin',
+  mkdirs  => $sources.'taglib-1.6.1-mingw-bin'],
+[ dir     => $sources.'taglib-1.6.1-mingw-bin/bin',
+  extract => [$sources.'taglib-1.6.1-mingw-bin.zip',
+              $sources.'taglib-1.6.1-mingw-bin' ]],
+[ file    => $msys.'lib/libtag.dll.a',
+  shell   => ['cd '.$sources.'taglib-1.6.1-mingw-bin',
               "cp -vr * $unixmsys"],
   comment => 'installing: msys taglib' ],
 # Hack for mythplugins/configure to detect taglib version:
