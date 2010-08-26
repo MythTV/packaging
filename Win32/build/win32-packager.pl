@@ -44,7 +44,7 @@ $SIG{INT} = sub { die "Interrupted\n"; };
 $| = 1; # autoflush stdout;
 
 # this script was last tested to work with this version, on other versions YMMV.
-my $SVNRELEASE = '23137'; # Recent trunk
+my $SVNRELEASE = '25855'; # Recent trunk
 #my $SVNRELEASE = 'HEAD'; # If you are game, go forth and test the latest!
 
 
@@ -103,6 +103,7 @@ if (defined $opt{c}) {
 }
 
 if (defined $opt{b}) {
+    $version = "0.23.1";
     my @num = split /\./, $version;
     $svnlocation = "branches/release-$num[0]-$num[1]-fixes";
 } else {
@@ -203,12 +204,8 @@ my $unixhome         = perl2unix($home);
 my $unixprogramfiles = perl2unix($programfiles);
 my $unixbuild        = perl2unix($build);
 
-# The installer for MinGW:
-my $MinGWinstaller = 'MinGW-5.1.6.exe';
-my $installMinGW   = $dossources.$MinGWinstaller;
-
 # Qt4 directory
-my $qt4dir     = 'C:/qt/4.5.3/';
+my $qt4dir     = 'C:/qt/4.6.3/';
 my $dosqt4dir  = perl2dos($qt4dir);
 my $unixqt4dir = perl2unix($qt4dir);
 
@@ -305,47 +302,52 @@ push @{$expect},
   mkdirs  => [$sources],
   comment => 'We download all the files from the web, and save them here:'],
 
+# (alternate would be from the gnuwin32 project,
+#  which is actually from same source)
+#  run it into a 'unzip' folder, because it doesn't extract to a folder:
+[ dir     => $sources."unzip",
+  mkdirs  => $sources.'unzip',
+  comment => 'unzip.exe - Get a precompiled '.
+             'native Win32 version from InfoZip' ],
+[ archive => $sources.'unzip/unz552xN.exe',
+  'fetch' => 'ftp://ftp.info-zip.org/pub/infozip/win32/unz552xn.exe'],
+[ file    => $sources.'unzip/unzip.exe',
+  exec    => 'chdir /d '.$dossources.'unzip && '.
+             $dossources.'unzip/unz552xN.exe' ],
+# we could probably put the unzip.exe into the path...
 
-[ archive => $sources.$MinGWinstaller,
-  'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw/'.$MinGWinstaller,
+[ archive => $sources.'MinGW-gcc440_1.zip',
+  'fetch' => 'ftp://ftp.qt.nokia.com/misc/MinGW-gcc440_1.zip',
   comment => 'Get mingw and addons first, or we cant do [shell] requests!' ],
 [ archive => $sources.'mingw-utils-0.3.tar.gz',
   'fetch' => 'http://'.$sourceforge.
               '/sourceforge/mingw/mingw-utils-0.3.tar.gz' ],
-# ffmpeg complains if gcc < 4.2, so download a newer version
-# As of 20090626 MinGW gcc >= 4.3 do NOT work with ffmpeg (MinGW bug #2812588)
- [ archive => $sources.'gcc-4.2.4-tdm-1-core.tar.gz',
-   'fetch' => 'http://'.$sourceforge.
-              '/sourceforge/tdm-gcc/gcc-4.2.4-tdm-1-core.tar.gz' ],
- [ archive => $sources.'gcc-4.2.4-tdm-1-g++.tar.gz',
-   'fetch' => 'http://'.$sourceforge.
-              '/sourceforge/tdm-gcc/gcc-4.2.4-tdm-1-g++.tar.gz' ],
+# Need updated binutils to build ffmpeg DLLs properly with gcc 4.4
+[ archive => $sources.'binutils-2.20-1-mingw32-bin.tar.gz',
+  'fetch' => 'http://'.$sourceforge.
+              '/sourceforge/mingw/binutils-2.20-1-mingw32-bin.tar.gz' ],
+# Need updated mingwrt for fixed usleep()
+[ archive => $sources.'mingwrt-3.17-mingw32-dev.tar.gz',
+  'fetch' => 'http://'.$sourceforge.
+              '/sourceforge/mingw/mingwrt-3.17-mingw32-dev.tar.gz' ],
+[ archive => $sources.'mingwrt-3.17-mingw32-dll.tar.gz',
+  'fetch' => 'http://'.$sourceforge.
+              '/sourceforge/mingw/mingwrt-3.17-mingw32-dll.tar.gz' ],
+# patch.exe included with MSYS 1.0.11 is broken, so update it
+[ archive => $sources.'patch-2.5.9-1-msys-1.0.11-bin.tar.lzma',
+  'fetch' => 'http://'.$sourceforge.
+              '/sourceforge/mingw/patch-2.5.9-1-msys-1.0.11-bin.tar.lzma' ],
 
-
-[ dir     => $mingw,
-  exec    => $installMinGW,
-  comment => 'install MinGW (be sure to install g++, g77 and ming '.
-             'make too. Leave the default directory at c:\mingw ) '.
-             '- it will require user interaction, '.
-             'but once completed, will return control to us....' ],
-
-# interactive, supposed to install g++ and ming make too,
-# but people forget to select them?
-
-[ file    => $mingw."bin/gcc.exe",
-  exec    => $installMinGW,
-  comment => 'unable to find a gcc.exe where expected, '.
-             'rerunning MinGW installer!' ],
+[ file    => $mingw.'manifest.txt',
+  extract => [$sources.'MinGW-gcc440_1.zip', '/'],
+  comment => 'install Qt MinGW bundle (includes gcc, g++, gdb, mingw-make)' ],
 
 [ archive => $sources.'MSYS-1.0.11.exe',
   'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw/MSYS-1.0.11.exe',
   comment => 'Get the MSYS and addons:' ] ,
-[ archive => $sources.'bash-3.1-MSYS-1.0.11-1.tar.bz2',
-  'fetch' => 'http://'.$sourceforge.
-             '/sourceforge/mingw/bash-3.1-MSYS-1.0.11-1.tar.bz2' ] ,
-[ archive => $sources.'zlib-1.2.3-MSYS-1.0.11.tar.bz2',
-  'fetch' => 'http://easynews.dl.sourceforge.net'.
-             '/sourceforge/mingw/zlib-1.2.3-MSYS-1.0.11.tar.bz2' ] ,
+[ archive => $sources.'zlib-1.2.3-MSYS-1.0.11-1.tar.bz2',
+  'fetch' => 'http://www.ufoot.org'.
+             '/download/liquidwar/v6/mingw32/pkg/zlib-1.2.3-MSYS-1.0.11-1.tar.bz2' ] ,
 [ archive => $sources.'coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2',
   'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw'.
              '/coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2' ] ,
@@ -368,92 +370,48 @@ push @{$expect},
 
 # prior to this point you can't use the 'extract' 'copy' or 'shell' features!
 
-# if you did a default-install of MingW, then you need to try again, as we
-# really need g++ and mingw32-make, and g77 is needed for fftw
-[ file    => $mingw.'bin/mingw32-make.exe',
-  exec    => $installMinGW,
-  comment => 'Seriously?  You must have done a default install of MinGW.  '.
-             'go try again! You MUST choose the custom installed and select '.
-             'the mingw make, g++ and g77 optional packages.' ],
-[ file    => $mingw.'bin/g++.exe',
-  exec    => $installMinGW,
-  comment => 'Seriously?  You must have done a default install of MinGW.  '.
-             'go try again! You MUST choose the custom installed and select '.
-             'the mingw make, g++ and g77 optional packages.' ],
-[ file    => $mingw.'bin/g77.exe',
-  exec    => $installMinGW,
-   comment => 'Seriously?  You must have done a default install of MinGW.  '.
-              'go try again! You MUST choose the custom installed and select '.
-              'the mingw make, g++ and g77 optional packages.' ],
-
-#[ file => 'C:/MinGW/bin/mingw32-make.exe',  extract =>
-#$sources.'mingw32-make-3.81-2.tar',"C:/MinGW" ], - optionally we could get
-#mingw32-make from here
-
 # now that we have the 'extract' feature, we can finish ...
 [ file    => $mingw.'/bin/reimp.exe',
   extract => [$sources.'mingw-utils-0.3.tar', $mingw],
   comment => 'Now we can finish all the mingw and msys addons:' ],
-[ file    => $msys.'bin/bash.exe',
-  extract => [$sources.'bash-3.1-MSYS-1.0.11-1.tar', $msys] ],
-[ file    => $mingw.'bin/mingw32-gcc-4.2.4.exe',
-  extract => [$sources.'gcc-4.2.4-tdm-1-core.tar', $mingw] ],
-[ file    => $mingw.'include/c++/4.2.4/cstdlib',
-  extract => [$sources.'gcc-4.2.4-tdm-1-g++.tar', $mingw] ],
+[ file    => $mingw.'/share/info/binutils.info',
+  extract => [$sources.'binutils-2.20-1-mingw32-bin.tar', $mingw] ],
+[ grep    => ['__MINGW32_VERSION           3.17', $mingw.'include/_mingw.h'],
+  extract => [$sources.'mingwrt-3.17-mingw32-dev.tar', $mingw] ],
+[ always  => ['No unique file to check'],
+  extract => [$sources.'mingwrt-3.17-mingw32-dll.tar', $mingw] ],
 [ dir     => $sources.'coreutils-5.97',
   extract => [$sources.'coreutils-5.97-MSYS-1.0.11-snapshot.tar'] ],
 [ file    => $msys.'bin/pr.exe',
   shell   => ["cd ".$unixsources."coreutils-5.97","cp -r * / "] ],
 [ file    => $msys.'bin/mktemp.exe',
   extract => [$sources.'mktemp-1.5-MSYS.tar', $msys] ],
+[ always  => ['No unique file to check'],
+  extract => [$sources.'patch-2.5.9-1-msys-1.0.11-bin.tar', $msys] ],
 
 [ dir     => $msys."lib" ,  mkdirs => $msys.'lib' ],
 [ dir     => $msys."include" ,  mkdirs => $msys.'include' ],
 
-#get gdb
-[ archive => $sources.'gdb-6.8-mingw-3.tar.bz2',
-  'fetch' => 'http://'.$sourceforge.
-             '/sourceforge/mingw/gdb-6.8-mingw-3.tar.bz2',
-  comment => 'Get gdb for possible debugging later' ],
-[ file    => $msys.'bin/gdb.exe',
-  extract => [$sources.'gdb-6.8-mingw-3.tar.bz2', $msys] ],
-
-
-# (alternate would be from the gnuwin32 project,
-#  which is actually from same source)
-#  run it into a 'unzip' folder, because it doesn't extract to a folder:
-[ dir     => $sources."unzip",
-  mkdirs  => $sources.'unzip',
-  comment => 'unzip.exe - Get a precompiled '.
-             'native Win32 version from InfoZip' ],
-[ archive => $sources.'unzip/unz552xN.exe',
-  'fetch' => 'ftp://ftp.info-zip.org/pub/infozip/win32/unz552xn.exe'],
-[ file    => $sources.'unzip/unzip.exe',
-  exec    => 'chdir '.$dossources.'unzip && '.
-             $dossources.'unzip/unz552xN.exe' ],
-# we could probably put the unzip.exe into the path...
-
-
-# we now use SVN 1.5.x
-[ archive => $sources.'svn-win32-1.5.1.zip',
-  'fetch' => 'http://subversion.tigris.org/files/'.
-             'documents/15/43251/svn-win32-1.5.1.zip',
+# we now use SVN 1.6.x
+[ archive => $sources.'svn-win32-1.6.12.zip',
+  'fetch' => 'http://alagazam.net/'.
+             'svn-1.6.12/svn-win32-1.6.12.zip',
   comment => 'Subversion comes as a zip file, so it '.
              'cant be done earlier than the unzip tool!'],
-[ dir     => $sources.'svn-win32-1.5.1',
-  extract => $sources.'svn-win32-1.5.1.zip' ],
+[ dir     => $sources.'svn-win32-1.6.12',
+  extract => $sources.'svn-win32-1.6.12.zip' ],
 
 # link to svn instead of installing it, to avoid packaging its dlls later
 [ always  => $msys.'bin/svn.bat',
   write   => [$msys.'bin/svn.bat',
-  '@'.$dossources.'svn-win32-1.5.1\bin\svn.exe %*' ],
+  '@'.$dossources.'svn-win32-1.6.12\bin\svn.exe %*' ],
   comment => 'put svn.bat into the path, '.
              'so we can use it easily later!' ],
 
 [ always  => $msys.'bin/svnversion',
   write   => [$msys.'bin/svnversion', 
 '#!/bin/sh
-'.$unixsources.'svn-win32-1.5.1/bin/svnversion.exe $*' ],
+'.$unixsources.'svn-win32-1.6.12/bin/svnversion.exe $*' ],
   comment => 'put svnversion into the path, '.
              'so mythtv can use it later!' ],
 
@@ -462,15 +420,15 @@ push @{$expect},
   mkdirs  => $sources.'zlib',
   comment => 'the zlib download is a bit messed-up, and needs some TLC '.
              'to put everything in the right place' ],
-[ dir     => $sources."zlib/usr",
-  extract => [$sources.'zlib-1.2.3-MSYS-1.0.11.tar', $sources."zlib"] ],
+[ dir     => $sources."zlib/",
+  extract => [$sources.'zlib-1.2.3-MSYS-1.0.11-1.tar', $sources."zlib"] ],
 # install to /usr:
 [ file    => $msys.'lib/libz.a',
-  exec    => ["copy /Y ".$dossources.'zlib\usr\lib\* '.$dosmsys."lib"] ],
+  exec    => ["copy /Y ".$dossources.'zlib\lib\* '.$dosmsys."lib"] ],
 [ file    => $msys.'bin/msys-z.dll',
-  exec    => ["copy /Y ".$dossources.'zlib\usr\bin\* '.$dosmsys."bin"] ],
+  exec    => ["copy /Y ".$dossources.'zlib\bin\* '.$dosmsys."bin"] ],
 [ file    => $msys.'include/zlib.h',
-  exec    => ["copy /Y ".$dossources.'zlib\usr\include\* '.
+  exec    => ["copy /Y ".$dossources.'zlib\include\* '.
               $dosmsys."include"] ],
 
 # fetch mysql
@@ -479,13 +437,13 @@ push @{$expect},
 # but that has no mirror autoselection, so we have just picked one.
 # If this fails you, try another mirror, or maybe an archived version:
 # http://downloads.mysql.com/archives/mysql-5.1/mysql-essential-5.1.42-win32.msi
-[ archive => $sources.'mysql-essential-5.1.43-win32.msi',
+[ archive => $sources.'mysql-essential-5.1.49-win32.msi',
   'fetch' => 'http://mysql.mirrors.ilisys.com.au/Downloads/'.
-             'MySQL-5.1/mysql-essential-5.1.43-win32.msi',
+             'MySQL-5.1/mysql-essential-5.1.49-win32.msi',
   comment => 'fetch mysql binaries - this is a big download(35MB) '.
              'so it might take a while' ],
 [ file    => $mysql.'bin/libmySQL.dll',
-  exec    => $dossources.'mysql-essential-5.1.43-win32.msi INSTALLLEVEL=2',
+  exec    => $dossources.'mysql-essential-5.1.49-win32.msi INSTALLLEVEL=2',
   comment => 'Install mysql - be sure to choose to do a "COMPLETE" install. '.
              'You should also choose NOT to "configure the server now" ' ],
 
@@ -545,6 +503,12 @@ push @{$expect},
   shell   => ["cd /usr/include","patch -p0 < mysql___h.patch"],
   comment => 'Apply mysql.h patch file, if not already applied....' ],
 
+# Qt MinGW distribution includes pthread headers but not the DLL, so fetch it
+[ archive => $sources.'pthreadGC2.dll',  
+  'fetch' => 'ftp://sources.redhat.com/pub/pthreads-win32/'. 
+             'dll-latest/lib/pthreadGC2.dll' ], 
+[ filesame => [$mingw.'bin/pthreadGC2.dll', $sources."pthreadGC2.dll"], 
+  copy     => [''=>''] ], 
 
 # apply sspi.h patch
 [ file    => $mingw.'include/sspi_h.patch',
@@ -572,8 +536,8 @@ push @{$expect},
 #[ pause => 'check  patch.... press [enter] to continue !'],
 
 # apply sched.h patch
-[ always    => $mingw.'include/sched_h.patch', 
-  write   => [$mingw.'include/sched_h.patch',
+[ always    => $mingw.'mingw32/include/sched_h.patch', 
+  write   => [$mingw.'mingw32/include/sched_h.patch',
 "--- include/sched.h.org	Thu Dec  4 12:00:16 2008
 +++ include/sched.h	Wed Dec  3 13:42:54 2008
 @@ -124,8 +124,17 @@
@@ -597,8 +561,8 @@ push @{$expect},
    SCHED_FIFO,
 " ],comment => 'write the patch for the the sched.h file'],
 # apply it!?
-[ grep    => ['GCC 4.x reportedly defines pid_t',$mingw.'include/sched.h'], 
-  shell   => ["cd /mingw/include","patch -p1 < sched_h.patch"],
+[ grep    => ['pid_t again!',$mingw.'mingw32/include/sched.h'], 
+  shell   => ["cd /mingw/mingw32/include", "patch -p1 < sched_h.patch"],
   comment => 'Apply sched.h patch file, if not already applied....' ],
 
 #[ pause => 'check  patch.... press [enter] to continue !'],
@@ -670,14 +634,13 @@ if ($package == 1) {
 #----------------------------------------
 if ( $qtver == 4  ) {
 push @{$expect}, 
-[ archive => $sources.'qt-win-opensource-4.5.3-mingw.exe',  
+[ archive => $sources.'qt-win-opensource-4.6.3-mingw.exe',  
     fetch => 'http://get.qt.nokia.com/qt/source/'.
-             'qt-win-opensource-4.5.3-mingw.exe',
-    comment => 'Downloading QT binaries; this will take a LONG time (165MB)' ],
+             'qt-win-opensource-4.6.3-mingw.exe',
+    comment => 'Downloading QT binaries; this will take a LONG time (267MB)' ],
 [ file => $qt4dir.'bin/QtCore4.dll', 
-  exec => $dossources.'qt-win-opensource-4.5.3-mingw.exe',
-  comment => 'Install Qt - use default options.  '.
-             'Ignore the warning about w32api version.' ],
+  exec => $dossources.'qt-win-opensource-4.6.3-mingw.exe',
+  comment => 'Install Qt - use default options.  ' ],
 ;
 } # end of QT4 install - we will patch and build mysql driver later
 
@@ -736,15 +699,15 @@ push @{$expect},
 
 if ( grep m/mythplugins/, @components ) {
 push @{$expect},
-# taglib 1.5 sources changed it's build system under win32 to use 'cmake', 
+# taglib 1.6 sources changed it's build system under win32 to use 'cmake', 
 # which we don't have, however pre-compiled mingw 1.5 binaries are available:
-[ archive => $sources.'taglib-1.5-mingw-bin.zip',  
-  fetch   => 'http://ftp.musicbrainz.org/pub/musicbrainz'.
-             '/users/luks/taglib/taglib-1.5-mingw-bin.zip'],
-[ dir     => $sources.'taglib-1.5-mingw-bin', 
-  extract => $sources.'taglib-1.5-mingw-bin.zip' ],
+[ archive => $sources.'taglib-1.6.1-mingw-bin.zip',  
+  fetch   => 'http://users.physik.fu-berlin.de'.
+             '/~glaubitz/linux-minidisc/taglib-1.6.1-mingw-bin.zip'],
+[ dir     => $sources, 
+  extract => $sources.'taglib-1.6.1-mingw-bin.zip' ],
 [ file    => $msys.'lib/libtag.dll.a', 
-  shell   => ['cd '.$sources.'taglib-1.5-mingw-bin',
+  shell   => ['cd '.$sources,
               "cp -vr * $unixmsys"],
   comment => 'installing: msys taglib' ],
 # Hack for mythplugins/configure to detect taglib version:
@@ -752,7 +715,7 @@ push @{$expect},
   write   => [$mingw.'bin/taglib-config',
 '#!/bin/sh
 case $1 in
-  "--version") echo 1.5    ;;
+  "--version") echo 1.6.1    ;;
   "--prefix")  echo /mingw ;;
 esac'] ],
 [ always  => [],
@@ -925,10 +888,10 @@ push @{$expect},
 #[ pause => 'press [enter] to extract and patch QT4 next!'],
 
 [ always => [],
-  write => [$sources.'qt-4.5.3.patch1',
-"--- 4.5.3/qmake/option.cpp.bak	2009-06-28 16:35:29 -0500
-+++ 4.5.3/qmake/option.cpp	2009-06-28 16:35:47 -0500
-@@ -619,7 +619,10 @@
+  write => [$sources.'qt-4.6.3.patch1',
+"--- 4.6.3/qmake/option.cpp.bak	2009-06-28 16:35:29 -0500
++++ 4.6.3/qmake/option.cpp	2009-06-28 16:35:47 -0500
+@@ -622,7 +622,10 @@
      Q_ASSERT(!((flags & Option::FixPathToLocalSeparators) && (flags & Option::FixPathToTargetSeparators)));
      if(flags & Option::FixPathToLocalSeparators) {
  #if defined(Q_OS_WIN32)
@@ -944,16 +907,18 @@ push @{$expect},
 [ grep  => ['Option::shellPath.isEmpty',
             $qt4dir.'qmake/option.cpp'], 
   shell => ['cd '.$unixqt4dir, 'dos2unix qmake/option.cpp', 
-            'patch -p1 < '.$sources.'qt-4.5.3.patch1'] ],
+            'patch -p1 < '.$sources.'qt-4.6.3.patch1'] ],
 
 
 [ always => [],
-  write => [$sources.'qt-4.5.3.patch2',
-"--- 4.5.3/mkspecs/win32-g++/qmake.conf.bak	2009-06-28 14:58:42 -0500
-+++ 4.5.3/mkspecs/win32-g++/qmake.conf	2009-06-28 14:59:01 -0500
-@@ -76,12 +76,15 @@
+  write => [$sources.'qt-4.6.3.patch2',
+"--- 4.6.3/mkspecs/win32-g++/qmake.conf.bak	2009-06-28 14:58:42 -0500
++++ 4.6.3/mkspecs/win32-g++/qmake.conf	2009-06-28 14:59:01 -0500
+@@ -75,14 +75,16 @@
+ !isEmpty(QMAKE_SH) {
      MINGW_IN_SHELL      = 1
  	QMAKE_DIR_SEP		= /
+-	QMAKE_QMAKE		~= s,\\\\\\\\,/,
  	QMAKE_COPY		= cp
 -	QMAKE_COPY_DIR		= xcopy /s /q /y /i
 +	QMAKE_COPY_DIR		= cp -r
@@ -969,7 +934,7 @@ push @{$expect},
  } else {
  	QMAKE_COPY		= copy /y
  	QMAKE_COPY_DIR		= xcopy /s /q /y /i
-@@ -90,12 +93,11 @@
+@@ -91,12 +93,11 @@
  	QMAKE_MKDIR		= mkdir
  	QMAKE_DEL_DIR		= rmdir
      QMAKE_CHK_DIR_EXISTS	= if not exist
@@ -989,7 +954,7 @@ push @{$expect},
 [ grep  => ['QMAKE_COPY_DIR.*?= cp -r',
             $qt4dir.'mkspecs/win32-g++/qmake.conf'], 
   shell => ['cd '.$unixqt4dir, 'dos2unix mkspecs/win32-g++/qmake.conf',
-            'patch -p1 < '.$sources.'qt-4.5.3.patch2'] ],
+            'patch -p1 < '.$sources.'qt-4.6.3.patch2'] ],
 
 
 # Write a batch script for the QT environment under DOS:
@@ -1001,7 +966,7 @@ set PATH=%QTDIR%\bin;%MINGW%\bin;%SystemRoot%\System32
 set QMAKESPEC=win32-g++
 set LIBRARY_PATH='.$dosmsys.'\lib
 set CPATH='.$dosmsys.'\include
-cd %QTDIR%
+cd /d %QTDIR%
 goto SQLONLY
 
 rem This would do a full build:
@@ -1386,6 +1351,9 @@ echo Creating build-folder Directories...
 mkdir '.$unixmythtv.'/build/bin/sqldrivers
 echo Copying QT plugin required dlls....
 cp '.$unixqt4dir.'plugins/sqldrivers/qsqlmysql*.dll '.$unixmythtv.'build/bin/sqldrivers 
+# need imageformat plugins to display channel icons
+mkdir '.$unixmythtv.'/build/bin/imageformats
+cp -p '.$unixqt4dir.'plugins/imageformats/*.dll '.$unixmythtv.'build/bin/imageformats 
 echo Copying ming and msys dlls to build folder.....
 # pthread dlls and mingwm10.dll are copied from here:
 cp /mingw/bin/*.dll '.$unixmythtv.'build/bin
@@ -2054,6 +2022,7 @@ sub findtar {
     my $t = shift;
     return "$t.gz" if -f "$t.gz";
     return "$t.bz2" if -f "$t.bz2";
+    return "$t.lzma" if -f "$t.lzma";
 
     if ( -f "$t.zip" || $t =~ m/\.zip$/ ) {
         die "no unzip.exe found ! - yet" unless -f $sources."unzip/unzip.exe";
@@ -2089,7 +2058,7 @@ sub extracttar {
                           # not forward slashes. 
         $d = perl2dos($d);
         $t = perl2dos($t);
-        my $cmd = 'chdir '.$d.' && '.$dossources.'unzip\unzip.exe -o '.$t;
+        my $cmd = 'chdir /d '.$d.' && '.$dossources.'unzip\unzip.exe -o '.$t;
         print "extracttar:$cmd\n";
         open F, "$cmd |"  || die "err: $!";
         while (<F>) {
@@ -2109,6 +2078,8 @@ sub extracttar {
         $cmd .= $unixmsys."bin/tar.exe -zxvpf $t";
     } elsif ( $t =~ /\.bz2$/ ) {
         $cmd .= $unixmsys."bin/tar.exe -jxvpf $t";
+    } elsif ( $t =~ /\.lzma$/ ) {
+        $cmd .= $unixmsys."bin/tar.exe --lzma -xvpf $t";
     } elsif ( $t =~ /\.tar$/ ) {
         $cmd .= $unixmsys."bin/tar.exe -xvpf $t";
     } else {
