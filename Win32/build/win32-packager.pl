@@ -1236,10 +1236,10 @@ push @{$expect},
 # ...to do a full clean-up of a prevous build,
 # a bit more than a 'make clean' can be required:
 foreach my $comp( @components ) {
-  push @{$expect}, 
-  [ file    => $mythtv.'delete_to_do_make_clean.txt',
-    exec    => [$dosmsys."bin\\svn -R revert $dosmythtv$comp", "nocheck"],
-    comment => "reverting any local MODS from SVN - $comp on $svnlocation" ],
+#  push @{$expect}, 
+#  [ file    => $mythtv.'delete_to_do_make_clean.txt',
+#    exec    => [$dosmsys."bin\\svn -R revert $dosmythtv$comp", "nocheck"],
+#    comment => "reverting any local MODS from SVN - $comp on $svnlocation" ],
     
 # this is now done as part of make_clean.sh, which happens EARLIER
 # in the process, prior to any possible SVN branch changes! 
