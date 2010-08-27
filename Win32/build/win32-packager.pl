@@ -338,9 +338,14 @@ push @{$expect},
   'fetch' => 'http://'.$sourceforge.
               '/sourceforge/mingw/patch-2.5.9-1-msys-1.0.11-bin.tar.lzma' ],
 
-[ file    => $mingw.'manifest.txt',
-  extract => [$sources.'MinGW-gcc440_1.zip', '/'],
+[ dir     => $mingw,
+  mkdirs  => $mingw],
+[ file    => $mingw.'mingw/manifest.txt',
+  extract => [$sources.'MinGW-gcc440_1.zip', $mingw],
   comment => 'install Qt MinGW bundle (includes gcc, g++, gdb, mingw-make)' ],
+[ dir     => $mingw.'_patches',
+  exec    => "for /d %i in ($dosmingw\\mingw\\*.*) do move /y %i $dosmingw",
+  comment => 'Move mingw directories to install location' ],
 
 [ archive => $sources.'MSYS-1.0.11.exe',
   'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw/MSYS-1.0.11.exe',
@@ -420,7 +425,7 @@ push @{$expect},
   mkdirs  => $sources.'zlib',
   comment => 'the zlib download is a bit messed-up, and needs some TLC '.
              'to put everything in the right place' ],
-[ dir     => $sources."zlib/",
+[ dir     => $sources."zlib/bin",
   extract => [$sources.'zlib-1.2.3-MSYS-1.0.11-1.tar', $sources."zlib"] ],
 # install to /usr:
 [ file    => $msys.'lib/libz.a',
