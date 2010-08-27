@@ -310,33 +310,28 @@ push @{$expect},
   comment => 'unzip.exe - Get a precompiled '.
              'native Win32 version from InfoZip' ],
 [ archive => $sources.'unzip/unz552xN.exe',
-  'fetch' => 'ftp://ftp.info-zip.org/pub/infozip/win32/unz552xn.exe'],
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/unz552xn.exe'],
 [ file    => $sources.'unzip/unzip.exe',
   exec    => 'chdir /d '.$dossources.'unzip && '.
              $dossources.'unzip/unz552xN.exe' ],
 # we could probably put the unzip.exe into the path...
 
 [ archive => $sources.'MinGW-gcc440_1.zip',
-  'fetch' => 'ftp://ftp.qt.nokia.com/misc/MinGW-gcc440_1.zip',
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/MinGW-gcc440_1.zip',
   comment => 'Get mingw and addons first, or we cant do [shell] requests!' ],
 [ archive => $sources.'mingw-utils-0.3.tar.gz',
-  'fetch' => 'http://'.$sourceforge.
-              '/sourceforge/mingw/mingw-utils-0.3.tar.gz' ],
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/mingw-utils-0.3.tar.gz' ],
 # Need updated binutils to build ffmpeg DLLs properly with gcc 4.4
 [ archive => $sources.'binutils-2.20-1-mingw32-bin.tar.gz',
-  'fetch' => 'http://'.$sourceforge.
-              '/sourceforge/mingw/binutils-2.20-1-mingw32-bin.tar.gz' ],
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/binutils-2.20-1-mingw32-bin.tar.gz' ],
 # Need updated mingwrt for fixed usleep()
 [ archive => $sources.'mingwrt-3.17-mingw32-dev.tar.gz',
-  'fetch' => 'http://'.$sourceforge.
-              '/sourceforge/mingw/mingwrt-3.17-mingw32-dev.tar.gz' ],
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/mingwrt-3.17-mingw32-dev.tar.gz' ],
 [ archive => $sources.'mingwrt-3.17-mingw32-dll.tar.gz',
-  'fetch' => 'http://'.$sourceforge.
-              '/sourceforge/mingw/mingwrt-3.17-mingw32-dll.tar.gz' ],
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/mingwrt-3.17-mingw32-dll.tar.gz' ],
 # patch.exe included with MSYS 1.0.11 is broken, so update it
 [ archive => $sources.'patch-2.5.9-1-msys-1.0.11-bin.tar.lzma',
-  'fetch' => 'http://'.$sourceforge.
-              '/sourceforge/mingw/patch-2.5.9-1-msys-1.0.11-bin.tar.lzma' ],
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/patch-2.5.9-1-msys-1.0.11-bin.tar.lzma' ],
 
 [ dir     => $mingw,
   mkdirs  => $mingw],
@@ -348,17 +343,14 @@ push @{$expect},
   comment => 'Move mingw directories to install location' ],
 
 [ archive => $sources.'MSYS-1.0.11.exe',
-  'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw/MSYS-1.0.11.exe',
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/MSYS-1.0.11.exe',
   comment => 'Get the MSYS and addons:' ] ,
 [ archive => $sources.'zlib-1.2.3-MSYS-1.0.11-1.tar.bz2',
-  'fetch' => 'http://www.ufoot.org'.
-             '/download/liquidwar/v6/mingw32/pkg/zlib-1.2.3-MSYS-1.0.11-1.tar.bz2' ] ,
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/zlib-1.2.3-MSYS-1.0.11-1.tar.bz2' ] ,
 [ archive => $sources.'coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2',
-  'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw'.
-             '/coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2' ] ,
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2' ] ,
 [ archive => $sources.'mktemp-1.5-MSYS.tar.bz2',
-  'fetch' => 'http://'.$sourceforge.'/sourceforge/mingw'.
-             '/mktemp-1.5-MSYS.tar.bz2' ] ,
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/mktemp-1.5-MSYS.tar.bz2' ] ,
 
 # install MSYS, it supplies the 'tar' executable, among others:
 [ file    => $msys.'bin/tar.exe',
@@ -399,8 +391,7 @@ push @{$expect},
 
 # we now use SVN 1.6.x
 [ archive => $sources.'svn-win32-1.6.12.zip',
-  'fetch' => 'http://alagazam.net/'.
-             'svn-1.6.12/svn-win32-1.6.12.zip',
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/svn-win32-1.6.12.zip',
   comment => 'Subversion comes as a zip file, so it '.
              'cant be done earlier than the unzip tool!'],
 [ dir     => $sources.'svn-win32-1.6.12',
@@ -443,8 +434,7 @@ push @{$expect},
 # If this fails you, try another mirror, or maybe an archived version:
 # http://downloads.mysql.com/archives/mysql-5.1/mysql-essential-5.1.42-win32.msi
 [ archive => $sources.'mysql-essential-5.1.49-win32.msi',
-  'fetch' => 'http://mysql.mirrors.ilisys.com.au/Downloads/'.
-             'MySQL-5.1/mysql-essential-5.1.49-win32.msi',
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/mysql-essential-5.1.49-win32.msi',
   comment => 'fetch mysql binaries - this is a big download(35MB) '.
              'so it might take a while' ],
 [ file    => $mysql.'bin/libmySQL.dll',
@@ -510,8 +500,7 @@ push @{$expect},
 
 # Qt MinGW distribution includes pthread headers but not the DLL, so fetch it
 [ archive => $sources.'pthreadGC2.dll',  
-  'fetch' => 'ftp://sources.redhat.com/pub/pthreads-win32/'. 
-             'dll-latest/lib/pthreadGC2.dll' ], 
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/pthreadGC2.dll' ], 
 [ filesame => [$mingw.'bin/pthreadGC2.dll', $sources."pthreadGC2.dll"], 
   copy     => [''=>''] ], 
 
@@ -575,8 +564,7 @@ push @{$expect},
 
 #   ( save bandwidth compare to the above full SDK where they came from:
 [ archive  => $sources.'DX9SDK_dsound_Include_subset.zip', 
-  'fetch'  => 'https://sites.google.com/site/davidbuzz/mythtv-files/'.
-              'DX9SDK_dsound_Include_subset.zip',
+  'fetch'  => 'http://mythtv-for-windows.googlecode.com/files/DX9SDK_dsound_Include_subset.zip',
   comment  => 'We download just the required Include files for DX9' ], 
 [ dir      => $sources.'DX9SDK_dsound_Include_subset', 
   extract  => $sources.'DX9SDK_dsound_Include_subset.zip' ],
@@ -664,8 +652,7 @@ push @{$expect},
 # but this requires that the .tar.gz didn't come with a Makefile in it.
 push @{$expect},
 [ archive => $sources.'freetype-2.3.5.tar.gz',  
-  fetch   => 'http://download.savannah.gnu.org'.
-             '/releases-noredirect/freetype/freetype-2.3.5.tar.gz'],
+  fetch   => 'http://mythtv-for-windows.googlecode.com/files/freetype-2.3.5.tar.gz'],
 [ dir     => $sources.'freetype-2.3.5', 
   extract => $sources.'freetype-2.3.5.tar' ],
 # caution... freetype comes with a Makefile in the .tar.gz, so work around it!
@@ -691,7 +678,7 @@ push @{$expect},
 
 #eg: http://transact.dl.sourceforge.net/sourceforge/lame/lame-398-2.tar.gz
 [ archive => $sources.'lame-398-2.tar.gz',  
-  fetch   => 'http://'.$sourceforge.'/sourceforge/lame/lame-398-2.tar.gz'],
+  fetch   => 'http://mythtv-for-windows.googlecode.com/files/lame-398-2.tar.gz'],
 [ dir     => $sources.'lame-398-2', 
   extract => $sources.'lame-398-2.tar' ],
 [ file    => $msys.'lib/libmp3lame.a', 
@@ -707,8 +694,7 @@ push @{$expect},
 # taglib 1.6 sources changed it's build system under win32 to use 'cmake', 
 # which we don't have, however pre-compiled mingw 1.6 binaries are available:
 [ archive => $sources.'taglib-1.6.1-mingw-bin.zip',  
-  fetch   => 'http://users.physik.fu-berlin.de'.
-             '/~glaubitz/linux-minidisc/taglib-1.6.1-mingw-bin.zip'],
+  fetch   => 'http://mythtv-for-windows.googlecode.com/files/taglib-1.6.1-mingw-bin.zip'],
 [ dir     => $sources.'taglib-1.6.1-mingw-bin',
   mkdirs  => $sources.'taglib-1.6.1-mingw-bin'],
 [ dir     => $sources.'taglib-1.6.1-mingw-bin/bin',
@@ -735,7 +721,7 @@ esac'] ],
 
 # confirmed latest version as at 26-12-2008:
 [ archive => $sources.'libao-0.8.8.tar.gz',  
-  fetch   => 'http://downloads.xiph.org/releases/ao/libao-0.8.8.tar.gz'],
+  fetch   => 'http://mythtv-for-windows.googlecode.com/files/libao-0.8.8.tar.gz'],
 [ dir     => $sources.'libao-0.8.8', 
   extract => $sources.'libao-0.8.8.tar' ],
 [ file    => $msys.'bin/libao-2.dll',  
@@ -750,7 +736,7 @@ esac'] ],
 # definitely need mingw version of ogg for plugins,
 # and for mingw vorbis to build!
 [ archive => $sources.'libogg-1.1.3.tar.gz',  
-  fetch   => 'http://downloads.xiph.org/releases/ogg/libogg-1.1.3.tar.gz'],
+  fetch   => 'http://mythtv-for-windows.googlecode.com/files/libogg-1.1.3.tar.gz'],
 [ dir     => $sources.'libogg-1.1.3', 
   extract => $sources.'libogg-1.1.3.tar' ],
 [ file    => $msys.'bin/libogg-0.dll', 
@@ -762,8 +748,7 @@ esac'] ],
 
 # confirmed latest version as at 26-12-2008:
 [ archive => $sources.'libvorbis-1.2.0.tar.gz',  
-  fetch   => 'http://downloads.xiph.org/releases/'.
-             'vorbis/libvorbis-1.2.0.tar.gz'],
+  fetch   => 'http://mythtv-for-windows.googlecode.com/files/libvorbis-1.2.0.tar.gz'],
 [ dir     => $sources.'libvorbis-1.2.0', 
   extract => $sources.'libvorbis-1.2.0.tar' ],
 [ file    => $msys.'lib/libvorbis.a', 
@@ -799,7 +784,7 @@ esac'] ],
 
 # confirmed latest source version as at 26-12-2008:
 [ archive => $sources.'SDL-devel-1.2.13-mingw32.tar.gz',  
-  fetch   => 'http://www.libsdl.org/release/SDL-devel-1.2.13-mingw32.tar.gz'],
+  fetch   => 'http://mythtv-for-windows.googlecode.com/files/SDL-devel-1.2.13-mingw32.tar.gz'],
 [ file    => $sources.'SDL-1.2.13/bin/SDL.dll', 
   extract => $sources.'SDL-devel-1.2.13-mingw32.tar.gz' ],
 [ file    => $msys.'bin/SDL.dll', 
@@ -809,8 +794,7 @@ esac'] ],
 
 # confirmed latest source version as at 26-12-2008
 [ archive => $sources.'libexif-0.6.17.tar.gz',  
-  fetch   => 'http://'.$sourceforge.
-             '/sourceforge/libexif/libexif-0.6.17.tar.gz'],
+  fetch   => 'http://mythtv-for-windows.googlecode.com/files/libexif-0.6.17.tar.gz'],
 [ dir     => $sources.'libexif-0.6.17', 
   extract => $sources.'libexif-0.6.17.tar' ],
 [ file    => $sources.'libexif-0.6.17/Makefile', 
@@ -825,8 +809,7 @@ esac'] ],
 
 # confirmed latest source version as at 26-12-2008
 [ archive => $sources.'libvisual-0.4.0.tar.gz',  
-  fetch   => 'http://'.$sourceforge.
-             '/sourceforge/libvisual/libvisual-0.4.0.tar.gz'],
+  fetch   => 'http://mythtv-for-windows.googlecode.com/files/libvisual-0.4.0.tar.gz'],
 [ dir     => $sources.'libvisual-0.4.0', 
   extract => $sources.'libvisual-0.4.0.tar' ],
 [ file  => $sources.'libvisual.patch',
@@ -866,7 +849,7 @@ esac'] ],
 
 
 [ archive => $sources.'fftw-3.2.1.tar.gz',  
-  fetch   => 'http://www.fftw.org/fftw-3.2.1.tar.gz'],
+  fetch   => 'http://mythtv-for-windows.googlecode.com/files/fftw-3.2.1.tar.gz'],
 [ dir     => $sources.'fftw-3.2.1', 
   extract => $sources.'fftw-3.2.1.tar' ],
 [ file    => $msys.'lib/libfftw3.a', 
