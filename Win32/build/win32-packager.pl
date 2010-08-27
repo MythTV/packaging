@@ -758,30 +758,6 @@ esac'] ],
               "make install"],
   comment => 'building and installing: msys libvorbis' ],
 
-#[ archive => $sources.'libcdaudio-0.99.12p2.tar.gz',
-#  fetch   => 'http://'.$sourceforge.
-#             '/sourceforge/libcdaudio/libcdaudio-0.99.12p2.tar.gz'],
-#[ dir     => $sources.'libcdaudio-0.99.12p2', 
-#  extract => $sources.'libcdaudio-0.99.12p2.tar' ],
-#
-#[ archive => $sources.'libcdaudio-0.99.12p2-WIN32-support.patch',  
-#  fetch   => 'http://sourceforge.net/tracker/download.php?'.
-#             'group_id=27134&atid=389444&file_id=286748&aid=2035008'],
-#  
-#[ grep => ['ifdef __WIN32', $sources.'libcdaudio-0.99.12p2/src/cddb.c'], 
-#  shell => ["cd ".$sources.'libcdaudio-0.99.12p2',
-#            "patch -p1 < ".$unixsources
-#            .'libcdaudio-0.99.12p2-WIN32-support.patch'] ],
-# 
-#[ file    => $msys.'bin/libcdaudio-config', 
-#  shell   => ["cd ".$unixsources."libcdaudio-0.99.12p2",
-#              "./configure --prefix=/usr",
-#              "make",
-#              "make install"],
-#  comment => 'building and installing:  msys libcdaudio' ],  
-  
-#[ pause => 'taglib, lame all done.... press [enter] to continue !'],
-
 # confirmed latest source version as at 26-12-2008:
 [ archive => $sources.'SDL-devel-1.2.13-mingw32.tar.gz',  
   fetch   => 'http://mythtv-for-windows.googlecode.com/files/SDL-devel-1.2.13-mingw32.tar.gz'],
@@ -1833,13 +1809,6 @@ foreach my $dep ( @{$expect} ) {
               undef $md5; undef $md5_2;
               ( $size,$mtime,$md5)=fileinfo($cause[0]);
               ( $size2,$mtime2,$md5_2)=fileinfo($cause[1]);
-              if ( $mtime != $mtime2 || $size != $size2 || $md5 ne $md5_2 ) {
-                die("effect failed, files NOT identical size,mtime, ".
-                    "and MD5: ($cause[0] => $cause[1]).\n");
-              } else {
-                print "files ($cause[0] => $cause[1]) now ".
-                      "identical - successful! \n";
-              }
             }
           }  
         }else {
