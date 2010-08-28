@@ -1410,7 +1410,6 @@ fi
 %{_datadir}/mythtv/video_settings.xml
 %{_datadir}/mythtv/videomenu.xml
 %{_localstatedir}/lib/mythvideo
-%{_bindir}/mtd
 %endif
 
 %if %{with_mythweather}
