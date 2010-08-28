@@ -36,6 +36,7 @@
 # The following options are enabled by default.  Use these options to disable:
 #
 # --without vdpau           Disable VDPAU support
+# --without crystalhd       Disable Crystal HD support
 # --without xvmc            Disable XvMC support
 # --without perl            Disable building of the perl bindings
 # --without python          Disable building of the python bindings
@@ -64,7 +65,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r25638
+%define _svnrev r25908
 %define branch trunk
 
 #
@@ -100,6 +101,7 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 
 # The following options are enabled by default.  Use --without to disable them
 %define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
+%define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
 %define with_xvmc          %{?_without_xvmc:       0} %{?!_without_xvmc:       1}
 %define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
 %define with_python        %{?_without_python:     0} %{!?_without_python:     1}
@@ -183,7 +185,6 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-BuildRequires:  faad2-devel
 BuildRequires:  fftw-devel >= 3
 BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  gsm-devel
@@ -223,6 +224,10 @@ BuildRequires:  directfb-devel
 
 %if %{with_vdpau}
 BuildRequires: libvdpau-devel
+%endif
+
+%if %{with_crystalhd}
+BuildRequires: libcrystalhd-devel
 %endif
 
 # API Build Requirements
@@ -413,7 +418,6 @@ Requires:  xorg-x11-drv-openchrome-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-Requires:  faad2-devel
 Requires:  fftw-devel >= 3
 Requires:  flac-devel >= 1.0.4
 Requires:  gsm-devel
@@ -452,6 +456,10 @@ Requires:  directfb-devel
 
 %if %{with_vdpau}
 Requires: libvdpau-devel
+%endif
+
+%if %{with_crystalhd}
+Requires: libcrystalhd-devel
 %endif
 
 %description devel
@@ -846,7 +854,7 @@ cd mythtv-%{version}
 
 # Put perl bits in the right place and set opt flags
     sed -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"#' \
-        bindings/perl/perl.pro
+        bindings/perl/Makefile
 
 # Install other source files
     cp -a %{SOURCE10} %{SOURCE101} %{SOURCE102} %{SOURCE103} .
@@ -932,6 +940,9 @@ cd mythtv-%{version}
     --enable-libxvid                            \
 %if %{with_vdpau}
     --enable-vdpau                              \
+%endif
+%if %{with_crystalhd}
+    --enable-crysatlhd                          \
 %endif
 %if !%{with_xvmc}
     --disable-xvmcw                             \
@@ -1411,7 +1422,8 @@ fi
 %{_libdir}/mythtv/plugins/libmythweather.so
 %{_datadir}/mythtv/i18n/mythweather_*.qm
 %{_datadir}/mythtv/weather_settings.xml
-%{_datadir}/mythtv/mythweather
+%dir %{_datadir}/mythtv/mythweather
+%{_datadir}/mythtv/mythweather/*
 %endif
 
 %if %{with_mythweb}
@@ -1451,6 +1463,11 @@ fi
 ################################################################################
 
 %changelog
+* Sat Aug 28 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn
+- Fix up perl bindings
+- Enable crystalhd support
+- Remove obsolete libfaad2 bits
+
 * Sat Aug 14 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn
 - Resync with RPM Fusion spec, now builds cleanly again on a
   Fedora 13 host as of svn revision 25638
