@@ -44,7 +44,7 @@ $SIG{INT} = sub { die "Interrupted\n"; };
 $| = 1; # autoflush stdout;
 
 # this script was last tested to work with this version, on other versions YMMV.
-my $SVNRELEASE = '25855'; # Recent trunk
+my $SVNRELEASE = '25912'; # Recent trunk
 #my $SVNRELEASE = 'HEAD'; # If you are game, go forth and test the latest!
 
 
@@ -345,8 +345,10 @@ push @{$expect},
 [ archive => $sources.'MSYS-1.0.11.exe',
   'fetch' => 'http://mythtv-for-windows.googlecode.com/files/MSYS-1.0.11.exe',
   comment => 'Get the MSYS and addons:' ] ,
-[ archive => $sources.'zlib-1.2.3-MSYS-1.0.11-1.tar.bz2',
-  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/zlib-1.2.3-MSYS-1.0.11-1.tar.bz2' ] ,
+[ archive => $sources.'libz-1.2.3-1-mingw32-dev.tar.gz',
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/libz-1.2.3-1-mingw32-dev.tar.gz' ] ,
+[ archive => $sources.'libz-1.2.3-1-mingw32-dll-1.tar.gz',
+  'fetch' => 'http://mythtv-for-windows.googlecode.com/files/libz-1.2.3-1-mingw32-dll-1.tar.gz' ] ,
 [ archive => $sources.'coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2',
   'fetch' => 'http://mythtv-for-windows.googlecode.com/files/coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2' ] ,
 [ archive => $sources.'mktemp-1.5-MSYS.tar.bz2',
@@ -385,6 +387,10 @@ push @{$expect},
   extract => [$sources.'mktemp-1.5-MSYS.tar', $msys] ],
 [ always  => ['No unique file to check'],
   extract => [$sources.'patch-2.5.9-1-msys-1.0.11-bin.tar', $msys] ],
+[ always  => ['Make sure we overwrite old msys-z lib files'],
+  extract => [$sources.'libz-1.2.3-1-mingw32-dev.tar', $msys] ],
+[ file    => $msys.'bin/libz-1.dll',
+  extract => [$sources.'libz-1.2.3-1-mingw32-dll-1.tar', $msys] ],
 
 [ dir     => $msys."lib" ,  mkdirs => $msys.'lib' ],
 [ dir     => $msys."include" ,  mkdirs => $msys.'include' ],
@@ -410,22 +416,6 @@ push @{$expect},
 '.$unixsources.'svn-win32-1.6.12/bin/svnversion.exe $*' ],
   comment => 'put svnversion into the path, '.
              'so mythtv can use it later!' ],
-
-# :
-[ dir     => $sources."zlib",
-  mkdirs  => $sources.'zlib',
-  comment => 'the zlib download is a bit messed-up, and needs some TLC '.
-             'to put everything in the right place' ],
-[ dir     => $sources."zlib/bin",
-  extract => [$sources.'zlib-1.2.3-MSYS-1.0.11-1.tar', $sources."zlib"] ],
-# install to /usr:
-[ file    => $msys.'lib/libz.a',
-  exec    => ["copy /Y ".$dossources.'zlib\lib\* '.$dosmsys."lib"] ],
-[ file    => $msys.'bin/msys-z.dll',
-  exec    => ["copy /Y ".$dossources.'zlib\bin\* '.$dosmsys."bin"] ],
-[ file    => $msys.'include/zlib.h',
-  exec    => ["copy /Y ".$dossources.'zlib\include\* '.
-              $dosmsys."include"] ],
 
 # fetch mysql
 # primary server site is:
@@ -1193,33 +1183,6 @@ if ($tickets == 1) {
 #----------------------------------------
 push @{$expect}, 
 
-[ file    => $mythtv.'mythtv/config/config.pro',
-  shell   => ['touch '.$unixmythtv.'mythtv/config/config.pro'], 
-  comment => 'create an empty config.pro or the mythtv build will fail'],
-;
-# do a make clean before going any further?
-# Yes, if the SVN revision has changed (it deleted the file for us),
-#  or the user deleted the file manually, to request it. 
-# ...to do a full clean-up of a prevous build,
-# a bit more than a 'make clean' can be required:
-foreach my $comp( @components ) {
-#  push @{$expect}, 
-#  [ file    => $mythtv.'delete_to_do_make_clean.txt',
-#    exec    => [$dosmsys."bin\\svn -R revert $dosmythtv$comp", "nocheck"],
-#    comment => "reverting any local MODS from SVN - $comp on $svnlocation" ],
-    
-# this is now done as part of make_clean.sh, which happens EARLIER
-# in the process, prior to any possible SVN branch changes! 
-#  [ file    => $mythtv.'delete_to_do_make_clean.txt',
-#    shell   =>['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
-#              'cd '.$unixmythtv.$comp,
-#              'make clean',
-#              'rm Makefile',
-#              'nocheck']
-#              ];
-}
-push @{$expect}, 
-
 [ file    => $mythtv.'delete_to_do_make_clean.txt',
   shell   => ['touch '.$unixmythtv.'delete_to_do_make_clean.txt'],
   comment => 'do a "make clean" first? not strictly necessary in all cases, '.
@@ -1233,7 +1196,7 @@ push @{$expect},
   comment => 'broken Makefile, delete it' ],
 
 # configure
-[ file   => $mythtv.'mythtv/Makefile',
+[ file   => $mythtv.'mythtv/config.mak',
   shell  => ['source '.$unixmythtv.'qt'.$qtver.'_env.sh',
             'cd '.$unixmythtv.'mythtv',
             './configure --prefix='.$unixbuild.' --runprefix=..'.
