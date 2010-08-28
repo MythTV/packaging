@@ -44,7 +44,7 @@ $SIG{INT} = sub { die "Interrupted\n"; };
 $| = 1; # autoflush stdout;
 
 # this script was last tested to work with this version, on other versions YMMV.
-my $SVNRELEASE = '25903'; # Recent trunk
+my $SVNRELEASE = '25919'; # Recent trunk
 #my $SVNRELEASE = 'HEAD'; # If you are game, go forth and test the latest!
 
 
