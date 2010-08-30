@@ -5,4 +5,3 @@ proper_shutdown_behavior_for_ubuntu.patch
 
 #Only apply these on 10.10
 #qt47_support.patch
-#configure_missing_check.patch

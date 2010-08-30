@@ -2,8 +2,8 @@
 ## Origin/Author: Mario Limonciello
 Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
 ===================================================================
---- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-05-12 23:12:30.000000000 -0500
-+++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-08-02 02:49:29.660622818 -0500
+--- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-08-29 17:22:36.000000000 -0500
++++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-08-30 14:28:13.827122595 -0500
 @@ -62,16 +62,7 @@
  
  void ExitPrompter::halt()
@@ -21,7 +21,7 @@ Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
 +    DBusHalt();
  }
  
- bool DBusReboot(void)
+ static bool DBusReboot(void)
 @@ -118,16 +109,7 @@
  
  void ExitPrompter::reboot()
