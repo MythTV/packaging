@@ -65,7 +65,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r25991
+%define _svnrev r25992
 %define branch trunk
 
 #
@@ -941,7 +941,7 @@ cd mythtv-%{version}
     --enable-vdpau                              \
 %endif
 %if %{with_crystalhd}
-    --enable-crysatlhd                          \
+    --enable-crystalhd                          \
 %endif
 %if !%{with_xvmc}
     --disable-xvmcw                             \
