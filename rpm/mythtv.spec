@@ -65,7 +65,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r25908
+%define _svnrev r25991
 %define branch trunk
 
 #
@@ -934,7 +934,6 @@ cd mythtv-%{version}
     --enable-ivtv                               \
     --enable-firewire                           \
     --enable-dvb                                \
-    --enable-libfaad --enable-libfaadbin        \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
