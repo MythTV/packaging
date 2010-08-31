@@ -31,6 +31,19 @@ mythtv (0.24.0~trunk25842-0ubuntu1) UNRELEASED; urgency=low
 
  -- Thomas Mashos <tgm4883@gmail.com>  Wed, 23 Jun 2010 21:28:44 -0700
 
+mythtv (0.23.1+fixes25842-0ubuntu3) UNRELEASED; urgency=low
+
+  * Simplify the upstart script.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 31 Aug 2010 14:14:55 -0500
+
+mythtv (0.23.1+fixes25842-0ubuntu2) maverick; urgency=low
+
+  * Rebuild without accidentally added patch 
+    debian-changes-0.23.1+fixes25842-0ubuntu1.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Wed, 25 Aug 2010 12:10:29 -0500
+
 mythtv (0.23.1+fixes25842-0ubuntu1) maverick; urgency=low
 
   [ Thomas Mashos ]

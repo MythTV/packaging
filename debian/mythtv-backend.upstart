@@ -9,9 +9,4 @@ stop on starting shutdown
 #expect fork
 respawn
 
-script
-        USER=mythtv
-        ARGS="--logfile /var/log/mythtv/mythbackend.log --user $USER"
-        test -f /etc/default/mythtv-backend && . /etc/default/mythtv-backend || true
-        /usr/bin/mythbackend $ARGS
-end script
+exec /usr/bin/mythbackend --logfile /var/log/mythtv/mythbackend.log --user mythtv
