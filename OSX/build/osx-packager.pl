@@ -218,7 +218,7 @@ our %depend = (
     # Using configure -release saves a lot of space and time,
     # but by default, debug builds of mythtv try to link against
     # debug libraries of Qt. This works around that:
-    'post-conf' => 'cd $PREFIX/lib ; '.
+    'post-make' => 'cd $PREFIX/lib ; '.
                    'ln -sf libQt3Support.dylib libQt3Support_debug.dylib ; '.
                    'ln -sf libQtSql.dylib      libQtSql_debug.dylib      ; '.
                    'ln -sf libQtXml.dylib      libQtXml_debug.dylib      ; '.
@@ -227,6 +227,7 @@ our %depend = (
                    'ln -sf libQtNetwork.dylib  libQtNetwork_debug.dylib  ; '.
                    'ln -sf libQtCore.dylib     libQtCore_debug.dylib     ; '.
                    'ln -sf libQtWebKit.dylib   libQtWebKit_debug.dylib   ; '.
+                   'rm -f $PREFIX/bin/pkg-config ; '.
                    '',
     'parallel-make' => 'yes'
   },
@@ -788,6 +789,10 @@ foreach my $sw (@build_depends)
         {   push(@make, 'all', 'install')   }
 
         &Syscall(\@make) or die;
+        if ($pkg->{'post-make'})
+        {
+            &Syscall([ $pkg->{'post-make'} ], 'munge' => 1) or die;
+        }
         &Syscall([ '/usr/bin/touch', '.osx-built' ]) or die;
     }
     else
