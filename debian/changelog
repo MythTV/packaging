@@ -1,3 +1,9 @@
+mythtv (0.23.1+fixes25842-0ubuntu3) UNRELEASED; urgency=low
+
+  * Simplify the upstart script.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 31 Aug 2010 14:14:55 -0500
+
 mythtv (0.23.1+fixes25842-0ubuntu2) maverick; urgency=low
 
   * Rebuild without accidentally added patch 
