@@ -65,6 +65,7 @@ our %depend_order = (
         'freetype',
         'lame',
         'mysqlclient',
+        #'dbus',
         'qt-4.6',
       ],
   'mythplugins'
@@ -168,6 +169,25 @@ our %depend = (
         ],
   },
 
+  'dbus' =>
+  {
+    'url' => 'http://dbus.freedesktop.org/releases/dbus/dbus-1.0.3.tar.gz',
+    'post-make' => 'mv $PREFIX/lib/dbus-1.0/include/dbus/dbus-arch-deps.h '.
+                     ' $PREFIX/include/dbus-1.0/dbus ; '.
+                   'rm -fr $PREFIX/lib/dbus-1.0 ; '.
+                   'cd $PREFIX/bin ; '.
+                   'echo "#!/bin/sh
+if [ \"\$2\" = dbus-1 ]; then
+  case \"\$1\" in
+    \"--version\") echo 1.0.3  ;;
+    \"--cflags\")  echo -I$PREFIX/include/dbus-1.0 ;;
+    \"--libs\")    echo \"-L$PREFIX/lib -ldbus-1\" ;;
+  esac
+fi
+exit 0"   > pkg-config ; '.
+                   'chmod 755 pkg-config'
+  },
+
   'qt-4.6'
   =>
   {
@@ -202,6 +222,7 @@ our %depend = (
           '-no-nis',
           '-no-cups',
           '-no-qdbus',
+          #'-dbus-linked',
           '-no-framework',
           '-no-multimedia',
           '-no-phonon',
