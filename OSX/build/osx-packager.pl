@@ -357,7 +357,6 @@ Getopt::Long::GetOptions(\%OPT,
                          'svnbranch=s',
                          'svnrev=s',
                          'svntag=s',
-                         'nocvs', # This is obsolete, but should stay a while
                          'nohead',
                          'usehdimage',
                          'leavehdimage',
@@ -403,9 +402,6 @@ if ( $OPT{'srcdir'} )
     $OPT{'nohead'} = 1;
     $OPT{'svnbranch'} = 0;
 }
-
-# Fold nocvs to nohead
-$OPT{'nohead'} = 1 if $OPT{'nocvs'};
 
 # Build our temp directories
 our $SCRIPTDIR = Cwd::abs_path(Cwd::getcwd());
