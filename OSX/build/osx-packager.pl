@@ -866,13 +866,6 @@ else
     if ( $OPT{'svnbranch'} )
     {
         $svnrepository .= 'branches/' . $OPT{'svnbranch'} . '/';
-    # When Trunk diverges from fixes, re-enable this:
-    #
-    if ( 0 )
-    {    die("Note that this script will not build old branches.
-    Please try the branched version instead. e.g.
-    http://svn.mythtv.org/svn/branches/release-0-22-fixes/mythtv/contrib/OSX/osx-packager.pl");
-    }
     }
     elsif ( $OPT{'svntag'} )
     {
