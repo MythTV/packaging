@@ -501,11 +501,6 @@ END
     die;
 }
 
-#
-# Same tests for fixes copy of this script:
-#
-if ( 0 )
-{
 if ( $OPT{'nohead'} && ! $OPT{'force'} )
 {
     my $SVNTOP="$SCRIPTDIR/.osx-packager/src/myth-svn/mythtv/.svn";
@@ -519,12 +514,11 @@ if ( $OPT{'nohead'} && ! $OPT{'force'} )
 elsif ( ! $OPT{'svnbranch'} && ! $OPT{'force'} )
 {
     &Complain(<<END);
-This script can only build branch release-0-22-fixes.
+This script can only build branch release-0-23-fixes.
 To build SVN HEAD, please try the latest version instead. e.g.
 http://svn.mythtv.org/svn/trunk/packaging/OSX/build/osx-packager.pl
 END
     die;
-}
 }
 
 our $WORKDIR = "$SCRIPTDIR/.osx-packager";
