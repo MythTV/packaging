@@ -383,7 +383,7 @@ if ( $OPT{'enable-jobtools'} )
 {   $jobtools = 1  }
 
 # Get version string sorted out
-if ($OPT{'svntag'} && !$OPT{'version'})
+if ( $OPT{'svntag'} && !$OPT{'version'} )
 {
     $OPT{'version'} = $OPT{'svntag'};
     $OPT{'version'} =~ s/-r *//;
@@ -405,7 +405,7 @@ if ( $OPT{'srcdir'} )
 
 # Build our temp directories
 our $SCRIPTDIR = Cwd::abs_path(Cwd::getcwd());
-if ($SCRIPTDIR =~ /\s/)
+if ( $SCRIPTDIR =~ /\s/ )
 {
     &Complain(<<END);
 Working directory contains spaces
@@ -466,12 +466,12 @@ END
 #
 if ( 0 )
 {
-if ( $OPT{'nohead'} && ! $OPT{'force'})
+if ( $OPT{'nohead'} && ! $OPT{'force'} )
 {
     my $SVNTOP="$SCRIPTDIR/.osx-packager/src/myth-svn/mythtv/.svn";
 
     if ( ! -d $SVNTOP )
-    {   die "No source code to build?" }
+    {   die "No source code to build?"   }
 
     if ( ! `grep 0-22-fixes $SVNTOP/entries` )
     {   die "Source code does not match release-0-22-fixes"   }
@@ -616,7 +616,7 @@ if ( `sysctl -n hw.cpu64bit_capable` eq "1\n" )
 
 # We set 32-bit mode via environment variables.
 # The messier alternative would be to tweak all the configure arguments.
-if ($OPT{'m32'})
+if ( $OPT{'m32'} )
 {
     &Verbose('Forcing 32-bit mode');
     $ENV{'CFLAGS'}    .= ' -m32';
@@ -627,7 +627,7 @@ if ($OPT{'m32'})
 }
 
 ### Distclean?
-if ($OPT{'distclean'})
+if ( $OPT{'distclean'} )
 {
     &Syscall([ '/bin/rm', '-f',       '$PREFIX/bin/myth*'    ]);
     &Syscall([ '/bin/rm', '-f', '-r', '$PREFIX/lib/libmyth*' ]);
@@ -643,7 +643,7 @@ if ($OPT{'distclean'})
 
 ### Check for app present in target location
 our $MFE = "$SCRIPTDIR/MythFrontend.app";
-if (-d $MFE)
+if ( -d $MFE )
 {
     &Complain(<<END);
 $MFE already exists
@@ -657,8 +657,8 @@ END
 }
 
 ### Third party packages
-my (@build_depends, %seen_depends);
-my @comps = ('mythtv', @components, 'packaging');
+my ( @build_depends, %seen_depends );
+my @comps = ( 'mythtv', @components, 'packaging' );
 
 # Deal with user-supplied skip arguments
 if ( $OPT{'mythtvskip'} )
@@ -694,7 +694,7 @@ foreach my $comp (@comps)
         }
     }
 }
-foreach my $sw (@build_depends)
+foreach my $sw ( @build_depends )
 {
     # Get info about this package
     my $pkg = $depend{$sw};
@@ -708,7 +708,7 @@ foreach my $sw (@build_depends)
     chdir($SRCDIR);
 
     # Download and decompress
-    unless (-e $filename)
+    unless ( -e $filename )
     {
         &Verbose("Downloading $sw");
         unless (&Syscall([ '/usr/bin/curl', '-f', '-L', $url, '>', $filename ],
@@ -721,7 +721,7 @@ foreach my $sw (@build_depends)
     else
     {   &Verbose("Using previously downloaded $sw")   }
 
-    if ($pkg->{'skip'})
+    if ( $pkg->{'skip'} )
     {   next   }
 
     if ( -d $dirname )
@@ -759,12 +759,12 @@ foreach my $sw (@build_depends)
     unless (-e '.osx-config')
     {
         &Verbose("Configuring $sw");
-        if ($pkg->{'pre-conf'})
+        if ( $pkg->{'pre-conf'} )
         {   &Syscall([ $pkg->{'pre-conf'} ], 'munge' => 1) or die   }
 
         my (@configure, $munge);
 
-        if ($pkg->{'conf-cmd'})
+        if ( $pkg->{'conf-cmd'} )
         {
             push(@configure, $pkg->{'conf-cmd'});
             $munge = 1;
@@ -776,12 +776,12 @@ foreach my $sw (@build_depends)
                        '--disable-static',
                        '--enable-shared');
         }
-        if ($pkg->{'conf'})
+        if ( $pkg->{'conf'} )
         {
             push(@configure, @{ $pkg->{'conf'} });
         }
         &Syscall(\@configure, 'interpolate' => 1, 'munge' => $munge) or die;
-        if ($pkg->{'post-conf'})
+        if ( $pkg->{'post-conf'} )
         {
             &Syscall([ $pkg->{'post-conf'} ], 'munge' => 1) or die;
         }
@@ -797,16 +797,16 @@ foreach my $sw (@build_depends)
         my (@make);
 
         push(@make, $standard_make);
-        if ($pkg->{'parallel-make'} && $parallel_make_flags)
+        if ( $pkg->{'parallel-make'} && $parallel_make_flags )
         {   push(@make, $parallel_make_flags)   }
 
-        if ($pkg->{'make'})
+        if ( $pkg->{'make'} )
         {   push(@make, @{ $pkg->{'make'} })   }
         else
         {   push(@make, 'all', 'install')   }
 
         &Syscall(\@make) or die;
-        if ($pkg->{'post-make'})
+        if ( $pkg->{'post-make'} )
         {
             &Syscall([ $pkg->{'post-make'} ], 'munge' => 1) or die;
         }
@@ -831,13 +831,13 @@ if ( $cleanLibs )
     }
     &Verbose("Cleaning previous installs of MythTV");
     my @mythlibs = glob "$PREFIX/lib/libmyth*";
-    if (scalar @mythlibs)
+    if ( scalar @mythlibs )
     {
         &Syscall([ '/bin/rm', @mythlibs ]) or die;
     }
     foreach my $dir ('include', 'lib', 'share')
     {
-        if (-d "$PREFIX/$dir/mythtv")
+        if ( -d "$PREFIX/$dir/mythtv" )
         {
             &Syscall([ '/bin/rm', '-f', '-r', "$PREFIX/$dir/mythtv" ]) or die;
         }
@@ -934,7 +934,7 @@ foreach my $comp (@comps)
         next;
     }
 
-    if ($OPT{'clean'} && -e 'Makefile')
+    if ( $OPT{'clean'} && -e 'Makefile' )
     {
         &Verbose("Cleaning $comp");
         &Syscall([ $standard_make, 'distclean' ]) or die;
@@ -946,19 +946,19 @@ foreach my $comp (@comps)
     }
 
     # Apply any nasty mac-specific patches
-    if ($patches{$comp})
+    if ( $patches{$comp} )
     {
         &Syscall([ "echo '$patches{$comp}' | patch -p0 --forward" ]);
     }
 
     # configure and make
-    if ( $makecleanopt{$comp} && -e 'Makefile' && ! $OPT{'noclean'})
+    if ( $makecleanopt{$comp} && -e 'Makefile' && ! $OPT{'noclean'} )
     {
         my @makecleancom = $standard_make;
         push(@makecleancom, @{ $makecleanopt{$comp} }) if $makecleanopt{$comp};
         &Syscall([ @makecleancom ]) or die;
     }
-    if (-e 'configure' && ! $OPT{'noclean'})
+    if ( -e 'configure' && ! $OPT{'noclean'} )
     {
         &Verbose("Configuring $comp");
         my @config = './configure';
@@ -992,7 +992,7 @@ foreach my $comp (@comps)
                @qmake_opts,
                "$comp.pro" ]) or die;
 
-    if ($comp eq 'mythtv')
+    if ( $comp eq 'mythtv' )
     {
         # Remove/add Nigel's frontend building speedup hack
         &DoSpeedupHacks('programs/programs.pro', 'mythfrontend mythavtest');
@@ -1013,13 +1013,13 @@ foreach my $comp (@comps)
     &Syscall([ $standard_make,
                'install' ]) or die;
 
-    if ($cleanLibs && $comp eq 'mythtv')
+    if ( $cleanLibs && $comp eq 'mythtv' )
     {
         # If we cleaned the libs, make install will have recopied them,
         # which means any dynamic libraries that the static libraries depend on
         # are newer than the table of contents. Hence we need to regenerate it:
         my @mythlibs = glob "$PREFIX/lib/libmyth*.a";
-        if (scalar @mythlibs)
+        if ( scalar @mythlibs )
         {
             &Verbose("Running ranlib on reinstalled static libraries");
             foreach my $lib (@mythlibs)
@@ -1216,7 +1216,7 @@ if ( $jobtools )
 &Syscall([ 'rm', '-fr', $WORKDIR . '/tmp' ]) or die;
 &Syscall([ 'mkdir',     $WORKDIR . '/tmp' ]) or die;
 
-if ($OPT{usehdimage} && !$OPT{leavehdimage})
+if ($OPT{usehdimage} && !$OPT{leavehdimage} )
 {
     Verbose("Dismounting case-sensitive build device");
     UnmountHDImage();
@@ -1242,14 +1242,14 @@ sub RecursiveCopy($$)
 
     # Then strip out any .svn directories
     my @files = map { chomp $_; $_ } `find $dst -name .svn`;
-    if (scalar @files)
+    if ( scalar @files )
     {
         &Syscall([ '/bin/rm', '-f', '-r', @files ]);
     }
 
     # And make sure any static libraries are properly relocated.
     my @libs = map { chomp $_; $_ } `find $dst -name "lib*.a"`;
-    if (scalar @libs)
+    if ( scalar @libs )
     {
         &Syscall([ 'ranlib', '-s', @libs ]);
     }
@@ -1284,7 +1284,7 @@ sub Syscall($%)
     {
         $arglist = [ $arglist ];
     }
-    if ($opts{'interpolate'})
+    if ( $opts{'interpolate'} )
     {
         my @args;
         foreach my $arg (@$arglist)
@@ -1295,7 +1295,7 @@ sub Syscall($%)
         }
         $arglist = \@args;
     }
-    if ($opts{'munge'})
+    if ( $opts{'munge'} )
     {
         $arglist = [ join(' ', @$arglist) ];
     }
@@ -1303,7 +1303,7 @@ sub Syscall($%)
     $arglist = [ map $_, @$arglist ];
     &Verbose(@$arglist);
     my $ret = system(@$arglist);
-    if ($ret)
+    if ( $ret )
     {
         &Complain('Failed system call: "', @$arglist,
                   '" with error code', $ret >> 8);
@@ -1341,9 +1341,9 @@ sub Complain
 
 sub MountHDImage
 {
-    if (!HDImageDevice())
+    if ( ! HDImageDevice() )
     {
-        if (-e "$SCRIPTDIR/.osx-packager.dmg")
+        if ( -e "$SCRIPTDIR/.osx-packager.dmg" )
         {
             Verbose("Mounting existing UFS disk image for the build");
         }
@@ -1370,7 +1370,7 @@ sub MountHDImage
 sub UnmountHDImage
 {
     my $device = HDImageDevice();
-    if ($device)
+    if ( $device )
     {
         &Syscall(['hdiutil', 'detach', $device, '-force']);
     }
