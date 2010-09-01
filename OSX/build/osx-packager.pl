@@ -846,75 +846,77 @@ if ( $cleanLibs )
 
 mkdir $SVNDIR;
 
+#
+# Work out Subversion branches, revisions and tags.
+# Note these vars are unused if nohead or srcdir set!
+#
+my $svnrepository = 'http://svn.mythtv.org/svn/';
+my @svnrevision   = ();
+
+if ( $OPT{'svnbranch'} )
+{
+    $svnrepository .= 'branches/' . $OPT{'svnbranch'} . '/';
+}
+elsif ( $OPT{'svntag'} )
+{
+    $svnrepository .= 'tags/' . $OPT{'svntag'} . '/';
+}
+elsif ( $OPT{'svnrev'} )
+{
+    $svnrepository .= 'trunk/';
+
+    # This arg. could be '1234', '-r 1234', or '--revision 1234'
+    # If the user just specified a number, add appropriate flag:
+    if ( $OPT{'svnrev'} =~ m/^\d+$/ )
+    {
+        push @svnrevision, '--revision';
+    }
+
+    push @svnrevision, $OPT{'svnrev'};
+}
+elsif ( ! $OPT{'nohead'} )
+{
+    # Lookup and use the HEAD revision so we are guaranteed consistent source
+    my $cmd = "$svn log $svnrepository --revision HEAD --xml | grep revision";
+    &Verbose($cmd);
+    my $rev = `$cmd`;
+
+    if ( $rev =~ m/revision="(\d+)">/ )
+    {
+        $svnrepository .= 'trunk/';
+        @svnrevision = ('--revision', $1);
+    }
+    else
+    {
+        &Complain("Cannot get head revision - Got '$rev'");
+        die;
+    }
+}
+
+# Retrieve source
 if ( $OPT{'srcdir'} )
 {
     chdir($SCRIPTDIR);
     &Syscall(['rm', '-fr', $SVNDIR]);
     &Syscall(['mkdir', '-p', $SVNDIR]);
-    foreach my $dir ('mythtv', 'mythplugins', 'myththemes', 'themes', 'packaging')
+    foreach my $dir ('mythtv', 'mythplugins',
+                     'myththemes', 'themes', 'packaging')
     {
         &Syscall(['cp', '-pR', "$OPT{'srcdir'}/$dir", "$SVNDIR/$dir"]);
     }
     &Syscall("mkdir -p $SVNDIR/mythtv/config")
 }
-else
+elsif ( ! $OPT{'nohead'} )
 {
-    # Deal with Subversion branches, revisions and tags:
-    my $svnrepository = 'http://svn.mythtv.org/svn/';
-    my @svnrevision   = ();
-
-    if ( $OPT{'svnbranch'} )
-    {
-        $svnrepository .= 'branches/' . $OPT{'svnbranch'} . '/';
-    }
-    elsif ( $OPT{'svntag'} )
-    {
-        $svnrepository .= 'tags/' . $OPT{'svntag'} . '/';
-    }
-    elsif ( $OPT{'svnrev'} )
-    {
-        $svnrepository .= 'trunk/';
-
-        # This arg. could be '1234', '-r 1234', or '--revision 1234'
-        # If the user just specified a number, add appropriate flag:
-        if ( $OPT{'svnrev'} =~ m/^\d+$/ )
-        {
-            push @svnrevision, '--revision';
-        }
-
-        push @svnrevision, $OPT{'svnrev'};
-    }
-    elsif ( ! $OPT{'nohead'} )
-    {
-        # Lookup and use the HEAD revision so we are guaranteed consistent source
-        my $cmd = "$svn log $svnrepository --revision HEAD --xml | grep revision";
-        &Verbose($cmd);
-        my $rev = `$cmd`;
-
-        if ( $rev =~ m/revision="(\d+)">/ )
-        {
-            $svnrepository .= 'trunk/';
-            @svnrevision = ('--revision', $1);
-        }
-        else
-        {
-            &Complain("Cannot get head revision - Got '$rev'");
-            die;
-        }
-    }
-
-    # Retrieve source
-    if ( ! $OPT{'nohead'} && ! $OPT{'force'} )
-    {
-        # Empty subdirectory 'config' sometimes causes checkout problems
-        &Syscall(['rm', '-fr', $SVNDIR . '/mythtv/config']);
-        Verbose("Checking out source code");
-        &Syscall([ $svn, 'co', @svnrevision,
-                  map($svnrepository . $_, @comps), $SVNDIR ]) or die;
-    }
-    else
-    {   &Syscall("mkdir -p $SVNDIR/mythtv/config")   }
+    # Empty subdirectory 'config' sometimes causes checkout problems
+    &Syscall(['rm', '-fr', $SVNDIR . '/mythtv/config']);
+    Verbose("Checking out source code");
+    &Syscall([ $svn, 'co', @svnrevision,
+              map($svnrepository . $_, @comps), $SVNDIR ]) or die;
 }
+else
+{   &Syscall("mkdir -p $SVNDIR/mythtv/config")   }
+
 # Make a convenience (non-hidden) directory for editing src code:
 system("ln -sf $SVNDIR $SCRIPTDIR/src");
 
