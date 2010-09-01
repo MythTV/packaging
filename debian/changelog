@@ -1,10 +1,10 @@
-mythtv (0.24.0~trunk25842-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.24.0~trunk26032-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * Drop 36_setgroups.  Been merged upstream.
   * Add upstart script into the packaging.  It's been dropped upstream.
     ref svn 24280 upstream.
-  * Bump version to 0.24 trunk r25535
+  * Bump version to 0.24 trunk r26032
   * Refresh patches due to upstream changes:
     * Mythfilldatabase logging
     * Force dbus reboot/halt.
@@ -16,6 +16,7 @@ mythtv (0.24.0~trunk25842-0ubuntu1) UNRELEASED; urgency=low
   * debian/rules: cleanup deprecated configure options.
   * Install mythpreviewgen into mythtv-frontend (LP: #616083)
   * Remove faad support, no longer listed in configure, fixes FTBFS.
+  * remove circular dependency.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
