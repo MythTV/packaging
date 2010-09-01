@@ -63,10 +63,6 @@ override_dh_auto_configure: special-patches
 	#Run configure
 	./configure $(CONFIGURE_OPTS)
 
-override_dh_auto_build:
-	qmake -o Makefile PREFIX=/usr mythtv.pro
-	dh_auto_build --parallel
-
 override_dh_auto_install:
 	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/tmp
 

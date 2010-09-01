@@ -17,6 +17,8 @@ mythtv (0.24.0~trunk26032-0ubuntu1) UNRELEASED; urgency=low
   * Install mythpreviewgen into mythtv-frontend (LP: #616083)
   * Remove faad support, no longer listed in configure, fixes FTBFS.
   * remove circular dependency.
+  * Reduce zealousness in files cleaned in clean rule.
+  * Remove qmake invocation.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
