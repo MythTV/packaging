@@ -425,11 +425,6 @@ END
     die;
 }
 
-#
-# When Trunk diverges from fixes, re-enable:
-#
-if ( 0 )
-{
 if ( $OPT{'nohead'} && ! $OPT{'force'} )
 {
     my $SVNTOP="$SCRIPTDIR/.osx-packager/src/myth-svn/mythtv/.svn";
@@ -440,18 +435,20 @@ if ( $OPT{'nohead'} && ! $OPT{'force'} )
     if ( ! `grep svn/trunk/mythtv $SVNTOP/entries` )
     {   die "Source code does not match SVN trunk"   }
 }
+#
+# Trunk building has diverged from 0.23-fixes. After 0.24-fixes, disable this:
+#
 elsif ( $OPT{'svnbranch'} )
 {
     &Complain(<<END);
 This version of this script can not build old branches.
 Please try the branched version instead. e.g.
-http://svn.mythtv.org/svn/branches/release-0-22-fixes/packaging/OSX/build/osx-packager.pl
+http://svn.mythtv.org/svn/branches/release-0-23-fixes/packaging/OSX/build/osx-packager.pl
 END
     die;
 }
-}
 
-if ( $OPT{'svnbranch'} && $OPT{'svnbranch'} lt "release-0-22-fixes" )
+if ( $OPT{'svnbranch'} && $OPT{'svnbranch'} lt "release-0-24-fixes" )
 {
     &Complain(<<END);
 This version of this script can not build old branches.
@@ -462,7 +459,7 @@ END
 }
 
 #
-# and put this in the fixes copy of the script:
+# Same tests for fixes copy of this script:
 #
 if ( 0 )
 {
@@ -927,10 +924,9 @@ foreach my $comp (@comps)
 
     chdir $compdir;
 
-    if ( ! -e "$comp.pro" )
+    if ( ! -e "$comp.pro" and ! -e 'Makefile' and ! -e 'configure' )
     {
-        &Complain("$compdir/$comp.pro does not exist.",
-                  'You must be building really old source?');
+        &Complain("Nothing to configure/make in $compdir");
         next;
     }
 
@@ -939,11 +935,11 @@ foreach my $comp (@comps)
         &Verbose("Cleaning $comp");
         &Syscall([ $standard_make, 'distclean' ]) or die;
     }
-    else
-    {
-        # clean the Makefiles, as process requires PREFIX hacking
-        &CleanMakefiles();
-    }
+    #else
+    #{
+    #    # clean the Makefiles, as process requires PREFIX hacking
+    #    &CleanMakefiles();
+    #}
 
     # Apply any nasty mac-specific patches
     if ( $patches{$comp} )
@@ -981,17 +977,19 @@ foreach my $comp (@comps)
         }
         &Syscall([ @config ]) or die;
     }
-    &Verbose("Running qmake for $comp");
-    my @qmake_opts = (
-        'QMAKE_LFLAGS+=-Wl,-search_paths_first',
-        'INCLUDEPATH+="' . $PREFIX . '/include"',
-        'LIBS+=-L/usr/lib -L"' . $PREFIX . '/lib"'
-        );
-    &Syscall([ $PREFIX . '/bin/qmake',
-               'PREFIX=../Resources',
-               @qmake_opts,
-               "$comp.pro" ]) or die;
-
+    if ( -e "$comp.pro" )
+    {
+        &Verbose("Running qmake for $comp");
+        my @qmake_opts = (
+            'QMAKE_LFLAGS+=-Wl,-search_paths_first',
+            'INCLUDEPATH+="' . $PREFIX . '/include"',
+            'LIBS+=-L/usr/lib -L"' . $PREFIX . '/lib"'
+            );
+        &Syscall([ $PREFIX . '/bin/qmake',
+                   'PREFIX=../Resources',
+                   @qmake_opts,
+                   "$comp.pro" ]) or die;
+    }
     if ( $comp eq 'mythtv' )
     {
         # Remove/add Nigel's frontend building speedup hack
@@ -1000,15 +998,15 @@ foreach my $comp (@comps)
 
     &Verbose("Making $comp");
     &Syscall([ $parallel_make ]) or die;
-    # install
-    # This requires a change from the compiled-in relative
-    # PREFIX to our absolute path of the temp install location.
-    &CleanMakefiles();
-    &Verbose("Running qmake for $comp install");
-    &Syscall([ $PREFIX . '/bin/qmake',
-               'PREFIX=' . $PREFIX,
-               @qmake_opts,
-               "$comp.pro" ]) or die;
+#    # install
+#    # This requires a change from the compiled-in relative
+#    # PREFIX to our absolute path of the temp install location.
+#    &CleanMakefiles();
+#    &Verbose("Running qmake for $comp install");
+#    &Syscall([ $PREFIX . '/bin/qmake',
+#               'PREFIX=' . $PREFIX,
+#               @qmake_opts,
+#               "$comp.pro" ]) or die;
     &Verbose("Installing $comp");
     &Syscall([ $standard_make,
                'install' ]) or die;
