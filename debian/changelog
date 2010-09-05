@@ -1,8 +1,9 @@
-mythtv (0.23.1+fixes25842-0ubuntu3) UNRELEASED; urgency=low
+mythtv (0.23.1+fixes26057-0ubuntu1) maverick; urgency=low
 
+  * New snapshot, 26057.
   * Simplify the upstart script.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 31 Aug 2010 14:14:55 -0500
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 04 Sep 2010 20:39:54 -0500
 
 mythtv (0.23.1+fixes25842-0ubuntu2) maverick; urgency=low
 
