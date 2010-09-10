@@ -1,3 +1,10 @@
+mythtv (0.23.1+fixes26192-0ubuntu1) maverick; urgency=low
+
+  * New snapshot, 26192.
+    - Fixes channel scan crashes (LP: #632756)
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 09 Sep 2010 23:41:28 -0500
+
 mythtv (0.23.1+fixes26057-0ubuntu1) maverick; urgency=low
 
   * New snapshot, 26057.
