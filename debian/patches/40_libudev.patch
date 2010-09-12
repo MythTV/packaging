@@ -2,8 +2,10 @@
 ## Origin/Author: Based on http://svn.mythtv.org/trac/attachment/ticket/6137/mythtv-libudev-1.patch
 ## Bug: https://bugs.launchpad.net/bugs/479509
 ## Notes: The Build Depends of libudev-dev can be removed, if this patch is dropped. 
---- a/configure
-+++ b/configure
+Index: mythtv-fixes/configure
+===================================================================
+--- mythtv-fixes.orig/configure	2010-09-11 20:23:41.564618270 -0500
++++ mythtv-fixes/configure	2010-09-11 20:23:47.020625526 -0500
 @@ -1291,6 +1291,7 @@
      ivtv
      joystick_menu
@@ -12,7 +14,7 @@
      lirc
      mheg
      opengl_video
-@@ -1776,6 +1777,7 @@
+@@ -1777,6 +1778,7 @@
  enable ivtv
  enable lamemp3
  enable lirc
@@ -20,7 +22,7 @@
  enable mheg
  enable opengl
  enable opengl_vsync
-@@ -3422,6 +3424,11 @@
+@@ -3428,6 +3430,11 @@
  disabled  zlib || check_lib   zlib.h      zlibVersion -lz   || disable  zlib
  disabled bzlib || check_lib2 bzlib.h BZ2_bzlibVersion -lbz2 || disable bzlib
  
@@ -32,7 +34,7 @@
  enabled ffmpeg_pthreads && enable pthreads
  
  # check for some common methods of building with pthread support
-@@ -4563,6 +4570,10 @@
+@@ -4573,6 +4580,10 @@
    echo "PERL_CONFIG_OPTS=$PERL_CONFIG_OPTS" >> $MYTH_CONFIG_MAK
  fi
  
@@ -43,8 +45,10 @@
  if test x"$CCONFIG" != x"" ; then
    echo "CCONFIG=$CCONFIG" >> $MYTH_CONFIG_MAK
    echo "#define MYTH_BUILD_CONFIG \"$CCONFIG\"" >>$TMPH
---- a/libs/libmyth/libmyth.pro
-+++ b/libs/libmyth/libmyth.pro
+Index: mythtv-fixes/libs/libmyth/libmyth.pro
+===================================================================
+--- mythtv-fixes.orig/libs/libmyth/libmyth.pro	2010-09-11 20:23:04.233615650 -0500
++++ mythtv-fixes/libs/libmyth/libmyth.pro	2010-09-11 20:23:47.020625526 -0500
 @@ -79,6 +79,7 @@
  LIBS += -L../libavcodec          -lmythavcodec-$${LIBVERSION}
  LIBS += -L../libavutil           -lmythavutil-$${LIBVERSION}
@@ -53,8 +57,10 @@
  
  TARGETDEPS += ../libmythsamplerate/libmythsamplerate-$${MYTH_LIB_EXT}
  TARGETDEPS += ../libmythsoundtouch/libmythsoundtouch-$${MYTH_LIB_EXT}
---- a/libs/libmyth/mediamonitor-unix.cpp
-+++ b/libs/libmyth/mediamonitor-unix.cpp
+Index: mythtv-fixes/libs/libmyth/mediamonitor-unix.cpp
+===================================================================
+--- mythtv-fixes.orig/libs/libmyth/mediamonitor-unix.cpp	2010-09-11 20:23:04.221624113 -0500
++++ mythtv-fixes/libs/libmyth/mediamonitor-unix.cpp	2010-09-11 20:23:47.020625526 -0500
 @@ -38,6 +38,15 @@
  #include "mythhdd.h"
  #include "mythverbose.h"

@@ -1,7 +1,9 @@
 Use /var/log/mythtv instead of just /var/log for mythtv logs.
 ==========================================================================
---- a/programs/mythbackend/housekeeper.cpp
-+++ b/programs/mythbackend/housekeeper.cpp
+Index: mythtv-fixes/programs/mythbackend/housekeeper.cpp
+===================================================================
+--- mythtv-fixes.orig/programs/mythbackend/housekeeper.cpp	2010-09-11 20:23:04.421615452 -0500
++++ mythtv-fixes/programs/mythbackend/housekeeper.cpp	2010-09-11 20:23:36.833627658 -0500
 @@ -326,7 +326,7 @@
                                            "mythfilldatabase");
      QString mfarg = gContext->GetSetting("MythFillDatabaseArgs", "");
@@ -11,9 +13,11 @@ Use /var/log/mythtv instead of just /var/log for mythtv logs.
  
      if (mfpath == "mythfilldatabase")
          mfpath = GetInstallPrefix() + "/bin/mythfilldatabase";
---- a/programs/mythwelcome/welcomedialog.cpp
-+++ b/programs/mythwelcome/welcomedialog.cpp
-@@ -441,7 +441,7 @@
+Index: mythtv-fixes/programs/mythwelcome/welcomedialog.cpp
+===================================================================
+--- mythtv-fixes.orig/programs/mythwelcome/welcomedialog.cpp	2010-09-11 20:23:04.441616458 -0500
++++ mythtv-fixes/programs/mythwelcome/welcomedialog.cpp	2010-09-11 20:23:36.833627658 -0500
+@@ -443,7 +443,7 @@
                                            "mythfilldatabase");
      QString mfarg = gContext->GetSetting("MythFillDatabaseArgs", "");
      QString mflog = gContext->GetSetting("MythFillDatabaseLog",

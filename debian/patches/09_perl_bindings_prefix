@@ -1,8 +1,10 @@
 Use prefix for Perl bindings. Also allow more options to be passed when setting
 config options for Perl bindings.
 ==========================================================================
---- a/bindings/perl/perl.pro
-+++ b/bindings/perl/perl.pro
+Index: mythtv-fixes/bindings/perl/perl.pro
+===================================================================
+--- mythtv-fixes.orig/bindings/perl/perl.pro	2010-09-11 20:23:04.377616772 -0500
++++ mythtv-fixes/bindings/perl/perl.pro	2010-09-11 20:23:41.560617621 -0500
 @@ -4,13 +4,7 @@
  
  mythperlbindings.target = Makefile.perl
@@ -27,8 +29,10 @@ config options for Perl bindings.
  
  QMAKE_LINK=@-echo
  PRE_TARGETDEPS += perl_build
---- a/configure
-+++ b/configure
+Index: mythtv-fixes/configure
+===================================================================
+--- mythtv-fixes.orig/configure	2010-09-11 20:23:04.365616923 -0500
++++ mythtv-fixes/configure	2010-09-11 20:23:41.564618270 -0500
 @@ -141,6 +141,8 @@
                             Supported bindings: perl, python
                             comma-separated list
@@ -38,7 +42,7 @@ config options for Perl bindings.
  EOF
  
  #following is ffmpeg's configure help text
-@@ -2007,6 +2009,9 @@
+@@ -2008,6 +2010,9 @@
              fi
          done
      ;;
@@ -48,7 +52,7 @@ config options for Perl bindings.
      --disable-devices) disable $INDEV_LIST $OUTDEV_LIST
      ;;
      --enable-debug=*) debuglevel="$optval"
-@@ -4237,6 +4242,9 @@
+@@ -4246,6 +4251,9 @@
  
  echo "# Bindings"
  echo "bindings_perl             ${bindings_perl-no}"
@@ -58,7 +62,7 @@ config options for Perl bindings.
  echo "bindings_python           ${bindings_python-no}"
  echo ""
  
-@@ -4551,6 +4559,10 @@
+@@ -4561,6 +4569,10 @@
    echo "CONFIG_OPENGL_LIBS=-lGL -lGLU" >> $MYTH_CONFIG_MAK
  fi
  
