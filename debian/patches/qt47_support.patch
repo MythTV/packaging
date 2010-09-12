@@ -1,7 +1,7 @@
 Index: mythtv-fixes/libs/libmyth/mythdeque.h
 ===================================================================
---- mythtv-fixes.orig/libs/libmyth/mythdeque.h	2010-08-24 19:12:55.017128343 -0500
-+++ mythtv-fixes/libs/libmyth/mythdeque.h	2010-08-24 19:13:17.590120714 -0500
+--- mythtv-fixes.orig/libs/libmyth/mythdeque.h	2009-04-10 19:04:30.000000000 -0500
++++ mythtv-fixes/libs/libmyth/mythdeque.h	2010-09-11 20:20:44.684627299 -0500
 @@ -19,7 +19,7 @@
      T dequeue()
      {
@@ -13,21 +13,21 @@ Index: mythtv-fixes/libs/libmyth/mythdeque.h
          return item;
 Index: mythtv-fixes/libs/libmythtv/recordingprofile.h
 ===================================================================
---- mythtv-fixes.orig/libs/libmythtv/recordingprofile.h	2010-08-24 19:13:05.190144174 -0500
-+++ mythtv-fixes/libs/libmythtv/recordingprofile.h	2010-08-24 19:13:17.610149724 -0500
+--- mythtv-fixes.orig/libs/libmythtv/recordingprofile.h	2010-09-11 10:03:44.000000000 -0500
++++ mythtv-fixes/libs/libmythtv/recordingprofile.h	2010-09-11 20:21:27.440942278 -0500
 @@ -84,7 +84,7 @@
  
    public:
      // initializers
 -    RecordingProfile(QString profName = NULL);
 +    RecordingProfile(QString profName = QString());
+     ~RecordingProfile();
      virtual void loadByID(int id);
      virtual bool loadByType(const QString &name, const QString &cardtype);
-     virtual bool loadByGroup(const QString &name, const QString &group);
 Index: mythtv-fixes/libs/libmythtv/tv_rec.h
 ===================================================================
---- mythtv-fixes.orig/libs/libmythtv/tv_rec.h	2010-08-24 19:13:10.173137963 -0500
-+++ mythtv-fixes/libs/libmythtv/tv_rec.h	2010-08-24 19:13:17.622149153 -0500
+--- mythtv-fixes.orig/libs/libmythtv/tv_rec.h	2010-01-30 21:08:49.000000000 -0600
++++ mythtv-fixes/libs/libmythtv/tv_rec.h	2010-09-11 20:20:44.684627299 -0500
 @@ -106,7 +106,7 @@
  class TuningRequest
  {
@@ -39,8 +39,8 @@ Index: mythtv-fixes/libs/libmythtv/tv_rec.h
      TuningRequest(uint f, RecordingInfo *p) :
 Index: mythtv-fixes/libs/libmythupnp/eventing.h
 ===================================================================
---- mythtv-fixes.orig/libs/libmythupnp/eventing.h	2010-08-24 19:12:41.501129379 -0500
-+++ mythtv-fixes/libs/libmythupnp/eventing.h	2010-08-24 19:13:17.586121044 -0500
+--- mythtv-fixes.orig/libs/libmythupnp/eventing.h	2009-12-30 23:38:50.000000000 -0600
++++ mythtv-fixes/libs/libmythupnp/eventing.h	2010-09-11 20:20:44.684627299 -0500
 @@ -233,7 +233,7 @@
          {
              SVMap::iterator it = m_map.find(sName);
