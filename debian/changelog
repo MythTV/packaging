@@ -1,3 +1,9 @@
+mythtv (0.23.1+fixes26231-0ubuntu1) UNRELEASED; urgency=low
+
+  * New snapshot, 26231.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 11 Sep 2010 20:17:36 -0500
+
 mythtv (0.23.1+fixes26192-0ubuntu1) maverick; urgency=low
 
   * New snapshot, 26192.
