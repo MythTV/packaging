@@ -1,4 +1,4 @@
-mythtv (0.24.0~trunk26032-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.24.0~trunk26238-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * Drop 36_setgroups.  Been merged upstream.
