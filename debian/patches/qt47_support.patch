@@ -1,7 +1,7 @@
 Index: mythtv-trunk/libs/libmyth/mythdeque.h
 ===================================================================
 --- mythtv-trunk.orig/libs/libmyth/mythdeque.h	2009-04-10 19:04:30.000000000 -0500
-+++ mythtv-trunk/libs/libmyth/mythdeque.h	2010-09-11 20:28:37.489616344 -0500
++++ mythtv-trunk/libs/libmyth/mythdeque.h	2010-09-18 23:40:08.348765522 -0500
 @@ -19,7 +19,7 @@
      T dequeue()
      {
@@ -11,23 +11,10 @@ Index: mythtv-trunk/libs/libmyth/mythdeque.h
          T item = deque<T>::front();
          deque<T>::pop_front();
          return item;
-Index: mythtv-trunk/libs/libmythtv/recordingprofile.h
-===================================================================
---- mythtv-trunk.orig/libs/libmythtv/recordingprofile.h	2010-09-11 08:53:10.000000000 -0500
-+++ mythtv-trunk/libs/libmythtv/recordingprofile.h	2010-09-11 20:29:00.872934258 -0500
-@@ -84,7 +84,7 @@
- 
-   public:
-     // initializers
--    RecordingProfile(QString profName = NULL);
-+    RecordingProfile(QString profName = QString());
-     ~RecordingProfile();
-     virtual void loadByID(int id);
-     virtual bool loadByType(const QString &name, const QString &cardtype);
 Index: mythtv-trunk/libs/libmythtv/tv_rec.h
 ===================================================================
 --- mythtv-trunk.orig/libs/libmythtv/tv_rec.h	2010-09-06 21:29:26.000000000 -0500
-+++ mythtv-trunk/libs/libmythtv/tv_rec.h	2010-09-11 20:28:37.489616344 -0500
++++ mythtv-trunk/libs/libmythtv/tv_rec.h	2010-09-18 23:40:08.348765522 -0500
 @@ -93,7 +93,7 @@
  class TuningRequest
  {
@@ -40,7 +27,7 @@ Index: mythtv-trunk/libs/libmythtv/tv_rec.h
 Index: mythtv-trunk/libs/libmythupnp/eventing.h
 ===================================================================
 --- mythtv-trunk.orig/libs/libmythupnp/eventing.h	2009-12-30 23:38:50.000000000 -0600
-+++ mythtv-trunk/libs/libmythupnp/eventing.h	2010-09-11 20:28:37.489616344 -0500
++++ mythtv-trunk/libs/libmythupnp/eventing.h	2010-09-18 23:40:08.348765522 -0500
 @@ -233,7 +233,7 @@
          {
              SVMap::iterator it = m_map.find(sName);
@@ -59,16 +46,3 @@ Index: mythtv-trunk/libs/libmythupnp/eventing.h
          }
  
          uint BuildNotifyBody(QTextStream &ts, TaskTime ttLastNotified) const;
-Index: mythtv-trunk/libs/libmyth/audiooutputbase.cpp
-===================================================================
---- mythtv-trunk.orig/libs/libmyth/audiooutputbase.cpp	2010-08-26 14:58:25.000000000 -0500
-+++ mythtv-trunk/libs/libmyth/audiooutputbase.cpp	2010-09-11 20:28:37.493616574 -0500
-@@ -75,7 +75,7 @@
-     source_bytes_per_frame(0),
-     needs_upmix(false),         needs_downmix(false),
-     surround_mode(QUALITY_LOW), old_stretchfactor(1.0f),
--    volume(80),                 volumeControl(NULL),
-+    volume(80),                 volumeControl(QString()),
- 
-     processing(false),
- 
