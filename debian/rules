@@ -55,7 +55,6 @@ special-patches:
 	#apply patches not intended for stable release
 	
 	if [ "$(shell lsb_release -rs)" = "10.10" ]; then \
-		patch -p1 < debian/patches/qt47_support.patch; \
 		patch -p1 < debian/patches/configure_missing_check.patch; \
 	fi
 
