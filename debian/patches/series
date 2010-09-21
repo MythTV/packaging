@@ -4,6 +4,3 @@
 30_python26_ubuntu
 40_libudev.patch
 proper_shutdown_behavior_for_ubuntu.patch
-
-#Only apply these on 10.10
-#configure_missing_check.patch
