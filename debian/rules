@@ -49,14 +49,7 @@ endif
 %:
 	dh $@
 
-special-patches:
-	#apply patches not intended for stable release
-	
-	if [ "$(shell lsb_release -rs)" = "10.10" ]; then \
-		patch -p1 < debian/patches/qt47_support.patch; \
-	fi
-
-override_dh_auto_configure: special-patches
+override_dh_auto_configure:
 	#update SVN REVISION to show the right version
 	sed -i -e "s/^\(\(str  *\)\?SOURCE_VERSION\)=.*$$/\1=$(SVN_REVISION)/g;" version.sh
 

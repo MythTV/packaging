@@ -2,6 +2,3 @@
 10_mythfilldatabase_log
 30_python26_ubuntu
 proper_shutdown_behavior_for_ubuntu.patch
-
-#Only apply these on 10.10
-#qt47_support.patch
