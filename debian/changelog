@@ -1,6 +1,6 @@
-mythtv (0.23.1+fixes26391-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.1+fixes26437-0ubuntu1) UNRELEASED; urgency=low
 
-  * New snapshot, 26391.
+  * New snapshot, 26437.
   * Drop qt47_support.patch, newer, bigger, better version upstream.
   * Drop configure_missing_check, iz now upstream too.
   * Refresh fuzzy patches.
