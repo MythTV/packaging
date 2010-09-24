@@ -1,11 +1,11 @@
-mythtv (0.23.1+fixes26437-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.23.1+fixes26437-0ubuntu1) maverick; urgency=low
 
   * New snapshot, 26437.
   * Drop qt47_support.patch, newer, bigger, better version upstream.
   * Drop configure_missing_check, iz now upstream too.
   * Refresh fuzzy patches.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 11 Sep 2010 20:17:36 -0500
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 23 Sep 2010 22:53:26 -0500
 
 mythtv (0.23.1+fixes26192-0ubuntu1) maverick; urgency=low
 
