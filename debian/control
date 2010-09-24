@@ -50,6 +50,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 libwww-perl,
                 python-oauth,
                 python-lxml,
+                python-mysqldb,
                 python-pycurl
 
 Package: mythtv

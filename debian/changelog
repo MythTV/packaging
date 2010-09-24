@@ -19,6 +19,7 @@ mythtv (0.24.0~trunk26390-0ubuntu1) UNRELEASED; urgency=low
   * remove circular dependency.
   * Reduce zealousness in files cleaned in clean rule.
   * Remove qmake invocation.
+  * Add depends on python-mysqldb
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
