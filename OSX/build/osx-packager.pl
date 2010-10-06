@@ -1113,7 +1113,7 @@ foreach my $target ( @targets )
 
     if ( $target eq "MythFrontend" )
     {
-        foreach my $extra ( 'ignyte', 'mtd' )
+        foreach my $extra ( 'ignyte', 'mythpreviewgen', 'mtd' )
         {
             if ( -e "$PREFIX/bin/$extra" )
             {
@@ -1130,8 +1130,25 @@ foreach my $target ( @targets )
         }
 
         # Allow playback of region encoded DVDs
+        mkdir("$finalTarget/Contents/Plugins");
         &Syscall([ 'cp', "$PREFIX/lib/libdvdcss.2.dylib",
                          "$finalTarget/Contents/Plugins" ]) or die;
+
+        # Allow opening of GIFs and JPEGs:
+        mkdir("$finalTarget/Contents/MacOS/imageformats");
+        foreach my $plugin ( 'libqgif.dylib', 'libqjpeg.dylib' )
+        {
+            my $pluginSrc = "$PREFIX/plugins.bad/imageformats/$plugin";
+            if ( -e $pluginSrc )
+            {
+                &Syscall([ 'cp', $pluginSrc,
+                           "$finalTarget/Contents/MacOS/imageformats" ])
+                    or die;
+                &Syscall([ @bundler,
+                           "$finalTarget/Contents/MacOS/imageformats/$plugin" ])
+                    or die;
+            }
+        }
     }
 
     if ( $target eq "MythWelcome" )
