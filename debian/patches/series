@@ -1,4 +1,4 @@
 08_default_directory
 10_mythfilldatabase_log
-30_python26_ubuntu
+python_perl_install_paths.patch
 proper_shutdown_behavior_for_ubuntu.patch
