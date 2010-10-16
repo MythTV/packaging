@@ -27,6 +27,7 @@ mythtv (0.24.0~trunk26811-0ubuntu1) UNRELEASED; urgency=low
   * Correct the missing locales and fonts.
   * Install python and perl directly into their appropriate directories.
   * Remove dummy libmyth-perl package.
+  * Modify ubuntu shutdown behavior patch to only use dbus if commands fail.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of

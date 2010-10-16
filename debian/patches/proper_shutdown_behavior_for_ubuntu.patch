@@ -2,41 +2,35 @@
 ## Origin/Author: Mario Limonciello
 Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
 ===================================================================
---- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-08-29 17:22:36.000000000 -0500
-+++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-08-30 14:28:13.827122595 -0500
-@@ -62,16 +62,7 @@
- 
- void ExitPrompter::halt()
+--- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-10-15 21:14:29.170273001 -0500
++++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-10-15 21:16:39.630273001 -0500
+@@ -64,10 +64,12 @@
  {
--
--    QString halt_cmd = gCoreContext->GetSetting("HaltCommand","");
--    if (!halt_cmd.isEmpty()) /* Use user specified command if it exists */
--    {
+ 
+     QString halt_cmd = gCoreContext->GetSetting("HaltCommand","");
++    int ret = -1;
+     if (!halt_cmd.isEmpty()) /* Use user specified command if it exists */
+     {
 -        myth_system(halt_cmd);
 -    } else if (!DBusHalt()) /* If supported, use DBus to shutdown */
--    {
--        myth_system("sudo /sbin/halt -p"); 
--    }
--
-+    DBusHalt();
- }
- 
- static bool DBusReboot(void)
-@@ -118,16 +109,7 @@
- 
- void ExitPrompter::reboot()
++        ret = myth_system(halt_cmd);
++    }
++    if (ret != 0 && !DBusHalt()) /* If supported, use DBus to shutdown */
+     {
+         myth_system("sudo /sbin/halt -p"); 
+     }
+@@ -120,10 +122,12 @@
  {
--
--    QString reboot_cmd = gCoreContext->GetSetting("RebootCommand","");
--    if (!reboot_cmd.isEmpty()) /* Use user specified command if it exists */
--    {
+ 
+     QString reboot_cmd = gCoreContext->GetSetting("RebootCommand","");
++    int ret = -1;
+     if (!reboot_cmd.isEmpty()) /* Use user specified command if it exists */
+     {
 -        myth_system(reboot_cmd);
 -    } else if (!DBusReboot()) /* If supported, use DBus to reboot */
--    {
--        myth_system("sudo /sbin/reboot");
--    }
--
-+    DBusReboot();
- }
- 
- void ExitPrompter::handleExit()
++        ret = myth_system(reboot_cmd);
++    }
++    if (ret != 0 && !DBusReboot()) /* If supported, use DBus to reboot */
+     {
+         myth_system("sudo /sbin/reboot");
+     }
