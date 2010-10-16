@@ -200,16 +200,6 @@ Description: Common library code for MythTV and add-on modules (development)
  This package contains files needed for developing applications which use
  libmyth (such as the various add-ons for MythTV)
 
-Package: libmyth-perl
-Architecture: all
-Section: perl
-Depends: libmythtv-perl, ${misc:Depends}
-Description: Transitional package to move people to libmythtv-perl
- This is a dummy package to help assist people with the transition
- to the new package name for storing the mythtv perl bindings.
- .
- It can be safely removed from your system.
-
 Package: libmythtv-perl
 Architecture: all
 Section: perl
