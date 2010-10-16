@@ -1,5 +1,6 @@
 ## Description: Fixes up the shutdown behavior so users can't break it
 ## Origin/Author: Mario Limonciello
+## Upstream URL: http://svn.mythtv.org/trac/ticket/9102
 Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
 ===================================================================
 --- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-10-15 21:14:29.170273001 -0500
