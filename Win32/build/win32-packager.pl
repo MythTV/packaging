@@ -44,7 +44,7 @@ $SIG{INT} = sub { die "Interrupted\n"; };
 $| = 1; # autoflush stdout;
 
 # this script was last tested to work with this version, on other versions YMMV.
-my $SVNRELEASE = '25919'; # Recent trunk
+my $SVNRELEASE = '26900'; # Recent trunk
 #my $SVNRELEASE = 'HEAD'; # If you are game, go forth and test the latest!
 
 
@@ -67,7 +67,7 @@ my $proxy = '';
 # Subversion proxy settings are configured in %APPDATA%\Subversion\servers
 
 my $NOISY   = 1;            # Set to 0 for less output to the screen
-my $version = '0.23';       # Main mythtv version - used to name dlls
+my $version = '0.24';       # Main mythtv version - used to name dlls
 my $package = 0;            # Create a Win32 Distribution package? 1 for yes
 my $compile_type = "profile"; # compile options: debug, profile or release
 my $tickets = 0;            # Apply specific win32 tickets -
@@ -103,7 +103,6 @@ if (defined $opt{c}) {
 }
 
 if (defined $opt{b}) {
-    $version = "0.23.1";
     my @num = split /\./, $version;
     $svnlocation = "branches/release-$num[0]-$num[1]-fixes";
 } else {
