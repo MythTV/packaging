@@ -28,6 +28,7 @@ mythtv (0.24.0~trunk26811-0ubuntu1) UNRELEASED; urgency=low
   * Install python and perl directly into their appropriate directories.
   * Remove dummy libmyth-perl package.
   * Modify ubuntu shutdown behavior patch to only use dbus if commands fail.
+  * Update shutdown patch for upstream recommendations.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of

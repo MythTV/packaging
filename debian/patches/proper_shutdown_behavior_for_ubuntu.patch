@@ -3,9 +3,17 @@
 ## Upstream URL: http://svn.mythtv.org/trac/ticket/9102
 Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
 ===================================================================
---- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-10-15 21:14:29.170273001 -0500
-+++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-10-15 21:16:39.630273001 -0500
-@@ -64,10 +64,12 @@
+--- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-10-18 09:20:27.962867001 -0500
++++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-10-18 09:21:16.762867001 -0500
+@@ -12,6 +12,7 @@
+ #include "mythmainwindow.h"
+ #include "mythscreenstack.h"
+ #include "mythsystem.h"
++#include "mythverbose.h"
+ 
+ void ExitPrompter::quit()
+ {
+@@ -64,10 +65,16 @@
  {
  
      QString halt_cmd = gCoreContext->GetSetting("HaltCommand","");
@@ -15,12 +23,16 @@ Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
 -        myth_system(halt_cmd);
 -    } else if (!DBusHalt()) /* If supported, use DBus to shutdown */
 +        ret = myth_system(halt_cmd);
++        if (ret != 0)
++        {
++            VERBOSE(VB_IMPORTANT, "User defined HaltCommand failed, falling back to alternative methods.");
++        }
 +    }
 +    if (ret != 0 && !DBusHalt()) /* If supported, use DBus to shutdown */
      {
          myth_system("sudo /sbin/halt -p"); 
      }
-@@ -120,10 +122,12 @@
+@@ -120,10 +127,16 @@
  {
  
      QString reboot_cmd = gCoreContext->GetSetting("RebootCommand","");
@@ -30,6 +42,10 @@ Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
 -        myth_system(reboot_cmd);
 -    } else if (!DBusReboot()) /* If supported, use DBus to reboot */
 +        ret = myth_system(reboot_cmd);
++        if (ret != 0)
++        {
++            VERBOSE(VB_IMPORTANT, "User defined RebootCommand failed, falling back to alternative methods.");
++        }
 +    }
 +    if (ret != 0 && !DBusReboot()) /* If supported, use DBus to reboot */
      {
