@@ -22,3 +22,6 @@
 ./version.sh
 debian/patches/.dpkg-source-applied
 .pc
+locales
+external
+Makefile

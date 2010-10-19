@@ -1,26 +1,26 @@
 Use /var/log/mythtv instead of just /var/log for mythtv logs.
 ==========================================================================
-Index: mythtv-fixes/programs/mythbackend/housekeeper.cpp
+Index: mythtv-trunk/programs/mythbackend/housekeeper.cpp
 ===================================================================
---- mythtv-fixes.orig/programs/mythbackend/housekeeper.cpp	2010-09-11 20:23:04.421615452 -0500
-+++ mythtv-fixes/programs/mythbackend/housekeeper.cpp	2010-09-11 20:23:36.833627658 -0500
+--- mythtv-trunk.orig/programs/mythbackend/housekeeper.cpp	2010-05-13 00:12:30.000000000 -0400
++++ mythtv-trunk/programs/mythbackend/housekeeper.cpp	2010-07-17 12:33:21.000000000 -0400
 @@ -326,7 +326,7 @@
                                            "mythfilldatabase");
-     QString mfarg = gContext->GetSetting("MythFillDatabaseArgs", "");
-     QString mflog = gContext->GetSetting("MythFillDatabaseLog",
+     QString mfarg = gCoreContext->GetSetting("MythFillDatabaseArgs", "");
+     QString mflog = gCoreContext->GetSetting("MythFillDatabaseLog",
 -                                         "/var/log/mythfilldatabase.log");
 +                                         "/var/log/mythtv/mythfilldatabase.log");
  
      if (mfpath == "mythfilldatabase")
          mfpath = GetInstallPrefix() + "/bin/mythfilldatabase";
-Index: mythtv-fixes/programs/mythwelcome/welcomedialog.cpp
+Index: mythtv-trunk/programs/mythwelcome/welcomedialog.cpp
 ===================================================================
---- mythtv-fixes.orig/programs/mythwelcome/welcomedialog.cpp	2010-09-11 20:23:04.441616458 -0500
-+++ mythtv-fixes/programs/mythwelcome/welcomedialog.cpp	2010-09-11 20:23:36.833627658 -0500
+--- mythtv-trunk.orig/programs/mythwelcome/welcomedialog.cpp	2010-07-16 11:24:25.000000000 -0400
++++ mythtv-trunk/programs/mythwelcome/welcomedialog.cpp	2010-07-17 12:33:21.000000000 -0400
 @@ -443,7 +443,7 @@
                                            "mythfilldatabase");
-     QString mfarg = gContext->GetSetting("MythFillDatabaseArgs", "");
-     QString mflog = gContext->GetSetting("MythFillDatabaseLog",
+     QString mfarg = gCoreContext->GetSetting("MythFillDatabaseArgs", "");
+     QString mflog = gCoreContext->GetSetting("MythFillDatabaseLog",
 -                                         "/var/log/mythfilldatabase.log");
 +                                         "/var/log/mythtv/mythfilldatabase.log");
  

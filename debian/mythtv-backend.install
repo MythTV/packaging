@@ -4,6 +4,9 @@ usr/bin/mythcommflag
 usr/bin/mythfilldatabase
 usr/bin/mythjobqueue
 usr/bin/mythtv-setup.real
+usr/bin/mythpreviewgen
+usr/share/mythtv/internetcontent
+usr/share/mythtv/metadata
 
 #Copied in from debian/
 debian/mythtv-setup.desktop 			usr/share/applications

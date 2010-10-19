@@ -21,7 +21,6 @@ CONFIGURE_OPTS +=   --compile-type=debug \
 					--enable-firewire \
 					--enable-joystick-menu \
 					--enable-opengl-vsync \
-					--enable-libfaad \
 					--with-bindings=perl \
 					--enable-opengl-video \
 					--enable-ffmpeg-pthreads \
@@ -32,13 +31,13 @@ CONFIGURE_OPTS +=   --compile-type=debug \
 #                                    #
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq "$(DEB_BUILD_ARCH)" "i386"
-	CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-glx-procaddrarb --enable-vdpau
+	CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --enable-xvmc --enable-xvmc-vld  --enable-vdpau
 endif
 ifeq "$(DEB_BUILD_ARCH)" "sparc"
-	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --extra-cflags="-mcpu=ultrasparc -mvis"
+	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --extra-cflags="-mcpu=ultrasparc -mvis"
 endif
 ifeq "$(DEB_BUILD_ARCH)" "amd64"
-	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-xvmc-pro --enable-glx-procaddrarb --enable-vdpau
+	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-vdpau
 endif
 ifeq "$(DEB_BUILD_ARCH)" "armel"
 	CONFIGURE_OPTS += --enable-vdpau --extra-cflags="-marm -fPIC -DPIC"
@@ -46,7 +45,6 @@ endif
 ifeq "$(DEB_BUILD_ARCH)" "powerpc"
 	CONFIGURE_OPTS += --enable-altivec --extra-cxxflags="-maltivec"
 endif
-
 
 %:
 	dh $@
@@ -58,10 +56,6 @@ override_dh_auto_configure:
 	#Run configure
 	./configure $(CONFIGURE_OPTS)
 
-override_dh_auto_build:
-	qmake -o Makefile PREFIX=/usr mythtv.pro
-	dh_auto_build --parallel
-
 override_dh_auto_install:
 	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/tmp
 
@@ -72,9 +66,10 @@ override_dh_auto_install:
 	mv debian/tmp/usr/bin/mythfrontend debian/tmp/usr/bin/mythfrontend.real
 	mv debian/tmp/usr/bin/mythtv-setup debian/tmp/usr/bin/mythtv-setup.real
 
+override_dh_install:
+	dh_install -Xusr/share/mythtv/fonts/Free --fail-missing
+
 override_dh_installinit:
-	# The upstart script comes from contrib
-#	cp contrib/Linux/init_scripts/upstart.mythtv-backend.conf debian/mythtv-backend.upstart
 	dh_installinit
 
 	#Remove license files

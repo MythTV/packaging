@@ -6,15 +6,15 @@ Uploaders: Mario Limonciello <superm1@ubuntu.com>,
            Andres Mejia <mcitadel@gmail.com>,
 Homepage: http://www.mythtv.org
 Standards-Version: 3.8.4
-Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-fixes
-Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-fixes
+Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
+Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
 Build-Conflicts: libqt3-mt-dev
 Build-Depends:  debhelper (>= 7.0.50~),
                 quilt,
                 ccache,
                 yasm,
                 libqt4-dev,
-                libqt4-webkit-dev | libqt4-dev (<< 4:4.7.0~beta1),
+                libqtwebkit-dev | libqt4-webkit-dev | libqt4-dev (<< 4:4.7.0~beta1),
                 libqt4-opengl-dev,
                 libdvb-dev,
                 po-debconf,
@@ -41,11 +41,17 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 libpulse-dev,
                 libxrandr-dev,
                 libfftw3-dev,
-                libfaad-dev,
                 xserver-xorg-video-openchrome [i386 amd64] | libchromexvmc1 [i386 amd64],
                 xserver-xorg-video-openchrome [i386 amd64] | libchromexvmcpro1 [i386 amd64],
                 libvdpau-dev [i386 amd64 armel] | nvidia-190-libvdpau-dev [i386 amd64] | nvidia-185-libvdpau-dev [i386 amd64] | nvidia-180-libvdpau-dev [i386 amd64],
-                libudev-dev
+                libudev-dev,
+                libclass-dbi-perl,
+                libnet-upnp-perl,
+                libwww-perl,
+                python-oauth,
+                python-lxml,
+                python-mysqldb,
+                python-pycurl
 
 Package: mythtv
 Architecture: all
@@ -82,7 +88,7 @@ Architecture: any
 Depends: pwgen, adduser, mysql-client, ttf-freefont, ttf-liberation, ttf-droid, ttf-dejavu, ${shlibs:Depends}, ${misc:Depends}
 Suggests: mythtv-doc
 Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-gray-osd, mythtv-theme-isthmus
-Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.23.0~trunk23548), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu, mythtv-backend (<< 0.23.0~trunk23549), mythtv-database (<< 0.23.1+fixes25610)
+Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.23.0~trunk23548), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu, mythtv-backend (<< 0.23.0~trunk23549), mythtv-database (<< 0.24.0~trunk25638)
 Description: A personal video recorder application (common data)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -168,7 +174,7 @@ Description: A personal video recorder application (client)
  For a complete installation of all MythTV components, install the 'mythtv'
  package.
 
-Package: libmyth-0.23-0
+Package: libmyth-0.24-0
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}, libqt4-sql-mysql, ${misc:Depends}
@@ -193,16 +199,6 @@ Description: Common library code for MythTV and add-on modules (development)
  .
  This package contains files needed for developing applications which use
  libmyth (such as the various add-ons for MythTV)
-
-Package: libmyth-perl
-Architecture: all
-Section: perl
-Depends: libmythtv-perl, ${misc:Depends}
-Description: Transitional package to move people to libmythtv-perl
- This is a dummy package to help assist people with the transition
- to the new package name for storing the mythtv perl bindings.
- .
- It can be safely removed from your system.
 
 Package: libmythtv-perl
 Architecture: all
