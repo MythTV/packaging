@@ -415,7 +415,8 @@ Description: A web browser for MythTV
 
 Package: mythnetvision
 Architecture: any
-Depends: mythtv-common (>= 0.20-0.0), mythtv-frontend (>= 0.20-0.0), ${shlibs:Depends}, ${misc:Depends}, mythbrowser (>= 0.22), libmyth-python (>= 0.22.0~trunk23213-0ubuntu0), python-feedparser, python-pycurl, flashplugin-installer | adobe-flashplugin
+Depends: mythtv-common (>= 0.20-0.0), mythtv-frontend (>= 0.20-0.0), ${shlibs:Depends}, ${misc:Depends}, mythbrowser (>= 0.22), libmyth-python (>= 0.22.0~trunk23213-0ubuntu0), python-feedparser, python-pycurl
+Recommends: flashplugin-installer | adobe-flashplugin
 Description: A Internet Video Player plugin for MythTV
  MythNetvision is a plugin designed to make adding Internet video sources to MythTV fun and easy.
  MythNetvision consists of two components-- a search screen and a site/RSS browser screen.

@@ -6,5 +6,4 @@ proper_shutdown_behavior_for_ubuntu.patch
 
 ##mythplugins##
 01_directories
-configure_missing_check.patch
 configure_mythplugins_without_mythtv_installed.patch
