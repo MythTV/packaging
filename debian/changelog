@@ -1,10 +1,10 @@
-mythtv (0.24.0~trunk26455-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.24.0~trunk26811-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * Drop 36_setgroups.  Been merged upstream.
   * Add upstart script into the packaging.  It's been dropped upstream.
     ref svn 24280 upstream.
-  * Bump version to 0.24 trunk r26455
+  * Bump version to 0.24 trunk r26811
   * Refresh patches due to upstream changes:
     * Mythfilldatabase logging
     * Force dbus reboot/halt.
@@ -19,6 +19,16 @@ mythtv (0.24.0~trunk26455-0ubuntu1) UNRELEASED; urgency=low
   * remove circular dependency.
   * Reduce zealousness in files cleaned in clean rule.
   * Remove qmake invocation.
+  * Add depends on python-mysqldb
+  * Install metadata to /usr/share/mythtv so it can be used by MNV.
+    (LP: #624064)
+  * Add a --list-missing option to make sure that all packaged files
+    get installed, and the build fails otherwise.
+  * Correct the missing locales and fonts.
+  * Install python and perl directly into their appropriate directories.
+  * Remove dummy libmyth-perl package.
+  * Modify ubuntu shutdown behavior patch to only use dbus if commands fail.
+  * Update shutdown patch for upstream recommendations.
   * Merge mythtv/mythplugins/myththemes source packages into one.
 
   [ Gerald Barker ]
@@ -35,11 +45,28 @@ mythtv (0.24.0~trunk26455-0ubuntu1) UNRELEASED; urgency=low
 
  -- Thomas Mashos <tgm4883@gmail.com>  Wed, 23 Jun 2010 21:28:44 -0700
 
-mythtv (0.23.1+fixes25842-0ubuntu3) UNRELEASED; urgency=low
+mythtv (0.23.1+fixes26437-0ubuntu1) maverick; urgency=low
 
+  * New snapshot, 26437.
+  * Drop qt47_support.patch, newer, bigger, better version upstream.
+  * Drop configure_missing_check, iz now upstream too.
+  * Refresh fuzzy patches.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 23 Sep 2010 22:53:26 -0500
+
+mythtv (0.23.1+fixes26192-0ubuntu1) maverick; urgency=low
+
+  * New snapshot, 26192.
+    - Fixes channel scan crashes (LP: #632756)
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 09 Sep 2010 23:41:28 -0500
+
+mythtv (0.23.1+fixes26057-0ubuntu1) maverick; urgency=low
+
+  * New snapshot, 26057.
   * Simplify the upstart script.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 31 Aug 2010 14:14:55 -0500
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 04 Sep 2010 20:39:54 -0500
 
 mythtv (0.23.1+fixes25842-0ubuntu2) maverick; urgency=low
 

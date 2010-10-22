@@ -3,6 +3,7 @@ usr/share/mythtv/themes
 usr/bin/mythshutdown
 usr/share/mythtv/*.xml
 usr/share/mythtv/*.pl
+usr/share/mythtv/locales
 
 #Other bits that we are gonna copy in that aren't part of make install
 contrib/config_files/config.xml usr/share/mythtv
