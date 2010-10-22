@@ -1,9 +1,9 @@
 Use /var/log/mythtv instead of just /var/log for mythtv logs.
 ==========================================================================
-Index: mythtv-trunk/programs/mythbackend/housekeeper.cpp
+Index: mythtv-trunk/mythtv/programs/mythbackend/housekeeper.cpp
 ===================================================================
---- mythtv-trunk.orig/programs/mythbackend/housekeeper.cpp	2010-05-13 00:12:30.000000000 -0400
-+++ mythtv-trunk/programs/mythbackend/housekeeper.cpp	2010-07-17 12:33:21.000000000 -0400
+--- mythtv-trunk~/mythtv/programs/mythbackend/housekeeper.cpp	2010-05-13 00:12:30.000000000 -0400
++++ mythtv-trunk/mythtv/programs/mythbackend/housekeeper.cpp	2010-07-17 12:33:21.000000000 -0400
 @@ -326,7 +326,7 @@
                                            "mythfilldatabase");
      QString mfarg = gCoreContext->GetSetting("MythFillDatabaseArgs", "");
@@ -13,10 +13,10 @@ Index: mythtv-trunk/programs/mythbackend/housekeeper.cpp
  
      if (mfpath == "mythfilldatabase")
          mfpath = GetInstallPrefix() + "/bin/mythfilldatabase";
-Index: mythtv-trunk/programs/mythwelcome/welcomedialog.cpp
+Index: mythtv-trunk/mythtv/programs/mythwelcome/welcomedialog.cpp
 ===================================================================
---- mythtv-trunk.orig/programs/mythwelcome/welcomedialog.cpp	2010-07-16 11:24:25.000000000 -0400
-+++ mythtv-trunk/programs/mythwelcome/welcomedialog.cpp	2010-07-17 12:33:21.000000000 -0400
+--- mythtv-trunk~/mythtv/programs/mythwelcome/welcomedialog.cpp	2010-07-16 11:24:25.000000000 -0400
++++ mythtv-trunk/mythtv/programs/mythwelcome/welcomedialog.cpp	2010-07-17 12:33:21.000000000 -0400
 @@ -443,7 +443,7 @@
                                            "mythfilldatabase");
      QString mfarg = gCoreContext->GetSetting("MythFillDatabaseArgs", "");

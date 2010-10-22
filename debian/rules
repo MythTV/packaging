@@ -9,71 +9,89 @@ include debian/mythtv.make
 #                                      #
 # Architecture Independent Build flags #
 #                                      #
-CONFIGURE_OPTS +=   --compile-type=debug \
-					--prefix=/usr \
-					--runprefix=/usr \
-					--enable-lirc \
-					--enable-audio-alsa \
-					--enable-audio-oss \
-					--enable-audio-jack \
-					--enable-dvb \
-					--enable-ivtv \
-					--enable-firewire \
-					--enable-joystick-menu \
-					--enable-opengl-vsync \
-					--with-bindings=perl \
-					--enable-opengl-video \
-					--enable-ffmpeg-pthreads \
-					--perl-config-opts="INSTALLDIRS=vendor"
+MYTHTV_CONFIGURE_OPTS +=    --compile-type=debug \
+				--prefix=/usr \
+				--runprefix=/usr \
+				--enable-lirc \
+				--enable-audio-alsa \
+				--enable-audio-oss \
+				--enable-audio-jack \
+				--enable-dvb \
+				--enable-ivtv \
+				--enable-firewire \
+				--enable-joystick-menu \
+				--enable-opengl-vsync \
+				--with-bindings=perl \
+				--enable-opengl-video \
+				--enable-ffmpeg-pthreads \
+				--perl-config-opts="INSTALLDIRS=vendor"
 
 #                                    #
 # Architecture dependent build flags #
 #                                    #
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq "$(DEB_BUILD_ARCH)" "i386"
-	CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --enable-xvmc --enable-xvmc-vld  --enable-vdpau
+	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --enable-xvmc --enable-xvmc-vld  --enable-vdpau
 endif
 ifeq "$(DEB_BUILD_ARCH)" "sparc"
-	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --extra-cflags="-mcpu=ultrasparc -mvis"
+	MYTHTV_CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --extra-cflags="-mcpu=ultrasparc -mvis"
 endif
 ifeq "$(DEB_BUILD_ARCH)" "amd64"
-	CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-vdpau
+	MYTHTV_CONFIGURE_OPTS += --enable-xvmc --enable-xvmc-vld --enable-vdpau
 endif
 ifeq "$(DEB_BUILD_ARCH)" "armel"
-	CONFIGURE_OPTS += --enable-vdpau --extra-cflags="-marm -fPIC -DPIC"
+	MYTHTV_CONFIGURE_OPTS += --enable-vdpau --extra-cflags="-marm -fPIC -DPIC"
 endif
 ifeq "$(DEB_BUILD_ARCH)" "powerpc"
-	CONFIGURE_OPTS += --enable-altivec --extra-cxxflags="-maltivec"
+	MYTHTV_CONFIGURE_OPTS += --enable-altivec --extra-cxxflags="-maltivec"
 endif
+
+#Mythplugins configure opts
+MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \
+                              --enable-all  \
+                              --zm-version=1.22.3 \ 
+                              --qmake=/usr/bin/qmake \
 
 %:
 	dh $@
 
+#Rather than have a configure/build/install phase, combine them all so we can do each part in order
 override_dh_auto_configure:
 	#update SVN REVISION to show the right version
-	sed -i -e "s/^\(\(str  *\)\?SOURCE_VERSION\)=.*$$/\1=$(SVN_REVISION)/g;" version.sh
+	sed -i -e "s/^\(\(str  *\)\?SOURCE_VERSION\)=.*$$/\1=$(SVN_REVISION)/g;" mythtv/version.sh
 
-	#Run configure
-	./configure $(CONFIGURE_OPTS)
+	#mythtv
+	cd mythtv && ./configure $(MYTHTV_CONFIGURE_OPTS)
+	$(MAKE) -C mythtv
+	$(MAKE) -C mythtv install INSTALL_ROOT=$(CURDIR)/debian/tmp
 
-override_dh_auto_install:
-	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/tmp
+	#make mythplugins think mythtv is already installed with these settings
+	ln -sf $(CURDIR)/mythtv/config.mak $(CURDIR)/mythplugins/mythconfig.mak
 
-	#Make sure python/perl scripts are executable
-	find debian/tmp/usr/share -name "*.p[y|l]" -type f -exec chmod 755 {} \;
+	#mythplugins
+	cd mythplugins && ./configure $(MYTHPLUGINS_CONFIGURE_OPTS) --sysroot=$(CURDIR)/debian/tmp
+	$(MAKE) -C mythplugins
+	for plugin in mytharchive \
+	mythgallery mythgame mythmusic mythmovies mythnews mythvideo \
+	mythweather mythzoneminder mythbrowser mythnetvision ; do \
+		$(MAKE) -C mythplugins/$$plugin install INSTALL_ROOT=$(CURDIR)/debian/$$plugin; \
+	done
 
-	#We replace these with shell scripts
+	#(MythTV) We replace these with shell scripts
 	mv debian/tmp/usr/bin/mythfrontend debian/tmp/usr/bin/mythfrontend.real
 	mv debian/tmp/usr/bin/mythtv-setup debian/tmp/usr/bin/mythtv-setup.real
+
+	#(All) Make sure python/perl scripts are executable
+	find debian/tmp/usr/share -name "*.p[y|l]" -type f -exec chmod 755 {} \;
 
 override_dh_installinit:
 	dh_installinit
 
-	#Remove license files
+	#(MythTV) Remove license files
 	find debian/tmp -name "COPYING" -delete
 	find debian/tmp -name "README.license" -delete
 
-	#Set correct permissions for png and html files
+	#(MythTV) Set correct permissions for png and html files
 	find debian/tmp -regex '.*\.png$$' -print0 | xargs -0 -r chmod 644
 	find debian/tmp -regex '.*\.html$$' -print0 | xargs -0 -r chmod 644
 
@@ -88,17 +106,15 @@ override_dh_compress:
 
 override_dh_fixperms:
 	dh_fixperms -X.pl -X.py
-	#On karmic we don't necessarily have scripts set executable (due to non-v3)
-	find debian -name "*.sh" -type f -exec chmod 755 {} \;
 
 override_dh_auto_clean:
 	dh_auto_clean
-	rm -f config.ep
-	rm -f config/*
 	debconf-updatepo
 
 override_dh_installdocs:
-	dh_installdocs
-	#Remove license files from contrib documentation.
+	#(MythTV) Remove license files from contrib documentation.
 	find debian/mythtv-backend/usr/share/doc/mythtv-backend/contrib \
 		-name "COPYING" -delete
+	#(MythPlugins)
+	rm -f debian/mythweb/usr/share/mythtv/mythweb/{INSTALL,LICENSE,README}
+	dh_installdocs

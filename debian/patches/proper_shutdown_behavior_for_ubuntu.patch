@@ -1,9 +1,9 @@
 ## Description: Fixes up the shutdown behavior so users can't break it
 ## Origin/Author: Mario Limonciello
-Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
+Index: mythtv-trunk/mythtv/programs/mythfrontend/exitprompt.cpp
 ===================================================================
---- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-08-29 17:22:36.000000000 -0500
-+++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-08-30 14:28:13.827122595 -0500
+--- mythtv-trunk~/mythtv/programs/mythfrontend/exitprompt.cpp	2010-08-29 17:22:36.000000000 -0500
++++ mythtv-trunk/mythtv/programs/mythfrontend/exitprompt.cpp	2010-08-30 14:28:13.827122595 -0500
 @@ -62,16 +62,7 @@
  
  void ExitPrompter::halt()

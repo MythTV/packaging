@@ -1,0 +1,61 @@
+Index: mythplugins-trunk/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
+===================================================================
+--- mythplugins-trunk~/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2010-08-28 15:16:22.000000000 -0500
++++ mythplugins-trunk/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2010-09-03 22:03:16.965118454 -0500
+@@ -18,7 +18,7 @@
+ #ifdef Q_WS_MACX
+     gc->setValue(QDir::homePath() + "/Pictures");
+ #else
+-    gc->setValue("/var/lib/pictures");
++    gc->setValue("/var/lib/mythtv/pictures");
+ #endif
+     gc->setHelpText(QObject::tr("This directory must exist and "
+                        "MythGallery needs to have read permission."));
+@@ -71,7 +71,7 @@
+ {
+     HostLineEdit *gc = new HostLineEdit("GalleryImportDirs");
+     gc->setLabel(QObject::tr("Paths to import images from"));
+-    gc->setValue("/mnt/cdrom:/mnt/camera");
++    gc->setValue("/media/cdrom:/media/usbdisk");
+     gc->setHelpText(QObject::tr("This is a colon separated list of paths. "
+                     "If the path in the list is a directory, its contents will "
+                     "be copied. If it is an executable, it will be run."));
+Index: mythplugins-trunk/mythplugins/mythmusic/mythmusic/globalsettings.cpp
+===================================================================
+--- mythplugins-trunk~/mythplugins/mythmusic/mythmusic/globalsettings.cpp	2010-05-12 23:18:15.000000000 -0500
++++ mythplugins-trunk/mythplugins/mythmusic/mythmusic/globalsettings.cpp	2010-09-03 22:03:16.965118454 -0500
+@@ -40,7 +40,7 @@
+ #ifdef Q_WS_MACX
+     gc->setValue(QDir::homePath() + "/Music");
+ #else
+-    gc->setValue("/mnt/store/music/");
++    gc->setValue("/var/lib/mythtv/music/");
+ #endif
+     gc->setHelpText(QObject::tr("This directory must exist, and the user "
+                     "running MythMusic needs to have write permission "
+Index: mythplugins-trunk/mythweb/mythweb.conf.apache
+===================================================================
+--- mythplugins-trunk~/mythplugins/mythweb/mythweb.conf.apache	2008-10-22 13:50:54.000000000 -0500
++++ mythplugins-trunk/mythplugins/mythweb/mythweb.conf.apache	2010-09-03 22:03:16.965118454 -0500
+@@ -29,7 +29,7 @@
+     <Directory "/var/www/html/data">
+         Options -All +FollowSymLinks +IncludesNoExec
+     </Directory>
+-    <Directory "/var/www/html" >
++    <Directory "/var/www/mythweb" >
+ 
+     ############################################################################
+     # I *strongly* urge you to turn on authentication for MythWeb.  It is disabled
+Index: mythplugins-trunk/mytharchive/mytharchive/archivesettings.cpp
+===================================================================
+--- mythplugins-trunk~/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2010-09-03 06:39:51.000000000 -0500
++++ mythplugins-trunk/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2010-09-03 22:03:41.974127280 -0500
+@@ -16,7 +16,7 @@
+ {
+     HostLineEdit *gc = new HostLineEdit("MythArchiveTempDir");
+     gc->setLabel(QObject::tr("MythArchive Temp Directory"));
+-    gc->setValue("");
++    gc->setValue("/var/lib/mytharchive/temp/");
+     gc->setHelpText(QObject::tr("Location where MythArchive should create its "
+             "temporory work files. LOTS of free space required here."));
+     return gc;

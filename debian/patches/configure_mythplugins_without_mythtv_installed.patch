@@ -1,0 +1,13 @@
+Index: mythtv-trunk-single-source/mythplugins/configure
+===================================================================
+--- mythtv-trunk-single-source.orig/mythplugins/configure	2010-09-22 19:20:22.390982035 -0500
++++ mythtv-trunk-single-source/mythplugins/configure	2010-09-22 19:23:27.107233471 -0500
+@@ -588,6 +588,8 @@
+ if [ -e $sysroot$prefix/include/mythtv/mythconfig.mak ] ; then
+   rm mythconfig.mak 2> /dev/null
+   ln -s $sysroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
++elif [ -f mythconfig.mak ]; then
++  echo "using mythconfig.mak that was pre-placed in this directory"
+ else
+   echo "ERROR: mythconfig.mak not found at $sysroot$prefix/include/mythtv/mythconfig.mak"
+   echo "Did you make AND install MythTV first?"

@@ -1,0 +1,12 @@
+Index: mythplugins-trunk/mythplugins/configure
+===================================================================
+--- mythplugins-trunk~/mythplugins/configure	2010-08-14 23:36:48.000000000 -0500
++++ mythplugins-trunk/mythplugins/configure	2010-08-26 10:15:34.873121203 -0500
+@@ -859,6 +859,7 @@
+ 
+ mkdir -p cleanup
+ cat << END_CLEANUP > cleanup/Makefile
++check:
+ all:
+ clean:
+ distclean:

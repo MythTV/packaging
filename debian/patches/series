@@ -1,4 +1,10 @@
+##mythtv##
 08_default_directory
 10_mythfilldatabase_log
 30_python26_ubuntu
 proper_shutdown_behavior_for_ubuntu.patch
+
+##mythplugins##
+01_directories
+configure_missing_check.patch
+configure_mythplugins_without_mythtv_installed.patch

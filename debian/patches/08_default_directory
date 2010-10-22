@@ -1,9 +1,9 @@
 Change location of default storage to somewhere in /var/lib.
 ==========================================================================
-Index: mythtv-trunk/libs/libmythdb/storagegroup.cpp
+Index: mythtv-trunk/mythtv/libs/libmythdb/storagegroup.cpp
 ===================================================================
---- mythtv-trunk.orig/libs/libmythdb/storagegroup.cpp	2010-09-01 22:43:12.261119260 -0500
-+++ mythtv-trunk/libs/libmythdb/storagegroup.cpp	2010-09-01 22:43:13.989118280 -0500
+--- mythtv-trunk~/mythtv/libs/libmythdb/storagegroup.cpp	2010-09-01 22:43:12.261119260 -0500
++++ mythtv-trunk/mythtv/libs/mythtv/libmythdb/storagegroup.cpp	2010-09-01 22:43:13.989118280 -0500
 @@ -14,7 +14,7 @@
  #define LOC_WARN QString("SG(%1) Warning: ").arg(m_groupname)
  #define LOC_ERR QString("SG(%1) Error: ").arg(m_groupname)
@@ -13,10 +13,10 @@ Index: mythtv-trunk/libs/libmythdb/storagegroup.cpp
  
  QMutex                 StorageGroup::m_staticInitLock;
  bool                   StorageGroup::m_staticInitDone = false;
-Index: mythtv-trunk/libs/libmythmetadata/globals.cpp
+Index: mythtv-trunk/mythtv/libs/libmythmetadata/globals.cpp
 ===================================================================
---- mythtv-trunk.orig/libs/libmythmetadata/globals.cpp	2010-09-01 22:43:20.945171566 -0500
-+++ mythtv-trunk/libs/libmythmetadata/globals.cpp	2010-09-01 22:43:46.416403238 -0500
+--- mythtv-trunk~/mythtv/libs/libmythmetadata/globals.cpp	2010-09-01 22:43:20.945171566 -0500
++++ mythtv-trunk/mythtv/libs/mythtv/libmythmetadata/globals.cpp	2010-09-01 22:43:46.416403238 -0500
 @@ -32,5 +32,5 @@
  #ifdef Q_WS_MACX
  const QString DEFAULT_VIDEOSTARTUP_DIR = QDir::homePath() + "/Movies";
