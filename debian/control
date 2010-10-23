@@ -178,8 +178,8 @@ Package: libmyth-0.24-0
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}, libqt4-sql-mysql, ${misc:Depends}
-Conflicts: mythtv (<< 0.7-5)
-Replaces: mythtv (<< 0.7-5)
+Conflicts: mythtv (<< 0.7-5), libmyth-0.23-0
+Replaces: mythtv (<< 0.7-5), libmyth-0.23-0
 Description: Common library code for MythTV and add-on modules (runtime)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
