@@ -114,9 +114,9 @@ override_dh_auto_clean:
 	debconf-updatepo
 
 override_dh_installdocs:
+	dh_installdocs
 	#(MythTV) Remove license files from contrib documentation.
 	find debian/mythtv-backend/usr/share/doc/mythtv-backend/contrib \
 		-name "COPYING" -delete
 	#(MythPlugins)
 	rm -f debian/mythweb/usr/share/mythtv/mythweb/{INSTALL,LICENSE,README}
-	dh_installdocs
