@@ -1,7 +1,7 @@
 Index: monsTer/mythplugins/configure
 ===================================================================
---- monsTer.orig/mythplugins/configure	2010-10-03 00:42:42.000000000 -0500
-+++ monsTer/mythplugins/configure	2010-10-22 23:12:59.106867002 -0500
+--- monsTer.orig/mythplugins/configure	2010-10-03 01:42:42.000000000 -0400
++++ monsTer/mythplugins/configure	2010-10-23 14:12:18.445521638 -0400
 @@ -347,6 +347,7 @@
  from distutils.sysconfig import get_python_lib
  import sys
@@ -19,15 +19,39 @@ Index: monsTer/mythplugins/configure
      check_py_lib pycurl  || disable_netvision "Python pycurl library (pycurl)"
      check_py_lib lxml    || disable_netvision "Python lxml library (lxml)"
      check_py_lib xml     || disable_netvision "Python XML library (xml)"
-@@ -587,7 +588,10 @@
+@@ -587,7 +588,8 @@
  # bring in mythtv config
  if [ -e $sysroot$prefix/include/mythtv/mythconfig.mak ] ; then
    rm mythconfig.mak 2> /dev/null
 -  ln -s $sysroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
 +  cp $sysroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
-+  sed -i -e "s,^SYSROOT\=.*,SYSROOT=$sysroot,g" \
-+	 -e "s,^LIBDIR\=,LIBDIR=$sysroot,g" \
-+         mythconfig.mak
++  sed -i -e "s,^SYSROOT\=.*,SYSROOT=$sysroot,g" mythconfig.mak
  else
    echo "ERROR: mythconfig.mak not found at $sysroot$prefix/include/mythtv/mythconfig.mak"
    echo "Did you make AND install MythTV first?"
+Index: monsTer/mythplugins/programs-libs.pro
+===================================================================
+--- monsTer.orig/mythplugins/programs-libs.pro	2010-10-23 14:10:34.613521639 -0400
++++ monsTer/mythplugins/programs-libs.pro	2010-10-23 17:29:55.837317001 -0400
+@@ -4,7 +4,7 @@
+ INCLUDEPATH += $${SYSROOT}$${PREFIX}/include/mythtv/libmyth
+ DEPENDPATH *= $${INCLUDEPATH}
+ 
+-LIBS += -L$${LIBDIR} $$EXTRA_LIBS -lmythdb-$$LIBVERSION
++LIBS += -L$${SYSROOT}$${LIBDIR} $$EXTRA_LIBS -lmythdb-$$LIBVERSION
+ LIBS += -lmyth-$$LIBVERSION -lmythui-$$LIBVERSION -lmythupnp-$$LIBVERSION
+ LIBS += -lmythavcodec
+ LIBS += -lmythavcore
+Index: monsTer/mythplugins/targetdep.pro
+===================================================================
+--- monsTer.orig/mythplugins/targetdep.pro	2010-10-23 14:10:28.289521638 -0400
++++ monsTer/mythplugins/targetdep.pro	2010-10-23 16:58:19.917317003 -0400
+@@ -10,7 +10,7 @@
+ MYTH_LIB_EXT  =$${LIBVERSION}.$${QMAKE_EXTENSION_LIB}
+ 
+ 
+-DEPLIBS = $${LIBDIR}
++DEPLIBS = $${SYSROOT}$${LIBDIR}
+ 
+ # On Windows, dlls were installed with exes:
+ mingw : DEPLIBS = $${PREFIX}/bin
