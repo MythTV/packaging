@@ -1,10 +1,10 @@
 ## Description: Fixes up the shutdown behavior so users can't break it
 ## Origin/Author: Mario Limonciello
 ## Upstream URL: http://svn.mythtv.org/trac/ticket/9102
-Index: mythtv-trunk/programs/mythfrontend/exitprompt.cpp
+Index: mythtv-trunk/mythtv/programs/mythfrontend/exitprompt.cpp
 ===================================================================
---- mythtv-trunk.orig/programs/mythfrontend/exitprompt.cpp	2010-10-18 09:20:27.962867001 -0500
-+++ mythtv-trunk/programs/mythfrontend/exitprompt.cpp	2010-10-18 09:21:16.762867001 -0500
+--- mythtv-trunk~/mythtv/programs/mythfrontend/exitprompt.cpp	2010-08-29 17:22:36.000000000 -0500
++++ mythtv-trunk/mythtv/programs/mythfrontend/exitprompt.cpp	2010-08-30 14:28:13.827122595 -0500
 @@ -12,6 +12,7 @@
  #include "mythmainwindow.h"
  #include "mythscreenstack.h"

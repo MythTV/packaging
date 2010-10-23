@@ -1,0 +1,43 @@
+#!/bin/sh
+
+set -e
+
+reload_apache()
+{
+    if apache2ctl configtest 2>/dev/null; then
+        invoke-rc.d apache2 force-reload || true
+    else
+        echo "Your apache2 configuration is broken, so we're not restarting it for you."
+    fi
+}
+
+case "$1" in
+    remove|purge)
+
+	#Disable site
+        if [ -e /etc/apache2/apache2.conf ]; then
+            a2dissite mythweb.conf >/dev/null || true
+            reload_apache
+        fi
+
+	#Remove links created during postinst
+	CLEANUP="/usr/share/mythtv/mythweb/data"
+	for item in `ls ${CLEANUP}`
+	do
+		rm -rf ${CLEANUP}/${item}
+	done
+    ;;
+
+    upgrade|abort-upgrade|abort-remove|abort-deconfigure)
+
+    ;;
+
+    *)
+        echo "prerm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

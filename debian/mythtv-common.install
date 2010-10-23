@@ -7,7 +7,7 @@ usr/share/mythtv/locales
 usr/share/mythtv/fonts/Tiresias*.ttf
 
 #Other bits that we are gonna copy in that aren't part of make install
-contrib/config_files/config.xml usr/share/mythtv
+mythtv/contrib/config_files/config.xml usr/share/mythtv
 
 #These are added in from debian/
 debian/dialog_functions.sh usr/share/mythtv

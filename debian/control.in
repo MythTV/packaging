@@ -197,12 +197,12 @@ Description: A personal video recorder application (client)
  For a complete installation of all MythTV components, install the 'mythtv'
  package.
 
-Package: libmyth-0.25-0
+Package: libmyth-0.24-0
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}, libqt4-sql-mysql, ${misc:Depends}
-Conflicts: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0
-Replaces: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0
+Conflicts: mythtv (<< 0.7-5), libmyth-0.23-0
+Replaces: mythtv (<< 0.7-5), libmyth-0.23-0
 Description: Common library code for MythTV and add-on modules (runtime)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -213,9 +213,9 @@ Description: Common library code for MythTV and add-on modules (runtime)
 Package: libmyth-dev
 Architecture: any
 Section: libdevel
-Depends: libmyth-0.25-0 (= ${binary:Version}), ${misc:Depends}
-Provides: libmyth-0.25-0-dev
-Conflicts: libmyth-0.25-dev
+Depends: libmyth-0.24-0 (= ${binary:Version}), ${misc:Depends}
+Provides: libmyth-0.24-0-dev
+Conflicts: libmyth-0.24-dev
 Description: Common library code for MythTV and add-on modules (development)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -424,7 +424,7 @@ Description: A Internet Video Player plugin for MythTV
 
 Package: mythtv-themes
 Architecture: all
-Depends: mythtv-theme-arclight, mythtv-theme-childish, mythtv-theme-graphite, mythtv-theme-metallurgy, mythtv-theme-mythbuntu, ${misc:Depends}
+Depends: #THEMES#, ${misc:Depends}
 Conflicts: mythtv-theme-blootube, 
            mythtv-theme-blootube-wide,
            mythtv-theme-blootubelite-wide,
@@ -440,39 +440,4 @@ Description: Themes for MythTV
  This package is a metapackage to pull in all of the supported themes
  that are available on svn.mythtv.org not directly in the MythTV
  package itself, nor the mythtv-themes-extra metapackage.
-
-Package: mythtv-theme-arclight
-Architecture: all
-Depends: mythtv-common, ttf-dejavu, ${misc:Depends}
-Replaces: mythtv-common (<< 1:0.22.0~zrc1-0ubuntu1)
-Description: The arclight MythTV Theme
- This package provides the arclight theme for MythTV.
-
-Package: mythtv-theme-childish
-Architecture: all
-Depends: mythtv-common, ttf-dejavu, ${misc:Depends}
-Replaces: mythtv-common (<< 1:0.22.0~zrc1-0ubuntu1)
-Description: The childish MythTV Theme
- This package provides the childish theme for MythTV.
-
-Package: mythtv-theme-graphite
-Architecture: all
-Depends: mythtv-common, ttf-dejavu, ${misc:Depends}
-Replaces: mythtv-common (<< 1:0.22.0~zrc1-0ubuntu1)
-Description: The graphite MythTV Theme
- This package provides the graphite theme for MythTV.
-
-Package: mythtv-theme-metallurgy
-Architecture: all
-Depends: mythtv-common, ttf-dejavu, ${misc:Depends}
-Replaces: mythtv-common (<< 1:0.22.0~zrc1-0ubuntu1)
-Description: The metallurgy MythTV Theme
- This package provides the metallurgy theme for MythTV.
-
-Package: mythtv-theme-mythbuntu
-Architecture: all
-Depends: mythtv-common, ttf-dejavu, ${misc:Depends}
-Replaces: mythtv-common (<< 1:0.22.0~zrc1-0ubuntu1)
-Description: The mythbuntu MythTV Theme
- This package provides the mythbuntu theme for MythTV.
 
