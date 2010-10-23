@@ -8,6 +8,7 @@ SVN_MAJOR_RELEASE+=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *.
 SVN_MINOR_RELEASE+=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *.....(.*)...........-.*/\1/p')
 SVN_REVISION:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *............(.*)-.*/\1/p')
 DELIMITTER+=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *......(.*)..........-.*/\1/p')
+THEMES=$(shell ls myththemes --full-time -l | grep '^d' | awk '{ print $$9 }' )
 
 ifeq "$(SVN_TYPE)" "trunk"
 	SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)
@@ -40,4 +41,13 @@ info:
 
 newest-revision:
 	svn info $(SVN_BRANCH) | grep "Last Changed Rev" | awk '{ print $$4 }'
+
+update-control-files:
+	rm -f debian/control debian/mythtv-theme*.install
+	sed s/#THEMES#/$(shell echo $(THEMES) | tr '[A-Z]' '[a-z]' | sed s/^/mythtv-theme-/ | sed s/\ /,\\\\\ mythtv-theme-/g)/ \
+	   debian/control.in > debian/control
+	$(foreach theme,$(THEMES),\
+	   echo "myththemes/$(theme) usr/share/mythtv/themes" > debian/mythtv-theme-$(shell echo $(theme) | tr '[A-Z]' '[a-z]').install; \
+	   cat debian/theme.stub | sed s/#THEME#/$(shell echo $(theme) | tr '[A-Z]' '[a-z]')/ >> debian/control; \
+ 	 )
 

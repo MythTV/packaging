@@ -106,6 +106,10 @@ override_dh_compress:
 
 override_dh_fixperms:
 	dh_fixperms -X.pl -X.py
+	#themes shouldn't be like this
+	for type in png html txt jpg xml ; do \
+		find debian -name "*.$$type" -type f -exec chmod -x {} \; ;\
+	done
 
 override_dh_auto_clean:
 	[ -f mythtv/config.mak ] && $(MAKE) -C mythtv distclean || true
