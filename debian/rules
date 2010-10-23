@@ -65,9 +65,6 @@ override_dh_auto_configure:
 	$(MAKE) -C mythtv
 	$(MAKE) -C mythtv install INSTALL_ROOT=$(CURDIR)/debian/tmp
 
-	#make mythplugins think mythtv is already installed with these settings
-	ln -sf $(CURDIR)/mythtv/config.mak $(CURDIR)/mythplugins/mythconfig.mak
-
 	#mythplugins
 	cd mythplugins && ./configure $(MYTHPLUGINS_CONFIGURE_OPTS) --sysroot=$(CURDIR)/debian/tmp
 	$(MAKE) -C mythplugins

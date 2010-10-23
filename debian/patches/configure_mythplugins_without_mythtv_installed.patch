@@ -1,13 +1,33 @@
-Index: mythtv-trunk-single-source/mythplugins/configure
+Index: monsTer/mythplugins/configure
 ===================================================================
---- mythtv-trunk-single-source.orig/mythplugins/configure	2010-09-22 19:20:22.390982035 -0500
-+++ mythtv-trunk-single-source/mythplugins/configure	2010-09-22 19:23:27.107233471 -0500
-@@ -588,6 +588,8 @@
+--- monsTer.orig/mythplugins/configure	2010-10-03 00:42:42.000000000 -0500
++++ monsTer/mythplugins/configure	2010-10-22 23:12:59.106867002 -0500
+@@ -347,6 +347,7 @@
+ from distutils.sysconfig import get_python_lib
+ import sys
+ sys.path.append(get_python_lib(prefix='${prefix}'))
++#sys.path.append('debian/libmyth-python/usr/lib/python2.6/dist-packages')
+ try:
+     import ${1}
+ except:
+@@ -431,7 +432,7 @@
+         disable netvision
+     }
+ 
+-    check_py_lib MythTV  || disable_netvision "MythTV Python bindings (MythTV)"
++    #check_py_lib MythTV  || disable_netvision "MythTV Python bindings (MythTV)"
+     check_py_lib pycurl  || disable_netvision "Python pycurl library (pycurl)"
+     check_py_lib lxml    || disable_netvision "Python lxml library (lxml)"
+     check_py_lib xml     || disable_netvision "Python XML library (xml)"
+@@ -587,7 +588,10 @@
+ # bring in mythtv config
  if [ -e $sysroot$prefix/include/mythtv/mythconfig.mak ] ; then
    rm mythconfig.mak 2> /dev/null
-   ln -s $sysroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
-+elif [ -f mythconfig.mak ]; then
-+  echo "using mythconfig.mak that was pre-placed in this directory"
+-  ln -s $sysroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
++  cp $sysroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
++  sed -i -e "s,^SYSROOT\=.*,SYSROOT=$sysroot,g" \
++	 -e "s,^LIBDIR\=,LIBDIR=$sysroot,g" \
++         mythconfig.mak
  else
    echo "ERROR: mythconfig.mak not found at $sysroot$prefix/include/mythtv/mythconfig.mak"
    echo "Did you make AND install MythTV first?"
