@@ -1,0 +1,5 @@
+var/cache/mythweb/image_cache
+var/www
+etc/mythtv
+usr/share/mythtv
+etc/apache2/sites-available

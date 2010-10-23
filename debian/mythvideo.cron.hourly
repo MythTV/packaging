@@ -1,0 +1,7 @@
+#!/bin/sh
+#Hourly massive update to ensure users see graphics coming in for upcoming recordings and current recordings
+DIRECTORY=$(getent passwd mythtv | cut -d':' -f6)
+if [ -f "$DIRECTORY/.mythtv/config.xml" ] && [ -x /usr/bin/mythbackend ]; then
+    su mythtv -c "/usr/bin/python /usr/share/mythtv/mythvideo/scripts/jamu.py -MW >> '/var/log/mythtv/jamu.log' 2>&1"
+fi
+
