@@ -67,7 +67,7 @@ override_dh_auto_install:
 	mv debian/tmp/usr/bin/mythtv-setup debian/tmp/usr/bin/mythtv-setup.real
 
 override_dh_install:
-	dh_install -Xusr/share/mythtv/fonts/Free --fail-missing
+	dh_install -Xusr/share/mythtv/fonts/Free -Xusr/share/mythtv/fonts/tiresias_gpl3.txt --fail-missing
 
 override_dh_installinit:
 	dh_installinit
