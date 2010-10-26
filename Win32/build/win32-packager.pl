@@ -450,10 +450,10 @@ push @{$expect},
 # of the MSYS post-install, but doesnt always work.
 [ always  => '',
   shell   => ['rm -f mingw-is-good',
-              '[ -d /mingw/bin ] && touch mingw-is-good',
+              '[ -d /mingw/bin ] && touch mingw-is-good'],
   comment => 'Looking for /mingw mountpoint' ],
 
-[ file    => $sources.'mingw-is-good',
+[ file    => 'mingw-is-good',
   exit    => 'There is no /mingw mount point under MSYS.
 Maybe the MSYS post-install failed?
 
