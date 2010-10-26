@@ -265,6 +265,7 @@ my $unixqt4dir = perl2unix($qt4dir);
 #  write a small patch/config/script file directly to disk           [write]
 #  make directory tree upto the path specified                       [mkdirs]
 #  copy a new version of a file, set mtime to the original           [copy]
+#  tell the user there is something we can't fix, then exit          [exit]
 
 #TODO:
 #  copy a set of files (path/filespec,  destination)               not-yet-impl
@@ -447,11 +448,18 @@ push @{$expect},
 # make sure that /mingw is mounted in MSYS properly before trying
 # to use the /mingw folder.  this is supposed to happen as part
 # of the MSYS post-install, but doesnt always work.
-[ file    => $msys.'etc/fstab',
-  write   => [$msys.'etc/fstab',
-"$mingw /mingw
-" ],
-  comment => 'correct a MinGW bug that prevents the /etc/fstab from existing'],
+[ always  => '',
+  shell   => ['rm -f mingw-is-good',
+              '[ -d /mingw/bin ] && touch mingw-is-good',
+  comment => 'Looking for /mingw mountpoint' ],
+
+[ file    => $sources.'mingw-is-good',
+  exit    => 'There is no /mingw mount point under MSYS.
+Maybe the MSYS post-install failed?
+
+Please create/edit C:\MSYS\1.0\etc\fstab and add a line like:
+
+C:/MinGW	/mingw'],
 
 #
 # TIP: we use a special file (with two extra _'s )
@@ -1864,10 +1872,10 @@ sub effect {
                 # strip off everything after the final forward slash
                 $destdir =~ s#[^/]*$##;
             }
-        my $t = findtar($tarfile);
-        print "found equivalent: ($t) -> ($tarfile)\n" if $t ne $tarfile;
-        print "extracttar($t,$destdir);\n";
-        extracttar($t,$destdir);
+            my $t = findtar($tarfile);
+            print "found equivalent: ($t) -> ($tarfile)\n" if $t ne $tarfile;
+            print "extracttar($t,$destdir);\n";
+            extracttar($t,$destdir);
 
         } elsif ($effecttype eq 'exec') { # execute a DOS command
             my $cmd = shift @effectparams;
@@ -1901,6 +1909,11 @@ sub effect {
             $fh->binmode();
             $fh->print(join('',@effectparams));
             $fh->close();
+
+        } elsif ($effecttype eq 'exit') {
+            print "\n---------------------------------------\n";
+            print "@effectparams\n";
+            exit;
 
         } else {
             die " unknown effecttype $effecttype from cause 'dir'\n";
