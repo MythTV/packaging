@@ -44,7 +44,10 @@ mythtv (0.24.0~trunk26811-0ubuntu1) UNRELEASED; urgency=low
   * Moved backup and restore scripts from mythtv-database to mythtv-common
   * Added Replaces for mythtv-common (LP: 622983)
 
- -- Thomas Mashos <tgm4883@gmail.com>  Wed, 23 Jun 2010 21:28:44 -0700
+  [ John Baab ]
+  * Fixed missing log folder for frontend only install (LP: #642992)
+
+ -- John Baab <rhpot1991@ubuntu.com>  Thu, 28 Oct 2010 00:08:40 -0400
 
 mythtv (0.23.1+fixes25842-0ubuntu3) UNRELEASED; urgency=low
 
