@@ -1,5 +1,4 @@
 usr/share/doc/mythtv-backend
-var/log/mythtv
 var/cache/mythtv
 var/lib/mythtv/recordings 
 var/lib/mythtv/videos
