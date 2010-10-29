@@ -3,11 +3,11 @@
 #                 #
 # get-orig-source #
 #                 #
-SVN_TYPE+=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *.......(.*).....-.*/\1/p')
-SVN_MAJOR_RELEASE+=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *..(.*).............-.*/\1/p')
-SVN_MINOR_RELEASE+=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *.....(.*)...........-.*/\1/p')
+SVN_TYPE:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *.......(.*).....-.*/\1/p')
+SVN_MAJOR_RELEASE:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *..(.*).............-.*/\1/p')
+SVN_MINOR_RELEASE:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *.....(.*)...........-.*/\1/p')
 SVN_REVISION:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *............(.*)-.*/\1/p')
-DELIMITTER+=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *......(.*)..........-.*/\1/p')
+DELIMITTER:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *......(.*)..........-.*/\1/p')
 THEMES=$(shell ls myththemes --full-time -l | grep '^d' | awk '{ print $$9 }' )
 
 ifeq "$(SVN_TYPE)" "trunk"
