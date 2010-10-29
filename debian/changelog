@@ -32,6 +32,7 @@ mythtv (0.25.0~trunk26957-0ubuntu1) UNRELEASED; urgency=low
   * Conflicts/Replaces on old libmyth package (LP: #665402)
   * Add new Tieresias fonts to mythtv-common.
   * Merge mythtv/mythplugins/myththemes source packages into one.
+  * Add a new get-svn-source rule to use with mythbuntu-weekly-build.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
