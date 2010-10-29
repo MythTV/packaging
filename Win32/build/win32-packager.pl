@@ -105,6 +105,11 @@ if (defined $opt{c}) {
 if (defined $opt{b}) {
     my @num = split /\./, $version;
     $svnlocation = "branches/release-$num[0]-$num[1]-fixes";
+    # 
+    # Releases like 0.23.1 are actually tags, and use a different location: 
+    #if ($version =~ m/-\d$/) { 
+    #    $svnlocation = "tags/release-$num[0]-$num[1]-$num[2]"; 
+    #}
 } else {
     $svnlocation = "trunk";
 }
