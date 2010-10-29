@@ -20,6 +20,18 @@ SVN_RELEASE=0.$(SVN_MAJOR_RELEASE).$(SVN_MINOR_RELEASE)
 SUFFIX+="$(DELIMITTER)$(SVN_TYPE)$(SVN_REVISION)"
 TARFILE+=mythtv_$(SVN_RELEASE)$(SUFFIX).orig.tar.gz
 
+get-svn-source:
+	for package in mythtv mythplugins myththemes; do \
+		if [ -d $$package ]; then \
+			cd $$package; \
+			svn update --revision $(SVN_REVISION); \
+			cd ..; \
+		else \
+			svn co -r $(SVN_REVISION) $(SVN_BRANCH)/$$package $$package; \
+		fi \
+	done
+	tar czf $(CURDIR)/../$(TARFILE) * --exclude .svn --exclude .bzr --exclude debian
+
 get-orig-source:
 	mkdir -p $(CURDIR)/tmp
 	svn export -r $(SVN_REVISION) $(SVN_BRANCH)/mythtv tmp/mythtv
