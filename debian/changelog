@@ -33,6 +33,7 @@ mythtv (0.25.0~trunk27061-0ubuntu1) UNRELEASED; urgency=low
   * Add new Tieresias fonts to mythtv-common.
   * Merge mythtv/mythplugins/myththemes source packages into one.
   * Add a new get-svn-source rule to use with mythbuntu-weekly-build.
+  * In the update-control-files rule, update the ABI as well.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
