@@ -32,6 +32,7 @@ mythtv (0.24.0+fixes26957-0ubuntu1) UNRELEASED; urgency=low
   * Conflicts/Replaces on old libmyth package (LP: #665402)
   * Merge mythtv/mythplugins/myththemes source packages into one.
   * Add a new get-svn-source rule to use with mythbuntu-weekly-build.
+  * In the update-control-files rule, update the ABI as well.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of

@@ -20,6 +20,11 @@ SVN_RELEASE=0.$(SVN_MAJOR_RELEASE).$(SVN_MINOR_RELEASE)
 SUFFIX+="$(DELIMITTER)$(SVN_TYPE)$(SVN_REVISION)"
 TARFILE+=mythtv_$(SVN_RELEASE)$(SUFFIX).orig.tar.gz
 
+ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/settings.pro)
+
+get-abi:
+	echo ABI: $(ABI)
+
 get-svn-source:
 	for package in mythtv mythplugins myththemes; do \
 		if [ -d $$package ]; then \
@@ -58,6 +63,7 @@ update-control-files:
 	rm -f debian/control debian/mythtv-theme*.install
 	sed s/#THEMES#/$(shell echo $(THEMES) | tr '[A-Z]' '[a-z]' | sed s/^/mythtv-theme-/ | sed s/\ /,\\\\\ mythtv-theme-/g)/ \
 	   debian/control.in > debian/control
+	sed -i s/#ABI#/$(ABI)/ debian/control
 	$(foreach theme,$(THEMES),\
 	   echo "myththemes/$(theme) usr/share/mythtv/themes" > debian/mythtv-theme-$(shell echo $(theme) | tr '[A-Z]' '[a-z]').install; \
 	   cat debian/theme.stub | sed s/#THEME#/$(shell echo $(theme) | tr '[A-Z]' '[a-z]')/ >> debian/control; \
