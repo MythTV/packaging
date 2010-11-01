@@ -1,10 +1,10 @@
-mythtv (0.25.0~trunk26957-0ubuntu1) UNRELEASED; urgency=low
+mythtv (0.25.0~trunk27061-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * Drop 36_setgroups.  Been merged upstream.
   * Add upstart script into the packaging.  It's been dropped upstream.
     ref svn 24280 upstream.
-  * Bump version to 0.25 trunk r26957
+  * Bump version to 0.25 trunk r27061
   * Refresh patches due to upstream changes:
     * Mythfilldatabase logging
     * Force dbus reboot/halt.
