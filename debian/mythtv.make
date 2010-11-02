@@ -64,6 +64,7 @@ update-control-files:
 	sed s/#THEMES#/$(shell echo $(THEMES) | tr '[A-Z]' '[a-z]' | sed s/^/mythtv-theme-/ | sed s/\ /,\\\\\ mythtv-theme-/g)/ \
 	   debian/control.in > debian/control
 	sed -i s/#ABI#/$(ABI)/ debian/control
+	cp debian/libmyth.install.in debian/libmyth-$(ABI)-0.install
 	$(foreach theme,$(THEMES),\
 	   echo "myththemes/$(theme) usr/share/mythtv/themes" > debian/mythtv-theme-$(shell echo $(theme) | tr '[A-Z]' '[a-z]').install; \
 	   cat debian/theme.stub | sed s/#THEME#/$(shell echo $(theme) | tr '[A-Z]' '[a-z]')/ >> debian/control; \
