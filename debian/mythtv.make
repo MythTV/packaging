@@ -20,7 +20,7 @@ SVN_RELEASE=0.$(SVN_MAJOR_RELEASE).$(SVN_MINOR_RELEASE)
 SUFFIX+="$(DELIMITTER)$(SVN_TYPE)$(SVN_REVISION)"
 TARFILE+=mythtv_$(SVN_RELEASE)$(SUFFIX).orig.tar.gz
 
-ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/settings.pro)
+ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/settings.pro 2>/dev/null || echo 0.$(SVN_MAJOR_RELEASE))
 
 get-abi:
 	echo ABI: $(ABI)
