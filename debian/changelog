@@ -35,6 +35,7 @@ mythtv (1:0.25.0~trunk27061-0ubuntu1) UNRELEASED; urgency=low
   * Add a new get-svn-source rule to use with mythbuntu-weekly-build.
   * In the update-control-files rule, update the ABI as well.
   * Conflicts/Replaces for no longer used mythplugins-dbg package.
+  * Drop mythvideo readme file.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
