@@ -34,6 +34,7 @@ mythtv (1:0.24.0+fixes26957-0ubuntu1) UNRELEASED; urgency=low
   * Add a new get-svn-source rule to use with mythbuntu-weekly-build.
   * In the update-control-files rule, update the ABI as well.
   * Conflicts/Replaces for no longer used mythplugins-dbg package.
+  * Drop references to mythplugins-dbg in the apport rules.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
