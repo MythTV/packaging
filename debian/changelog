@@ -35,6 +35,7 @@ mythtv (1:0.24.0+fixes26957-0ubuntu1) UNRELEASED; urgency=low
   * In the update-control-files rule, update the ABI as well.
   * Conflicts/Replaces for no longer used mythplugins-dbg package.
   * Drop references to mythplugins-dbg in the apport rules.
+  * Fix the installation of mythmusic. (LP: #672045)
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
