@@ -55,6 +55,62 @@ mythtv (1:0.25.0~trunk27061-0ubuntu1) UNRELEASED; urgency=low
 
  -- John Baab <rhpot1991@ubuntu.com>  Thu, 28 Oct 2010 00:08:40 -0400
 
+mythtv (1:0.24.0+fixes26957-0ubuntu1) UNRELEASED; urgency=low
+
+  [ Mario Limonciello ]
+  * Drop 36_setgroups.  Been merged upstream.
+  * Add upstart script into the packaging.  It's been dropped upstream.
+    ref svn 24280 upstream.
+  * Bump version to 0.24 fixes r26957
+  * Refresh patches due to upstream changes:
+    * Mythfilldatabase logging
+    * Force dbus reboot/halt.
+    * Default directories.
+    * Python 2.6
+    * proper shutdown behavior for ubuntu.
+  * Drop 40_libudev.  Merged upstream.
+  * Drop 09_perl_bindings_prefix.  Merged upstream.
+  * debian/rules: cleanup deprecated configure options.
+  * Install mythpreviewgen into mythtv-frontend (LP: #616083)
+  * Remove faad support, no longer listed in configure, fixes FTBFS.
+  * remove circular dependency.
+  * Reduce zealousness in files cleaned in clean rule.
+  * Remove qmake invocation.
+  * Add depends on python-mysqldb
+  * Install metadata to /usr/share/mythtv so it can be used by MNV.
+    (LP: #624064)
+  * Add a --list-missing option to make sure that all packaged files
+    get installed, and the build fails otherwise.
+  * Correct the missing locales and fonts.
+  * Install python and perl directly into their appropriate directories.
+  * Remove dummy libmyth-perl package.
+  * Modify ubuntu shutdown behavior patch to only use dbus if commands fail.
+  * Update shutdown patch for upstream recommendations.
+  * Conflicts/Replaces on old libmyth package (LP: #665402)
+  * Merge mythtv/mythplugins/myththemes source packages into one.
+  * Add a new get-svn-source rule to use with mythbuntu-weekly-build.
+  * In the update-control-files rule, update the ABI as well.
+  * Conflicts/Replaces for no longer used mythplugins-dbg package.
+  * Drop references to mythplugins-dbg in the apport rules.
+  * Fix the installation of mythmusic. (LP: #672045)
+
+  [ Gerald Barker ]
+  * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of
+    mythbackend install so they can be requeted by MythNetvision
+
+  [ Thomas Mashos ]
+  * Added missingok for mirobridge log in logrotate (LP: #581283)
+  * Updated perl bindings patch for upstream changes (LP: #586293)
+  * Added libqt4-webkit-dev dependency to satisify maverick FTBFS
+  * Added new python and perl dependencies
+  * Moved backup and restore scripts from mythtv-database to mythtv-common
+  * Added Replaces for mythtv-common (LP: 622983)
+
+  [ John Baab ]
+  * Fixed missing log folder for frontend only install (LP: #642992)
+
+ -- John Baab <rhpot1991@ubuntu.com>  Thu, 28 Oct 2010 00:08:40 -0400
+
 mythtv (0.23.1+fixes26437-0ubuntu1) maverick; urgency=low
 
   * New snapshot, 26437.
