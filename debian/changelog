@@ -1,4 +1,4 @@
-mythtv (1:0.24.0+fixes27162-0ubuntu1) UNRELEASED; urgency=low
+mythtv (1:0.24.0+fixes27162-0ubuntu1) natty; urgency=low
 
   [ Mario Limonciello ]
   * Drop 36_setgroups.  Been merged upstream.
@@ -53,7 +53,7 @@ mythtv (1:0.24.0+fixes27162-0ubuntu1) UNRELEASED; urgency=low
   [ John Baab ]
   * Fixed missing log folder for frontend only install (LP: #642992)
 
- -- John Baab <rhpot1991@ubuntu.com>  Thu, 28 Oct 2010 00:08:40 -0400
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 11 Nov 2010 11:51:35 -0600
 
 mythtv (0.23.1+fixes26437-0ubuntu1) maverick; urgency=low
 
