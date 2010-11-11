@@ -9,4 +9,7 @@ stop on starting shutdown
 #expect fork
 respawn
 
-exec /usr/bin/mythbackend --logfile /var/log/mythtv/mythbackend.log --user mythtv
+script
+	test -f /etc/default/locale && . /etc/default/locale || true
+	LANG=$LANG /usr/bin/mythbackend --logfile /var/log/mythtv/mythbackend.log --user mythtv
+end script
