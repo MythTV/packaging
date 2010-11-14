@@ -146,7 +146,7 @@ Description: A personal video recorder application (database)
 
 Package: mythtv-backend
 Architecture: any
-Depends: mythtv-common, mythtv-transcode-utils, ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, libmythtv-perl, xterm, ${misc:Depends}
+Depends: mythtv-common, mythtv-transcode-utils, ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, libmythtv-perl, xterm, python, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
 Recommends: ntp | time-daemon | ntp-simple, logrotate
@@ -268,8 +268,6 @@ Section: debug
 Priority: extra
 Recommends: libc6-dbg
 Depends: ${misc:Depends}, mythtv-backend (=${binary:Version}) | mythtv-frontend (=${binary:Version})
-Conflicts: mythplugins-dbg
-Replaces: mythplugins-dbg
 Description: Debug symbols for mythtv packages
  This package provides all debug symbols for mythtv packages since ddebs
  don't appear to always do the right thing.
@@ -293,8 +291,7 @@ Description: Wrapper package for MythTV plugins
 
 Package: mythgallery
 Architecture: any
-Depends: mythtv-common (>= 0.20-0.0), mythtv-frontend (>= 0.20-0.0), ${shlibs:Depends}, ${misc:Depends}
-Replaces: mythtv-common
+Depends: mythtv-frontend (>= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Image gallery/slideshow add-on module for MythTV
  MythGallery allows you to visually browse a directory tree containing image
  files. It can display any image file format supported by Qt, and supports
@@ -302,16 +299,14 @@ Description: Image gallery/slideshow add-on module for MythTV
 
 Package: mythgame
 Architecture: any
-Section: multiverse/games
-Depends: mythtv-common (>= 0.20-0.0), mythtv-frontend (>= 0.20-0.0), ${shlibs:Depends}, ${misc:Depends}
+Depends: mythtv-frontend (>= ${binary:Version}), python, ${shlibs:Depends}, ${misc:Depends}
 Description: Emulator & PC Game frontend module for MythTV
  MythGame can be used as a frontend to start any emulator that your host OS
  runs.
 
 Package: mythmusic
 Architecture: any
-Depends: mythtv-common (>= 0.20-0.0), mythtv-frontend (>= 0.20-0.0), ${shlibs:Depends}, ${misc:Depends}
-Replaces: mythtv-common
+Depends: mythtv-frontend (>= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Music add-on module for MythTV
  MythMusic provides a digital audio jukebox integrated with MythTV. It
  supports Ogg Vorbis, FLAC and MP3 streams, displays visualizations, and can
@@ -320,14 +315,13 @@ Description: Music add-on module for MythTV
 
 Package: mythnews
 Architecture: any
-Depends: mythtv-common (>= 0.20-0.0), mythtv-frontend (>= 0.20-0.0), ${shlibs:Depends}, ${misc:Depends}
-Replaces: mythtv-common
+Depends: mythtv-frontend (>= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: An RSS feed news reader module for MythTV
- An RSS feed news reader module for MythTV
+ MythNews will fetch RSS feeds for you to read.
 
 Package: mythvideo
 Architecture: any
-Depends: mythtv-common (>= 0.20-0.0), mythtv-frontend (>= 0.20-0.0), libxml-simple-perl, libwww-perl, libmyth-python, transcode, python-imdbpy, ${shlibs:Depends}, ${misc:Depends}
+Depends: mythtv-frontend (>= ${binary:Version}), libxml-simple-perl, libwww-perl, libmyth-python, transcode, python, python-imdbpy, ${shlibs:Depends}, ${misc:Depends}
 Replaces: mythdvd, mythtv-common (<< 0.20.99+trunk15258-0ubuntu0~mythbuntu1 )
 Conflicts: mythdvd, mythtv-common (<< 0.20.99+trunk15258-0ubuntu0~mythbuntu1 )
 Provides: mythdvd
@@ -341,8 +335,7 @@ Description: A generic video player frontend module for MythTV
 
 Package: mythweather
 Architecture: any
-Depends: mythtv-common (>= 0.20-0.0), 
-         mythtv-frontend (>= 0.20-0.0), 
+Depends: mythtv-frontend (>= ${binary:Version}), 
          ${shlibs:Depends}, 
          ${misc:Depends}, 
          perl, 
@@ -365,7 +358,7 @@ Description: Weather add-on module for MythTV
 
 Package: mythweb
 Architecture: all
-Depends: mythtv-common (>= 0.20-0.0), apache2-mpm-prefork | httpd, php5 | libapache2-mod-php5, php5-mysql, ${misc:Depends}
+Depends: mythtv-common (>= ${binary:Version}), apache2-mpm-prefork | httpd, php5 | libapache2-mod-php5, php5-mysql, ${misc:Depends}
 Recommends: libmath-round-perl
 Description: Web interface add-on module for MythTV
  MythWeb provides a web interface which can be used to view listings,
@@ -375,7 +368,7 @@ Description: Web interface add-on module for MythTV
 
 Package: mytharchive
 Architecture: any
-Depends: mythtv-transcode-utils, mythtv-common (>= 0.20-0.0), mjpegtools, ffmpeg, dvdauthor, genisoimage, dvd+rw-tools, python-imaging, python-mysqldb, ${misc:Depends}
+Depends: mythtv-transcode-utils, mythtv-frontend (>= ${binary:Version}), mjpegtools, ffmpeg, dvdauthor, genisoimage, dvd+rw-tools, python, python-imaging, python-mysqldb, ${misc:Depends}
 Suggests: transcode, project-x
 Replaces: mytharchive-data
 Conflicts: mytharchive-data
@@ -393,7 +386,7 @@ Description: create and burn DVD's from MythTV - binary file
 Package: mythzoneminder
 Architecture: any
 Suggests: zoneminder
-Depends: ${misc:Depends}
+Depends: mythtv-frontend, ${misc:Depends}
 Description: view status and display footage recorded with zoneminder
  MythZoneMinder interfaces with Zoneminder, a CCTV solution.
  You can view the status of ZoneMinder and watch live camera shots and
@@ -403,13 +396,13 @@ Description: view status and display footage recorded with zoneminder
 
 Package: mythbrowser
 Architecture: any
-Depends: mythtv-common (>= 0.20-0.0), mythtv-frontend (>= 0.20-0.0), ${shlibs:Depends}, ${misc:Depends}
+Depends: mythtv-frontend (>= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: A web browser for MythTV
  A web browser for MythTV
 
 Package: mythnetvision
 Architecture: any
-Depends: mythtv-common (>= 0.20-0.0), mythtv-frontend (>= 0.20-0.0), ${shlibs:Depends}, ${misc:Depends}, mythbrowser (>= 0.22), libmyth-python (>= 0.22.0~trunk23213-0ubuntu0), python-feedparser, python-pycurl
+Depends: mythtv-frontend (>= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}, mythbrowser (>= 0.22), libmyth-python (>= 0.22.0~trunk23213-0ubuntu0), python-feedparser, python-pycurl
 Recommends: flashplugin-installer | adobe-flashplugin
 Description: A Internet Video Player plugin for MythTV
  MythNetvision is a plugin designed to make adding Internet video sources to MythTV fun and easy.
