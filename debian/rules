@@ -33,9 +33,6 @@ DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq "$(DEB_BUILD_ARCH)" "i386"
 	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --disable-xvmc  --enable-vdpau
 endif
-ifeq "$(DEB_BUILD_ARCH)" "sparc"
-	MYTHTV_CONFIGURE_OPTS += --disable-xvmc --extra-cflags="-mcpu=ultrasparc -mvis"
-endif
 ifeq "$(DEB_BUILD_ARCH)" "amd64"
 	MYTHTV_CONFIGURE_OPTS += --disable-xvmc --enable-vdpau
 endif

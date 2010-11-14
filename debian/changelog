@@ -9,6 +9,7 @@ mythtv (1:0.24.0+fixes27162-0ubuntu2) UNRELEASED; urgency=low
     version.
   * Disable XvMC as it's causing crashes.  VDPAU is better off in these situations
     anyhow (LP: #660833)
+  * Remove sparc support.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 11 Nov 2010 14:55:57 -0600
 
