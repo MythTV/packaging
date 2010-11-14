@@ -1,7 +1,7 @@
 Index: mythtv-fixes/mythplugins/configure
 ===================================================================
 --- mythtv-fixes.orig/mythplugins/configure	2010-11-13 23:10:35.000000000 -0600
-+++ mythtv-fixes/mythplugins/configure	2010-11-13 23:20:27.000000000 -0600
++++ mythtv-fixes/mythplugins/configure	2010-11-14 10:17:34.000000000 -0600
 @@ -126,6 +126,7 @@
  prefix="/usr/local"
  libdir_name="lib"
@@ -45,19 +45,19 @@ Index: mythtv-fixes/mythplugins/configure
      check_py_lib pycurl  || disable_netvision "Python pycurl library (pycurl)"
      check_py_lib lxml    || disable_netvision "Python lxml library (lxml)"
      check_py_lib xml     || disable_netvision "Python XML library (xml)"
-@@ -585,9 +589,10 @@
+@@ -585,7 +589,11 @@
  ###########################################################
  
  # bring in mythtv config
 -if [ -e $sysroot$prefix/include/mythtv/mythconfig.mak ] ; then
 +if [ -e $mythroot$prefix/include/mythtv/mythconfig.mak ] ; then
-   rm mythconfig.mak 2> /dev/null
--  ln -s $sysroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
++  rm mythconfig.mak 2> /dev/null
 +  cp $mythroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
 +  sed -i -e "s,^SYSROOT\=.*,SYSROOT=$mythroot,g" mythconfig.mak
++elif [ -e $sysroot$prefix/include/mythtv/mythconfig.mak ] ; then
+   rm mythconfig.mak 2> /dev/null
+   ln -s $sysroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
  else
-   echo "ERROR: mythconfig.mak not found at $sysroot$prefix/include/mythtv/mythconfig.mak"
-   echo "Did you make AND install MythTV first?"
 Index: mythtv-fixes/mythplugins/programs-libs.pro
 ===================================================================
 --- mythtv-fixes.orig/mythplugins/programs-libs.pro	2010-11-08 17:24:48.000000000 -0600
