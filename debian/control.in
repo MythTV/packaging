@@ -274,7 +274,7 @@ Description: Debug symbols for mythtv packages
 
 Package: mythplugins
 Architecture: all
-Conflicts: mythflix
+Conflicts: mythflix, mythmovies
 Depends: ${misc:Depends},
          mythgallery,
          mythgame,
@@ -284,7 +284,6 @@ Depends: ${misc:Depends},
          mythweather,
          mythweb,
          mytharchive,
-         mythmovies,
          mythbrowser,
          mythnetvision
 Description: Wrapper package for MythTV plugins
@@ -306,13 +305,6 @@ Depends: mythtv-common (>= 0.20-0.0), mythtv-frontend (>= 0.20-0.0), ${shlibs:De
 Description: Emulator & PC Game frontend module for MythTV
  MythGame can be used as a frontend to start any emulator that your host OS
  runs.
-
-Package: mythmovies
-Architecture: any
-Depends: mythtv-common (>= 0.20-0.0), mythtv-frontend (>= 0.20-0.0), ${shlibs:Depends}, ${misc:Depends}
-Description: Find nearby movies and cinema listings
- MythMovies will query the local area within a given radius and provide
- showtimes for local cinemas.
 
 Package: mythmusic
 Architecture: any
