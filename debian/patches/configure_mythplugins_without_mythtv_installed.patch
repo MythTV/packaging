@@ -1,7 +1,7 @@
 Index: mythtv-fixes/mythplugins/configure
 ===================================================================
---- mythtv-fixes.orig/mythplugins/configure	2010-11-08 17:22:51.000000000 -0600
-+++ mythtv-fixes/mythplugins/configure	2010-11-08 17:24:42.000000000 -0600
+--- mythtv-fixes.orig/mythplugins/configure	2010-11-13 23:10:35.000000000 -0600
++++ mythtv-fixes/mythplugins/configure	2010-11-13 23:20:27.000000000 -0600
 @@ -126,6 +126,7 @@
  prefix="/usr/local"
  libdir_name="lib"
@@ -60,8 +60,8 @@ Index: mythtv-fixes/mythplugins/configure
    echo "Did you make AND install MythTV first?"
 Index: mythtv-fixes/mythplugins/programs-libs.pro
 ===================================================================
---- mythtv-fixes.orig/mythplugins/programs-libs.pro	2010-11-08 17:22:51.000000000 -0600
-+++ mythtv-fixes/mythplugins/programs-libs.pro	2010-11-08 17:23:36.000000000 -0600
+--- mythtv-fixes.orig/mythplugins/programs-libs.pro	2010-11-08 17:24:48.000000000 -0600
++++ mythtv-fixes/mythplugins/programs-libs.pro	2010-11-13 23:20:27.000000000 -0600
 @@ -4,7 +4,7 @@
  INCLUDEPATH += $${SYSROOT}$${PREFIX}/include/mythtv/libmyth
  DEPENDPATH *= $${INCLUDEPATH}
@@ -73,8 +73,8 @@ Index: mythtv-fixes/mythplugins/programs-libs.pro
  LIBS += -lmythavcore
 Index: mythtv-fixes/mythplugins/targetdep.pro
 ===================================================================
---- mythtv-fixes.orig/mythplugins/targetdep.pro	2010-11-08 17:22:51.000000000 -0600
-+++ mythtv-fixes/mythplugins/targetdep.pro	2010-11-08 17:23:36.000000000 -0600
+--- mythtv-fixes.orig/mythplugins/targetdep.pro	2010-11-08 17:24:48.000000000 -0600
++++ mythtv-fixes/mythplugins/targetdep.pro	2010-11-13 23:20:27.000000000 -0600
 @@ -10,7 +10,7 @@
  MYTH_LIB_EXT  =$${LIBVERSION}.$${QMAKE_EXTENSION_LIB}
  
@@ -84,3 +84,44 @@ Index: mythtv-fixes/mythplugins/targetdep.pro
  
  # On Windows, dlls were installed with exes:
  mingw : DEPLIBS = $${PREFIX}/bin
+Index: mythtv-fixes/mythplugins/mytharchive/mytharchive/mytharchive.pro
+===================================================================
+--- mythtv-fixes.orig/mythplugins/mytharchive/mytharchive/mytharchive.pro	2010-11-13 23:22:22.000000000 -0600
++++ mythtv-fixes/mythplugins/mytharchive/mytharchive/mytharchive.pro	2010-11-13 23:23:07.000000000 -0600
+@@ -33,28 +33,28 @@
+ SOURCES += mythburn.cpp themeselector.cpp editmetadata.cpp thumbfinder.cpp
+ SOURCES += exportnative.cpp importnative.cpp
+ 
+-burnuifiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/themes/default
++burnuifiles.path = $${PREFIX}/share/mythtv/themes/default
+ burnuifiles.files = mythburn-ui.xml
+ 
+-scriptfiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/mytharchive/scripts
++scriptfiles.path = $${PREFIX}/share/mythtv/mytharchive/scripts
+ scriptfiles.files = ../mythburn/scripts/*
+ 
+-introfiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/mytharchive/intro
++introfiles.path = $${PREFIX}/share/mythtv/mytharchive/intro
+ introfiles.files = ../mythburn/intro/*.mpg
+ 
+-musicfiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/mytharchive/music
++musicfiles.path = $${PREFIX}/share/mythtv/mytharchive/music
+ musicfiles.files = ../mythburn/music/*.ac3
+ 
+-imagefiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/mytharchive/images
++imagefiles.path = $${PREFIX}/share/mythtv/mytharchive/images
+ imagefiles.files = ../mythburn/images/*.png
+ 
+-themefiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/mytharchive/themes
++themefiles.path = $${PREFIX}/share/mythtv/mytharchive/themes
+ themefiles.files = ../mythburn/themes/*
+ 
+-profilefiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/mytharchive/encoder_profiles
++profilefiles.path = $${PREFIX}/share/mythtv/mytharchive/encoder_profiles
+ profilefiles.files = ../mythburn/encoder_profiles/*.xml
+ 
+-nativeuifiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/themes/default
++nativeuifiles.path = $${PREFIX}/share/mythtv/themes/default
+ nativeuifiles.files = mythnative-ui.xml 
+ 
+ INSTALLS +=  scriptfiles introfiles themefiles imagefiles musicfiles 
