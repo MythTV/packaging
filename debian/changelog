@@ -1,6 +1,12 @@
 mythtv (1:0.24.0+fixes27162-0ubuntu2) UNRELEASED; urgency=low
 
   * Modify the upstart script to load the LANG first. (LP: #541042)
+  * Modify configure_mythplugins_without_mythtv_installed.patch to remove 
+    SYSROOT from the mytharchive build process for it's additional support 
+    files. (LP: #674626)
+  * Remove unused package, mythmovies from build process.
+  * Clean up the dependencies of a few packages, and harden them to the binary
+    version.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 11 Nov 2010 14:55:57 -0600
 
