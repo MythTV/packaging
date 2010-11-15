@@ -10,6 +10,14 @@ stop on starting shutdown
 respawn
 respawn limit 2 3600
 
+pre-start script 
+    [ -x /usr/sbin/mysqld ] || exit 0
+    for i in `seq 1 30` ; do
+       /usr/bin/mysqladmin --defaults-file=/etc/mysql/debian.cnf ping && exit 0
+       sleep .5
+    done
+end script
+
 script
 	test -f /etc/default/locale && . /etc/default/locale || true
 	LANG=$LANG /usr/bin/mythbackend --logfile /var/log/mythtv/mythbackend.log --user mythtv

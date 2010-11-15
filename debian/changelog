@@ -11,11 +11,12 @@ mythtv (1:0.24.0+fixes27162-0ubuntu2) UNRELEASED; urgency=low
   * Disable XvMC as it's causing crashes.  VDPAU is better off in these situations
     anyhow (LP: #660833)
   * Remove sparc support.
+  * Make sure mysql is pingable before trying to start the backend (LP: #609402)
 
   [ Thomas Mashos ]
   * Set backend to not respawn if it dies 2 times in 1 hour (LP: #654846)
 
- -- Thomas Mashos <tgm4883@gmail.com>  Sun, 14 Nov 2010 16:18:20 -0800
+ -- Thomas Mashos <tgm4883@gmail.com>  Sun, 14 Nov 2010 16:17:16 -0800
 
 mythtv (1:0.24.0+fixes27162-0ubuntu1) natty; urgency=low
 
