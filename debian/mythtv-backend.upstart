@@ -8,6 +8,7 @@ stop on starting shutdown
 
 #expect fork
 respawn
+respawn limit 2 3600
 
 script
 	test -f /etc/default/locale && . /etc/default/locale || true
