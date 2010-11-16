@@ -12,6 +12,11 @@ mythtv (1:0.24.0+fixes27162-0ubuntu2) UNRELEASED; urgency=low
     anyhow (LP: #660833)
   * Remove sparc support.
   * Make sure mysql is pingable before trying to start the backend (LP: #609402)
+  * Fixup some linitians:
+    - Extra license files
+    - Longer extended descriptions
+    - Duplicated synopsis
+    - Init.d script
 
   [ Thomas Mashos ]
   * Set backend to not respawn if it dies 2 times in 1 hour (LP: #654846)

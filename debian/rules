@@ -119,5 +119,10 @@ override_dh_installdocs:
 	#(MythTV) Remove license files from contrib documentation.
 	find debian/mythtv-backend/usr/share/doc/mythtv-backend/contrib \
 		-name "COPYING" -delete
+	rm -f debian/mythtv-common/usr/share/mythtv/themes/Terra/watermarks/README.license
 	#(MythPlugins)
 	rm -f debian/mythweb/usr/share/mythtv/mythweb/{INSTALL,LICENSE,README}
+	#(Myththemes)
+	rm -f debian/mythtv-theme-arclight/usr/share/mythtv/themes/Arclight/LICENSE
+	rm -f debian/mythtv-theme-childish/usr/share/mythtv/themes/Childish/COPYING
+	rm -f debian/mythtv-theme-graphite/usr/share/mythtv/themes/Graphite/LICENSE
