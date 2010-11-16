@@ -440,9 +440,9 @@ Depends: mythtv-frontend (>= ${binary:Version}),
          mythbrowser (>= ${binary:Version}), 
          libmyth-python (>= ${binary:Version}), 
          python-feedparser, 
-         python-pycurl
+         python-pycurl,
          ${shlibs:Depends}, 
-         ${misc:Depends}, 
+         ${misc:Depends} 
 Recommends: flashplugin-installer | adobe-flashplugin
 Description: A Internet Video Player plugin for MythTV
  MythNetvision is a plugin designed to make adding Internet video sources to 
