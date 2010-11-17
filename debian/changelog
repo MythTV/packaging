@@ -20,8 +20,9 @@ mythtv (1:0.24.0+fixes27162-0ubuntu2) UNRELEASED; urgency=low
 
   [ Thomas Mashos ]
   * Set backend to not respawn if it dies 2 times in 1 hour (LP: #654846)
+  * Move metadata scripts and internetcontent to mythtv-common
 
- -- Thomas Mashos <tgm4883@gmail.com>  Sun, 14 Nov 2010 16:17:16 -0800
+ -- Thomas Mashos <thomas@earth>  Tue, 16 Nov 2010 16:05:42 -0800
 
 mythtv (1:0.24.0+fixes27162-0ubuntu1) natty; urgency=low
 

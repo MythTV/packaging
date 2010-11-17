@@ -5,6 +5,8 @@ usr/share/mythtv/*.xml
 usr/share/mythtv/*.pl
 usr/share/mythtv/locales
 usr/share/mythtv/fonts/Tiresias*.ttf
+usr/share/mythtv/internetcontent
+usr/share/mythtv/metadata
 
 #Other bits that we are gonna copy in that aren't part of make install
 mythtv/contrib/config_files/config.xml usr/share/mythtv
