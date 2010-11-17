@@ -1,6 +1,7 @@
-mythtv (1:0.24.0+fixes27162-0ubuntu2) UNRELEASED; urgency=low
+mythtv (1:0.24.0+fixes27235-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
+  * New 0.24 checkout (27235)
   * Modify the upstart script to load the LANG first. (LP: #541042)
   * Modify configure_mythplugins_without_mythtv_installed.patch to remove 
     SYSROOT from the mytharchive build process for it's additional support 
@@ -8,10 +9,10 @@ mythtv (1:0.24.0+fixes27162-0ubuntu2) UNRELEASED; urgency=low
   * Remove unused package, mythmovies from build process.
   * Clean up the dependencies of a few packages, and harden them to the binary
     version.
-  * Disable XvMC as it's causing crashes.  VDPAU is better off in these situations
-    anyhow (LP: #660833)
+  * Disable XvMC as it's causing crashes.  VDPAU is better off in these 
+    situations anyhow (LP: #660833)
   * Remove sparc support.
-  * Make sure mysql is pingable before trying to start the backend (LP: #609402)
+  * Make sure mysql is pingable before starting the backend (LP: #609402)
   * Fixup some linitians:
     - Extra license files
     - Longer extended descriptions
@@ -20,8 +21,11 @@ mythtv (1:0.24.0+fixes27162-0ubuntu2) UNRELEASED; urgency=low
 
   [ Thomas Mashos ]
   * Set backend to not respawn if it dies 2 times in 1 hour (LP: #654846)
+  * Move metadata scripts and internetcontent to mythtv-common
+  * Fixed Replaces for mythtv-common
+  * Added python and perl bindings as recommends for BE/FE
 
- -- Thomas Mashos <tgm4883@gmail.com>  Sun, 14 Nov 2010 16:17:16 -0800
+ -- Thomas Mashos <tgm4883@gmail.com>  Tue, 16 Nov 2010 22:08:05 -0800
 
 mythtv (1:0.24.0+fixes27162-0ubuntu1) natty; urgency=low
 
