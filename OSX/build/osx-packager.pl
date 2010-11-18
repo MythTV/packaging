@@ -1138,7 +1138,7 @@ foreach my $target ( @targets )
         mkdir("$finalTarget/Contents/MacOS/imageformats");
         foreach my $plugin ( 'libqgif.dylib', 'libqjpeg.dylib' )
         {
-            my $pluginSrc = "$PREFIX/plugins.bad/imageformats/$plugin";
+            my $pluginSrc = "$PREFIX/plugins/imageformats/$plugin";
             if ( -e $pluginSrc )
             {
                 &Syscall([ 'cp', $pluginSrc,
