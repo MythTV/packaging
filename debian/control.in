@@ -111,7 +111,8 @@ Architecture: any
 Depends: pwgen, adduser, mysql-client, ttf-freefont, ttf-liberation, ttf-droid, ttf-dejavu, ${shlibs:Depends}, ${misc:Depends}
 Suggests: mythtv-doc
 Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-gray-osd, mythtv-theme-isthmus
-Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.23.0~trunk23548), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu, mythtv-backend (<< 0.23.0~trunk23549), mythtv-database (<< 0.24.0~trunk25638)
+Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.23.0~trunk23548), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu, mythtv-backend (<< 1:0.24.0+fixes27252), mythtv-database (<< 0.24.0~trunk25638)
+Breaks: mythtv-backend (<< 1:0.24.0+fixes27252)
 Description: A personal video recorder application (common data)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -149,7 +150,7 @@ Architecture: any
 Depends: mythtv-common, mythtv-transcode-utils, ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, libmythtv-perl, xterm, python, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
-Recommends: ntp | time-daemon | ntp-simple, logrotate
+Recommends: ntp | time-daemon | ntp-simple, logrotate, libmyth-python, libmythtv-perl
 Suggests: mythtv-frontend, mythweb, mythtv-database, xmltv-util
 Description: A personal video recorder application (server)
  MythTV provides a unified graphical interface for recording and viewing
@@ -180,6 +181,7 @@ Description: Utilities used for transcoding MythTV tasks
 Package: mythtv-frontend
 Architecture: any
 Depends: mythtv-common, ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, wmctrl, ${misc:Depends}
+Recommends: libmyth-python, libmythtv-perl
 Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0), mythflix (<< 0.23.0)
 Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0)
@@ -267,6 +269,8 @@ Architecture: any
 Section: debug
 Priority: extra
 Recommends: libc6-dbg
+Conflicts: mythplugins-dbg
+Replaces: mythplugins-dbg
 Depends: ${misc:Depends}, mythtv-backend (=${binary:Version}) | mythtv-frontend (=${binary:Version})
 Description: Debug symbols for mythtv packages
  This package provides all debug symbols for mythtv packages since ddebs
