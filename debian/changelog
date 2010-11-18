@@ -24,8 +24,9 @@ mythtv (1:0.24.0+fixes27235-0ubuntu1) UNRELEASED; urgency=low
   * Move metadata scripts and internetcontent to mythtv-common
   * Fixed Replaces for mythtv-common
   * Added python and perl bindings as recommends for BE/FE
+  * Fixes replaces in control.in for mythtv-common (LP: #676791)
 
- -- Thomas Mashos <tgm4883@gmail.com>  Tue, 16 Nov 2010 22:08:05 -0800
+ -- Thomas Mashos <tgm4883@gmail.com>  Wed, 17 Nov 2010 20:25:52 -0800
 
 mythtv (1:0.24.0+fixes27162-0ubuntu1) natty; urgency=low
 
