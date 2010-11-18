@@ -149,7 +149,7 @@ Architecture: any
 Depends: mythtv-common, mythtv-transcode-utils, ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, gksu | kdebase-bin, libmythtv-perl, xterm, python, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
-Recommends: ntp | time-daemon | ntp-simple, logrotate
+Recommends: ntp | time-daemon | ntp-simple, logrotate, libmyth-python, libmythtv-perl
 Suggests: mythtv-frontend, mythweb, mythtv-database, xmltv-util
 Description: A personal video recorder application (server)
  MythTV provides a unified graphical interface for recording and viewing
@@ -180,6 +180,7 @@ Description: Utilities used for transcoding MythTV tasks
 Package: mythtv-frontend
 Architecture: any
 Depends: mythtv-common, ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, wmctrl, ${misc:Depends}
+Recommends: libmyth-python, libmythtv-perl
 Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0), mythflix (<< 0.23.0)
 Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0)
