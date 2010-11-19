@@ -18,6 +18,9 @@ mythtv (1:0.24.0+fixes27235-0ubuntu1) UNRELEASED; urgency=low
     - Longer extended descriptions
     - Duplicated synopsis
     - Init.d script
+  * Add a new debian/rules rule called 'update-upstream-changelog'.  
+    This finds all of the most recent svn commit messages and 
+    creates changelog entries.
 
   [ Thomas Mashos ]
   * Set backend to not respawn if it dies 2 times in 1 hour (LP: #654846)
