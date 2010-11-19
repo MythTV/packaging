@@ -29,7 +29,7 @@ update-upstream-changelog:
 		for package in mythtv mythplugins myththemes; do \
 			if [ -d $$package/.svn ]; then \
 				cd $$package; \
-				svn log -r $(LAST_SVN_REVISION):$(SVN_REVISION) | sed "/^---/d; /^r[0-9]/d; /^$$/d" > ../$$package.out ; \
+				svn log -r $(LAST_SVN_REVISION):$(SVN_REVISION) | sed "/^---/d; /^r[0-9]/d; /^$$/d; s/*/-/;" > ../$$package.out ; \
 				cd ..; \
 				while read line; do \
 					echo $$line | xargs dch -a; \
