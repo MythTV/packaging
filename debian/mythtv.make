@@ -7,6 +7,7 @@ SVN_TYPE:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *.......(.*
 SVN_MAJOR_RELEASE:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *..(.*).............-.*/\1/p')
 SVN_MINOR_RELEASE:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *.....(.*)...........-.*/\1/p')
 SVN_REVISION:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *............(.*)-.*/\1/p')
+LAST_SVN_REVISION:=$(shell dpkg-parsechangelog --offset 1 --count 1 | sed -rne 's/1://;s/^Version: *............(.*)-.*/\1/p')
 DELIMITTER:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *......(.*)..........-.*/\1/p')
 THEMES=$(shell ls myththemes --full-time -l | grep '^d' | awk '{ print $$9 }' )
 
@@ -21,6 +22,24 @@ SUFFIX+="$(DELIMITTER)$(SVN_TYPE)$(SVN_REVISION)"
 TARFILE+=mythtv_$(SVN_RELEASE)$(SUFFIX).orig.tar.gz
 
 ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/settings.pro 2>/dev/null || echo 0.$(SVN_MAJOR_RELEASE))
+
+update-upstream-changelog:
+	if [ "$(SVN_REVISION)" != "$(LAST_SVN_REVISION)" ]; then \
+		echo ">>Upstream changes since last upload:" | xargs dch -a ;\
+		for package in mythtv mythplugins myththemes; do \
+			if [ -d $$package/.svn ]; then \
+				cd $$package; \
+				svn log -r $(LAST_SVN_REVISION):$(SVN_REVISION) | sed "/^---/d; /^r[0-9]/d; /^$$/d; s/*/-/;" > ../$$package.out ; \
+				cd ..; \
+				while read line; do \
+					echo $$line | xargs dch -a; \
+				done < $$package.out ;\
+				rm -f $$package.out \
+			else \
+				echo "Skipping $$package"; \
+			fi \
+		done ;\
+	fi
 
 get-abi:
 	echo ABI: $(ABI)

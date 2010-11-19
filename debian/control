@@ -112,6 +112,7 @@ Depends: pwgen, adduser, mysql-client, ttf-freefont, ttf-liberation, ttf-droid, 
 Suggests: mythtv-doc
 Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-gray-osd, mythtv-theme-isthmus
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.23.0~trunk23548), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu, mythtv-backend (<< 1:0.24.0+fixes27252), mythtv-database (<< 0.24.0~trunk25638)
+Breaks: mythtv-backend (<< 1:0.24.0+fixes27252)
 Description: A personal video recorder application (common data)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -268,6 +269,8 @@ Architecture: any
 Section: debug
 Priority: extra
 Recommends: libc6-dbg
+Conflicts: mythplugins-dbg
+Replaces: mythplugins-dbg
 Depends: ${misc:Depends}, mythtv-backend (=${binary:Version}) | mythtv-frontend (=${binary:Version})
 Description: Debug symbols for mythtv packages
  This package provides all debug symbols for mythtv packages since ddebs
