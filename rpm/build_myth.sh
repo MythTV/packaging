@@ -127,7 +127,7 @@ EOF
             echo "$ABSPATH/mythtv/$file-$VERSION.tar.bz2"
         done
     # Build MythTV
-        rpmbuild -bb "$ABSPATH"/mythtv.spec \
+        time rpmbuild -bb "$ABSPATH"/mythtv.spec \
             --define "_sourcedir $ABSPATH/mythtv" \
             --with debug            \
             --without mytharchive   \
