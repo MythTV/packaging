@@ -1,7 +1,14 @@
-mythtv (1:0.24.0+fixes27235-0ubuntu1) UNRELEASED; urgency=low
+mythtv (1:0.25.0~trunk27305-0ubuntu1) UNRELEASED; urgency=low
+
+  * Add new Tieresias fonts to mythtv-common.
+  * Drop mythvideo readme file.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 20 Nov 2010 13:19:58 -0600
+
+mythtv (1:0.24.0+fixes27305-0ubuntu1) natty; urgency=low
 
   [ Mario Limonciello ]
-  * New 0.24 checkout (27235)
+  * New 0.24 checkout (27305)
   * Modify the upstart script to load the LANG first. (LP: #541042)
   * Modify configure_mythplugins_without_mythtv_installed.patch to remove 
     SYSROOT from the mytharchive build process for it's additional support 
@@ -41,7 +48,7 @@ mythtv (1:0.24.0+fixes27235-0ubuntu1) UNRELEASED; urgency=low
   * Added conflicts/replaces for mythplugins-dbg to mythtv-dbg
   * Added script to find latest mythtv svn revision in PPA
 
- -- Thomas Mashos <tgm4883@gmail.com>  Fri, 19 Nov 2010 19:18:57 -0800
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 20 Nov 2010 13:19:58 -0600
 
 mythtv (1:0.24.0+fixes27162-0ubuntu1) natty; urgency=low
 
@@ -49,7 +56,7 @@ mythtv (1:0.24.0+fixes27162-0ubuntu1) natty; urgency=low
   * Drop 36_setgroups.  Been merged upstream.
   * Add upstart script into the packaging.  It's been dropped upstream.
     ref svn 24280 upstream.
-  * Bump version to 0.25 trunk r27061
+  * Bump version to 0.24 fixes r27162
   * Refresh patches due to upstream changes:
     * Mythfilldatabase logging
     * Force dbus reboot/halt.
@@ -75,7 +82,6 @@ mythtv (1:0.24.0+fixes27162-0ubuntu1) natty; urgency=low
   * Modify ubuntu shutdown behavior patch to only use dbus if commands fail.
   * Update shutdown patch for upstream recommendations.
   * Conflicts/Replaces on old libmyth package (LP: #665402)
-  * Add new Tieresias fonts to mythtv-common.
   * Merge mythtv/mythplugins/myththemes source packages into one.
   * Add a new get-svn-source rule to use with mythbuntu-weekly-build.
   * In the update-control-files rule, update the ABI as well.
@@ -83,7 +89,6 @@ mythtv (1:0.24.0+fixes27162-0ubuntu1) natty; urgency=low
   * Drop references to mythplugins-dbg in the apport rules.
   * Fix the installation of mythmusic. (LP: #672045)
   * Create a mysql.txt symlink from mythtv-setup as well.
-  * Drop mythvideo readme file.
 
   [ Gerald Barker ]
   * Copy 'internetcontent' scripts to /usr/share/mythtv/ as part of

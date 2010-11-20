@@ -26,7 +26,7 @@ ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/se
 
 update-upstream-changelog:
 	if [ -n "$(AUTOBUILD)" ]; then \
-		LAST_SVN_REVISION=`python debian/PPA-published-svn-checker.py $(ABI)` ;\
+		LAST_SVN_REVISION=`python debian/PPA-published-svn-checker.py 0.$(SVN_MAJOR_RELEASE)` ;\
 		[ -n "$$LAST_SVN_REVISION" ] || LAST_SVN_REVISION=$(LAST_SVN_REVISION) ;\
 	else \
 		LAST_SVN_REVISION=$(LAST_SVN_REVISION) ;\
