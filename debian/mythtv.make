@@ -83,8 +83,12 @@ info:
 		"Suffix: $(SUFFIX)" \
 		"Tarfile: $(TARFILE)"
 
-newest-revision:
-	svn info $(SVN_BRANCH) | grep "Last Changed Rev" | awk '{ print $$4 }'
+update-latest-revision:
+	SVN_REVISION=`svn info $(SVN_BRANCH) | grep "Last Changed Rev" | awk '{ print $$4 }'` ;\
+	if [ -n "$$SVN_REVISION" ] && [ "$$SVN_REVISION" != "$(SVN_REVISION)" ]; then \
+		dpkg-parsechangelog | sed "/Version/!d; s/$(SVN_TYPE)[0-9]*/$(SVN_TYPE)$$SVN_REVISION/; s/Version:\ //; s/$$/\ \"New\ Upstream\ Checkout\ r$$SVN_REVISION\"/;" | xargs dch -v ;\
+		echo "Updated checkout to r$$SVN_REVISION" ;\
+	fi
 
 update-control-files:
 	rm -f debian/control debian/mythtv-theme*.install
