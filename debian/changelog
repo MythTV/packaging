@@ -25,6 +25,10 @@ mythtv (1:0.24.0+fixes27235-0ubuntu1) UNRELEASED; urgency=low
   * In the update-upstream-changelog rule, search for the word mythbuntu
     in the version string.  If found, find the latest version on the PPA
     to compare against.
+  * Get rid of the newest-revision rule in favor of one that will actually
+    update the changelog/checkout to the new version.
+  * Add a new helper script debian/do-new-release.sh that will run all of
+    these common tasks in preparation for an upload to ubuntu.
 
   [ Thomas Mashos ]
   * Set backend to not respawn if it dies 2 times in 1 hour (LP: #654846)

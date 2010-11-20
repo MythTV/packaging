@@ -13,14 +13,32 @@ Launchpad's PPA system can sometimes get backed up, meaning package builds will
 skew on different architectures as well as for plugins/themes versus the main 
 package.
 
-
->>Preparing an upload
+---------------------
+>Preparing an upload<
+---------------------
 When uploading a package to the archive, you have a few different steps for how 
 to prepare the package than the rest of Ubuntu or Debian.
 
-1) Set the version # of the checkout you want in debian/changelog's new entry.
-   See below for more details on how to set this string up properly.
-# dch -i
+-------------
+>>Automated<<
+-------------
+If you are making no changes to the packaging or switching to a newer major
+version, there is a helper script available that will automate steps 1-4 below.
+
+# debian/do-new-release.sh
+
+----------
+>>Manual<<
+----------
+1) Update the revision of the checkout to a current revision.  
+   A) If you aren't changing branches or major versions, there is a helper rule 
+      for this.
+   # debian/rules update-latest-revision
+
+   B) If you are changing branches or versions, set the version # of the 
+      checkout you want in debian/changelog's new entry. See below for more 
+      details on how to set this string up properly.
+   # dch -i
 
 2) Check out the upstream source in svn format. This will create an orig.tar.gz
    based on the version you just set in <1>.  In the future, you won't need to
@@ -36,7 +54,9 @@ to prepare the package than the rest of Ubuntu or Debian.
    this type of data might just be a waste.
 # debian/rules update-upstream-changelog
 
->> MythTV version string
+-------------------------
+> MythTV version string <
+-------------------------
 All of the scripts for the special rules are dependent upon finding the MythTV
 version string in a special format to represent individual data.
 
