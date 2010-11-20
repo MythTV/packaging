@@ -10,6 +10,7 @@ SVN_REVISION:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *......
 LAST_SVN_REVISION:=$(shell dpkg-parsechangelog --offset 1 --count 1 | sed -rne 's/1://;s/^Version: *............(.*)-.*/\1/p')
 DELIMITTER:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *......(.*)..........-.*/\1/p')
 THEMES=$(shell ls myththemes --full-time -l | grep '^d' | awk '{ print $$9 }' )
+AUTOBUILD=$(shell dpkg-parsechangelog | sed '/Version/!d' | grep mythbuntu)
 
 ifeq "$(SVN_TYPE)" "trunk"
 	SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)
@@ -24,15 +25,22 @@ TARFILE+=mythtv_$(SVN_RELEASE)$(SUFFIX).orig.tar.gz
 ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/settings.pro 2>/dev/null || echo 0.$(SVN_MAJOR_RELEASE))
 
 update-upstream-changelog:
-	if [ "$(SVN_REVISION)" != "$(LAST_SVN_REVISION)" ]; then \
-		echo ">>Upstream changes since last upload:" | xargs dch -a ;\
+	if [ -n "$(AUTOBUILD)" ]; then \
+		LAST_SVN_REVISION=`python debian/PPA-published-svn-checker.py $(ABI)` ;\
+		[ -n "$$LAST_SVN_REVISION" ] || LAST_SVN_REVISION=$(LAST_SVN_REVISION) ;\
+	else \
+		LAST_SVN_REVISION=$(LAST_SVN_REVISION) ;\
+	fi ;\
+	if [ "$(SVN_REVISION)" != "$$LAST_SVN_REVISION" ]; then \
+		echo "Appending upstream changes between $$LAST_SVN_REVISION and $(SVN_REVISION)";\
+		dch -a ">>Upstream changes since last upload:" ;\
 		for package in mythtv mythplugins myththemes; do \
 			if [ -d $$package/.svn ]; then \
 				cd $$package; \
-				svn log -r $(LAST_SVN_REVISION):$(SVN_REVISION) | sed "/^---/d; /^r[0-9]/d; /^$$/d; s/*/-/;" > ../$$package.out ; \
+				svn log -r $$LAST_SVN_REVISION:$(SVN_REVISION) | sed "/^---/d; /^r[0-9]/d; /^$$/d; s/*/>/;" > ../$$package.out ; \
 				cd ..; \
 				while read line; do \
-					echo $$line | xargs dch -a; \
+					dch -a "$$line"; \
 				done < $$package.out ;\
 				rm -f $$package.out \
 			else \
