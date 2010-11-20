@@ -1,4 +1,4 @@
-mythtv (1:0.24.0+fixes27305-0ubuntu1) UNRELEASED; urgency=low
+mythtv (1:0.24.0+fixes27305-0ubuntu1) natty; urgency=low
 
   [ Mario Limonciello ]
   * New 0.24 checkout (27305)
@@ -41,7 +41,7 @@ mythtv (1:0.24.0+fixes27305-0ubuntu1) UNRELEASED; urgency=low
   * Added conflicts/replaces for mythplugins-dbg to mythtv-dbg
   * Added script to find latest mythtv svn revision in PPA
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 20 Nov 2010 13:01:58 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 20 Nov 2010 13:19:58 -0600
 
 mythtv (1:0.24.0+fixes27162-0ubuntu1) natty; urgency=low
 
