@@ -1,7 +1,7 @@
-mythtv (1:0.24.0+fixes27235-0ubuntu1) UNRELEASED; urgency=low
+mythtv (1:0.24.0+fixes27305-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
-  * New 0.24 checkout (27235)
+  * New 0.24 checkout (27305)
   * Modify the upstart script to load the LANG first. (LP: #541042)
   * Modify configure_mythplugins_without_mythtv_installed.patch to remove 
     SYSROOT from the mytharchive build process for it's additional support 
@@ -41,7 +41,7 @@ mythtv (1:0.24.0+fixes27235-0ubuntu1) UNRELEASED; urgency=low
   * Added conflicts/replaces for mythplugins-dbg to mythtv-dbg
   * Added script to find latest mythtv svn revision in PPA
 
- -- Thomas Mashos <tgm4883@gmail.com>  Fri, 19 Nov 2010 19:18:57 -0800
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 20 Nov 2010 13:01:58 -0600
 
 mythtv (1:0.24.0+fixes27162-0ubuntu1) natty; urgency=low
 
