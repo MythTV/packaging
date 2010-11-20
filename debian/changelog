@@ -22,6 +22,9 @@ mythtv (1:0.24.0+fixes27235-0ubuntu1) UNRELEASED; urgency=low
     This finds all of the most recent svn commit messages and 
     creates changelog entries.
   * Add a debian/README.Debian for explaining how to work with the package.
+  * In the update-upstream-changelog rule, search for the word mythbuntu
+    in the version string.  If found, find the latest version on the PPA
+    to compare against.
 
   [ Thomas Mashos ]
   * Set backend to not respawn if it dies 2 times in 1 hour (LP: #654846)
