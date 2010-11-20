@@ -25,7 +25,7 @@ to prepare the package than the rest of Ubuntu or Debian.
 If you are making no changes to the packaging or switching to a newer major
 version, there is a helper script available that will automate steps 1-4 below.
 
-# debian/do-new-release.sh
+# debian/do-new-release.sh $DISTRIBUTION
 
 ----------
 >>Manual<<
