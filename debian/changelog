@@ -32,8 +32,9 @@ mythtv (1:0.24.0+fixes27235-0ubuntu1) UNRELEASED; urgency=low
   * Added bindings as recommends to FR and BE in control.in
   * Added Breaks mythtv-backend to mythtv-common (LP: #677206)
   * Added conflicts/replaces for mythplugins-dbg to mythtv-dbg
+  * Added script to find latest mythtv svn revision in PPA
 
- -- Thomas Mashos <thomas@earth>  Thu, 18 Nov 2010 14:25:35 -0800
+ -- Thomas Mashos <tgm4883@gmail.com>  Fri, 19 Nov 2010 19:18:57 -0800
 
 mythtv (1:0.24.0+fixes27162-0ubuntu1) natty; urgency=low
 
