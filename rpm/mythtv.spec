@@ -65,7 +65,7 @@
 %define desktop_vendor  xris
 
 # SVN Revision number and branch ID
-%define _svnrev r25992
+%define _svnrev r27303
 %define branch trunk
 
 #
@@ -1208,6 +1208,7 @@ fi
 %doc mythtv-%{version}/database mythtv-%{version}/keys.txt
 %doc mythtv-%{version}/docs/*.html mythtv-%{version}/docs/*.png
 %doc mythtv-%{version}/docs/*.txt mythtv-%{version}/contrib
+%doc %{_datadir}/mythtv/fonts/*.txt
 %doc mythtv-%{version}/PACKAGE-LICENSING
 
 %files common
