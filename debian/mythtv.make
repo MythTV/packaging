@@ -65,12 +65,7 @@ get-svn-source:
 	tar czf $(CURDIR)/../$(TARFILE) * --exclude .svn --exclude .bzr --exclude debian
 
 get-orig-source:
-	mkdir -p $(CURDIR)/tmp
-	svn export -r $(SVN_REVISION) $(SVN_BRANCH)/mythtv tmp/mythtv
-	svn export -r $(SVN_REVISION) $(SVN_BRANCH)/mythplugins tmp/mythplugins
-	svn export -r $(SVN_REVISION) $(SVN_BRANCH)/myththemes tmp/myththemes
-	tar czf $(CURDIR)/../$(TARFILE) -C $(CURDIR)/tmp mythtv mythplugins myththemes
-	rm -rf $(CURDIR)/tmp
+	python debian/LP-get-orig-source.py $(SVN_RELEASE)$(SUFFIX) $(CURDIR)/../$(TARFILE)
 
 info:
 	echo "Type: $(SVN_TYPE)" \

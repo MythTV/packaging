@@ -5,6 +5,13 @@ mythtv (1:0.25.0~trunk27305-0ubuntu1) UNRELEASED; urgency=low
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 20 Nov 2010 13:19:58 -0600
 
+mythtv (1:0.24.0+fixes27305-0ubuntu2) UNRELEASED; urgency=low
+
+  * Modify the get-orig-source rule to use launchpadlib to try to fetch the file
+    from the archive instead.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sun, 21 Nov 2010 11:33:18 -0600
+
 mythtv (1:0.24.0+fixes27305-0ubuntu1) natty; urgency=low
 
   [ Mario Limonciello ]
