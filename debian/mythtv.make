@@ -33,7 +33,7 @@ update-upstream-changelog:
 	fi ;\
 	if [ "$(SVN_REVISION)" != "$$LAST_SVN_REVISION" ]; then \
 		echo "Appending upstream changes between $$LAST_SVN_REVISION and $(SVN_REVISION)";\
-		dch -a ">>Upstream changes since last upload:" ;\
+		dch -a ">>Upstream changes since last upload (r$$LAST_SVN_REVISION):" ;\
 		for package in mythtv mythplugins myththemes; do \
 			if [ -d $$package/.svn ]; then \
 				cd $$package; \
