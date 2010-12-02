@@ -1166,11 +1166,15 @@ foreach my $target ( @targets )
                    "$finalTarget/Contents/MacOS" ]) or die;
     }
 
-    # Run 'rebase' on all the frameworks:
+    # Run 'rebase' on all the frameworks, for slightly faster loading.
+    # Note that we process the real library, not symlinks to it,
+    # to prevent rebase erroneously creating copies:
     my @libs = glob "$finalTarget/Contents/Frameworks/*";
-    @libs = grep(s,(.*/)(\w+).framework$,$1$2.framework/$2, , @libs);
-    # and all the filters/plugins:
+    @libs = grep(s,(.*/)(\w+).framework$,$1$2.framework/Versions/A/$2, , @libs);
+
+    # Also process all the filters/plugins:
     push(@libs, glob "$finalTarget/Contents/Resources/lib/mythtv/*/*");
+
     if ( $OPT{'verbose'} )
     {   &Syscall([ 'rebase', '-v', @libs ]) or die   }
     else
