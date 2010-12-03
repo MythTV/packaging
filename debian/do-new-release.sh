@@ -1,7 +1,6 @@
-debian/rules update-latest-revision
-debian/rules get-svn-source
+quilt pop -a 2>/dev/null || true
 debian/rules update-control-files
-debian/rules update-upstream-changelog
+debian/rules get-git-source
 if [ -n "$1" ]; then
 	DIST="$1"
 else
