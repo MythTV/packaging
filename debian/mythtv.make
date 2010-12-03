@@ -30,7 +30,7 @@ ifeq "$(GIT_TYPE)" "master"
         GIT_BRANCH=master
 	DELIMITTER="~"
 else
-        GIT_BRANCH=origin/fixes/0.$(GIT_MAJOR_RELEASE)
+        GIT_BRANCH=fixes/0.$(GIT_MAJOR_RELEASE)
 	DELIMITTER="+"
 endif
 
@@ -43,29 +43,19 @@ ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/se
 get-git-source:
 	#checkout mythtv/mythplugins
 	if [ -d .git ]; then \
-		if [ "$(GIT_BRANCH)" = "master" ]; then \
-			GIT_BRANCH=$(GIT_BRANCH) ;\
-		else \
-			GIT_BRANCH=0.$(GIT_MAJOR_RELEASE) ;\
-		fi ;\
-		git checkout $$GIT_BRANCH ;\
+		git checkout $(GIT_BRANCH) ;\
 		git pull --rebase; \
 	else \
 		git clone $(MAIN_GIT_URL) tmp ;\
 		mv tmp/.git* tmp/* . ;\
 		rm -rf tmp ;\
-		[ "$(GIT_BRANCH)" != "master" ] && git checkout -b 0.$(GIT_MAJOR_RELEASE) --track $(GIT_BRANCH) ;\
+		git checkout $(GIT_BRANCH) ;\
 	fi
 
 	#checkout mythweb
 	if [ -d mythplugins/mythweb/.git ]; then \
-                if [ "$(GIT_BRANCH)" = "master" ]; then \
-                        GIT_BRANCH=$(GIT_BRANCH) ;\
-                else \
-                        GIT_BRANCH=0.$(GIT_MAJOR_RELEASE) ;\
-                fi ;\
 		cd mythplugins/mythweb; \
-                git checkout $$GIT_BRANCH ;\
+                git checkout $(GIT_BRANCH) ;\
 		git pull --rebase ;\
 	else \
 		mkdir -p mythplugins/mythweb ;\
@@ -73,7 +63,7 @@ get-git-source:
 		mv tmp/.git* tmp/* mythplugins/mythweb ;\
 		rm -rf tmp ;\
 		cd mythplugins/mythweb ;\
-                [ "$(GIT_BRANCH)" != "master" ] && git checkout -b 0.$(GIT_MAJOR_RELEASE) --track $(GIT_BRANCH) ;\
+                git checkout $(GIT_BRANCH) ;\
 	fi
 
 	#build the tarball

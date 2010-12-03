@@ -5,7 +5,7 @@ mythtv (2:0.25.0~master.20101202.ee329fe-0ubuntu1) UNRELEASED; urgency=low
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 20 Nov 2010 13:19:58 -0600
 
-mythtv (2:0.24.0+fixes.20101202.ee329fe-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20101203.71bf56a-0ubuntu1) UNRELEASED; urgency=low
 
   * Modify the get-orig-source rule to use launchpadlib to try to fetch the file
     from the archive instead.
