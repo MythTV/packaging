@@ -1,4 +1,4 @@
-mythtv (1:0.24.0+fixes.20101202.ee329fe-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20101202.ee329fe-0ubuntu1) UNRELEASED; urgency=low
 
   * Modify the get-orig-source rule to use launchpadlib to try to fetch the file
     from the archive instead.
@@ -6,6 +6,8 @@ mythtv (1:0.24.0+fixes.20101202.ee329fe-0ubuntu2) UNRELEASED; urgency=low
   * Move packaging to git based commands.
   * If no themes are included, don't make bad theme stubs in debian/control.
   * Update control files.
+  * Add an epoch because of the changing fixes->fixes and trunk->master to allow
+    proper upgrades.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 02 Dec 2010 22:52:04 -0600
 
