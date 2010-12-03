@@ -1,94 +1,147 @@
-#Custom debian/rules snippet used for building MythTV packages that come from svn.mythtv.org
+#Custom debian/rules snippet used for building MythTV packages that come from MythTV's github location
 
-#                 #
-# get-orig-source #
-#                 #
-SVN_TYPE:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *.......(.*).....-.*/\1/p')
-SVN_MAJOR_RELEASE:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *..(.*).............-.*/\1/p')
-SVN_MINOR_RELEASE:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *.....(.*)...........-.*/\1/p')
-SVN_REVISION:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *............(.*)-.*/\1/p')
-LAST_SVN_REVISION:=$(shell dpkg-parsechangelog --offset 1 --count 1 | sed -rne 's/1://;s/^Version: *............(.*)-.*/\1/p')
-DELIMITTER:=$(shell dpkg-parsechangelog | sed -rne 's/1://;s/^Version: *......(.*)..........-.*/\1/p')
+#Figure out what we're working with by parsing the project and debian changelog
+#To make sense of these sed rules that are used:
+#  Sample version string: 
+#                  Version: 1:0.25.0+master.20101129.a8acde8-0ubuntu1
+#  /Version/!d  -> only version line from dpkg-parsechangelog
+#  s/.*1:0.//   -> kill the epoch and Version bit and 0. leading the version
+#  s/-.*//      -> kill everything after and including the -
+#  s/+.*//      -> kill everything after and including the +
+#  s/.*+//      -> kill everything before and including the +
+
+GIT_MAJOR_RELEASE:=$(shell dpkg-parsechangelog | dpkg-parsechangelog | sed '/Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $$1 }')
+GIT_MINOR_RELEASE:=$(shell dpkg-parsechangelog | dpkg-parsechangelog | sed '/Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $$2 }')
+GIT_TYPE:=$(shell dpkg-parsechangelog | sed '/Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$1}')
+DATE:=$(shell dpkg-parsechangelog | sed '/Version/!d; s/.*+//; s/-.*//;' | awk -F. '{print $$2}')
+GIT_HASH:=$(shell dpkg-parsechangelog | sed '/Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$3}')
+LAST_GIT_HASH:=$(shell dpkg-parsechangelog --offset 1 --count 1 | sed '/Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$3}')
+DEBIAN_SUFFIX:=$(shell dpkg-parsechangelog | sed '/Version/!d; s/.*-//;')
 THEMES=$(shell ls myththemes --full-time -l | grep '^d' | awk '{ print $$9 }' )
 AUTOBUILD=$(shell dpkg-parsechangelog | sed '/Version/!d' | grep mythbuntu)
+EPOCH:=$(shell dpkg-parsechangelog | sed '/Version/!d; s/.* //; s/:.*//;')
 
-ifeq "$(SVN_TYPE)" "trunk"
-	SVN_BRANCH+= http://svn.mythtv.org/svn/$(SVN_TYPE)
+TODAY=$(shell date +%Y%m%d)
+
+MAIN_GIT_URL=git://github.com/MythTV/mythtv.git
+MYTHWEB_GIT_URL=git://github.com/MythTV/mythweb.git
+
+ifeq "$(GIT_TYPE)" "master"
+        GIT_BRANCH=master
+	DELIMITTER="~"
 else
-	SVN_BRANCH+= http://svn.mythtv.org/svn/branches/release-0-$(SVN_MAJOR_RELEASE)-$(SVN_TYPE)
+        GIT_BRANCH=origin/fixes/0.$(GIT_MAJOR_RELEASE)
+	DELIMITTER="+"
 endif
 
-SVN_RELEASE=0.$(SVN_MAJOR_RELEASE).$(SVN_MINOR_RELEASE)
-SUFFIX+="$(DELIMITTER)$(SVN_TYPE)$(SVN_REVISION)"
-TARFILE+=mythtv_$(SVN_RELEASE)$(SUFFIX).orig.tar.gz
+GIT_RELEASE=0.$(GIT_MAJOR_RELEASE).$(GIT_MINOR_RELEASE)
+SUFFIX+=$(GIT_TYPE).$(DATE).$(GIT_HASH)
+TARFILE+=mythtv_$(GIT_RELEASE)$(DELIMITTER)$(SUFFIX).orig.tar.gz
 
-ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/settings.pro 2>/dev/null || echo 0.$(SVN_MAJOR_RELEASE))
+ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/settings.pro 2>/dev/null || echo 0.$(GIT_MAJOR_RELEASE))
 
-update-upstream-changelog:
-	if [ -n "$(AUTOBUILD)" ]; then \
-		LAST_SVN_REVISION=`python debian/PPA-published-svn-checker.py 0.$(SVN_MAJOR_RELEASE)` ;\
-		[ -n "$$LAST_SVN_REVISION" ] || LAST_SVN_REVISION=$(LAST_SVN_REVISION) ;\
+get-git-source:
+	#checkout mythtv/mythplugins
+	if [ -d .git ]; then \
+		if [ "$(GIT_BRANCH)" = "master" ]; then \
+			GIT_BRANCH=$(GIT_BRANCH) ;\
+		else \
+			GIT_BRANCH=0.$(GIT_MAJOR_RELEASE) ;\
+		fi ;\
+		git checkout $$GIT_BRANCH ;\
+		git pull --rebase; \
 	else \
-		LAST_SVN_REVISION=$(LAST_SVN_REVISION) ;\
-	fi ;\
-	if [ "$(SVN_REVISION)" != "$$LAST_SVN_REVISION" ]; then \
-		echo "Appending upstream changes between $$LAST_SVN_REVISION and $(SVN_REVISION)";\
-		dch -a ">>Upstream changes since last upload (r$$LAST_SVN_REVISION):" ;\
-		for package in mythtv mythplugins myththemes; do \
-			if [ -d $$package/.svn ]; then \
-				cd $$package; \
-				svn log -r $$LAST_SVN_REVISION:$(SVN_REVISION) | sed "/^---/d; /^r[0-9]/d; /^$$/d; s/*/>/;" > ../$$package.out ; \
-				cd ..; \
-				while read line; do \
-					dch -a "$$line"; \
-				done < $$package.out ;\
-				rm -f $$package.out \
-			else \
-				echo "Skipping $$package"; \
-			fi \
-		done ;\
+		git clone $(MAIN_GIT_URL) tmp ;\
+		mv tmp/.git* tmp/* . ;\
+		rm -rf tmp ;\
+		[ "$(GIT_BRANCH)" != "master" ] && git checkout -b 0.$(GIT_MAJOR_RELEASE) --track $(GIT_BRANCH) ;\
 	fi
 
-get-abi:
-	echo ABI: $(ABI)
+	#checkout mythweb
+	if [ -d mythplugins/mythweb/.git ]; then \
+                if [ "$(GIT_BRANCH)" = "master" ]; then \
+                        GIT_BRANCH=$(GIT_BRANCH) ;\
+                else \
+                        GIT_BRANCH=0.$(GIT_MAJOR_RELEASE) ;\
+                fi ;\
+		cd mythplugins/mythweb; \
+                git checkout $$GIT_BRANCH ;\
+		git pull --rebase ;\
+	else \
+		mkdir -p mythplugins/mythweb ;\
+		git clone $(MYTHWEB_GIT_URL) tmp ;\
+		mv tmp/.git* tmp/* mythplugins/mythweb ;\
+		rm -rf tmp ;\
+		cd mythplugins/mythweb ;\
+                [ "$(GIT_BRANCH)" != "master" ] && git checkout -b 0.$(GIT_MAJOR_RELEASE) --track $(GIT_BRANCH) ;\
+	fi
 
-get-svn-source:
-	for package in mythtv mythplugins myththemes; do \
-		if [ -d $$package ]; then \
-			cd $$package; \
-			svn update --revision $(SVN_REVISION); \
-			cd ..; \
-		else \
-			svn co -r $(SVN_REVISION) $(SVN_BRANCH)/$$package $$package; \
+	#build the tarball
+	tar czf $(CURDIR)/../$(TARFILE) * --exclude .git --exclude .pc --exclude .bzr --exclude debian
+
+	#1) Check if the hash in the changelog (GIT_HASH) matches what the tree has
+	#   ->If not, then set the new HASH we are diffing to as the one from the tree
+	#     and the old HASH we are diffing from as the one from the changelog
+	#   ->If so , then set the current HASH to the one from the tree
+	#2) Check for autobuild.
+	#   ->If not, do nothing
+	#   ->If so,  then query the PPA for a revision number
+	#3) Check for an empty last git hash, and fill if empty
+	CURRENT_GIT_HASH=`git log -1 --oneline | awk '{ print $$1 }'` ;\
+	if [ "$(GIT_HASH)" != "$$CURRENT_GIT_HASH" ]; then \
+		GIT_HASH=$$CURRENT_GIT_HASH ;\
+		LAST_GIT_HASH=$(GIT_HASH) ;\
+		dch -b -v $(EPOCH):$(GIT_RELEASE)$(DELIMITTER)$(GIT_TYPE).$(TODAY).$$GIT_HASH-$(DEBIAN_SUFFIX) "";\
+	else \
+		GIT_HASH=$(GIT_HASH) ;\
+	fi ;\
+	if [ -n "$(AUTOBUILD)" ]; then \
+		LAST_GIT_HASH=`python debian/PPA-published-git-checker.py 0.$(GIT_MAJOR_RELEASE)` ;\
+	fi ;\
+	[ -n "$$LAST_GIT_HASH" ] || LAST_GIT_HASH=$(LAST_GIT_HASH) ;\
+	if [ -n "$$LAST_GIT_HASH" ] && [ "$$GIT_HASH" != "$$LAST_GIT_HASH" ]; then \
+		echo "Appending upstream changes between $$LAST_GIT_HASH and $$GIT_HASH" ;\
+		dch -a ">>Upstream changes since last upload ($$LAST_GIT_HASH):" ;\
+		if [ -d .git ]; then \
+			git log --oneline $$LAST_GIT_HASH..$$GIT_HASH | sed 's,^,[,; s, ,] ,;' > .gitout ;\
+			while read line; do \
+				dch -a "$$line"; \
+			done < .gitout ;\
+			rm -f .gitout ;\
 		fi \
-	done
-	tar czf $(CURDIR)/../$(TARFILE) * --exclude .svn --exclude .bzr --exclude debian
+	fi
 
 get-orig-source:
-	python debian/LP-get-orig-source.py $(SVN_RELEASE)$(SUFFIX) $(CURDIR)/../$(TARFILE)
+	python debian/LP-get-orig-source.py $(GIT_RELEASE)$(DELIMITTER)$(SUFFIX) $(CURDIR)/../$(TARFILE)
 
 info:
-	echo "Type: $(SVN_TYPE)" \
-		"Major Release: $(SVN_MAJOR_RELEASE)" \
-		"Minor Release: $(SVN_MINOR_RELEASE)" \
-		"Total Release: $(SVN_RELEASE)" \
-		"Rev: $(SVN_REVISION)" \
-		"Delimitter: $(DELIMITTER)" \
-		"Branch: $(SVN_BRANCH)" \
-		"Suffix: $(SUFFIX)" \
-		"Tarfile: $(TARFILE)"
-
-update-latest-revision:
-	SVN_REVISION=`svn info $(SVN_BRANCH) | grep "Last Changed Rev" | awk '{ print $$4 }'` ;\
-	if [ -n "$$SVN_REVISION" ] && [ "$$SVN_REVISION" != "$(SVN_REVISION)" ]; then \
-		dpkg-parsechangelog | sed "/Version/!d; s/$(SVN_TYPE)[0-9]*/$(SVN_TYPE)$$SVN_REVISION/; s/Version:\ //; s/$$/\ \"New\ Upstream\ Checkout\ r$$SVN_REVISION\"/;" | xargs dch -v ;\
-		echo "Updated checkout to r$$SVN_REVISION" ;\
-	fi
+	echo    "--Upstream Project--\n" \
+		"ABI: $(ABI)\n" \
+		"--From CURRENT changelog entry in debian--\n" \
+		"Epoch: $(EPOCH)\n" \
+		"Type: $(GIT_TYPE)\n" \
+		"Major Release: $(GIT_MAJOR_RELEASE)\n" \
+		"Minor Release: $(GIT_MINOR_RELEASE)\n" \
+		"Total Release: $(GIT_RELEASE)\n" \
+		"Hash: $(GIT_HASH)\n" \
+                "Date: $(DATE)\n" \
+		"--Calculated Data--\n" \
+		"Branch: $(GIT_BRANCH)\n" \
+		"Suffix: $(SUFFIX)\n" \
+		"Tarfile: $(TARFILE)\n" \
+		"--Other info--\n" \
+                "OLD Hash: $(LAST_GIT_HASH)\n" \
+                "Current branch hash: $(CURRENT_GIT_HASH)\n" \
+                "Current date: $(TODAY)\n" \
 
 update-control-files:
 	rm -f debian/control debian/mythtv-theme*.install
-	sed s/#THEMES#/$(shell echo $(THEMES) | tr '[A-Z]' '[a-z]' | sed s/^/mythtv-theme-/ | sed s/\ /,\\\\\ mythtv-theme-/g)/ \
-	   debian/control.in > debian/control
+	if [ -n "$(THEMES)" ]; then \
+		sed s/#THEMES#/$(shell echo $(THEMES) | tr '[A-Z]' '[a-z]' | sed s/^/mythtv-theme-/ | sed s/\ /,\\\\\ mythtv-theme-/g)/ \
+		   debian/control.in > debian/control ;\
+	else \
+		sed 's/#THEMES#,//' debian/control.in > debian/control ;\
+	fi
 	sed -i s/#ABI#/$(ABI)/ debian/control
 	cp debian/libmyth.install.in debian/libmyth-$(ABI)-0.install
 	$(foreach theme,$(THEMES),\
