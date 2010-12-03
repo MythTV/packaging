@@ -136,8 +136,12 @@ info:
 
 update-control-files:
 	rm -f debian/control debian/mythtv-theme*.install
-	sed s/#THEMES#/$(shell echo $(THEMES) | tr '[A-Z]' '[a-z]' | sed s/^/mythtv-theme-/ | sed s/\ /,\\\\\ mythtv-theme-/g)/ \
-	   debian/control.in > debian/control
+	if [ -n "$(THEMES)" ]; then \
+		sed s/#THEMES#/$(shell echo $(THEMES) | tr '[A-Z]' '[a-z]' | sed s/^/mythtv-theme-/ | sed s/\ /,\\\\\ mythtv-theme-/g)/ \
+		   debian/control.in > debian/control ;\
+	else \
+		sed 's/#THEMES#,//' debian/control.in > debian/control ;\
+	fi
 	sed -i s/#ABI#/$(ABI)/ debian/control
 	cp debian/libmyth.install.in debian/libmyth-$(ABI)-0.install
 	$(foreach theme,$(THEMES),\
