@@ -43,6 +43,7 @@ ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/se
 get-git-source:
 	#checkout mythtv/mythplugins
 	if [ -d .git ]; then \
+		git fetch ;\
 		git checkout $(GIT_BRANCH) ;\
 		git pull --rebase; \
 	else \
@@ -55,6 +56,7 @@ get-git-source:
 	#checkout mythweb
 	if [ -d mythplugins/mythweb/.git ]; then \
 		cd mythplugins/mythweb; \
+		git fetch ;\
                 git checkout $(GIT_BRANCH) ;\
 		git pull --rebase ;\
 	else \
