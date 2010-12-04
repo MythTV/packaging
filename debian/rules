@@ -54,8 +54,10 @@ MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \
 
 #Rather than have a configure/build/install phase, combine them all so we can do each part in order
 override_dh_auto_install:
-	#update SVN REVISION to show the right version
-	sed -i -e "s/^\(\(str  *\)\?SOURCE_VERSION\)=.*$$/\1=$(SUFFIX)/g;" mythtv/version.sh
+	#update Git to parse debian/changelog
+	echo "BRANCH=\"$(GIT_BRANCH)\"" > mythtv/VERSION
+	echo "SOURCE_VERSION=\"$(GIT_HASH)\"" >> mythtv/VERSION
+	cd mythtv && sh version.sh `pwd`
 
 	#mythtv
 	cd mythtv && ./configure $(MYTHTV_CONFIGURE_OPTS)

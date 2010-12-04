@@ -5,7 +5,7 @@ mythtv (2:0.25.0~master.20101203.f7ad913-0ubuntu1) UNRELEASED; urgency=low
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 03 Dec 2010 11:52:43 -0600
 
-mythtv (2:0.24.0+fixes.20101203.71bf56a-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20101203.11ee9c5-0ubuntu1) UNRELEASED; urgency=low
 
   * Modify the get-orig-source rule to use launchpadlib to try to fetch the file
     from the archive instead.
@@ -16,7 +16,7 @@ mythtv (2:0.24.0+fixes.20101203.71bf56a-0ubuntu1) UNRELEASED; urgency=low
   * Add an epoch because of the changing fixes->fixes and trunk->master to allow
     proper upgrades.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 02 Dec 2010 22:52:04 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 03 Dec 2010 16:19:07 -0600
 
 mythtv (1:0.24.0+fixes27305-0ubuntu1) natty; urgency=low
 

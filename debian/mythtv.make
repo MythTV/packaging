@@ -25,6 +25,7 @@ TODAY=$(shell date +%Y%m%d)
 
 MAIN_GIT_URL=git://github.com/MythTV/mythtv.git
 MYTHWEB_GIT_URL=git://github.com/MythTV/mythweb.git
+MYTHTHEMES_GIT_URL=git://github.com/MythTV/myththemes.git
 
 ifeq "$(GIT_TYPE)" "master"
         GIT_BRANCH=master
@@ -65,6 +66,21 @@ get-git-source:
 		mv tmp/.git* tmp/* mythplugins/mythweb ;\
 		rm -rf tmp ;\
 		cd mythplugins/mythweb ;\
+                git checkout $(GIT_BRANCH) ;\
+	fi
+
+	#checkout myththemes
+	if [ -d myththemes/.git ]; then \
+		cd myththemes; \
+		git fetch ;\
+                git checkout $(GIT_BRANCH) ;\
+		git pull --rebase ;\
+	else \
+		mkdir -p myththemes ;\
+		git clone $(MYTHTHEMES_GIT_URL) tmp ;\
+		mv tmp/.git* tmp/* myththemes ;\
+		rm -rf tmp ;\
+		cd myththemes ;\
                 git checkout $(GIT_BRANCH) ;\
 	fi
 
