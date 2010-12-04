@@ -1,5 +1,6 @@
 mythtv (2:0.24.0+fixes.20101203.11ee9c5-0ubuntu1) UNRELEASED; urgency=low
 
+  [ Mario Limonciello ]
   * Modify the get-orig-source rule to use launchpadlib to try to fetch the file
     from the archive instead.
   * Stop on runlevels [016] rather than on the start of shutdown job. (LP: #542627)
@@ -9,7 +10,10 @@ mythtv (2:0.24.0+fixes.20101203.11ee9c5-0ubuntu1) UNRELEASED; urgency=low
   * Add an epoch because of the changing fixes->fixes and trunk->master to allow
     proper upgrades.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 03 Dec 2010 16:19:07 -0600
+  [ Thomas Mashos ]
+  * Make mythplugins replace mythmovies
+
+ -- Thomas Mashos <tgm4883@gmail.com>  Fri, 03 Dec 2010 21:17:51 -0800
 
 mythtv (1:0.24.0+fixes27305-0ubuntu1) natty; urgency=low
 
