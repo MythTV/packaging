@@ -56,8 +56,8 @@ fi
 
 #for checking out git
 if ! which git 1>/dev/null; then
-	echo "Missing git, marking for installation"
-	sudo apt-get install git || die "Error installing git"
+	echo "Missing git-core, marking for installation"
+	sudo apt-get install git-core || die "Error installing git-core"
 fi
 
 #make sure we have debuild no matter what
