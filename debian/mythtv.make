@@ -87,7 +87,7 @@ get-git-source:
                 git checkout $(GIT_BRANCH) ;\
 	fi
 
-	#build the tarball and fixup changelog
+	#fixup changelog
 	#1) Check if the hash in the changelog (GIT_HASH) matches what the tree has
 	#   ->If not, then set the new HASH we are diffing to as the one from the tree
 	#     and the old HASH we are diffing from as the one from the changelog
@@ -98,8 +98,6 @@ get-git-source:
 	#3) Check for an empty last git hash, and fill if empty
 
 	CURRENT_GIT_HASH=`git log -1 --oneline | awk '{ print $$1 }'` ;\
-	TARFILE=mythtv_$(GIT_RELEASE)$(DELIMITTER)$(GIT_TYPE).$(DATE).$$CURRENT_GIT_HASH.orig.tar.gz;\
-	tar czf $(CURDIR)/../$$TARFILE * --exclude .git --exclude .pc --exclude .bzr --exclude debian ;\
 	echo "Current hash: $$CURRENT_GIT_HASH" ;\
 	if [ "$(GIT_HASH)" != "$$CURRENT_GIT_HASH" ]; then \
 		GIT_HASH=$$CURRENT_GIT_HASH ;\
