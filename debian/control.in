@@ -279,6 +279,7 @@ Description: Debug symbols for mythtv packages
 Package: mythplugins
 Architecture: all
 Conflicts: mythflix, mythmovies
+Replaces: mythmovies
 Depends: ${misc:Depends},
          mythgallery,
          mythgame,

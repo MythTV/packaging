@@ -13,8 +13,9 @@ mythtv (2:0.24.0+fixes.20101203.11ee9c5-0ubuntu1) UNRELEASED; urgency=low
 
   [ Thomas Mashos ]
   * Make mythplugins replace mythmovies
+  * Make mythplugins replace mythmovies in debian/control.in
 
- -- Thomas Mashos <tgm4883@gmail.com>  Fri, 03 Dec 2010 21:17:51 -0800
+ -- Thomas Mashos <tgm4883@gmail.com>  Fri, 03 Dec 2010 22:46:48 -0800
 
 mythtv (1:0.24.0+fixes27305-0ubuntu1) natty; urgency=low
 
