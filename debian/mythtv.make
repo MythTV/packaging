@@ -37,9 +37,12 @@ endif
 
 GIT_RELEASE=0.$(GIT_MAJOR_RELEASE).$(GIT_MINOR_RELEASE)
 SUFFIX+=$(GIT_TYPE).$(DATE).$(GIT_HASH)
-TARFILE+=mythtv_$(GIT_RELEASE)$(DELIMITTER)$(SUFFIX).orig.tar.gz
 
 ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/settings.pro 2>/dev/null || echo 0.$(GIT_MAJOR_RELEASE))
+
+build-tarball:
+	#build the tarball
+	tar czf $(CURDIR)/../mythtv_$(GIT_RELEASE)$(DELIMITTER)$(SUFFIX).orig.tar.gz * --exclude .git --exclude .pc --exclude .bzr --exclude debian
 
 get-git-source:
 	#checkout mythtv/mythplugins
@@ -84,9 +87,7 @@ get-git-source:
                 git checkout $(GIT_BRANCH) ;\
 	fi
 
-	#build the tarball
-	tar czf $(CURDIR)/../$(TARFILE) * --exclude .git --exclude .pc --exclude .bzr --exclude debian
-
+	#build the tarball and fixup changelog
 	#1) Check if the hash in the changelog (GIT_HASH) matches what the tree has
 	#   ->If not, then set the new HASH we are diffing to as the one from the tree
 	#     and the old HASH we are diffing from as the one from the changelog
@@ -95,7 +96,11 @@ get-git-source:
 	#   ->If not, do nothing
 	#   ->If so,  then query the PPA for a revision number
 	#3) Check for an empty last git hash, and fill if empty
+
 	CURRENT_GIT_HASH=`git log -1 --oneline | awk '{ print $$1 }'` ;\
+	TARFILE=mythtv_$(GIT_RELEASE)$(DELIMITTER)$(GIT_TYPE).$(DATE).$$CURRENT_GIT_HASH.orig.tar.gz;\
+	tar czf $(CURDIR)/../$$TARFILE * --exclude .git --exclude .pc --exclude .bzr --exclude debian ;\
+	echo "Current hash: $$CURRENT_GIT_HASH" ;\
 	if [ "$(GIT_HASH)" != "$$CURRENT_GIT_HASH" ]; then \
 		GIT_HASH=$$CURRENT_GIT_HASH ;\
 		LAST_GIT_HASH=$(GIT_HASH) ;\
