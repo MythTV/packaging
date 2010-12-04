@@ -22,5 +22,8 @@ package=archive.getPublishedSources(source_name="mythtv")
 fullversion=package[0].source_package_version
 
 ## Pull out GIT hash
-hash = fullversion.split('-')[0].split('.')[4]
+try:
+    hash = fullversion.split('-')[0].split('.')[4]
+except IndexError:
+    hash = ''
 print hash

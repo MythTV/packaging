@@ -9,6 +9,7 @@ mythtv (2:0.24.0+fixes.20101203.11ee9c5-0ubuntu1) UNRELEASED; urgency=low
   * Update control files.
   * Add an epoch because of the changing fixes->fixes and trunk->master to allow
     proper upgrades.
+  * In ppa git checker helper, if no hash returned, don't error up.
 
   [ Thomas Mashos ]
   * Make mythplugins replace mythmovies
