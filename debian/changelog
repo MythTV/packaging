@@ -1,9 +1,9 @@
-mythtv (2:0.25.0~master.20101203.f7ad913-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.25.0~master.20101204.803b474-0ubuntu1) UNRELEASED; urgency=low
 
   * Add new Tieresias fonts to mythtv-common.
   * Drop mythvideo readme file.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 03 Dec 2010 11:52:43 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 04 Dec 2010 23:36:22 -0600
 
 mythtv (2:0.24.0+fixes.20101203.11ee9c5-0ubuntu1) UNRELEASED; urgency=low
 
