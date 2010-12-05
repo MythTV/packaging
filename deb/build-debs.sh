@@ -109,7 +109,22 @@ fi
 
 #check out/update checkout
 debian/rules get-git-source LAST_GIT_HASH=''
-debian/rules build-tarball
+
+#new upstream version
+UPSTREAM_VERSION=$(dpkg-parsechangelog | sed '/Version/!d; s/.*[0-9]://; s/-.*//')
+
+# 0) Check for a orig tarball file.  If no file then:
+# 1) build a tarball
+# 2) is this an autobuild?  if so, double check whether the tarball already
+#    existed in the primary archive
+#    A) if so, this replaces it so that we have consistent md5sums
+#    B) if it didn't this will do nothing.
+if [ ! -f ../mythtv_$UPSTREAM_VERSION.orig.tar.gz ]; then
+	debian/rules build-tarball
+	if echo $DEBIAN_SUFFIX | grep '+mythbuntu' 2>&1 1>/dev/null; then
+		debian/rules get-orig-source
+	fi
+fi
 
 if [ "$TYPE" = "binary" ]; then
     #Make sure we have the package for get-build-deps
