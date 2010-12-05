@@ -3,6 +3,7 @@ mythtv
 mythplugins
 myththemes
 .git
+.gitignore
 checksums
 themestringstool
 version.cpp

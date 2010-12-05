@@ -159,4 +159,7 @@ update-control-files:
 	   echo "myththemes/$(theme) usr/share/mythtv/themes" > debian/mythtv-theme-$(shell echo $(theme) | tr '[A-Z]' '[a-z]').install; \
 	   cat debian/theme.stub | sed s/#THEME#/$(shell echo $(theme) | tr '[A-Z]' '[a-z]')/ >> debian/control; \
  	 )
+	if [ "$(GIT_TYPE)" = "master" ]; then \
+		sed -i debian/control -e 's/Recommends:\ mythtv-themes.*/Recommends:\ mythtv-themes, mythtv-dbg/' ;\
+	fi
 
