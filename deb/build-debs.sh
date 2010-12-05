@@ -25,7 +25,7 @@ help()
 	exit 0
 }
 
-DEBUILD_FLAGS="-us -uc -i -I.git"
+[ -z "$DEBUILD_FLAGS" ] && DEBUILD_FLAGS="-us -uc -i -I.git"
 
 if [ -z "$1" ]; then
 	help
@@ -100,7 +100,7 @@ bzr revert
 EPOCH=$(dpkg-parsechangelog | sed '/Version/!d; s/.* //; s/:.*//;')
 TODAY=$(date +%Y%m%d)
 #actually bump the changelog up. don't include a git hash here right now.
-dch -b -v $EPOCH:0.$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TODAY.-$DEBIAN_SUFFIX ""
+dch -b -v $EPOCH:0.$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TODAY.-$DEBIAN_SUFFIX "Automated Build"
 
 #clean up any old patches (just in case)
 if [ -d .pc ]; then
@@ -154,6 +154,10 @@ fi
 
 #update changelog and control files
 debian/rules update-control-files
+
+#mark the ubuntu target in the changelog
+[ -z "$UBUNTU_RELEASE" ] && UBUNTU_RELEASE=$(lsb_release -s -c)
+dch -b --force-distribution -D $UBUNTU_RELEASE ""
 
 #build the packages
 debuild $DEBUILD_FLAGS
