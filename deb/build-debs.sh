@@ -121,7 +121,7 @@ UPSTREAM_VERSION=$(dpkg-parsechangelog | sed '/Version/!d; s/.*[0-9]://; s/-.*//
 #    B) if it didn't this will do nothing.
 if [ ! -f ../mythtv_$UPSTREAM_VERSION.orig.tar.gz ]; then
 	debian/rules build-tarball
-	if echo $DEBIAN_SUFFIX | grep '+mythbuntu' 2>&1 1>/dev/null; then
+	if echo $DEBIAN_SUFFIX | grep 'mythbuntu' 2>&1 1>/dev/null; then
 		debian/rules get-orig-source
 	fi
 fi
