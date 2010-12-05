@@ -74,17 +74,17 @@ fi
 
 mkdir -p $DIRECTORY
 cd $DIRECTORY
+
 #update bzr branches that are supported
+#reset them and stage the proper one
 if [ ! -d ".bzr" ]; then
 	bzr init-repo .
-	bzr branch http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-master bzr-master
-	bzr branch http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-fixes  bzr-fixes
-else
-	cd bzr-master && bzr pull && cd ..
-	cd bzr-fixes  && bzr pull && cd ..
 fi
-
-#set the proper bzr branch in place
+if [ ! -d bzr-$GIT_TYPE ]; then
+	bzr branch http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-$GIT_TYPE bzr-$GIT_TYPE
+else
+	cd bzr-$GIT_TYPE && bzr pull && cd ..
+fi
 mkdir -p git
 cd git
 rm -rf .bzr
