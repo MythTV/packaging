@@ -34,8 +34,13 @@ else
 	DIRECTORY="$2"
 	if echo "$1" | grep fixes 2>&1 1>/dev/null; then
 		GIT_TYPE="fixes"
+		GIT_MAJOR_RELEASE=$(echo $1 |sed 's,.*0.,,')
+		DELIMITTER="+"
+		echo "Building for fixes, v0.$GIT_MAJOR_RELEASE"
 	else
 		GIT_TYPE="master"
+		DELIMITTER="~"
+		echo "Building for master"
 	fi
 	if [ -z "$DIRECTORY" ]; then
 		DIRECTORY=`pwd`
@@ -86,14 +91,15 @@ rm -rf .bzr
 ln -s ../bzr-$GIT_TYPE/.bzr .
 bzr revert
 
-#set changelog entry
-GIT_MAJOR_RELEASE=$(dpkg-parsechangelog | dpkg-parsechangelog | sed '/Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $1 }')
-GIT_MINOR_RELEASE=$(dpkg-parsechangelog | dpkg-parsechangelog | sed '/Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $2 }')
-DATE=$(dpkg-parsechangelog | sed '/Version/!d; s/.*+//; s/-.*//;' | awk -F. '{print $2}')
-DELIMITTER=$(dpkg-parsechangelog  | sed '/Version/!d; s/fixes.*//; s/master.*//; s/unknown.*//; s/.*[0-9]//')
+##set changelog entry
+#these can be filled in potentially from external sources
+[ -z "$GIT_MAJOR_RELEASE" ] && GIT_MAJOR_RELEASE=$(dpkg-parsechangelog | dpkg-parsechangelog | sed '/Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $1 }')
 [ -z "$DEBIAN_SUFFIX" ] && DEBIAN_SUFFIX=$(dpkg-parsechangelog | sed '/Version/!d; s/.*-//;')
+#these should always be parsed from the old changelog
+GIT_MINOR_RELEASE=$(dpkg-parsechangelog | dpkg-parsechangelog | sed '/Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $2 }')
 EPOCH=$(dpkg-parsechangelog | sed '/Version/!d; s/.* //; s/:.*//;')
 TODAY=$(date +%Y%m%d)
+#actually bump the changelog up. don't include a git hash here right now.
 dch -b -v $EPOCH:0.$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TODAY.-$DEBIAN_SUFFIX ""
 
 #clean up any old patches (just in case)
