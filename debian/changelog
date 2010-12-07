@@ -14,6 +14,7 @@ mythtv (2:0.24.0+fixes.20101203.11ee9c5-0ubuntu1) UNRELEASED; urgency=low
     mythtv-dbg.
   * Update standards version.
   * Force pic support on as much of the build as possible. (LP: #684941)
+  * Move mythweb's set -e into the script invokation to quiet lintian.
 
   [ Thomas Mashos ]
   * Make mythplugins replace mythmovies
