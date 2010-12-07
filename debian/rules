@@ -124,7 +124,9 @@ override_dh_installdocs:
 		-name "COPYING" -delete
 	rm -f debian/mythtv-common/usr/share/mythtv/themes/Terra/watermarks/README.license
 	#(MythPlugins)
-	rm -f debian/mythweb/usr/share/mythtv/mythweb/{INSTALL,LICENSE,README}
+	for file in LICENSE README INSTALL; do \
+		rm -f debian/mythweb/usr/share/mythtv/mythweb/$$file ;\
+	done
 	#(Myththemes)
 	rm -f debian/mythtv-theme-arclight/usr/share/mythtv/themes/Arclight/LICENSE
 	rm -f debian/mythtv-theme-childish/usr/share/mythtv/themes/Childish/COPYING
