@@ -1,4 +1,4 @@
-mythtv (2:0.24.0+fixes.20101203.11ee9c5-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20101207.d3d2640-0ubuntu1) natty; urgency=low
 
   [ Mario Limonciello ]
   * Modify the get-orig-source rule to use launchpadlib to try to fetch the file
@@ -19,12 +19,20 @@ mythtv (2:0.24.0+fixes.20101203.11ee9c5-0ubuntu1) UNRELEASED; urgency=low
   * Demote libmythtv-perl depends to recommends on mythtv-backend.
   * Don't run the permissions fix up on python files smaller than 1 block.
   * Fixup the extra docs cleanup for mythweb.
+  * >>Upstream changes since last upload (11ee9c5):
+  * [d3d2640] MythArchive: Update the script to look for the fonts in
+    the new location.
+  * [011ffd5] Fix file streaming to stay working past 4G
+  * [ecbbcf8] Backport from master to fixes/0.24.
+  * [fe9d48e] Move toLower to the correct location
+  * [e4ea220] Add gitignores to fixes/0.24 too
+  * [dc4868a] Tweak PWD in the Makefile to be more specific
 
   [ Thomas Mashos ]
   * Make mythplugins replace mythmovies
   * Make mythplugins replace mythmovies in debian/control.in
 
- -- Thomas Mashos <tgm4883@gmail.com>  Fri, 03 Dec 2010 22:46:48 -0800
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 07 Dec 2010 02:42:49 -0600
 
 mythtv (1:0.24.0+fixes27305-0ubuntu1) natty; urgency=low
 
