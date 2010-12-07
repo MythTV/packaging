@@ -12,6 +12,7 @@ mythtv (2:0.24.0+fixes.20101203.11ee9c5-0ubuntu1) UNRELEASED; urgency=low
   * In ppa git checker helper, if no hash returned, don't error up.
   * If running on a master build, have the update-control-files rule recommends
     mythtv-dbg.
+  * Update standards version.
 
   [ Thomas Mashos ]
   * Make mythplugins replace mythmovies
