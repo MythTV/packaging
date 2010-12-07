@@ -79,7 +79,7 @@ override_dh_auto_install:
 	mv debian/tmp/usr/bin/mythtv-setup debian/tmp/usr/bin/mythtv-setup.real
 
 	#(All) Make sure python/perl scripts are executable
-	find debian/tmp/usr/share -name "*.p[y|l]" -type f -exec chmod 755 {} \;
+	find debian/tmp/usr/share -name "*.p[y|l]" -type f -size +1b -exec chmod 755 {} \;
 
 override_dh_install:
 	dh_install -Xusr/share/mythtv/fonts/Free -Xusr/share/mythtv/fonts/tiresias_gpl3.txt --fail-missing

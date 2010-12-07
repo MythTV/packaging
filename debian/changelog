@@ -17,6 +17,7 @@ mythtv (2:0.24.0+fixes.20101203.11ee9c5-0ubuntu1) UNRELEASED; urgency=low
   * Move mythweb's set -e into the script invokation to quiet lintian.
   * Add python dependency to mythtv-common.
   * Demote libmythtv-perl depends to recommends on mythtv-backend.
+  * Don't run the permissions fix up on python files smaller than 1 block.
 
   [ Thomas Mashos ]
   * Make mythplugins replace mythmovies
