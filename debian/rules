@@ -24,6 +24,7 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=debug \
 				--with-bindings=perl \
 				--enable-opengl-video \
 				--enable-ffmpeg-pthreads \
+				--enable-pic \
 				--perl-config-opts="INSTALLDIRS=vendor"
 
 #                                    #
@@ -78,7 +79,7 @@ override_dh_auto_install:
 	mv debian/tmp/usr/bin/mythtv-setup debian/tmp/usr/bin/mythtv-setup.real
 
 	#(All) Make sure python/perl scripts are executable
-	find debian/tmp/usr/share -name "*.p[y|l]" -type f -exec chmod 755 {} \;
+	find debian/tmp/usr/share -name "*.p[y|l]" -type f -size +1b -exec chmod 755 {} \;
 
 override_dh_install:
 	dh_install -Xusr/share/mythtv/fonts/Free -Xusr/share/mythtv/fonts/tiresias_gpl3.txt --fail-missing
@@ -123,7 +124,9 @@ override_dh_installdocs:
 		-name "COPYING" -delete
 	rm -f debian/mythtv-common/usr/share/mythtv/themes/Terra/watermarks/README.license
 	#(MythPlugins)
-	rm -f debian/mythweb/usr/share/mythtv/mythweb/{INSTALL,LICENSE,README}
+	for file in LICENSE README INSTALL; do \
+		rm -f debian/mythweb/usr/share/mythtv/mythweb/$$file ;\
+	done
 	#(Myththemes)
 	rm -f debian/mythtv-theme-arclight/usr/share/mythtv/themes/Arclight/LICENSE
 	rm -f debian/mythtv-theme-childish/usr/share/mythtv/themes/Childish/COPYING

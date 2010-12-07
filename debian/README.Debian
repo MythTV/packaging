@@ -67,3 +67,30 @@ master    -> indicates this is a checkout from trunk
 20101202  -> date
 .ee329fe  -> git hash
 -0ubuntu1 -> indicates not in debian, but this is ubuntu package iteration 1
+
+
+---------------------
+>-fPIC support<
+---------------------
+The builds do have --enable-pic passed to them which should enable -fPIC where 
+applicable.  There are certain portions of the ffmpeg code that intentionally
+disable this functionality though. The same libraries in the 'ffmpeg' 
+package don't have -fPIC either.
+
+These are all caused by inline assmebly referring to absolute memory on 
+x86/x86_64 that matches on MMX flags.
+On other architectures this code will not be compiled.
+
+libmyth-0.24-0: shlib-with-non-pic-code usr/lib/libmythavcodec.so.52.86.1
+ - mythtv/external/FFmpeg/libavcodec/x86/vp8dsp-init.c
+ - ff_vp8dsp_init_x86
+
+libmyth-0.24-0: shlib-with-non-pic-code usr/lib/libmythpostproc.so.51.2.0
+ - mythtv/external/libpostproc/postprocess.c
+ - pp_get_mode_by_name_and_quality
+
+libmyth-0.24-0: shlib-with-non-pic-code usr/lib/libmythswscale.so.0.11.0
+ - libswscale/utils.c
+ - sws_rgb2rgb_init
+ - sws_getCachedContext
+ - sws_getDefaultFilter
