@@ -24,6 +24,7 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=debug \
 				--with-bindings=perl \
 				--enable-opengl-video \
 				--enable-ffmpeg-pthreads \
+				--enable-pic \
 				--perl-config-opts="INSTALLDIRS=vendor"
 
 #                                    #

@@ -13,6 +13,7 @@ mythtv (2:0.24.0+fixes.20101203.11ee9c5-0ubuntu1) UNRELEASED; urgency=low
   * If running on a master build, have the update-control-files rule recommends
     mythtv-dbg.
   * Update standards version.
+  * Force pic support on as much of the build as possible. (LP: #684941)
 
   [ Thomas Mashos ]
   * Make mythplugins replace mythmovies
