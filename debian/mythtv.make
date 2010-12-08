@@ -102,12 +102,13 @@ get-git-source:
 	if [ "$(GIT_HASH)" != "$$CURRENT_GIT_HASH" ]; then \
 		GIT_HASH=$$CURRENT_GIT_HASH ;\
 		LAST_GIT_HASH=$(GIT_HASH) ;\
-		dch -b -v $(EPOCH):$(GIT_RELEASE)$(DELIMITTER)$(GIT_TYPE).$(TODAY).$$GIT_HASH-$(DEBIAN_SUFFIX) "";\
+		if [ -n "$(AUTOBUILD)" ]; then \
+			LAST_GIT_HASH=`python debian/PPA-published-git-checker.py 0.$(GIT_MAJOR_RELEASE)` ;\
+			AUTOBUILD="Automated Build: " ;\
+		fi ;\
+		dch -b -v $(EPOCH):$(GIT_RELEASE)$(DELIMITTER)$(GIT_TYPE).$(TODAY).$$GIT_HASH-$(DEBIAN_SUFFIX) "$${AUTOBUILD}New upstream checkout ($$GIT_HASH)";\
 	else \
 		GIT_HASH=$(GIT_HASH) ;\
-	fi ;\
-	if [ -n "$(AUTOBUILD)" ]; then \
-		LAST_GIT_HASH=`python debian/PPA-published-git-checker.py 0.$(GIT_MAJOR_RELEASE)` ;\
 	fi ;\
 	[ -n "$$LAST_GIT_HASH" ] || LAST_GIT_HASH=$(LAST_GIT_HASH) ;\
 	if [ -n "$$LAST_GIT_HASH" ] && [ "$$GIT_HASH" != "$$LAST_GIT_HASH" ]; then \
