@@ -3,6 +3,7 @@ mythtv (2:0.24.0+fixes.20101214.1405782-0ubuntu2) UNRELEASED; urgency=low
   * in the git building rule, make sure to include the proper phrases
     for autobuilds.
   * reverse the rule for do-new-release.sh
+  * include a data directory to fix mythweb postinst breaking.
   * New upstream checkout (1405782)
   * >>Upstream changes since last upload (d3d2640):
   * [1405782] Fix ALSA buffer allocation.

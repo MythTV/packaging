@@ -2,4 +2,5 @@ var/cache/mythweb/image_cache
 var/www
 etc/mythtv
 usr/share/mythtv
+usr/share/mythtv/mythweb/data
 etc/apache2/sites-available
