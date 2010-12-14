@@ -2,6 +2,7 @@ mythtv (2:0.24.0+fixes.20101207.d3d2640-0ubuntu2) UNRELEASED; urgency=low
 
   * in the git building rule, make sure to include the proper phrases
     for autobuilds.
+  * reverse the rule for do-new-release.sh
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 07 Dec 2010 19:09:40 -0600
 
