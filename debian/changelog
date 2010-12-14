@@ -1,4 +1,4 @@
-mythtv (2:0.24.0+fixes.20101214.1405782-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20101214.1405782-0ubuntu1) natty; urgency=low
 
   * in the git building rule, make sure to include the proper phrases
     for autobuilds.
@@ -49,7 +49,7 @@ mythtv (2:0.24.0+fixes.20101214.1405782-0ubuntu2) UNRELEASED; urgency=low
   * [5cd75db] Fix logic error that forced to have audio advanced checked
     to get 7.1 LPCM
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 14 Dec 2010 09:47:40 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 14 Dec 2010 10:32:47 -0600
 
 mythtv (2:0.24.0+fixes.20101207.d3d2640-0ubuntu1) natty; urgency=low
 
