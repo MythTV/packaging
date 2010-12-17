@@ -3,11 +3,11 @@
 #
 # Script for building MythTV packages from an SVN checkout.
 #
-# by:   Chris Petersen <rpm@forevermore.net>
+# by:   Chris Petersen <cpetersen@mythtv.org>
 #
-# The latest version of this file can be found in mythtv svn:
+# The latest version of this file can be found in the mythtv git repository:
 #
-# http://svn.mythtv.org/svn/trunk/packaging/rpm/build_myth.sh $
+# https://github.com/MythTV/packaging/raw/master/rpm/build_myth.sh
 #
 # See --help for usage instructions.
 #
@@ -26,14 +26,14 @@
 ###############################################################################
 
 # Hard-code the version of MythTV
-    VERSION="0.24"
+    VERSION="0.25"
 
-# Branch should be "trunk" or "stable"
-    BRANCH="trunk"
+# Branch should be "master" or "stable"
+    BRANCH="master"
 
-# Hard-code the svn checkout directory.  Leave blank to auto-detect based on
+# Hard-code the git clone directory.  Leave blank to auto-detect based on
 # the location of this script
-    SVNDIR=""
+    GITDIR=""
 
 ###############################################################################
 # Functions to be used by the program
@@ -66,32 +66,13 @@ $PROG --revision REVISION
 EOF
     }
 
-# Update to the latest/requested SVN version
-    function updatesvn {
-        PKG="$1"
-        REV="$2"
-        if [ -z "$REV" -o 0"$REV" -lt 1 ]; then
-            echo "Updating svn checkout for $PKG"
-            REL=`svn up "$SVNDIR"/"$PKG" 2>/dev/null`
-        else
-            echo "Updating svn checkout for $PKG to r$REV"
-            REL=`svn up -r "$REV" "$SVNDIR"/"$PKG" 2>/dev/null`
-        fi
-        if [ $? != 0 ]; then
-            echo "Problem updating svn checkout"
-            return $?
-        fi
-        REL=`echo "$REL" | grep -i revision | sed -e 's/[^0-9]\\+//g'`
-        echo "Updated to SVN Revision $REL"
-    }
-
 # Update the requested spec to the requested revision/branch/version
     function updatespec {
         R="$1"
         SPEC="$2"
-        echo "Updating $SPEC _svnver to r$R"
+        echo "Updating $SPEC _gitver to r$R"
         sed -i \
-            -e "s,define _svnrev .\+,define _svnrev r$R," \
+            -e "s,define _gitrev .\+,define _svnrev r$R," \
             -e "s,define branch .\+,define branch $BRANCH,"  \
             -e "s,Version:.\+,Version: $VERSION,"             \
             $SPEC
@@ -99,9 +80,6 @@ EOF
 
 # Function to build mythtv packages
     function buildmyth {
-    # Update the SVN checkout
-        updatesvn mythtv "$1"
-        updatesvn mythplugins "$1"
     # Remove the existing mythtv-devel so it doesn't confuse qmake
     # (we can't override the order of the include file path)
         PKG=`rpm -q mythtv-devel`
@@ -109,22 +87,13 @@ EOF
             echo "Removing existing mythtv-devel package to avoid conflicts"
             sudo rpm -e mythtv-devel.i386 mythtv-devel.x86_64 2>/dev/null
         fi
-    # Update the spec
-        updatespec $REL "$ABSPATH/mythtv.spec"
     # Clean up any old tarballs that might exist
         rm -f "$ABSPATH"/mythtv/myth*.tar.bz2
     # Create the appropriate tarballs
-        echo "Creating tarballs from svn checkout at $SVNDIR"
-        cd "$SVNDIR"
+        echo "Creating tarballs from git clones at $GITDIR"
         for file in mythtv mythplugins; do
-            if [ -d "$file-$VERSION" ]; then
-                rm -rf "$file-$VERSION"
-            fi
-            echo -n "    "
-            mv "$file" "$file-$VERSION"
-            tar jcf "$ABSPATH/mythtv/$file-$VERSION.tar.bz2" --exclude .svn "$file-$VERSION"
-            mv "$file-$VERSION" "$file"
-            echo "$ABSPATH/mythtv/$file-$VERSION.tar.bz2"
+            git archive --format tar --remote "$GITDIR"/ HEAD "$file"/ | bzip2  > "$ABSPATH/mythtv/$file-$GITVER.tar.bz2"
+            echo "$ABSPATH/mythtv/$file-$GITVER.tar.bz2"
         done
     # Build MythTV
         time rpmbuild -bb "$ABSPATH"/mythtv.spec \
@@ -141,12 +110,12 @@ EOF
             return
         fi
     # Install
-        echo -n "Install r$REL? [n] "
+        echo -n "Install $VSTRING? [n] "
         read INST
         if [ "$INST" = "y" -o "$INST" = "Y" -o "$INST" = "yes" ]; then
-            installmyth "$REL"
+            installmyth "$VSTRING"
         else
-            echo "If you wish to install later, just run: $PROG --install \"$REL\""
+            echo "If you wish to install later, just run: $PROG --install \"$VSTRING\""
         fi
     }
 
@@ -236,11 +205,12 @@ EOF
     done
 
 # Auto-detect the source directory?
-    if [ -z "$SVNDIR" ]; then
-        SVNDIR=$(dirname $(dirname "$ABSPATH"))
-    elif [ ! -d "$SVNDIR" ]; then
-        echo "$SVNDIR does not exist.  Please check out using:"
-        echo "    svn co http://svn.mythtv.org/svn/trunk/ $SVNDIR"
+    if [ -z "$GITDIR" ]; then
+        GITDIR=$(dirname $(dirname "$ABSPATH"))/mythtv
+    fi
+    if [ ! -d "$GITDIR" ]; then
+        echo "$GITDIR does not exist.  Please check out using:"
+        echo "    git clone https://github.com/MythTV/mythtv"
         exit
     fi
 
@@ -264,19 +234,61 @@ EOF
             REV="$1"
     esac
 
-# Sanity check
-    if [ `expr "$REV" : "[^0-9]"` -ne 0 ]; then
-        echo "Invalid revision:  $REV"
+# Make sure our git clone is up to date
+    echo "Fetching latest information from git repository."
+    cd "$GITDIR"
+    git fetch
+    git fetch --tags
+
+# Get information about the latest/requested Git sha
+    if [[ $REV ]]; then
+        DESCRIBE=`git describe "$REV" -- 2>/dev/null`
+    else
+        DESCRIBE=`git describe -- 2>/dev/null`
+    fi
+    if [[ ! $DESCRIBE ]]; then
+        echo "Unknown/Invalid revision:  $REV"
         exit
     fi
+    GITVER=`echo "$DESCRIBE" | sed -e 's,^\([^-]\+\)-.\+$,\1,'`
+    GITREV=`echo "$DESCRIBE" | sed -e 's,^[^-]\+-,,' -e 's,-,.,'`
+    # do some magic here to detect v, b, or pre notations
+    if [[ $GITVER =~ '^v' ]]; then
+        GITVER=${GITVER#v}
+        GITREV=1
+    elif [[ $GITVER =~ '^b' ]]; then
+        GITVER=0.$((${GITVER#b0.}+1))
+        GITREV="0.$GITREV"
+    elif [[ $GITVER =~ 'pre$' ]]; then\
+        GITVER=${GITVER%pre}
+        GITREV="0.$GITREV"
+    fi
+    VSTRING="$GITVER.$GITREV"
+
+# Done doing that, now back to the working dir
+    cd - >/dev/null
 
 # What to do now?
-    if [ -z "$REV" ]; then
-        echo "Building latest revision"
+    if [[ ! $REV ]]; then
+        echo "Building $VSTRING (latest revision)"
     else
-        echo "Building Revision:  $REV"
+        echo "Building $VSTRING"
     fi
-    buildmyth "$REV"
+
+# Update the revision in the specfile
+    echo "Updating mythtv.spec _gitver to $VSTRING"
+    sed -i \
+        -e "s,define _gitrev .\+,define _gitrev $GITREV," \
+        -e "s,define branch .\+,define branch $BRANCH,"   \
+        -e "s,define vers_string .\+,define vers_string $DESCRIBE,"   \
+        -e "s,Version:.\+,Version: $GITVER,"              \
+        mythtv.spec
+    
+# Update the other spec files to the MythTV spec version
+    # later...
+
+# Build MythTV
+    buildmyth
 
 # Done
     exit
