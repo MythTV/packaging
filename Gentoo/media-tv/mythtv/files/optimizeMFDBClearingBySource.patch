@@ -1,0 +1,108 @@
+Index: libs/libmythtv/programdata.cpp
+===================================================================
+--- libs/libmythtv/programdata.cpp	(revision 26115)
++++ libs/libmythtv/programdata.cpp	(working copy)
+@@ -910,7 +910,7 @@
+     QDateTime newTo   = to.addSecs(secs);
+ 
+     MSqlQuery query(MSqlQuery::InitCon());
+-    query.prepare("DELETE FROM program "
++    query.prepare("DELETE QUICK FROM program "
+                   "WHERE starttime >= :FROM AND starttime < :TO "
+                   "AND chanid = :CHANID ;");
+     query.bindValue(":FROM", newFrom);
+@@ -918,7 +918,7 @@
+     query.bindValue(":CHANID", chanid);
+     bool ok = query.exec();
+ 
+-    query.prepare("DELETE FROM programrating "
++    query.prepare("DELETE QUICK FROM programrating "
+                   "WHERE starttime >= :FROM AND starttime < :TO "
+                   "AND chanid = :CHANID ;");
+     query.bindValue(":FROM", newFrom);
+@@ -926,7 +926,7 @@
+     query.bindValue(":CHANID", chanid);
+     ok &= query.exec();
+ 
+-    query.prepare("DELETE FROM credits "
++    query.prepare("DELETE QUICK FROM credits "
+                   "WHERE starttime >= :FROM AND starttime < :TO "
+                   "AND chanid = :CHANID ;");
+     query.bindValue(":FROM", newFrom);
+@@ -934,7 +934,7 @@
+     query.bindValue(":CHANID", chanid);
+     ok &= query.exec();
+ 
+-    query.prepare("DELETE FROM programgenres "
++    query.prepare("DELETE QUICK FROM programgenres "
+                   "WHERE starttime >= :FROM AND starttime < :TO "
+                   "AND chanid = :CHANID ;");
+     query.bindValue(":FROM", newFrom);
+@@ -949,11 +949,63 @@
+     uint sourceid, const QDateTime &from, const QDateTime &to,
+     bool use_channel_time_offset)
+ {
+-    vector<uint> chanids = ChannelUtil::GetChanIDs(sourceid);
++    MSqlQuery query(MSqlQuery::InitCon());
++
++    query.prepare("DELETE QUICK FROM program "
++                  "USING program INNER JOIN channel "
++                  "WHERE channel.sourceid = :SOURCEID "
++                  "AND channel.xmltvid != '' "
++                  "AND program.chanid = channel.chanid "
++                  "AND program.starttime >= "
++                  "FROM_UNIXTIME(UNIX_TIMESTAMP(:FROM)+channel.tmoffset) "
++                  "AND program.starttime < "
++                  "FROM_UNIXTIME(UNIX_TIMESTAMP(:TO)+channel.tmoffset) ");
++    query.bindValue(":FROM", from);
++    query.bindValue(":TO", to);
++    query.bindValue(":SOURCEID", sourceid);
++    bool ok = query.exec();
++
++    query.prepare("DELETE QUICK FROM programrating "
++                  "USING programrating INNER JOIN channel "
++                  "WHERE channel.sourceid = :SOURCEID "
++                  "AND channel.xmltvid != '' "
++                  "AND programrating.chanid = channel.chanid "
++                  "AND programrating.starttime >= "
++                  "FROM_UNIXTIME(UNIX_TIMESTAMP(:FROM)+channel.tmoffset) "
++                  "AND programrating.starttime < "
++                  "FROM_UNIXTIME(UNIX_TIMESTAMP(:TO)+channel.tmoffset) ");
++    query.bindValue(":FROM", from);
++    query.bindValue(":TO", to);
++    query.bindValue(":SOURCEID", sourceid);
++    ok &= query.exec();
++
++    query.prepare("DELETE QUICK FROM credits "
++                  "USING credits INNER JOIN channel "
++                  "WHERE channel.sourceid = :SOURCEID "
++                  "AND channel.xmltvid != '' "
++                  "AND credits.chanid = channel.chanid "
++                  "AND credits.starttime >= "
++                  "FROM_UNIXTIME(UNIX_TIMESTAMP(:FROM)+channel.tmoffset) "
++                  "AND credits.starttime < "
++                  "FROM_UNIXTIME(UNIX_TIMESTAMP(:TO)+channel.tmoffset) ");
++    query.bindValue(":FROM", from);
++    query.bindValue(":TO", to);
++    query.bindValue(":SOURCEID", sourceid);
++    ok &= query.exec();
+ 
+-    bool ok = true;
+-    for (uint i = 0; i < chanids.size(); i++)
+-        ok &= ClearDataByChannel(chanids[i], from, to, use_channel_time_offset);
++    query.prepare("DELETE QUICK FROM programgenres "
++                  "USING programgenres INNER JOIN channel "
++                  "WHERE channel.sourceid = :SOURCEID "
++                  "AND channel.xmltvid != '' "
++                  "AND programgenres.chanid = channel.chanid "
++                  "AND programgenres.starttime >= "
++                  "FROM_UNIXTIME(UNIX_TIMESTAMP(:FROM)+channel.tmoffset) "
++                  "AND programgenres.starttime < "
++                  "FROM_UNIXTIME(UNIX_TIMESTAMP(:TO)+channel.tmoffset) ");
++    query.bindValue(":FROM", from);
++    query.bindValue(":TO", to);
++    query.bindValue(":SOURCEID", sourceid);
++    ok &= query.exec();
+ 
+     return ok;
+ }

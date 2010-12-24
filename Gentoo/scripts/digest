@@ -1,0 +1,15 @@
+#!/bin/bash
+
+self=`readlink -f $0`
+selfpath=`dirname $self`
+cd $selfpath/../
+
+echo ""
+echo "Digesting ebuilds..."
+
+find . -name Manifest -delete
+
+for file in `find . -name \*.ebuild`
+do
+ ebuild $file digest
+done

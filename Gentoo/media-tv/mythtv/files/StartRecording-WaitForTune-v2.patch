@@ -1,0 +1,92 @@
+Index: libs/libmythtv/tv_rec.cpp
+===================================================================
+--- libs/libmythtv/tv_rec.cpp	(revision 26118)
++++ libs/libmythtv/tv_rec.cpp	(working copy)
+@@ -122,7 +122,7 @@
+       stateChangeLock(QMutex::Recursive),
+       pendingRecLock(QMutex::Recursive),
+       internalState(kState_None), desiredNextState(kState_None),
+-      changeState(false), pauseNotify(true),
++      changeState(false), m_SMdone(true), pauseNotify(true),
+       stateFlags(0), lastTuningRequest(0),
+       triggerEventLoopLock(QMutex::NonRecursive),
+       triggerEventLoopSignal(false),
+@@ -1618,7 +1618,7 @@
+         stateChangeLock.lock();
+ 
+         // verify that we were triggered.
+-        ok = (tuningRequests.empty() && !changeState);
++        ok = (tuningRequests.empty() && m_SMdone && !changeState);
+     }
+     return ok;
+ }
+@@ -3507,6 +3507,8 @@
+ 
+         // The dequeue isn't safe to do until now because we
+         // release the stateChangeLock to teardown a recorder
++        if (request.flags & kFlagRecording)
++            m_SMdone = false;
+         tuningRequests.dequeue();
+ 
+         // Now we start new stuff
+@@ -3542,6 +3544,8 @@
+     if (HasFlags(kFlagWaitingForSignal) && !(streamData = TuningSignalCheck()))
+         return;
+ 
++    m_SMdone = true;
++
+     if (HasFlags(kFlagNeedToStartRecorder))
+     {
+         if (recorder)
+@@ -3788,38 +3792,11 @@
+     if (!channum.isEmpty())
+     {
+         if (!input.isEmpty())
+-            ok = channel->SelectInput(input, channum, true);
++            channel->SelectInput(input, channum, true);
+         else
+-        {
+             channel->SelectChannel(channum, true);
+-            ok = true;
+-        }
+     }
+ 
+-    if (!ok)
+-    {
+-        if (!(request.flags & kFlagLiveTV) || !(request.flags & kFlagEITScan))
+-        {
+-            if (curRecording)
+-                curRecording->SetRecordingStatus(rsFailed);
+-
+-            VERBOSE(VB_IMPORTANT, LOC_ERR +
+-                    QString("Failed to set channel to %1. "
+-                            "Reverting to kState_None")
+-                    .arg(channum));
+-            if (kState_None != internalState)
+-                ChangeState(kState_None);
+-            else
+-                tuningRequests.enqueue(TuningRequest(kFlagKillRec));
+-            return;
+-        }
+-        else
+-        {
+-            VERBOSE(VB_IMPORTANT, LOC_ERR +
+-                    QString("Failed to set channel to %1.").arg(channum));
+-        }
+-    }
+-
+     // Start signal (or channel change) monitoring
+     VERBOSE(VB_RECORD, LOC + "Starting Signal Monitor");
+     bool error = false;
+Index: libs/libmythtv/tv_rec.h
+===================================================================
+--- libs/libmythtv/tv_rec.h	(revision 26118)
++++ libs/libmythtv/tv_rec.h	(working copy)
+@@ -355,6 +355,7 @@
+     TVState        internalState;
+     TVState        desiredNextState;
+     bool           changeState;
++    bool           m_SMdone;
+     bool           pauseNotify;
+     uint           stateFlags;
+     TuningQueue    tuningRequests;

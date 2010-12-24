@@ -1,0 +1,68 @@
+Index: mythplugins/mythvideo/mythvideo/globalsettings.cpp
+===================================================================
+--- mythplugins/mythvideo/mythvideo/globalsettings.cpp	(revision 21047)
++++ mythplugins/mythvideo/mythvideo/globalsettings.cpp	(working copy)
+@@ -301,6 +301,29 @@
+     return gc;
+ }
+ 
++HostLineEdit *TVExportDirectoryFormat() 
++{ 
++    HostLineEdit *gc = new HostLineEdit("mythvideo.TVExportDirFormat"); 
++    gc->setLabel(QObject::tr("TV Export Directory Format")); 
++    gc->setValue(DEFAULT_TVEXPORTDIRFORMAT); 
++    gc->setHelpText(QObject::tr("Directory format for recording export " 
++                    "to MythVideo, using user job style variables. Directory " 
++                    "is off of base MythVideo directory. Example: " 
++                    "Television/%CATEGORY%/%TITLE%")); 
++    return gc; 
++} 
++ 
++HostLineEdit *TVExportFileFormat() 
++{ 
++    HostLineEdit *gc = new HostLineEdit("mythvideo.TVExportFileFormat"); 
++    gc->setLabel(QObject::tr("TV Export File Format")); 
++    gc->setValue(DEFAULT_TVEXPORTFILEFORMAT); 
++    gc->setHelpText(QObject::tr("File format for recording export " 
++                    "to MythVideo, using user job style variables. Example: " 
++                    "%TITLE% %S##E##% - %SUBTITLE% (%STARTTIMEISO%)")); 
++    return gc; 
++} 
++	 
+ //Player Settings
+ 
+ HostLineEdit *VideoDefaultPlayer()
+@@ -727,6 +750,8 @@
+     page1->addChild(VideoBannerDirectory()); 
+     page1->addChild(VideoFanartDirectory()); 
+     page1->addChild(VideoDefaultView());
++    page1->addChild(TVExportDirectoryFormat()); 
++    page1->addChild(TVExportFileFormat()); 
+ 
+     VConfigPage page2(pages, false);
+     page2->addChild(VideoListUnknownFiletypes());
+Index: mythplugins/mythvideo/mythvideo/globals.cpp
+===================================================================
+--- mythplugins/mythvideo/mythvideo/globals.cpp	(revision 21047)
++++ mythplugins/mythvideo/mythvideo/globals.cpp	(working copy)
+@@ -28,6 +28,8 @@
+ const QString JUMP_VIDEO_TREE = "Video Listings";
+ const QString JUMP_VIDEO_GALLERY = "Video Gallery";
+ const QString JUMP_VIDEO_DEFAULT = "MythVideo";
++const QString DEFAULT_TVEXPORTDIRFORMAT = "Television/%TITLE%"; 
++const QString DEFAULT_TVEXPORTFILEFORMAT = "%TITLE% %##X##% - %SUBTITLE%"; 
+ 
+ #ifdef Q_WS_MACX
+ const QString DEFAULT_VIDEOSTARTUP_DIR = QDir::homePath() + "/Movies";
+Index: mythplugins/mythvideo/mythvideo/globals.h
+===================================================================
+--- mythplugins/mythvideo/mythvideo/globals.h	(revision 21047)
++++ mythplugins/mythvideo/mythvideo/globals.h	(working copy)
+@@ -28,5 +28,7 @@
+ extern const QString JUMP_VIDEO_DEFAULT;
+ 
+ extern const QString DEFAULT_VIDEOSTARTUP_DIR;
++extern const QString DEFAULT_TVEXPORTDIRFORMAT; 
++extern const QString DEFAULT_TVEXPORTFILEFORMAT; 
+ 
+ #endif // GLOBALS_H_
