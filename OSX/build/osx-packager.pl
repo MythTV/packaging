@@ -7,7 +7,7 @@
 ### $Id$
 ###
 ### = location
-### http://svn.mythtv.org/svn/trunk/packaging/OSX/build/osx-packager.pl
+### https://github.com/MythTV/packaging/raw/master/OSX/build/osx-packager.pl
 ###
 ### = description
 ### Tool for automating frontend builds on Mac OS X.
@@ -20,10 +20,10 @@ use Cwd ();
 
 ### Configuration settings (stuff that might change more often)
 
-# We try to auto-locate the Subversion client binaries.
+# We try to auto-locate the Git client binaries.
 # If they are not in your path, we build them from source
 #
-our $svn = `which svn`; chomp $svn;
+our $git = `which git`; chomp $git;
 
 # This script used to always delete the installed include and lib dirs.
 # That probably ensures a safe build, but when rebuilding adds minutes to
@@ -81,28 +81,9 @@ our %depend_order = (
 
 our %depend = (
 
-  'svndeps' =>
+  'git' =>
   {
-    'url'
-    => 'http://subversion.tigris.org/downloads/subversion-deps-1.4.3.tar.bz2',
-    'skip'
-    => 'yes'   # Don't actually untarr/configure/make.
-  },
-
-  'svn' =>
-  {
-    'url'
-    => 'http://subversion.tigris.org/downloads/subversion-1.4.3.tar.bz2',
-    'pre-conf'
-    => 'cd .. ; tar -xjf subversion-deps-1.4.3.tar.bz2',
-    'conf'
-    =>  [
-           '--disable-keychain',  # Workaround a 10.3 build problem
-           "MAKEFLAGS=\$parallel_make_flags"   # For builds of deps
-        ],
-    # For some reason, this dies when the neon sub-make ends
-    #'parallel-make'
-    #=> 'yes'
+    'url' => 'http://www.kernel.org/pub/software/scm/git/git-1.7.3.4.tar.bz2',
   },
 
   'freetype' =>
@@ -127,7 +108,7 @@ our %depend = (
 
   'taglib' =>
   {
-    'url' => 'http://developer.kde.org/~wheeler/files/src/taglib-1.6.3.tar.gz',
+    'url' => 'http://developer.kde.org/~wheeler/files/src/taglib-1.5.tar.gz',
   },
 
   'libogg' =>
@@ -273,7 +254,7 @@ osx-packager.pl - build OS X binary packages for MythTV
    -help            print the usage message
    -man             print full documentation
    -verbose         print informative messages during the process
-   -version <str>   custom version suffix (defaults to "svnYYYYMMDD")
+   -version <str>   custom version suffix (defaults to "gitYYYYMMDD")
    -noversion       don't use any version (for building release versions)
    -distclean       throw away all intermediate files and exit
    -thirdclean      do a clean rebuild of third party packages
@@ -282,9 +263,7 @@ osx-packager.pl - build OS X binary packages for MythTV
    -pluginskip      don't rebuild/install mythplugins
    -themeskip       don't install the extra themes from myththemes
    -clean           do a clean rebuild of MythTV
-   -svnbranch <str> build a specified Subversion branch,   instead of HEAD
-   -svnrev <str>    build a specified Subversion revision, instead of HEAD
-   -svntag <str>    build a specified release, instead of Subversion HEAD
+   -gitrev <str>    build a specified Git revision or tag, instead of HEAD
    -nohead          don't update to HEAD revision of MythTV before building
    -usehdimage      perform build inside of a case-sensitive disk image
    -leavehdimage    leave disk image mounted on exit
@@ -304,7 +283,7 @@ This script builds a MythTV frontend and all necessary dependencies, along
 with plugins as specified, as a standalone binary package for Mac OS X.
 
 It was designed for building daily CVS (now Subversion) snapshots,
-but can also be used to create release builds with the '-svntag' option.
+but can also be used to create release builds with the '-srctag' option.
 
 All intermediate files go into an '.osx-packager' directory in the current
 working directory. The finished application is named 'MythFrontend.app' and
@@ -322,7 +301,7 @@ Building two snapshots, one with plugins and one without:
 Building a "fixes" branch:
 
   osx-packager.pl -distclean
-  osx-packager.pl -svnbranch release-0-22-fixes
+  osx-packager.pl -srcbranch release-0-22-fixes
 
 Note that this script will not build old branches.
 Please try the branched version instead. e.g.
@@ -354,9 +333,7 @@ Getopt::Long::GetOptions(\%OPT,
                          'pluginskip',
                          'themeskip',
                          'clean',
-                         'svnbranch=s',
-                         'svnrev=s',
-                         'svntag=s',
+                         'gitrev=s',
                          'nohead',
                          'usehdimage',
                          'leavehdimage',
@@ -383,9 +360,9 @@ if ( $OPT{'enable-jobtools'} )
 {   $jobtools = 1  }
 
 # Get version string sorted out
-if ( $OPT{'svntag'} && !$OPT{'version'} )
+if ( $OPT{'srctag'} && !$OPT{'version'} )
 {
-    $OPT{'version'} = $OPT{'svntag'};
+    $OPT{'version'} = $OPT{'srctag'};
     $OPT{'version'} =~ s/-r *//;
     $OPT{'version'} =~ s/--revision *//;
 }
@@ -393,14 +370,14 @@ $OPT{'version'} = '' if $OPT{'noversion'};
 unless (defined $OPT{'version'})
 {
     my @lt = gmtime(time);
-    $OPT{'version'} = sprintf('svn%04d%02d%02d',
+    $OPT{'version'} = sprintf('git%04d%02d%02d',
                               $lt[5] + 1900, $lt[4] + 1, $lt[3]);
 }
 
 if ( $OPT{'srcdir'} )
 {
     $OPT{'nohead'} = 1;
-    $OPT{'svnbranch'} = 0;
+    $OPT{'srcbranch'} = 0;
 }
 
 # Build our temp directories
@@ -427,18 +404,18 @@ END
 
 if ( $OPT{'nohead'} && ! $OPT{'force'} )
 {
-    my $SVNTOP="$SCRIPTDIR/.osx-packager/src/myth-svn/mythtv/.svn";
+    my $GITTOP="$SCRIPTDIR/.osx-packager/src/myth-git/.git";
 
-    if ( ! -d $SVNTOP )
+    if ( ! -d $GITTOP )
     {   die "No source code to build?"   }
 
-    if ( ! `grep svn/trunk/mythtv $SVNTOP/entries` )
-    {   die "Source code does not match SVN trunk"   }
+    if ( ! `grep refs/heads/master $GITTOP/HEAD` )
+    {   die "Source code does not match GIT master"   }
 }
 #
 # Trunk building has diverged from 0.23-fixes. After 0.24-fixes, disable this:
 #
-elsif ( $OPT{'svnbranch'} )
+elsif ( $OPT{'srcbranch'} )
 {
     &Complain(<<END);
 This version of this script can not build old branches.
@@ -448,7 +425,7 @@ END
     die;
 }
 
-if ( $OPT{'svnbranch'} && $OPT{'svnbranch'} lt "release-0-24-fixes" )
+if ( $OPT{'srcbranch'} && $OPT{'srcbranch'} lt "release-0-24-fixes" )
 {
     &Complain(<<END);
 This version of this script can not build old branches.
@@ -473,12 +450,12 @@ if ( $OPT{'nohead'} && ! $OPT{'force'} )
     if ( ! `grep 0-22-fixes $SVNTOP/entries` )
     {   die "Source code does not match release-0-22-fixes"   }
 }
-elsif ( ! $OPT{'svnbranch'} && ! $OPT{'force'} )
+elsif ( ! $OPT{'srcbranch'} && ! $OPT{'force'} )
 {
     &Complain(<<END);
 This script can only build branch release-0-22-fixes.
 To build SVN HEAD, please try the latest version instead. e.g.
-http://svn.mythtv.org/svn/trunk/packaging/OSX/build/osx-packager.pl
+https://github.com/MythTV/packaging/raw/master/OSX/build/osx-packager.pl
 END
     die;
 }
@@ -504,7 +481,7 @@ mkdir $PREFIX;
 our $SRCDIR = "$WORKDIR/src";
 mkdir $SRCDIR;
 
-our $SVNDIR = "$SRCDIR/myth-svn";
+our $GITDIR = "$SRCDIR/myth-git";
 
 our @pluginConf;
 if ( $OPT{plugins} )
@@ -560,10 +537,10 @@ our %makecleanopt = (
 # Source code version.pro needs to call subversion binary
 #
 use File::Basename;
-our $svnpath = dirname $svn;
+our $gitpath = dirname $git;
 
 # Clean the environment
-$ENV{'PATH'} = "$PREFIX/bin:/bin:/usr/bin:/usr/sbin:$svnpath";
+$ENV{'PATH'} = "$PREFIX/bin:/bin:/usr/bin:/usr/sbin:$gitpath";
 $ENV{'PKG_CONFIG_PATH'} = "$PREFIX/lib/pkgconfig:";
 delete $ENV{'CC'};
 delete $ENV{'CXX'};
@@ -630,11 +607,11 @@ if ( $OPT{'distclean'} )
     &Syscall([ '/bin/rm', '-f', '-r', '$PREFIX/lib/libmyth*' ]);
     &Syscall([ '/bin/rm', '-f', '-r', '$PREFIX/lib/mythtv'   ]);
     &Syscall([ '/bin/rm', '-f', '-r', '$PREFIX/share/mythtv' ]);
-    &Syscall([ 'find', $SVNDIR, '-name', '*.o',     '-delete' ]);
-    &Syscall([ 'find', $SVNDIR, '-name', '*.a',     '-delete' ]);
-    &Syscall([ 'find', $SVNDIR, '-name', '*.dylib', '-delete' ]);
-    &Syscall([ 'find', $SVNDIR, '-name', '*.orig',  '-delete' ]);
-    &Syscall([ 'find', $SVNDIR, '-name', '*.rej',   '-delete' ]);
+    &Syscall([ 'find', $GITDIR, '-name', '*.o',     '-delete' ]);
+    &Syscall([ 'find', $GITDIR, '-name', '*.a',     '-delete' ]);
+    &Syscall([ 'find', $GITDIR, '-name', '*.dylib', '-delete' ]);
+    &Syscall([ 'find', $GITDIR, '-name', '*.orig',  '-delete' ]);
+    &Syscall([ 'find', $GITDIR, '-name', '*.rej',   '-delete' ]);
     exit;
 }
 
@@ -673,11 +650,11 @@ if ( ! @comps )
 
 &Verbose("Including components:", @comps);
 
-# If no SubVersion in path, and we are checking something out, build SVN:
-if ( $svn =~ m/no svn in / && ! $OPT{'nohead'} )
+# If no Git in path, and we are checking something out, build Git:
+if ( ( ! $git || $git =~ m/no git in / ) && ! $OPT{'nohead'} )
 {
-    $svn = "$PREFIX/bin/svn";
-    @build_depends = ('svndeps', 'svn');
+    $git = "$PREFIX/bin/git";
+    @build_depends = ( 'git' );
 }
 
 foreach my $comp (@comps)
@@ -841,86 +818,82 @@ if ( $cleanLibs )
     }
 }
 
-mkdir $SVNDIR;
-
 #
-# Work out Subversion branches, revisions and tags.
+# Work out Git branches, revisions and tags.
 # Note these vars are unused if nohead or srcdir set!
 #
-my $svnrepository = 'http://svn.mythtv.org/svn/';
-my @svnrevision   = ();
+my $gitrepository = 'git://github.com/MythTV/mythtv.git';
+my $gitpackaging  = 'git://github.com/MythTV/packaging.git';
+my $gitrevert = 0;
+my $gitrevision;
 
-if ( $OPT{'svnbranch'} )
+if ( $OPT{'gitrev'} )
 {
-    $svnrepository .= 'branches/' . $OPT{'svnbranch'} . '/';
-}
-elsif ( $OPT{'svntag'} )
-{
-    $svnrepository .= 'tags/' . $OPT{'svntag'} . '/';
-}
-elsif ( $OPT{'svnrev'} )
-{
-    $svnrepository .= 'trunk/';
-
-    # This arg. could be '1234', '-r 1234', or '--revision 1234'
-    # If the user just specified a number, add appropriate flag:
-    if ( $OPT{'svnrev'} =~ m/^\d+$/ )
-    {
-        push @svnrevision, '--revision';
-    }
-
-    push @svnrevision, $OPT{'svnrev'};
+    # This arg. could be '64d9d7c5...' (up to 40 hex digits),
+    # a branch like 'mythtv-rec', 'nigelfixes' or 'master',
+    # or a tag name like 'fixes/0.24'.
+ 
+    # Either way, no checking currently needed:
+    $gitrevision = $OPT{'srcrev'};
 }
 elsif ( ! $OPT{'nohead'} )
 {
-    # Lookup and use the HEAD revision so we are guaranteed consistent source
-    my $cmd = "$svn log $svnrepository --revision HEAD --xml | grep revision";
-    &Verbose($cmd);
-    my $rev = `$cmd`;
-
-    if ( $rev =~ m/revision="(\d+)">/ )
-    {
-        $svnrepository .= 'trunk/';
-        @svnrevision = ('--revision', $1);
-    }
-    else
-    {
-        &Complain("Cannot get head revision - Got '$rev'");
-        die;
-    }
+    $gitrevision = 'master';  # HEAD might also work?
 }
 
 # Retrieve source
 if ( $OPT{'srcdir'} )
 {
     chdir($SCRIPTDIR);
-    &Syscall(['rm', '-fr', $SVNDIR]);
-    &Syscall(['mkdir', '-p', $SVNDIR]);
+    &Syscall(['rm', '-fr', $GITDIR]);
+    &Syscall(['mkdir', '-p', $GITDIR]);
     foreach my $dir ('mythtv', 'mythplugins',
                      'myththemes', 'themes', 'packaging')
     {
-        &Syscall(['cp', '-pR', "$OPT{'srcdir'}/$dir", "$SVNDIR/$dir"]);
+        &Syscall(['cp', '-pR', "$OPT{'srcdir'}/$dir", "$GITDIR/$dir"]);
     }
-    &Syscall("mkdir -p $SVNDIR/mythtv/config")
+    &Syscall("mkdir -p $GITDIR/mythtv/config")
 }
 elsif ( ! $OPT{'nohead'} )
 {
-    # Empty subdirectory 'config' sometimes causes checkout problems
-    &Syscall(['rm', '-fr', $SVNDIR . '/mythtv/config']);
-    Verbose("Checking out source code");
-    &Syscall([ $svn, 'co', @svnrevision,
-              map($svnrepository . $_, @comps), $SVNDIR ]) or die;
+    # Only do 'git clone' if mythtv directory does not exist.
+    # Always do 'git checkout' to make sure we have the right branch,
+    # then 'git pull' to get up to date.
+    if ( ! -e $GITDIR )
+    {
+        Verbose("Checking out source code");
+        &Syscall([ $git, 'clone', $gitrepository, $GITDIR ]) or die;
+    }
+    if ( ! -e "$GITDIR/packaging" )
+    {
+        Verbose("Checking out packaging code");
+        &Syscall([ $git, 'clone',
+                   $gitpackaging, $GITDIR . '/packaging' ]) or die;
+    }
+
+    my @gitcheckoutflags;
+
+    if ( $gitrevert )
+    {   @gitcheckoutflags = ( 'checkout', '--force', $gitrevision )   }
+    else
+    {   @gitcheckoutflags = ( 'checkout', '--merge', $gitrevision )   }
+    
+    chdir $GITDIR;
+    &Syscall([ $git, @gitcheckoutflags ]) or die;
+    &Syscall([ $git, 'pull' ]) or die;
+
+    chdir "$GITDIR/packaging";
+    &Syscall([ $git, @gitcheckoutflags ]) or die;
+    &Syscall([ $git, 'pull' ]) or die;
 }
-else
-{   &Syscall("mkdir -p $SVNDIR/mythtv/config")   }
 
 # Make a convenience (non-hidden) directory for editing src code:
-system("ln -sf $SVNDIR $SCRIPTDIR/src");
+system("ln -sf $GITDIR $SCRIPTDIR/src");
 
 # Build MythTV and any plugins
 foreach my $comp (@comps)
 {
-    my $compdir = "$SVNDIR/$comp/" ;
+    my $compdir = "$GITDIR/$comp/" ;
 
     chdir $compdir;
 
@@ -1033,7 +1006,7 @@ $VERS =~ s/^.*\-(.*)\.dylib$/$1/s;
 $VERS .= '.' . $OPT{'version'} if $OPT{'version'};
 
 ### Program which creates bundles:
-our @bundler = "$SVNDIR/packaging/OSX/build/osx-bundler.pl";
+our @bundler = "$GITDIR/packaging/OSX/build/osx-bundler.pl";
 if ( $OPT{'verbose'} )
 {   push @bundler, '--verbose'   }
 
@@ -1063,7 +1036,7 @@ foreach my $target ( @targets )
     # Get a fresh copy of the binary
     &Verbose("Building self-contained $target");
     &Syscall([ 'rm', '-fr', $finalTarget ]) or die;
-    &Syscall([ 'cp',  "$SVNDIR/mythtv/programs/$builtTarget/$builtTarget",
+    &Syscall([ 'cp',  "$GITDIR/mythtv/programs/$builtTarget/$builtTarget",
                       "$SCRIPTDIR/$target" ]) or die;
 
     # Convert it to a bundled .app
@@ -1105,7 +1078,7 @@ foreach my $target ( @targets )
 
         # The icon
         &Syscall([ 'cp',
-                   "$SVNDIR/mythtv/programs/mythfrontend/mythfrontend.icns",
+                   "$GITDIR/mythtv/programs/mythfrontend/mythfrontend.icns",
                    "$res/application.icns" ]) or die;
         &Syscall([ '/Developer/Tools/SetFile', '-a', 'C', $finalTarget ])
             or die;
@@ -1248,7 +1221,7 @@ exit 0;
 
 
 ######################################
-## RecursiveCopy copies a directory tree, stripping out .svn
+## RecursiveCopy copies a directory tree, stripping out .git
 ## directories and properly managing static libraries.
 ######################################
 
@@ -1259,8 +1232,8 @@ sub RecursiveCopy($$)
     # First copy absolutely everything
     &Syscall([ '/bin/cp', '-pR', "$src", "$dst"]) or die;
 
-    # Then strip out any .svn directories
-    my @files = map { chomp $_; $_ } `find $dst -name .svn`;
+    # Then strip out any .git directories
+    my @files = map { chomp $_; $_ } `find $dst -name .git`;
     if ( scalar @files )
     {
         &Syscall([ '/bin/rm', '-f', '-r', @files ]);
