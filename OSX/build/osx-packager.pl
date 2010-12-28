@@ -282,8 +282,8 @@ osx-packager.pl - build OS X binary packages for MythTV
 This script builds a MythTV frontend and all necessary dependencies, along
 with plugins as specified, as a standalone binary package for Mac OS X.
 
-It was designed for building daily CVS (now Subversion) snapshots,
-but can also be used to create release builds with the '-srctag' option.
+It was designed for building daily CVS, (then Subversion now Git) snapshots,
+and can also be used to create release builds with the '-gitrev' option.
 
 All intermediate files go into an '.osx-packager' directory in the current
 working directory. The finished application is named 'MythFrontend.app' and
@@ -301,7 +301,7 @@ Building two snapshots, one with plugins and one without:
 Building a "fixes" branch:
 
   osx-packager.pl -distclean
-  osx-packager.pl -srcbranch release-0-22-fixes
+  osx-packager.pl -gitrev fixes/0.24
 
 Note that this script will not build old branches.
 Please try the branched version instead. e.g.
@@ -360,11 +360,9 @@ if ( $OPT{'enable-jobtools'} )
 {   $jobtools = 1  }
 
 # Get version string sorted out
-if ( $OPT{'srctag'} && !$OPT{'version'} )
+if ( $OPT{'gitrev'} && !$OPT{'version'} )
 {
-    $OPT{'version'} = $OPT{'srctag'};
-    $OPT{'version'} =~ s/-r *//;
-    $OPT{'version'} =~ s/--revision *//;
+    $OPT{'version'} = $OPT{'gitrev'};
 }
 $OPT{'version'} = '' if $OPT{'noversion'};
 unless (defined $OPT{'version'})
@@ -377,7 +375,7 @@ unless (defined $OPT{'version'})
 if ( $OPT{'srcdir'} )
 {
     $OPT{'nohead'} = 1;
-    $OPT{'srcbranch'} = 0;
+    $OPT{'gitrev'} = '';
 }
 
 # Build our temp directories
@@ -412,54 +410,17 @@ if ( $OPT{'nohead'} && ! $OPT{'force'} )
     if ( ! `grep refs/heads/master $GITTOP/HEAD` )
     {   die "Source code does not match GIT master"   }
 }
-#
-# Trunk building has diverged from 0.23-fixes. After 0.24-fixes, disable this:
-#
-elsif ( $OPT{'srcbranch'} )
+elsif ( $OPT{'gitrev'} =~ m,^fixes/, && $OPT{'gitrev'} lt "fixes/0.23" )
 {
     &Complain(<<END);
 This version of this script can not build old branches.
 Please try the branched version instead. e.g.
 http://svn.mythtv.org/svn/branches/release-0-23-fixes/packaging/OSX/build/osx-packager.pl
-END
-    die;
-}
-
-if ( $OPT{'srcbranch'} && $OPT{'srcbranch'} lt "release-0-24-fixes" )
-{
-    &Complain(<<END);
-This version of this script can not build old branches.
-Please try the branched version instead. e.g.
 http://svn.mythtv.org/svn/branches/release-0-21-fixes/mythtv/contrib/OSX/osx-packager.pl
 END
     die;
 }
 
-#
-# Same tests for fixes copy of this script:
-#
-if ( 0 )
-{
-if ( $OPT{'nohead'} && ! $OPT{'force'} )
-{
-    my $SVNTOP="$SCRIPTDIR/.osx-packager/src/myth-svn/mythtv/.svn";
-
-    if ( ! -d $SVNTOP )
-    {   die "No source code to build?"   }
-
-    if ( ! `grep 0-22-fixes $SVNTOP/entries` )
-    {   die "Source code does not match release-0-22-fixes"   }
-}
-elsif ( ! $OPT{'srcbranch'} && ! $OPT{'force'} )
-{
-    &Complain(<<END);
-This script can only build branch release-0-22-fixes.
-To build SVN HEAD, please try the latest version instead. e.g.
-https://github.com/MythTV/packaging/raw/master/OSX/build/osx-packager.pl
-END
-    die;
-}
-}
 
 our $WORKDIR = "$SCRIPTDIR/.osx-packager";
 mkdir $WORKDIR;
