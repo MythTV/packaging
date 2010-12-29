@@ -39,6 +39,7 @@
 # --without crystalhd       Disable Crystal HD support
 # --without xvmc            Disable XvMC support
 # --without perl            Disable building of the perl bindings
+# --without php             Disable building of the php bindings
 # --without python          Disable building of the python bindings
 #
 # # All plugins get built by default, but you can disable them as you wish:
@@ -64,10 +65,10 @@
 %define desktop_vendor  xris
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string b0.24-457-gf31bd0c
+%define vers_string v0.25pre-649-g5527301
 
 # Git Revision number and branch ID
-%define _gitrev 0.457.gf31bd0c
+%define _gitrev 649.g5527301
 %define branch master
 
 #
@@ -106,6 +107,7 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
 %define with_xvmc          %{?_without_xvmc:       0} %{?!_without_xvmc:       1}
 %define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
+%define with_php           %{?_without_php:        0} %{!?_without_php:        1}
 %define with_python        %{?_without_python:     0} %{!?_without_python:     1}
 %define with_pulseaudio    %{?_without_pulseaudio: 0} %{!?_without_pulseaudio: 1}
 
@@ -246,6 +248,9 @@ BuildRequires:  perl(Net::UPnP::QueryResponse)
 BuildRequires:  perl(Net::UPnP::ControlPoint)
 %endif
 
+%if %{with_php}
+%endif
+
 %if %{with_python}
 BuildRequires:  python-devel
 BuildRequires:  MySQL-python
@@ -318,6 +323,7 @@ Requires:  mythtv-docs        = %{version}-%{release}
 Requires:  mythtv-frontend    = %{version}-%{release}
 Requires:  mythtv-setup       = %{version}-%{release}
 Requires:  perl-MythTV        = %{version}-%{release}
+Requires:  php-MythTV         = %{version}-%{release}
 Requires:  python-MythTV      = %{version}-%{release}
 
 Requires:  mythplugins        = %{version}-%{release}
@@ -582,6 +588,21 @@ Requires:       perl(Net::UPnP::ControlPoint)
 
 %description -n perl-MythTV
 Provides a perl-based interface to interacting with MythTV.
+
+%endif
+
+################################################################################
+
+%if %{with_php}
+
+%package -n php-MythTV
+Summary:        PHP bindings for MythTV
+Group:          Development/Languages
+# Wish we could do this:
+#BuildArch:      noarch
+
+%description -n php-MythTV
+Provides a PHP-based interface to interacting with MythTV.
 
 %endif
 
@@ -941,6 +962,9 @@ cd mythtv
 %if !%{with_perl}
     --without-bindings=perl                     \
 %endif
+%if !%{with_php}
+    --without-bindings=php                      \
+%endif
 %if !%{with_python}
     --without-bindings=python                   \
 %endif
@@ -1284,6 +1308,12 @@ fi
 %exclude %{perl_vendorarch}/auto/MythTV/.packlist
 %endif
 
+%if %{with_php}
+%files -n php-MythTV
+%defattr(-,root,root,-)
+%{_datadir}/mythtv/bindings/php/*
+%endif
+
 %if %{with_python}
 %files -n python-MythTV
 %defattr(-,root,root,-)
@@ -1431,7 +1461,11 @@ fi
 ################################################################################
 
 %changelog
-* Wed Dec 15 2010 Chris Petersen <jarod@wilsonet.com> 0.25-0.1.svn
+* Tue Dec 28 2010 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Add PHP bindings
+- Fix my email address in changelogs
+
+* Wed Dec 15 2010 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Fedora 11 minimum requirement
 - Split out mythweb
 - Update for Git
@@ -1446,19 +1480,19 @@ fi
 - Resync with RPM Fusion spec, now builds cleanly again on a
   Fedora 13 host as of svn revision 25638
 
-* Thu Aug 05 2010 Chris Petersen <rpm@forevermore.net> 0.24-0.1.svn
+* Thu Aug 05 2010 Chris Petersen <cpetersen@mythtv.org> 0.24-0.1.svn
 - Add mythpreviewgen
 
-* Sun Jun 20 2010 Chris Petersen <rpm@forevermore.net> 0.24-0.1.svn
+* Sun Jun 20 2010 Chris Petersen <cpetersen@mythtv.org> 0.24-0.1.svn
 - Add new MythWeather perl dep
 - Rearrange file lists for new/deleted/moved installed files
 
-* Sun Jun 06 2010 Chris Petersen <rpm@forevermore.net> 0.24-0.1.svn
+* Sun Jun 06 2010 Chris Petersen <cpetersen@mythtv.org> 0.24-0.1.svn
 - Remove deprecated MythMovies
 - Add support for some new files
 - Move share/internetcontent to the backend subpackage
 
-* Sun May 23 2010 Chris Petersen <rpm@forevermore.net> 0.24-0.1.svn
+* Sun May 23 2010 Chris Petersen <cpetersen@mythtv.org> 0.24-0.1.svn
 - Bump version number
 - Remove legacy --enable-x configure flags
 - Add python builddeps for mythnetvision
@@ -1466,19 +1500,19 @@ fi
 - Rename libmyth to mythtv-libs
 - Add perl build deps
 
-* Sat Jan 23 2010 Chris Petersen <rpm@forevermore.net> 0.23-0.1.svn
+* Sat Jan 23 2010 Chris Petersen <cpetersen@mythtv.org> 0.23-0.1.svn
 - Add MythNetVision requirement for MythBrowser
 
 * Wed Jan 13 2010 Harry Orenstein <hospam@verizon.net> 0.23-0.1.svn
 - Add MythNetVision
 
-* Sat Dec 05 2009 Chris Petersen <rpm@forevermore.net> 0.23-0.1.svn
+* Sat Dec 05 2009 Chris Petersen <cpetersen@mythtv.org> 0.23-0.1.svn
 - Remove MythFlix
 
-* Sat Nov 07 2009 Chris Petersen <rpm@forevermore.net> 0.23-0.1.svn
+* Sat Nov 07 2009 Chris Petersen <cpetersen@mythtv.org> 0.23-0.1.svn
 - New tags for trunk
 
-* Mon Nov 02 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.6.svn
+* Mon Nov 02 2009 Chris Petersen <cpetersen@mythtv.org> 0.22-0.6.svn
 - Compensate for moved tvdb script directory
 - Make php chmod fix more robust
 - Remove --enable-audio-arts because it doesn't exist anymore
@@ -1492,7 +1526,7 @@ fi
 * Fri Oct 02 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.5.svn
 - Remove libmad BR, its not used at all any longer
 
-* Sat Sep 19 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.5.svn
+* Sat Sep 19 2009 Chris Petersen <cpetersen@mythtv.org> 0.22-0.5.svn
 - Re-remove non-GPL libfaac options (not really used by MythTV anyway)
 
 * Fri Sep 18 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn
@@ -1501,18 +1535,18 @@ fi
 - Rename option to build VDPAU support, since its not nVidia-specific
 - Add assorted cleanups from James Twyford (via trac ticket #7090)
 
-* Thu Aug 13 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
+* Thu Aug 13 2009 Chris Petersen <cpetersen@mythtv.org> 0.22-0.1.svn
 - Add XML::Simple requirement for mythvideo (for tmdb.pl)
 - Remove now-deprecated call for XvMCNVIDIA_dynamic
 
-* Mon Jul 27 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
+* Mon Jul 27 2009 Chris Petersen <cpetersen@mythtv.org> 0.22-0.1.svn
 - Rename xvmcnvidia stuff to just nvidia, and add vdpau options to it
 
-* Sat Jul 25 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
+* Sat Jul 25 2009 Chris Petersen <cpetersen@mythtv.org> 0.22-0.1.svn
 - Remove all a52 references because ./configure no longer accepts even "disable"
 - Remove non-GPL libfaac options (not really used by MythTV anyway)
 
-* Sun Jun 28 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
+* Sun Jun 28 2009 Chris Petersen <cpetersen@mythtv.org> 0.22-0.1.svn
 - Remove xvmc-opengl references that were removed in r20723
 - Add requirement for pulseaudio-libs-devel now that some distros are requiring it
 
@@ -1520,10 +1554,10 @@ fi
 - Drop kdelibs3-devel BR for MythBrowser, its been ported to qt4 now
 - Add Requires: php-process (needed for posix_get*() functions)
 
-* Mon May 04 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
+* Mon May 04 2009 Chris Petersen <cpetersen@mythtv.org> 0.22-0.1.svn
 - Require Qt >= 4.4
 
-* Fri Apr 10 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
+* Fri Apr 10 2009 Chris Petersen <cpetersen@mythtv.org> 0.22-0.1.svn
 - Disable liba52 options because they seem to cause no end of trouble
   with AC3 recordings from hdhomerun/firewire.
 
@@ -1531,13 +1565,13 @@ fi
 - Resync with RPM Fusion spec to pick up packaging fix-ups and
   kill off the defunct mythphone plugin
 
-* Wed Jan 21 2009 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
+* Wed Jan 21 2009 Chris Petersen <cpetersen@mythtv.org> 0.22-0.1.svn
 - Remove mythcontrols, which no longer exists
 
-* Sat Nov 01 2008 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
+* Sat Nov 01 2008 Chris Petersen <cpetersen@mythtv.org> 0.22-0.1.svn
 - Add a --without plugins option to disable all plugin builds
 
-* Tue Oct 28 2008 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
+* Tue Oct 28 2008 Chris Petersen <cpetersen@mythtv.org> 0.22-0.1.svn
 - Update to compile for pre-0.22 svn trunk, including new files and qt4 deps
 - Major cleanup and porting from my personal spec (which was a combination
   of works from atrpms and some of Jarod's earlier works).
