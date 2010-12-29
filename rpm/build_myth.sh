@@ -152,25 +152,24 @@ EOF
 
 # A function to install mythtv packages
     function installmyth {
-        REL="$1"
-        sudo rpm -Uvh --force --nodeps                                                   \
-            /usr/src/redhat/RPMS/x86_64/mythtv-docs-$VERSION-0.1.svn.r$REL.*.rpm         \
-            /usr/src/redhat/RPMS/x86_64/mythtv-libs-$VERSION-0.1.svn.r$REL.*.rpm             \
-            /usr/src/redhat/RPMS/x86_64/mythtv-devel-$VERSION-0.1.svn.r$REL.*.rpm       \
-            /usr/src/redhat/RPMS/x86_64/mythtv-base-themes-$VERSION-0.1.svn.r$REL.*.rpm  \
-            /usr/src/redhat/RPMS/x86_64/mythtv-frontend-$VERSION-0.1.svn.r$REL.*.rpm     \
-            /usr/src/redhat/RPMS/x86_64/mythtv-backend-$VERSION-0.1.svn.r$REL.*.rpm      \
-            /usr/src/redhat/RPMS/x86_64/mythtv-setup-$VERSION-0.1.svn.r$REL.*.rpm        \
-            /usr/src/redhat/RPMS/x86_64/mythtv-common-$VERSION-0.1.svn.r$REL.*.rpm       \
-            /usr/src/redhat/RPMS/x86_64/perl-MythTV-$VERSION-0.1.svn.r$REL.*.rpm         \
-            /usr/src/redhat/RPMS/x86_64/python-MythTV-$VERSION-0.1.svn.r$REL.*.rpm       \
-            /usr/src/redhat/RPMS/x86_64/mythmusic-$VERSION-0.1.svn.r$REL.*.rpm           \
-            /usr/src/redhat/RPMS/x86_64/mythbrowser-$VERSION-0.1.svn.r$REL.*.rpm         \
-            /usr/src/redhat/RPMS/x86_64/mythnetvision-$VERSION-0.1.svn.r$REL.*.rpm       \
-            /usr/src/redhat/RPMS/x86_64/mythvideo-$VERSION-0.1.svn.r$REL.*.rpm           \
-            /usr/src/redhat/RPMS/x86_64/mythweather-$VERSION-0.1.svn.r$REL.*.rpm         \
-            /usr/src/redhat/RPMS/x86_64/mythtv-debuginfo-$VERSION-0.1.svn.r$REL.*.rpm
-            #/usr/src/redhat/RPMS/x86_64/mythtv-themes-$VERSION-0.1.svn.r$REL.*.rpm  \
+        sudo rpm -Uvh --force --nodeps                                     \
+            /usr/src/redhat/RPMS/x86_64/mythtv-docs-$GITVER-0.1.git.$GITREV.*.rpm         \
+            /usr/src/redhat/RPMS/x86_64/mythtv-libs-$GITVER-0.1.git.$GITREV.*.rpm         \
+            /usr/src/redhat/RPMS/x86_64/mythtv-devel-$GITVER-0.1.git.$GITREV.*.rpm        \
+            /usr/src/redhat/RPMS/x86_64/mythtv-base-themes-$GITVER-0.1.git.$GITREV.*.rpm  \
+            /usr/src/redhat/RPMS/x86_64/mythtv-frontend-$GITVER-0.1.git.$GITREV.*.rpm     \
+            /usr/src/redhat/RPMS/x86_64/mythtv-backend-$GITVER-0.1.git.$GITREV.*.rpm      \
+            /usr/src/redhat/RPMS/x86_64/mythtv-setup-$GITVER-0.1.git.$GITREV.*.rpm        \
+            /usr/src/redhat/RPMS/x86_64/mythtv-common-$GITVER-0.1.git.$GITREV.*.rpm       \
+            /usr/src/redhat/RPMS/x86_64/perl-MythTV-$GITVER-0.1.git.$GITREV.*.rpm         \
+            /usr/src/redhat/RPMS/x86_64/python-MythTV-$GITVER-0.1.git.$GITREV.*.rpm       \
+            /usr/src/redhat/RPMS/x86_64/mythmusic-$GITVER-0.1.git.$GITREV.*.rpm           \
+            /usr/src/redhat/RPMS/x86_64/mythbrowser-$GITVER-0.1.git.$GITREV.*.rpm         \
+            /usr/src/redhat/RPMS/x86_64/mythnetvision-$GITVER-0.1.git.$GITREV.*.rpm       \
+            /usr/src/redhat/RPMS/x86_64/mythvideo-$GITVER-0.1.git.$GITREV.*.rpm           \
+            /usr/src/redhat/RPMS/x86_64/mythweather-$GITVER-0.1.git.$GITREV.*.rpm         \
+            /usr/src/redhat/RPMS/x86_64/mythtv-debuginfo-$GITVER-0.1.git.$GITREV.*.rpm
+            #/usr/src/redhat/RPMS/x86_64/mythtv-themes-$GITVER-0.1.git.$GITREV.*.rpm  \
     }
 
 # And a function to install mythtv theme packages, since they need mythtv-libs
@@ -253,14 +252,14 @@ EOF
     GITVER=`echo "$DESCRIBE" | sed -e 's,^\([^-]\+\)-.\+$,\1,'`
     GITREV=`echo "$DESCRIBE" | sed -e 's,^[^-]\+-,,' -e 's,-,.,'`
     # do some magic here to detect v, b, or pre notations
-    if [[ $GITVER =~ '^v' ]]; then
+    if [[ $GITVER =~ pre$ ]]; then
+        GITVER=${GITVER#v}
+        GITVER=${GITVER%pre}
+    elif [[ $GITVER =~ ^v ]]; then
         GITVER=${GITVER#v}
         GITREV=1
-    elif [[ $GITVER =~ '^b' ]]; then
+    elif [[ $GITVER =~ ^b ]]; then
         GITVER=0.$((${GITVER#b0.}+1))
-        GITREV="0.$GITREV"
-    elif [[ $GITVER =~ 'pre$' ]]; then\
-        GITVER=${GITVER%pre}
         GITREV="0.$GITREV"
     fi
     VSTRING="$GITVER.$GITREV"
