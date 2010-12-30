@@ -225,6 +225,15 @@ Description: Common library code for MythTV and add-on modules (development)
  This package contains files needed for developing applications which use
  libmyth (such as the various add-ons for MythTV)
 
+Package: php-mythtv
+Architecture: all
+Description: PHP Bindings for MythTV
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains files needed for using PHP based applications that
+ connect to MythTV backends.
+
 Package: libmythtv-perl
 Architecture: all
 Section: perl
