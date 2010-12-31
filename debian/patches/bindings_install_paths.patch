@@ -1,9 +1,9 @@
 Patch to include layout option for python 2.6
 ==========================================================================
-Index: mythtv-trunk/mythtv/bindings/python/Makefile
+Index: mythtv-master/mythtv/bindings/python/Makefile
 ===================================================================
---- mythtv-trunk.orig/mythtv/bindings/python/Makefile	2010-12-30 02:46:20.388115044 -0600
-+++ mythtv-trunk/mythtv/bindings/python/Makefile	2010-12-30 02:46:48.900115044 -0600
+--- mythtv-master.orig/mythtv/bindings/python/Makefile	2010-12-31 10:28:56.820339937 -0600
++++ mythtv-master/mythtv/bindings/python/Makefile	2010-12-31 10:31:08.728339938 -0600
 @@ -1,7 +1,7 @@
  include ../../config.mak
  
@@ -21,10 +21,10 @@ Index: mythtv-trunk/mythtv/bindings/python/Makefile
  
  all: python_build
  
-Index: mythtv-trunk/mythtv/bindings/perl/Makefile
+Index: mythtv-master/mythtv/bindings/perl/Makefile
 ===================================================================
---- mythtv-trunk.orig/mythtv/bindings/perl/Makefile	2010-12-30 02:46:20.428115044 -0600
-+++ mythtv-trunk/mythtv/bindings/perl/Makefile	2010-12-30 02:46:48.900115044 -0600
+--- mythtv-master.orig/mythtv/bindings/perl/Makefile	2010-12-31 10:28:56.828339937 -0600
++++ mythtv-master/mythtv/bindings/perl/Makefile	2010-12-31 10:31:08.728339938 -0600
 @@ -1,7 +1,7 @@
  include ../../config.mak
  
@@ -34,15 +34,16 @@ Index: mythtv-trunk/mythtv/bindings/perl/Makefile
  endif
  
  ifneq ($(PREFIX:/=), /usr)
-Index: mythtv-trunk/mythtv/bindings/php/Makefile
+Index: mythtv-master/mythtv/bindings/php/Makefile
 ===================================================================
---- mythtv-trunk.orig/mythtv/bindings/php/Makefile	2010-12-30 02:46:55.096115045 -0600
-+++ mythtv-trunk/mythtv/bindings/php/Makefile	2010-12-30 02:47:13.364115044 -0600
-@@ -4,6 +4,7 @@
+--- mythtv-master.orig/mythtv/bindings/php/Makefile	2010-12-31 10:28:56.840339937 -0600
++++ mythtv-master/mythtv/bindings/php/Makefile	2010-12-31 10:31:40.288339939 -0600
+@@ -4,7 +4,7 @@
  FILES += MythTV.php MythTVProgram.php MythTVRecording.php
  FILES += MythTVStorageGroup.php
  
-+INSTALL_ROOT = ${INSTALL_ROOT}../php-mythtv
- INSTDIR = ${INSTALL_ROOT}${PREFIX}/share/mythtv/bindings/php
+-INSTDIR = ${INSTALL_ROOT}${PREFIX}/share/mythtv/bindings/php
++INSTDIR = ${INSTALL_ROOT}../php-mythtv${PREFIX}/share/mythtv/bindings/php
  INSTALL = /usr/bin/install
  
+ all:
