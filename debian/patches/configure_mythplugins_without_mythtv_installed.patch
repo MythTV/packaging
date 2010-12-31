@@ -1,7 +1,7 @@
-Index: mythtv-trunk/mythplugins/configure
+Index: mythtv-master/mythplugins/configure
 ===================================================================
---- mythtv-trunk.orig/mythplugins/configure	2010-12-17 11:15:48.231152455 -0600
-+++ mythtv-trunk/mythplugins/configure	2010-12-17 11:16:03.063152455 -0600
+--- mythtv-master.orig/mythplugins/configure	2010-12-14 21:09:18.397224817 -0600
++++ mythtv-master/mythplugins/configure	2010-12-31 10:28:31.788339937 -0600
 @@ -126,6 +126,7 @@
  prefix="/usr/local"
  libdir_name="lib"
@@ -58,10 +58,10 @@ Index: mythtv-trunk/mythplugins/configure
    rm mythconfig.mak 2> /dev/null
    ln -s $sysroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
  else
-Index: mythtv-trunk/mythplugins/programs-libs.pro
+Index: mythtv-master/mythplugins/programs-libs.pro
 ===================================================================
---- mythtv-trunk.orig/mythplugins/programs-libs.pro	2010-12-17 10:42:44.235152455 -0600
-+++ mythtv-trunk/mythplugins/programs-libs.pro	2010-12-17 11:16:03.071152455 -0600
+--- mythtv-master.orig/mythplugins/programs-libs.pro	2010-12-14 21:09:18.473224817 -0600
++++ mythtv-master/mythplugins/programs-libs.pro	2010-12-31 10:28:31.804339937 -0600
 @@ -4,7 +4,7 @@
  INCLUDEPATH += $${SYSROOT}$${PREFIX}/include/mythtv/libmyth
  DEPENDPATH *= $${INCLUDEPATH}
@@ -71,10 +71,10 @@ Index: mythtv-trunk/mythplugins/programs-libs.pro
  LIBS += -lmyth-$$LIBVERSION -lmythui-$$LIBVERSION -lmythupnp-$$LIBVERSION
  LIBS += -lmythavcodec
  LIBS += -lmythavcore
-Index: mythtv-trunk/mythplugins/targetdep.pro
+Index: mythtv-master/mythplugins/targetdep.pro
 ===================================================================
---- mythtv-trunk.orig/mythplugins/targetdep.pro	2010-12-17 10:42:44.235152455 -0600
-+++ mythtv-trunk/mythplugins/targetdep.pro	2010-12-17 11:16:03.075152455 -0600
+--- mythtv-master.orig/mythplugins/targetdep.pro	2010-12-14 21:09:18.425224817 -0600
++++ mythtv-master/mythplugins/targetdep.pro	2010-12-31 10:28:31.804339937 -0600
 @@ -10,7 +10,7 @@
  MYTH_LIB_EXT  =$${LIBVERSION}.$${QMAKE_EXTENSION_LIB}
  
@@ -84,11 +84,11 @@ Index: mythtv-trunk/mythplugins/targetdep.pro
  
  # On Windows, dlls were installed with exes:
  mingw : DEPLIBS = $${PREFIX}/bin
-Index: mythtv-trunk/mythplugins/mytharchive/mytharchive/mytharchive.pro
+Index: mythtv-master/mythplugins/mytharchive/mytharchive/mytharchive.pro
 ===================================================================
---- mythtv-trunk.orig/mythplugins/mytharchive/mytharchive/mytharchive.pro	2010-12-17 11:15:48.231152455 -0600
-+++ mythtv-trunk/mythplugins/mytharchive/mytharchive/mytharchive.pro	2010-12-17 11:16:20.723152454 -0600
-@@ -33,28 +33,28 @@
+--- mythtv-master.orig/mythplugins/mytharchive/mytharchive/mytharchive.pro	2010-12-31 10:28:18.924339937 -0600
++++ mythtv-master/mythplugins/mytharchive/mytharchive/mytharchive.pro	2010-12-31 10:28:31.804339937 -0600
+@@ -34,28 +34,28 @@
  SOURCES += mythburn.cpp themeselector.cpp editmetadata.cpp thumbfinder.cpp
  SOURCES += exportnative.cpp importnative.cpp
  
