@@ -795,7 +795,7 @@ if ( $OPT{'gitrev'} )
     # or a tag name like 'fixes/0.24'.
  
     # Either way, no checking currently needed:
-    $gitrevision = $OPT{'srcrev'};
+    $gitrevision = $OPT{'gitrev'};
 }
 elsif ( ! $OPT{'nohead'} )
 {
