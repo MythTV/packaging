@@ -87,6 +87,11 @@ get-git-source:
                 git checkout $(GIT_BRANCH) ;\
 	fi
 
+	#fixup --version
+	DESCRIBE=`git describe` ;\
+	echo "BRANCH=\"$(GIT_BRANCH)\"" > debian/DESCRIBE ;\
+	echo "SOURCE_VERSION=\"$$DESCRIBE\"" >> debian/DESCRIBE ;\
+
 	#fixup changelog
 	#1) Check if the hash in the changelog (GIT_HASH) matches what the tree has
 	#   ->If not, then set the new HASH we are diffing to as the one from the tree
