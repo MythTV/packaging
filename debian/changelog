@@ -1,6 +1,8 @@
 mythtv (2:0.24.0+fixes.20101214.1405782-0ubuntu2) UNRELEASED; urgency=low
 
   * Install mythffmpeg and mythffplay in mythtv-common.
+  * While grabbing git source, capture the details of 'git describe'
+    for --version output.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 04 Dec 2010 23:36:22 -0600
 

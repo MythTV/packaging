@@ -58,6 +58,9 @@ override_dh_auto_install:
 	#update Git to parse debian/changelog
 	echo "BRANCH=\"$(GIT_BRANCH)\"" > mythtv/VERSION
 	echo "SOURCE_VERSION=\"$(GIT_HASH)\"" >> mythtv/VERSION
+	if [ -f debian/DESCRIBE ]; then \
+		cp debian/DESCRIBE mythtv/VERSION ;\
+	fi
 	cd mythtv && sh version.sh `pwd`
 
 	#mythtv

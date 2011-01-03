@@ -8,3 +8,4 @@ checksums
 themestringstool
 version.cpp
 .gitout
+debian/DESCRIBE
