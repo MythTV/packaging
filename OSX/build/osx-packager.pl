@@ -46,8 +46,8 @@ our $jobtools = 0;
 #
 our $sourceforge = 'http://downloads.sourceforge.net';
 
-# At the moment, there is mythtv plus these two
-our @components = ( 'myththemes', 'mythplugins' );
+# At the moment, there is mythtv plus...
+our @components = ( 'mythplugins' );
 
 # The OS X programs that we are likely to be interested in.
 our @targets   = ( 'MythFrontend', 'MythAVTest',  'MythWelcome' );
@@ -261,7 +261,6 @@ osx-packager.pl - build OS X binary packages for MythTV
    -thirdskip       don't rebuild the third party packages
    -mythtvskip      don't rebuild/install mythtv
    -pluginskip      don't rebuild/install mythplugins
-   -themeskip       don't install the extra themes from myththemes
    -clean           do a clean rebuild of MythTV
    -gitrev <str>    build a specified Git revision or tag, instead of HEAD
    -nohead          don't update to HEAD revision of MythTV before building
@@ -331,7 +330,6 @@ Getopt::Long::GetOptions(\%OPT,
                          'thirdskip',
                          'mythtvskip',
                          'pluginskip',
-                         'themeskip',
                          'clean',
                          'gitrev=s',
                          'nohead',
@@ -469,10 +467,6 @@ our %conf = (
         '--prefix=' . $PREFIX,
         @pluginConf
       ],
-  'myththemes'
-  =>  [
-        '--prefix=' . $PREFIX,
-      ],
   'mythtv'
   =>  [
         '--prefix=' . $PREFIX,
@@ -600,8 +594,6 @@ if ( $OPT{'mythtvskip'} )
 {   @comps = grep(!m/mythtv/,      @comps)   }
 if ( $OPT{'pluginskip'} )
 {   @comps = grep(!m/mythplugins/, @comps)   }
-if ( $OPT{'themeskip'} )
-{   @comps = grep(!m/myththemes/,  @comps)   }
 
 if ( ! @comps )
 {
@@ -808,8 +800,7 @@ if ( $OPT{'srcdir'} )
     chdir($SCRIPTDIR);
     &Syscall(['rm', '-fr', $GITDIR]);
     &Syscall(['mkdir', '-p', $GITDIR]);
-    foreach my $dir ('mythtv', 'mythplugins',
-                     'myththemes', 'themes', 'packaging')
+    foreach my $dir ( @comps )
     {
         &Syscall(['cp', '-pR', "$OPT{'srcdir'}/$dir", "$GITDIR/$dir"]);
     }
@@ -856,7 +847,7 @@ foreach my $comp (@comps)
 {
     my $compdir = "$GITDIR/$comp/" ;
 
-    chdir $compdir;
+    chdir $compdir || die "No source directory $compdir";
 
     if ( ! -e "$comp.pro" and ! -e 'Makefile' and ! -e 'configure' )
     {
