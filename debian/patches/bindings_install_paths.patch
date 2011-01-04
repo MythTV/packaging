@@ -43,7 +43,7 @@ Index: mythtv-master/mythtv/bindings/php/Makefile
  FILES += MythTVStorageGroup.php
  
 -INSTDIR = ${INSTALL_ROOT}${PREFIX}/share/mythtv/bindings/php
-+INSTDIR = ${INSTALL_ROOT}../php-mythtv${PREFIX}/share/mythtv/bindings/php
++INSTDIR = ${INSTALL_ROOT}/../php-mythtv${PREFIX}/share/mythtv/bindings/php
  INSTALL = /usr/bin/install
  
  all:
