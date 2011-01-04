@@ -379,6 +379,9 @@ if ( $OPT{'enable-backend'} )
 if ( $OPT{'clean'} )
 {   $cleanLibs = 1  }
 
+if ( $OPT{'noclean'} )
+{   $cleanLibs = 0  }
+
 if ( $OPT{'enable-jobtools'} )
 {   $jobtools = 1  }
 
