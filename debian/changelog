@@ -8,6 +8,7 @@ mythtv (2:0.25.0~master.20101204.803b474-0ubuntu1) UNRELEASED; urgency=low
     for --version output.
   * Add a new php-mythtv package for the newly developed php bindings.
   * Don't include .gitignore files in the mythweb package.
+  * Add a depends on php-mythtv for mythweb.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 04 Dec 2010 23:36:22 -0600
 
