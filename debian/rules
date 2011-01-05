@@ -131,7 +131,7 @@ override_dh_installdocs:
 	for file in LICENSE README INSTALL; do \
 		rm -f debian/mythweb/usr/share/mythtv/mythweb/$$file ;\
 	done
-	find debian/mythweb -name ".gitignore" -type f -delete
+	find debian/mythweb -name ".gitignore" -type f -delete || true
 
 	#(Myththemes)
 	rm -f debian/mythtv-theme-arclight/usr/share/mythtv/themes/Arclight/LICENSE

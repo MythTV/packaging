@@ -1,4 +1,4 @@
-mythtv (2:0.25.0~master.20101204.803b474-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
 
   * Add new Tieresias fonts to mythtv-common.
   * Drop mythvideo readme file.
