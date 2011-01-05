@@ -1192,7 +1192,7 @@ if ( $backend && grep(m/MythBackend/, @targets) )
 
     # The backend gets all the useful binaries it might call:
     foreach my $binary ( 'mythjobqueue', 'mythcommflag',
-                         'mythtranscode', 'mythfilldatabase' )
+                         'mythpreviewgen', 'mythtranscode', 'mythfilldatabase' )
     {
         my $SRC  = "$PREFIX/bin/$binary";
         if ( -e $SRC )
