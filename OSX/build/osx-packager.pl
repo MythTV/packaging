@@ -543,9 +543,6 @@ our %conf = (
         # To "cross compile" something for a lesser Mac:
         #'--tune=G3',
         #'--disable-altivec',
-
-        # Currently needed for Mac OS 10.6 builds?
-        '--disable-mmx', '--enable-disable-mmx-for-debugging',
       ],
 );
 
