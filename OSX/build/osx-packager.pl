@@ -784,6 +784,7 @@ if ( $cleanLibs )
 #
 my $gitrepository = 'git://github.com/MythTV/mythtv.git';
 my $gitpackaging  = 'git://github.com/MythTV/packaging.git';
+my $gitrevSHA = 0;
 my $gitrevert = 0;
 my $gitrevision;
 
@@ -793,8 +794,11 @@ if ( $OPT{'gitrev'} )
     # a branch like 'mythtv-rec', 'nigelfixes' or 'master',
     # or a tag name like 'fixes/0.24'.
  
-    # Either way, no checking currently needed:
     $gitrevision = $OPT{'gitrev'};
+
+    # If it is a hex revision, we checkout and don't pull mythtv src
+    if ( $gitrevision =~ /^[0-9a-f]{7,40}$/ )
+    {   $gitrevSHA = 1   }
 }
 elsif ( ! $OPT{'nohead'} )
 {
@@ -839,11 +843,17 @@ elsif ( ! $OPT{'nohead'} )
     
     chdir $GITDIR;
     &Syscall([ $git, @gitcheckoutflags ]) or die;
-    &Syscall([ $git, 'pull' ]) or die;
+    if ( ! $gitrevSHA )
+    {   &Syscall([ $git, 'pull' ]) or die   }
 
     chdir "$GITDIR/packaging";
-    &Syscall([ $git, @gitcheckoutflags ]) or die;
-    &Syscall([ $git, 'pull' ]) or die;
+    if ( $gitrevSHA )
+    {   &Syscall([ $git, 'checkout', 'master' ]) or die  }
+    else
+    {
+        &Syscall([ $git, @gitcheckoutflags ]) or die;
+        &Syscall([ $git, 'pull' ]) or die;
+    }
 }
 
 # Make a convenience (non-hidden) directory for editing src code:
