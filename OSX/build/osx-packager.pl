@@ -806,7 +806,7 @@ if ( $OPT{'gitrev'} )
 }
 
 if ( $OPT{'nohead'} )
-{   $gotDoPull = 0   }
+{   $gitDoPull = 0   }
 
 # Retrieve source
 if ( $OPT{'srcdir'} )
