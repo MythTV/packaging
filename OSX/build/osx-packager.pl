@@ -67,6 +67,7 @@ our %depend_order = (
         'mysqlclient',
         #'dbus',
         'qt-4.6',
+        'yasm',
       ],
   'mythplugins'
   =>  [
@@ -238,7 +239,13 @@ exit 0"   > pkg-config ; '.
   {
     'url'  => "$sourceforge/sourceforge/libexif/libexif-0.6.17.tar.bz2",
     'conf' => [ '--disable-docs' ]
-  }
+  },
+
+  'yasm' =>
+  {
+    'url'  => 'http://www.tortall.net/projects/yasm/releases/yasm-1.1.0.tar.gz',
+  },
+
 );
 
 
