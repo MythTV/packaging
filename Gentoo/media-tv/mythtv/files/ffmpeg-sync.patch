@@ -8,7 +8,9 @@ Index: configure
  SHLIBDIR=\$(INSTALL_ROOT)$shlibdir
 -INCDIR=\$(INSTALL_ROOT)$incdir
 +INCDIR=$incdir
- BINDIR=\$(INSTALL_ROOT)$bindir
- DATADIR=\$(INSTALL_ROOT)$datadir
+-BINDIR=\$(INSTALL_ROOT)$bindir
++BINDIR=$bindir
+-DATADIR=\$(INSTALL_ROOT)$datadir
++DATADIR=$datadir
  MANDIR=\$(INSTALL_ROOT)$mandir
 
