@@ -491,9 +491,6 @@ our %conf = (
         # To "cross compile" something for a lesser Mac:
         #'--tune=G3',
         #'--disable-altivec',
-
-        # Currently needed for Mac OS 10.6 builds?
-        '--disable-mmx', '--enable-disable-mmx-for-debugging',
       ],
 );
 
@@ -1136,7 +1133,7 @@ if ( $backend && grep(m/MythBackend/, @targets) )
 
     # The backend gets all the useful binaries it might call:
     foreach my $binary ( 'mythjobqueue', 'mythcommflag',
-                         'mythtranscode', 'mythfilldatabase' )
+                         'mythpreviewgen', 'mythtranscode', 'mythfilldatabase' )
     {
         my $SRC  = "$PREFIX/bin/$binary";
         if ( -e $SRC )
