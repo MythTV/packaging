@@ -784,9 +784,10 @@ if ( $cleanLibs )
 #
 my $gitrepository = 'git://github.com/MythTV/mythtv.git';
 my $gitpackaging  = 'git://github.com/MythTV/packaging.git';
+my $gitDoPull = 1;
 my $gitrevSHA = 0;
 my $gitrevert = 0;
-my $gitrevision;
+my $gitrevision = 'master';
 
 if ( $OPT{'gitrev'} )
 {
@@ -798,12 +799,14 @@ if ( $OPT{'gitrev'} )
 
     # If it is a hex revision, we checkout and don't pull mythtv src
     if ( $gitrevision =~ /^[0-9a-f]{7,40}$/ )
-    {   $gitrevSHA = 1   }
+    {
+        $gitrevSHA = 1;
+        $gitDoPull = 0;
+    }
 }
-elsif ( ! $OPT{'nohead'} )
-{
-    $gitrevision = 'master';  # HEAD might also work?
-}
+
+if ( $OPT{'nohead'} )
+{   $gitDoPull = 0   }
 
 # Retrieve source
 if ( $OPT{'srcdir'} )
@@ -817,7 +820,7 @@ if ( $OPT{'srcdir'} )
     }
     &Syscall("mkdir -p $GITDIR/mythtv/config")
 }
-elsif ( ! $OPT{'nohead'} )
+else
 {
     # Only do 'git clone' if mythtv directory does not exist.
     # Always do 'git checkout' to make sure we have the right branch,
@@ -840,10 +843,11 @@ elsif ( ! $OPT{'nohead'} )
     {   @gitcheckoutflags = ( 'checkout', '--force', $gitrevision )   }
     else
     {   @gitcheckoutflags = ( 'checkout', '--merge', $gitrevision )   }
-    
+
+
     chdir $GITDIR;
     &Syscall([ $git, @gitcheckoutflags ]) or die;
-    if ( ! $gitrevSHA )
+    if ( $gitDoPull )
     {   &Syscall([ $git, 'pull' ]) or die   }
 
     chdir "$GITDIR/packaging";
@@ -852,7 +856,8 @@ elsif ( ! $OPT{'nohead'} )
     else
     {
         &Syscall([ $git, @gitcheckoutflags ]) or die;
-        &Syscall([ $git, 'pull' ]) or die;
+        if ( $gitDoPull )
+        {   &Syscall([ $git, 'pull' ]) or die   }
     }
 }
 

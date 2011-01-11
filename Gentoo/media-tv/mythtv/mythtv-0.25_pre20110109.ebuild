@@ -4,10 +4,10 @@
 
 EAPI=2
 PYTHON_DEPEND="2"
-MYTHTV_VERSION="b0.24-636-gcd2bc0a"
+MYTHTV_VERSION="v0.25pre-822-gb35ddbf"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="cd2bc0a47d38e133743216468d5d22d1b5947e18"
-MYTHTV_SREV="cd2bc0a"
+MYTHTV_REV="b35ddbfee4c51b37d5f4b5600b6125bf6322341d"
+MYTHTV_SREV="b35ddbf"
 
 inherit flag-o-matic multilib eutils qt4 mythtv toolchain-funcs python
 
