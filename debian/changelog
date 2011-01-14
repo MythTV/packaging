@@ -10,6 +10,9 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
   * Don't include .gitignore files in the mythweb package.
   * Add a depends on php-mythtv for mythweb.
   * Correct php bindings install path (LP: #696724)
+  * debian/control:
+    - drop openchrome build dependencies.  We no longer support XvMC in
+    Ubuntu builds anyway.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 04 Dec 2010 23:36:22 -0600
 
@@ -17,8 +20,54 @@ mythtv (2:0.24.0+fixes.20101214.1405782-0ubuntu1) natty; urgency=low
 
   * in the git building rule, make sure to include the proper phrases
     for autobuilds.
+  * reverse the rule for do-new-release.sh
+  * include a data directory to fix mythweb postinst breaking.
+  * New upstream checkout (1405782)
+  * >>Upstream changes since last upload (d3d2640):
+  * [1405782] Fix ALSA buffer allocation.
+  * [588cc6e] Fix potential deadlocks resulting in "Waited 100ms for
+    video buffers"
+  * [208e2f5] Add some extra NULL pointer protection in the main decoder
+    loop.
+  * [fc09367] Fix setting the display refresh rate in live tv.
+  * [f3ddc58] Backport to fixes/0.24.
+  * [52f8df1] Backport to fixes/0.24.
+  * [4e4653f] One change got committed by mistake
+  * [0d719aa] Following SHA: 9dc22bcc223e753d072dcdb2910ea271d377a5ef.
+    Add a little bit of leeway when checking the alsa buffer size, as
+    alsa may round down the value.
+  * [8115c44] Tidy up the block processing in AddFrames by renaming
+    variables. Block size is properly calculated based on the source
+    channels. Properly cast all variables involved in 64 bits timecode
+    calculation as int64_t, and make all constants long long ones. Make
+    the code easier to re-read
+  * [1b695d7] Issue we were trying to fix in SHA:
+    312ef27cd0d5a8b515cf0ba2587bdc2ba94aac28 were in fact related to the
+    alsa hardware buffer size being too low. And the calculation for
+    what the correct buffer size should be being incorrect, we never got
+    the proper value displayed/set. For 5.1 32 bits LPCM, 48kHz a
+    minimum buffer size should be 225kB. Alsa default is 64kB
+  * [3a0bc28] Simplify upmixing and fix some issues, in particular
+    timestamp that could be incorrect under some circumstances, fix
+    writing silence to the audio card when in pause mode (we could under
+    some circumstances not write enough data leading to underruns
+  * [cfd7b78] Remove the state change QWaitCondition from the TV class.
+  * [3e29dab] Left justify CC-608 captions.
+  * [6bb60cd] Minor CC-608 caption display optimisation.
+  * [7b4f3fb] Don't create an additional thread for media playback.
+  * [8155c43] Fix control socket call used for Video._playOnFe().
+  * [df2d58b] Fix missing parameter in SG filelist query.  Patch from
+    fedora a t ready2think.
+  * [aec0097] fix CPU flags in libmythsoundtouch
+  * [ee57332] Backport b674e521028d49193c7d from HEAD to branch
+    fixes/0.24
+  * [3e9463e] Following [98a196], fix same logic error used in the
+    settings which prevented selecting 7.1 unless audio advanced was
+    selected
+  * [5cd75db] Fix logic error that forced to have audio advanced checked
+    to get 7.1 LPCM
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 07 Dec 2010 19:09:40 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 14 Dec 2010 10:32:47 -0600
 
 mythtv (2:0.24.0+fixes.20101207.d3d2640-0ubuntu1) natty; urgency=low
 
