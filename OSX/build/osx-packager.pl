@@ -61,6 +61,7 @@ our %patches = ();
 our %depend_order = (
   'mythtv'
   =>  [
+        'ccache',
         'dvdcss',
         'freetype',
         'lame',
@@ -244,6 +245,11 @@ exit 0"   > pkg-config ; '.
   'yasm' =>
   {
     'url'  => 'http://www.tortall.net/projects/yasm/releases/yasm-1.1.0.tar.gz',
+  },
+
+  'ccache' =>
+  {
+    'url'  => 'http://samba.org/ftp/ccache/ccache-3.1.4.tar.bz2',
   },
 
 );
@@ -938,7 +944,7 @@ foreach my $comp (@comps)
     if ( $comp eq 'mythtv' )
     {
         # Remove/add Nigel's frontend building speedup hack
-        &DoSpeedupHacks('programs/programs.pro', 'mythfrontend mythavtest');
+        ##&DoSpeedupHacks('programs/programs.pro', 'mythfrontend mythavtest');
     }
 
     &Verbose("Making $comp");
