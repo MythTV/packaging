@@ -784,7 +784,7 @@ if ( $cleanLibs )
 #
 my $gitrepository = 'git://github.com/MythTV/mythtv.git';
 my $gitpackaging  = 'git://github.com/MythTV/packaging.git';
-my $gitDoPull = 1;
+my $gitfetch  = 1;
 my $gitrevSHA = 0;
 my $gitrevert = 0;
 my $gitrevision = 'master';
@@ -801,12 +801,9 @@ if ( $OPT{'gitrev'} )
     if ( $gitrevision =~ /^[0-9a-f]{7,40}$/ )
     {
         $gitrevSHA = 1;
-        $gitDoPull = 0;
+        #$gitfetch = 0;
     }
 }
-
-if ( $OPT{'nohead'} )
-{   $gitDoPull = 0   }
 
 # Retrieve source
 if ( $OPT{'srcdir'} )
@@ -820,7 +817,7 @@ if ( $OPT{'srcdir'} )
     }
     &Syscall("mkdir -p $GITDIR/mythtv/config")
 }
-else
+elsif ( ! $OPT{'nohead'} )
 {
     # Only do 'git clone' if mythtv directory does not exist.
     # Always do 'git checkout' to make sure we have the right branch,
@@ -846,19 +843,20 @@ else
 
 
     chdir $GITDIR;
+    if ( $gitfetch )
+    {   &Syscall([ $git, 'fetch' ]) or die   }
     &Syscall([ $git, @gitcheckoutflags ]) or die;
-    if ( $gitDoPull )
-    {   &Syscall([ $git, 'pull' ]) or die   }
 
     chdir "$GITDIR/packaging";
+    if ( $gitfetch )
+    {   &Syscall([ $git, 'fetch' ]) or die   }
     if ( $gitrevSHA )
-    {   &Syscall([ $git, 'checkout', 'master' ]) or die  }
-    else
     {
-        &Syscall([ $git, @gitcheckoutflags ]) or die;
-        if ( $gitDoPull )
-        {   &Syscall([ $git, 'pull' ]) or die   }
+        &Syscall([ $git, 'checkout', 'master' ]) or die;
+        &Syscall([ $git, 'merge',    'master' ]) or die;
     }
+    else
+    {   &Syscall([ $git, @gitcheckoutflags ]) or die   }
 }
 
 # Make a convenience (non-hidden) directory for editing src code:
