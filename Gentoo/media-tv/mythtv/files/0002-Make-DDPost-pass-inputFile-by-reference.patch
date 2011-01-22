@@ -1,0 +1,39 @@
+From 10508d2217619a7bc65f6f7952a2006ffc4a0138 Mon Sep 17 00:00:00 2001
+From: Gavin Hurlbut <ghurlbut@mythtv.org>
+Date: Sat, 22 Jan 2011 00:26:56 -0800
+Subject: [PATCH 2/2] Make DDPost pass inputFile by reference
+
+---
+ mythtv/libs/libmythtv/datadirect.cpp |    2 +-
+ mythtv/libs/libmythtv/datadirect.h   |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/datadirect.cpp b/mythtv/libs/libmythtv/datadirect.cpp
+index 1e5954b..35fa0ac 100644
+--- a/mythtv/libs/libmythtv/datadirect.cpp
++++ b/mythtv/libs/libmythtv/datadirect.cpp
+@@ -943,7 +943,7 @@ void DataDirectProcessor::DataDirectProgramUpdate(void)
+ 
+ bool DataDirectProcessor::DDPost(
+     QString    ddurl,
+-    QString    postFilename, QString    inputFile,
++    QString    postFilename, QString   &inputFile,
+     QString    userid,       QString    password,
+     QDateTime  pstartDate,   QDateTime  pendDate,
+     QString   &err_txt)
+diff --git a/mythtv/libs/libmythtv/datadirect.h b/mythtv/libs/libmythtv/datadirect.h
+index 9dd2c34..067189d 100644
+--- a/mythtv/libs/libmythtv/datadirect.h
++++ b/mythtv/libs/libmythtv/datadirect.h
+@@ -354,7 +354,7 @@ class MPUBLIC DataDirectProcessor
+                      QString inCookieFile, QString outCookieFile);
+ 
+     static bool DDPost(QString    url,
+-                       QString    postFilename, QString    inputFilename,
++                       QString    postFilename, QString   &inputFilename,
+                        QString    userid,       QString    password,
+                        QDateTime  pstartDate,   QDateTime  pendDate,
+                        QString   &err_txt);
+-- 
+1.7.0.4
+
