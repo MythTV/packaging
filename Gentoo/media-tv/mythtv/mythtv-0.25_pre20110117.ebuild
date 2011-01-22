@@ -98,6 +98,7 @@ src_prepare() {
 		-i "${S}"/bindings/perl/Makefile
 
 	epatch "${FILESDIR}/fixLdconfSandbox.patch"
+	epatch "${FILESDIR}/0001-Fix-the-use-of-datadirect-with-no-named-input-file.patch"
 
 	if use experimental
 	then
