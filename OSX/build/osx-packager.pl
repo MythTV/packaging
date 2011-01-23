@@ -790,10 +790,13 @@ if ( $cleanLibs )
 #
 my $gitrepository = 'git://github.com/MythTV/mythtv.git';
 my $gitpackaging  = 'git://github.com/MythTV/packaging.git';
-my $gitfetch  = 1;
+
+my $gitfetch  = 0;  # Synchronise cloned database copy before checkout?
+my $gitpull   = 1;  # Cause a fast-forward
 my $gitrevSHA = 0;
-my $gitrevert = 0;
-my $gitrevision = 'master';
+my $gitrevert = 0;  # Undo any local changes?
+
+my $gitrevision = 'master';  # Default thingy to checkout
 
 if ( $OPT{'gitrev'} )
 {
@@ -807,7 +810,8 @@ if ( $OPT{'gitrev'} )
     if ( $gitrevision =~ /^[0-9a-f]{7,40}$/ )
     {
         $gitrevSHA = 1;
-        #$gitfetch = 0;
+        $gitfetch  = 1;  # Rev. might be newer than local cache
+        $gitpull   = 0;  # Checkout creates "detached HEAD", git pull will fail
     }
 }
 
@@ -849,12 +853,14 @@ elsif ( ! $OPT{'nohead'} )
 
 
     chdir $GITDIR;
-    if ( $gitfetch )
+    if ( $gitfetch )   # Update Git DB
     {   &Syscall([ $git, 'fetch' ]) or die   }
     &Syscall([ $git, @gitcheckoutflags ]) or die;
+    if ( $gitpull )    # Fast-forward
+    {   &Syscall([ $git, 'pull' ]) or die   }
 
     chdir "$GITDIR/packaging";
-    if ( $gitfetch )
+    if ( $gitfetch )   # Update Git DB
     {   &Syscall([ $git, 'fetch' ]) or die   }
     if ( $gitrevSHA )
     {
@@ -862,7 +868,11 @@ elsif ( ! $OPT{'nohead'} )
         &Syscall([ $git, 'merge',    'master' ]) or die;
     }
     else
-    {   &Syscall([ $git, @gitcheckoutflags ]) or die   }
+    {
+        &Syscall([ $git, @gitcheckoutflags ]) or die;
+        if ( $gitpull )   # Fast-forward
+        {   &Syscall([ $git, 'pull' ]) or die   }
+    }
 }
 
 # Make a convenience (non-hidden) directory for editing src code:
