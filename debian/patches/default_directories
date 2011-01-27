@@ -1,10 +1,10 @@
 Default directories for all plugins
 Use /var/log/mythtv instead of just /var/log for mythtv logs.
 Change location of default storage groups to somewhere in /var/lib.
-Index: mythplugins-trunk/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
+Index: mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
 ===================================================================
---- mythplugins-trunk~/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2010-08-28 15:16:22.000000000 -0500
-+++ mythplugins-trunk/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2010-09-03 22:03:16.965118454 -0500
+--- mythtv-master.orig/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2011-01-26 18:53:46.000000000 -0800
++++ mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2011-01-26 18:55:05.118703202 -0800
 @@ -18,7 +18,7 @@
  #ifdef Q_WS_MACX
      gc->setValue(QDir::homePath() + "/Pictures");
@@ -23,11 +23,11 @@ Index: mythplugins-trunk/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
      gc->setHelpText(QObject::tr("This is a colon separated list of paths. "
                      "If the path in the list is a directory, its contents will "
                      "be copied. If it is an executable, it will be run."));
-Index: mythplugins-trunk/mythplugins/mythmusic/mythmusic/globalsettings.cpp
+Index: mythtv-master/mythplugins/mythmusic/mythmusic/globalsettings.cpp
 ===================================================================
---- mythplugins-trunk~/mythplugins/mythmusic/mythmusic/globalsettings.cpp	2010-05-12 23:18:15.000000000 -0500
-+++ mythplugins-trunk/mythplugins/mythmusic/mythmusic/globalsettings.cpp	2010-09-03 22:03:16.965118454 -0500
-@@ -40,7 +40,7 @@
+--- mythtv-master.orig/mythplugins/mythmusic/mythmusic/globalsettings.cpp	2011-01-26 18:53:46.000000000 -0800
++++ mythtv-master/mythplugins/mythmusic/mythmusic/globalsettings.cpp	2011-01-26 18:55:05.122703710 -0800
+@@ -39,7 +39,7 @@
  #ifdef Q_WS_MACX
      gc->setValue(QDir::homePath() + "/Music");
  #else
@@ -36,23 +36,10 @@ Index: mythplugins-trunk/mythplugins/mythmusic/mythmusic/globalsettings.cpp
  #endif
      gc->setHelpText(QObject::tr("This directory must exist, and the user "
                      "running MythMusic needs to have write permission "
-Index: mythplugins-trunk/mythweb/mythweb.conf.apache
+Index: mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp
 ===================================================================
---- mythplugins-trunk~/mythplugins/mythweb/mythweb.conf.apache	2008-10-22 13:50:54.000000000 -0500
-+++ mythplugins-trunk/mythplugins/mythweb/mythweb.conf.apache	2010-09-03 22:03:16.965118454 -0500
-@@ -29,7 +29,7 @@
-     <Directory "/var/www/html/data">
-         Options -All +FollowSymLinks +IncludesNoExec
-     </Directory>
--    <Directory "/var/www/html" >
-+    <Directory "/var/www/mythweb" >
- 
-     ############################################################################
-     # I *strongly* urge you to turn on authentication for MythWeb.  It is disabled
-Index: mythplugins-trunk/mytharchive/mytharchive/archivesettings.cpp
-===================================================================
---- mythplugins-trunk~/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2010-09-03 06:39:51.000000000 -0500
-+++ mythplugins-trunk/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2010-09-03 22:03:41.974127280 -0500
+--- mythtv-master.orig/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2011-01-26 18:53:46.000000000 -0800
++++ mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2011-01-26 18:55:05.122703710 -0800
 @@ -16,7 +16,7 @@
  {
      HostLineEdit *gc = new HostLineEdit("MythArchiveTempDir");
@@ -62,11 +49,10 @@ Index: mythplugins-trunk/mytharchive/mytharchive/archivesettings.cpp
      gc->setHelpText(QObject::tr("Location where MythArchive should create its "
              "temporory work files. LOTS of free space required here."));
      return gc;
-==========================================================================
-Index: mythtv-trunk/mythtv/programs/mythbackend/housekeeper.cpp
+Index: mythtv-master/mythtv/programs/mythbackend/housekeeper.cpp
 ===================================================================
---- mythtv-trunk~/mythtv/programs/mythbackend/housekeeper.cpp	2010-05-13 00:12:30.000000000 -0400
-+++ mythtv-trunk/mythtv/programs/mythbackend/housekeeper.cpp	2010-07-17 12:33:21.000000000 -0400
+--- mythtv-master.orig/mythtv/programs/mythbackend/housekeeper.cpp	2011-01-26 18:53:47.000000000 -0800
++++ mythtv-master/mythtv/programs/mythbackend/housekeeper.cpp	2011-01-26 18:55:05.122703710 -0800
 @@ -326,7 +326,7 @@
                                            "mythfilldatabase");
      QString mfarg = gCoreContext->GetSetting("MythFillDatabaseArgs", "");
@@ -76,11 +62,11 @@ Index: mythtv-trunk/mythtv/programs/mythbackend/housekeeper.cpp
  
      if (mfpath == "mythfilldatabase")
          mfpath = GetInstallPrefix() + "/bin/mythfilldatabase";
-Index: mythtv-trunk/mythtv/programs/mythwelcome/welcomedialog.cpp
+Index: mythtv-master/mythtv/programs/mythwelcome/welcomedialog.cpp
 ===================================================================
---- mythtv-trunk~/mythtv/programs/mythwelcome/welcomedialog.cpp	2010-07-16 11:24:25.000000000 -0400
-+++ mythtv-trunk/mythtv/programs/mythwelcome/welcomedialog.cpp	2010-07-17 12:33:21.000000000 -0400
-@@ -443,7 +443,7 @@
+--- mythtv-master.orig/mythtv/programs/mythwelcome/welcomedialog.cpp	2011-01-26 18:53:47.000000000 -0800
++++ mythtv-master/mythtv/programs/mythwelcome/welcomedialog.cpp	2011-01-26 18:55:05.122703710 -0800
+@@ -436,7 +436,7 @@
                                            "mythfilldatabase");
      QString mfarg = gCoreContext->GetSetting("MythFillDatabaseArgs", "");
      QString mflog = gCoreContext->GetSetting("MythFillDatabaseLog",
@@ -89,24 +75,10 @@ Index: mythtv-trunk/mythtv/programs/mythwelcome/welcomedialog.cpp
  
      if (mflog.isEmpty())
          command = QString("%1 %2").arg(mfpath).arg(mfarg);
-==========================================================================
-Index: mythtv-trunk/mythtv/libs/libmythdb/storagegroup.cpp
+Index: mythtv-master/mythtv/libs/libmythmetadata/globals.cpp
 ===================================================================
---- mythtv-trunk~/mythtv/libs/libmythdb/storagegroup.cpp	2010-09-01 22:43:12.261119260 -0500
-+++ mythtv-trunk/mythtv/libs/mythtv/libmythdb/storagegroup.cpp	2010-09-01 22:43:13.989118280 -0500
-@@ -14,7 +14,7 @@
- #define LOC_WARN QString("SG(%1) Warning: ").arg(m_groupname)
- #define LOC_ERR QString("SG(%1) Error: ").arg(m_groupname)
- 
--const char *StorageGroup::kDefaultStorageDir = "/mnt/store";
-+const char *StorageGroup::kDefaultStorageDir = "/var/lib/mythtv/recordings";
- 
- QMutex                 StorageGroup::m_staticInitLock;
- bool                   StorageGroup::m_staticInitDone = false;
-Index: mythtv-trunk/mythtv/libs/libmythmetadata/globals.cpp
-===================================================================
---- mythtv-trunk~/mythtv/libs/libmythmetadata/globals.cpp	2010-09-01 22:43:20.945171566 -0500
-+++ mythtv-trunk/mythtv/libs/mythtv/libmythmetadata/globals.cpp	2010-09-01 22:43:46.416403238 -0500
+--- mythtv-master.orig/mythtv/libs/libmythmetadata/globals.cpp	2011-01-26 18:53:46.000000000 -0800
++++ mythtv-master/mythtv/libs/libmythmetadata/globals.cpp	2011-01-26 18:55:05.122703710 -0800
 @@ -32,5 +32,5 @@
  #ifdef Q_WS_MACX
  const QString DEFAULT_VIDEOSTARTUP_DIR = QDir::homePath() + "/Movies";
