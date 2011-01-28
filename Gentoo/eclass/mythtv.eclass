@@ -18,9 +18,19 @@ case "${PN}" in
       mythtv)
 				REPO="mythtv"
 				MY_PN="mythtv";;
+				S="${WORKDIR}/MythTV-${REPO}-${MYTHTV_SREV}/${MY_PN}"
+      mythweb)
+				REPO="mythweb"
+				MY_PN="mythweb";;
+				S="${WORKDIR}/MythTV-${REPO}-${MYTHTV_SREV}/"
+      mythtv-themes)
+				REPO="myththemes"
+				MY_PN="mythtv-themes";;
+				S="${WORKDIR}/MythTV-${REPO}-${MYTHTV_SREV}/"
 	       *)
 				REPO="mythtv"
 				MY_PN="mythplugins";;
+				S="${WORKDIR}/MythTV-${REPO}-${MYTHTV_SREV}/${MY_PN}"
 esac
 
 # _pre is from SVN trunk while _p and _beta are from SVN ${MY_PV}-fixes
@@ -32,5 +42,4 @@ esac
 
 HOMEPAGE="http://www.mythtv.org"
 LICENSE="GPL-2"
-SRC_URI="https://github.com/MythTV/${REPO}/tarball/${MYTHTV_REV} -> mythtv-${PV}.tar.gz"
-S="${WORKDIR}/MythTV-${REPO}-${MYTHTV_SREV}/${MY_PN}"
+SRC_URI="https://github.com/MythTV/${REPO}/tarball/${MYTHTV_REV} -> ${REPO}-${PV}.tar.gz"
