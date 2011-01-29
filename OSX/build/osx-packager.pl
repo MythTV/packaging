@@ -790,10 +790,13 @@ if ( $cleanLibs )
 #
 my $gitrepository = 'git://github.com/MythTV/mythtv.git';
 my $gitpackaging  = 'git://github.com/MythTV/packaging.git';
-my $gitDoPull = 1;
+
+my $gitfetch  = 0;  # Synchronise cloned database copy before checkout?
+my $gitpull   = 1;  # Cause a fast-forward
 my $gitrevSHA = 0;
-my $gitrevert = 0;
-my $gitrevision = 'master';
+my $gitrevert = 0;  # Undo any local changes?
+
+my $gitrevision = 'master';  # Default thingy to checkout
 
 if ( $OPT{'gitrev'} )
 {
@@ -807,12 +810,10 @@ if ( $OPT{'gitrev'} )
     if ( $gitrevision =~ /^[0-9a-f]{7,40}$/ )
     {
         $gitrevSHA = 1;
-        $gitDoPull = 0;
+        $gitfetch  = 1;  # Rev. might be newer than local cache
+        $gitpull   = 0;  # Checkout creates "detached HEAD", git pull will fail
     }
 }
-
-if ( $OPT{'nohead'} )
-{   $gitDoPull = 0   }
 
 # Retrieve source
 if ( $OPT{'srcdir'} )
@@ -826,7 +827,7 @@ if ( $OPT{'srcdir'} )
     }
     &Syscall("mkdir -p $GITDIR/mythtv/config")
 }
-else
+elsif ( ! $OPT{'nohead'} )
 {
     # Only do 'git clone' if mythtv directory does not exist.
     # Always do 'git checkout' to make sure we have the right branch,
@@ -852,17 +853,24 @@ else
 
 
     chdir $GITDIR;
+    if ( $gitfetch )   # Update Git DB
+    {   &Syscall([ $git, 'fetch' ]) or die   }
     &Syscall([ $git, @gitcheckoutflags ]) or die;
-    if ( $gitDoPull )
+    if ( $gitpull )    # Fast-forward
     {   &Syscall([ $git, 'pull' ]) or die   }
 
     chdir "$GITDIR/packaging";
+    if ( $gitfetch )   # Update Git DB
+    {   &Syscall([ $git, 'fetch' ]) or die   }
     if ( $gitrevSHA )
-    {   &Syscall([ $git, 'checkout', 'master' ]) or die  }
+    {
+        &Syscall([ $git, 'checkout', 'master' ]) or die;
+        &Syscall([ $git, 'merge',    'master' ]) or die;
+    }
     else
     {
         &Syscall([ $git, @gitcheckoutflags ]) or die;
-        if ( $gitDoPull )
+        if ( $gitpull )   # Fast-forward
         {   &Syscall([ $git, 'pull' ]) or die   }
     }
 }
@@ -946,7 +954,8 @@ foreach my $comp (@comps)
     if ( $comp eq 'mythtv' )
     {
         # Remove/add Nigel's frontend building speedup hack
-        ##&DoSpeedupHacks('programs/programs.pro', 'mythfrontend mythavtest');
+        &DoSpeedupHacks('programs/programs.pro',
+                        'mythfrontend mythavtest mythwelcome');
     }
 
     &Verbose("Making $comp");
