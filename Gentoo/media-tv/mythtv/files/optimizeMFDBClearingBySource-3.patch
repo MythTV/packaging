@@ -92,10 +92,10 @@ Index: libs/libmythtv/programdata.cpp
      return ok;
  }
  
-Index: libs/libmythdb/mythdbcon.h
+Index: libs/libmythbase/mythdbcon.h
 ===================================================================
---- libs/libmythdb/mythdbcon.h	(revision 26134)
-+++ libs/libmythdb/mythdbcon.h	(working copy)
+--- libs/libmythbase/mythdbcon.h	(revision 26134)
++++ libs/libmythbase/mythdbcon.h	(working copy)
 @@ -114,6 +114,9 @@
      /// \brief Wrap QSqlQuery::exec() so we can display SQL
      bool exec(void);
@@ -106,10 +106,10 @@ Index: libs/libmythdb/mythdbcon.h
      /// \brief Wrap QSqlQuery::next() so we can display the query results
      bool next(void);
  
-Index: libs/libmythdb/mythdbcon.cpp
+Index: libs/libmythbase/mythdbcon.cpp
 ===================================================================
---- libs/libmythdb/mythdbcon.cpp	(revision 26134)
-+++ libs/libmythdb/mythdbcon.cpp	(working copy)
+--- libs/libmythbase/mythdbcon.cpp	(revision 26134)
++++ libs/libmythbase/mythdbcon.cpp	(working copy)
 @@ -505,6 +505,19 @@
      return result;
  }
