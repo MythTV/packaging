@@ -13,6 +13,7 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
   * debian/control:
     - drop openchrome build dependencies.  We no longer support XvMC in
     Ubuntu builds anyway.
+    - add build depends on libcdio-dev for new UDF support.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 04 Dec 2010 23:36:22 -0600
 
