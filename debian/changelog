@@ -6,6 +6,7 @@ mythtv (2:0.24.0+fixes.20101214.1405782-0ubuntu2) UNRELEASED; urgency=low
   * debian/control:
     - drop openchrome build dependencies.  We no longer support XvMC in
     Ubuntu builds anyway.
+  * Add a depends on python-lxml (LP: #710709)
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 04 Dec 2010 23:36:22 -0600
 

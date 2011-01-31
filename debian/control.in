@@ -239,7 +239,7 @@ Description: A PERL library to access some MythTV features
 Package: libmyth-python
 Architecture: all
 Section: libs
-Depends: ${python:Depends}, python-mysqldb, ${misc:Depends}
+Depends: ${python:Depends}, python-mysqldb, python-lxml, ${misc:Depends}
 Replaces: mythtv-common (<< 0.20.98 )
 Conflicts: mythtv-common (<< 0.20.98 )
 Description: A python library to access some MythTV features
