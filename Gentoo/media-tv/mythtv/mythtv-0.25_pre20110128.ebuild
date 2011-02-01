@@ -65,6 +65,9 @@ RDEPEND="
               dev-python/lxml )
     bluray? ( media-libs/libbluray )
     video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-180.06 )
+	media-fonts/liberation-fonts
+	media-fonts/corefonts
+	media-fonts/dejavu
 	"
 
 DEPEND="${RDEPEND}
@@ -72,7 +75,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xf86vidmodeproto
 	x11-apps/xinit
 	!x11-themes/mythtv-themes
-	media-fonts/liberation-fonts
+	dev-lang/yasm
 	"
 
 MYTHTV_GROUPS="video,audio,tty,uucp"

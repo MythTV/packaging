@@ -64,9 +64,12 @@ RDEPEND=">=media-libs/freetype-2.0
 	xvmc? ( x11-libs/libXvMC )
     bluray? ( media-libs/libbluray )
     video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-180.06 )
+	media-fonts/corefonts
+	media-fonts/dejavu
 	"
 
 DEPEND="${RDEPEND}
+	dev-lang/yasm
 	x11-proto/xineramaproto
 	x11-proto/xf86vidmodeproto
 	x11-apps/xinit"
@@ -171,7 +174,6 @@ src_configure() {
 	if use xvmc && use video_cards_nvidia
 	then
 		myconf="${myconf} --xvmc-lib=XvMCNVIDIA"
-		myconf="${myconf} --enable-xvmc-opengl"
 		myconf="${myconf} --enable-opengl-video"
 	fi
 
