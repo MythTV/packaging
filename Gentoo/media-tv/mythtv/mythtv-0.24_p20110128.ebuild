@@ -171,7 +171,6 @@ src_configure() {
 	if use xvmc && use video_cards_nvidia
 	then
 		myconf="${myconf} --xvmc-lib=XvMCNVIDIA"
-		myconf="${myconf} --enable-xvmc-opengl"
 		myconf="${myconf} --enable-opengl-video"
 	fi
 
