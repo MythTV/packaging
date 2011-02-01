@@ -28,7 +28,11 @@ ${IUSE_VIDEO_CARDS} \
 input_devices_joystick \
 "
 
-RDEPEND=">=media-libs/freetype-2.0
+# fonts from Gentoo bug #296222
+RDEPEND="dev-lang/yasm
+        media-fonts/corefonts
+        media-fonts/dejavu
+	>=media-libs/freetype-2.0
 	>=media-sound/lame-3.93.1
 	x11-libs/libX11
 	x11-libs/libXext
