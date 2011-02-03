@@ -959,7 +959,7 @@ foreach my $comp (@comps)
     {
         # Remove/add Nigel's frontend building speedup hack
         &DoSpeedupHacks('programs/programs.pro',
-                        'mythfrontend mythavtest mythwelcome');
+                        'mythfrontend mythavtest mythpreviewgen mythwelcome');
     }
 
     &Verbose("Making $comp");
