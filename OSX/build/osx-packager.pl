@@ -357,6 +357,7 @@ Getopt::Long::GetOptions(\%OPT,
                          'srcdir=s',
                          'force',
                          'noclean',
+			 'archives=s',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -455,6 +456,14 @@ mkdir $PREFIX;
 
 our $SRCDIR = "$WORKDIR/src";
 mkdir $SRCDIR;
+
+our $ARCHIVEDIR ='';
+if ( $OPT{'archives'} )
+{
+    $ARCHIVEDIR = "$SCRIPTDIR" . '/' . $OPT{'archives'};
+} else {
+    $ARCHIVEDIR = "$SRCDIR";
+}
 
 our $GITDIR = "$SRCDIR/myth-git";
 
@@ -642,6 +651,7 @@ foreach my $sw ( @build_depends )
     my $filename = $url;
     $filename =~ s|^.+/([^/]+)$|$1|;
     my $dirname = $filename;
+    $filename = $ARCHIVEDIR . '/' . $filename;
     $dirname =~ s|\.tar\.gz$||;
     $dirname =~ s|\.tar\.bz2$||;
 
