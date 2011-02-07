@@ -139,7 +139,7 @@ our %depend = (
   'mysqlclient' =>
   {
     'url'
-    => 'http://mysql.he.net/Downloads/MySQL-5.0/mysql-5.0.89.tar.gz',
+    => 'http://mysql.he.net/Downloads/MySQL-5.1/mysql-5.1.54.tar.gz',
     'conf'
     =>  [
           '--without-debug',
@@ -175,7 +175,7 @@ exit 0"   > pkg-config ; '.
   =>
   {
     'url'
-    => 'http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.0.tar.gz',
+    => 'http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz',
     'conf-cmd'
     =>  'echo yes | MAKEFLAGS=$parallel_make_flags ./configure',
     'conf'
@@ -190,11 +190,11 @@ exit 0"   > pkg-config ; '.
 
           # When MySQL 5.1 is used, its plugin.h file clashes with Qt's.
           # To work around that, replace these three lines:
-          '-I"$PREFIX/include/mysql"',
-          '-L"$PREFIX/lib/mysql"',
-          '-qt-sql-mysql',
+          # '-I"$PREFIX/include/mysql"',
+          # '-L"$PREFIX/lib/mysql"',
+          # '-qt-sql-mysql',
           # with:
-          # '-qt-sql-mysql -mysql_config "$PREFIX/bin/mysql_config"',
+          '-qt-sql-mysql -mysql_config "$PREFIX/bin/mysql_config"',
 
           '-no-sql-sqlite',
           '-no-sql-odbc',
