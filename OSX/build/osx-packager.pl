@@ -519,8 +519,6 @@ our $gitpath = dirname $git;
 # Clean the environment
 $ENV{'PATH'} = "$PREFIX/bin:/bin:/usr/bin:/usr/sbin:$gitpath";
 $ENV{'PKG_CONFIG_PATH'} = "$PREFIX/lib/pkgconfig:";
-delete $ENV{'CC'};
-delete $ENV{'CXX'};
 delete $ENV{'CPP'};
 delete $ENV{'CXXCPP'};
 $ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'CPPFLAGS'} = "-I$PREFIX/include";
