@@ -2,9 +2,11 @@ mythtv (2:0.24.0+fixes.20110208.6318d52-0ubuntu1) UNRELEASED; urgency=low
 
   [ Pieter Hoekstra ]
   * Automatically restart the frontend if it crashes.  Also notify the user
-    using libnotify.
+    using libnotify. (LP: #692697)
 
   [ Mario Limonciello ]
+  * debian/control:
+    - Depends on libnotify-bin.
   * New upstream checkout (6318d52)
   * >>Upstream changes since last upload (6dd5e4b):
   * [6318d52] Replace 'xml' version check with one that checks Python
