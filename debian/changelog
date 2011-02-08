@@ -1,23 +1,201 @@
 mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
 
+
   * Add new Tieresias fonts to mythtv-common.
   * Drop mythvideo readme file.
   * configure_mythplugins_without_mythtv_installed.patch: refresh.
-  * Install mythffmpeg and mythffplay in mythtv-common.
-  * While grabbing git source, capture the details of 'git describe'
-    for --version output.
   * Add a new php-mythtv package for the newly developed php bindings.
   * Don't include .gitignore files in the mythweb package.
   * Add a depends on php-mythtv for mythweb.
   * Correct php bindings install path (LP: #696724)
+    - add build depends on libcdio-dev for new UDF support.
+  * Add a depends on python-lxml (LP: #710709)
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
+
+mythtv (2:0.24.0+fixes.20110208.6318d52-0ubuntu1) UNRELEASED; urgency=low
+
+  [ Pieter Hoekstra ]
+  * Automatically restart the frontend if it crashes.  Also notify the user
+    using libnotify. (LP: #692697)
+
+  [ Mario Limonciello ]
+  * debian/control:
+    - Depends on libnotify-bin.
+  * New upstream checkout (6318d52)
+  * >>Upstream changes since last upload (6dd5e4b):
+  * [6318d52] Replace 'xml' version check with one that checks Python
+    version, for Python 2.7 compatibility. (LP: #711762)
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
+
+mythtv (2:0.24.0+fixes.20110207.6dd5e4b-0ubuntu1) natty; urgency=low
+
+  * Install mythffmpeg and mythffplay in mythtv-common.
+  * While grabbing git source, capture the details of 'git describe'
+    for --version output.
   * debian/control:
     - drop openchrome build dependencies.  We no longer support XvMC in
     Ubuntu builds anyway.
-    - add build depends on libcdio-dev for new UDF support.
   * Add a depends on python-lxml (LP: #710709)
-  * Install mythmessage rather than mythtvosd
+  * New upstream checkout (6dd5e4b)
+  * >>Upstream changes since last upload (1405782):
+  * [6dd5e4b] Display the Auto commercial skip option for in-progress
+    recordings. (cherry picked from commit
+    5d94418d0813cf3c6dfb5d29b7fe594c155fb3be)
+  * [1a69c92] Several changes to fix the current position and duration
+    of the playback OSD  * Start using the currently displayed video
+    timecode for the OSD position instead of frame number and total
+    frames which is inaccurate.  * Use FFmpeg duration for pre-recorded
+    and video playback length. LiveTV is already correct since it uses
+    the actual recording times but in-progress recordings still uses
+    frames written and fps which is obviously wrong for variable
+    framerate and repeat frame material. The problem with in-progress
+    duration should be able to be fixed by using recording times like
+    livetv does. An update to mythplayer and the recorder class will be
+    necessary.  * Refactor and clean-up some timestamp/timecode
+    handling.
+  * [08a8a65] Force reload of context and stream properties when
+    switching between LiveTV segments.
+  * [849b5ca] Fix seeking after LiveTV transitions.
+  * [7e34a2b] Fix initial bookmark seeking in conjunction with cut
+    lists.
+  * [0100e77] fixes/0.24: Revert Pause/Unpause changes.
+  * [51e3486] Change ThreadPool shutdown to use deleteLater
+  * [cd0acb0] Fix silly error in 5aa72ebce (cherry picked from commit
+    8195d9c5c7b7654ec988d8dce6641d2665e48528)
+  * [8bf1a3a] Don't overwrite default help text if the current widget
+    does not provide any of it's own. (cherry picked from commit
+    5aa72ebce5661e966b1c5a73a576bc1bf7c3cca1)
+  * [9502a6d] OpenGL: Revert 'Don't call QGLContext::doneCurrent() in
+    MythRenderOpenGL'
+  * [e6e1964] Reset the CEA-708 font stretch property when re-
+    initialised. (cherry picked from commit
+    399c1bcd31d6ebf4873bf722d235b2789b4f8be8)
+  * [1e8e703] Update the subtitle font if the fontstretch has changed.
+  * [ae20c48] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [d85343b] Skip past the initial cut area when starting playback.
+  * [14bfdc3] Fix recording item disappearing from list when the
+    subtitle has been edited. (cherry picked from commit
+    9590973b7869c67d68a51cb215f400dcd03f3729)
+  * [61ba0b7] Use ExpandArea() instead of custom and flawed code to
+    achieve the same in MythUIStateType. Potentially fixes a few drawing
+    bugs. (cherry picked from commit
+    b25ec2ebee9bfebf7d148b03c70c6912635d91e4)
+  * [4a113b0] Fix priority textareas not being updated when priority is
+    increased on a list entry. Fixes #9512
+  * [8921ded] Add a timeout for RemoteFile sync. downloads in
+    MythDownloadManager
+  * [38938b3] Don't cache bad result in
+    MythCoreContext::GetMasterHostName().
+  * [06c8142] AOBASE: SRC was setup with 'source_channels' but if we
+    downmix we only get 'channels'
+  * [c884505] Fix for recpriorityB textarea in ProgramRecPriority.
+  * [7612cde] Fix compilation of MythDownloadManager.
+  * [613079e] Add an atexit() handler to delete the MythDownloadManager
+    singleton. (cherry picked from commit
+    26ab0d1bdddb28d826328576f8c048f0f283f883)
+  * [8d1c058] Pause the RingBuffer before pausing the decoder.
+  * [9250772] Use the livetv ringbuffer timeout when switching
+    channel/program.
+  * [bb5e107] Update the seektables when a filename changes on scan in
+    MythVideo.
+  * [6dbb6e9] Fix a potential segfault in MythDVDPlayer. (cherry picked
+    from commit f36b3f020ef3e42c0bb33fc656988a93e599f63b)
+  * [b6dbb3e] A couple bugfixes in MythDownloadManager.
+  * [95ecfdb] Rename the player eof variable.
+  * [efe64a4] OSD: Improved locking in MythPlayer and its subclasses.
+  * [57812c6] MythPlayer: Reorder pause/unpause sequence.
+  * [e6fa6c2] Add areas so that the shapes added in the last commit are
+    correctly proportioned. (cherry picked from commit
+    46d0061dd8625795e7cecfa1082650fa2e982e23)
+  * [3ab178d] Do not lower case when comparing paths, these are case
+    sensitive comparisons and can result in broken paths being used.
+    (cherry picked from commit cfdd72e88d39c1d371fcc272ed5756bbb782b142)
+  * [1509627] Don't convert these strings to Utf8 before comparison,
+    they should already have been converted to Unicode by the QT mysql
+    driver. This sort of conversion isn't strictly legal for QString
+    anyway, it's not a simple byte array, it expects to be holding a
+    unicode encoded string. (cherry picked from commit
+    5c8b326f90b971901804c4d2163194022ade9331)
+  * [2329c36] Don't mangle filename string when saving the file during
+    import or ripping. Refs #9483 (cherry picked from commit
+    d581cefad528a193197c4660cf7e1922ead8b7d7)
+  * [fa2ae0d] Replace some broken image links with shapes instead.
+    (cherry picked from commit 361140bb12fee460a8ee642dfd1519ea68ebd1d5)
+  * [61c78f5] Fix a memory leak in mpegts.c (cherry picked from commit
+    d6d489f4212ad81793164ad29ac4d28819a2c2ae)
+  * [bebb13b] Re-enable settings cache after news schema check.
+  * [7af55a6] Remove channels which are no longer in use in us-bcast
+    (Backport of 2080ca309)
+  * [90fe13c] Use --no-color when checking the git branch.
+  * [40df4b6] Disable XvMC when playing DVDs in fixes/0.24
+  * [f25787f] Add missing break statement in dvbsubdec.c
+  * [3f991fa] Allow braindead old git versions to give version
+  * [945c673] Make the worker threads clean up properly
+  * [798359f] Ensure the main UI window is always hidden when starting
+    playback. (cherry picked from commit
+    f33ac2858392cf8a1670261e5d1058a995add80d)
+  * [2cf5043] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [a328d99] Remove the PlayerTimer class and run the player from
+    TV::StartTV
+  * [46a0dda] Fix restore script host name change with generic names.
+  * [2394a9d] Added Environment Canada static maps as well
+  * [6574b9c] Fix Environment Canada animated maps.
+  * [09800d6] Fix frame rate detection for RM video files with patch
+    used by XBMC.
+  * [c6c50df] Refs #9306. Fixes a memory leak in the EIT scanner.
+  * [415b883] Backport fix for bitrate and duration detection.
+  * [2d85d70] New readme for 0.24 fixes
+  * [e15a45e] Find subdirs before parents when searching for SG relative
+    pathname.
+  * [3ec48f2] Re-enable ffmpeg binary on Darwin.
+  * [f5e6f3d] Propogate INSTALL_ROOT to subdirs on make install
+  * [21b99f1] Added windows outputs to gitignore
+  * [cdf73ef] Add kdevelop supporting files to gitignore.
+  * [2f3a2f8] Fix program finder to not show programs on invisible
+    channels.
+  * [557f3de] Backport fc8e5ee from master.
+  * [f36a849] Exit Watch Recordings if user aborts the initial Rec Group
+    popup.
+  * [3cf32e8] Fix audio-only playback
+  * [1ef81e1] Fix UTF-8 handling on UPnP request URLs
+  * [b769303] MythZoneMinder: Remove some no longer needed includes.
+  * [370220c] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [edf87f5] MythArchive: Add EAC3 as a valid audio format in the
+    script.
+  * [bac67dc] MythArchive: Add EAC3 as a valid audio format in the
+    script.
+  * [30a2515] Backport SHA: 26cb1f7306fe
+  * [c81a3d7] Add edit marks to MythCenter-wide OSD editbar
+  * [7ed83c3] Backport SHA: a635a7b288d8e1456970 from master to
+    fixes/0.24
+  * [5aa7665] MythVideo: Backport JAMU unicode fix to .24-fixes.
+  * [de60515] Change on how we calculate the required ALSA hardware
+    buffer size.
+  * [64d9d7c] Add INSTALL_ROOT support for mythffmpeg/play
+  * [7cdfb8e] Change the QMutex to QSemaphore in myth_system
+  * [c548468] Added mythffplay to the build
+  * [137af77] Build ffmpeg as mythffmpeg and install
+  * [f6af8c7] Try to increase ALSA bugger by 64kB block
+  * [1b25aae] MythArchive: Tweak a please wait message.
+  * [2efe497] MythCenter: Make the message text in the busy dialog
+    multi-line.
+  * [c9e982a] Fix displaying external text subtitles under a rare
+    situation.
+  * [57059b3] Backport 87db11803 to fixes/0.24.
+  * [c6d47f6] Fix compile warnings for the quickdnr filter.
+  * [f0ffba1] MythArchive: Fix the background of the change encoding
+    profile dialog.
+  * [513409c] MythArchive: Fix the name of the button background shape
+    used in the button lists. Fixes ticket 9372.
+  * [7a644c4] Fix HOWTO references to content no longer in contrib.
+  * [5b7beed] Backport to fixes/0.24.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 04 Dec 2010 23:36:22 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 07 Feb 2011 23:58:38 -0600
 
 mythtv (2:0.24.0+fixes.20101214.1405782-0ubuntu1) natty; urgency=low
 
