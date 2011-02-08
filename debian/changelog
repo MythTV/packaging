@@ -1,3 +1,12 @@
+mythtv (2:0.24.0+fixes.20110208.6318d52-0ubuntu1) UNRELEASED; urgency=low
+
+  * New upstream checkout (6318d52)
+  * >>Upstream changes since last upload (6dd5e4b):
+  * [6318d52] Replace 'xml' version check with one that checks Python
+    version, for Python 2.7 compatibility. (LP: #711762)
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
+
 mythtv (2:0.24.0+fixes.20110207.6dd5e4b-0ubuntu1) natty; urgency=low
 
   * Install mythffmpeg and mythffplay in mythtv-common.
