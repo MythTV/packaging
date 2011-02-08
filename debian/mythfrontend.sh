@@ -79,7 +79,14 @@ if [ "$1" = "--service" ]; then
             exec mythwelcome | tee -a "${MYTHWELCOMELOG}"
         else
             echo "Starting mythfrontend.real.." >> "${MYTHFELOG}"
-            exec /usr/bin/mythfrontend.real --logfile "${MYTHFELOG}" ${MYTHFRONTEND_OPTS}
+
+            until /usr/bin/mythfrontend.real --logfile "${MYTHFELOG}" ${MYTHFRONTEND_OPTS}
+                  RET=$?
+                  [ "$RET" = "0" -o "$RET" = "1" ]
+            do
+                  echo "Restarting mythfrontend.real..." >> "${MYTHFELOG}"
+                  notify-send -i info 'Restarting Frontend' 'The front-end crashed unexpectedly and is restarting. Please wait...' 2>> "${MYTHFELOG}"
+            done
         fi
     fi
 # if we're not in --service mode, just behave normally
