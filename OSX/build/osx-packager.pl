@@ -844,6 +844,10 @@ elsif ( ! $OPT{'nohead'} )
                    $gitpackaging, $GITDIR . '/packaging' ]) or die;
     }
 
+    # Remove Nigel's frontend building speedup hack
+    chdir "$GITDIR/mythtv" or die;
+    &DoSpeedupHacks('programs/programs.pro', '');
+
     my @gitcheckoutflags;
 
     if ( $gitrevert )
@@ -955,7 +959,7 @@ foreach my $comp (@comps)
     {
         # Remove/add Nigel's frontend building speedup hack
         &DoSpeedupHacks('programs/programs.pro',
-                        'mythfrontend mythavtest mythwelcome');
+                        'mythfrontend mythavtest mythpreviewgen mythwelcome');
     }
 
     &Verbose("Making $comp");
@@ -1395,7 +1399,7 @@ sub DoSpeedupHacks($$)
         {  last  }
         print OUT;
     }
-    if ( ! $backend && ! $jobtools )
+    if ( ! $backend && ! $jobtools && $subdirs )
     {
         # Nigel's hack to speedup building
         print OUT "# Nigel\'s speedup hack:\n";
