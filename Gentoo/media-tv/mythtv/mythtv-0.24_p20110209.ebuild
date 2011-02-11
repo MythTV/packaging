@@ -66,13 +66,15 @@ RDEPEND=">=media-libs/freetype-2.0
     video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-180.06 )
 	media-fonts/corefonts
 	media-fonts/dejavu
+    !media-tv/mythtv-bindings
 	"
 
 DEPEND="${RDEPEND}
 	dev-lang/yasm
 	x11-proto/xineramaproto
 	x11-proto/xf86vidmodeproto
-	x11-apps/xinit"
+	x11-apps/xinit
+    "
 
 MYTHTV_GROUPS="video,audio,tty,uucp"
 

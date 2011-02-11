@@ -208,7 +208,7 @@ if opts.packages is None:
                      'media-plugins/mythgame',      'media-plugins/mythmusic',
                      'media-plugins/mythnetvision', 'media-plugins/mythnews',
                      'media-plugins/mythvideo',     'media-plugins/mythweather',
-                     'media-plugins/mythzoneminder']
+                     'media-plugins/mythzoneminder','media-tv/mythtv-bindings']
 else:
     opts.packages = opts.packages.split(',')
 

@@ -18,6 +18,9 @@ case "${PN}" in
       mythtv)
 				REPO="mythtv"
 				MY_PN="mythtv";;
+      mythtv-bindings)
+                REPO="mythtv"
+                MY_PN="mythtv";;
 	       *)
 				REPO="mythtv"
 				MY_PN="mythplugins";;
