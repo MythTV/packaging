@@ -34,6 +34,7 @@ mythtv (2:0.24.0+fixes.20110214.ad3c81f-0ubuntu1) UNRELEASED; urgency=low
     Live TV'.
   * [54a300f] LiveTV: Construct the TV object immediately.
   * [d0976da] Disable Picture-In-Picture and Picture-By-Picture
+  * Re-enable V4L support by rebuilding against newer libc-dev (LP: #717717)
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 14 Feb 2011 10:41:07 -0600
 
