@@ -20,7 +20,6 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=debug \
 				--enable-ivtv \
 				--enable-firewire \
 				--enable-joystick-menu \
-				--enable-opengl-vsync \
 				--with-bindings=perl \
 				--enable-opengl-video \
 				--enable-ffmpeg-pthreads \
