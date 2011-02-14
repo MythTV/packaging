@@ -1,4 +1,4 @@
-mythtv (2:0.24.0+fixes.20110214.ad3c81f-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20110214.ad3c81f-0ubuntu1) natty; urgency=low
 
   * Drop proper shutdown behavior for ubuntu patch.  Applied upstream.
   * New upstream checkout (ad3c81f)
