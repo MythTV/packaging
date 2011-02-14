@@ -13,7 +13,47 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
 
-mythtv (2:0.24.0+fixes.20110208.6318d52-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20110214.ad3c81f-0ubuntu1) natty; urgency=low
+
+  * Drop proper shutdown behavior for ubuntu patch.  Applied upstream.
+  * New upstream checkout (ad3c81f)
+  * >>Upstream changes since last upload (6318d52):
+  * [ad3c81f] When shutting down or rebooting keep trying alternate
+    methods if the first ones fail.
+  * [20929be] Add MythNetVision to the DVR menu theme. Fixes #9440.
+    (cherry picked from commit a0fc086f5ac8add273cb1306190472495fdb7d1c)
+  * [52f7df5] Remove some no longer needed code now we only support
+    Qt4.5 or later. (cherry picked from commit
+    548434c2944dcca14abfce4734fb8d09bc3957ae)
+  * [809ec68] Ensure teletext images are properly cleared when using
+    XVideo (cherry picked from commit
+    9980fcf452101d8e3a18cf5640427d9946071854)
+  * [18a8200] Fix lockup when keys are pressed while playback is
+    starting. (cherry picked from commit
+    5ec80d83b3f37f600374ee44c4708047e2e08ea2)
+  * [3d55e51] Only need a video track for duration/position info so
+    remove MHEG check.
+  * [4a8c889] Fix BBC frame detection.
+  * [8e3fd5a] Fix windows compiling
+  * [a7c8820] Don't check whether there are pending events in the TV
+    playback loop.
+  * [0ddc3f2] Fix duration/position information for MHEG and audio only
+    playback.
+  * [dcc9b96] Re-enable setting MythPlayer::noVideoTracks
+  * [25ffbc3] Fix clipping issues with the OpenGL painter.
+  * [b259732] fixes/0.24: Workaround windows OpenGL current context
+    issues.
+  * [48d554e] Non LiveTV: Construct the TV object immediately.
+  * [dd981aa] Remove the key list queue in the TV class.
+  * [54fcb92] Improved handling of 'Show the Program Guide when Start
+    Live TV'.
+  * [54a300f] LiveTV: Construct the TV object immediately.
+  * [d0976da] Disable Picture-In-Picture and Picture-By-Picture
+  * Re-enable V4L support by rebuilding against newer libc-dev (LP: #717717)
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 14 Feb 2011 10:41:07 -0600
+
+mythtv (2:0.24.0+fixes.20110208.6318d52-0ubuntu1) natty; urgency=low
 
   [ Pieter Hoekstra ]
   * Automatically restart the frontend if it crashes.  Also notify the user
@@ -27,7 +67,7 @@ mythtv (2:0.24.0+fixes.20110208.6318d52-0ubuntu1) UNRELEASED; urgency=low
   * [6318d52] Replace 'xml' version check with one that checks Python
     version, for Python 2.7 compatibility. (LP: #711762)
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 11:59:28 -0600
 
 mythtv (2:0.24.0+fixes.20110207.6dd5e4b-0ubuntu1) natty; urgency=low
 
