@@ -107,7 +107,13 @@ src_prepare() {
 	then
 		epatch "${FILESDIR}/optimizeMFDBClearingBySource-3.patch"
 		epatch "${FILESDIR}/jobQueueIgnoreDeletedRecgroup.patch"
-		true;
+
+		if has_version ">=virtual/mysql-5.5"
+		then
+			epatch "${FILESDIR}/mysql-5.5.patch"
+		fi
+
+		true
 	fi
 }
 
