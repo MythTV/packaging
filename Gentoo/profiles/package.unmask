@@ -1,0 +1,14 @@
+>=media-plugins/mythgame-0.01
+>=media-plugins/mythweather-0.01
+>=media-plugins/mythgallery-0.01
+>=media-plugins/mythbrowser-0.01
+>=media-plugins/mythnews-0.01
+>=media-plugins/mythnetvision-0.01
+>=media-plugins/mytharchive-0.01
+>=media-plugins/mythzoneminder-0.01
+>=media-plugins/mythvideo-0.01
+>=media-plugins/mythmusic-0.01
+>=www-apps/mythweb-0.01
+>=media-tv/mythtv-0.01
+>=media-tv/mythtvbindings-0.01
+
