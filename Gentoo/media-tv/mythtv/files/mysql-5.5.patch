@@ -1,5 +1,5 @@
 diff --git a/mythtv/libs/libmyth/programinfo.cpp b/mythtv/libs/libmyth/programinfo.cpp
-index 8c8991a..8325f82 100644
+index 8c8991a..17cf352 100644
 --- a/mythtv/libs/libmyth/programinfo.cpp
 +++ b/mythtv/libs/libmyth/programinfo.cpp
 @@ -1589,7 +1589,7 @@ bool ProgramInfo::LoadProgramFromRecorded(
@@ -11,7 +11,31 @@ index 8c8991a..8325f82 100644
  
      if (!query.exec())
      {
-@@ -2669,7 +2669,7 @@ void ProgramInfo::UpdateLastDelete(bool setTime) const
+@@ -2182,7 +2182,7 @@ QDateTime ProgramInfo::QueryBookmarkTimeStamp(void) const
+         "WHERE chanid    = :CHANID AND"
+         "      starttime = :STARTTIME");
+     query.bindValue(":CHANID",    chanid);
+-    query.bindValue(":STARTTIME", recstartts);
++    query.bindValue(":STARTTIME", recstartts.toString("yyyy-MM-dd hh:mm:ss"));
+ 
+     QDateTime ts;
+ 
+@@ -2631,7 +2631,7 @@ void ProgramInfo::SaveAutoExpire(AutoExpireType autoExpire, bool updateDelete)
+                   " AND starttime = :STARTTIME ;");
+     query.bindValue(":AUTOEXPIRE", (uint)autoExpire);
+     query.bindValue(":CHANID", chanid);
+-    query.bindValue(":STARTTIME", recstartts);
++    query.bindValue(":STARTTIME", recstartts.toString("yyyy-MM-dd hh:mm:ss"));
+ 
+     if (!query.exec())
+         MythDB::DBError("AutoExpire update", query);
+@@ -2664,12 +2664,12 @@ void ProgramInfo::UpdateLastDelete(bool setTime) const
+         query.prepare("UPDATE record SET last_delete = :TIME, "
+                       "avg_delay = (avg_delay * 3 + :DELAY) / 4 "
+                       "WHERE recordid = :RECORDID");
+-        query.bindValue(":TIME", timeNow);
++        query.bindValue(":TIME", timeNow.toString("yyyy-MM-dd hh:mm:ss"));
+         query.bindValue(":DELAY", delay);
      }
      else
      {
@@ -87,6 +111,21 @@ index fa43d1a..f21ec29 100644
      "WHERE value = 'NextSuggestedMythfilldatabaseRun';",
  NULL
  };
+diff --git a/mythtv/libs/libmythtv/recordinginfo.cpp b/mythtv/libs/libmythtv/recordinginfo.cpp
+index da235dd..08bdb7e 100644
+--- a/mythtv/libs/libmythtv/recordinginfo.cpp
++++ b/mythtv/libs/libmythtv/recordinginfo.cpp
+@@ -1141,8 +1141,8 @@ void RecordingInfo::AddHistory(bool resched, bool forcedup)
+                    ":CATEGORY,:SERIESID,:PROGRAMID,:FINDID,:RECORDID,"
+                    ":STATION,:RECTYPE,:RECSTATUS,:DUPLICATE,:REACTIVATE);");
+     result.bindValue(":CHANID", chanid);
+-    result.bindValue(":START", startts.toString(Qt::ISODate));
+-    result.bindValue(":END", endts.toString(Qt::ISODate));
++    result.bindValue(":START", startts.toString("yyyy-MM-dd hh:mm:ss"));
++    result.bindValue(":END", endts.toString("yyyy-MM-dd hh:mm:ss"));
+     result.bindValue(":TITLE", title);
+     result.bindValue(":SUBTITLE", subtitle);
+     result.bindValue(":DESC", description);
 diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
 index bd81323..76b5308 100644
 --- a/mythtv/programs/mythbackend/scheduler.cpp
