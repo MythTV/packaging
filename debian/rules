@@ -31,10 +31,10 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=debug \
 #                                    #
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq "$(DEB_BUILD_ARCH)" "i386"
-	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --disable-xvmc  --enable-vdpau
+	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx  --enable-vdpau
 endif
 ifeq "$(DEB_BUILD_ARCH)" "amd64"
-	MYTHTV_CONFIGURE_OPTS += --disable-xvmc --enable-vdpau
+	MYTHTV_CONFIGURE_OPTS += --enable-vdpau
 endif
 ifeq "$(DEB_BUILD_ARCH)" "armel"
 	MYTHTV_CONFIGURE_OPTS += --enable-vdpau --extra-cflags="-marm -fPIC -DPIC"
