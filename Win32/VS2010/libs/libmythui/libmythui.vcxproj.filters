@@ -1,0 +1,508 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{9a5dbf23-0cc4-482f-a5f5-cdc3180767b2}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{5305e9b7-13fe-48de-8471-68ad2b690ef2}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GeneratedFiles\Debug\moc_lirc.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_lirc.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythdialogbox.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythdialogbox.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythmainwindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythmainwindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythprogressdialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythprogressdialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythscreenstack.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythscreenstack.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythscreentype.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythscreentype.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_myththemedmenu.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_myththemedmenu.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythudplistener.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythudplistener.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythuibutton.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythuibutton.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythuibuttonlist.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythuibuttonlist.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythuibuttontree.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythuibuttontree.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythuicheckbox.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythuicheckbox.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythuifilebrowser.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythuifilebrowser.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythuispinbox.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythuispinbox.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythuitextedit.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythuitextedit.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythuitype.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythuitype.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythuiwebbrowser.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythuiwebbrowser.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythvirtualkeyboard.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythvirtualkeyboard.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\DisplayRes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\DisplayResScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\jsmenuevent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\lircevent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythdialogbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythdisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythfontmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythfontproperties.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythgenerictree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythgesture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythimage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythmainwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythpainter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythpainter_d3d9.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythpainter_ogl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythpainter_qimage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythpainter_qt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythpainter_yuva.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythprogressdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythrect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythrender_d3d9.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythrender_opengl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythrender_opengl1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythrender_opengl2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythscreenstack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythscreentype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\myththemebase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\myththemedmenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythudplistener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuibutton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuibuttonlist.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuibuttontree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuicheckbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiclock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuieditbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuifilebrowser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuigroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiguidegrid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuihelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiimage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiprogressbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuishape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuispinbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuistatetype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuitext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuitextedit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuitype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiutils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuivideo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiwebbrowser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythvirtualkeyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythxdisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\screensaver-null.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\screensaver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\themeinfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\x11colors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\xmlparsebase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythmainwindow_internal.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythmainwindow_internal.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\DisplayRes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\DisplayResScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\lircevent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\lirc_client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythdisplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythfontmanager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythgenerictree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythgesture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythimage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythpainter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythpainter_d3d9.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythpainter_ogl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythpainter_qimage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythpainter_qt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythpainter_yuva.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythrect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythrender_base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythrender_d3d9.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythrender_opengl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythrender_opengl1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythrender_opengl2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythrender_opengl_defs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythrender_opengl_defs1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythrender_opengl_defs2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\myththemebase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiclock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuieditbar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiexp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuigroup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiguidegrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuihelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiimage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiprogressbar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuishape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuistatetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuitext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiutils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuivideo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythxdisplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\screensaver-null.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\screensaver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\themeinfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\x11colors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\xmlparsebase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythvirtualkeyboard.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiwebbrowser.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythuitype.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythuitextedit.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythuispinbox.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythuifilebrowser.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythuicheckbox.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythuibuttontree.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythuibuttonlist.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythuibutton.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythudplistener.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\myththemedmenu.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythscreentype.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythscreenstack.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythprogressdialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythmainwindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythdialogbox.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\lirc.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\mythtv\mythtv\libs\libmythui\mythmainwindow_internal.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

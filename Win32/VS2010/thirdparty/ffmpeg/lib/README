@@ -1,0 +1,34 @@
+You need to place all myth specific ffmpeg DLL's here.  
+
+  libmythavformat.dll
+  libmythavutil.dll
+  libmythavcore.dll
+  libmythavcodec.dll
+
+They will need to be built using MingW, or can be found prebuilt online.
+
+You will need to create import libraries for each dll.
+
+******
+The following taken from http://support.microsoft.com/kb/131313
+
+Given a .DLL with functions exported via a C interface, you can create an 
+import library by following these steps: 
+
+  * Use DUMPBIN /EXPORTS <.DLL file name> to obtain the list of exported 
+    symbols for the .DLL in question.  The symbols appear in the "name" 
+    column of the table whose headings are "ordinal hint name." 
+
+  * Create a .DEF file that contains an EXPORTS section with the names of 
+    the functions listed in the "name" column of the DUMPBIN output.  For 
+    _cdecl functions, the symbol appears just as it would when used in the 
+    calling program. Just place this symbol in the EXPORTS section of the 
+    .DEF file. 
+
+  * Use LIB /DEF:<.DEF file name> to generate the import library and exports 
+    file. The base name of the import library will be the base name of the 
+    .DEF file. Use /OUT: to control the output library name. 
+******
+
+-=>NOTE: I have included the .DEF files I used, however they may not be correct 
+         and should be generated based on the actual DLL's used.

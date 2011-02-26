@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <mythtv_source>y:\git\mythtv</mythtv_source>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup Label="Configuration">
+    <BuildLogFile>$(IntDir)\BuildLog.htm</BuildLogFile>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)compat\include;$(SolutionDir)libs\libmythbase;$(mythtv_source)\mythtv\libs\libmythbase;$(mythtv_source)\mythtv\libs\libmythupnp;$(mythtv_source)\mythtv\libs\libmythui;$(mythtv_source)\mythtv\libs\libmyth;$(mythtv_source)\mythtv\libs\libmyth\audio;$(mythtv_source)\mythtv\libs\libmythtv;$(mythtv_source)\mythtv\libs\libmythtv\channelscan;$(mythtv_source)\mythtv\libs\libmythtv\iptv;$(mythtv_source)\mythtv\libs\libmythtv\mpeg;$(mythtv_source)\mythtv\libs\libmythsamplerate;$(mythtv_source)\mythtv\libs\libmythsoundtouch;$(mythtv_source)\mythtv\libs\libmythfreesurround;$(mythtv_source)\mythtv\libs\libmythdvdnav;$(mythtv_source)\mythtv\libs\libmythbluray;$(mythtv_source)\mythtv\libs\libmythmetadata;$(mythtv_source)\mythtv\libs;$(SolutionDir)thirdparty\zlib\include;$(SolutionDir)thirdparty\pthreads\include;$(SolutionDir)thirdparty\opengl\include;$(SolutionDir)thirdparty;$(mythtv_source)\mythtv\external\FFmpeg;$(QTDIR)\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USING_MINGW;USE_OPENGL_PAINTER;RUNPREFIX="c:\\program files";LIBDIRNAME="lib";_FILE_OFFSET_BITS=64;_LARGEFILE_SOURCE;QT_LARGEFILE_SUPPORT;PIC;__STDC_CONSTANT_MACROS;__STDC_LIMIT_MACROS;_WINDOWS;WIN32;_GNU_SOURCE;QT_THREAD_SUPPORT;QT_DLL;QT_SQL_LIB;QT_XML_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>
+      </RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(OutDir);$(SolutionDir)thirdparty\pthreads\lib;$(SolutionDir)thirdparty\zlib\lib;$(SolutionDir)thirdparty\ffmpeg\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="mythtv_source">
+      <Value>$(mythtv_source)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

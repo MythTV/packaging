@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{5ef2064a-1180-43c1-9ad4-ff56a767622e}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{1d3946f0-e38c-42e5-a567-f7ba9dd5dbe4}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\autoexpire.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\mainserver.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\scheduler.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\server.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GeneratedFiles\Debug\moc_autoexpire.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_autoexpire.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mainserver.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mainserver.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scheduler.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scheduler.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_server.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_server.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\autoexpire.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\backendcontext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\backendutil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\encoderlink.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\filetransfer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\housekeeper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\httpstatus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\main_helpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\mainserver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\mediaserver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\moc_autoexpire.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\moc_mainserver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\moc_scheduler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\moc_server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\mythxml.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\playbacksock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\scheduler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\upnpcdsmusic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\upnpcdstv.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\upnpcdsvideo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\backendcontext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\backendutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\encoderlink.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\filetransfer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\housekeeper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\httpstatus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\main_helpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\mediaserver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\mythxml.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\playbacksock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\upnpcdsmusic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\upnpcdstv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\upnpcdsvideo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
