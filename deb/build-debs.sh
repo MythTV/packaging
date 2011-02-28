@@ -32,7 +32,7 @@ if [ -z "$1" ]; then
 else
 	GIT_BRANCH="$1"
 	DIRECTORY="$2"
-	if echo "$1" | grep fixes 2>&1 1>/dev/null; then
+	if echo "$GIT_BRANCH" | grep fixes 2>&1 1>/dev/null; then
 		GIT_TYPE="fixes"
 		GIT_MAJOR_RELEASE=$(echo $1 |sed 's,.*0.,,')
 		DELIMITTER="+"
@@ -108,7 +108,7 @@ if [ -d .pc ]; then
 fi
 
 #check out/update checkout
-debian/rules get-git-source LAST_GIT_HASH=''
+debian/rules get-git-source LAST_GIT_HASH='' GIT_BRANCH=$GIT_BRANCH
 
 #new upstream version
 UPSTREAM_VERSION=$(dpkg-parsechangelog | sed '/Version/!d; s/.*[0-9]://; s/-.*//')
