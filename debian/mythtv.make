@@ -28,10 +28,10 @@ MYTHWEB_GIT_URL=git://github.com/MythTV/mythweb.git
 MYTHTHEMES_GIT_URL=git://github.com/MythTV/myththemes.git
 
 ifeq "$(GIT_TYPE)" "master"
-        GIT_BRANCH=master
+        GIT_BRANCH:=master
 	DELIMITTER="~"
 else
-        GIT_BRANCH=fixes/0.$(GIT_MAJOR_RELEASE)
+        GIT_BRANCH:=fixes/0.$(GIT_MAJOR_RELEASE)
 	DELIMITTER="+"
 endif
 

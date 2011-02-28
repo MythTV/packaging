@@ -14,6 +14,13 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
 
+mythtv (2:0.24.0+fixes.20110214.ad3c81f-0ubuntu2) UNRELEASED; urgency=low
+
+  * debian/mythtv.make:
+    - If GIT_BRANCH is specified in the env, don't reset it.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 28 Feb 2011 00:24:57 -0600
+
 mythtv (2:0.24.0+fixes.20110214.ad3c81f-0ubuntu1) natty; urgency=low
 
   * Drop proper shutdown behavior for ubuntu patch.  Applied upstream.
