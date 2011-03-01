@@ -137,8 +137,6 @@ src_configure() {
 	myconf="${myconf} --enable-xv"
 	myconf="${myconf} --enable-x11"
 
-	myconf="${myconf} --disable-xvmc"
-
 	if use perl && use python
 	then
 		myconf="${myconf} --with-bindings=perl,python"
