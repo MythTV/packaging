@@ -111,7 +111,7 @@ src_prepare() {
 		if has_version ">=virtual/mysql-5.5"
 		then
 			epatch "${FILESDIR}/mythtv-8585-use_proper_ISO_SQL_format_in_database_logging.patch"
-			epatch "${FILESDIR}/mysql-5.5.patch"
+			#epatch "${FILESDIR}/mysql-5.5.patch"
 		fi
 
 		true
