@@ -29,9 +29,11 @@ MYTHTHEMES_GIT_URL=git://github.com/MythTV/myththemes.git
 
 ifeq "$(GIT_TYPE)" "master"
         GIT_BRANCH:=master
+	GIT_BRANCH_FALLBACK=master
 	DELIMITTER="~"
 else
         GIT_BRANCH:=fixes/0.$(GIT_MAJOR_RELEASE)
+	GIT_BRANCH_FALLBACK=fixes/0.$(GIT_MAJOR_RELEASE)
 	DELIMITTER="+"
 endif
 
@@ -48,20 +50,20 @@ get-git-source:
 	#checkout mythtv/mythplugins
 	if [ -d .git ]; then \
 		git fetch ;\
-		git checkout $(GIT_BRANCH) ;\
+		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 		git pull --rebase; \
 	else \
 		git clone $(MAIN_GIT_URL) tmp ;\
 		mv tmp/.git* tmp/* . ;\
 		rm -rf tmp ;\
-		git checkout $(GIT_BRANCH) ;\
+		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 	fi
 
 	#checkout mythweb
 	if [ -d mythplugins/mythweb/.git ]; then \
 		cd mythplugins/mythweb; \
 		git fetch ;\
-                git checkout $(GIT_BRANCH) ;\
+		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 		git pull --rebase ;\
 	else \
 		mkdir -p mythplugins/mythweb ;\
@@ -69,14 +71,14 @@ get-git-source:
 		mv tmp/.git* tmp/* mythplugins/mythweb ;\
 		rm -rf tmp ;\
 		cd mythplugins/mythweb ;\
-                git checkout $(GIT_BRANCH) ;\
+		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 	fi
 
 	#checkout myththemes
 	if [ -d myththemes/.git ]; then \
 		cd myththemes; \
 		git fetch ;\
-                git checkout $(GIT_BRANCH) ;\
+		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 		git pull --rebase ;\
 	else \
 		mkdir -p myththemes ;\
@@ -84,7 +86,7 @@ get-git-source:
 		mv tmp/.git* tmp/* myththemes ;\
 		rm -rf tmp ;\
 		cd myththemes ;\
-                git checkout $(GIT_BRANCH) ;\
+		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 	fi
 
 	#fixup --version
