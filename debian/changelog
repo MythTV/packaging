@@ -11,6 +11,7 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
     - add build depends on libcdio-dev for new UDF support.
   * Add a depends on python-lxml (LP: #710709)
   * Drop the disable XvMC flags.  No longer necessary.
+  * Install the new hardware profile stuff in the common package.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
 
