@@ -1,0 +1,22 @@
+---
+ libs/libmythbase/mythdbcon.cpp |    7 	6 +	1 -	0 !
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+Index: mythtv/libs/libmythbase/mythdbcon.cpp
+===================================================================
+--- mythtv.orig/libs/libmythbase/mythdbcon.cpp	2011-01-26 19:16:34.000000000 -0500
++++ mythtv/libs/libmythbase/mythdbcon.cpp	2011-02-20 20:34:26.000000000 -0500
+@@ -512,7 +512,12 @@ bool MSqlQuery::exec()
+         while (b.hasNext())
+         {
+             b.next();
+-            str.replace(b.key(), '\'' + b.value().toString() + '\'');
++            if (b.value().type() == QVariant::DateTime)
++                str.replace(b.key(), '\'' + b.value().toDateTime()
++                                             .toString("yyyy-MM-dd hh:mm:ss") +
++                                             '\'');
++            else
++                str.replace(b.key(), '\'' + b.value().toString() + '\'');
+         }
+ 
+         VERBOSE(VB_DATABASE,
