@@ -1,4 +1,4 @@
-mythtv (2:0.24.0+fixes.20110214.ad3c81f-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20110302.0d3d3a4-0ubuntu2) natty; urgency=low
 
   * debian/mythtv.make:
     - If GIT_BRANCH is specified in the env, don't reset it.
@@ -7,8 +7,51 @@ mythtv (2:0.24.0+fixes.20110214.ad3c81f-0ubuntu2) UNRELEASED; urgency=low
   * Update default SQL file to the current 0.24 schema.
   * Add a patch to allow mythbackend to run without tuners defined, fixing
     fresh installs that mythtv-setup hasn't yet been ran.
+  * New upstream checkout (0d3d3a4)
+  * >>Upstream changes since last upload (ad3c81f):
+  * [0d3d3a4] Fix some indenting in default-wide/music-ui.xml.
+  * [fe8f442] MythMusic: Add a couple missing window definitions to the
+    default 4:3 theme.
+  * [4af46b1] Fix digital passthrough on Mac CoreAudio.
+  * [bbfb6b0] Make MPEG2fixup::ProcessVideo return int
+  * [6e5ca62] Slightly improve handling of failed recordings.
+  * [057b017] Do no suspend PulseAudio if the ALSA device contains a
+    hint with the word 'pulse'.
+  * [a2a57df] Remove channel limitation in mythtranscode
+  * [9d78d28] Fix memory leaks in pulseaudio code. Closes #9548
+  * [f169dd9] Fix timestamp estimates for digital audio passthrough
+  * [e0a7720] Prevent Python bindings from loading against Python 2.4 or
+    previous.
+  * [8ba07a0] Improve timestamp logging and restrict fixup code.
+  * [4ce4707] Fix PPC compilation of NuppeDecoder and NuppelRecorder
+  * [c66dceb] configure: Fix libs order in check_ld()
+  * [fa6564d] Change a few <font> to <fontdef>
+  * [dca8767] Remove a stray QMutex::unlock in the TV class.
+  * [519b1b1] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [1443c1c] Teletext: Fix a logging typo in AVFormatDecoder (cherry
+    picked from commit baf2f3f99ea3b357a0b85c66f923f6ae351b5295)
+  * [2b7036f] Add an 'auto-run' setting to mythgallery so that behaviour
+    can be disabled (cherry picked from commit
+    80d9234a505598942214978cc58145320aba0aa2)
+  * [84db96c] Fix a segfault in MusicPlayer::decoderHandlerReady().
+  * [90f48c8] Alter path sanity check to allow PATH lookup, rather than
+    requiring absolute paths.
+  * [e414577] Simplify timestamp selection code which fixes AV-sync for
+    AVI video. (cherry picked from commit
+    eb3c98c5cb899219ddd7dd66877c97655c40d3c4)
+  * [316718a] Faster pausing when switching programs in live tv.
+  * [ad1543a] Refactor 'eof' handling in the decoder and player classes.
+  * [b2c0afc] TV: Clear the contents of TvPlayWindow when playback is
+    starting.
+  * [8332e50] TV: Hide and disable the main UI at the last moment.
+  * [4055a5e] Ensure the TvPlayWindow is shown before we construct the
+    player object. (cherry picked from commit
+    01a5c56e3f98291a67a4277431a7c9df30da8433)
+  * [72b76bd] Use totalLength and framesPlayed to generate
+    duration/position for nuv decoder.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 28 Feb 2011 00:24:57 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Wed, 02 Mar 2011 09:47:50 -0600
 
 mythtv (2:0.24.0+fixes.20110214.ad3c81f-0ubuntu1) natty; urgency=low
 
