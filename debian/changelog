@@ -4,6 +4,7 @@ mythtv (2:0.24.0+fixes.20110214.ad3c81f-0ubuntu2) UNRELEASED; urgency=low
     - If GIT_BRANCH is specified in the env, don't reset it.
     - Set a GIT_BRANCH_FALLBACK in case GIT_BRANCH only exists on a particular
       portion of the checkout.
+  * Update default SQL file to the current 0.24 schema.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 28 Feb 2011 00:24:57 -0600
 
