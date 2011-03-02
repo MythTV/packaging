@@ -3,6 +3,7 @@ default_directories
 
 ##mythtv##
 python_perl_install_paths.patch
+allow_no_tuners.patch
 
 ##mythplugins##
 configure_mythplugins_without_mythtv_installed.patch
