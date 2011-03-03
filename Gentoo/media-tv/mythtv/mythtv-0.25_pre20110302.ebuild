@@ -70,6 +70,9 @@ RDEPEND="
 	media-fonts/corefonts
 	media-fonts/dejavu
     !media-tv/mythtv-bindings
+	dev-python/dbus-python
+	dev-python/simplejson
+	sys-apps/hal
 	"
 
 DEPEND="${RDEPEND}
