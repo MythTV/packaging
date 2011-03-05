@@ -198,5 +198,8 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnputil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\multicast.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

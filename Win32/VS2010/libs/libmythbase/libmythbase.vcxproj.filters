@@ -195,9 +195,6 @@
     <ClInclude Include="mythconfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythbase\version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythbase\autodeletedeque.h">

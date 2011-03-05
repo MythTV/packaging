@@ -1,11 +1,6 @@
 #pragma once
 
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-
-#include <windows.h>
-#include <io.h>
+#include "compat.h"
 
 __inline unsigned int usleep( unsigned int us )
 {
@@ -27,3 +22,5 @@ __inline int write( int fd, const void *buffer, unsigned int count )
 
 #define strncasecmp _strnicmp
 #define strcasecmp  _stricmp
+
+typedef __int64 off64_t;

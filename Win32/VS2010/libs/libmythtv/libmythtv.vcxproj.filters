@@ -41,9 +41,6 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\channelscan\channelimporter.h">
       <Filter>Header Files\channelscan</Filter>
     </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\channelscan\channelscan_sm.h">
-      <Filter>Header Files\channelscan</Filter>
-    </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\channelscan\channelscanmiscsettings.h">
       <Filter>Header Files\channelscan</Filter>
     </ClInclude>
@@ -179,9 +176,6 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\bdoverlayscreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\bdringbuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\blend.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -285,9 +279,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\eitscanner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\fifowriter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\fileringbuffer.h">
@@ -509,6 +500,12 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\yuv2rgb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="bdringbuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\dxva2decoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythtv\channelscan\scanwizardconfig.h">
@@ -596,6 +593,12 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythtv\videosource.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythtv\channelscan\channelscan_sm.h">
+      <Filter>Header Files\channelscan</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythtv\fifowriter.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -717,9 +720,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mpeg\freesat_huffman.cpp">
       <Filter>Source Files\mpeg</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mpeg\H264Parser.cpp">
-      <Filter>Source Files\mpeg</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mpeg\iso6937tables.cpp">
       <Filter>Source Files\mpeg</Filter>
     </ClCompile>
@@ -837,12 +837,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_scanwizard.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_ThreadedFileWriter.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_ThreadedFileWriter.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_transporteditor.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -872,30 +866,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_videosource.cpp">
       <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\audioinput.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\audioplayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\avformatdecoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\avformatdecoderbd.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\avformatdecoderdvd.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\avfringbuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\bdoverlayscreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\bdringbuffer.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\cardutil.cpp">
       <Filter>Source Files</Filter>
@@ -945,9 +915,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\dbcheck.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\decoderbase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\deletemap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -993,25 +960,7 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\dtvsignalmonitor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\dvdringbuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\eitcache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\eitfixup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\eithelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\eitscanner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\fifowriter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\fileringbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\filtermanager.cpp">
@@ -1023,18 +972,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\frequencytables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\hdhrchannel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\hdhrrecorder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\hdhrsignalmonitor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\hdhrstreamhandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\importrecorder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1042,12 +979,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\inputinfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\interactivescreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\interactivetv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\jitterometer.cpp">
@@ -1059,16 +990,10 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\livetvchain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mhi.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\minilzo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\myth_imgconvert.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mythbdplayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mythcodecid.cpp">
@@ -1080,22 +1005,10 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mythdvdplayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mythiowrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mythplayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mythsystemevent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\nuppeldecoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\openglvideo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\osd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\playercontext.cpp">
@@ -1137,9 +1050,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\remoteencoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\ringbuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\RTjpegN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1161,37 +1071,10 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\streamingringbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\subtitlereader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\subtitlescreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\teletextdecoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\teletextreader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\teletextscreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\textsubtitleparser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\ThreadedFileWriter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\transporteditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\tv.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\tv_play.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\tv_play_win.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\tv_rec.cpp">
@@ -1252,6 +1135,123 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\yuv2rgb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ThreadedFileWriter.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ThreadedFileWriter.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\ThreadedFileWriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\tv_play.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\ringbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\osd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\audioplayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\subtitlereader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_channelscan_sm.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_channelscan_sm.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_fifowriter.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_fifowriter.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\eithelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mpeg\H264Parser.cpp">
+      <Filter>Source Files\mpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\decoderbase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\avformatdecoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\avformatdecoderdvd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\subtitlescreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\teletextdecoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\teletextreader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\teletextscreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\textsubtitleparser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\eitscanner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\openglvideo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mhi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\interactivescreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\interactivetv.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\fileringbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\avfringbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bdringbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\eitcache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\eitfixup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mythiowrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mythbdplayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\nuppeldecoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\tv_play_win.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\avformatdecoderbd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\bdoverlayscreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dvdringbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
