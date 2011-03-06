@@ -2,8 +2,10 @@
 #ifndef __COMPAT_TIME_H__
 #define __COMPAT_TIME_H__
 
-#include <windows.h>
+#include "compat.h"
+
 #include <time.h>
+#include <sys/utime.h>
 
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 #define EPOCHFILETIME (116444736000000000i64)
@@ -32,5 +34,15 @@ __inline int gettimeofday( struct timeval *tv, void *tz )
 
     return 0;
 }
+
+#define utimbuf       _utimbuf
+#define utime( a, b ) _utime( a, b )
+
+struct timezone
+{
+    int tz_dsttime;
+    int tz_minuteswest;
+};
+
 
 #endif 

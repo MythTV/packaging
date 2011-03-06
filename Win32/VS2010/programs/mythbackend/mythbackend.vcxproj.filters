@@ -15,18 +15,21 @@
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
     <Filter Include="Generated Files\Debug">
-      <UniqueIdentifier>{5ef2064a-1180-43c1-9ad4-ff56a767622e}</UniqueIdentifier>
+      <UniqueIdentifier>{c7bdb9d2-338d-4c24-983e-498f0975c2c3}</UniqueIdentifier>
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
     <Filter Include="Generated Files\Release">
-      <UniqueIdentifier>{1d3946f0-e38c-42e5-a567-f7ba9dd5dbe4}</UniqueIdentifier>
+      <UniqueIdentifier>{91d62283-6083-4fe7-a924-20831b12c523}</UniqueIdentifier>
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\autoexpire.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\housekeeper.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\mainserver.h">
@@ -44,6 +47,12 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_autoexpire.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_housekeeper.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_housekeeper.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_mainserver.cpp">
@@ -97,18 +106,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\mediaserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\moc_autoexpire.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\moc_mainserver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\moc_scheduler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\moc_server.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\mythxml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -142,9 +139,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\filetransfer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\housekeeper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\httpstatus.h">

@@ -501,7 +501,7 @@
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\lirc.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\..\..\..\mythtv\mythtv\libs\libmythui\mythmainwindow_internal.h">
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythmainwindow_internal.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <float.h>
+//#include <sys\time.h>
 
 //#define ssize_t  __int64
 
@@ -26,10 +27,30 @@ typedef uint32_t            mode_t;
 #ifndef UINT64_C
 # define UINT64_C(x) x##ui64
 #endif
-
+/*
 #ifndef INT64_MAX
 #define INT64_MAX INT64_C(9223372036854775807)
 #endif
+*/
+#ifdef __STDC_LIMIT_MACROS  
+# define INT8_MAX 0x7f 
+# define INT8_MIN (-INT8_MAX - 1) 
+# define UINT8_MAX (__CONCAT(INT8_MAX, U) * 2U + 1U) 
+# define INT16_MAX 0x7fff 
+# define INT16_MIN (-INT16_MAX - 1) 
+# define UINT16_MAX (__CONCAT(INT16_MAX, U) * 2U + 1U) 
+# define INT32_MAX 0x7fffffffL 
+# define INT32_MIN (-INT32_MAX - 1L) 
+# define UINT32_MAX (__CONCAT(INT32_MAX, U) * 2UL + 1UL) 
+# define INT64_MAX 0x7fffffffffffffffLL 
+# define INT64_MIN (-INT64_MAX - 1LL) 
+# define UINT64_MAX (__CONCAT(INT64_MAX, U) * 2ULL + 1ULL) 
+#endif
+
+__inline double roundf(double x) 
+{ 
+    return floor(x + 0.5); 
+}
 
 __inline int truncf( float flt )
 {
