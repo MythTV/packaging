@@ -33,6 +33,11 @@ static const char *dvdnav_menu_table[] =
     "Part",
 };
 
+dvdnav_status_t dvdnav_part_play(dvdnav_t *self, int32_t title, int32_t part)
+{
+    return 0;
+}
+
 DVDRingBuffer::DVDRingBuffer(const QString &lfilename) :
     m_dvdnav(NULL),     m_dvdBlockReadBuf(NULL),
     m_dvdBlockRPos(0),  m_dvdBlockWPos(0),

@@ -341,9 +341,6 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\lzoconf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\mhi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\minilzo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -405,9 +402,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\scheduledrecording.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\signalmonitor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\signalmonitorlistener.h">
@@ -599,6 +593,12 @@
       <Filter>Header Files\channelscan</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythtv\fifowriter.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythtv\mhi.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythtv\signalmonitor.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -1253,6 +1253,18 @@
     </ClCompile>
     <ClCompile Include="dvdringbuffer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mhi.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mhi.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_signalmonitor.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_signalmonitor.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
