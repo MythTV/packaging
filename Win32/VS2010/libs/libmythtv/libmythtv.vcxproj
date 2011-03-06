@@ -630,7 +630,7 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\teletextscreen.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\textsubtitleparser.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\ThreadedFileWriter.cpp">
-      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PreprocessToFile>
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\tv_play.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\tv_play_win.cpp" />
