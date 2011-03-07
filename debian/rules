@@ -49,6 +49,12 @@ MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \
                               --zm-version=1.22.3 \ 
                               --qmake=/usr/bin/qmake \
 
+#Use moar CPUs for jya
+PROCESSORS       ?= $(shell grep -ic ^processor /proc/cpuinfo)
+ifeq (0,$(PROCESSORS))
+PROCESSORS := 1
+endif
+
 %:
 	dh $@
 
@@ -64,12 +70,12 @@ override_dh_auto_install:
 
 	#mythtv
 	cd mythtv && ./configure $(MYTHTV_CONFIGURE_OPTS)
-	$(MAKE) -C mythtv
+	$(MAKE) -j$(PROCESSORS) -C mythtv
 	$(MAKE) -C mythtv install INSTALL_ROOT=$(CURDIR)/debian/tmp
 
 	#mythplugins
 	cd mythplugins && ./configure $(MYTHPLUGINS_CONFIGURE_OPTS) --mythroot=$(CURDIR)/debian/tmp
-	$(MAKE) -C mythplugins
+	$(MAKE) -j$(PROCESSORS) -C mythplugins
 	for plugin in mytharchive \
 	mythgallery mythgame mythmusic mythmovies mythnews mythvideo \
 	mythweather mythzoneminder mythbrowser mythnetvision ; do \
