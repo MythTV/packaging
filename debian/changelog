@@ -15,6 +15,7 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
   * Refresh patches for changes upstream:
     - default_directories
     - allow_no_tuners
+    - configure_mythplugins_without_mythtv
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
 
