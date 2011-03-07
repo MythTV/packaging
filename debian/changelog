@@ -1,3 +1,10 @@
+mythtv (2:0.24.0+fixes.20110302.0d3d3a4-0ubuntu3) UNRELEASED; urgency=low
+
+  * debian/rules:
+    - Give jya more G's.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sun, 06 Mar 2011 22:35:15 -0600
+
 mythtv (2:0.24.0+fixes.20110302.0d3d3a4-0ubuntu2) natty; urgency=low
 
   * debian/mythtv.make:
