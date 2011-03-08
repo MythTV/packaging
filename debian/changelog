@@ -1,9 +1,36 @@
-mythtv (2:0.24.0+fixes.20110302.0d3d3a4-0ubuntu3) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20110307.00d86fd-0ubuntu1) natty; urgency=low
 
   * debian/rules:
     - Give jya more G's.
+  * debian/control:
+    - Disable largly unused jack support.
+  * New upstream checkout (00d86fd)
+  * >>Upstream changes since last upload (0d3d3a4):
+  * [00d86fd] MythMusic: Fix some overlapping text on the default 4:3
+    track info screen. (cherry picked from commit
+    3ae9230296078ca72c59c997a45c76b46fb1e8df)
+  * [e763cdf] MythMusic: Fix some overlapping text on the default 4:3
+    mini player. (cherry picked from commit
+    7d4bee30863c820e45f3119d7bb68ce6e4c9ad04)
+  * [92443af] MythMusic: Fix some overlapping text on the track info
+    screen and make better use of the available space. (cherry picked
+    from commit 11232c75735ecea3610851a1376ff8aa8322c97b)
+  * [df861e4] MythMusic: Fix some overlapping text on the default-wide
+    mini player. (cherry picked from commit
+    834a383aa7ec4ec7779956648d9e343f9680872d)
+  * [a68266a] MythCenter-wide: Fix some overlapping text on the program
+    lister screen. (cherry picked from commit
+    8689a20c828e7d8b7364af3cca0854df7b413dea)
+  * [e938aa9] MythCenter-wide: Fix some overlapping text on the program
+    finder screen. (cherry picked from commit
+    10f5b0b695830ca37995c798bf8ddcd038d7b1c5)
+  * [a0b5b8f] MythCenter-wide: Fix some overlapping text on the program
+    guide screen. (cherry picked from commit
+    a43a6aee1340d05e3ae203818db9cd270133d3de)
+  * [5367795] Updated MythFrontend, MythArchive and MythGallery
+    translation from Ilkka Tengvall.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sun, 06 Mar 2011 22:35:15 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 07 Mar 2011 19:15:36 -0600
 
 mythtv (2:0.24.0+fixes.20110302.0d3d3a4-0ubuntu2) natty; urgency=low
 
