@@ -15,7 +15,6 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=debug \
 				--enable-lirc \
 				--enable-audio-alsa \
 				--enable-audio-oss \
-				--enable-audio-jack \
 				--enable-dvb \
 				--enable-ivtv \
 				--enable-firewire \
