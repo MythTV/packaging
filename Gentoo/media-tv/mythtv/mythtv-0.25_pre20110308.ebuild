@@ -4,10 +4,10 @@
 
 EAPI=2
 PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.25pre-1315-gcd073b6"
+MYTHTV_VERSION="v0.25pre-1365-gae3dccf"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="cd073b6e9b323958f785cab47884e605e4033885"
-MYTHTV_SREV="cd073b6"
+MYTHTV_REV="ae3dccfd55d3fd4ca37a61a3a21e9bed6a7227a5"
+MYTHTV_SREV="ae3dccf"
 
 inherit flag-o-matic multilib eutils qt4 mythtv toolchain-funcs python
 
@@ -96,8 +96,8 @@ src_prepare() {
 # upstream wants the revision number in their version.cpp
 # since the subversion.eclass strips out the .svn directory
 # svnversion in MythTV's build doesn't work
-	sed -e "s/\${SOURCE_VERSION}/${MYTHTV_VERSION}/g" \
-		-e "s/\${BRANCH}/${MYTHTV_BRANCH}/g" \
+	sed -e "s#\${SOURCE_VERSION}#${MYTHTV_VERSION}#g" \
+		-e "s#\${BRANCH}#${MYTHTV_BRANCH}#g" \
 		-i "${S}"/version.sh
 
 

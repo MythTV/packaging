@@ -4,16 +4,16 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.24-198-g0d3d3a4"
-MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="0d3d3a4909f10ff30092044e6c106ed6d049ffe3"
-MYTHTV_SREV="0d3d3a4"
+MYTHTV_VERSION="v0.25pre-1365-gae3dccf"
+MYTHTV_BRANCH="master"
+MYTHTV_REV="ae3dccfd55d3fd4ca37a61a3a21e9bed6a7227a5"
+MYTHTV_SREV="ae3dccf"
 
 inherit mythtv-plugins eutils
 
 DESCRIPTION="Video player module for MythTV."
 IUSE=""
-KEYWORDS="amd64 x86 ~ppc"
+KEYWORDS="~amd64 ~x86 ~ppc"
 
 RDEPEND="media-tv/mythtv[python]
         sys-apps/eject"
