@@ -161,13 +161,18 @@ class Ebuild( object ):
         bp.close()
         cp.close()
 
-    def digest(self, verbose=False):
+    def digest(self, verbose=False, force=False):
         if self.opts.verbose: print 'Digesting...'
         nr = open('/dev/null','r')
         nw = open('/dev/null','w')
         if verbose:
             nw = sys.stdout
-        dp = subprocess.Popen(['ebuild',self.get_name(self.base),'digest'], stdin=nr, stdout=nw, stderr=nw)
+        cmd = ['ebuild']
+        if force:
+            cmd.append('--force')
+        cmd.append(self.get_name(self.base))
+        cmd.append('digest')
+        dp = subprocess.Popen(cmd, stdin=nr, stdout=nw, stderr=nw)
         dp.wait()
 
 parser = optparse.OptionParser()
@@ -216,7 +221,7 @@ for package in opts.packages:
     if opts.digest:
         e = Ebuild(package)
         e.get_base()
-        e.digest(True)
+        e.digest(True, True)
     else:
         Ebuild(package).update()
 
