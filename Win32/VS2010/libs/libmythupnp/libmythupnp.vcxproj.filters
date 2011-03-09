@@ -24,6 +24,12 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Header Files\serializers">
+      <UniqueIdentifier>{35477dc5-5889-436c-acfb-4cb011f1359b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\serializers">
+      <UniqueIdentifier>{b0662b94-717d-49f4-9fff-777dd99bb85c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\broadcast.h">
@@ -99,6 +105,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnputil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\jsonSerializer.h">
+      <Filter>Header Files\serializers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\serializer.h">
+      <Filter>Header Files\serializers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\soapSerializer.h">
+      <Filter>Header Files\serializers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\xmlSerializer.h">
+      <Filter>Header Files\serializers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\servicehost.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\wsdl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -199,6 +223,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\multicast.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\jsonSerializer.cpp">
+      <Filter>Source Files\serializers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\serializer.cpp">
+      <Filter>Source Files\serializers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\xmlSerializer.cpp">
+      <Filter>Source Files\serializers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\servicehost.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\wsdl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

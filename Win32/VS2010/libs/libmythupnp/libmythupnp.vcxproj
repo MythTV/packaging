@@ -36,6 +36,12 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnptasknotify.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnptasksearch.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnputil.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\jsonSerializer.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\serializer.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\soapSerializer.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\xmlSerializer.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\servicehost.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\wsdl.h" />
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythupnp\threadpool.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
@@ -109,6 +115,11 @@
     <ClCompile Include="GeneratedFiles\Release\moc_threadpool.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\jsonSerializer.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\serializer.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\xmlSerializer.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\servicehost.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\wsdl.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F0EE3ABC-B1DA-45FB-A453-A0F4ED35769D}</ProjectGuid>
@@ -162,7 +173,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>mythbase.lib;QtCored4.lib;QtXmld4.lib;QtNetworkd4.lib;QtSqld4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mythbase.lib;mythservicecontracts.lib;QtCored4.lib;QtXmld4.lib;QtNetworkd4.lib;QtSqld4.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
