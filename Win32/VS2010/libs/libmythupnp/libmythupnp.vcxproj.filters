@@ -125,6 +125,9 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\wsdl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\htmlserver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythupnp\threadpool.h">
@@ -238,6 +241,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\wsdl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\htmlserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

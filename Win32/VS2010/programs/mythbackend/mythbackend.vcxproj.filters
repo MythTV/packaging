@@ -127,9 +127,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\mediaserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\mythxml.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\playbacksock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -187,6 +184,9 @@
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\services\dvr.cpp">
       <Filter>Source Files\services</Filter>
     </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\internetContent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\backendcontext.h">
@@ -208,9 +208,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\mediaserver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\mythxml.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\playbacksock.h">
@@ -236,6 +233,9 @@
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\services\serviceUtil.h">
       <Filter>Header Files\services</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\internetContent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

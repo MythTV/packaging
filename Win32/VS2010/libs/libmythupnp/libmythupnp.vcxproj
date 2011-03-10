@@ -42,6 +42,7 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\xmlSerializer.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\servicehost.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\wsdl.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\htmlserver.h" />
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythupnp\threadpool.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
@@ -120,6 +121,7 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\xmlSerializer.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\servicehost.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\wsdl.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\htmlserver.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F0EE3ABC-B1DA-45FB-A453-A0F4ED35769D}</ProjectGuid>
