@@ -1221,6 +1221,8 @@ fi
 %{_datadir}/mythtv/mythconverg*.pl
 %dir %{_datadir}/mythtv/locales
 %{_datadir}/mythtv/locales/*
+%dir %{_datadir}/mythtv/hardwareprofile
+%{_datadir}/mythtv/hardwareprofile/*
 
 %files backend
 %defattr(-,root,root,-)
@@ -1237,6 +1239,8 @@ fi
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
 %dir %{_datadir}/mythtv/internetcontent
 %{_datadir}/mythtv/internetcontent/*
+%dir %{_datadir}/mythtv/html
+%{_datadir}/mythtv/html/*
 
 %files setup
 %defattr(-,root,root,-)
@@ -1460,6 +1464,10 @@ fi
 ################################################################################
 
 %changelog
+* Thu Mar 10 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- add hardware profile scripts to mythtv-common
+- add html server static files to mythbackend
+
 * Tue Feb 22 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Remove xvmc-vld, opengl-vsync
 - Rename mythtvosd to mythmessage
