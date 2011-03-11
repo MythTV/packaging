@@ -281,8 +281,8 @@ EOF
         -e "s,define branch .\+,define branch $BRANCH,"   \
         -e "s,define vers_string .\+,define vers_string $DESCRIBE,"   \
         -e "s,Version:.\+,Version: $GITVER,"              \
-        mythtv.spec
-    
+        "$ABSPATH/mythtv.spec"
+
 # Update the other spec files to the MythTV spec version
     # later...
 
