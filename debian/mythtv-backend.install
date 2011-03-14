@@ -5,7 +5,7 @@ usr/bin/mythfilldatabase
 usr/bin/mythjobqueue
 usr/bin/mythtv-setup.real
 usr/bin/mythpreviewgen
-share/mythtv/html
+usr/share/mythtv/html
 
 #Copied in from debian/
 debian/mythtv-setup.desktop 			usr/share/applications
