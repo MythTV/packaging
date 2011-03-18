@@ -1,0 +1,3 @@
+# Files to ignore
+*.vcxproj.user
+VS2010.sdf
