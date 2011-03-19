@@ -1,10 +1,7 @@
-# Files to ignore
 Release
 Debug
 GeneratedFiles
-ipch
-VS2010.sdf
-VS2010.opensdf
+*.props
 *.user
 *.suo
 *.user
