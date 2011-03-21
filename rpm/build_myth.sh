@@ -152,7 +152,7 @@ EOF
 
 # A function to install mythtv packages
     function installmyth {
-        sudo rpm -Uvh --force --nodeps                                     \
+        sudo rpm -Uvh --force --nodeps                                                    \
             /usr/src/redhat/RPMS/x86_64/mythtv-docs-$GITVER-0.1.git.$GITREV.*.rpm         \
             /usr/src/redhat/RPMS/x86_64/mythtv-libs-$GITVER-0.1.git.$GITREV.*.rpm         \
             /usr/src/redhat/RPMS/x86_64/mythtv-devel-$GITVER-0.1.git.$GITREV.*.rpm        \
@@ -163,6 +163,7 @@ EOF
             /usr/src/redhat/RPMS/x86_64/mythtv-common-$GITVER-0.1.git.$GITREV.*.rpm       \
             /usr/src/redhat/RPMS/x86_64/perl-MythTV-$GITVER-0.1.git.$GITREV.*.rpm         \
             /usr/src/redhat/RPMS/x86_64/python-MythTV-$GITVER-0.1.git.$GITREV.*.rpm       \
+            /usr/src/redhat/RPMS/x86_64/mythffmpeg-$GITVER-0.1.git.$GITREV.*.rpm          \
             /usr/src/redhat/RPMS/x86_64/mythmusic-$GITVER-0.1.git.$GITREV.*.rpm           \
             /usr/src/redhat/RPMS/x86_64/mythbrowser-$GITVER-0.1.git.$GITREV.*.rpm         \
             /usr/src/redhat/RPMS/x86_64/mythnetvision-$GITVER-0.1.git.$GITREV.*.rpm       \
