@@ -40,6 +40,9 @@ NOTE:  Edit the following .props files _before_ opening the VS2010.sln file.
   * Update the version.h file with the appropriate settings.  Run 
     "git describe --dirty" to obtain the MYTH_SOURCE_VERSION
 
+  * The avconfig.h file is generated during the Linux configure, so move it
+    to mythtv/external/FFmpeg/libavutil
+
   * I tried to limit the impact to the base MythTV source, so I create any
     unix-only header files that were included and they are located in the
     "compat" directory.
