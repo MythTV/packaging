@@ -12,11 +12,15 @@ MYTHTV_SREV="4ce7cd8"
 inherit mythtv-plugins
 
 DESCRIPTION="Module for MythTV."
-IUSE=""
+IUSE="+exif +opengl raw"
 KEYWORDS="amd64 x86 ~ppc"
 
-RDEPEND=""
-DEPEND=""
+RDEPEND="exif? ( >=media-libs/libexif-0.6.10 )
+        media-libs/tiff
+        raw? ( media-gfx/dcraw )"
+DEPEND="${RDEPEND}"
+
+MTVCONF="$(use_enable exif) $(use_enable exif new-exif) $(use_enable raw dcraw) $(use_enable opengl)"
 
 src_install() {
 	mythtv-plugins_src_install
