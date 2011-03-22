@@ -82,10 +82,10 @@ if [ "$1" = "--service" ]; then
 
             until /usr/bin/mythfrontend.real --logfile "${MYTHFELOG}" ${MYTHFRONTEND_OPTS}
                   RET=$?
-                  [ "$RET" = "0" -o "$RET" = "1" ]
+                  [ "$RET" = "0" -o "$RET" = "1" -o "$RET" = "254" ]
             do
                   echo "Restarting mythfrontend.real..." >> "${MYTHFELOG}"
-                  notify-send -i info 'Restarting Frontend' 'The front-end crashed unexpectedly and is restarting. Please wait...' 2>> "${MYTHFELOG}"
+                  notify-send -i info 'Restarting Frontend' "The front-end crashed unexpectedly (exit code $RET) and is restarting. Please wait..." 2>> "${MYTHFELOG}"
             done
         fi
     fi
