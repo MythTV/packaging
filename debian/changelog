@@ -1,10 +1,55 @@
-mythtv (2:0.24.0+fixes.20110307.00d86fd-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20110322.c2baf1b-0ubuntu2) natty; urgency=low
 
   * Don't restart the frontend on exit code 254 (which is representative of
     being unable to initialize a context)
   * Mention the exit code in the notify-osd message that it's being restarted.
+  * New upstream checkout (c2baf1b)
+  * >>Upstream changes since last upload (00d86fd):
+  * [c2baf1b] Fix initial pulseaudio volume.
+  * [782b652] Fix lockTuner() and freeTuner() methods of MythBE.  They
+    relied on database access methods that had been removed prior to
+    0.23. (cherry picked from commit
+    5fd4a102989336841628b9764f2d7fe07162089f)
+  * [db3cfd3] libmythui: Revert recent Compiz/fullscreen window fixes.
+  * [4ce7cd8] Fix history handling of overridden find recordings.
+  * [ccd73be] MythPlayer: Fix decoder locking.
+  * [ccc89dd] MythPlayer: Only lock the eof check when run from the
+    decoder thread.
+  * [5e8685f] MythPlayer:: Remove some unnecessary decoder locking.
+  * [8cc2e9a] libmythui: Fix fullscreen windowing with Compiz (and
+    Gnome?)
+  * [ee6aaa7] Video playback: Don't try and display the OSD when
+    embedded. (cherry picked from commit
+    6ce20f63502997afe7bffa82ccc47825fcc6f143)
+  * [1f532a5] MythUIFileBrowser: Fix a segfault if the 'back' button is
+    missing.
+  * [ae52b58] Fix mouse usage in popups, thanks to Paul for spotting the
+    error. Fixes #9667.     (cherry picked from commit
+    afb8995fe52dd3a3f35ab6c256fd556cce68fd68)
+  * [cf09840] Ignore the dividers on the Watch Recordings Change Group
+    Filter popup. Fixes #9668. (cherry picked from commit
+    850dcfb0accb166f47c66e6ee940ca66ee0da148)
+  * [71ff7fd] Mythmusic: Suppress some compiler warnings. (cherry picked
+    from commit 6e71eda7fab37f8c657d357979ff051ccf324afc)
+  * [223142c] Mythmusic: Fix fullscreen spectrum visualisation.
+  * [a6decbc] windows: Support opengl, libfftw amd libvisual in
+    mythplugins configure
+  * [df16df9] OSX: Cross compilation fixes for mythmusic.
+  * [f525415] OSX: Cross compilation fixes for libmythui
+  * [e28fe98] OSX: Cross compilation fixes for libmythtv
+  * [7f15abd] libmythfreemheg: Catch exception for unrecognised content
+  * [f691e85] OpenGL: Avoid crashing hard if the OpenGL context is
+    invalid.
+  * [785ea1b] MythPlayer:: Add some missing null pointer checks for the
+    decoder.
+  * [40fc454] Change ENVCAN parser to use &deg; rather than 260
+  * [13be9c2] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [9d533f3] Do not attempt to increase ALSA buffer size if it's
+    already set to the maximum the hardware can handle
+  * [b41e218] Change ALSA buffer size and period size
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 22 Mar 2011 08:32:18 -0500
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 22 Mar 2011 08:33:49 -0500
 
 mythtv (2:0.24.0+fixes.20110307.00d86fd-0ubuntu1) natty; urgency=low
 
