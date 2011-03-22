@@ -3,8 +3,12 @@
 
 ' option explicit
 
-Dim objFSO, objShell, strCommand, objExecuteObject, objStdOut, strSourceVersion, strBranch, strTemp
-Dim strMythTVSource 
+Dim objFSO, objShell, strCommand, objExecuteObject, objStdOut
+Dim strSourceVersion, strBranch, strTemp, strMythTVSource
+
+' This needs to be set to the location of your MythTV source so that the 
+' source version and branch in version.h reflect the MythTV path and not the
+' git version of the packaging branch!
 
 strMythTVSource = "c:\git\mythtv"
 
@@ -21,7 +25,6 @@ do until objStdOut.AtEndOfStream
   strTemp = objStdOut.readline
   if left(strTemp,1) = "*" then strBranch=mid(strTemp,3)  
 loop
-
 
 Set objFSO = CreateObject("Scripting.FileSystemObject")
 set objFile = objFSO.CreateTextFile("version.h",TRUE)
