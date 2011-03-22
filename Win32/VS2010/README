@@ -37,8 +37,8 @@ NOTE:  Edit the following .props files _before_ opening the VS2010.sln file.
   * you will need to update the "Qt4VSPropertySheet.props" file to make sure
     the QTDIR value is set correctly.
 
-  * Update the version.h file with the appropriate settings.  Run 
-    "git describe --dirty" to obtain the MYTH_SOURCE_VERSION
+  * Run version.vbs to create version.h, which is a file normally generated
+    during the build process in Unix
 
   * The avconfig.h file is generated during the Linux configure, so move it
     to mythtv/external/FFmpeg/libavutil
@@ -50,6 +50,8 @@ NOTE:  Edit the following .props files _before_ opening the VS2010.sln file.
   * Any third party library that is needed has a directory under the
     "thirdparty" directory.  You will need to look at each folder's README
     file to determine where/what is needed.
+
+  * Run copydll.vbs to move the .dll's from thirdparty into bin\debug.
 
   * MythTV's version of ffmpeg still needs to be compiled using MingW and
     import libraries need to be manually created (see README file).
