@@ -1,4 +1,4 @@
-mythtv (2:0.24.0+fixes.20110322.c2baf1b-0ubuntu2) natty; urgency=low
+mythtv (2:0.24.0+fixes.20110322.c2baf1b-0ubuntu1) natty; urgency=low
 
   * Don't restart the frontend on exit code 254 (which is representative of
     being unable to initialize a context)
