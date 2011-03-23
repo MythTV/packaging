@@ -17,6 +17,7 @@ KEYWORDS="amd64 x86 ~ppc"
 
 RDEPEND="exif? ( >=media-libs/libexif-0.6.10 )
         media-libs/tiff
+        opengl? ( virtual/opengl )
         raw? ( media-gfx/dcraw )"
 DEPEND="${RDEPEND}"
 
