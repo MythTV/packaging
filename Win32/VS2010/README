@@ -51,7 +51,13 @@ NOTE:  Edit the following .props files _before_ opening the VS2010.sln file.
     "thirdparty" directory.  You will need to look at each folder's README
     file to determine where/what is needed.
 
-  * Run copydll.vbs to move the .dll's from thirdparty into bin\debug.
+  * Install the MySQL connector for C
+    (http://dev.mysql.com/downloads/connector/c/)
+
+  * Edit copydll.vbs and update the directories.
+
+  * Run copydll.vbs to copy various .dll's from thirdparty and other
+    locations into bin\debug.
 
   * MythTV's version of ffmpeg still needs to be compiled using MingW and
     import libraries need to be manually created (see README file).
