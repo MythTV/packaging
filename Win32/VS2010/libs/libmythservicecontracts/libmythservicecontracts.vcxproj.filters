@@ -47,12 +47,6 @@
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\settingList.h">
       <Filter>Header Files\datacontracts</Filter>
     </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\stringList.h">
-      <Filter>Header Files\datacontracts</Filter>
-    </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\successFail.h">
-      <Filter>Header Files\datacontracts</Filter>
-    </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\services\mythServices.h">
       <Filter>Header Files\services</Filter>
     </CustomBuild>
@@ -122,18 +116,6 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_settingList.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_stringList.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_stringList.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_successFail.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_successFail.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_mythServices.cpp">

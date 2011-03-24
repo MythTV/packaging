@@ -139,6 +139,9 @@
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythupnp\httpserver.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythupnp\serverSideScripting.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_httpserver.cpp">
@@ -245,6 +248,15 @@
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\htmlserver.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\serverSideScripting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_serverSideScripting.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_serverSideScripting.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
