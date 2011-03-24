@@ -4,17 +4,28 @@
 
 option explicit
 
-Dim strStartFolder, strDestinationFolder, objFSO, objFolder, strFilenames, objSubFolder, objSubFile
-Dim colFolders, objFile
+DIM strStartFolder, strDestinationFolder, strQtFolder, strMySQLFolder, strQtDLL, strMySQLDLL
+DIM objFSO, objFolder, strFilenames, objSubFolder, objSubFile, colFolders, objFile
 
+' The folder names.  Edit as required for your particular system.
 strStartFolder = "thirdparty"
 strDestinationFolder = ".\bin\debug\"
+strQtFolder = "c:\Qt\4.7.2\bin\"
+strMySQLFolder = "c:\Program Files\MySQL\MySQL Connector C 6.0.2\lib\debug\"
+
+strQtDLL = strQtFolder & "\QtSQLd4.dll"
+strMySQLDLL = strMySQLFolder & "\libmysql.dll"
 
 Set objFSO = CreateObject("Scripting.FileSystemObject")
 
+' Do the DLLs in thirdparty
 Set objFolder = objFSO.GetFolder(strStartFolder)
-
 ScanSubFolders(objFolder)
+
+' Copy the individual DLLs that we also need.
+objFSO.CopyFile strQtDLL,(strDestinationFolder)
+objFSO.CopyFile strMySQLDLL,(strDestinationFolder)
+
 
 Sub ScanSubFolders(objFolder)
 Set colFolders = objFolder.SubFolders
