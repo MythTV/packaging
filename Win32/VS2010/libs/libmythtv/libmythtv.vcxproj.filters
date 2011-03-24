@@ -36,6 +36,12 @@
     <Filter Include="Source Files\mpeg">
       <UniqueIdentifier>{494115b7-7220-43ab-a471-caa87958175a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\visualisations">
+      <UniqueIdentifier>{f953d66e-3dfa-47c8-a0de-5665c73936da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\visualisations">
+      <UniqueIdentifier>{5ef9f9e6-2e66-4ca3-aa4b-5b7a5fc790ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\channelscan\channelimporter.h">
@@ -499,6 +505,9 @@
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\dxva2decoder.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\visualisations\videovisual.h">
+      <Filter>Header Files\visualisations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1265,6 +1274,9 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_signalmonitor.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\visualisations\videovisual.cpp">
+      <Filter>Source Files\visualisations</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

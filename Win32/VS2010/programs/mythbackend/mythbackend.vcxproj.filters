@@ -187,6 +187,12 @@
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\internetContent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\httpconfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\mythsettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\backendcontext.h">
@@ -235,6 +241,12 @@
       <Filter>Header Files\services</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\internetContent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\httpconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\mythsettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

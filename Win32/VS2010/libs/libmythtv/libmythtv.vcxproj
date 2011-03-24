@@ -55,6 +55,7 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\eitscanner.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\dxva2decoder.h" />
     <ClInclude Include="bdringbuffer.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\visualisations\videovisual.h" />
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythtv\fifowriter.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
@@ -852,6 +853,7 @@
     <ClCompile Include="GeneratedFiles\Release\moc_videosource.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\visualisations\videovisual.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9B6BC8F2-BA46-4D47-BA86-9913259F88C9}</ProjectGuid>

@@ -100,6 +100,8 @@
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\services\myth.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\services\serviceUtil.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\internetContent.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\httpconfig.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\mythsettings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\backendcontext.h" />
@@ -117,6 +119,8 @@
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\serviceHosts\mythServiceHost.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\services\serviceUtil.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\internetContent.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\httpconfig.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\mythsettings.h" />
     <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\services\dvr.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
