@@ -23,7 +23,7 @@ Set objFolder = objFSO.GetFolder(strStartFolder)
 ScanSubFolders(objFolder)
 
 ' Copy the individual DLLs that we also need.
-objFSO.CopyFile strQtDLL,(strDestinationFolder)
+' objFSO.CopyFile strQtDLL,(strDestinationFolder)
 objFSO.CopyFile strMySQLDLL,(strDestinationFolder)
 
 
