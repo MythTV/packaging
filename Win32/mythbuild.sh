@@ -2087,7 +2087,7 @@ case "$MYTHVER" in
     0.24*|0.25*|master) ffmpeglibs="$ffmpeglibs mythavcore mythpostproc" ;;
 esac
 xtralibs="xml2 freetype mp3lame dvdcss exif ogg vorbis vorbisenc tag cdio cdio_cdda cdio_paranoia visual-0.4"
-QTDLLS="QtCore QtGui QtNetwork QtOpenGL QtSql QtSvg QtWebKit QtXml Qt3Support"
+QTDLLS="QtCore QtGui QtNetwork QtOpenGL QtSql QtSvg QtWebKit QtXml Qt3Support QtScript"
 
 if [ "$MYTHTARGET" = "Windows" ]; then
     banner "Building MythTV $MYTHTARGET runtime in $windir"
