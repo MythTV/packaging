@@ -16,7 +16,7 @@ IUSE=""
 KEYWORDS="amd64 x86 ~ppc"
 
 RDEPEND="media-tv/mythtv[python]
-        sys-apps/eject"
+        sys-block/eject"
 DEPEND=""
 
 src_prepare() {
