@@ -4,10 +4,10 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.25pre-1365-gae3dccf"
+MYTHTV_VERSION="v0.25pre-1617-g4464513"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="ae3dccfd55d3fd4ca37a61a3a21e9bed6a7227a5"
-MYTHTV_SREV="ae3dccf"
+MYTHTV_REV="4464513c484fca4aea8eeba380b0eb2453a7ed96"
+MYTHTV_SREV="4464513"
 
 inherit mythtv-plugins flag-o-matic toolchain-funcs eutils
 

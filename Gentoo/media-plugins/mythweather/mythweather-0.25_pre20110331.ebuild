@@ -4,16 +4,16 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.24-209-g13be9c2"
-MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="13be9c27f99478bf86336fae5b9e78bbb8d52d04"
-MYTHTV_SREV="13be9c2"
+MYTHTV_VERSION="v0.25pre-1617-g4464513"
+MYTHTV_BRANCH="master"
+MYTHTV_REV="4464513c484fca4aea8eeba380b0eb2453a7ed96"
+MYTHTV_SREV="4464513"
 
 inherit mythtv-plugins
 
 DESCRIPTION="Weather forecast module for MythTV."
 IUSE=""
-KEYWORDS="amd64 x86 ~ppc"
+KEYWORDS="~amd64 ~x86 ~ppc"
 
 DEPEND="dev-perl/DateManip
 	dev-perl/ImageSize

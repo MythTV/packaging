@@ -4,18 +4,18 @@
 
 EAPI=2
 PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.24-228-g4ce7cd8"
-MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="4ce7cd8cbb892390e8d389462ccba716c6e6acf4"
-MYTHTV_SREV="4ce7cd8"
+MYTHTV_VERSION="v0.25pre-1617-g4464513"
+MYTHTV_BRANCH="master"
+MYTHTV_REV="4464513c484fca4aea8eeba380b0eb2453a7ed96"
+MYTHTV_SREV="4464513"
 
 inherit flag-o-matic multilib eutils qt4 mythtv toolchain-funcs python
 
 DESCRIPTION="Homebrew PVR project language bindings"
 SLOT="0"
-KEYWORDS="amd64 x86 ~ppc"
+KEYWORDS="~amd64 ~x86 ~ppc"
 
-IUSE="perl python"
+IUSE="perl python php"
 
 RDEPEND="
 	perl?   (   dev-lang/perl
@@ -25,6 +25,9 @@ RDEPEND="
 	python? ( >=dev-lang/python-2.6
                 dev-python/mysql-python
                 dev-python/lxml )
+    php?    ( >=dev-lang/php-5.3
+                dev-php/PEAR-Net_Socket
+                dev-php/PEAR-MDB2_Driver_mysqli )
 	!media-tv/mythtv"
 
 DEPEND="${RDEPEND}"
@@ -34,6 +37,7 @@ src_configure() {
     echo "PYTHON=/usr/bin/python" >> "${S}/config.mak"
     use perl   && echo "CONFIG_BINDINGS_PERL=yes" >> "${S}/config.mak"
     use python && echo "CONFIG_BINDINGS_PYTHON=yes" >> "${S}/config.mak"
+    use php    && echo "CONFIG_BINDINGS_PHP=yes" >> "${S}/config.mak"
 
     S="${S}/bindings"
     cp "${FILESDIR}/Makefile" "${S}/Makefile"
