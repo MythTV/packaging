@@ -19,9 +19,10 @@ IUSE_VIDEO_CARDS="video_cards_nvidia"
 IUSE="altivec autostart dvb \
 dvd bluray \
 ieee1394 jack lcd lirc \
-alsa jack \
+alsa jack mp3 \
 debug profile \
 perl python \
+x264 xvid \
 vdpau \
 experimental \
 ${IUSE_VIDEO_CARDS} \
@@ -29,8 +30,8 @@ input_devices_joystick \
 "
 
 RDEPEND="
-    >=net-misc/wget-1.12-r3
-    >=media-libs/freetype-2.0
+	>=net-misc/wget-1.12-r3
+	>=media-libs/freetype-2.0
 	>=media-sound/lame-3.93.1
 	x11-libs/libX11
 	x11-libs/libXext
@@ -54,22 +55,24 @@ RDEPEND="
 	dvb? ( media-libs/libdvb media-tv/linuxtv-dvb-headers )
 	dvd? ( media-libs/libdvdcss )
 	ieee1394? (	>=sys-libs/libraw1394-1.2.0
-			    >=sys-libs/libavc1394-0.5.3
-			    >=media-libs/libiec61883-1.0.0 )
+				>=sys-libs/libavc1394-0.5.3
+				>=media-libs/libiec61883-1.0.0 )
 	jack? ( media-sound/jack-audio-connection-kit )
 	lcd? ( app-misc/lcdproc )
 	lirc? ( app-misc/lirc )
-	perl? ( dev-perl/DBD-mysql 
-            dev-perl/Net-UPnP )
+	perl? ( dev-perl/DBD-mysql
+			dev-perl/Net-UPnP )
 	python? ( dev-python/mysql-python
-              dev-python/lxml
+			  dev-python/lxml
 			  dev-python/urlgrabber )
-    bluray? ( media-libs/libbluray )
-    video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-180.06 )
+	bluray? ( media-libs/libbluray )
+	video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-180.06 )
 	media-fonts/liberation-fonts
 	media-fonts/corefonts
 	media-fonts/dejavu
-    !media-tv/mythtv-bindings
+	!media-tv/mythtv-bindings
+	x264? ( >=media-libs/x264-0.0.20100605 )
+	xvid? ( >=media-libs/xvid-1.1.0 )
 	dev-python/dbus-python
 	dev-python/simplejson
 	sys-apps/hal
@@ -176,6 +179,11 @@ src_configure() {
 	use input_devices_joystick || myconf="${myconf} --disable-joystick-menu"
 
 	myconf="${myconf} --enable-symbol-visibility"
+
+# configure flags for mythffmpeg
+	myconf="${myconf} $(use_enable mp3 libmp3lame)"
+	myconf="${myconf} $(use_enable xvid libxvid)"
+	myconf="${myconf} $(use_enable x264 libx264)"
 
 	hasq distcc ${FEATURES} || myconf="${myconf} --disable-distcc"
 	hasq ccache ${FEATURES} || myconf="${myconf} --disable-ccache"

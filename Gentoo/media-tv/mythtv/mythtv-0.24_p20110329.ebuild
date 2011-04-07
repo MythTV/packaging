@@ -19,9 +19,10 @@ IUSE_VIDEO_CARDS="video_cards_nvidia"
 IUSE="altivec autostart dvb \
 dvd bluray \
 ieee1394 jack lcd lirc \
-alsa jack \
+alsa jack mp3 \
 debug profile \
 perl python \
+x264 xvid \
 xvmc vdpau \
 experimental \
 ${IUSE_VIDEO_CARDS} \
@@ -57,16 +58,18 @@ RDEPEND=">=media-libs/freetype-2.0
 	jack? ( media-sound/jack-audio-connection-kit )
 	lcd? ( app-misc/lcdproc )
 	lirc? ( app-misc/lirc )
-	perl? ( dev-perl/DBD-mysql 
-            dev-perl/Net-UPnP )
+	perl? ( dev-perl/DBD-mysql
+			dev-perl/Net-UPnP )
 	python? ( dev-python/mysql-python
-              dev-python/lxml )
+			  dev-python/lxml )
 	xvmc? ( x11-libs/libXvMC )
-    bluray? ( media-libs/libbluray )
-    video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-180.06 )
+	bluray? ( media-libs/libbluray )
+	video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-180.06 )
 	media-fonts/corefonts
 	media-fonts/dejavu
-    !media-tv/mythtv-bindings
+	!media-tv/mythtv-bindings
+	x264? ( >=media-libs/x264-0.0.20100605 )
+	xvid? ( >=media-libs/xvid-1.1.0 )
 	"
 
 DEPEND="${RDEPEND}
@@ -74,7 +77,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xineramaproto
 	x11-proto/xf86vidmodeproto
 	x11-apps/xinit
-    "
+	"
 
 MYTHTV_GROUPS="video,audio,tty,uucp"
 
@@ -189,6 +192,11 @@ src_configure() {
 	then
 		myconf="${myconf} --enable-symbol-visibility"
 	fi
+
+# configure flags for mythffmpeg
+	myconf="${myconf} $(use_enable mp3 libmp3lame)"
+	myconf="${myconf} $(use_enable xvid libxvid)"
+	myconf="${myconf} $(use_enable x264 libx264)"
 
 ## CFLAG cleaning so it compiles
 	strip-flags
