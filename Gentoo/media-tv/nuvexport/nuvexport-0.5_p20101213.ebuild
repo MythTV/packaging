@@ -4,34 +4,29 @@
 
 EAPI=2
 
+NUVEXPORT_BRANCH="master"
 NUVEXPORT_REV="c18508f20448077762d23ab9207c5eb643324dc0"
 NUVEXPORT_SREV="c18508f"
 REPO="nuvexport"
 
-DESCRIPTION="Export recordings from MythTV"
-HOMEPAGE="http://www.mythtv.org"
-LICENSE="GPL-2"
-SRC_URI="https://github.com/MythTV/${REPO}/tarball/${NUVEXPORT_REV} -> ${REPO}-${PV}.tar.gz"
+inherit mythtv
 
-LICENSE="as-is"
+DESCRIPTION="Export recordings from MythTV"
+
 SLOT="0"
 KEYWORDS="~amd64 ~ppc ~x86"
-IUSE="+faac +ffmpeg +mp3 mplayer +x264 +xvid"
+IUSE="+faac mplayer +x264 +xvid"
 
 DEPEND=""
 RDEPEND=">=dev-lang/perl-5.6
 	dev-perl/DBI
 	dev-perl/DBD-mysql
 	dev-perl/DateManip
-	ffmpeg? (
-		>=media-video/mjpegtools-1.6.2
-		media-sound/sox[encode]
-	)
-	mp3? ( media-libs/id3lib )
-	mplayer? ( media-video/mplayer[encode,faac?,mp3?,xvid?] )
-	>=media-tv/mythtv-0.24[perl]"
-
-S="${WORKDIR}/MythTV-${REPO}-${NUVEXPORT_SREV}/"
+    >=media-video/mjpegtools-1.6.2
+	media-sound/sox[encode]
+	media-libs/id3lib
+	mplayer? ( media-video/mplayer[encode,mp3,faac?,xvid?] )
+	>=media-tv/mythtv-0.25_pre20110408[perl,xvid?,x264?]"
 
 src_install() {
 	einstall || die "einstall failed"
