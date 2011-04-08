@@ -4,10 +4,10 @@
 
 EAPI=2
 PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.25pre-1617-g4464513"
+MYTHTV_VERSION="v0.25pre-1687-g2434f7c"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="4464513c484fca4aea8eeba380b0eb2453a7ed96"
-MYTHTV_SREV="4464513"
+MYTHTV_REV="2434f7c9eae8eaed1beab966869ddc0ebabe3977"
+MYTHTV_SREV="2434f7c"
 
 inherit flag-o-matic multilib eutils qt4 mythtv toolchain-funcs python
 
@@ -23,6 +23,7 @@ alsa jack \
 debug profile \
 perl python \
 vdpau \
+xvid x264 \
 experimental \
 ${IUSE_VIDEO_CARDS} \
 input_devices_joystick \
@@ -73,6 +74,8 @@ RDEPEND="
 	dev-python/dbus-python
 	dev-python/simplejson
 	sys-apps/hal
+    x264? ( >=media-libs/x264-0.0.20100605 )
+    xvid? ( >=media-libs/xvid-1.1.0 )
 	"
 
 DEPEND="${RDEPEND}
@@ -172,6 +175,10 @@ src_configure() {
 	then
 		myconf="${myconf} --enable-vdpau"
 	fi
+
+    myconf="${myconf} --enable-libmp3lame"
+    myconf="${myconf} $(use_enable xvid libxvid)"
+    myconf="${myconf} $(use_enable x264 libx264)"
 
 	use input_devices_joystick || myconf="${myconf} --disable-joystick-menu"
 

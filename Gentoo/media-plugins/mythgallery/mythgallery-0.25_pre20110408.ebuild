@@ -4,15 +4,15 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.25pre-1617-g4464513"
+MYTHTV_VERSION="v0.25pre-1687-g2434f7c"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="4464513c484fca4aea8eeba380b0eb2453a7ed96"
-MYTHTV_SREV="4464513"
+MYTHTV_REV="2434f7c9eae8eaed1beab966869ddc0ebabe3977"
+MYTHTV_SREV="2434f7c"
 
 inherit mythtv-plugins
 
 DESCRIPTION="Module for MythTV."
-IUSE="+exif +opengl raw"
+IUSE="exif opengl raw"
 KEYWORDS="~amd64 ~x86 ~ppc"
 
 RDEPEND="exif? ( >=media-libs/libexif-0.6.10 )
