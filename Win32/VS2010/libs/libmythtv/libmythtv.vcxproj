@@ -54,7 +54,6 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\eithelper.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\eitscanner.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\dxva2decoder.h" />
-    <ClInclude Include="bdringbuffer.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\visualisations\videovisual.h" />
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythtv\fifowriter.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -73,10 +72,6 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\frame.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\frequencies.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\frequencytables.h" />
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\hdhrchannel.h" />
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\hdhrrecorder.h" />
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\hdhrsignalmonitor.h" />
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\hdhrstreamhandler.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\importrecorder.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\inputgroupmap.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\inputinfo.h" />
@@ -931,7 +926,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties UicDir=".\GeneratedFiles" MocDir=".\GeneratedFiles\$(ConfigurationName)" MocOptions="" RccDir=".\GeneratedFiles" lupdateOnBuild="0" QtVersion_x0020_Win32="4.7.1" />
+      <UserProperties UicDir=".\GeneratedFiles" MocDir=".\GeneratedFiles\$(ConfigurationName)" MocOptions="" RccDir=".\GeneratedFiles" lupdateOnBuild="0" QtVersion_x0020_Win32="$(DefaultQtVersion)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

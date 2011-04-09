@@ -308,18 +308,6 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\frequencytables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\hdhrchannel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\hdhrrecorder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\hdhrsignalmonitor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\hdhrstreamhandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\importrecorder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -498,9 +486,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\yuv2rgb.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="bdringbuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\dxva2decoder.h">

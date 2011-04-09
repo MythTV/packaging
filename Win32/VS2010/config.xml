@@ -1,0 +1,13 @@
+<Configuration>
+  <UPnP>
+    <MythFrontend>
+      <DefaultBackend>
+        <DBHostName>localhost</DBHostName>
+        <DBUserName>mythtv</DBUserName>
+        <DBPassword>mythtv</DBPassword>
+        <DBName>mythconverg</DBName>
+        <DBPort>0</DBPort>
+      </DefaultBackend>
+    </MythFrontend>
+  </UPnP>
+</Configuration>
