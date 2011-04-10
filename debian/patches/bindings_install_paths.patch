@@ -2,8 +2,8 @@ Patch to include layout option for python 2.6
 ==========================================================================
 Index: mythtv-master/mythtv/bindings/python/Makefile
 ===================================================================
---- mythtv-master.orig/mythtv/bindings/python/Makefile	2010-12-31 10:28:56.820339937 -0600
-+++ mythtv-master/mythtv/bindings/python/Makefile	2010-12-31 10:31:08.728339938 -0600
+--- mythtv-master.orig/mythtv/bindings/python/Makefile	2011-03-06 22:31:46.000000000 -0600
++++ mythtv-master/mythtv/bindings/python/Makefile	2011-04-09 22:57:12.162532463 -0500
 @@ -1,7 +1,7 @@
  include ../../config.mak
  
@@ -23,8 +23,8 @@ Index: mythtv-master/mythtv/bindings/python/Makefile
  
 Index: mythtv-master/mythtv/bindings/perl/Makefile
 ===================================================================
---- mythtv-master.orig/mythtv/bindings/perl/Makefile	2010-12-31 10:28:56.828339937 -0600
-+++ mythtv-master/mythtv/bindings/perl/Makefile	2010-12-31 10:31:08.728339938 -0600
+--- mythtv-master.orig/mythtv/bindings/perl/Makefile	2011-03-06 22:31:46.000000000 -0600
++++ mythtv-master/mythtv/bindings/perl/Makefile	2011-04-09 22:57:12.162532463 -0500
 @@ -1,7 +1,7 @@
  include ../../config.mak
  
@@ -36,14 +36,14 @@ Index: mythtv-master/mythtv/bindings/perl/Makefile
  ifneq ($(PREFIX:/=), /usr)
 Index: mythtv-master/mythtv/bindings/php/Makefile
 ===================================================================
---- mythtv-master.orig/mythtv/bindings/php/Makefile	2010-12-31 10:28:56.840339937 -0600
-+++ mythtv-master/mythtv/bindings/php/Makefile	2010-12-31 10:31:40.288339939 -0600
+--- mythtv-master.orig/mythtv/bindings/php/Makefile	2011-04-09 22:56:43.000000000 -0500
++++ mythtv-master/mythtv/bindings/php/Makefile	2011-04-09 22:57:49.806719139 -0500
 @@ -4,7 +4,7 @@
  FILES += MythTV.php MythTVProgram.php MythTVRecording.php
  FILES += MythTVStorageGroup.php
  
 -INSTDIR = ${INSTALL_ROOT}${PREFIX}/share/mythtv/bindings/php
 +INSTDIR = ${INSTALL_ROOT}/../php-mythtv${PREFIX}/share/mythtv/bindings/php
- INSTALL = /usr/bin/install
  
  all:
+ clean:
