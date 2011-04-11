@@ -6,8 +6,8 @@ Uploaders: Mario Limonciello <superm1@ubuntu.com>,
            Andres Mejia <mcitadel@gmail.com>,
 Homepage: http://www.mythtv.org
 Standards-Version: 3.8.4
-Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
-Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-trunk
+Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-master
+Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-master
 Build-Conflicts: libqt3-mt-dev
 Build-Depends:  debhelper (>= 7.0.50~),
                 quilt,

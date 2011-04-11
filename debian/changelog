@@ -21,6 +21,13 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
 
+mythtv (2:0.24.0+fixes.20110410.2a9d9f5-0ubuntu3) UNRELEASED; urgency=low
+
+  * debian/mythtv.make:
+    - Properly generate the VCS fields depending on fixes/master.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 11 Apr 2011 12:49:16 -0500
+
 mythtv (2:0.24.0+fixes.20110410.2a9d9f5-0ubuntu2) natty; urgency=low
 
   * debian/rules: Disable OpenGL for armel builds, to prevent FTBFS.
