@@ -21,6 +21,30 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
 
+mythtv (2:0.24.0+fixes.20110410.2a9d9f5-0ubuntu1) natty; urgency=low
+
+  * New upstream checkout (2a9d9f5)
+  * >>Upstream changes since last upload (c2baf1b):
+  * [2a9d9f5] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [27c3ea5] Add a more descriptive error for failed deletes in
+    Recorded due to unavailable recording. (cherry picked from commit
+    d81e4ef542d6d9e9bd79dc58b70f9b90d04c06b2)
+  * [362d834] Check for null frame buffers in commflag
+  * [80192ec] mythplayer: Revert back to the old method used for
+    duration/position in the OSD slider.
+  * [83bc1fa] CrystalHD: Fix compilation with recent CrystalHD library
+    versions.
+  * [c375a86] TV: Fix unlocking of the player context in the main
+    playback loop. (cherry picked from commit
+    534945895ead72b147f3d695c8f77c9486a48f46)
+  * [464fa28] Fix a bug which caused jamu to crash due to multiple
+    unicode conversions.
+  * Add a patch to enable V4L2 on 2.6.38.  Thanks mlarsen.
+    (LP: #717717)
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sun, 10 Apr 2011 21:20:50 -0500
+
 mythtv (2:0.24.0+fixes.20110322.c2baf1b-0ubuntu1) natty; urgency=low
 
   * Don't restart the frontend on exit code 254 (which is representative of
