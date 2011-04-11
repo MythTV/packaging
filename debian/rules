@@ -19,13 +19,16 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=debug \
 				--enable-ivtv \
 				--enable-firewire \
 				--enable-joystick-menu \
-				--enable-opengl-vsync \
 				--with-bindings=perl \
-				--enable-opengl-video \
 				--enable-ffmpeg-pthreads \
 				--enable-pic \
 				--perl-config-opts="INSTALLDIRS=vendor"
 
+ifeq "$(DEB_BUILD_ARCH)" "armel"
+	MYTHTV_CONFIGURE_OPTS += --disable-opengl-vsync  --disable-opengl-video --disable-opengl
+else
+	MYTHTV_CONFIGURE_OPTS += --enable-opengl-vsync  --enable-opengl-video
+endif
 #                                    #
 # Architecture dependent build flags #
 #                                    #
@@ -48,6 +51,10 @@ MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \
                               --enable-all  \
                               --zm-version=1.22.3 \ 
                               --qmake=/usr/bin/qmake \
+
+ifeq "$(DEB_BUILD_ARCH)" "armel"
+	  MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
+endif
 
 #Use moar CPUs for jya
 PROCESSORS       ?= $(shell grep -ic ^processor /proc/cpuinfo)
