@@ -161,6 +161,7 @@ update-control-files:
 	else \
 		sed 's/#THEMES#,//' debian/control.in > debian/control ;\
 	fi
+	sed -i s/#TYPE#/$(GIT_TYPE)/ debian/control
 	sed -i s/#ABI#/$(ABI)/ debian/control
 	cp debian/libmyth.install.in debian/libmyth-$(ABI)-0.install
 	$(foreach theme,$(THEMES),\
