@@ -25,9 +25,9 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=debug \
 				--perl-config-opts="INSTALLDIRS=vendor"
 
 ifeq "$(DEB_BUILD_ARCH)" "armel"
-	MYTHTV_CONFIGURE_OPTS += --disable-opengl-vsync  --disable-opengl-video --disable-opengl
+	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl
 else
-	MYTHTV_CONFIGURE_OPTS += --enable-opengl-vsync  --enable-opengl-video
+	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video
 endif
 #                                    #
 # Architecture dependent build flags #
