@@ -77,7 +77,6 @@ Build-Depends:  debhelper (>= 7.0.50~),
 Package: mythtv
 Architecture: all
 Depends: mysql-server, mythtv-database, mythtv-frontend, mythtv-backend, ntp | time-daemon | ntp-simple, ${misc:Depends}
-Recommends: mythtv-themes
 Suggests: mythtv-doc
 Description: A personal video recorder application (client and server)
  MythTV implements the following PVR features, and more, with a
