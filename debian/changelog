@@ -21,6 +21,22 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
 
+mythtv (2:0.24.0+fixes.20110416.9ba3ece-0ubuntu1) natty; urgency=low
+
+  * New upstream checkout (9ba3ece)
+  * >>Upstream changes since last upload (2a9d9f5):
+  * [9ba3ece] Fixed update of some recording status transitions.
+  * [f6e282f] RSS Parsing: Check player tags to make sure they don't
+    have child elements.
+  * [c1c7af0] Filter out NULL-characters from EIT before we save the
+    data in the database.
+  * [1cfcb2b] Internet Content: Correct Blip.tv API URL.
+  * [4068639] libmythtv: Use the actual MythPlayer pause state
+  * Disable jamu and mirobridge bindings as they're current broke with
+    0.24 and won't be fixed in time for release.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 16 Apr 2011 02:14:52 -0500
+
 mythtv (2:0.24.0+fixes.20110410.2a9d9f5-0ubuntu3) natty; urgency=low
 
   * debian/mythtv.make:
