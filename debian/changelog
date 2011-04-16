@@ -1,3 +1,10 @@
+mythtv (2:0.24.0+fixes.20110410.2a9d9f5-0ubuntu4) UNRELEASED; urgency=low
+
+  * Disable jamu and mirobridge bindings as they're current broke with
+    0.24 and won't be fixed in time for release.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Sat, 16 Apr 2011 02:13:33 -0500
+
 mythtv (2:0.24.0+fixes.20110410.2a9d9f5-0ubuntu3) natty; urgency=low
 
   * debian/mythtv.make:
