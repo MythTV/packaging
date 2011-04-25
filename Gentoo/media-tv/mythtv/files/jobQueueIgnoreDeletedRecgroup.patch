@@ -1,0 +1,12 @@
+diff --git a/mythtv/libs/libmythtv/jobqueue.cpp b/mythtv/libs/libmythtv/jobqueue.cpp
+index 88c318f..aa55515 100644
+--- a/mythtv/libs/libmythtv/jobqueue.cpp
++++ b/mythtv/libs/libmythtv/jobqueue.cpp
+@@ -1242,6 +1242,7 @@ int JobQueue::GetJobsInQueue(QMap<int, JobQueueEntry> &jobs, int findJobs)
+                   "FROM jobqueue j "
+                   "LEFT JOIN recorded r "
+                   "  ON j.chanid = r.chanid AND j.starttime = r.starttime "
++                  "WHERE r.recgroup != 'Deleted' "
+                   "ORDER BY j.schedruntime, j.id;");
+ 
+     if (!query.exec())

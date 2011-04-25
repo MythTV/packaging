@@ -1,0 +1,199 @@
+diff --git a/mythtv/libs/libmyth/programinfo.cpp b/mythtv/libs/libmyth/programinfo.cpp
+index 8c8991a..17cf352 100644
+--- a/mythtv/libs/libmyth/programinfo.cpp
++++ b/mythtv/libs/libmyth/programinfo.cpp
+@@ -1589,7 +1589,7 @@ bool ProgramInfo::LoadProgramFromRecorded(
+         "WHERE r.chanid    = :CHANID AND "
+         "      r.starttime = :RECSTARTTS");
+     query.bindValue(":CHANID",     _chanid);
+-    query.bindValue(":RECSTARTTS", _recstartts);
++    query.bindValue(":RECSTARTTS", _recstartts.toString("yyyy-MM-dd hh:mm:ss"));
+ 
+     if (!query.exec())
+     {
+@@ -2182,7 +2182,7 @@ QDateTime ProgramInfo::QueryBookmarkTimeStamp(void) const
+         "WHERE chanid    = :CHANID AND"
+         "      starttime = :STARTTIME");
+     query.bindValue(":CHANID",    chanid);
+-    query.bindValue(":STARTTIME", recstartts);
++    query.bindValue(":STARTTIME", recstartts.toString("yyyy-MM-dd hh:mm:ss"));
+ 
+     QDateTime ts;
+ 
+@@ -2631,7 +2631,7 @@ void ProgramInfo::SaveAutoExpire(AutoExpireType autoExpire, bool updateDelete)
+                   " AND starttime = :STARTTIME ;");
+     query.bindValue(":AUTOEXPIRE", (uint)autoExpire);
+     query.bindValue(":CHANID", chanid);
+-    query.bindValue(":STARTTIME", recstartts);
++    query.bindValue(":STARTTIME", recstartts.toString("yyyy-MM-dd hh:mm:ss"));
+ 
+     if (!query.exec())
+         MythDB::DBError("AutoExpire update", query);
+@@ -2664,12 +2664,12 @@ void ProgramInfo::UpdateLastDelete(bool setTime) const
+         query.prepare("UPDATE record SET last_delete = :TIME, "
+                       "avg_delay = (avg_delay * 3 + :DELAY) / 4 "
+                       "WHERE recordid = :RECORDID");
+-        query.bindValue(":TIME", timeNow);
++        query.bindValue(":TIME", timeNow.toString("yyyy-MM-dd hh:mm:ss"));
+         query.bindValue(":DELAY", delay);
+     }
+     else
+     {
+-        query.prepare("UPDATE record SET last_delete = '0000-00-00T00:00:00' "
++        query.prepare("UPDATE record SET last_delete = '0000-00-00 00:00:00' "
+                       "WHERE recordid = :RECORDID");
+     }
+     query.bindValue(":RECORDID", recordid);
+@@ -2888,7 +2888,7 @@ void ProgramInfo::SaveMarkupMap(
+                           " (chanid, starttime, mark, type)"
+                           " VALUES ( :CHANID , :STARTTIME , :MARK , :TYPE );");
+             query.bindValue(":CHANID", chanid);
+-            query.bindValue(":STARTTIME", recstartts);
++            query.bindValue(":STARTTIME", recstartts.toString("yyyy-MM-dd hh:mm:ss"));
+         }
+         query.bindValue(":MARK", (quint64)frame);
+         query.bindValue(":TYPE", mark_type);
+@@ -3288,7 +3288,7 @@ void ProgramInfo::SaveAspect(
+                     " VALUES"
+                     " ( :CHANID, :STARTTIME, :MARK, :TYPE, :DATA);");
+     query.bindValue(":CHANID", chanid);
+-    query.bindValue(":STARTTIME", recstartts);
++    query.bindValue(":STARTTIME", recstartts.toString("yyyy-MM-dd hh:mm:ss"));
+ 
+     query.bindValue(":MARK", (quint64)frame);
+     query.bindValue(":TYPE", type);
+@@ -3317,7 +3317,7 @@ void ProgramInfo::SaveFrameRate(uint64_t frame, uint framerate)
+                   "    VALUES"
+                   " ( :CHANID, :STARTTIME, :MARK, :TYPE, :DATA);");
+     query.bindValue(":CHANID", chanid);
+-    query.bindValue(":STARTTIME", recstartts);
++    query.bindValue(":STARTTIME", recstartts.toString("yyyy-MM-dd hh:mm:ss"));
+     query.bindValue(":MARK", (quint64)frame);
+     query.bindValue(":TYPE", MARK_VIDEO_RATE);
+     query.bindValue(":DATA", framerate);
+@@ -3351,7 +3351,7 @@ void ProgramInfo::SaveTotalDuration(int64_t duration)
+                   "    VALUES"
+                   " ( :CHANID, :STARTTIME, 0, :TYPE, :DATA);");
+     query.bindValue(":CHANID", chanid);
+-    query.bindValue(":STARTTIME", recstartts);
++    query.bindValue(":STARTTIME", recstartts.toString("yyyy-MM-dd hh:mm:ss"));
+     query.bindValue(":TYPE", MARK_DURATION_MS);
+     query.bindValue(":DATA", (uint)(duration / 1000));
+ 
+@@ -3375,7 +3375,7 @@ void ProgramInfo::SaveResolution(uint64_t frame, uint width, uint height)
+                   "    VALUES"
+                   " ( :CHANID, :STARTTIME, :MARK, :TYPE, :DATA);");
+     query.bindValue(":CHANID", chanid);
+-    query.bindValue(":STARTTIME", recstartts);
++    query.bindValue(":STARTTIME", recstartts.toString("yyyy-MM-dd hh:mm:ss"));
+     query.bindValue(":MARK", (quint64)frame);
+     query.bindValue(":TYPE", MARK_VIDEO_WIDTH);
+     query.bindValue(":DATA", width);
+@@ -3388,7 +3388,7 @@ void ProgramInfo::SaveResolution(uint64_t frame, uint width, uint height)
+                   "    VALUES"
+                   " ( :CHANID, :STARTTIME, :MARK, :TYPE, :DATA);");
+     query.bindValue(":CHANID", chanid);
+-    query.bindValue(":STARTTIME", recstartts);
++    query.bindValue(":STARTTIME", recstartts.toString("yyyy-MM-dd hh:mm:ss"));
+     query.bindValue(":MARK", (quint64)frame);
+     query.bindValue(":TYPE", MARK_VIDEO_HEIGHT);
+     query.bindValue(":DATA", height);
+diff --git a/mythtv/libs/libmythtv/dbcheck.cpp b/mythtv/libs/libmythtv/dbcheck.cpp
+index fa43d1a..f21ec29 100644
+--- a/mythtv/libs/libmythtv/dbcheck.cpp
++++ b/mythtv/libs/libmythtv/dbcheck.cpp
+@@ -2019,7 +2019,7 @@ NULL
+ "UPDATE settings SET value = 'MythFillGrabberSuggestsTime' "
+     "WHERE value = 'HonorGrabberNextSuggestedMythfilldatabaseRunTime';",
+ "UPDATE settings SET value = 'MythFillSuggestedRunTime', "
+-    "    data = '1970-01-01T00:00:00' "
++    "    data = '1970-01-01 00:00:00' "
+     "WHERE value = 'NextSuggestedMythfilldatabaseRun';",
+ NULL
+ };
+diff --git a/mythtv/libs/libmythtv/recordinginfo.cpp b/mythtv/libs/libmythtv/recordinginfo.cpp
+index da235dd..08bdb7e 100644
+--- a/mythtv/libs/libmythtv/recordinginfo.cpp
++++ b/mythtv/libs/libmythtv/recordinginfo.cpp
+@@ -1141,8 +1141,8 @@ void RecordingInfo::AddHistory(bool resched, bool forcedup)
+                    ":CATEGORY,:SERIESID,:PROGRAMID,:FINDID,:RECORDID,"
+                    ":STATION,:RECTYPE,:RECSTATUS,:DUPLICATE,:REACTIVATE);");
+     result.bindValue(":CHANID", chanid);
+-    result.bindValue(":START", startts.toString(Qt::ISODate));
+-    result.bindValue(":END", endts.toString(Qt::ISODate));
++    result.bindValue(":START", startts.toString("yyyy-MM-dd hh:mm:ss"));
++    result.bindValue(":END", endts.toString("yyyy-MM-dd hh:mm:ss"));
+     result.bindValue(":TITLE", title);
+     result.bindValue(":SUBTITLE", subtitle);
+     result.bindValue(":DESC", description);
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index bd81323..76b5308 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -532,15 +532,15 @@ void Scheduler::UpdateRecStatus(RecordingInfo *pginfo)
+         {
+             if (p->GetRecordingStatus() != pginfo->GetRecordingStatus())
+             {
+-                VERBOSE(VB_IMPORTANT, 
++                VERBOSE(VB_IMPORTANT,
+                     QString("Updating status for %1 on cardid %2 (%3 => %4)")
+                         .arg(p->toString(ProgramInfo::kTitleSubtitle))
+                         .arg(p->GetCardID())
+-                        .arg(toString(p->GetRecordingStatus(), 
++                        .arg(toString(p->GetRecordingStatus(),
+                                       p->GetRecordingRuleType()))
+-                        .arg(toString(pginfo->GetRecordingStatus(), 
++                        .arg(toString(pginfo->GetRecordingStatus(),
+                                       p->GetRecordingRuleType())));
+-                bool resched = 
++                bool resched =
+                     ((p->GetRecordingStatus() != rsRecording &&
+                       p->GetRecordingStatus() != rsTuning) ||
+                      (pginfo->GetRecordingStatus() != rsRecording &&
+@@ -577,15 +577,15 @@ void Scheduler::UpdateRecStatus(uint cardid, uint chanid,
+ 
+             if (p->GetRecordingStatus() != recstatus)
+             {
+-                VERBOSE(VB_IMPORTANT, 
++                VERBOSE(VB_IMPORTANT,
+                     QString("Updating status for %1 on cardid %2 (%3 => %4)")
+                         .arg(p->toString(ProgramInfo::kTitleSubtitle))
+                         .arg(p->GetCardID())
+-                        .arg(toString(p->GetRecordingStatus(), 
++                        .arg(toString(p->GetRecordingStatus(),
+                                       p->GetRecordingRuleType()))
+-                        .arg(toString(recstatus, 
++                        .arg(toString(recstatus,
+                                       p->GetRecordingRuleType())));
+-                bool resched = 
++                bool resched =
+                     ((p->GetRecordingStatus() != rsRecording &&
+                       p->GetRecordingStatus() != rsTuning) ||
+                      (recstatus != rsRecording &&
+@@ -1446,7 +1446,7 @@ void Scheduler::UpdateNextRecord(void)
+             if (nextRecMap[recid].isNull() || !next_record.isValid())
+             {
+                 subquery.prepare("UPDATE record "
+-                                 "SET next_record = '0000-00-00T00:00:00' "
++                                 "SET next_record = '0000-00-00 00:00:00' "
+                                  "WHERE recordid = :RECORDID;");
+                 subquery.bindValue(":RECORDID", recid);
+             }
+@@ -1455,7 +1455,7 @@ void Scheduler::UpdateNextRecord(void)
+                 subquery.prepare("UPDATE record SET next_record = :NEXTREC "
+                                  "WHERE recordid = :RECORDID;");
+                 subquery.bindValue(":RECORDID", recid);
+-                subquery.bindValue(":NEXTREC", nextRecMap[recid]);
++                subquery.bindValue(":NEXTREC", nextRecMap[recid].toString("yyyy-MM-dd hh:mm:ss"));
+             }
+             if (!subquery.exec())
+                 MythDB::DBError("Update next_record", subquery);
+@@ -3876,7 +3876,7 @@ static bool comp_storage_perc_free_space(FileSystemInfo *a, FileSystemInfo *b)
+     if (b->totalSpaceKB == 0)
+         return true;
+ 
+-    if ((a->freeSpaceKB * 100.0) / a->totalSpaceKB > 
++    if ((a->freeSpaceKB * 100.0) / a->totalSpaceKB >
+         (b->freeSpaceKB * 100.0) / b->totalSpaceKB)
+         return true;
+ 

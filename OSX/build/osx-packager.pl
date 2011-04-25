@@ -1156,6 +1156,9 @@ if ( $backend && grep(m/MythBackend/, @targets) )
     &Syscall([ 'mkdir', '-p', $share ]) or die;
     &Syscall([ 'cp', glob("$PREFIX/share/mythtv/*.xml"), $share ]) or die;
 
+    # Same for default web server page:
+    &Syscall([ 'cp', '-pR', "$PREFIX/share/mythtv/html", $share ]) or die;
+
     # The backend gets all the useful binaries it might call:
     foreach my $binary ( 'mythjobqueue', 'mythcommflag',
                          'mythpreviewgen', 'mythtranscode', 'mythfilldatabase' )

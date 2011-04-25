@@ -65,10 +65,10 @@
 %define desktop_vendor  xris
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25pre-649-g5527301
+%define vers_string v0.25pre-1331-g1582957
 
 # Git Revision number and branch ID
-%define _gitrev 649.g5527301
+%define _gitrev 1331.g1582957
 %define branch master
 
 #
@@ -161,9 +161,9 @@ BuildRequires:  gcc-c++
 BuildRequires:  mysql-devel >= 5
 %if 0%{?fedora} >= 14
 BuildRequires:  qt-webkit-devel
-BuildRequires:  qt-devel >= 4.4
+BuildRequires:  qt-devel >= 4.5
 %else
-BuildRequires:  qt4-devel >= 4.4
+BuildRequires:  qt4-devel >= 4.5
 %endif
 BuildRequires:  phonon-devel
 
@@ -380,7 +380,7 @@ Obsoletes: libmyth < %{version}-%{release}
 
 Requires:  freetype >= 2
 Requires:  lame
-Requires:  qt4 >= 4.4
+Requires:  qt4 >= 4.5
 Requires:  qt4-MySQL
 
 %description libs
@@ -400,7 +400,7 @@ Requires:  mythtv-libs = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
 Requires:  mysql-devel >= 5
-Requires:  qt4-devel >= 4.4
+Requires:  qt4-devel >= 4.5
 Requires:  lm_sensors-devel
 Requires:  lirc-devel
 
@@ -935,8 +935,7 @@ cd mythtv
     --enable-libfftw3                           \
     --enable-x11 --x11-path=%{_includedir}      \
     --enable-xv                                 \
-    --enable-xvmc-vld                           \
-    --enable-opengl-video --enable-opengl-vsync \
+    --enable-opengl-video                       \
     --enable-xrandr                             \
     --enable-lirc                               \
     --enable-ivtv                               \
@@ -1257,7 +1256,7 @@ fi
 %{_datadir}/mythtv/setup.xml
 %{_bindir}/mythavtest
 %{_bindir}/mythfrontend
-%{_bindir}/mythtvosd
+%{_bindir}/mythmessage
 %{_bindir}/mythlcdserver
 %{_bindir}/mythshutdown
 %{_bindir}/mythwelcome
@@ -1461,6 +1460,13 @@ fi
 ################################################################################
 
 %changelog
+* Tue Feb 22 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Remove xvmc-vld, opengl-vsync
+- Rename mythtvosd to mythmessage
+
+* Thu Feb 17 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Require Qt >= 4.5
+
 * Tue Dec 28 2010 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Add PHP bindings
 - Fix my email address in changelogs
