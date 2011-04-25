@@ -47,12 +47,6 @@
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\settingList.h">
       <Filter>Header Files\datacontracts</Filter>
     </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\stringList.h">
-      <Filter>Header Files\datacontracts</Filter>
-    </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\successFail.h">
-      <Filter>Header Files\datacontracts</Filter>
-    </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\services\mythServices.h">
       <Filter>Header Files\services</Filter>
     </CustomBuild>
@@ -81,6 +75,30 @@
       <Filter>Header Files\services</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\programList.h">
+      <Filter>Header Files\datacontracts</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\storageGroupDir.h">
+      <Filter>Header Files\datacontracts</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\storageGroupDirList.h">
+      <Filter>Header Files\datacontracts</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\services\channelServices.h">
+      <Filter>Header Files\services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\channelInfoList.h">
+      <Filter>Header Files\datacontracts</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\videoSource.h">
+      <Filter>Header Files\datacontracts</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\videoSourceList.h">
+      <Filter>Header Files\datacontracts</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\videoMultiplex.h">
+      <Filter>Header Files\datacontracts</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythservicecontracts\datacontracts\videoMultiplexList.h">
       <Filter>Header Files\datacontracts</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -116,18 +134,6 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_settingList.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_stringList.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_stringList.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_successFail.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_successFail.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_mythServices.cpp">
@@ -188,6 +194,54 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_programList.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_storageGroupDir.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_storageGroupDir.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_storageGroupDirList.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_storageGroupDirList.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_channelServices.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_channelServices.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_channelInfoList.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_channelInfoList.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_videoSource.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_videoSource.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_videoSourceList.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_videoSourceList.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_videoMultiplex.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_videoMultiplex.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_videoMultiplexList.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_videoMultiplexList.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>

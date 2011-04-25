@@ -1,7 +1,12 @@
-Visual Studio 2010 solution for MythTv
+Visual Studio 2010 solution for MythTV
 
-The following files is a start at being able to compile mythbackend using Visual Studio 2010.  This undertaking was done solely to allow the VS2010 debugger to be used to develop for the backend.  I don't expect to have a completely running backend any time soon, I'm only planning on getting enough support working for the API Framework, Http Server re-write, & upnp development.
-(others are free to continue my work to get a fully working system)
+The following files are a start at being able to compile mythbackend using
+Visual Studio 2010.  This undertaking was done solely to allow the VS2010
+debugger to be used to develop for the backend.  I don't expect to have a
+completely running backend any time soon, I'm only planning on getting
+enough support working for the API Framework, HTTP Server re-write, & UPnP
+development.  (others are free to continue my work to get a fully working
+system)
 
 A few things to note:
 
@@ -15,29 +20,48 @@ A few things to note:
         libmythsamplerate
         libmythsoundtouch
         libmythtv           * Not compiling clean yet.
-
         mythbackend         * compiles, but doesn't link yet (missing libs)
 
-  * I'm using the 4.7.1 version of Qt for VS2008 which can be downloaded and
-    installed from:  http://qt.nokia.com/downloads
-              pick:  "Qt libraries 4.7.1 for Windows (VS 2008, 228 MB)"
+  * I'm using the 4.7.2 version of Qt for VS2008 which can be downloaded and
+    installed from: http://qt.nokia.com/downloads > LGPL Then choose Qt:
+    Framework Only and download
+    "Qt libraries 4.7.2 for Windows (VS 2008, 218 MB)"
+
+NOTE:  Edit the following .props files _before_ opening the VS2010.sln file.
 
   * You will need to edit the "mythtv.props" file to point the mythtv_source
-    UserMacro at the location of the source code.
+    UserMacro at the location of the source code.  Ensure that you specify the
+    top-level of the hierarchy, meaning that there are subdirectories for
+    mythplugins, mythtv, themestringtool, etc.
 
-  * you may need to update the "Qt4VSPropertySheet.props" file to make sure the
-    QTDIR value is set correctly
+  * you will need to update the "Qt4VSPropertySheet.props" file to make sure
+    the QTDIR value is set correctly.
 
-  * I tried to limit the impact to the base mythtv source, so I create any
-    unix only header files that were included and they are located in the
+  * Run version.vbs to create version.h, which is a file normally generated
+    during the build process in Unix
+
+  * The avconfig.h file is generated during the Linux configure, so move it
+    to mythtv/external/FFmpeg/libavutil
+
+  * I tried to limit the impact to the base MythTV source, so I create any
+    unix-only header files that were included and they are located in the
     "compat" directory.
 
   * Any third party library that is needed has a directory under the
-    "thirdparty" directory. You will need to look at each folder's README file
-    to determine where/what is needed.
+    "thirdparty" directory.  You will need to look at each folder's README
+    file to determine where/what is needed.
 
-  * MythTv's version ffmpeg still needs to be compiled using MingW and import
-    libraries need to be manually created (see README file).
+  * Install the MySQL connector for C
+    (http://dev.mysql.com/downloads/connector/c/)
 
-I will hopefully get a copy of mythbackend (probably stripped of some features) running soon and will make sure to commit any changes needed to accomplish this goal.
+  * Edit copydll.vbs and update the directories.
 
+  * Run copydll.vbs to copy various .dll's from thirdparty and other
+    locations into bin\debug.
+
+  * MythTV's version of ffmpeg still needs to be compiled using MingW and
+    import libraries need to be manually created (see README file).
+
+I will hopefully get a copy of mythbackend (probably stripped of some
+features) running soon and will make sure to commit any changes needed to
+accomplish this goal.

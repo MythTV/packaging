@@ -33,6 +33,9 @@
     <Filter Include="Header Files\serviceHosts">
       <UniqueIdentifier>{0b199a2a-4520-4caa-9212-2759b905ad68}</UniqueIdentifier>
     </Filter>
+    <Filter Include=".mythtv">
+      <UniqueIdentifier>{ad4fd8ae-b33c-4219-a8b0-642b276e57ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\autoexpire.h">
@@ -60,6 +63,15 @@
       <Filter>Header Files\services</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\services\dvr.h">
+      <Filter>Header Files\services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\config.xml">
+      <Filter>.mythtv</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\mysql.txt">
+      <Filter>.mythtv</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\services\channel.h">
       <Filter>Header Files\services</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -187,6 +199,21 @@
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\internetContent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\httpconfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\mythsettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_channel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_channel.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\services\channel.cpp">
+      <Filter>Source Files\services</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\backendcontext.h">
@@ -236,6 +263,18 @@
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\internetContent.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\httpconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\mythsettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\serviceHosts\dvrServiceHost.h">
+      <Filter>Header Files\serviceHosts</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\serviceHosts\channelServiceHost.h">
+      <Filter>Header Files\serviceHosts</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

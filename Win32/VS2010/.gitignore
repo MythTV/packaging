@@ -1,0 +1,17 @@
+# Files to ignore
+Release
+Debug
+GeneratedFiles
+ipch
+VS2010.sdf
+VS2010.opensdf
+*.user
+*.suo
+*.user
+*.exp
+*.obj
+*.dll
+*.def
+*.lib
+*.gz
+*.zip

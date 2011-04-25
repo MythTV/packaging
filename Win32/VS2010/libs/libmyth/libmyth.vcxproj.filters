@@ -187,6 +187,9 @@
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\virtualkeyboard_qt.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\hardwareprofile.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_backendselect.cpp">
@@ -464,6 +467,15 @@
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\audio\spdifencoder.cpp">
       <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\hardwareprofile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_hardwareprofile.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_hardwareprofile.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

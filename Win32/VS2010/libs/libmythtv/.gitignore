@@ -1,0 +1,14 @@
+Release
+Debug
+GeneratedFiles
+*.props
+*.user
+*.suo
+*.user
+*.exp
+*.obj
+*.dll
+*.def
+*.lib
+*.gz
+*.zip
