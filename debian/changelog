@@ -18,6 +18,7 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
     - configure_mythplugins_without_mythtv
   * Install new HTML configuration content with mythbackend.
   * Install new backend configuration content with mythbackend.
+  * Add build-deps on python-urlgrabber.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
 
