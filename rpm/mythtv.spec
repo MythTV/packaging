@@ -65,10 +65,10 @@
 %define desktop_vendor  xris
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25pre-1398-gc68c7ae
+%define vers_string v0.25pre-1924-g83e79b6
 
 # Git Revision number and branch ID
-%define _gitrev 1398.gc68c7ae
+%define _gitrev 1924.g83e79b6
 %define branch master
 
 #
@@ -1231,6 +1231,7 @@ fi
 %{_bindir}/mythjobqueue
 %{_bindir}/mythreplex
 %{_datadir}/mythtv/MXML_scpd.xml
+%{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
 %{_sysconfdir}/init.d/mythbackend
@@ -1464,6 +1465,9 @@ fi
 ################################################################################
 
 %changelog
+* Wed Apr 20 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- add backend-config directory
+
 * Thu Mar 10 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - add hardware profile scripts to mythtv-common
 - add html server static files to mythbackend
