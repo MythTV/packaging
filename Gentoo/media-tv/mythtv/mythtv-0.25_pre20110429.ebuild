@@ -26,6 +26,7 @@ perl python \
 vdpau \
 xvid x264 \
 experimental \
+hal \
 ${IUSE_VIDEO_CARDS} \
 input_devices_joystick \
 "
@@ -75,7 +76,7 @@ RDEPEND="
     !media-tv/mythtv-bindings
 	dev-python/dbus-python
 	dev-python/simplejson
-	sys-apps/hal
+    hal?  ( sys-apps/hal )
     x264? ( >=media-libs/x264-0.0.20100605 )
     xvid? ( >=media-libs/xvid-1.1.0 )
 	"
