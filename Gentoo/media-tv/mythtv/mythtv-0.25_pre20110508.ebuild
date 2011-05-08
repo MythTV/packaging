@@ -4,10 +4,10 @@
 
 EAPI=2
 PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.25pre-1867-gad091ec"
+MYTHTV_VERSION="v0.25pre-1937-g3c2f214"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="ad091eccddd49971aa95a5f14cc7556e5851b385"
-MYTHTV_SREV="ad091ec"
+MYTHTV_REV="3c2f214633f14a0e02cd6e4b1dd87ae597bd477a"
+MYTHTV_SREV="3c2f214"
 
 inherit flag-o-matic multilib eutils qt4 mythtv toolchain-funcs python
 inherit linux-info
@@ -73,9 +73,6 @@ RDEPEND="
 	media-fonts/corefonts
 	media-fonts/dejavu
     !media-tv/mythtv-bindings
-	dev-python/dbus-python
-	dev-python/simplejson
-	sys-apps/hal
     x264? ( >=media-libs/x264-0.0.20100605 )
     xvid? ( >=media-libs/xvid-1.1.0 )
 	"
