@@ -58,9 +58,36 @@ our @targetsBE = ( 'MythBackend',  'MythFillDatabase', 'MythTV-Setup');
 # Patches for MythTV source
 our %patches = ();
 
-our %depend_order = (
-  'mythtv'
-  =>  [
+our %build_profile = (
+  'master'
+   => [
+    'branch' => 'master',
+    'mythtv'
+    => [
+        'ccache',
+        'dvdcss',
+        'freetype',
+        'lame',
+        'mysqlclient',
+        #'dbus',
+        'qt-4.6',
+        'yasm',
+       ],
+    'mythplugins'
+    => [
+        'exif',
+# MythMusic needs these:
+        'taglib',
+        'libogg',
+        'vorbis',
+        'flac',
+       ],
+     ],
+  '0.24-fixes'
+  => [
+    'branch' => 'fixes/0.24',
+    'mythtv'
+    =>  [
         'ccache',
         'dvdcss',
         'freetype',
@@ -70,8 +97,8 @@ our %depend_order = (
         'qt-4.6',
         'yasm',
       ],
-  'mythplugins'
-  =>  [
+    'mythplugins'
+    =>  [
         'exif',
 # MythMusic needs these:
         'taglib',
@@ -79,6 +106,7 @@ our %depend_order = (
         'vorbis',
         'flac',
       ],
+    ],
 );
 
 our %depend = (
@@ -358,6 +386,7 @@ Getopt::Long::GetOptions(\%OPT,
                          'force',
                          'noclean',
 			 'archives=s',
+			 'buildprofile=s',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -463,6 +492,18 @@ if ( $OPT{'archives'} )
     $ARCHIVEDIR = "$SCRIPTDIR" . '/' . $OPT{'archives'};
 } else {
     $ARCHIVEDIR = "$SRCDIR";
+}
+
+our %depend_order = '';
+my $gitrevision = 'master';  # Default thingy to checkout
+if ( $OPT{'buildprofile'} && $OPT{'buildprofile'} == '0.24-fixes' )
+{
+    &Verbose('Building using 0.24-fixes profile');
+    %depend_order = @{ $build_profile{'0.24-fixes'} };
+    $gitrevision = 'fixes/0.24'
+} else {
+    &Verbose('Building using master profile');
+    %depend_order = @{ $build_profile{'master'} };
 }
 
 our $GITDIR = "$SRCDIR/myth-git";
@@ -803,8 +844,6 @@ my $gitfetch  = 0;  # Synchronise cloned database copy before checkout?
 my $gitpull   = 1;  # Cause a fast-forward
 my $gitrevSHA = 0;
 my $gitrevert = 0;  # Undo any local changes?
-
-my $gitrevision = 'master';  # Default thingy to checkout
 
 if ( $OPT{'gitrev'} )
 {
