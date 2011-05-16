@@ -31,10 +31,11 @@ case "${PN}" in
 		S="${WORKDIR}/MythTV-${REPO}-${MYTHTV_SREV}/"
 		;;
     nuvexport)
-        REPO="nuvexport"
-        MY_PN="nuvexport"
-        S="${WORKDIR}/MythTV-${REPO}-${NUVEXPORT_SREV}/"
-        ;;
+		REPO="nuvexport"
+		MY_PN="nuvexport"
+		MYTHTV_REV="$NUVEXPORT_REV"
+		S="${WORKDIR}/MythTV-${REPO}-${NUVEXPORT_SREV}/"
+		;;
 	*)
 		REPO="mythtv"
 		MY_PN="mythplugins"
