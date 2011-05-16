@@ -25,7 +25,8 @@ debug profile \
 perl python \
 vdpau \
 xvid x264 \
-experimental \
+-experimental \
++lame \
 ${IUSE_VIDEO_CARDS} \
 input_devices_joystick \
 "
@@ -75,6 +76,7 @@ RDEPEND="
     !media-tv/mythtv-bindings
     x264? ( >=media-libs/x264-0.0.20100605 )
     xvid? ( >=media-libs/xvid-1.1.0 )
+	<sys-kernel/linux-headers-2.6.38
 	"
 
 DEPEND="${RDEPEND}
@@ -174,9 +176,9 @@ src_configure() {
 		myconf="${myconf} --enable-vdpau"
 	fi
 
-    myconf="${myconf} --enable-libmp3lame"
-    myconf="${myconf} $(use_enable xvid libxvid)"
-    myconf="${myconf} $(use_enable x264 libx264)"
+	myconf="${myconf} $(use_enable lame libmp3lame)"
+	myconf="${myconf} $(use_enable xvid libxvid)"
+	myconf="${myconf} $(use_enable x264 libx264)"
 
 	use input_devices_joystick || myconf="${myconf} --disable-joystick-menu"
 
