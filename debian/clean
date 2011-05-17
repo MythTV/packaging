@@ -10,7 +10,6 @@ mythtv/libs/libmythupnp/version.cpp
 mythtv/external/FFmpeg/.config
 mythtv/external/FFmpeg/.version
 mythtv/external/FFmpeg/config.h
-mythtv/VERSION
 mythplugins/debian
 mythplugins/config.pro
 mythplugins/config.log
