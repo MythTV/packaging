@@ -22,6 +22,13 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
 
+mythtv (2:0.24.0+fixes.20110416.9ba3ece-0ubuntu2) UNRELEASED; urgency=low
+
+  * debian/mythtv.make:
+    - Only parse the line if it *starts* with Version
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 17 May 2011 15:26:01 -0500
+
 mythtv (2:0.24.0+fixes.20110416.9ba3ece-0ubuntu1) natty; urgency=low
 
   * New upstream checkout (9ba3ece)
