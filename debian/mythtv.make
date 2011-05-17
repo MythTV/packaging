@@ -4,22 +4,22 @@
 #To make sense of these sed rules that are used:
 #  Sample version string: 
 #                  Version: 1:0.25.0+master.20101129.a8acde8-0ubuntu1
-#  /Version/!d  -> only version line from dpkg-parsechangelog
+#  /^Version/!d  -> only version line from dpkg-parsechangelog
 #  s/.*1:0.//   -> kill the epoch and Version bit and 0. leading the version
 #  s/-.*//      -> kill everything after and including the -
 #  s/+.*//      -> kill everything after and including the +
 #  s/.*+//      -> kill everything before and including the +
 
-GIT_MAJOR_RELEASE:=$(shell dpkg-parsechangelog | dpkg-parsechangelog | sed '/Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $$1 }')
-GIT_MINOR_RELEASE:=$(shell dpkg-parsechangelog | dpkg-parsechangelog | sed '/Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $$2 }')
-GIT_TYPE:=$(shell dpkg-parsechangelog | sed '/Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$1}')
-DATE:=$(shell dpkg-parsechangelog | sed '/Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$2}')
-GIT_HASH:=$(shell dpkg-parsechangelog | sed '/Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$3}')
-LAST_GIT_HASH:=$(shell dpkg-parsechangelog --offset 1 --count 1 | sed '/Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$3}')
-DEBIAN_SUFFIX:=$(shell dpkg-parsechangelog | sed '/Version/!d; s/.*-//;')
+GIT_MAJOR_RELEASE:=$(shell dpkg-parsechangelog | dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $$1 }')
+GIT_MINOR_RELEASE:=$(shell dpkg-parsechangelog | dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $$2 }')
+GIT_TYPE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$1}')
+DATE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$2}')
+GIT_HASH:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$3}')
+LAST_GIT_HASH:=$(shell dpkg-parsechangelog --offset 1 --count 1 | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$3}')
+DEBIAN_SUFFIX:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*-//;')
 THEMES=$(shell ls myththemes --full-time -l | grep '^d' | awk '{ print $$9 }' )
-AUTOBUILD=$(shell dpkg-parsechangelog | sed '/Version/!d' | grep mythbuntu)
-EPOCH:=$(shell dpkg-parsechangelog | sed '/Version/!d; s/.* //; s/:.*//;')
+AUTOBUILD=$(shell dpkg-parsechangelog | sed '/^Version/!d' | grep mythbuntu)
+EPOCH:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.* //; s/:.*//;')
 
 TODAY=$(shell date +%Y%m%d)
 
