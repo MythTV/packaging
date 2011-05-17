@@ -70,6 +70,9 @@ override_dh_auto_install:
 	#update Git to parse debian/changelog
 	echo "BRANCH=\"$(GIT_BRANCH)\"" > mythtv/VERSION
 	echo "SOURCE_VERSION=\"$(GIT_HASH)\"" >> mythtv/VERSION
+	if [ -f mythtv/VERSION ]; then \
+		mv mythtv/VERSION mythtv/VERSION.old ;\
+	fi
 	if [ -f debian/DESCRIBE ]; then \
 		cp debian/DESCRIBE mythtv/VERSION ;\
 	fi
@@ -129,6 +132,7 @@ override_dh_fixperms:
 override_dh_auto_clean:
 	[ -f mythtv/config.mak ] && $(MAKE) -C mythtv distclean || true
 	[ -f mythplugins/config.pro ] && $(MAKE) -C mythplugins distclean || true
+	[ -f mythtv/VERSION.old ] && mv mythtv/VERSION.old mythtv/VERSION || true
 	dh_auto_clean
 	debconf-updatepo
 
