@@ -122,7 +122,7 @@ get-git-source:
 		echo "Appending upstream changes between $$LAST_GIT_HASH and $$GIT_HASH" ;\
 		dch -a ">>Upstream changes since last upload ($$LAST_GIT_HASH):" ;\
 		if [ -d .git ]; then \
-			git log --oneline $$LAST_GIT_HASH..$$GIT_HASH | sed 's,^,[,; s, ,] ,;' > .gitout ;\
+			git log --oneline $$LAST_GIT_HASH..$$GIT_HASH | sed 's,^,[,; s, ,] ,; s,Version,version,' > .gitout ;\
 			while read line; do \
 				dch -a "$$line"; \
 			done < .gitout ;\
