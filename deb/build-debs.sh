@@ -111,7 +111,7 @@ fi
 debian/rules get-git-source LAST_GIT_HASH='' GIT_BRANCH=$GIT_BRANCH
 
 #new upstream version
-UPSTREAM_VERSION=$(dpkg-parsechangelog | sed '/Version/!d; s/.*[0-9]://; s/-.*//')
+UPSTREAM_VERSION=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/-.*//')
 
 # 0) Check for a orig tarball file.  If no file then:
 # 1) build a tarball
