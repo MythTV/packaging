@@ -1,11 +1,15 @@
 mythtv (2:0.24.0+fixes.20110416.9ba3ece-0ubuntu2) UNRELEASED; urgency=low
 
+  [ Mario Limonciello ]
   * debian/mythtv.make:
     - Only parse the line if it *starts* with Version
   * Don't destroy VERSION in between runs, make sure to restore it to what
     was there before starting each time.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 17 May 2011 15:26:01 -0500
+  [ Thomas Mashos ]
+  * Removed mythtv_v4l2_fix.patch as this issue has been fixed upstream
+
+ -- Thomas Mashos <tgm4883@ubuntu.com>  Mon, 30 May 2011 11:09:06 -0700
 
 mythtv (2:0.24.0+fixes.20110416.9ba3ece-0ubuntu1) natty; urgency=low
 
