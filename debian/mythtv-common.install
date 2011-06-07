@@ -1,6 +1,5 @@
 #these came from make install
 usr/share/mythtv/themes
-usr/bin/mythmediaserver
 usr/bin/mythshutdown
 usr/bin/mythff*
 usr/share/mythtv/*.xml

@@ -5,6 +5,7 @@ usr/bin/mythreplex
 usr/bin/mythavtest
 usr/bin/mythmessage
 usr/bin/mythwelcome
+usr/bin/mythmediaserver
 usr/lib/mythtv/filters
 usr/share/mythtv/i18n/mythfrontend_*
 
