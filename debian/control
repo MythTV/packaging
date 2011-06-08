@@ -178,11 +178,23 @@ Description: Utilities used for transcoding MythTV tasks
 
 Package: mythtv-frontend
 Architecture: any
-Depends: mythtv-common, ${shlibs:Depends}, adduser, zenity | kdebase-bin, gksu | kdebase-bin, wmctrl, libnotify-bin, ${misc:Depends}
-Recommends: libmyth-python, libmythtv-perl
-Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythvideo, mythgame, ntp | time-daemon | ntp-simple
-Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0), mythflix (<< 0.23.0)
-Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0)
+Depends: mythtv-common, 
+         ${shlibs:Depends}, 
+         adduser, 
+         zenity | kdebase-bin, 
+         gksu | kdebase-bin, 
+         wmctrl, 
+         libnotify-bin, ${misc:Depends}
+         libxml-simple-perl,
+         libwww-perl,
+         libmyth-python,
+         transcode,
+         python,
+         python-imdbpy,
+Recommends: libmyth-python, libmythtv-perl, python-imaging
+Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythgame, ntp | time-daemon | ntp-simple
+Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0), mythflix (<< 0.23.0), mythvideo
+Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0), mythvideo
 Description: A personal video recorder application (client)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -292,7 +304,6 @@ Depends: ${misc:Depends},
          mythgame,
          mythmusic,
          mythnews,
-         mythvideo,
          mythweather,
          mythweb,
          mytharchive,
@@ -339,28 +350,6 @@ Depends: mythtv-frontend (>= ${binary:Version}),
          ${misc:Depends}
 Description: An RSS feed news reader module for MythTV
  MythNews will fetch RSS feeds for you to read.
-
-Package: mythvideo
-Architecture: any
-Depends: mythtv-frontend (>= ${binary:Version}), 
-         libxml-simple-perl, 
-         libwww-perl, 
-         libmyth-python, 
-         transcode, 
-         python, 
-         python-imdbpy, 
-         ${shlibs:Depends}, 
-         ${misc:Depends}
-Replaces: mythdvd, mythtv-common (<< 0.20.99+trunk15258-0ubuntu0~mythbuntu1 )
-Conflicts: mythdvd, mythtv-common (<< 0.20.99+trunk15258-0ubuntu0~mythbuntu1 )
-Provides: mythdvd
-Recommends: python-imaging
-Suggests: xine | ogle | mplayer
-Enhances: mythbuntu-control-centre
-Description: A generic video player frontend module for MythTV
- MythVideo allows you to browse and play video streams, using an external
- player, from within the MythTV interface. It also acts as a DVD player
- and DVD backup software, superseding mythdvd.
 
 Package: mythweather
 Architecture: any
@@ -418,7 +407,7 @@ Replaces: mytharchive-data
 Conflicts: mytharchive-data
 Description: create and burn DVD's from MythTV - binary file
  MythArchive is a plugin for MythTV that lets you create DVDs from your
- recorded shows, MythVideo files and any video files available on your
+ recorded shows, files and any video files available on your
  system. It can also archive recordings in a proprietary format that
  archives not only the file but also all the associated metadata like title,
  description and cut list information which will mean you can create backups
