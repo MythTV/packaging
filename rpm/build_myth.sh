@@ -167,7 +167,6 @@ EOF
             /usr/src/redhat/RPMS/x86_64/mythmusic-$GITVER-0.1.git.$GITREV.*.rpm           \
             /usr/src/redhat/RPMS/x86_64/mythbrowser-$GITVER-0.1.git.$GITREV.*.rpm         \
             /usr/src/redhat/RPMS/x86_64/mythnetvision-$GITVER-0.1.git.$GITREV.*.rpm       \
-            /usr/src/redhat/RPMS/x86_64/mythvideo-$GITVER-0.1.git.$GITREV.*.rpm           \
             /usr/src/redhat/RPMS/x86_64/mythweather-$GITVER-0.1.git.$GITREV.*.rpm         \
             /usr/src/redhat/RPMS/x86_64/mythtv-debuginfo-$GITVER-0.1.git.$GITREV.*.rpm
             #/usr/src/redhat/RPMS/x86_64/mythtv-themes-$GITVER-0.1.git.$GITREV.*.rpm  \

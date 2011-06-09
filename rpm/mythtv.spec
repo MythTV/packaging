@@ -31,7 +31,7 @@
 #
 # The following options are disabled by default.  Use these options to enable:
 #
-# --with directfb           Enable directfb support
+# * currently no disabled options *
 #
 # The following options are enabled by default.  Use these options to disable:
 #
@@ -65,10 +65,10 @@
 %define desktop_vendor  xris
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25pre-1924-g83e79b6
+%define vers_string v0.25pre-2256-g4d4eaa8
 
 # Git Revision number and branch ID
-%define _gitrev 1924.g83e79b6
+%define _gitrev 2256.g4d4eaa8
 %define branch master
 
 #
@@ -111,9 +111,6 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_python        %{?_without_python:     0} %{!?_without_python:     1}
 %define with_pulseaudio    %{?_without_pulseaudio: 0} %{!?_without_pulseaudio: 1}
 
-# The following options are disabled by default.  Use --with to enable them
-%define with_directfb      %{?_with_directfb:      1} %{!?_with_directfb:      0}
-
 # All plugins get built by default, but you can disable them as you wish
 %define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
 %define with_mytharchive    %{?_without_mytharchive:    0} %{!?_without_mytharchive:     1}
@@ -122,7 +119,6 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_mythgame       %{?_without_mythgame:       0} %{!?_without_mythgame:        1}
 %define with_mythmusic      %{?_without_mythmusic:      0} %{!?_without_mythmusic:       1}
 %define with_mythnews       %{?_without_mythnews:       0} %{!?_without_mythnews:        1}
-%define with_mythvideo      %{?_without_mythvideo:      0} %{!?_without_mythvideo:       1}
 %define with_mythweather    %{?_without_mythweather:    0} %{!?_without_mythweather:     1}
 %define with_mythzoneminder %{?_without_mythzoneminder: 0} %{!?_without_mythzoneminder:  1}
 %define with_mythnetvision  %{?_without_mythnetvision:  0} %{!?_without_mythnetvision:   1}
@@ -212,6 +208,9 @@ BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  pulseaudio-libs-devel
 %endif
 
+# Video support, formerly MythVideo
+Requires:       perl(XML::Simple)
+
 # Need dvb headers to build in dvb support
 BuildRequires: kernel-headers
 
@@ -219,10 +218,6 @@ BuildRequires: kernel-headers
 BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
-
-%if %{with_directfb}
-BuildRequires:  directfb-devel
-%endif
 
 %if %{with_vdpau}
 BuildRequires: libvdpau-devel
@@ -279,10 +274,6 @@ BuildRequires:  SDL-devel
 %endif
 
 BuildRequires: ncurses-devel
-
-%if %{with_mythvideo}
-Requires:       perl(XML::Simple)
-%endif
 
 %if %{with_mythweather}
 Requires:       mythweather      >= %{version}
@@ -452,10 +443,6 @@ Requires:  libavc1394-devel
 Requires:  libiec61883-devel
 Requires:  libraw1394-devel
 
-%if %{with_directfb}
-Requires:  directfb-devel
-%endif
-
 %if %{with_vdpau}
 Requires: libvdpau-devel
 %endif
@@ -493,8 +480,12 @@ Requires:  freetype, lame
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
 Provides:  mythtv-frontend-api = %{mythfeapiver}
-Obsoletes: mythcontrols < %{version}-%{release}
-Provides:  mythcontrols = %{version}-%{release}
+Requires:  mplayer
+Requires:  python-imdb
+Requires:  python-MythTV = %{version}-%{release}
+Obsoletes: mythcontrols
+Obsoletes: mythvideo
+Obsoletes: mythdvd
 
 %description frontend
 MythTV provides a unified graphical interface for recording and viewing
@@ -634,7 +625,6 @@ Summary:  Main MythTV plugins
 Group:    Applications/Multimedia
 
 Requires:  mythmusic      = %{version}-%{release}
-Requires:  mythvideo      = %{version}-%{release}
 Requires:  mythweather    = %{version}-%{release}
 Requires:  mythgallery    = %{version}-%{release}
 Requires:  mythgame       = %{version}-%{release}
@@ -668,7 +658,7 @@ Requires:  python-imaging
 
 %description -n mytharchive
 MythArchive is a new plugin for MythTV that lets you create DVDs from
-your recorded shows, MythVideo files and any video files available on
+your recorded shows, video files and any video files available on
 your system.
 
 %endif
@@ -759,30 +749,6 @@ Requires:  mythtv-frontend-api = %{mythfeapiver}
 
 %description -n mythnews
 An RSS news feed reader plugin for MythTV.
-
-%endif
-################################################################################
-%if %{with_mythvideo}
-
-%package -n mythvideo
-Summary:   A generic video player frontend module for MythTV
-Group:     Applications/Multimedia
-Requires:  mythtv-frontend-api = %{mythfeapiver}
-Requires:  mplayer
-Requires:  python-imdb
-Requires:  python-MythTV = %{version}-%{release}
-
-Provides:  mythdvd = %{version}-%{release}
-Obsoletes: mythdvd < %{version}-%{release}
-
-%description -n mythvideo
-MythVideo is a MythTV module that allows you to play videos, DVDs and
-(optionally) VCDs. It can also be configured to let you rip DVDs and
-transcode their video and audio content to other (generally smaller)
-formats. The player can either use the MythTV internal software (which
-now supports DVD menus), or simply to invoke your favorite DVD/XVCD
-playing software (mplayer, ogle, xine, etc) as an external
-command.
 
 %endif
 ################################################################################
@@ -884,6 +850,12 @@ EOF
 # We also need Xv libs to build XvMCNVIDIA
     sed -i -e 's,VENDOR_XVMC_LIBS="-lXvMCNVIDIA",VENDOR_XVMC_LIBS="-lXvMCNVIDIA -lXv",' configure
 
+# Fix the default video directory so it points to something more standard
+    sed -i -e 's,/share/Movies/dvd,%{_localstatedir}/lib/mythtv/dvd,' libs/libmythmetadata/globals.cpp
+
+# Add execute bits to the various python helper scripts
+    find programs/scripts/metadata -name '*.py' -exec chmod +x "{}" \;
+
 # On to mythplugins
 cd ..
 
@@ -896,14 +868,6 @@ cd mythplugins
     cd mythmusic
     sed -i -e's,/mnt/store/music,%{_localstatedir}/lib/mythmusic,' mythmusic/globalsettings.cpp
     cd ..
-
-# Fix /mnt/store -> /var/lib/mythvideo
-    cd mythvideo
-    sed -i -e 's,/share/Movies/dvd,%{_localstatedir}/lib/mythvideo,' mythvideo/globalsettings.cpp
-    cd ..
-
-# Add execute bits to mythvideo python helper scripts
-    find mythvideo/mythvideo/scripts/ -name '*.py' -exec chmod +x "{}" \;
 
 # And back to the compile root
 cd ..
@@ -952,11 +916,6 @@ cd mythtv
 %endif
 %if !%{with_xvmc}
     --disable-xvmcw                             \
-%endif
-%if %{with_directfb}
-    --enable-directfb                           \
-%else
-    --disable-directfb                          \
 %endif
 %if !%{with_perl}
     --without-bindings=perl                     \
@@ -1053,11 +1012,6 @@ cd mythplugins
     %else
         --disable-mythnews \
     %endif
-    %if %{with_mythvideo}
-        --enable-mythvideo \
-    %else
-        --disable-mythvideo \
-    %endif
     %if %{with_mythweather}
         --enable-mythweather \
     %else
@@ -1143,9 +1097,6 @@ cd mythplugins
 %if %{with_mythmusic}
     mkdir -p %{buildroot}%{_localstatedir}/lib/mythmusic
 %endif
-%if %{with_mythvideo}
-    mkdir -p %{buildroot}%{_localstatedir}/lib/mythvideo
-%endif
 %if %{with_mythgallery}
     mkdir -p %{buildroot}%{_localstatedir}/lib/pictures
 %endif
@@ -1229,6 +1180,7 @@ fi
 %{_bindir}/mythbackend
 %{_bindir}/mythfilldatabase
 %{_bindir}/mythjobqueue
+%{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
 %{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/backend-config/
@@ -1277,6 +1229,12 @@ fi
 %{_datadir}/pixmaps/myth*.png
 %dir %{_datadir}/mythtv/metadata
 %{_datadir}/mythtv/metadata/*
+#%doc mythplugins/mythvideo/COPYING
+#%doc mythplugins/mythvideo/README*
+#%{_datadir}/mythtv/i18n/mythvideo_*.qm
+#%{_datadir}/mythtv/video_settings.xml
+#%{_datadir}/mythtv/videomenu.xml
+#%{_localstatedir}/lib/mythvideo
 
 %files base-themes
 %defattr(-,root,root,-)
@@ -1412,19 +1370,6 @@ fi
 %{_datadir}/mythtv/i18n/mythnews_*.qm
 %endif
 
-%if %{with_mythvideo}
-%files -n mythvideo
-%defattr(-,root,root,-)
-%doc mythplugins/mythvideo/COPYING
-%doc mythplugins/mythvideo/README*
-%{_libdir}/mythtv/plugins/libmythvideo.so
-%{_datadir}/mythtv/mythvideo
-%{_datadir}/mythtv/i18n/mythvideo_*.qm
-%{_datadir}/mythtv/video_settings.xml
-%{_datadir}/mythtv/videomenu.xml
-%{_localstatedir}/lib/mythvideo
-%endif
-
 %if %{with_mythweather}
 %files -n mythweather
 %defattr(-,root,root,-)
@@ -1465,6 +1410,13 @@ fi
 ################################################################################
 
 %changelog
+* Wed Jun 08 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Merge MythVideo into the frontend
+- Add mythmediaserver to the backend package
+
+* Wed May 30 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- remove directfb compile options
+
 * Wed Apr 20 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - add backend-config directory
 
