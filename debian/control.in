@@ -180,11 +180,12 @@ Package: mythtv-frontend
 Architecture: any
 Depends: mythtv-common, 
          ${shlibs:Depends}, 
+         ${misc:Depends},
+         libnotify-bin,
          adduser, 
          zenity | kdebase-bin, 
          gksu | kdebase-bin, 
          wmctrl, 
-         libnotify-bin, ${misc:Depends}
          libxml-simple-perl,
          libwww-perl,
          libmyth-python,
