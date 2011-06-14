@@ -20,15 +20,6 @@ case "$1" in
                 chmod 2775 $dir || true
             fi
         done
-
-        HOMEDIR=$(getent passwd mythtv | awk -F: '{ print $6 }')
-        mkdir -p $HOMEDIR/.mythtv || true
-        chown mythtv:mythtv $HOMEDIR/.mythtv || true
-        if [ ! -f $HOMEDIR/.mythtv/jamu.conf ]; then
-            cp /usr/share/mythtv/mythvideo/scripts/jamu-example.conf $HOMEDIR/.mythtv/jamu.conf
-            chown mythtv:mythtv $HOMEDIR/.mythtv/jamu.conf
-        fi
-
         ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
