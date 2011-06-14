@@ -23,6 +23,7 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
   * Drop mythvideo package.  Fully integrated into frontend package now.
   * Drop references to mythvideo from debian/control.
   * Move Jamu into backend (no longer tied to mythvideo). (LP: #797003)
+  * Fix mythvideo to be breaks/replaces. (LP: #797327)
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
 
