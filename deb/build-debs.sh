@@ -90,6 +90,7 @@ cd git
 rm -rf .bzr
 ln -s ../bzr-$GIT_TYPE/.bzr .
 bzr revert
+bzr clean-tree --force
 
 ##set changelog entry
 #these can be filled in potentially from external sources
