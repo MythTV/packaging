@@ -58,9 +58,36 @@ our @targetsBE = ( 'MythBackend',  'MythFillDatabase', 'MythTV-Setup');
 # Patches for MythTV source
 our %patches = ();
 
-our %depend_order = (
-  'mythtv'
-  =>  [
+our %build_profile = (
+  'master'
+   => [
+    'branch' => 'master',
+    'mythtv'
+    => [
+        'ccache',
+        'dvdcss',
+        'freetype',
+        'lame',
+        'mysqlclient',
+        #'dbus',
+        'qt-4.6',
+        'yasm',
+       ],
+    'mythplugins'
+    => [
+        'exif',
+# MythMusic needs these:
+        'taglib',
+        'libogg',
+        'vorbis',
+        'flac',
+       ],
+     ],
+  '0.24-fixes'
+  => [
+    'branch' => 'fixes/0.24',
+    'mythtv'
+    =>  [
         'ccache',
         'dvdcss',
         'freetype',
@@ -70,8 +97,8 @@ our %depend_order = (
         'qt-4.6',
         'yasm',
       ],
-  'mythplugins'
-  =>  [
+    'mythplugins'
+    =>  [
         'exif',
 # MythMusic needs these:
         'taglib',
@@ -79,6 +106,7 @@ our %depend_order = (
         'vorbis',
         'flac',
       ],
+    ],
 );
 
 our %depend = (
@@ -139,7 +167,7 @@ our %depend = (
   'mysqlclient' =>
   {
     'url'
-    => 'http://mysql.he.net/Downloads/MySQL-5.0/mysql-5.0.89.tar.gz',
+    => 'http://mysql.he.net/Downloads/MySQL-5.1/mysql-5.1.54.tar.gz',
     'conf'
     =>  [
           '--without-debug',
@@ -175,7 +203,7 @@ exit 0"   > pkg-config ; '.
   =>
   {
     'url'
-    => 'http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.0.tar.gz',
+    => 'http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz',
     'conf-cmd'
     =>  'echo yes | MAKEFLAGS=$parallel_make_flags ./configure',
     'conf'
@@ -190,11 +218,11 @@ exit 0"   > pkg-config ; '.
 
           # When MySQL 5.1 is used, its plugin.h file clashes with Qt's.
           # To work around that, replace these three lines:
-          '-I"$PREFIX/include/mysql"',
-          '-L"$PREFIX/lib/mysql"',
-          '-qt-sql-mysql',
+          # '-I"$PREFIX/include/mysql"',
+          # '-L"$PREFIX/lib/mysql"',
+          # '-qt-sql-mysql',
           # with:
-          # '-qt-sql-mysql -mysql_config "$PREFIX/bin/mysql_config"',
+          '-qt-sql-mysql -mysql_config "$PREFIX/bin/mysql_config"',
 
           '-no-sql-sqlite',
           '-no-sql-odbc',
@@ -357,6 +385,8 @@ Getopt::Long::GetOptions(\%OPT,
                          'srcdir=s',
                          'force',
                          'noclean',
+			 'archives=s',
+			 'buildprofile=s',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -456,6 +486,26 @@ mkdir $PREFIX;
 our $SRCDIR = "$WORKDIR/src";
 mkdir $SRCDIR;
 
+our $ARCHIVEDIR ='';
+if ( $OPT{'archives'} )
+{
+    $ARCHIVEDIR = "$SCRIPTDIR" . '/' . $OPT{'archives'};
+} else {
+    $ARCHIVEDIR = "$SRCDIR";
+}
+
+our %depend_order = '';
+my $gitrevision = 'master';  # Default thingy to checkout
+if ( $OPT{'buildprofile'} && $OPT{'buildprofile'} == '0.24-fixes' )
+{
+    &Verbose('Building using 0.24-fixes profile');
+    %depend_order = @{ $build_profile{'0.24-fixes'} };
+    $gitrevision = 'fixes/0.24'
+} else {
+    &Verbose('Building using master profile');
+    %depend_order = @{ $build_profile{'master'} };
+}
+
 our $GITDIR = "$SRCDIR/myth-git";
 
 our @pluginConf;
@@ -510,8 +560,6 @@ our $gitpath = dirname $git;
 # Clean the environment
 $ENV{'PATH'} = "$PREFIX/bin:/bin:/usr/bin:/usr/sbin:$gitpath";
 $ENV{'PKG_CONFIG_PATH'} = "$PREFIX/lib/pkgconfig:";
-delete $ENV{'CC'};
-delete $ENV{'CXX'};
 delete $ENV{'CPP'};
 delete $ENV{'CXXCPP'};
 $ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'CPPFLAGS'} = "-I$PREFIX/include";
@@ -642,6 +690,7 @@ foreach my $sw ( @build_depends )
     my $filename = $url;
     $filename =~ s|^.+/([^/]+)$|$1|;
     my $dirname = $filename;
+    $filename = $ARCHIVEDIR . '/' . $filename;
     $dirname =~ s|\.tar\.gz$||;
     $dirname =~ s|\.tar\.bz2$||;
 
@@ -795,8 +844,6 @@ my $gitfetch  = 0;  # Synchronise cloned database copy before checkout?
 my $gitpull   = 1;  # Cause a fast-forward
 my $gitrevSHA = 0;
 my $gitrevert = 0;  # Undo any local changes?
-
-my $gitrevision = 'master';  # Default thingy to checkout
 
 if ( $OPT{'gitrev'} )
 {
