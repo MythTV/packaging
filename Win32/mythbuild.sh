@@ -1918,7 +1918,7 @@ if [ ! -e "$stampconfig${MYTHBUILD:+.$MYTHBUILD}" -o -n "$MYTHTV_CFG" \
     args="--sysinclude=$incdir \
         --extra-cflags=-I$incdir --extra-cxxflags=-I$incdir --extra-libs=-L$libdir \
         --disable-avdevice --disable-avfilter \
-        --enable-libfftw3 --disable-directfb --disable-joystick-menu"
+        --enable-libfftw3 --disable-joystick-menu"
     rprefix=".."
     case "$MYTHTARGET" in
         [Hh]ost) targetos= ;;
