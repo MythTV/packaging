@@ -126,13 +126,11 @@ readonly version="0.5"
 : ${MYSQL:="mysql-5.1.56"}
 : ${MYSQL_URL:="http://mirrors.ircam.fr/pub/mysql/Downloads/MySQL-${MYSQL:6:3}/$MYSQL.tar.gz"}
 # Pre-built win32 install. NB mysql-5.1 requires winXP-SP2, 5.0 works on win2k
-# 5.0.89 unavailable 11-feb-11
-#: ${MYSQLW:="mysql-5.0.89-win32"}
-: ${MYSQLW:="mysql-5.1.55-win32"}
+: ${MYSQLW:="mysql-5.1.56-win32"}
 : ${MYSQLW_URL:="ftp://mirrors.ircam.fr/pub/mysql/Downloads/MySQL-${MYSQLW:6:3}/${MYSQLW/mysql-/mysql-noinstall-}.zip"}
 #: ${MYSQLW_URL:="ftp://ftp.mirrorservice.org/sites/ftp.mysql.com/Downloads/MySQL-${MYSQLW:6:3}/${MYSQLW/mysql-/mysql-noinstall-}.zip"}
 # Pre-built MacOSX install
-: ${MYSQLM:="mysql-5.1.55-osx10.4-i686"}
+: ${MYSQLM:="mysql-5.1.56-osx10.4-i686"}
 : ${MYSQLM_URL:="ftp://mirrors.ircam.fr/pub/mysql/Downloads/MySQL-${MYSQLM:6:3}/$MYSQLM.tar.gz"}
 # Pre-built MacOSX powerpc
 : ${MYSQLX:="mysql-standard-4.1.22-apple-darwin7.9.0-powerpc"}
