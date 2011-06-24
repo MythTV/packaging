@@ -1793,8 +1793,8 @@ if [ ! -e "$stampconfig.$debug" -o -n "${!compcfg}" -o ! -e Makefile ]; then
                 # Add -no-iconv else build fails on Mandriva with mingw iconv installed
                 args="$args -no-iconv"
             ;;
-            MacOSX-i686) args="$args -arch x86 -little-endian" ;;&
-            MacOSX-PPC) args="$args -arch powerpc -big-endian" ;;&
+            MacOSX-i686) args="$args -arch x86 -little-endian" ;;
+            MacOSX-PPC) args="$args -arch powerpc -big-endian" ;;
             MacOSX*)
                 args="$args -no-framework"
 
@@ -1933,7 +1933,7 @@ if [ ! -e "$stampconfig${MYTHBUILD:+.$MYTHBUILD}" -o -n "$MYTHTV_CFG" \
         ;;
         # BUG the ppc x-compiler defines __vector but the SDK expects vector
         # in CarbonCore/MachineExceptions.h so disable altivec
-        MacOSX-PPC) : ${cpu:=g3} ;;&
+        MacOSX-PPC) : ${cpu:=g3} ;;
         MacOSX*) targetos="darwin" ;;
         *) die "Unknown target: $MYTHTARGET" ;;
     esac
