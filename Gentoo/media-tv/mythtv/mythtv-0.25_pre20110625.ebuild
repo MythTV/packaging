@@ -4,10 +4,10 @@
 
 EAPI=2
 PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.25pre-2037-g89f6681"
+MYTHTV_VERSION="v0.25pre-2456-gd347640"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="89f668185fc9d08e925d10679e4d7c0829f50b7d"
-MYTHTV_SREV="89f6681"
+MYTHTV_REV="d347640033f0a0c59ce7d06918e3be9ffc753905"
+MYTHTV_SREV="d347640"
 
 inherit flag-o-matic multilib eutils qt4 mythtv toolchain-funcs python
 inherit linux-info
@@ -64,7 +64,7 @@ RDEPEND="
 	lirc? ( app-misc/lirc )
 	perl? ( dev-perl/DBD-mysql 
             dev-perl/Net-UPnP
-			>=dev-perl/libwww-perl-6 )
+			>=dev-perl/libwww-perl-5 )
 	python? ( dev-python/mysql-python
               dev-python/lxml
 			  dev-python/urlgrabber )
@@ -84,6 +84,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xf86vidmodeproto
 	x11-apps/xinit
 	!x11-themes/mythtv-themes
+	!media-plugins/mythvideo
 	dev-lang/yasm
 	"
 
