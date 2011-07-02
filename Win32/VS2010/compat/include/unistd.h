@@ -1,6 +1,7 @@
 #pragma once
 
 #include "compat.h"
+#include "stdint.h"
 
 __inline unsigned int usleep( unsigned int us )
 {
@@ -24,3 +25,11 @@ __inline int write( int fd, const void *buffer, unsigned int count )
 #define strcasecmp  _stricmp
 
 typedef __int64 off64_t;
+                                
+#ifndef MAX
+#define MAX( a, b )  ((a>b)?a:b)
+#endif
+
+#ifndef MIN
+#define MIN( a, b )  ((a<b)?a:b)
+#endif

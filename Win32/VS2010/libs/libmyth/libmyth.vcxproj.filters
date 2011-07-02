@@ -190,6 +190,9 @@
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\hardwareprofile.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\filesysteminfo.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_backendselect.cpp">
@@ -381,9 +384,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\mediamonitor-windows.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\mythcommandlineparser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\mythconfigdialogs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -475,6 +475,15 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_hardwareprofile.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\filesysteminfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_filesysteminfo.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_filesysteminfo.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>

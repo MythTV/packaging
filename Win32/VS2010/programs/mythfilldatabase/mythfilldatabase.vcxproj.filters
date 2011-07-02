@@ -36,6 +36,9 @@
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\xmltvparser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\commandlineparser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\channeldata.cpp">
@@ -54,6 +57,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\xmltvparser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\commandlineparser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

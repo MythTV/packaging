@@ -10,7 +10,6 @@
 
 #include "mythdvdplayer.h"
 #include "compat.h"
-#include "mythverbose.h"
 #include "mythuihelper.h"
 
 #define LOC      QString("DVDRB: ")
@@ -70,7 +69,8 @@ DVDRingBuffer::DVDRingBuffer(const QString &lfilename) :
 
     // Menu/buttons
     m_inMenu(false), m_buttonVersion(1), m_buttonStreamID(0),
-    m_hl_button(0, 0, 0, 0), m_menuSpuPkt(0), m_menuBuflength(0)
+    m_hl_button(0, 0, 0, 0), m_menuSpuPkt(0), m_menuBuflength(0),
+    RingBuffer( kRingBuffer_DVD )
 {
     
 }
@@ -81,6 +81,11 @@ DVDRingBuffer::~DVDRingBuffer()
 
 void DVDRingBuffer::CloseDVD(void)
 {
+}
+
+bool DVDRingBuffer::IsBookmarkAllowed( void )
+{
+    return false;
 }
 
 long long DVDRingBuffer::Seek(long long pos, int whence, bool has_lock)
@@ -424,6 +429,28 @@ bool DVDRingBuffer::SwitchAngle(uint angle)
 }
 
 bool DVDRingBuffer::NewSequence(bool new_sequence)
+{
+    return false;
+}
+
+void DVDRingBuffer::GetChapterTimes(QList<long long> &times)
+{
+}
+
+bool DVDRingBuffer::playTrack(int track)
+{
+    return false;
+}
+
+DVDInfo::DVDInfo(const QString &filename)
+{
+}
+
+DVDInfo::~DVDInfo(void)
+{
+}
+
+bool DVDInfo::GetNameAndSerialNum(QString &name, QString &serialnum)
 {
     return false;
 }

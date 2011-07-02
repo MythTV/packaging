@@ -11,13 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\broadcast.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\bufferedsocketdevice.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\configuration.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\eventing.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\httprequest.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\mmembuf.h" />
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\multicast.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\mythxmlclient.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\refcounted.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\soapclient.h" />
@@ -43,6 +41,10 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\servicehost.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\wsdl.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\htmlserver.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\mbroadcastsocketdevice.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\mmulticastsocketdevice.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpserviceimpl.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpsubscription.h" />
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythupnp\serverSideScripting.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
@@ -107,7 +109,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnptasknotify.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnptasksearch.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnputil.cpp" />
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\multicast.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_httpserver.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -139,6 +140,9 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\wsdl.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\htmlserver.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\serverSideScripting.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\mmulticastsocketdevice.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpserviceimpl.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpsubscription.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F0EE3ABC-B1DA-45FB-A453-A0F4ED35769D}</ProjectGuid>
@@ -174,8 +178,8 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\$(Configuration)\bin\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\$(Configuration)\bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

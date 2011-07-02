@@ -16,6 +16,7 @@
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\fillutil.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\icondata.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\xmltvparser.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\commandlineparser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\channeldata.cpp" />
@@ -24,6 +25,7 @@
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\icondata.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\main.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\xmltvparser.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfilldatabase\commandlineparser.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{050EA05F-BC2E-409A-9E6F-43DD7BDE5845}</ProjectGuid>
@@ -58,7 +60,7 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\$(Configuration)\bin\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(ConfigurationName)</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -32,6 +32,9 @@
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythtv-setup\checksetup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythtv-setup\commandlineparser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythtv-setup\channeleditor.h">
@@ -100,6 +103,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythtv-setup\startprompt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythtv-setup\commandlineparser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

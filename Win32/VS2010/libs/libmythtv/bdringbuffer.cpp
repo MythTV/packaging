@@ -12,7 +12,6 @@
 #include "mythevent.h"
 #include "iso639.h"
 #include "bdringbuffer.h"
-#include "mythverbose.h"
 #include "mythcorecontext.h"
 #include "mythlocale.h"
 #include "mythdirs.h"
@@ -38,7 +37,8 @@ BDRingBuffer::BDRingBuffer(const QString &lfilename)
     m_numTitles(0), m_titleChanged(false), m_playerWait(false),
     m_ignorePlayerWait(true),
     m_stillTime(0), m_stillMode(BLURAY_STILL_NONE),
-    m_infoLock(QMutex::Recursive), m_mainThread(NULL)
+    m_infoLock(QMutex::Recursive), m_mainThread(NULL),
+    RingBuffer( kRingBuffer_BD )
 {
 }
 

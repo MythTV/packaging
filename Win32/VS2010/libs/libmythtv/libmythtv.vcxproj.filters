@@ -377,9 +377,6 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\programdetail.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\recorderbase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\recordinginfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -593,6 +590,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythtv\signalmonitor.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythtv\recorderbase.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -880,9 +880,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\channelbase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\channelchangemonitor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\channelgroup.cpp">
@@ -1262,6 +1259,15 @@
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\visualisations\videovisual.cpp">
       <Filter>Source Files\visualisations</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_recorderbase.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_recorderbase.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="ffmpeghack.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

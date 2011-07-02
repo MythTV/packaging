@@ -41,12 +41,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\$(Configuration)\bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</IgnoreImportLibrary>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     </LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\$(Configuration)\bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</IgnoreImportLibrary>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -121,6 +121,7 @@
       <WarningLevel>Level1</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_FILE_OFFSET_BITS=64;_LARGEFILE_SOURCE;PIC;__STDC_CONSTANT_MACROS;__STDC_LIMIT_MACROS;QT_NO_DEBUG;NDEBUG;_WINDOWS;WIN32;QT_LARGEFILE_SUPPORT;WIN32;USING_MINGW;MMX;_GNU_SOURCE;RUNPREFIX="/usr/local";LIBDIRNAME="lib";MBASE_API;linux;QT_THREAD_SUPPORT;QT_DLL;QT_NO_DEBUG;QT_SQL_LIB;QT_XML_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -139,7 +140,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\dbutil.cpp" />
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\decodeencode.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\httpcomms.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\iso3166.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\iso639.cpp" />
@@ -170,7 +170,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\mythstorage.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\mythsystem.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\mythtranslation.cpp" />
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\mythverbose.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\oldsettings.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\remotefile.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\storagegroup.cpp" />
@@ -192,6 +191,9 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_mythhttphandler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythlogging.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_mythmedia.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -199,6 +201,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_mythsystem.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_referencecounter.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_system-windows.cpp">
@@ -219,6 +224,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_mythhttphandler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythlogging.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_mythmedia.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -228,11 +236,38 @@
     <ClCompile Include="GeneratedFiles\Release\moc_mythsystem.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_referencecounter.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_system-windows.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\mythcommandlineparser.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\mythlogging.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\referencecounter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythbase\mythcommandlineparser.h" />
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythbase\referencecounter.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DMBASE_API -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DUSING_OPENGL -DUSING_MINGW -DUSING_BACKEND -DUSE_OPENGL_PAINTER -DUSING_MHEG -DRUNPREFIX=\"../\" -DLIBDIRNAME=\"lib\" -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DQT_LARGEFILE_SUPPORT -DPIC -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D_WINDOWS -DWIN32 -D_GNU_SOURCE -DQT_THREAD_SUPPORT -DQT_DLL -D_WINDLL "-I." "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I." "-I$(SolutionDir)\." "-I$(SolutionDir)compat\include" "-I$(SolutionDir)libs" "-I$(SolutionDir)libs\libmythbase" "-I$(SolutionDir)libs\libmythtv" "-I$(SolutionDir)libs\libmythfreemheg" "-I$(mythtv_source)\mythtv\libs\libmythbase" "-I$(mythtv_source)\mythtv\libs\libmythupnp" "-I$(mythtv_source)\mythtv\libs\libmythui" "-I$(mythtv_source)\mythtv\libs\libmyth" "-I$(mythtv_source)\mythtv\libs\libmyth\audio" "-I$(mythtv_source)\mythtv\libs\libmythtv" "-I$(mythtv_source)\mythtv\libs\libmythtv\channelscan" "-I$(mythtv_source)\mythtv\libs\libmythtv\iptv" "-I$(mythtv_source)\mythtv\libs\libmythtv\mpeg" "-I$(mythtv_source)\mythtv\libs\libmythsamplerate" "-I$(mythtv_source)\mythtv\libs\libmythsoundtouch" "-I$(mythtv_source)\mythtv\libs\libmythfreesurround" "-I$(mythtv_source)\mythtv\libs\libmythdvdnav" "-I$(mythtv_source)\mythtv\libs\libmythbluray" "-I$(mythtv_source)\mythtv\libs\libmythmetadata" "-I$(mythtv_source)\mythtv\libs\libmythservicecontracts" "-I$(mythtv_source)\mythtv\libs\libmythhdhomerun" "-I$(mythtv_source)\mythtv\libs" "-I$(SolutionDir)thirdparty\zlib\include" "-I$(SolutionDir)thirdparty\pthreads\include" "-I$(SolutionDir)thirdparty\opengl\include" "-I$(SolutionDir)thirdparty\freetype\include" "-I$(SolutionDir)thirdparty\freetype\include\freetype2" "-I$(SolutionDir)thirdparty" "-I$(mythtv_source)\mythtv\external\FFmpeg" "-I$(QTDIR)\include" "-I$(NOINHERIT)\." "-I." "-I." "-I."</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DMBASE_API -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DUSING_OPENGL -DUSING_MINGW -DUSING_BACKEND -DUSE_OPENGL_PAINTER -DUSING_MHEG -DRUNPREFIX=\"../\" -DLIBDIRNAME=\"lib\" -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DQT_LARGEFILE_SUPPORT -DPIC -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D_WINDOWS -DWIN32 -D_GNU_SOURCE -DQT_THREAD_SUPPORT -DQT_DLL -D_WINDLL "-I." "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(NOINHERIT)\." "-I$(SolutionDir)\." "-I$(SolutionDir)compat\include" "-I$(SolutionDir)libs" "-I$(SolutionDir)libs\libmythbase" "-I$(SolutionDir)libs\libmythtv" "-I$(SolutionDir)libs\libmythfreemheg" "-I$(mythtv_source)\mythtv\libs\libmythbase" "-I$(mythtv_source)\mythtv\libs\libmythupnp" "-I$(mythtv_source)\mythtv\libs\libmythui" "-I$(mythtv_source)\mythtv\libs\libmyth" "-I$(mythtv_source)\mythtv\libs\libmyth\audio" "-I$(mythtv_source)\mythtv\libs\libmythtv" "-I$(mythtv_source)\mythtv\libs\libmythtv\channelscan" "-I$(mythtv_source)\mythtv\libs\libmythtv\iptv" "-I$(mythtv_source)\mythtv\libs\libmythtv\mpeg" "-I$(mythtv_source)\mythtv\libs\libmythsamplerate" "-I$(mythtv_source)\mythtv\libs\libmythsoundtouch" "-I$(mythtv_source)\mythtv\libs\libmythfreesurround" "-I$(mythtv_source)\mythtv\libs\libmythdvdnav" "-I$(mythtv_source)\mythtv\libs\libmythbluray" "-I$(mythtv_source)\mythtv\libs\libmythmetadata" "-I$(mythtv_source)\mythtv\libs\libmythservicecontracts" "-I$(mythtv_source)\mythtv\libs\libmythhdhomerun" "-I$(mythtv_source)\mythtv\libs" "-I$(SolutionDir)thirdparty\zlib\include" "-I$(SolutionDir)thirdparty\pthreads\include" "-I$(SolutionDir)thirdparty\opengl\include" "-I$(SolutionDir)thirdparty\freetype\include" "-I$(SolutionDir)thirdparty\freetype\include\freetype2" "-I$(SolutionDir)thirdparty" "-I$(mythtv_source)\mythtv\external\FFmpeg" "-I$(QTDIR)\include" "-I." "-I." "-I." "-I."</Command>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythbase\mythlogging.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DMBASE_API -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DUSING_OPENGL -DUSING_MINGW -DUSING_BACKEND -DUSE_OPENGL_PAINTER -DUSING_MHEG -DRUNPREFIX=\"../\" -DLIBDIRNAME=\"lib\" -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DQT_LARGEFILE_SUPPORT -DPIC -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D_WINDOWS -DWIN32 -D_GNU_SOURCE -DQT_THREAD_SUPPORT -DQT_DLL -D_WINDLL "-I." "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I." "-I$(SolutionDir)\." "-I$(SolutionDir)compat\include" "-I$(SolutionDir)libs" "-I$(SolutionDir)libs\libmythbase" "-I$(SolutionDir)libs\libmythtv" "-I$(SolutionDir)libs\libmythfreemheg" "-I$(mythtv_source)\mythtv\libs\libmythbase" "-I$(mythtv_source)\mythtv\libs\libmythupnp" "-I$(mythtv_source)\mythtv\libs\libmythui" "-I$(mythtv_source)\mythtv\libs\libmyth" "-I$(mythtv_source)\mythtv\libs\libmyth\audio" "-I$(mythtv_source)\mythtv\libs\libmythtv" "-I$(mythtv_source)\mythtv\libs\libmythtv\channelscan" "-I$(mythtv_source)\mythtv\libs\libmythtv\iptv" "-I$(mythtv_source)\mythtv\libs\libmythtv\mpeg" "-I$(mythtv_source)\mythtv\libs\libmythsamplerate" "-I$(mythtv_source)\mythtv\libs\libmythsoundtouch" "-I$(mythtv_source)\mythtv\libs\libmythfreesurround" "-I$(mythtv_source)\mythtv\libs\libmythdvdnav" "-I$(mythtv_source)\mythtv\libs\libmythbluray" "-I$(mythtv_source)\mythtv\libs\libmythmetadata" "-I$(mythtv_source)\mythtv\libs\libmythservicecontracts" "-I$(mythtv_source)\mythtv\libs\libmythhdhomerun" "-I$(mythtv_source)\mythtv\libs" "-I$(SolutionDir)thirdparty\zlib\include" "-I$(SolutionDir)thirdparty\pthreads\include" "-I$(SolutionDir)thirdparty\opengl\include" "-I$(SolutionDir)thirdparty\freetype\include" "-I$(SolutionDir)thirdparty\freetype\include\freetype2" "-I$(SolutionDir)thirdparty" "-I$(mythtv_source)\mythtv\external\FFmpeg" "-I$(QTDIR)\include" "-I$(NOINHERIT)\." "-I." "-I." "-I."</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DMBASE_API -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DUSING_OPENGL -DUSING_MINGW -DUSING_BACKEND -DUSE_OPENGL_PAINTER -DUSING_MHEG -DRUNPREFIX=\"../\" -DLIBDIRNAME=\"lib\" -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DQT_LARGEFILE_SUPPORT -DPIC -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D_WINDOWS -DWIN32 -D_GNU_SOURCE -DQT_THREAD_SUPPORT -DQT_DLL -D_WINDLL "-I." "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(NOINHERIT)\." "-I$(SolutionDir)\." "-I$(SolutionDir)compat\include" "-I$(SolutionDir)libs" "-I$(SolutionDir)libs\libmythbase" "-I$(SolutionDir)libs\libmythtv" "-I$(SolutionDir)libs\libmythfreemheg" "-I$(mythtv_source)\mythtv\libs\libmythbase" "-I$(mythtv_source)\mythtv\libs\libmythupnp" "-I$(mythtv_source)\mythtv\libs\libmythui" "-I$(mythtv_source)\mythtv\libs\libmyth" "-I$(mythtv_source)\mythtv\libs\libmyth\audio" "-I$(mythtv_source)\mythtv\libs\libmythtv" "-I$(mythtv_source)\mythtv\libs\libmythtv\channelscan" "-I$(mythtv_source)\mythtv\libs\libmythtv\iptv" "-I$(mythtv_source)\mythtv\libs\libmythtv\mpeg" "-I$(mythtv_source)\mythtv\libs\libmythsamplerate" "-I$(mythtv_source)\mythtv\libs\libmythsoundtouch" "-I$(mythtv_source)\mythtv\libs\libmythfreesurround" "-I$(mythtv_source)\mythtv\libs\libmythdvdnav" "-I$(mythtv_source)\mythtv\libs\libmythbluray" "-I$(mythtv_source)\mythtv\libs\libmythmetadata" "-I$(mythtv_source)\mythtv\libs\libmythservicecontracts" "-I$(mythtv_source)\mythtv\libs\libmythhdhomerun" "-I$(mythtv_source)\mythtv\libs" "-I$(SolutionDir)thirdparty\zlib\include" "-I$(SolutionDir)thirdparty\pthreads\include" "-I$(SolutionDir)thirdparty\opengl\include" "-I$(SolutionDir)thirdparty\freetype\include" "-I$(SolutionDir)thirdparty\freetype\include\freetype2" "-I$(SolutionDir)thirdparty" "-I$(mythtv_source)\mythtv\external\FFmpeg" "-I$(QTDIR)\include" "-I." "-I." "-I." "-I."</Command>
+    </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythbase\autodeletedeque.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing Custom Build Step</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -247,18 +282,6 @@
     </CustomBuild>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythbase\compat.h" />
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythbase\dbutil.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing Custom Build Step</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing Custom Build Step</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Outputs)</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythbase\decodeencode.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing Custom Build Step</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </Command>
