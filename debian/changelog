@@ -1,4 +1,4 @@
-mythtv (2:0.24.0+fixes.20110706.b491236-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20110706.b491236-0ubuntu1) oneiric; urgency=low
 
   [ Mario Limonciello ]
   * debian/mythtv.make:
@@ -154,7 +154,7 @@ mythtv (2:0.24.0+fixes.20110706.b491236-0ubuntu1) UNRELEASED; urgency=low
   [ Thomas Mashos ]
   * Removed mythtv_v4l2_fix.patch as this issue has been fixed upstream
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Wed, 06 Jul 2011 01:45:25 -0500
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Wed, 06 Jul 2011 01:46:41 -0500
 
 mythtv (2:0.24.0+fixes.20110416.9ba3ece-0ubuntu1) natty; urgency=low
 
