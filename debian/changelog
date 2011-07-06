@@ -1,4 +1,4 @@
-mythtv (2:0.24.0+fixes.20110416.9ba3ece-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20110706.b491236-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * debian/mythtv.make:
@@ -7,11 +7,154 @@ mythtv (2:0.24.0+fixes.20110416.9ba3ece-0ubuntu2) UNRELEASED; urgency=low
     was there before starting each time.
   * Install the icon from http://www.mythtv.org/wiki/Logo (LP: #458686)
     Thanks Daniel Ellis for the pointer!
+  * New upstream checkout (b491236)
+  * >>Upstream changes since last upload (9ba3ece):
+  * [b491236] Tweak the EIT thread startup
+  * [d06878a] OK, I'm blind.  Sorry.  Should still be using DVB not DTV
+  * [5e67f94] Make EITScanner thread only be started when needed
+  * [ef39225] Suspend recording list updates whilst playback is in
+    progress as this causes issues for some people. This is likely a
+    temporary fix while I work on something better. (cherry picked from
+    commit 1bbc9a43eb63f1569f8b510c4588a439019b49dc)
+  * [db67f84] Fixes #9716. for (int i... shadowed the int i we had
+    declared earlier for that loop so we could check whether the for
+    loop exited prematurely.
+  * [04334ef] Remove unused directory
+  * [fc3ce90] Allow stream_backend_file to accept a myth url (perl
+    bindings)
+  * [e3953dc] Fix stream_backend_file in the perl bindings
+  * [c80795e] Work-around to handle display of high-numbered cards.
+  * [4444dc5] Add missing QString argument
+  * [30993d6] DVD: Fix crash when displaying dvd menu button.
+  * [572b95a] Use settings code to store mythfilldatabase HaveRepeats.
+  * [bc746e8] MythCenter-wide: Fix the wonky layout on the 'Schedule
+    Priorities' screen. Fixes #9717.
+  * [9d428f4] MythCenter-wide: Fix the list overlapping the background
+    shape on the status screen. Fixes #9701.
+  * [523bc8b] channel icon downloader: Add the missing wide window
+    definitions.
+  * [e0972c9] MythCenter-wide: Tidy up the 'Channel Editor' screen.
+    (cherry picked from commit b29bcaed72257bda17e4b10ef5ba88e00cdb6393)
+  * [05e7a23] mythtv-setup: Fix scrolling in the xmltv config terminal
+    screen.
+  * [7c2c249] HDHomeRun: Make Tuner number editable.
+  * [ef79f36] Revert tuner count fix for .24.
+  * [6fca6fa] HDHomeRun: Create the right number of tuners for the found
+    device.
+  * [422a88f] HDHomeRun: Backport fix for IP-defined HDHomeRuns.
+  * [958dd8c] Add another known DCX-3200 changer (but don't backport the
+    changes to GENERIC).
+  * [da58b1d] Backport recently added DCX-3200 models to .24-fixes.
+  * [5aa5e48] RingBuffer: Use case insensitive url and extension
+    checking.
+  * [1be38ea] OSD: Fix subtitle window painting order.
+  * [18ab626] DVB Subtitles: Fix display of subs with no display
+    segment.
+  * [40a3124] Unescape HTML Encoding when parsing text portions of
+    metadata.
+  * [4dec7cf] DVDRingBuffer: Release the ringbuffer writelock when
+    waiting.
+  * [3657f31] Update en_gb MythFrontend, MythArcive and MythGallery
+    translation from Nick Morrott.
+  * [096fca7] Try to fix FreeBSD compile after V4L1 fix.
+  * [a163dc8] Enable building 0.24-fixes without system V4L1 support.
+  * [8e4a3c3] Change the heuristic to only skip animation for myth://
+  * [1605466] Revert "Initialize the MythUIImage filename correctly"
+  * [c321ee6] Initialize the MythUIImage filename correctly
+  * [9375ffb] Make the free space updates start in PBH
+  * [d0648f6] Load the disk free bar in the PBB on each
+    UPDATE_FREE_SPACE
+  * [347cd24] Change version string in 0.24-fixes to reflect the fact
+    that we're post- 0.24.1
+  * [b5a3805] Make ffmpeg's version.sh run in the ffmpeg dir
+  * [298e343] Add a VERSION file to the repo instead of generating it at
+    release time, this provides a sane fallback for users exporting from
+    a repo before building.
+  * [8dd67eb] Fix 7.1 channel order in CoreAudio (mac).
+  * [8119784] Fix occasional audio corruption
+  * [5032286] Revert "VideoBuffers: Remove some unused code."
+  * [32882b2] VideoBuffers: Remove some unused code. (cherry picked from
+    commit 400aba3f27f2c6e0d712ae3a870df0e8c92b292f)
+  * [5867bb0] Fix video buffering code to properly play high reference
+    frame videos.
+  * [b56fc28] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [97118ac] VideoSync: Fix the DummyVideoSync::WaitForFrame return
+    type;
+  * [ee029d1] PiP: Add a dummy video sync sub-class for Picture in
+    Picture.
+  * [983e6d7] PiP: Remove the extra thread created for PiP playback.
+  * [4062695] Re-enable Picture in Picture and Picture By Picture.
+  * [5461754] Prevent 100% CPU usage when in pause mode. Note that the
+    following options help preventing the blast of static when using
+    pulse: - Use ALSA, including the pulse's ALSA plug (usually
+    ALSA:pulse) - Change pulse server sampling rate from the default
+    44.1kHz to 48kHz - In Advanced audio settings, disable myth's
+    resampler.
+  * [475f612] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [cda0ca5] MythCenter-wide: fix the clock position.
+  * [7f99d0f] Following SHA1:7b6c78856da1b8785cc856b6e1ef1ccd35d1947b.
+    Fix improper merge
+  * [5d38c49] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [16775c5] Refs #9761. Check to see if m_checkAvailabilityTimerId=0
+    before killing it. Prevents the frontend issuing the following error
+    message. "Application asked to unregister timer 0x0 which is not
+    registered in this thread. Fix application."
+  * [e751ba6] Refs #9672 - Adds support for multi-byte EIT encodings.
+  * [7b6c788] - Change digital passthrough auto-configuration:   Open
+    device with settings:   AES0=6 AES1=0x82 AES2=0x00 AES3=0x01.
+  * [f301945] Fix transcoding of files with multi-channels audio
+  * [a0bb5e9] MythPlayer: Pause the audio when the video is lagging.
+  * [56c54fa] Adds mention of duration for initial uncached run.
+  * [4fe108c] Fix the check to see if we have a valid DB schema.
+  * [10af40c] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [8c6ee70] Add flush() noop to FileTransfer class for Python file
+    object compatibility. (cherry picked from commit
+    8741c3adc2afcd6c4b042b99520a4b029d026121)
+  * [4693357] MythPlayer: Fix a Live TV channel change deadlock.
+  * [bfa8827] Don't use QDateTime::toString() for prepared queries.
+  * [c339887] Fix some invalid-format datetimes in queries.
+  * [0bbd75b] Sort recordings for bindings and MythArchive.
+  * [b46d964] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [6d864e0] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [5518420] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [d9771ad] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [16cb736] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [e3c81a3] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [b2ac77a] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [86acefa] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [a09bb6b] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [7430c10] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [f4d9213] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [56a70c3] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [4ed827c] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [ab31e1f] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [5c5a34e] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [9a07420] Remove the PlayerTimer class and run the player from
+    TV::StartTV
 
   [ Thomas Mashos ]
   * Removed mythtv_v4l2_fix.patch as this issue has been fixed upstream
 
- -- Thomas Mashos <tgm4883@ubuntu.com>  Mon, 30 May 2011 11:09:06 -0700
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Wed, 06 Jul 2011 01:45:25 -0500
 
 mythtv (2:0.24.0+fixes.20110416.9ba3ece-0ubuntu1) natty; urgency=low
 
