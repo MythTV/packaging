@@ -5,6 +5,8 @@ mythtv (2:0.24.0+fixes.20110416.9ba3ece-0ubuntu2) UNRELEASED; urgency=low
     - Only parse the line if it *starts* with Version
   * Don't destroy VERSION in between runs, make sure to restore it to what
     was there before starting each time.
+  * Install the icon from http://www.mythtv.org/wiki/Logo (LP: #458686)
+    Thanks Daniel Ellis for the pointer!
 
   [ Thomas Mashos ]
   * Removed mythtv_v4l2_fix.patch as this issue has been fixed upstream

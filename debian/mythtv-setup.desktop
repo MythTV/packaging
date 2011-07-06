@@ -5,6 +5,6 @@ GenericName=mythtv-setup
 Exec=mythtv-setup
 Type=Application
 Encoding=UTF-8
-Icon=/usr/share/mythtv/themes/MythCenter-wide/ui/mythtv_logo.png
+Icon=mythtv
 Categories=GTK;System;Settings
 X-AppInstall-Package=mythtv
