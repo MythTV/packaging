@@ -5,9 +5,52 @@ import optparse
 import datetime
 import urllib2
 import urllib
+import json
 import sys
 import os
 import re
+
+def process_date(datestr):
+    class tzinfo( datetime.tzinfo):
+        def __init__(self, direc='+', hr=0, min=0):
+            if direc == '-':
+                hr = -1*int(hr)
+            self._offset = datetime.timedelta(hours=int(hr), minutes=int(min))
+        def utcoffset(self, dt): return self._offset
+        def tzname(self, dt): return ''
+        def dst(self, dt): return datetime.timedelta(0)
+    reiso = re.compile('(?P<year>[0-9]{4})'
+                        '-(?P<month>[0-9]{1,2})'
+                        '-(?P<day>[0-9]{1,2})'
+                        '.'
+                        '(?P<hour>[0-9]{2})'
+                        ':(?P<min>[0-9]{2})'
+                        '(:(?P<sec>[0-9]{2}))?'
+                        '(?P<tz>Z|'
+                            '(?P<tzdirec>[-+])'
+                            '(?P<tzhour>[0-9]{1,2}?)'
+                            '(:)?'
+                            '(?P<tzmin>[0-9]{2})?'
+                        ')?')
+    match = reiso.match(datestr)
+    if match is None:
+        return datetime.datetime.now()
+
+    dt = [int(a) for a in match.groups()[:5]]
+    if match.group('sec') is not None:
+        dt.append(int(match.group('sec')))
+    else:
+        dt.append(0)
+    if match.group('tz'):
+        if match.group('tz') == 'Z':
+            tz = tzinfo()
+        elif match.group('tzmin'):
+            tz = tzinfo(*match.group('tzdirec','tzhour','tzmin'))
+        else:
+            tz = tzinfo(*match.group('tzdirec','tzhour'))
+        dt.append(0)
+        dt.append(tz)
+    return datetime.datetime(*dt)
 
 class Ebuild( object ):
     def __init__(self, package):
@@ -104,20 +147,32 @@ class Ebuild( object ):
             version = self.opts.version
 
         type = self.base[1]
-        if self.opts.hash is None:
+        if self.opts.type == 'tagged':
             type = 4
+            self.opts.hash = None
         elif self.opts.type is not None:
             type = types.index(self.opts.type)
 
-        self.cur = (version, type, self.opts.date)
-        if self.opts.verbose: print 'New version set to: {0}-{1}'.format(self.name,self.get_version(self.cur))
-
         if self.opts.branch:
             self.branch = self.opts.branch
-        elif self.cur[1] < 4:
+        elif type < 4:
             self.branch = 'master'
         else:
-            self.branch = 'fixes/{0}'.format(self.cur[0])
+            self.branch = 'fixes/{0}'.format('.'.join(version.split('.')[0:2]))
+
+        if type != 4:
+            if self.opts.hash is None:
+                commits = json.load(urllib.urlopen("http://github.com/api/v2/json/commits/list/mythtv/MythTV/"+self.branch))
+                self.opts.hash = commits['commits'][0]['id']
+                if self.opts.date is None:
+                    self.opts.date = process_date(commits['commits'][0]['committed_date']).strftime('%Y%m%d')
+                print "Autoselecting hash: "+self.opts.hash
+            elif self.opts.date is None:
+                commit = json.load(urllib.urlopen("http://github.com/api/v2/json/commits/list/mythtv/MythTV/"+self.opts.hash))
+                self.opts.date = process_date(commit['committed_date']).strftime('%Y%m%d')
+
+        self.cur = (version, type, self.opts.date)
+        if self.opts.verbose: print 'New version set to: {0}-{1}'.format(self.name,self.get_version(self.cur))
 
     def get_version(self, version):
         types = ('alpha','beta','pre','rc',None,'p')
@@ -181,7 +236,7 @@ parser.add_option("--verbose", action="store_true", dest="verbose",
 parser.add_option('-v', "--version", dest="version",
                   help="Specify major version to make ebuild for.")
 parser.add_option('-s', "--hash", dest="hash",
-                  help="Specify hash for commit.  If not provided, this will assume a tagged release.")
+                  help="Specify hash for commit.  If not provided, this assume the latest on the branch.")
 parser.add_option('-t', "--type", dest="type",
                   help="Specify release type for non-tagged ebuilds.")
 parser.add_option("--date", dest="date",
@@ -196,6 +251,8 @@ parser.add_option("--branch", dest="branch",
                   help="Specifies an alternate branch to use.  This is only used for properly setting the --version output.")
 parser.add_option("--digest-only", action="store_true", dest="digest",
                   help="This command only runs digest on all specified packages, for help resolving git merges.")
+#parser.add_option("--cleanup", action="store_true", dest="cleanup",
+#                  help="This command clears out old instances of the package, keeping only the latest for each version.")
 
 opts,args = parser.parse_args()
 Ebuild.opts = opts
@@ -203,9 +260,6 @@ Ebuild.opts = opts
 opts.tarball = None
 opts.shash = None
 opts.gitver = None
-
-if opts.date is None:
-    opts.date = datetime.datetime.now().strftime('%Y%m%d')
 
 if opts.packages is None:
     opts.packages = ['media-tv/mythtv',             'media-plugins/mytharchive',
@@ -222,6 +276,7 @@ for package in opts.packages:
         e = Ebuild(package)
         e.get_base()
         e.digest(True, True)
+#    elif opts.cleanup:
     else:
         Ebuild(package).update()
 
