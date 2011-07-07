@@ -65,10 +65,10 @@
 %define desktop_vendor  xris
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25pre-2450-g87af5d5
+%define vers_string v0.25pre-2608-g838f0bd
 
 # Git Revision number and branch ID
-%define _gitrev 2450.g87af5d5
+%define _gitrev 2608.g838f0bd
 %define branch master
 
 #
@@ -1169,9 +1169,12 @@ fi
 %{_bindir}/mythpreviewgen
 %{_bindir}/mythtranscode
 %{_bindir}/mythwikiscripts
+%{_bindir}/mythmetadatalookup
 %{_datadir}/mythtv/mythconverg*.pl
 %dir %{_datadir}/mythtv/locales
+%dir %{_datadir}/mythtv/metadata
 %{_datadir}/mythtv/locales/*
+%{_datadir}/mythtv/metadata/*
 %dir %{_datadir}/mythtv/hardwareprofile
 %{_datadir}/mythtv/hardwareprofile/*
 
@@ -1227,8 +1230,6 @@ fi
 %{_datadir}/mythtv/i18n/mythfrontend_*.qm
 %{_datadir}/applications/*mythfrontend.desktop
 %{_datadir}/pixmaps/myth*.png
-%dir %{_datadir}/mythtv/metadata
-%{_datadir}/mythtv/metadata/*
 #%doc mythplugins/mythvideo/COPYING
 #%doc mythplugins/mythvideo/README*
 #%{_datadir}/mythtv/i18n/mythvideo_*.qm
@@ -1410,6 +1411,10 @@ fi
 ################################################################################
 
 %changelog
+* Wed Jul 08 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Add mythmetadatalookup
+- Move other metadata files into -common
+
 * Wed Jun 08 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Merge MythVideo into the frontend
 - Add mythmediaserver to the backend package
