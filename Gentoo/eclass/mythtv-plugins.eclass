@@ -51,7 +51,7 @@ mythtv-plugins_pkg_setup() {
 	MYTHPLUGINS="${MYTHPLUGINS} mythmusic"
 	MYTHPLUGINS="${MYTHPLUGINS} mythnetvision"
 	MYTHPLUGINS="${MYTHPLUGINS} mythnews"
-	if [[ ${MY_PV} == "0.24" ]]; then
+	if [[ ${MY_PV} == "0.24.1" ]]; then
 		MYTHPLUGINS="${MYTHPLUGINS} mythvideo"
 	fi
 	MYTHPLUGINS="${MYTHPLUGINS} mythweather"

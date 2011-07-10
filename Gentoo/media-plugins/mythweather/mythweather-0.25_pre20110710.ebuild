@@ -4,10 +4,10 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.25pre-2613-gee5cbbb"
+MYTHTV_VERSION="v0.25pre-2674-g82c763a"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="ee5cbbbed6ecd8151ae9917cdaee5909239e43d6"
-MYTHTV_SREV="ee5cbbb"
+MYTHTV_REV="82c763ac10994866c74ffb0f0ba7b924bac0df93"
+MYTHTV_SREV="82c763a"
 
 inherit mythtv-plugins
 

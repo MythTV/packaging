@@ -4,27 +4,36 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.24.1-37-gb491236"
+MYTHTV_VERSION="v0.24.1-43-g6dfda22"
 MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="b491236f7b4d67ea026057c7333db8d1c6612af2"
-MYTHTV_SREV="b491236"
+MYTHTV_REV="6dfda22ae71fe98219f6f70f539a85a9249360dd"
+MYTHTV_SREV="6dfda22"
 
 inherit mythtv-plugins eutils
 
-DESCRIPTION="Module for MythTV."
+DESCRIPTION="Video player module for MythTV."
 IUSE=""
 KEYWORDS="amd64 x86 ~ppc"
 
-RDEPEND=""
-DEPEND="x11-libs/qt-webkit:4"
+RDEPEND="media-tv/mythtv[python]
+        dev-python/mysql-python
+		dev-python/pycurl
+		dev-python/oauth
+        dev-python/lxml
+		"
+DEPEND=""
 
 src_prepare() {
 	if use experimental
 	then
-		true
+		true;
 	fi
 }
 
 src_install() {
 	mythtv-plugins_src_install
+}
+
+pkg_postinst() {
+	true
 }

@@ -4,17 +4,16 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.25pre-2613-gee5cbbb"
-MYTHTV_BRANCH="master"
-MYTHTV_REV="ee5cbbbed6ecd8151ae9917cdaee5909239e43d6"
-MYTHTV_SREV="ee5cbbb"
-
+MYTHTV_VERSION="v0.24.1-43-g6dfda22"
+MYTHTV_BRANCH="fixes/0.24"
+MYTHTV_REV="6dfda22ae71fe98219f6f70f539a85a9249360dd"
+MYTHTV_SREV="6dfda22"
 
 inherit mythtv-plugins
 
 DESCRIPTION="Module for MythTV."
 IUSE=""
-KEYWORDS="~amd64 ~x86 ~ppc"
+KEYWORDS="amd64 x86 ~ppc"
 
 RDEPEND=""
 DEPEND=""
