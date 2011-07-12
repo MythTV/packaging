@@ -1,7 +1,0 @@
-#!/bin/sh
-#Daily maintenance mode for Jamu
-DIRECTORY=$(getent passwd mythtv | cut -d':' -f6)
-if [ -f "$DIRECTORY/.mythtv/config.xml" ] && [ -x /usr/bin/mythbackend ]; then
-    su mythtv -c "/usr/bin/python /usr/share/doc/mythtv-backend/contrib/metadata/jamu.py -M >> '/var/log/mythtv/jamu.log' 2>&1"
-fi
-

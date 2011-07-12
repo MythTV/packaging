@@ -28,6 +28,14 @@ if [ "$1" = install ] || [ "$1" = upgrade ]; then
 	if dpkg --compare-versions "$2" le "0.23.0~trunk23567-0ubuntu2"; then
 		rm_conffile "mythtv-backend" "/etc/default/mythtv-backend"
 	fi
+	for dir in daily hourly weekly; do
+		if [ -e "/etc/cron.$dir/mythtv-backend" ]; then
+			rm_conffile "mythtv-backend" "/etc/cron.$dir/mythtv-backend"
+		fi
+		if [ -e "/etc/cron.$dir/mythvideo" ]; then
+			rm_conffile "mythvideo" "/etc/cron.$dir/mythvideo"
+		fi
+	done
 fi
 
 #DEBHELPER#

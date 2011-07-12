@@ -14,8 +14,3 @@ debian/mythtv.desktop usr/share/applications
 debian/mythfrontend.sh usr/share/mythtv
 debian/session-settings etc/mythtv
 
-#Disable jamu/mirobridge since they're not set up
-#to work with 0.24+ bindings yet.
-#debian/mcc-jamu/python	usr/share/mythbuntu/plugins
-#debian/mcc-jamu/ui	usr/share/mythbuntu/plugins
-

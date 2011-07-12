@@ -8,10 +8,6 @@ case "$1" in
         HOMEDIR=$(getent passwd mythtv | awk -F: '{ print $6 }')
         mkdir -p $HOMEDIR/.mythtv || true
         chown mythtv:mythtv $HOMEDIR/.mythtv || true
-        if [ ! -f $HOMEDIR/.mythtv/jamu.conf ]; then
-            zcat /usr/share/doc/mythtv-backend/contrib/metadata/jamu-example.conf.gz > $HOMEDIR/.mythtv/jamu.conf
-            chown mythtv:mythtv $HOMEDIR/.mythtv/jamu.conf
-        fi
 
         for dir in /var/log/mythtv \
                    /var/lib/mythtv/recordings \
