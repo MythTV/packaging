@@ -3,6 +3,7 @@ usr/share/mythtv/themes
 usr/bin/mythshutdown
 usr/bin/mythff*
 usr/bin/mythmetadatalookup
+usr/bin/mythccextractor
 usr/share/mythtv/*.xml
 usr/share/mythtv/*.pl
 usr/share/mythtv/locales
