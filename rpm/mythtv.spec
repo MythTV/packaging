@@ -65,10 +65,10 @@
 %define desktop_vendor  xris
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25pre-2608-g838f0bd
+%define vers_string v0.25pre-2862-g45efc4d
 
 # Git Revision number and branch ID
-%define _gitrev 2608.g838f0bd
+%define _gitrev 2862.g45efc4d
 %define branch master
 
 #
@@ -1165,6 +1165,7 @@ fi
 %dir %{_datadir}/mythtv
 %config(noreplace) %{_sysconfdir}/mythtv/mysql.txt
 %config(noreplace) %{_sysconfdir}/mythtv/config.xml
+%{_bindir}/mythccextractor
 %{_bindir}/mythcommflag
 %{_bindir}/mythpreviewgen
 %{_bindir}/mythtranscode
@@ -1411,6 +1412,9 @@ fi
 ################################################################################
 
 %changelog
+* Thu Jul 21 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Add mythccextractor
+
 * Wed Jul 08 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Add mythmetadatalookup
 - Move other metadata files into -common
