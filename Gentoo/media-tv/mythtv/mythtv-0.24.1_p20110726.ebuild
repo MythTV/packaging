@@ -1,39 +1,34 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header:$
+# $Header: /var/cvsroot/gentoo-x86/media-tv/mythtv/mythtv-0.22_alpha18535.ebuild,v 1.4 2008/10/09 20:52:54 cardoe Exp $
 
 EAPI=2
 PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.25pre-2674-g82c763a"
-MYTHTV_BRANCH="master"
-MYTHTV_REV="82c763ac10994866c74ffb0f0ba7b924bac0df93"
-MYTHTV_SREV="82c763a"
+MYTHTV_VERSION="v0.24.1-58-g760c8db"
+MYTHTV_BRANCH="fixes/0.24"
+MYTHTV_REV="760c8db330134fbd4b084473bace157ea778aa27"
+MYTHTV_SREV="760c8db"
 
-inherit flag-o-matic multilib eutils qt4 mythtv toolchain-funcs python
-inherit linux-info
+inherit flag-o-matic multilib eutils qt4-r2 mythtv toolchain-funcs python linux-info
 
 DESCRIPTION="Homebrew PVR project"
 SLOT="0"
-KEYWORDS="~amd64 ~x86 ~ppc"
+KEYWORDS="amd64 x86 ~ppc"
 
 IUSE_VIDEO_CARDS="video_cards_nvidia"
+IUSE_INPUT_DEVICES="input_devices_joystick"
 IUSE="altivec autostart dvb \
 dvd bluray \
-ieee1394 jack lcd lirc \
-alsa jack \
-debug profile \
+ieee1394 lcd lirc \
+alsa jack pulseaudio \
+debug \
 perl python \
-vdpau \
-xvid x264 \
--experimental \
-+lame \
+xvmc vdpau \
 ${IUSE_VIDEO_CARDS} \
-input_devices_joystick \
+${IUSE_INPUT_DEVICES}
 "
 
-RDEPEND="
-    >=net-misc/wget-1.12-r3
-    >=media-libs/freetype-2.0
+RDEPEND=">=media-libs/freetype-2.0
 	>=media-sound/lame-3.93.1
 	x11-libs/libX11
 	x11-libs/libXext
@@ -54,6 +49,7 @@ RDEPEND="
 	autostart? ( net-dialup/mingetty
 				 x11-wm/evilwm
 				 x11-apps/xset )
+	bluray? ( media-libs/libbluray )
 	dvb? ( media-libs/libdvb media-tv/linuxtv-dvb-headers )
 	dvd? ( media-libs/libdvdcss )
 	ieee1394? (	>=sys-libs/libraw1394-1.2.0
@@ -65,32 +61,35 @@ RDEPEND="
 	perl? ( dev-perl/DBD-mysql 
             dev-perl/Net-UPnP
 			>=dev-perl/libwww-perl-5 )
+	pulseaudio? ( media-sound/pulseaudio )
 	python? ( dev-python/mysql-python
-              dev-python/lxml
-			  dev-python/urlgrabber )
-    bluray? ( media-libs/libbluray )
+              dev-python/lxml )
+	xvmc? ( x11-libs/libXvMC )
     video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-180.06 )
-	media-fonts/liberation-fonts
 	media-fonts/corefonts
 	media-fonts/dejavu
     !media-tv/mythtv-bindings
-    x264? ( >=media-libs/x264-0.0.20100605 )
-    xvid? ( >=media-libs/xvid-1.1.0 )
-	<sys-kernel/linux-headers-2.6.38
 	"
 
 DEPEND="${RDEPEND}
+	dev-lang/yasm
 	x11-proto/xineramaproto
 	x11-proto/xf86vidmodeproto
 	x11-apps/xinit
-	!x11-themes/mythtv-themes
-	!media-plugins/mythvideo
-	dev-lang/yasm
-	"
+    "
 
 MYTHTV_GROUPS="video,audio,tty,uucp"
 
 pkg_setup() {
+	einfo "This ebuild now uses a heavily stripped down version of your CFLAGS"
+
+	if use xvmc && use video_cards_nvidia
+	then
+		elog
+		elog "For NVIDIA based cards, the XvMC renderer only works on"
+		elog "the NVIDIA 4, 5, 6 & 7 series cards."
+	fi
+
 	python_set_active_version 2
 
 	enewuser mythtv -1 /bin/bash /home/mythtv ${MYTHTV_GROUPS}
@@ -101,28 +100,19 @@ src_prepare() {
 # upstream wants the revision number in their version.cpp
 # since the subversion.eclass strips out the .svn directory
 # svnversion in MythTV's build doesn't work
-	sed -e "s#\${SOURCE_VERSION}#${MYTHTV_VERSION}#g" \
-		-e "s#\${BRANCH}#${MYTHTV_BRANCH}#g" \
-		-i "${S}"/version.sh
+sed -e "s#\${SOURCE_VERSION}#${MYTHTV_VERSION}#g" -e "s#\${BRANCH}#${MYTHTV_BRANCH}#g" -i "${S}"/version.sh
 
 
 # Perl bits need to go into vender_perl and not site_perl
 	sed -e "s:pure_install:pure_install INSTALLDIRS=vendor:" \
 		-i "${S}"/bindings/perl/Makefile
 
+	epatch "${FILESDIR}/ffmpeg-sync.patch"
 	epatch "${FILESDIR}/fixLdconfSandbox.patch"
 
 	if use experimental
 	then
-		epatch "${FILESDIR}/optimizeMFDBClearingBySource-3.patch"
-		epatch "${FILESDIR}/jobQueueIgnoreDeletedRecgroup.patch"
-
-		if has_version ">=virtual/mysql-5.5"
-		then
-			epatch "${FILESDIR}/mythtv-8585-use_proper_ISO_SQL_format_in_database_logging.patch"
-		fi
-
-		true
+		true;
 	fi
 }
 
@@ -132,15 +122,29 @@ src_configure() {
 	myconf="${myconf} --libdir-name=$(get_libdir)"
 
 	myconf="${myconf} --enable-pic"
+	myconf="${myconf} --enable-proc-opt"
 
-	use alsa    || myconf="${myconf} --disable-audio-alsa"
-	use altivec || myconf="${myconf} --disable-altivec"
-	use jack    || myconf="${myconf} --disable-audio-jack"
+	use alsa       || myconf="${myconf} --disable-audio-alsa"
+	use altivec    || myconf="${myconf} --disable-altivec"
+	use jack       || myconf="${myconf} --disable-audio-jack"
+	use pulseaudio || myconf="${myconf} --disable-audio-pulseoutput"
+
+#from bug #220857
+	if use xvmc; then
+		myconf="${myconf} --enable-xvmc"
+		myconf="${myconf} --enable-xvmcw"
+		myconf="${myconf} --disable-xvmc-vld"
+	else
+		myconf="${myconf} --disable-xvmc"
+		myconf="${myconf} --disable-xvmcw"
+	fi
 
 	myconf="${myconf} $(use_enable dvb)"
 	myconf="${myconf} $(use_enable ieee1394 firewire)"
 	myconf="${myconf} $(use_enable lirc)"
+	myconf="${myconf} --disable-directfb"
 	myconf="${myconf} --dvb-path=/usr/include"
+	myconf="${myconf} --enable-opengl-vsync"
 	myconf="${myconf} --enable-xrandr"
 	myconf="${myconf} --enable-xv"
 	myconf="${myconf} --enable-x11"
@@ -163,12 +167,15 @@ src_configure() {
 	if use debug
 	then
 		myconf="${myconf} --compile-type=debug"
-	elif use profile
-	then
-		myconf="${myconf} --compile-type=profile"
 	else
-		myconf="${myconf} --compile-type=release"
+		myconf="${myconf} --compile-type=profile"
 		myconf="${myconf} --enable-proc-opt"
+	fi
+
+	if use xvmc && use video_cards_nvidia
+	then
+		myconf="${myconf} --xvmc-lib=XvMCNVIDIA"
+		myconf="${myconf} --enable-opengl-video"
 	fi
 
 	if use vdpau && use video_cards_nvidia
@@ -176,19 +183,22 @@ src_configure() {
 		myconf="${myconf} --enable-vdpau"
 	fi
 
-	myconf="${myconf} $(use_enable lame libmp3lame)"
-	myconf="${myconf} $(use_enable xvid libxvid)"
-	myconf="${myconf} $(use_enable x264 libx264)"
-
 	use input_devices_joystick || myconf="${myconf} --disable-joystick-menu"
 
-	myconf="${myconf} --enable-symbol-visibility"
+	if use experimental
+	then
+		myconf="${myconf} --enable-symbol-visibility"
+	fi
+
+## CFLAG cleaning so it compiles
+	strip-flags
+	filter-flags "-march=*" "-mtune=*" "-mcpu=*"
+	filter-flags "-O" "-O?"
 
 	hasq distcc ${FEATURES} || myconf="${myconf} --disable-distcc"
 	hasq ccache ${FEATURES} || myconf="${myconf} --disable-ccache"
 
 # let MythTV come up with our CFLAGS. Upstream will support this
-	strip-flags
 	CFLAGS=""
 	CXXFLAGS=""
 
@@ -200,11 +210,12 @@ src_configure() {
 }
 
 src_compile() {
+#	eqmake4 mythtv.pro -o "Makefile" || die "eqmake4 failed"
 	emake || die "emake failed"
 }
 
 src_install() {
-	make INSTALL_ROOT="${D}" install || die "install failed"
+	einstall INSTALL_ROOT="${D}" || die "install failed"
 	dodoc AUTHORS FAQ UPGRADING  README
 
 	insinto /usr/share/mythtv/database
@@ -241,12 +252,9 @@ src_install() {
 		newins "${FILESDIR}"/xinitrc .xinitrc
 	fi
 
-	for file in `find ${D} -type f -name \*.py \
-						-o -type f -name \*.sh \
-						-o -type f -name \*.pl`;
-	do
-		chmod a+x $file;
-	done
+	for file in `find ${D} -type f -name \*.py`; do chmod a+x $file; done
+	for file in `find ${D} -type f -name \*.sh`; do chmod a+x $file; done
+	for file in `find ${D} -type f -name \*.pl`; do chmod a+x $file; done
 }
 
 pkg_preinst() {
@@ -256,7 +264,7 @@ pkg_preinst() {
 pkg_postinst() {
 	elog "Want mythfrontend to start automatically?"
 	elog "Set USE=autostart. Details can be found at:"
-	elog "http://www.mythtv.org/wiki/Gentoo_Autostart"
+	elog "http://dev.gentoo.org/~cardoe/mythtv/autostart.html"
 
 	elog
 	elog "To always have MythBackend running and available run the following:"
@@ -264,6 +272,15 @@ pkg_postinst() {
 	elog
 	ewarn "Your recordings folder must be owned by the user 'mythtv' now"
 	ewarn "chown -R mythtv /path/to/store"
+
+	if use xvmc && [[ ! -s "${ROOT}/etc/X11/XvMCConfig" ]]
+	then
+		ewarn
+		ewarn "No XvMC implementation has been selected yet"
+		ewarn "Use 'eselect xvmc list' for a list of available choices"
+		ewarn "Then use 'eselect xvmc set <choice>' to choose"
+		ewarn "'eselect xvmc set nvidia' for example"
+	fi
 
 	if use autostart
 	then
@@ -273,6 +290,11 @@ pkg_postinst() {
 		elog "c8:2345:respawn:/sbin/mingetty --autologin mythtv tty8"
 	fi
 
+}
+
+pkg_postrm()
+{
+	true;
 }
 
 pkg_info() {
