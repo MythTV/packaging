@@ -216,6 +216,10 @@ exit 0"   > pkg-config ; '.
           '-no-stl',
           # When MythTV all ported:  '-no-qt3support',
 
+          # 10.7 and XCode 4.1 suggestion from Jean-Yves Avenard:
+          #'-sdk /Developer/SDKs/MacOSX10.6.sdk',
+
+
           # When MySQL 5.1 is used, its plugin.h file clashes with Qt's.
           # To work around that, replace these three lines:
           # '-I"$PREFIX/include/mysql"',
