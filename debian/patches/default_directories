@@ -3,9 +3,9 @@ Use /var/log/mythtv instead of just /var/log for mythtv logs.
 Change location of default storage groups to somewhere in /var/lib.
 Index: mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
 ===================================================================
---- mythtv-master.orig/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2011-07-10 14:49:41.541055329 -0500
-+++ mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2011-07-10 14:49:46.737081091 -0500
-@@ -18,7 +18,7 @@
+--- mythtv-master.orig/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2011-08-10 07:28:51.606337509 +0800
++++ mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2011-08-10 07:28:53.154337510 +0800
+@@ -42,7 +42,7 @@
  #ifdef Q_WS_MACX
      gc->setValue(QDir::homePath() + "/Pictures");
  #else
@@ -14,7 +14,7 @@ Index: mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
  #endif
      gc->setHelpText(QObject::tr("This directory must exist and "
                         "MythGallery needs to have read permission."));
-@@ -71,7 +71,7 @@
+@@ -107,7 +107,7 @@
  {
      HostLineEdit *gc = new HostLineEdit("GalleryImportDirs");
      gc->setLabel(QObject::tr("Paths to import images from"));
@@ -25,8 +25,8 @@ Index: mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
                      "be copied. If it is an executable, it will be run."));
 Index: mythtv-master/mythplugins/mythmusic/mythmusic/globalsettings.cpp
 ===================================================================
---- mythtv-master.orig/mythplugins/mythmusic/mythmusic/globalsettings.cpp	2011-07-10 14:49:41.585055547 -0500
-+++ mythtv-master/mythplugins/mythmusic/mythmusic/globalsettings.cpp	2011-07-10 14:49:46.741081115 -0500
+--- mythtv-master.orig/mythplugins/mythmusic/mythmusic/globalsettings.cpp	2011-08-10 07:28:51.654337509 +0800
++++ mythtv-master/mythplugins/mythmusic/mythmusic/globalsettings.cpp	2011-08-10 07:28:53.158337510 +0800
 @@ -39,7 +39,7 @@
  #ifdef Q_WS_MACX
      gc->setValue(QDir::homePath() + "/Music");
@@ -38,8 +38,8 @@ Index: mythtv-master/mythplugins/mythmusic/mythmusic/globalsettings.cpp
                      "running MythMusic needs to have write permission "
 Index: mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp
 ===================================================================
---- mythtv-master.orig/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2011-07-10 14:49:41.505055143 -0500
-+++ mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2011-07-10 14:49:46.741081115 -0500
+--- mythtv-master.orig/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2011-08-10 07:28:51.630337509 +0800
++++ mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2011-08-10 07:28:53.158337510 +0800
 @@ -16,7 +16,7 @@
  {
      HostLineEdit *gc = new HostLineEdit("MythArchiveTempDir");
@@ -51,9 +51,9 @@ Index: mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp
      return gc;
 Index: mythtv-master/mythtv/programs/mythbackend/housekeeper.cpp
 ===================================================================
---- mythtv-master.orig/mythtv/programs/mythbackend/housekeeper.cpp	2011-07-10 14:49:41.417054713 -0500
-+++ mythtv-master/mythtv/programs/mythbackend/housekeeper.cpp	2011-07-10 14:49:46.741081115 -0500
-@@ -419,7 +419,7 @@
+--- mythtv-master.orig/mythtv/programs/mythbackend/housekeeper.cpp	2011-08-10 07:28:51.538337509 +0800
++++ mythtv-master/mythtv/programs/mythbackend/housekeeper.cpp	2011-08-10 07:28:53.158337510 +0800
+@@ -426,7 +426,7 @@
                                            "mythfilldatabase");
      QString mfarg = gCoreContext->GetSetting("MythFillDatabaseArgs", "");
      QString mflog = gCoreContext->GetSetting("MythFillDatabaseLog",
@@ -64,9 +64,9 @@ Index: mythtv-master/mythtv/programs/mythbackend/housekeeper.cpp
          mfpath = GetInstallPrefix() + "/bin/mythfilldatabase";
 Index: mythtv-master/mythtv/programs/mythwelcome/welcomedialog.cpp
 ===================================================================
---- mythtv-master.orig/mythtv/programs/mythwelcome/welcomedialog.cpp	2011-07-10 14:49:41.433054788 -0500
-+++ mythtv-master/mythtv/programs/mythwelcome/welcomedialog.cpp	2011-07-10 14:49:46.741081115 -0500
-@@ -448,7 +448,7 @@
+--- mythtv-master.orig/mythtv/programs/mythwelcome/welcomedialog.cpp	2011-08-10 07:28:51.562337509 +0800
++++ mythtv-master/mythtv/programs/mythwelcome/welcomedialog.cpp	2011-08-10 07:28:53.158337510 +0800
+@@ -446,7 +446,7 @@
                                            "mythfilldatabase");
      QString mfarg = gCoreContext->GetSetting("MythFillDatabaseArgs", "");
      QString mflog = gCoreContext->GetSetting("MythFillDatabaseLog",
@@ -77,8 +77,8 @@ Index: mythtv-master/mythtv/programs/mythwelcome/welcomedialog.cpp
      if (mflog.isEmpty())
 Index: mythtv-master/mythtv/libs/libmythmetadata/globals.cpp
 ===================================================================
---- mythtv-master.orig/mythtv/libs/libmythmetadata/globals.cpp	2011-07-10 14:49:41.469054971 -0500
-+++ mythtv-master/mythtv/libs/libmythmetadata/globals.cpp	2011-07-10 14:49:46.741081115 -0500
+--- mythtv-master.orig/mythtv/libs/libmythmetadata/globals.cpp	2011-08-10 07:28:51.586337509 +0800
++++ mythtv-master/mythtv/libs/libmythmetadata/globals.cpp	2011-08-10 07:28:53.162337510 +0800
 @@ -32,5 +32,5 @@
  #ifdef Q_WS_MACX
  const QString DEFAULT_VIDEOSTARTUP_DIR = QDir::homePath() + "/Movies";
