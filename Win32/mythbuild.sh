@@ -123,14 +123,14 @@ readonly version="0.5"
 : ${LIBXML2:="libxml2-2.7.8"}
 : ${LIBXML2_URL:="ftp://xmlsoft.org/libxml2/$LIBXML2.tar.gz"}
 # 16-Dec-2010 latest: mysql-5.5.8
-: ${MYSQL:="mysql-5.1.56"}
+: ${MYSQL:="mysql-5.1.58"}
 : ${MYSQL_URL:="http://mirrors.ircam.fr/pub/mysql/Downloads/MySQL-${MYSQL:6:3}/$MYSQL.tar.gz"}
 # Pre-built win32 install. NB mysql-5.1 requires winXP-SP2, 5.0 works on win2k
-: ${MYSQLW:="mysql-5.1.56-win32"}
+: ${MYSQLW:="mysql-5.1.58-win32"}
 : ${MYSQLW_URL:="ftp://mirrors.ircam.fr/pub/mysql/Downloads/MySQL-${MYSQLW:6:3}/${MYSQLW/mysql-/mysql-noinstall-}.zip"}
 #: ${MYSQLW_URL:="ftp://ftp.mirrorservice.org/sites/ftp.mysql.com/Downloads/MySQL-${MYSQLW:6:3}/${MYSQLW/mysql-/mysql-noinstall-}.zip"}
 # Pre-built MacOSX install
-: ${MYSQLM:="mysql-5.1.56-osx10.4-i686"}
+: ${MYSQLM:="mysql-5.1.58-osx10.4-i686"}
 : ${MYSQLM_URL:="ftp://mirrors.ircam.fr/pub/mysql/Downloads/MySQL-${MYSQLM:6:3}/$MYSQLM.tar.gz"}
 # Pre-built MacOSX powerpc
 : ${MYSQLX:="mysql-standard-4.1.22-apple-darwin7.9.0-powerpc"}
@@ -1453,7 +1453,7 @@ if [ "$MYTHTARGET" = "Windows" ]; then
 		END
         chmod +x mysql_config
         cd "$incdir"
-        ln -f -s "$MYTHWORK/$name/include/" mysql
+        ln -f -s "$MYTHWORK/$name/include" mysql
         cd "$libdir"
         ln -f -s "$MYTHWORK/$name/$MYSQLW_LIB/mysqlclient.lib" .
         cp -p "$MYTHWORK/$name/$MYSQLW_LIB/libmysql.lib" .
@@ -1987,7 +1987,7 @@ if [ ! -e "$stampconfig${MYTHBUILD:+.$MYTHBUILD}" -o -n "$MYTHPLUGINS_CFG" \
     rm -f $stampconfig*
     [ -e Makefile ] && { make_uninstall; make_distclean; } || true
     # NB patches reqd for mytharchive & mythzoneminder
-    #plugins="--disable-mytharchive --disable-mythzoneminder"
+    plugins="--disable-mytharchive --disable-mythzoneminder"
     if ! isdebug QT ; then
         # These plugins require a debug build of Qt in .pro file
         case "$MYTHVER" in
