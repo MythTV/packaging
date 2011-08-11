@@ -70,6 +70,9 @@
 #   or for a debug build type:
 #     ./mythbuild.sh -H -d
 #
+#   For an optimised build:
+#     CFLAGS="-march=native -O2" CXXFLAGS="-march=native -O2" mythbuild.sh -r -c host
+#
 #   Package dependecies:
 #   MythTV Xv:    libxxf86vm-dev libxv-dev
 #   MythTV ALSA:  libasound2-dev
@@ -79,7 +82,7 @@
 #   Host dependencies:
 #   Mac B/W G3: mythbuild.sh -c g3
 
-readonly version="0.5"
+readonly version="0.6"
 
 # Myth code repo
 : ${MYTHREPO:="http://mythtv-for-windows.googlecode.com/files"}
@@ -100,6 +103,7 @@ readonly version="0.5"
 : ${LAME_URL:="http://$SOURCEFORGE/project/lame/lame/${LAME/lame-/}/$LAME.tar.gz"}
 : ${WINE:="wine-1.3.6"}
 : ${WINE_URL:="http://$SOURCEFORGE/project/wine/Source/$WINE.tar.bz2"}
+: ${DXVA2_URL:="http://download.videolan.org/pub/videolan/contrib/dxva2api.h"}
 : ${LIBEXIF:="libexif-0.6.19"}
 : ${LIBEXIF_URL:="http://$SOURCEFORGE/project/libexif/libexif/${LIBEXIF/libexif-/}/$LIBEXIF.tar.bz2"}
 : ${LIBOGG:="libogg-1.2.1"}
@@ -207,8 +211,10 @@ else
     cpus=1
 fi
 [ $cpus -gt 1 ] && makejobs=`expr $cpus + 1` || makejobs=1
-makeflags=
+verbose="no"
 dosudo=
+patchmaster="no"
+: ${DXVA2:="no"}
 
 
 ###############################################################
@@ -218,13 +224,20 @@ readonly myname="$0"
 readonly myargs="$@"
 readonly currdir="$PWD"
 readonly logfile="mythbuild.log"
-readonly def_branch="master"
+
+# Get the current git branch
+# $1= path to .git
+function gitbranch() {
+    [ -d "$1/.git" ] && git --git-dir="$1/.git" branch --no-color|grep "^\*"|cut -d ' ' -f 2
+}
 
 function myhelp() {
+    local branch="$MYTHBRANCH"
+    : ${branch:=`gitbranch "$MYTHDIR/mythtv"`}
     echo "A script to build MythTV"
     echo "Usage: $myname [options] [packages_to_make]"
     echo "Options:"
-    echo "  -b tag        Checkout MythTV branch [${MYTHBRANCH:-$def_branch}]"
+    echo "  -b tag        Checkout MythTV branch [$branch]"
     echo "  -r           *Release build (sticky)"
     echo "  -d            Debug build (sticky)"
     echo "  -p            Profile build (sticky)"
@@ -236,20 +249,23 @@ function myhelp() {
     echo "  -l            Tee stdout and stderr to $logfile"
     echo "  -c <cpu>      Set target CPU (host|i?86|...) [$cpu]"
     echo "  -j n          Number of parallel make jobs [$makejobs]"
-    echo "  -s            Silent make"
     echo "  -t <n>        Timeout after configure [$readtimeout Seconds]"
+    echo "  -v            Verbose build messages [$verbose]"
     echo "  -C            Force a clean re-build"
-    echo "  -P            Apply all patches to mythtv and mythplugins then exit (stable releases only)"
-    echo "  -R            Reverse all patches applied to mythtv & mythplugins then exit (stable releases only)"
+    echo "  -F            Enable mythtv and mythplugins master patches [$patchmaster]"
+    echo "  -P            Apply all patches to mythtv and mythplugins then exit"
+    echo "  -R            Reverse all patches applied to mythtv & mythplugins then exit"
     echo "  -S            Run make install/uninstall with sudo"
-    echo "  -T            Build and install myththemes"
+    echo "  -T            Build and install myththemes [$themes]"
     echo "  -h            Display this help then exit"
-    echo "  -v            Display version then exit"
+    echo "  -V            Display version then exit"
     echo ""
     echo "The following shell variables are influential:"
     echo "MYTHDIR         Build tree root [current directory]"
     echo "MYTHWORK        Directory to unpack and build packages [${MYTHWORK#$MYTHDIR/}]"
     echo "MYTHPATCHES     Patches to apply [$MYTHPATCHES]"
+    echo "MYTHVER         MythTV version [$MYTHVER]"
+    echo "DXVA2           Windows DXVA2 support [$DXVA2]"
     echo "MYTHGIT         Myth git repository [$MYTHGIT]"
     echo "MYTHREPO        Primary mirror [$MYTHREPO]"
     echo "SOURCEFORGE     Sourceforge mirror [$SOURCEFORGE]"
@@ -273,35 +289,34 @@ function die() {
 }
 
 # Options
-while getopts ":b:c:dj:lprst:hvCHI:MPRSTWX" opt
+while getopts ":b:c:dj:lprt:vhVCFHI:MPRSTWX" opt
 do
     case "$opt" in
-        b) [ "${OPTARG:0:1}" = "-" ] && die "Invalid branch tag: $OPTARG"
-            MYTHBRANCH=$OPTARG ;;
-        c) [ "${OPTARG:0:1}" = "-" ] && die "Invalid CPU: $OPTARG" 
-            cpu=$OPTARG ;;
+        b) [ "${OPTARG:0:1}" != "-" ] && MYTHBRANCH=$OPTARG || die "Invalid branch tag: $OPTARG" ;;
+        c) [ "${OPTARG:0:1}" != "-" ] && cpu=$OPTARG || die "Invalid CPU: $OPTARG" ;;
         d) MYTHBUILD="debug" ;;
         p) MYTHBUILD="profile" ;;
         r) MYTHBUILD="release" ;;
         j) [ $OPTARG -lt 0 -o $OPTARG -gt 99 ] && die "Invalid number of jobs: $OPTARG"
            [ $OPTARG -lt 1 ] && die "Invalid make jobs: $OPTARG"
             makejobs=$OPTARG ;;
-        s) makeflags="-s" ;;
         t) [ $OPTARG \< 0 -o $OPTARG -gt 999 ] && die "Invalid timeout: $OPTARG"
             readtimeout=$OPTARG ;;
+        v) verbose="yes" ;;
         l) logging="yes" ;;
         C) cleanbuild="yes" ;;
+        F) [ "$patchmaster" = "no" ] && patchmaster="yes" || patchmaster="no" ;;
         H) MYTHTARGET="Host" ;;
         M) MYTHTARGET="MacOSX-i686" ;;
         X) MYTHTARGET="MacOSX-PPC" ;;
         W) MYTHTARGET="Windows" ;;
-        I) [ -d "$OPTARG" ] && MYTHINSTALL=$OPTARG || die "No such directory: $OPTARG" ;;
+        I) MYTHINSTALL=`readlink -f "$OPTARG" 2>/dev/null` || die "Invalid path: $OPTARG" ;;
         P) patches="apply" ;;
         R) patches="reverse" ;;
         S) dosudo="sudo" ;;
-        T) themes="yes" ;;
+        T) [ "$themes" = "no" ] && themes="yes" || themes="no" ;;
         h) myhelp; exit ;;
-        v) version; exit ;;
+        V) version; exit ;;
         \?) [ -n "$OPTARG" ] && die "Invalid option -$OPTARG" ;;
         :) [ -n "$OPTARG" ] && die "-$OPTARG requires an argument" ;;
         *) die "Unknown option $opt" ;;
@@ -418,19 +433,29 @@ function unpack() {
     esac
 }
 
+function patchapplied() {
+    local n x
+    case "$1" in
+        *.diff) x=".diff" ;;
+        *.patch) x=".patch" ;;
+    esac
+    n=`basename "$1" "$x"`
+    echo "patch-$n.applied"
+}
+
 # Apply patches to a component
 # $1= component name, $2... args to patch
 function dopatches() {
-    local d=$1 i ret=0 p patched dryrun
+    local d=$1 i ret=0 patched dryrun
     shift
     echo "$@" | grep -- --dry > /dev/null 2>&1 && dryrun="yes"
-    for i in $MYTHDIR/$MYTHPATCHES/$d/*.diff ; do
+    local patches=`ls 2>/dev/null $MYTHDIR/$MYTHPATCHES/$d/*.{patch,diff} | sort`
+    for i in $patches ; do
         if [ -r "$i" ]; then
-            p=`basename "$i" ".diff"`
-            patched="patch-$p.applied"
+            patched=`patchapplied "$i"`
             if [ ! -e "$patched" ]; then
                 echo "Applying patch $d/`basename $i`"
-                patch -p1 -N -i "$i" $@
+                patch -s -p1 -N -i "$i" $@
                 [ -z "$dryrun" ] && touch "$patched"
                 let ++ret
             fi
@@ -442,15 +467,15 @@ function dopatches() {
 # Undo patches to a component
 # $1= component name, $2... args to patch
 function undopatches() {
-    local d=$1 i p patched
+    local d=$1 i patched
     shift
-    for i in $MYTHDIR/$MYTHPATCHES/$d/*.diff ; do
+    local patches=`ls 2>/dev/null $MYTHDIR/$MYTHPATCHES/$d/*.{patch,diff} | sort -r`
+    for i in $patches ; do
         if [ -r "$i" ]; then
-            p=`basename "$i" ".diff"`
-            patched="patch-$p.applied"
+            patched=`patchapplied "$i"`
             if [ -e "$patched" ]; then
                 echo "Reversing patch $d/`basename $i`"
-                patch -p1 -R -E -i "$i" $@ || true
+                patch -s -p1 -R -E -i "$i" $@ || true
                 rm -f "$patched"
             fi
         fi
@@ -462,12 +487,6 @@ function undopatches() {
 function gitclone() {
     banner "git clone $*"
     git clone $@
-}
-
-# Get the current git branch
-# $1= path to .git
-function gitbranch() {
-    [ -d "$1/.git" ] && git --git-dir="$1/.git" branch --no-color|grep "^\*"|cut -d ' ' -f 2
 }
 
 # Get the most recent git tag
@@ -514,7 +533,12 @@ function isAltivec() {
         [Ww]indows) ;;
         MacOSX-i686) ;;
         MacOSX-PPC) ;; # Safer to say no
-        [Hh]ost) [ -r "/proc/cpuinfo" ] && grep -i "altivec" /proc/cpuinfo >/dev/null && return 0 ;;
+        [Hh]ost)
+            case "$cpu" in
+                [gG]3) ;;
+                *) [ -r "/proc/cpuinfo" ] && grep -i "altivec" /proc/cpuinfo >/dev/null && return 0 ;;
+            esac
+            ;;
         *) ;;
     esac
     return 1
@@ -564,7 +588,7 @@ function dumpenv() {
     echo ""
 
     local param param1="MYTHTARGET MYTHBUILD MYTHBRANCH readtimeout logging patches"
-    local param2="cleanbuild reconfig cpu cpus makejobs makeflags dosudo"
+    local param2="cleanbuild reconfig cpu cpus makejobs verbose dosudo themes patchmaster"
     for param in $param1 $param2 ; do
         echo "$param=${!param}"
     done
@@ -618,24 +642,20 @@ case "$MYTHBUILD" in
 esac
 
 
-# Myth branch
-: ${MYTHBRANCH:=`gitbranch "$MYTHDIR/mythtv"`}
-: ${MYTHBRANCH:=$def_branch}
-case "$MYTHBRANCH" in
-    master)
-        MYTHVER="master"
-        ;;
-    fixes/0.25*|fixes/0.24*|fixes/0.23*)
-        MYTHVER=${MYTHBRANCH#fixes/}
-        ;;
-    fixes/*)
-        echo "WARNING: This script has not been verified with $MYTHBRANCH"
-        MYTHVER=${MYTHBRANCH#fixes/}
-        ;;
-    *)
-        echo "WARNING: This script has not been verified with $MYTHBRANCH"
-        MYTHVER=${MYTHBRANCH//\//-}
-        ;;
+# Determine Myth version from branch name
+function branch2ver() {
+    case "$1" in
+        *master) echo "master" ;;
+        fixes/*) echo "${1#fixes/}" ;;
+        *-[0-9].[1-9]*) echo "${1#*-}" ;;
+        *) ;;
+    esac
+}
+branch=$MYTHBRANCH
+[ -z "$branch" ] && branch=`gitbranch "$MYTHDIR/mythtv"`
+case "$branch" in
+    "") : ${MYTHVER:="master"} ;;
+    fixes/*) : ${MYTHVER:=`branch2ver "$branch"`} ;;
 esac
 
 
@@ -737,38 +757,28 @@ function get_patches() {
 function patchmyth() {
     local message=$1 action=$2
     shift 2
-    banner "$message all MythTV branch $MYTHBRANCH patches." >&2
+    banner "$message all MythTV $MYTHVER patches." >&2
     read -p "Press [Return] to continue or [Control-C] to abort: "
 
     get_patches
-    if [ -d "$MYTHDIR/mythtv/mythtv" ]; then
-        pushd "$MYTHDIR/mythtv/mythtv" >/dev/null
+    if [ -d "$MYTHDIR/mythtv" ]; then
+        pushd "$MYTHDIR/mythtv" >/dev/null
         #rm -f $stampconfig*
-        $action "mythtv${MYTHVER:+-$MYTHVER}" $@ || true
-        popd >/dev/null
-    fi
-    if [ -d "$MYTHDIR/mythtv/mythplugins" ]; then
-        pushd "$MYTHDIR/mythtv/mythplugins" >/dev/null
-        #rm -f $stampconfig*
-        $action "mythplugins${MYTHVER:+-$MYTHVER}" $@ || true
+        $action "mythtv-$MYTHVER" $@ || true
         popd >/dev/null
     fi
 }
 
-if [ "$MYTHVER" != "master" ]; then
-    case "$patches" in
-        "") ;;
-        apply) patchmyth "Apply" "dopatches" $@ ; exit ;;
-        reverse) patchmyth "Reverse" "undopatches" $@ ; exit ;;
-        *) die "Unknown patches option: $patches" ;;
-    esac
-else
-    echo "Not applying patches to master"
-fi
+case "$patches" in
+    "") ;;
+    apply)   [ -n "$MYTHVER" ] && patchmyth "Apply"   "dopatches"   $@ ; exit ;;
+    reverse) [ -n "$MYTHVER" ] && patchmyth "Reverse" "undopatches" $@ ; exit ;;
+    *) die "Unknown patches option: $patches" ;;
+esac
 
 
 # Display Myth branch & build type and wait for OK
-banner "Building MythTV branch '$MYTHBRANCH' ($MYTHBUILD) for $MYTHTARGET" >&2
+banner "Building MythTV${branch:+ branch '$branch'} ($MYTHBUILD) for $MYTHTARGET" >&2
 [ "$cleanbuild" = "yes" ] && echo "WARNING: All packages will be rebuilt from scratch." >&2
 read -p "Press [Return] to continue or [Control-C] to abort: "
 echo ""
@@ -798,12 +808,8 @@ export PATH="$bindir:$PATH"
 # Check make
 make --version >/dev/null 2>&1 || install_pkg make
 
-if [ $makejobs -gt 1 ]; then
-    # Parallel make
-    make="make $makeflags -j $makejobs"
-else
-    make="make $makeflags"
-fi
+# Parallel make
+[ $makejobs -gt 1 ] && make="make -j$makejobs" || make="make"
 
 
 # Check the C & C++ compilers exist
@@ -957,12 +963,6 @@ fi
 
 # Download the patches
 get_patches
-if [ ! -d "$MYTHDIR/$MYTHPATCHES/mythtv-$MYTHVER" -o \
-     ! -d "$MYTHDIR/$MYTHPATCHES/mythplugins-$MYTHVER" ]; then
-    echo "WARNING: Patches are not available for the branch '$MYTHBRANCH'"
-    echo "WARNING: Building MythTV may fail."
-    read -p "Press [Return] to continue or [Control-C] to abort: "
-fi
 
 
 # Apply the mingw <float.h> patch for Qt
@@ -1357,6 +1357,20 @@ if [ "$MYTHTARGET" = "Windows" ]; then
 fi
 
 ###############################################################################
+# DXVA2
+if [ "$MYTHTARGET" = "Windows" -a "$DXVA2" == "yes" ]; then
+    url=$DXVA2_URL; arc=`basename "$url"`
+    stampinstall="$( installed DXVA2)"
+
+    [ ! -e "$arc" ] && download "$url"
+    banner "Installing DXVA2 header"
+    if [ ! -e "$stampinstall" ]; then
+        cp -p "$arc" "$incdir/"
+        touch "$stampinstall"
+    fi
+fi
+
+###############################################################################
 # Install libexif - http://libexif.sourceforge.net/
 # For MythGallery
 build LIBEXIF
@@ -1500,6 +1514,7 @@ else
     MYSQL_DEBUGFLAG="--with-debug"
     # BUG: debug build of mysql 5.1.54 enables -Werror which errors with
     # gcc 4.4.5 so disable those warnings...
+    CXXFLAGS="-Wno-uninitialized $CXXFLAGS" \
     CFLAGS="-Wno-unused-result -Wno-unused-function $CFLAGS" \
     build MYSQL --enable-thread-safe-client \
         --without-server --without-docs --without-man --without-geometry
@@ -1513,20 +1528,13 @@ comp=QT; compurl=${comp}_URL; compcfg=${comp}_CFG
 name=${!comp}; url=${!compurl}; arc=`basename "$url"`
 stampinstall="$( installed $name)"
 
-if [ -n "$xprefix" ]; then
-    case "$MYTHTARGET" in
-        # Cross compiler doesn't produce compatible dwarf2 symbols so disable debug
-        MacOSX*) [ "$QT_DEBUG" = "auto" ] && QT_DEBUG="no" ;;
-    esac
-fi
-
-cxxflags_save=$CXXFLAGS
 if isdebug QT ; then
     debug="debug"
     # BUG: debug build with i586-mingw32msvc-gcc version 4.2.1 fails due to
     # multiple definitions of inline functions like powf conflicting with stdlibc++
     # Workaround: set CXXFLAGS=-O1 before configuring Qt
-    export CXXFLAGS="${CXXFLAGS:+$CXXFLAGS }-O1"
+    cxxflags_save=$CXXFLAGS
+    export CXXFLAGS="$CXXFLAGS -O1"
 else
     debug="release"
 fi
@@ -1798,6 +1806,9 @@ if [ ! -e "$stampconfig.$debug" -o -n "${!compcfg}" -o ! -e Makefile ]; then
             MacOSX*)
                 args="$args -no-framework"
 
+                # Dwarf2 symbols cause memory exhaustion in debug build
+                args="$args -no-dwarf2"
+
                 # MacOSX qfontengine includes fontconfig.h unless explicitly disabled
                 args="$args -no-fontconfig"
 
@@ -1851,27 +1862,26 @@ isdebug QT && export CXXFLAGS=$cxxflags_save
 ###############################################################################
 cd "$MYTHDIR"
 name="mythtv"
-[ ! -d $name ] && gitclone -b $MYTHBRANCH "$MYTHGIT/$name.git" $name
+[ ! -d $name ] && gitclone ${MYTHBRANCH:+-b $MYTHBRANCH} "$MYTHGIT/$name.git" $name
 pushd "$name" >/dev/null
 
 branch=`gitbranch .`
-if [ "$MYTHBRANCH" != "$branch" ]; then
+if [ -n "$MYTHBRANCH" -a "$MYTHBRANCH" != "$branch" ]; then
     banner "Switching to $name branch $MYTHBRANCH" >&2
+    ver=`branch2ver "$branch"`
 
-    # Get the current branch
-    case "$branch" in
-        fixes/*) branch=${branch#fixes/} ;;
-    esac
-
+    # Uninstall & distclean plugins
     pushd mythplugins >/dev/null
     [ -e Makefile ] && { make_uninstall; make_distclean; } || true
-    undopatches "mythplugins-$branch" || true
     rm -f $stampconfig*
     popd >/dev/null
 
+    # Uninstall & distclean mythtv
     pushd mythtv >/dev/null
     [ -e config.mak ] && { make_uninstall; make_distclean; } || true
-    undopatches "mythtv-$branch" || true
+
+    # Undo patches
+    undopatches "mythtv-$ver" || true
     rm -f $stampconfig*
     popd >/dev/null
 
@@ -1885,20 +1895,27 @@ if [ "$MYTHBRANCH" != "$branch" ]; then
 
     git clean -f -d -x >/dev/null
     git checkout -f "$MYTHBRANCH"
+    branch="$MYTHBRANCH"
 elif [ "$clean" = "yes" ]; then
     git clean -f -d -x >/dev/null
     git checkout .
 fi
 
 mythtag=$( git describe)
+banner "Building $name branch $branch ($MYTHBUILD)"
+
+# Apply patches
+case "$MYTHVER" in
+    master)
+        [ "$patchmaster" = "yes" ] && { dopatches "$name-$MYTHVER" || rm -f $stampconfig* ; }
+        ;;
+    [0-9].[1-9]*)
+        dopatches "$name-$MYTHVER" || rm -f $stampconfig*
+        ;;
+    *) ;;
+esac
 
 pushd "$name" >/dev/null
-banner "Building $name branch $MYTHBRANCH ($MYTHBUILD)"
-
-if [ "$MYTHVER" != "master" ]; then
-    dopatches "$name${MYTHVER:+-$MYTHVER}" || rm -f $stampconfig*
-fi
-
 [ "$reconfig" = "yes" ] && rm -f $stampconfig*
 if [ ! -e "$stampconfig${MYTHBUILD:+.$MYTHBUILD}" -o -n "$MYTHTV_CFG" \
         -o ! -e "config.h" -o ! -e "Makefile" ]; then
@@ -1917,19 +1934,26 @@ if [ ! -e "$stampconfig${MYTHBUILD:+.$MYTHBUILD}" -o -n "$MYTHTV_CFG" \
         --extra-cflags=-I$incdir --extra-cxxflags=-I$incdir --extra-libs=-L$libdir \
         --disable-avdevice --disable-avfilter \
         --enable-libfftw3 --disable-joystick-menu"
+    case "$MYTHVER" in
+        0.23*|0.24*) args="$args --disable-directfb" ;;
+    esac
     rprefix=".."
     case "$MYTHTARGET" in
         [Hh]ost) targetos= ;;
         [Ww]indows)
             targetos="mingw32"
             rprefix="."
+
             # Disable hdhomerun & lirc since they use get/freeaddrinfo which is XPSP2+ only
             # BUG Should use HAVE_GETADDRINFO
             args="$args --disable-lirc --disable-hdhomerun"
-            case "$MYTHVER" in
-                # Disable symbol-visibility or build problems
-                0.24*|0.23*) args="$args --disable-symbol-visibility" ;;
-            esac
+
+            # DXVA2
+            [ "$DXVA2" == "yes" ] && args="$args --enable-dxva2"
+
+            # Disable symbol-visibility or build problems on 0.24 & 0.23
+            # Also disabled on master to quieten warnings which otherwise hide real probs
+            args="$args --disable-symbol-visibility"
         ;;
         # BUG the ppc x-compiler defines __vector but the SDK expects vector
         # in CarbonCore/MachineExceptions.h so disable altivec
@@ -1947,15 +1971,58 @@ if [ ! -e "$stampconfig${MYTHBUILD:+.$MYTHBUILD}" -o -n "$MYTHTV_CFG" \
         ${arch:+--arch=$arch} ${cpu:+--cpu=$cpu} \
         $args --compile-type=$MYTHBUILD $MYTHTV_CFG
     set +x
+
     case "$MYTHTARGET" in
         [Hh]ost)
             # So LD_LIBRARY_PATH can override rpath, set RUNPATH
             cat >> config.mak <<< QMAKE_LFLAGS+="-Wl,--enable-new-dtags"
         ;;
     esac
+
+    # This quietens the build noise but is irreversible
+    #cat >> config.mak <<< CCONFIG+=silent
+
+    # Install a 'precis' handler for tools with long command lines
+    # This allows warning messages to be more easily seen
+    precis="$bindir/makelessnoise"
+    cat >> config.mak <<-EOF
+		QMAKE_CC=@$precis CC \$(abspath \$<) \$\$QMAKE_CC
+		QMAKE_CXX=@$precis CXX \$(abspath \$<) \$\$QMAKE_CXX
+		QMAKE_LINK=@$precis LINK \$@ \$\$QMAKE_LINK
+		QMAKE_AR=@$precis AR \$@ \$\$QMAKE_AR
+		QMAKE_MOC=@$precis MOC \$(abspath \$<) \$\$QMAKE_MOC
+	EOF
+    cat > "$precis" <<-EOF && chmod +x "$precis"
+		#!/bin/sh
+		cmd="\$1"
+		tgt="\$2"
+		shift 2
+		case "\$MYTHVERBOSE" in
+		    no|NO|"")
+		        fname=\`basename "\$tgt"\`
+		        dname=\`dirname "\$tgt"\`
+		        if [ -n "\$dname" -a "\$dname" != "." ]; then
+		            dname=\`basename "\$dname"\`
+		            tgt="\$dname/\$fname"
+		        fi
+		        len=\${#tgt}
+		        maxlen=67
+		        if [ \$len -gt \$maxlen ]; then
+		            len=\$(( \$len - \$maxlen + 1 ))
+		            tgt="...\`expr substr "\$tgt" \$len \$maxlen\`"
+		        fi
+		        printf "%-8.8s %.70s\\n" "\$cmd" "\$tgt"
+		    ;;
+		    off|OFF|0) ;;
+		    *) echo "\$@" ;;
+		esac
+		exec \$@
+	EOF
+
     pausecont
     touch "$stampconfig${MYTHBUILD:+.$MYTHBUILD}"
 fi
+
 function helpmyth() {
     echo ""
     echo "ERROR: make failed."
@@ -1966,7 +2033,10 @@ function helpmyth() {
     fi
     exit 1
 }
-$make || helpmyth
+
+[ "$verbose" = "no" ] && make="$make -s"
+MYTHVERBOSE="$verbose" $make || helpmyth
+
 banner "Installing $name ($MYTHBUILD)"
 make_install
 popd >/dev/null
@@ -1975,37 +2045,45 @@ popd >/dev/null
 # Build MythPlugins - http://www.mythtv.org/
 name="mythplugins"
 pushd "$name" >/dev/null
-banner "Building $name branch $MYTHBRANCH ($MYTHBUILD)"
-
-if [ "$MYTHVER" != "master" ]; then
-    dopatches "$name${MYTHVER:+-$MYTHVER}" || rm -f $stampconfig*
-fi
+banner "Building $name branch $branch ($MYTHBUILD)"
 
 [ "$reconfig" = "yes" ] && rm -f $stampconfig*
 if [ ! -e "$stampconfig${MYTHBUILD:+.$MYTHBUILD}" -o -n "$MYTHPLUGINS_CFG" \
         -o ! -e "config.pro" -o ! -e "Makefile" ]; then
     rm -f $stampconfig*
     [ -e Makefile ] && { make_uninstall; make_distclean; } || true
-    # NB patches reqd for mytharchive & mythzoneminder
-    plugins="--disable-mytharchive --disable-mythzoneminder"
+
+    plugins="--enable-all --enable-libvisual --enable-fftw"
+
     if ! isdebug QT ; then
         # These plugins require a debug build of Qt in .pro file
+        [ "$MYTHNEWS" = "yes" ] || plugins="$plugins --disable-mythnews"
+        [ "$MYTHNETVISION" = "yes" ] || plugins="$plugins --disable-mythnetvision"
         case "$MYTHVER" in
-            0.23*|0.24*) plugins="$plugins --disable-mythnews --disable-mythweather --disable-mythnetvision" ;;
-            0.25*|master) plugins="$plugins --disable-mythnews --disable-mythnetvision" ;;
+            ""|0.23*|0.24*) [ "$MYTHWEATHER" = "yes" ] || plugins="$plugins --disable-mythweather" ;;
+            0.25*|master) ;;
         esac
     fi
-    [ "$MYTHTARGET" = "Windows" ] && args="--disable-dcraw" || args=""
-    set -x
-    ./configure "--prefix=$MYTHINSTALL" \
-        "--qmake=$MYTHWORK/$QT/bin/qmake" \
-        "--sysroot=$MYTHINSTALL" \
-        ${xprefix:+--cross-prefix=${xprefix}-} \
-        ${xprefix:+--targetos=MINGW32} \
-        --enable-all $plugins \
-        --enable-libvisual --enable-fftw \
-        $args --compile-type=$MYTHBUILD $MYTHPLUGINS_CFG
-    set +x
+
+    args="--prefix=$MYTHINSTALL --qmake=$MYTHWORK/$QT/bin/qmake --sysroot=$MYTHINSTALL --compile-type=$MYTHBUILD"
+    case "$MYTHTARGET" in
+    [Ww]indows)
+        [ -n "$xprefix" ] && args="$args --cross-prefix=${xprefix}- --targetos=MINGW32"
+        plugins="$plugins --disable-dcraw"
+        # NB patches reqd for Windows for mytharchive & mythzoneminder
+        [ "$MYTHZONEMINDER" = "yes" ] || plugins="$plugins --disable-mythzoneminder"
+        [ "$MYTHARCHIVE" = "yes" ] || plugins="$plugins --disable-mytharchive"
+        ;;
+    MacOSX*)
+        [ -n "$xprefix" ] && args="$args--cross-prefix=${xprefix}- --targetos=Darwin"
+        plugins="$plugins --disable-dcraw"
+        ;;
+    *)
+        [ -n "$xprefix" ] && args="$args--cross-prefix=${xprefix}-"
+        ;;
+    esac
+
+    set -x; ./configure $args $plugins $MYTHPLUGINS_CFG ; set +x
     pausecont
     touch "$stampconfig${MYTHBUILD:+.$MYTHBUILD}"
 fi
@@ -2020,20 +2098,21 @@ popd >/dev/null ; # mythtv
 # Build MythThemes
 if [ "$themes" = "yes" ]; then
     name="myththemes"
-    [ ! -d $name ] && gitclone -b $MYTHBRANCH "$MYTHGIT/$name.git" $name
+    [ ! -d $name ] && gitclone ${MYTHBRANCH:+-b $MYTHBRANCH} "$MYTHGIT/$name.git" $name
     pushd "$name" >/dev/null
 
-    if [ "$MYTHBRANCH" != $( gitbranch .) ]; then
+    branch=`gitbranch .`
+    if [ -n "$MYTHBRANCH" -a "$MYTHBRANCH" != "$branch" ]; then
         banner "Switching to $name branch $MYTHBRANCH"
         git clean -f -d -x >/dev/null
         git checkout -f "$MYTHBRANCH"
+        branch="$MYTHBRANCH"
     elif [ "$clean" = "yes" ]; then
         git clean -f -d -x >/dev/null
         git checkout .
     fi
 
-    banner "Building $name branch $MYTHBRANCH"
-    dopatches "$name${MYTHVER:+-$MYTHVER}" || rm -f "mythconfig.mak"
+    banner "Building $name branch $branch"
     [ "$reconfig" = "yes" ] && rm -f "mythconfig.mak"
     if [ ! -e "mythconfig.mak" ]; then
         [ -e Makefile ] && { make_uninstall; make_distclean; } || true
@@ -2077,15 +2156,19 @@ mythlibs="myth mythfreemheg mythtv mythui mythupnp mythlivemedia"
 case "$MYTHVER" in
     0.23*)        mythlibs="$mythlibs mythdb" ;;
     0.24*)        mythlibs="$mythlibs mythdb mythmetadata" ;;
-    0.25*|master) mythlibs="$mythlibs mythbase mythmetadata" ;;
-    *)            echo "WARNING Installation untested with this version." ;;
+    0.25*|master) mythlibs="$mythlibs mythbase mythmetadata mythservicecontracts" ;;
+    *)            mythlibs="$mythlibs mythbase mythmetadata mythservicecontracts"
+                  echo "WARNING Installation untested with this version." ;;
 esac
 ffmpeglibs="mythavcodec mythavformat mythavutil mythswscale"
 case "$MYTHVER" in
-    0.24*|0.25*|master) ffmpeglibs="$ffmpeglibs mythavcore mythpostproc" ;;
+    0.24*|0.25*|master|"") ffmpeglibs="$ffmpeglibs mythavcore mythpostproc" ;;
 esac
 xtralibs="xml2 freetype mp3lame dvdcss exif ogg vorbis vorbisenc tag cdio cdio_cdda cdio_paranoia visual-0.4"
-QTDLLS="QtCore QtGui QtNetwork QtOpenGL QtSql QtSvg QtWebKit QtXml Qt3Support QtScript"
+QTDLLS="QtCore QtGui QtNetwork QtOpenGL QtSql QtSvg QtWebKit QtXml Qt3Support"
+case "$MYTHVER" in
+    ""|0.25*|master) QTDLLS="$QTDLLS QtScript" ;;
+esac
 
 if [ "$MYTHTARGET" = "Windows" ]; then
     banner "Building MythTV $MYTHTARGET runtime in $windir"
@@ -2254,6 +2337,7 @@ else
             sdk=${sdk##*SDKs/}
             archive="$archive-$sdk-${MYTHTARGET#MacOSX-}"
         ;;
+        [Hh]ost) archive="$archive-$arch" ;;
         *) archive="$archive-$MYTHTARGET" ;;
     esac
     [ -n "$cpu" ] && archive="$archive-$cpu"
