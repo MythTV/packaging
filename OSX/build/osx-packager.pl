@@ -167,7 +167,7 @@ our %depend = (
   'mysqlclient' =>
   {
     'url'
-    => 'http://mysql.he.net/Downloads/MySQL-5.1/mysql-5.1.56.tar.gz',
+    => 'http://downloads.mysql.com/archives/mysql-5.1/mysql-5.1.56.tar.gz',
     'conf'
     =>  [
           '--without-debug',
