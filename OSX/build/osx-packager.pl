@@ -1227,6 +1227,21 @@ if ( $backend && grep(m/MythBackend/, @targets) )
     &AddFakeBinDir($BE);
 }
 
+if ( $backend && grep(m/MythTV-Setup/, @targets) )
+{
+    my $SET = "$SCRIPTDIR/MythTV-Setup.app";
+    my $SRC  = "$PREFIX/bin/mythfilldatabase";
+    if ( -e $SRC )
+    {
+        &Verbose("Installing $SRC into $SET");
+        &Syscall([ '/bin/cp', $SRC, "$SET/Contents/MacOS" ]) or die;
+
+        &Verbose("Updating lib paths of $SET/Contents/MacOS/mythfilldatabase");
+        &Syscall([ @bundler, "$SET/Contents/MacOS/mythfilldatabase" ]) or die;
+    }
+    &AddFakeBinDir($SET);
+}
+
 if ( $jobtools )
 {
     # JobQueue also gets some binaries it might call:
