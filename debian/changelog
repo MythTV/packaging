@@ -25,6 +25,8 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
   * Move Jamu into backend (no longer tied to mythvideo). (LP: #797003)
   * Fix mythvideo to be breaks/replaces. (LP: #797327)
   * Remove jamu and all references to it.  Now built into myth.
+  * Convert to using a rsyslog mechanism for log files.  Thanks Michael
+    Dean.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
 

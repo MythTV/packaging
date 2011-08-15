@@ -20,5 +20,5 @@ end script
 
 script
 	test -f /etc/default/locale && . /etc/default/locale || true
-	LANG=$LANG /usr/bin/mythbackend --logfile /var/log/mythtv/mythbackend.log --user mythtv
+	LANG=$LANG /usr/bin/mythbackend --syslog local7 --user mythtv
 end script
