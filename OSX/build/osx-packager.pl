@@ -52,8 +52,7 @@ our @components = ( 'mythplugins' );
 # The OS X programs that we are likely to be interested in.
 our @targets   = ( 'MythFrontend', 'MythAVTest',  'MythWelcome' );
 our @targetsJT = ( 'MythCommFlag', 'MythJobQueue');
-our @targetsBE = ( 'MythBackend',  'MythFillDatabase', 'MythTV-Setup',
-                   'MythMetadataLookup' );
+our @targetsBE = ( 'MythBackend',  'MythFillDatabase', 'MythTV-Setup');
 
 
 # Patches for MythTV source
@@ -1211,16 +1210,9 @@ if ( $backend && grep(m/MythBackend/, @targets) )
     # Same for default web server page:
     &Syscall([ 'cp', '-pR', "$PREFIX/share/mythtv/html", $share ]) or die;
 
-    # The icon
-    &Syscall([ 'mkdir', '-p', "$BE/Contents/Resources" ]) or die;
-    &Syscall([ 'cp',
-               "$GITDIR/mythtv/programs/mythfrontend/mythfrontend.icns",
-               "$BE/Contents/Resources/application.icns" ]) or die;
-
     # The backend gets all the useful binaries it might call:
     foreach my $binary ( 'mythjobqueue', 'mythcommflag',
-                         'mythpreviewgen', 'mythtranscode', 'mythfilldatabase',
-                         'mythmetadatalookup' )
+                         'mythpreviewgen', 'mythtranscode', 'mythfilldatabase' )
     {
         my $SRC  = "$PREFIX/bin/$binary";
         if ( -e $SRC )
@@ -1248,36 +1240,6 @@ if ( $backend && grep(m/MythTV-Setup/, @targets) )
         &Syscall([ @bundler, "$SET/Contents/MacOS/mythfilldatabase" ]) or die;
     }
     &AddFakeBinDir($SET);
-}
-
-if ( $backend && grep(m/MythMetadataLookup/, @targets) )
-{
-    my $SET = "$SCRIPTDIR/MythMetadataLookup.app";
-    my $SRC  = "$PREFIX/bin/mythmetadatalookup";
-
-    # The icon
-    &Syscall([ 'mkdir', '-p', "$SET/Contents/Resources" ]) or die;
-    &Syscall([ 'cp',
-               "$GITDIR/mythtv/programs/mythfrontend/mythfrontend.icns",
-               "$SET/Contents/Resources/application.icns" ]) or die;
-
-    if ( -e $SRC )
-    {
-        &Verbose("Installing $SRC into $SET");
-        &Syscall([ '/bin/cp', $SRC, "$SET/Contents/MacOS" ]) or die;
-    }
-    &AddFakeBinDir($SET);
-}
-
-if ( $backend && grep(m/MythFillDatabase/, @targets) )
-{
-    my $SET = "$SCRIPTDIR/MythFillDatabase.app";
-
-    # The icon
-    &Syscall([ 'mkdir', '-p', "$SET/Contents/Resources" ]) or die;
-    &Syscall([ 'cp',
-               "$GITDIR/mythtv/programs/mythfrontend/mythfrontend.icns",
-               "$SET/Contents/Resources/application.icns" ]) or die;
 }
 
 if ( $jobtools )
