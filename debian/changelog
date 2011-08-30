@@ -1,3 +1,9 @@
+mythtv (2:0.24.0+fixes.20110706.b491236-0ubuntu2) UNRELEASED; urgency=low
+
+  * Change compile type to profile per discussion in #mythtv again.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 30 Aug 2011 15:55:05 -0500
+
 mythtv (2:0.24.0+fixes.20110706.b491236-0ubuntu1) oneiric; urgency=low
 
   [ Mario Limonciello ]
