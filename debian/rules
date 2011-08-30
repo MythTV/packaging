@@ -9,7 +9,7 @@ include debian/mythtv.make
 #                                      #
 # Architecture Independent Build flags #
 #                                      #
-MYTHTV_CONFIGURE_OPTS +=    --compile-type=debug \
+MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
 				--prefix=/usr \
 				--runprefix=/usr \
 				--enable-lirc \
