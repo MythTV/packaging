@@ -26,6 +26,11 @@ case "$1" in
             fi
         done
 
+        #fix rsyslog permissions
+	if [ -d "$dir" ] && ! dpkg-statoverride --list "$dir" >/dev/null; then
+            chown syslog:mythtv /var/log/mythtv
+        fi
+
         if [ -z "$2" ]; then
             # Migrate from old mythtv -> mythtv-backend
             [ -f /etc/logrotate.d/mythtv ] && \
