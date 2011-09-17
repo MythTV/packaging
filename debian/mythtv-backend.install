@@ -13,7 +13,7 @@ debian/mythtv-setup.desktop 			usr/share/applications
 debian/41-mythtv-permissions.rules		lib/udev/rules.d
 debian/mythtv-backend.if-up.d 			etc/network/if-up.d
 debian/mythtv-setup.sh				usr/share/mythtv
-debian/mythtv-rsyslog.conf etc/rsyslog.d
+debian/40-mythtv-rsyslog.conf etc/rsyslog.d
 
 ## Mythbuntu control centre
 # plugin for mcc-mirobridge

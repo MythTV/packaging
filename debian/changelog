@@ -28,6 +28,8 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
   * Convert to using a rsyslog mechanism for log files.  Thanks Michael
     Dean.
   * Make /var/log/mythtv writable by the syslog user.
+  * Install rsyslog conf as 40-mythtv-rsyslog.conf instead of just
+    mythtv-rsyslog.conf.
 
   [ Pieter Hoekstra (pieter-hoekstra) ]
   * Add missing space to debian/rules preventing some plugin installation.

@@ -22,6 +22,9 @@ rm_conffile() {
 
 
 if [ "$1" = install ] || [ "$1" = upgrade ]; then
+	if [ -f "/etc/rsyslog.d/mythtv-rsyslog.conf" ]; then
+		rm_conffile "mythtv-backend" "/etc/rsyslog.d/mythtv-rsyslog.conf"
+	fi
 	if [ -e "/etc/udev.rules.d/41-mythtv-permissions.rules" ]; then
 		rm_conffile "mythtv-backend" "/etc/udev.rules.d/41-mythtv-permissions.rules"
         fi
