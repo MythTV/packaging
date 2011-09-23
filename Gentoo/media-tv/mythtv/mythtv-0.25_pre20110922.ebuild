@@ -4,10 +4,10 @@
 
 EAPI=2
 PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.25pre-2963-g42fbadb"
+MYTHTV_VERSION="38a7691b8cb35ce3674"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="42fbadb26fa00311ec35de7be116656a02bcc189"
-MYTHTV_SREV="42fbadb"
+MYTHTV_REV="cd002d2bfb49ad38a7691b8cb35ce3674328c4ac"
+MYTHTV_SREV="cd002d2"
 
 inherit flag-o-matic multilib eutils qt4-r2 mythtv toolchain-funcs python
 inherit linux-info
@@ -31,71 +31,75 @@ ${IUSE_VIDEO_CARDS} \
 ${IUSE_INPUT_DEVICES}
 "
 
-RDEPEND="
-    >=net-misc/wget-1.12-r3
-    >=media-libs/freetype-2.0
-	>=media-sound/lame-3.93.1
-	x11-libs/libX11
-	x11-libs/libXext
-	x11-libs/libXinerama
-	x11-libs/libXv
-	x11-libs/libXrandr
-	x11-libs/libXxf86vm
-	x11-libs/qt-core:4[qt3support]
-	x11-libs/qt-gui:4[qt3support]
-	x11-libs/qt-sql:4[qt3support,mysql]
-	x11-libs/qt-opengl:4[qt3support]
-	x11-libs/qt-webkit:4
-	virtual/mysql
-	virtual/opengl
-	virtual/glu
-	|| ( >=net-misc/wget-1.9.1 >=media-tv/xmltv-0.5.43 )
-	alsa? ( >=media-libs/alsa-lib-0.9 )
-	autostart? ( net-dialup/mingetty
-				 x11-wm/evilwm
-				 x11-apps/xset )
-	bluray? ( media-libs/libbluray )
-	dvb? ( media-libs/libdvb media-tv/linuxtv-dvb-headers )
-	dvd? ( media-libs/libdvdcss )
-	ieee1394? (	>=sys-libs/libraw1394-1.2.0
-			    >=sys-libs/libavc1394-0.5.3
-			    >=media-libs/libiec61883-1.0.0 )
-	jack? ( media-sound/jack-audio-connection-kit )
-	lcd? ( app-misc/lcdproc )
-	lirc? ( app-misc/lirc )
-	perl? ( dev-perl/DBD-mysql 
+SDEPEND="
+    >=media-sound/lame-3.93.1
+    virtual/glu
+    virtual/mysql
+    virtual/opengl
+    x11-libs/libX11
+    x11-libs/libXext
+    x11-libs/libXinerama
+    x11-libs/libXv
+    x11-libs/libXrandr
+    x11-libs/libXxf86vm
+    x11-libs/qt-core:4[qt3support]
+    x11-libs/qt-gui:4[qt3support]
+    x11-libs/qt-sql:4[qt3support,mysql]
+    x11-libs/qt-opengl:4[qt3support]
+    x11-libs/qt-webkit:4
+    alsa? ( >=media-libs/alsa-lib-0.9 )
+    dvb? ( media-libs/libdvb media-tv/linuxtv-dvb-headers )
+    ieee1394? ( >=sys-libs/libraw1394-1.2.0
+                >=sys-libs/libavc1394-0.5.3
+                >=media-libs/libiec61883-1.0.0 )
+    jack? ( media-sound/jack-audio-connection-kit )
+    lcd? ( app-misc/lcdproc )
+    lirc? ( app-misc/lirc )
+    perl? ( dev-perl/DBD-mysql
             dev-perl/Net-UPnP
-			>=dev-perl/libwww-perl-5 )
-	pulseaudio? ( media-sound/pulseaudio )
-	python? ( dev-python/mysql-python
+            >=dev-perl/libwww-perl-5 )
+    pulseaudio? ( media-sound/pulseaudio )
+    python? ( dev-python/mysql-python
               dev-python/lxml
-			  dev-python/urlgrabber )
-    video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-180.06 )
-	media-fonts/liberation-fonts
-	media-fonts/corefonts
-	media-fonts/dejavu
-    !media-tv/mythtv-bindings
+              dev-python/urlgrabber )
+    vdpau? ( x11-libs/libvdpau )
     x264? ( >=media-libs/x264-0.0.20100605 )
     xvid? ( >=media-libs/xvid-1.1.0 )
-	<sys-kernel/linux-headers-2.6.38
-	"
+    !media-tv/mythtv-bindings
+    !media-plugins/mythvideo
+    !x11-themes/mythtv-themes
+    "
 
-DEPEND="${RDEPEND}
-	x11-proto/xineramaproto
-	x11-proto/xf86vidmodeproto
-	x11-apps/xinit
-	!x11-themes/mythtv-themes
-	!media-plugins/mythvideo
-	dev-lang/yasm
-	"
+RDEPEND="${SDEPEND}
+    media-fonts/corefonts
+    media-fonts/dejavu
+    media-fonts/liberation-fonts
+    >=media-libs/freetype-2.0
+    x11-apps/xinit
+    || ( >=net-misc/wget-1.12-r3 >=media-tv/xmltv-0.5.43 )
+    autostart? ( net-dialup/mingetty
+                 x11-wm/evilwm
+                 x11-apps/xset )
+    bluray? ( media-libs/libbluray )
+    dvd? ( media-libs/libdvdcss )
+    video_cards_nvidia? ( x11-drivers/nvidia-drivers 
+                          vdpau? ( >=x11-drivers/nvidia-drivers-256 ) )
+    "
+
+DEPEND="${SDEPEND}
+    x11-proto/xineramaproto
+    x11-proto/xf86vidmodeproto
+    x11-apps/xinit
+    dev-lang/yasm
+    "
 
 MYTHTV_GROUPS="video,audio,tty,uucp"
 
 pkg_setup() {
-	python_set_active_version 2
+    python_set_active_version 2
 
-	enewuser mythtv -1 /bin/bash /home/mythtv ${MYTHTV_GROUPS}
-	usermod -a -G ${MYTHTV_GROUPS} mythtv
+    enewuser mythtv -1 /bin/bash /home/mythtv ${MYTHTV_GROUPS}
+    usermod -a -G ${MYTHTV_GROUPS} mythtv
 }
 
 src_prepare() {
@@ -222,10 +226,22 @@ src_install() {
 	keepdir /var/log/mythtv
 	chown -R mythtv "${D}"/var/log/mythtv
 
+
 	insinto /etc/logrotate.d
-	newins "${FILESDIR}"/mythtv.logrotate.d mythtv
+	newins "${FILESDIR}"/mythtv.25.logrotate.d mythtv
+
+    insinto /etc/cron.daily
+    insopts -m0544
+    newins "${FILESDIR}"/runlogcleanup mythtv.logcleanup
+
+    dodir /usr/share/mythtv/bin
+    insinto /usr/share/mythtv/bin
+    insopts -m0555
+    doins "${FILESDIR}"/logcleanup.py
+    
 
 	insinto /usr/share/mythtv/contrib
+    insopts -m0644
 	doins -r contrib/*
 
 	dobin "${FILESDIR}"/runmythfe

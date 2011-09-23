@@ -4,10 +4,10 @@
 
 EAPI=2
 PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.24.1-58-g760c8db"
+MYTHTV_VERSION="7410b77aad6abcc1109"
 MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="760c8db330134fbd4b084473bace157ea778aa27"
-MYTHTV_SREV="760c8db"
+MYTHTV_REV="e16613a3cae2347410b77aad6abcc11096fb749a"
+MYTHTV_SREV="e16613a"
 
 inherit flag-o-matic multilib eutils qt4-r2 mythtv toolchain-funcs python linux-info
 
@@ -28,8 +28,8 @@ ${IUSE_VIDEO_CARDS} \
 ${IUSE_INPUT_DEVICES}
 "
 
-RDEPEND=">=media-libs/freetype-2.0
-	>=media-sound/lame-3.93.1
+SDEPEND="
+    >=media-sound/lame-3.93.1
 	x11-libs/libX11
 	x11-libs/libXext
 	x11-libs/libXinerama
@@ -44,38 +44,45 @@ RDEPEND=">=media-libs/freetype-2.0
 	virtual/mysql
 	virtual/opengl
 	virtual/glu
-	|| ( >=net-misc/wget-1.9.1 >=media-tv/xmltv-0.5.43 )
-	alsa? ( >=media-libs/alsa-lib-0.9 )
+    alsa? ( >=media-libs/alsa-lib-0.9 )
+    dvb? ( media-libs/libdvb media-tv/linuxtv-dvb-headers )
+    ieee1394? (	>=sys-libs/libraw1394-1.2.0
+			    >=sys-libs/libavc1394-0.5.3
+			    >=media-libs/libiec61883-1.0.0 )
+    jack? ( media-sound/jack-audio-connection-kit )
+	lcd? ( app-misc/lcdproc )
+    lirc? ( app-misc/lirc )
+	perl? ( dev-perl/DBD-mysql
+            dev-perl/Net-UPnP
+			>=dev-perl/libwww-perl-5 )
+	pulseaudio? ( media-sound/pulseaudio )
+    python? ( dev-python/mysql-python
+              dev-python/lxml )
+    vdpau? ( x11-libs/libvdpau )
+	xvmc? ( x11-libs/libXvMC )
+    !media-tv/mythtv-bindings
+    !x11-themes/mythtv-themes
+    "
+
+RDEPEND="${SDEPEND}
+	media-fonts/corefonts
+	media-fonts/dejavu
+    >=media-libs/freetype-2.0
+    x11-apps/xinit
+    || ( >=net-misc/wget-1.12-r3 >=media-tv/xmltv-0.5.43 )
 	autostart? ( net-dialup/mingetty
 				 x11-wm/evilwm
 				 x11-apps/xset )
 	bluray? ( media-libs/libbluray )
-	dvb? ( media-libs/libdvb media-tv/linuxtv-dvb-headers )
 	dvd? ( media-libs/libdvdcss )
-	ieee1394? (	>=sys-libs/libraw1394-1.2.0
-			    >=sys-libs/libavc1394-0.5.3
-			    >=media-libs/libiec61883-1.0.0 )
-	jack? ( media-sound/jack-audio-connection-kit )
-	lcd? ( app-misc/lcdproc )
-	lirc? ( app-misc/lirc )
-	perl? ( dev-perl/DBD-mysql 
-            dev-perl/Net-UPnP
-			>=dev-perl/libwww-perl-5 )
-	pulseaudio? ( media-sound/pulseaudio )
-	python? ( dev-python/mysql-python
-              dev-python/lxml )
-	xvmc? ( x11-libs/libXvMC )
-    video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-180.06 )
-	media-fonts/corefonts
-	media-fonts/dejavu
-    !media-tv/mythtv-bindings
+    video_cards_nvidia? ( x11-drivers/nvidia-drivers 
+                          vdpau? ( >=x11-drivers/nvidia-drivers-256 ) )
 	"
 
-DEPEND="${RDEPEND}
+DEPEND="${SDEPEND}
 	dev-lang/yasm
 	x11-proto/xineramaproto
 	x11-proto/xf86vidmodeproto
-	x11-apps/xinit
     "
 
 MYTHTV_GROUPS="video,audio,tty,uucp"

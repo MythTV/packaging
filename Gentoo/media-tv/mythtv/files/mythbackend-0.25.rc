@@ -30,8 +30,8 @@ start() {
 		--exec /usr/bin/mythbackend \
 		--make-pidfile --pidfile /var/run/mythbackend.pid \
 		--background -- --verbose ${MYTH_VERBOSE} \
-        --loglevel ${MYTH_LOGLEVEL} \
-		--logfile /var/log/mythtv
+		--loglevel ${MYTH_LOGLEVEL} \
+		--logpath /var/log/mythtv
 	eend $?
 }
 

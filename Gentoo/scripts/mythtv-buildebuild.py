@@ -270,7 +270,7 @@ if opts.packages is None:
                      'media-plugins/mythzoneminder','media-tv/mythtv-bindings']
     if opts.version is None:
         opts.packages.remove('media-plugins/mythvideo')
-    elif int(opts.version.split('.')[1]) < 25:
+    elif int(opts.version.split('.')[1]) >= 25:
         opts.packages.remove('media-plugins/mythvideo')
         
 else:
