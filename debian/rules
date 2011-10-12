@@ -22,6 +22,7 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
 				--with-bindings=perl \
 				--enable-ffmpeg-pthreads \
 				--enable-pic \
+				--enable-vaapi \
 				--perl-config-opts="INSTALLDIRS=vendor"
 
 ifeq "$(DEB_BUILD_ARCH)" "armel"
