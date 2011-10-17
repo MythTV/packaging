@@ -150,7 +150,7 @@ if [ "$TYPE" = "binary" ]; then
     get-build-deps || die "Error installing build dependencies"
 
 elif [ "$TYPE" = "source" ]; then
-    DEBUILD_FLAGS="-S -sa $DEBUILD_FLAGS"
+    DEBUILD_FLAGS="-S $DEBUILD_FLAGS"
 fi
 
 #update changelog and control files
