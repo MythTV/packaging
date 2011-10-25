@@ -4,16 +4,16 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="18280c8753775e3b54f"
-MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="35468d7d5ce5af18280c8753775e3b54f7ceaf40"
-MYTHTV_SREV="35468d7"
+MYTHTV_VERSION="07e072df6b5e325cd0d"
+MYTHTV_BRANCH="master"
+MYTHTV_REV="becede20371e7907e072df6b5e325cd0d154cdaf"
+MYTHTV_SREV="becede2"
 
 inherit mythtv-plugins flag-o-matic toolchain-funcs eutils
 
 DESCRIPTION="Music player module for MythTV."
 IUSE="aac cdr fftw libvisual projectm opengl sdl"
-KEYWORDS="amd64 x86 ~ppc"
+KEYWORDS="~amd64 ~x86 ~ppc"
 
 RDEPEND=">=media-sound/cdparanoia-3.9.8
 	>=media-libs/libmad-0.15.1b

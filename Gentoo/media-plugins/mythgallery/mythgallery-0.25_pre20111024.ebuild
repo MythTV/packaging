@@ -4,24 +4,24 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="18280c8753775e3b54f"
-MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="35468d7d5ce5af18280c8753775e3b54f7ceaf40"
-MYTHTV_SREV="35468d7"
+MYTHTV_VERSION="07e072df6b5e325cd0d"
+MYTHTV_BRANCH="master"
+MYTHTV_REV="becede20371e7907e072df6b5e325cd0d154cdaf"
+MYTHTV_SREV="becede2"
 
 inherit mythtv-plugins
 
 DESCRIPTION="Module for MythTV."
-IUSE="+exif +opengl raw"
-KEYWORDS="amd64 x86 ~ppc"
+IUSE="exif opengl raw"
+KEYWORDS="~amd64 ~x86 ~ppc"
 
 RDEPEND="exif? ( >=media-libs/libexif-0.6.10 )
          media-libs/tiff
          opengl? ( virtual/opengl )
          raw? ( media-gfx/dcraw )"
 DEPEND="${RDEPEND}"
-
-MTVCONF="$(use_enable exif) $(use_enable exif new-exif) $(use_enable raw dcraw) $(use_enable opengl)"
+MTVCONF="$(use_enable exif) $(use_enable exif new-exif) $(use_enable raw dcraw)
+$(use_enable opengl)"
 
 src_install() {
 	mythtv-plugins_src_install
