@@ -268,10 +268,11 @@ if opts.packages is None:
                      'media-plugins/mythnetvision', 'media-plugins/mythnews',
                      'media-plugins/mythvideo',     'media-plugins/mythweather',
                      'media-plugins/mythzoneminder','media-tv/mythtv-bindings']
-    if opts.version is None:
-        opts.packages.remove('media-plugins/mythvideo')
-    elif int(opts.version.split('.')[1]) >= 25:
-        opts.packages.remove('media-plugins/mythvideo')
+    if not opts.digest:
+        if opts.version is None:
+            opts.packages.remove('media-plugins/mythvideo')
+        elif int(opts.version.split('.')[1]) >= 25:
+            opts.packages.remove('media-plugins/mythvideo')
         
 else:
     opts.packages = opts.packages.split(',')
