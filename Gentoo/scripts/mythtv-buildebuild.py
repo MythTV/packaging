@@ -52,6 +52,22 @@ def process_date(datestr):
         dt.append(tz)
     return datetime.datetime(*dt)
 
+def multi_split(string, separators, merge=True):
+    response = [string]
+    for sep in separators:
+        for index, group in enumerate(response):
+            if sep in group:
+                response.pop(index)
+                for pos, chunk in enumerate(group.split(sep)):
+                    response.insert(index+pos, chunk)
+    if merge:
+        offs = 0
+        for index, group in enumerate(list(response)):
+            if group == "":
+                response.pop(index+offs)
+                offs -= 1
+    return response
+
 class Ebuild( object ):
     def __init__(self, package):
         self.package = package
@@ -82,9 +98,18 @@ class Ebuild( object ):
         request = urllib2.Request(url)
         opener = urllib2.build_opener()
         f = opener.open(request)
-        url = f.url
 
-        self.opts.gitver = url.split('/')[-1][14:-7]
+        for line in f.headers.headers:
+            if not line.startswith('Content-Disposition'):
+                continue
+            line = multi_split(line.strip(), ' =:;')
+            line = dict([line[i:i+2] for i in range(0, len(line), 2)])
+            if line['Content-Disposition'] != 'attachment':
+                raise Exception("requested tarball is not of type 'attachment'")
+            self.opts.gitver = line['filename'][14:-7]
+            break
+        else:
+            raise Exception("could not extract version string from tarball")
 
         if self.opts.tarball is not None:
             return
