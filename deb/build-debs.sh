@@ -8,9 +8,10 @@ die()
 
 help()
 {
-	echo "Usage: $0 git_branch [target_dir]"
+	echo "Usage: $0 git_branch [target_dir] [additional_patches]"
 	echo "git_branch -> mandatory: the GIT branch of MythTV to build"
 	echo "target_dir -> optional: the dir used for the BZR & GIT checkouts"
+	echo "additional_patches -> optional: space separated full path to all patches to apply"
 	echo ""
 	echo "If the target_dir already contains git and bzr checkouts, they"
 	echo "will just be updated to the latest HEAD followed by the git"
@@ -22,16 +23,36 @@ help()
 	echo ""
 	echo " $0 fixes/0.24 /tmp"
 	echo "  This would checkout out the fixes/0.24 branch, fixes packaging and build debs in /tmp"
+	echo ""
+	echo " $0 fixes/0.24 /tmp /full/path/to/patch"
+	echo "  This would checkout the fixes/0.24 branch, fixes packaging, apply the patch called "
+	echo "  'patch' located at /full/path/to/ to the build and then produce debs"
 	exit 0
 }
 
+export QUILT_PATCHES="debian/patches"
+[ -n "$GIT_BRANCH" ] && GIT_BRANCH=""
+[ -n "$DIRECTORY" ] && DIRECTORY=""
+[ -n "$PATCHES" ] && PATCHES=""
 [ -z "$DEBUILD_FLAGS" ] && DEBUILD_FLAGS="-us -uc -i -I.git"
 
 if [ -z "$1" ]; then
 	help
 else
-	GIT_BRANCH="$1"
-	DIRECTORY="$2"
+	for arg in $@; do
+		if [ -z "$GIT_BRANCH" ]; then
+			GIT_BRANCH=$arg
+			continue
+		fi
+		if [ -z "$DIRECTORY" ] && [ -d "$arg" ]; then
+			DIRECTORY=$arg
+			continue
+		fi
+		if [ -f "$arg" ]; then
+			PATCHES="$PATCHES $arg"
+			continue
+		fi
+	done
 	if echo "$GIT_BRANCH" | grep fixes 2>&1 1>/dev/null; then
 		GIT_TYPE="fixes"
 		GIT_MAJOR_RELEASE=$(echo $1 |sed 's,.*0.,,')
@@ -160,9 +181,24 @@ debian/rules update-control-files
 [ -z "$UBUNTU_RELEASE" ] && UBUNTU_RELEASE=$(lsb_release -s -c)
 dch -b --force-distribution -D $UBUNTU_RELEASE ""
 
+#if we have patch arguments, apply them
+if [ -n "$PATCHES" ]; then
+	for PATCH in $PATCHES; do
+		cp $PATCH debian/patches
+		echo $(basename $PATCH) >> debian/patches/series
+		dch -a "Applied $PATCH to build"
+	done
+fi
+
+echo "Testing all patches before building the packages"
+quilt push -aq || (quilt pop -aqf && exit 1)
+quilt pop -aq
+
 #build the packages
+echo "Building the packages"
 debuild $DEBUILD_FLAGS
 
 #remove all patches and cleanup
-quilt pop -af
+echo "Cleaning up"
+quilt pop -aqf
 debian/rules clean
