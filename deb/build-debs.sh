@@ -189,9 +189,15 @@ if [ -n "$PATCHES" ]; then
 	done
 fi
 
+echo "Testing all patches before building the packages"
+quilt push -aq || (quilt pop -aqf && exit 1)
+quilt pop -aq
+
 #build the packages
+echo "Building the packages"
 debuild $DEBUILD_FLAGS
 
 #remove all patches and cleanup
-quilt pop -af
+echo "Cleaning up"
+quilt pop -aqf
 debian/rules clean
