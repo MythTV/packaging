@@ -30,6 +30,7 @@ help()
 	exit 0
 }
 
+export QUILT_PATCHES="debian/patches"
 [ -n "$GIT_BRANCH" ] && GIT_BRANCH=""
 [ -n "$DIRECTORY" ] && DIRECTORY=""
 [ -n "$PATCHES" ] && PATCHES=""
