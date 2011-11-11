@@ -1,3 +1,11 @@
+mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu2) UNRELEASED; urgency=low
+
+  * debian/rules:
+    - Don't modify mythtv/VERSION at all during build.  Only use 
+      debian/DESCRIBE and restore mythtv/VERSION at end of build.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 11 Nov 2011 12:15:22 -0600
+
 mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu1) oneiric; urgency=low
 
   * Change compile type to profile per discussion in #mythtv again.

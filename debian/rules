@@ -67,13 +67,8 @@ endif
 
 #Rather than have a configure/build/install phase, combine them all so we can do each part in order
 override_dh_auto_install:
-	#update Git to parse debian/changelog
-	echo "BRANCH=\"$(GIT_BRANCH)\"" > mythtv/VERSION
-	echo "SOURCE_VERSION=\"$(GIT_HASH)\"" >> mythtv/VERSION
-	if [ -f mythtv/VERSION ]; then \
+	if [ -f mythtv/VERSION ] && [ -f debian/DESCRIBE ]; then \
 		mv mythtv/VERSION mythtv/VERSION.old ;\
-	fi
-	if [ -f debian/DESCRIBE ]; then \
 		cp debian/DESCRIBE mythtv/VERSION ;\
 	fi
 	cd mythtv && sh version.sh `pwd`
