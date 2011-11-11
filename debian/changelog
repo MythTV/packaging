@@ -37,11 +37,97 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
 
-mythtv (2:0.24.0+fixes.20110706.b491236-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu2) UNRELEASED; urgency=low
+
+  * debian/rules:
+    - Don't modify mythtv/VERSION at all during build.  Only use 
+      debian/DESCRIBE and restore mythtv/VERSION at end of build.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 11 Nov 2011 12:15:22 -0600
+
+mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu1) oneiric; urgency=low
 
   * Change compile type to profile per discussion in #mythtv again.
+  * New upstream checkout (1de0431)
+  * >>Upstream changes since last upload (b491236):
+  * [1de0431] Fix inefficiency in marking first/last showings without
+    programids.
+  * [4942639] Fix another invalid-string-format datetime binding.
+  * [8b9e5ce] Fix invalid-string-format date passing to MySQL.
+  * [4bba807] Use correct exception type for error handling. (cherry
+    picked from commit 751a4111b55f629e574970fe5340e1408833180f)
+  * [69e3919] Net Utils: Only select distinct grabbers.
+  * [2e3105d] Fixed MiroBridge abort when Miro metadata has an invalid
+    video filename
+  * [d282ee2] Fixed Jamu unnecessary unicode declarations
+  * [5655302] Fix a segfault in MythUIHelper::LoadCacheImage()
+  * [4bc24ed] RingBuffer: add back inadvertantly removed code that
+    allows the readahead thread to sleep when full.
+  * [8028a58] MythBrowser: Change the user-agent string reported by the
+    browser widget.
+  * [c502e0d] Fix scheduler output ordering.
+  * [515171d] Fix creation of row with autoincrement fields (cherry
+    picked from commit e76745784032591caa79045cdec4e20f68175f89)
+  * [39f6a97] Fix LiveTV channel browsing start channel.
+  * [3a5f788] Fixes #9885. Fixes deadlock when a slave backend
+    disconnect is first seen from within the Scheduler thread. Patch by
+    Ian Dall.
+  * [1cf65bc] RingBuffer: Optimize readahead buffer to completely fill
+    if readblocksize > totfree.
+  * [c212ca8] Fix Theme Chooser theme downloading on remote frontends.
+  * [45ddada] Re-enable the delay for artwork loading in PlaybackBox
+  * [d656310] Fixes #9575. Fix an ambiguous DB query (fixed by
+    [d14b660c16] in master).
+  * [5161a5f] Revert "Force reload of context and stream properties when
+    switching between LiveTV segments."
+  * [cccad82] Don't allow remote mythbackends to upgrade database.
+  * [d525265] Fix mpeg2fix randomly aborting.  OBEY EAGAIN for
+    av_read_frame! :) (cherry picked from commit
+    1a41fec06ee2f6746c9ccb944efcf7ee62e52664)
+  * [5be3cdf] Fix a QT warning about calling killTimer() with an invalid
+    timer id. (cherry picked from commit
+    7ad539e3a4ac21188672791b27dd8e5444a09cbb)
+  * [760c8db] Fixes #9927. Make sure we always join the pthread in the
+    DeviceReadBuffer.
+  * [23305b9] Make sure DeviceReadBuffer::videodevice is never
+    QString::null, this will cause the logging to segfault.
+  * [56350fb] Backports a small portion of the RingBuffer improvements
+    from master.
+  * [8bc2a66] Fix PPC movrel issue in FFmpeg libs.
+  * [be29d21] Fix endian issue in OSD color conversion
+  * [b43b015] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [cebd10c] Fix tzinfo handling in custom Python datetime class
+  * [9024703] Bypass filesize query on recording if possible. Refs #9539
+  * [ced1c78] Avoid updating the group info if the group hasn't changed.
+    Closes #9539
+  * [4f99949] Under some circumstances, using ALSA due to bad rounding,
+    some audio samples would be lost.
+  * [7d69703] Fix a deadlock in the socket handling causing the backend
+    to stop responding to connections.
+  * [051c748] Fix display of MiroBridge command line help
+  * [63b8603] MythMusic: Don't append a '/' if the start directory
+    hasn't been set yet.
+  * [254c9f7] Add escaping of periods at the beginning of a movie title,
+    to work around security mechanism in TMDB API. (cherry picked from
+    commit 1c34d57bf2b5a862fb12d4e7600a8173cb8bd682)
+  * [8f8d662] ttvdb grabber performance improvements Change Log: 1)
+    Removed complex element tree searches from the XSLT stylesheet and
+    substituted XPATH lxml functions 2) Minor docmentation corrections
+  * [6dfda22] Additional patch to pick up changes missed in 944268c20
+  * [944268c] Add Miro 4.0.2 support to MiroBridge   Change Log:   1)
+    Added support for Miro 4.0.2   2) Silenced verbose output from
+    ffmpeg when creating screen shots   3) Fixed oldrecording deletion
+    abort when a source issues two videos that have identical publish
+    dates and durations. Trapped error so no abort but also added every
+    other unique DB field to deletion statment.   4) Minor error message
+    corrections
+  * [a59fa98] Extend the maximum transition times in mythgallery
+  * [a466843] Shortcut the return from the new --fifoinfo mode
+  * [488c7c1] Display format information for the fifo data
+  * [90ac990] Permit remote transcode in fifodir case
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 30 Aug 2011 15:55:05 -0500
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 08 Sep 2011 10:48:38 -0500
 
 mythtv (2:0.24.0+fixes.20110706.b491236-0ubuntu1) oneiric; urgency=low
 
