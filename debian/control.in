@@ -107,7 +107,7 @@ Description: A personal video recorder application (client and server)
 
 Package: mythtv-common
 Architecture: any
-Depends: pwgen, adduser, mysql-client, ttf-freefont, ttf-liberation, ttf-droid, ttf-dejavu, python, ${shlibs:Depends}, ${misc:Depends}
+Depends: pwgen, adduser, mysql-client, ttf-freefont, fonts-liberation | ttf-liberation, fonts-droid | ttf-droid, ttf-dejavu, python, ${shlibs:Depends}, ${misc:Depends}
 Suggests: mythtv-doc
 Conflicts: mythtv (<< 0.8-1), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-gray-osd, mythtv-theme-isthmus
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<< 0.23.0~trunk23548), mythmusic (<< 0.20.99+trunk14393), mythweather (<< 0.20.99+trunk14393), mythcontrols (<< 0.20.trunk19500), mythcontrols, mythtv-theme-mythcenter, mythtv-theme-mythcenter-wide, mythtv-theme-isthmus, mythtv-theme-gray-osd, mythtv-theme-mythbuntu, mythtv-backend (<< 1:0.24.0+fixes27252), mythtv-database (<< 0.24.0~trunk25638)
