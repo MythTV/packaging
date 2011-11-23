@@ -15,8 +15,8 @@ DESCRIPTION="PHP scripts intended to manage MythTV from a web browser."
 IUSE=""
 KEYWORDS="amd64 ppc x86"
 
-RDEPEND="dev-lang/php[curl,json,mysql,session,posix]
-	|| ( <dev-lang/php-5.3[spl,pcre] >=dev-lang/php-5.3 )
+RDEPEND="<dev-lang/php-5.4[curl,json,mysql,session,posix]
+	|| ( <dev-lang/php-5.3[spl,pcre] <dev-lang/php-5.4 )
 	dev-perl/DBI
 	dev-perl/DBD-mysql
 	dev-perl/Net-UPnP"
