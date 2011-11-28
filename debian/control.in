@@ -74,6 +74,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 libimage-size-perl,
                 libdatetime-format-iso8601-perl,
                 libsoap-lite-perl,
+                libx264-dev,
                 libxml-xpath-perl
 
 Package: mythtv
