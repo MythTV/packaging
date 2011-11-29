@@ -36,7 +36,10 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
   [ Pieter Hoekstra (pieter-hoekstra) ]
   * Add missing space to debian/rules preventing some plugin installation.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 08 Feb 2011 10:50:52 -0600
+  [ Thomas Mashos ]
+  * Changed backend upstart job to look at NOT lo, instead of lo
+
+ -- Thomas Mashos <thomas@mashos.com>  Tue, 29 Nov 2011 15:22:48 -0800
 
 mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu2) UNRELEASED; urgency=low
 
