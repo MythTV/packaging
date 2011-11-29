@@ -8,7 +8,10 @@ mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu2) UNRELEASED; urgency=low
   [ Martin Pitt ]
   * debian/control.in: Some ttf-* → fonts-* renames.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 11 Nov 2011 12:15:22 -0600
+  [ Thomas Mashos ]
+  * Changed upstart to look for NOT lo instead of lo
+
+ -- Thomas Mashos <thomas@mashos.com>  Tue, 29 Nov 2011 15:18:59 -0800
 
 mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu1) oneiric; urgency=low
 
