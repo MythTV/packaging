@@ -4,6 +4,7 @@ mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu2) UNRELEASED; urgency=low
   * debian/rules:
     - Don't modify mythtv/VERSION at all during build.  Only use 
       debian/DESCRIBE and restore mythtv/VERSION at end of build.
+  * Enable crystal HD support.
 
   [ Martin Pitt ]
   * debian/control.in: Some ttf-* → fonts-* renames.

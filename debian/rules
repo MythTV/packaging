@@ -12,6 +12,7 @@ include debian/mythtv.make
 MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
 				--prefix=/usr \
 				--runprefix=/usr \
+				--enable-crystalhd \
 				--enable-lirc \
 				--enable-audio-alsa \
 				--enable-audio-oss \
