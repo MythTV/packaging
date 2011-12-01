@@ -32,6 +32,7 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
     mythtv-rsyslog.conf.
   * Build with vaapi support.
   * Build with --enable-libx264 --enable-libmp3lame --enable-libfaac
+  * Build with --enable-libvpx support for VP8 video.
 
   [ Pieter Hoekstra (pieter-hoekstra) ]
   * Add missing space to debian/rules preventing some plugin installation.

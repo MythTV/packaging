@@ -24,6 +24,7 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
 				--enable-pic \
 				--enable-vaapi \
 				--perl-config-opts="INSTALLDIRS=vendor" \
+				--enable-libvpx \
 				--enable-libx264 \
 				--enable-libmp3lame \
 				--enable-libfaac \
