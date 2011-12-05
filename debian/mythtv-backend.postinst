@@ -19,6 +19,7 @@ case "$1" in
                    /var/lib/mythtv/db_backups \
                    /var/lib/mythtv/livetv \
                    /var/lib/mythtv/trailers \
+                   /var/lib/mythtv/streaming \
                    /var/lib/mythtv/videos; do
 	    if [ -d "$dir" ] && ! dpkg-statoverride --list "$dir" >/dev/null; then
                 chown mythtv:mythtv "$dir" || true
