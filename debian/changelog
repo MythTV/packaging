@@ -10,7 +10,7 @@ mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu2) UNRELEASED; urgency=low
   * debian/control.in: Some ttf-* → fonts-* renames.
 
   [ Thomas Mashos ]
-  * Changed upstart to look for NOT lo instead of lo
+  * Changed upstart to look for NOT lo instead of lo (LP: #886321)
 
  -- Thomas Mashos <thomas@mashos.com>  Tue, 29 Nov 2011 15:18:59 -0800
 
