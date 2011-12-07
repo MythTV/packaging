@@ -44,7 +44,7 @@ ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/se
 
 build-tarball:
 	#build the tarball
-	tar czf $(CURDIR)/../mythtv_$(GIT_RELEASE)$(DELIMITTER)$(SUFFIX).orig.tar.gz * --exclude .git --exclude .pc --exclude .bzr --exclude debian
+	tar czf $(CURDIR)/../mythtv_$(GIT_RELEASE)$(DELIMITTER)$(SUFFIX).orig.tar.gz * --exclude-vcs --exclude .pc --exclude debian
 
 get-git-source:
 	#checkout mythtv/mythplugins
