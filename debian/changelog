@@ -1,4 +1,4 @@
-mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20111207.40f3bae-0ubuntu1) precise; urgency=low
 
   [ Mario Limonciello ]
   * debian/rules:
@@ -6,6 +6,55 @@ mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu2) UNRELEASED; urgency=low
       debian/DESCRIBE and restore mythtv/VERSION at end of build.
   * Enable crystal HD support.
   * Exclude all vcs's when building a tarball.
+  * New upstream checkout (40f3bae)
+  * >>Upstream changes since last upload (1de0431):
+  * [40f3bae] Refs #6516. Fix a regression caused by [21445] aka
+    [2fdeb3fc].
+  * [c4ee599] Catch first frame corrupting unsigned count
+  * [f5fd11f] Merge branch 'fixes/0.24' of github.com:MythTV/mythtv into
+    fixes/0.24
+  * [9f9dcf5] Add a UK fixup to remove "All New To 4Music!" which is
+    breaking proper creation of subtitles and therefore duplicate
+    matching.
+  * [07b1cc1] Allows to change the ALSA buffer size
+  * [088335b] Fix DVD and Blu Ray seeking.
+  * [31e9528] Add @ to valid chars on mythfrontend network control
+    command line.
+  * [2b55759] OSD: Fix screen ordering again.
+  * [4299903] libdvdread: fix compilation for ifo_read.c
+  * [b1ff37e] libdvdread: backport upstream changesets r1232 and r1234.
+  * [8b2c972] Fix the Danish virtual keyboard by correcting the ISO-code
+    in its filename. (cherry picked from commit
+    48185237a59b4fd00eb100ebe713873e74a1c479)
+  * [5da2367] Fixed error with 'UTC' dates and some code format clean up
+  * [19a63d4] Allow bad Metadata tags to be bypassed
+  * [fdfc989] Correct copy/paste error in postroll commercial detection
+  * [347ff57] MythRenderOpenGL: Add glu.h header.
+  * [274470c] Fix AAC/LATM playback for streams with changing config
+  * [e89d6a9] Fix potential cash in mythtranscode.
+  * [cb01f30] Fix MythPlayer::GetRawVideoFrame() for mythcommflag.
+  * [a24ecbf] Add ALSA playback support for 24 bits LSB audio.
+  * [35468d7] Fix possible audio corruption.
+  * [19b31f3] Update the Danish translation of mythfrontend and
+    mythgallery.
+  * [5e3c81f] Fixed MiroBridge abort when Miro metadata has no video
+    filename
+  * [c8c1582] Update a few strings in the Danish translation of
+    Mytharchive.
+  * [7713fdf] Fix JACK playback, change default JACK output device
+  * [f006f90] Better handle frame rate changes during fast-
+    forward/rewind.
+  * [5510579] Fix JACK/ALSA compilation
+  * [d7e974e] Fix a bug introduced in SHA1:ad091eccdd.
+  * [e16613a] Revert "Avoid updating the group info if the group hasn't
+    changed. Closes #9539"
+  * [8f865a6] Updated MythMusic Spanish translation from Antonio Marcos
+    Lopez Alonso.
+  * [ff9bbb1] Update MythNetvision Spanish translation from David Lara.
+  * [8459ad8] Regenerate the qm file for the MythGallery Spanish
+    translation.
+  * [11d8959] Updated MythGallery Spanish translation from Antonio
+    Marcos Lopez Alonso.
 
   [ Martin Pitt ]
   * debian/control.in: Some ttf-* → fonts-* renames.
@@ -13,7 +62,7 @@ mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu2) UNRELEASED; urgency=low
   [ Thomas Mashos ]
   * Changed upstart to look for NOT lo instead of lo (LP: #886321)
 
- -- Thomas Mashos <thomas@mashos.com>  Tue, 29 Nov 2011 15:18:59 -0800
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Wed, 07 Dec 2011 10:29:20 -0600
 
 mythtv (2:0.24.0+fixes.20110908.1de0431-0ubuntu1) oneiric; urgency=low
 
