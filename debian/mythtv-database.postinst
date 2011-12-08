@@ -49,7 +49,7 @@ ask_root_pw() {
     if [ "$admin_password" != "" ]; then
         admin_password="-p$admin_password"
     fi
-    SECURITY_INFO="--host=\"$hostname\" --user=\"$admin_username\" $admin_password"
+    SECURITY_INFO="--host=$hostname --user=$admin_username $admin_password"
 }
 
 update_database() {
@@ -94,7 +94,7 @@ case "$1" in
         if [ "$admin_password" != "" ]; then
             admin_password="-p$admin_password"
         fi
-        SECURITY_INFO="--host=\"$hostname\" --user=\"$admin_username\" $admin_password"
+        SECURITY_INFO="--host=$hostname --user=$admin_username $admin_password"
     fi
     
     #If we are running locally, make sure to start mysql first
