@@ -65,10 +65,10 @@
 %define desktop_vendor  xris
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25pre-3459-ge8909ce
+%define vers_string v0.25pre-3945-gab02583
 
 # Git Revision number and branch ID
-%define _gitrev 3459.ge8909ce
+%define _gitrev 3945.gab02583
 %define branch master
 
 #
@@ -290,6 +290,8 @@ BuildRequires:  perl(Image::Size)
 Requires:       perl(Image::Size)
 BuildRequires:  perl(SOAP::Lite)
 Requires:       perl(SOAP::Lite)
+BuildRequires:  perl(JSON)
+Requires:       perl(JSON)
 %endif
 
 %if %{with_mythzoneminder}
@@ -1154,8 +1156,7 @@ fi
 %doc mythtv/README* mythtv/UPGRADING
 %doc mythtv/AUTHORS mythtv/COPYING mythtv/FAQ
 %doc mythtv/database mythtv/keys.txt
-%doc mythtv/docs/*.html mythtv/docs/*.png
-%doc mythtv/docs/*.txt mythtv/contrib
+%doc mythtv/contrib
 %doc %{_datadir}/mythtv/fonts/*.txt
 %doc mythtv/PACKAGE-LICENSING
 
@@ -1413,6 +1414,11 @@ fi
 ################################################################################
 
 %changelog
+
+* Wed Dec 28 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Remove official docs (now on the wiki)
+- Mythweather needs perl(JSON)
+
 * Sat Oct 06 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Add mythutil
 
