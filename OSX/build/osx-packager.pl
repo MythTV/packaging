@@ -320,6 +320,7 @@ osx-packager.pl - build OS X binary packages for MythTV
    -srcdir  <path>  build using (fresh copy of) provided root mythtv directory
    -force           do not check for SVN validity
    -noclean         use with -nohead, do not re-run configure nor clean
+   -bootstrap       exit after building all thirdparty components
 
 =head1 DESCRIPTION
 
@@ -391,6 +392,7 @@ Getopt::Long::GetOptions(\%OPT,
                          'noclean',
 			 'archives=s',
 			 'buildprofile=s',
+			 'bootstrap',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -811,6 +813,10 @@ foreach my $sw ( @build_depends )
     }
 }
 
+if ( $OPT{'bootstrap'} )
+{
+    exit;
+}
 
 ### build MythTV
 
