@@ -321,6 +321,7 @@ osx-packager.pl - build OS X binary packages for MythTV
    -force           do not check for SVN validity
    -noclean         use with -nohead, do not re-run configure nor clean
    -bootstrap       exit after building all thirdparty components
+   -nohacks         don't use Nigel's hacks
 
 =head1 DESCRIPTION
 
@@ -393,6 +394,7 @@ Getopt::Long::GetOptions(\%OPT,
 			 'archives=s',
 			 'buildprofile=s',
 			 'bootstrap',
+			 'nohacks',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -903,7 +905,7 @@ elsif ( ! $OPT{'nohead'} )
 
     # Remove Nigel's frontend building speedup hack
     chdir "$GITDIR/mythtv" or die;
-    &DoSpeedupHacks('programs/programs.pro', '');
+    &DoSpeedupHacks('programs/programs.pro', '') unless $OPT{'nohacks'};
 
     my @gitcheckoutflags;
 
@@ -1016,7 +1018,7 @@ foreach my $comp (@comps)
     {
         # Remove/add Nigel's frontend building speedup hack
         &DoSpeedupHacks('programs/programs.pro',
-                        'mythfrontend mythavtest mythpreviewgen mythwelcome');
+                        'mythfrontend mythavtest mythpreviewgen mythwelcome') unless $OPT{'nohacks'};
     }
 
     &Verbose("Making $comp");
