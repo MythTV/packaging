@@ -156,7 +156,11 @@ then
 			LOGOUT_NOT=$?
 			if [ "$LOGOUT_NOT" = "0" ]; then
 				if [ "$DE" = "gnome" ]; then
-					gnome-session-save --kill
+					if which gnome-session-save; then
+						gnome-session-save --kill
+					else
+						gnome-session-quit --logout
+					fi
 				elif [ "$DE" = "kde" ]; then
 					dcop ksmserver ksmserver logout 0 0 0
 				elif [ "$DE" = "xfce" ]; then
