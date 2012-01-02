@@ -160,6 +160,7 @@ then
 						gnome-session-save --kill
 					else
 						gnome-session-quit --logout
+					fi
 				elif [ "$DE" = "kde" ]; then
 					dcop ksmserver ksmserver logout 0 0 0
 				elif [ "$DE" = "xfce" ]; then
