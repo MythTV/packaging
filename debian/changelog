@@ -5,6 +5,9 @@ mythtv (2:0.24.0+fixes.20111207.40f3bae-0ubuntu2) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * Use gnome-session-quit if gnome-session-save isn't found.  (LP: #908315)
+  * Don't start mythtv-backend if it wasn't already running unless the user wants
+    it started.
+  * Don't offer to stop mythtv-backend if it's not running. (LP: #897467)
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 08 Dec 2011 10:10:23 -0600
 

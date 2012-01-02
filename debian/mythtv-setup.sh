@@ -17,20 +17,34 @@ symlink
 
 #if group membership is okay, go ahead and continue
 if [ "$IGNORE_NOT" = "0" ]; then
-
-	dialog_question "MythTV Setup Preparation" "Mythbackend must be closed before continuing.\nIs it OK to close any currently running mythbackend processes?"
-	CLOSE_NOT=$?
+	RUNNING=$(status mythtv-backend | grep running)
+	if [ -n "$RUNNING" ]; then
+		dialog_question "MythTV Setup Preparation" "Mythbackend must be closed before continuing.\nIs it OK to close any currently running mythbackend processes?"
+		CLOSE_NOT=$?
+	else
+		CLOSE_NOT=0
+	fi
 	if [ "$CLOSE_NOT" = "0" ]; then
-		if [ "$DE" = "kde" ]; then
-			$SU_TYPE stop mythtv-backend
-		else
-			$SU_TYPE stop mythtv-backend --message "Please enter your current login password to stop mythtv-backend."
+		if [ -n "$RUNNING" ]; then
+			if [ "$DE" = "kde" ]; then
+				$SU_TYPE stop mythtv-backend
+			else
+				$SU_TYPE stop mythtv-backend --message "Please enter your current login password to stop mythtv-backend."
+			fi
 		fi
 		xterm -title "MythTV Setup Terminal" -e taskset -c 0 /usr/bin/mythtv-setup.real "$@"
-		if [ "$DE" = "kde" ]; then
-			$SU_TYPE start mythtv-backend
+		if [ -z "$RUNNING" ]; then
+			dialog_question "Start backend" "Would you like to start the mythtv backend?"
+			START_NOT=$?
 		else
-			$SU_TYPE start mythtv-backend --message "Please enter your current login password to start mythtv-backend."
+			START_NOT=0
+		fi
+		if [ "$START_NOT" = "0" ]; then
+			if [ "$DE" = "kde" ]; then
+				$SU_TYPE start mythtv-backend
+			else
+				$SU_TYPE start mythtv-backend --message "Please enter your current login password to start mythtv-backend."
+			fi
 		fi
 		dialog_question "Fill Database?" "Would you like to run mythfilldatabase?"
 		DATABASE_NOT=$?
