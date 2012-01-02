@@ -3,6 +3,9 @@ mythtv (2:0.24.0+fixes.20111207.40f3bae-0ubuntu2) UNRELEASED; urgency=low
   [ Ryan Davies ]
   * Fix bad quote escaping on mythtv-database postinst.  (LP: #829066)
 
+  [ Mario Limonciello ]
+  * Use gnome-session-quit if gnome-session-save isn't found.  (LP: #908315)
+
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 08 Dec 2011 10:10:23 -0600
 
 mythtv (2:0.24.0+fixes.20111207.40f3bae-0ubuntu1) precise; urgency=low
