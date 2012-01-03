@@ -4,10 +4,10 @@
 
 EAPI=2
 PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.25pre-3841-g1da9d23"
+MYTHTV_VERSION="v0.25pre-3996-gd354002"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="1da9d23d2838bc2d2e0bc06e2e9e1d382897d21d"
-MYTHTV_SREV="1da9d23"
+MYTHTV_REV="d35400280da1bfd95c4d43df2b5a82516914ee0d"
+MYTHTV_SREV="d354002"
 
 inherit flag-o-matic multilib eutils qt4-r2 mythtv toolchain-funcs python
 inherit linux-info
@@ -25,8 +25,8 @@ alsa jack pulseaudio \
 debug \
 perl python \
 vdpau vaapi crystalhd \
-xvid x264 \
-+lame \
+xvid x264 vpx \
++lame faac \
 ${IUSE_VIDEO_CARDS} \
 ${IUSE_INPUT_DEVICES}
 "
@@ -66,6 +66,8 @@ SDEPEND="
     vdpau? ( x11-libs/libvdpau )
     x264? ( >=media-libs/x264-0.0.20100605 )
     xvid? ( >=media-libs/xvid-1.1.0 )
+    vpx? ( media-libs/libvpx )
+    faac? ( media-libs/faac )
     !media-tv/mythtv-bindings
     !media-plugins/mythvideo
     !x11-themes/mythtv-themes
@@ -192,6 +194,9 @@ src_configure() {
 	myconf="${myconf} $(use_enable lame libmp3lame)"
 	myconf="${myconf} $(use_enable xvid libxvid)"
 	myconf="${myconf} $(use_enable x264 libx264)"
+    myconf="${myconf} $(use_enable vpx libvpx)"
+    myconf="${myconf} $(use_enable faac libfaac)"
+    myconf="${myconf} --enable-nonfree"
 
 	use input_devices_joystick || myconf="${myconf} --disable-joystick-menu"
 
