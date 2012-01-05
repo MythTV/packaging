@@ -425,8 +425,8 @@ if ( $OPT{'nohead'} && ! $OPT{'force'} )
     if ( ! -d $GITTOP )
     {   die "No source code to build?"   }
 
-    if ( ! `grep refs/heads/master $GITTOP/HEAD` )
-    {   die "Source code does not match GIT master"   }
+    if ( ! `grep refs/heads/fixes/0.24 $GITTOP/HEAD` )
+    {   die "Source code does not match GIT fixes/0.24"   }
 }
 elsif ( $OPT{'gitrev'} =~ m,^fixes/, && $OPT{'gitrev'} lt "fixes/0.23" )
 {
@@ -460,7 +460,7 @@ mkdir $PREFIX;
 our $SRCDIR = "$WORKDIR/src";
 mkdir $SRCDIR;
 
-my $gitrevision = 'master';  # Default thingy to checkout
+my $gitrevision = 'fixes/0.24';  # Default thingy to checkout
 
 our $GITDIR = "$SRCDIR/myth-git";
 
