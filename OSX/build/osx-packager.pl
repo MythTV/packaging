@@ -452,9 +452,12 @@ END
     die;
 }
 
+our $WORKDIR = "$SCRIPTDIR/.osx-packager";
+mkdir $WORKDIR;
+
 if ( $OPT{'nohead'} && ! $OPT{'force'} )
 {
-    my $GITTOP="$SCRIPTDIR/.osx-packager/src/myth-git/.git";
+    my $GITTOP="$WORKDIR/src/myth-git/.git";
 
     if ( ! -d $GITTOP )
     {   die "No source code to build?"   }
@@ -473,9 +476,6 @@ END
     die;
 }
 
-
-our $WORKDIR = "$SCRIPTDIR/.osx-packager";
-mkdir $WORKDIR;
 
 # Do we need to force a case-sensitive disk image?
 if (0 &&       # No. MythTV source doesn't require it at the moment.
