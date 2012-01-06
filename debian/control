@@ -45,6 +45,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 libudev-dev,
                 libclass-dbi-perl,
                 libnet-upnp-perl,
+                libjson-perl,
                 libwww-perl,
                 python-oauth,
                 python-lxml,
@@ -368,6 +369,7 @@ Depends: mythtv-frontend (>= ${binary:Version}),
          libwww-perl,
          libxml-simple-perl,
          libdatetime-format-iso8601-perl,
+         libjson-perl,
          libxml-xpath-perl
 Conflicts: mythtv-common (<< 0.20.99)
 Replaces:  mythtv-common (<< 0.20.99)
