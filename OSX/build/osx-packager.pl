@@ -455,7 +455,7 @@ END
 our $WORKDIR = "$SCRIPTDIR/.osx-packager";
 mkdir $WORKDIR;
 
-if ( $OPT{'nohead'} && ! $OPT{'force'} )
+if ( $OPT{'nohead'} && ! $OPT{'force'} && ! $OPT{'srcdir'} )
 {
     my $GITTOP="$WORKDIR/src/myth-git/.git";
 
