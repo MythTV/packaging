@@ -263,6 +263,7 @@ exit 0"   > pkg-config ; '.
                    'ln -sf libQtNetwork.dylib  libQtNetwork_debug.dylib  ; '.
                    'ln -sf libQtCore.dylib     libQtCore_debug.dylib     ; '.
                    'ln -sf libQtWebKit.dylib   libQtWebKit_debug.dylib   ; '.
+                   'ln -sf libQtScript.dylib   libQtScript_debug.dylib   ; '.
                    'rm -f $PREFIX/bin/pkg-config ; '.
                    '',
     'parallel-make' => 'yes'
