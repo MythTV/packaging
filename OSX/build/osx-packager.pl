@@ -319,6 +319,7 @@ osx-packager.pl - build OS X binary packages for MythTV
    -m32             build for a 32-bit environment
    -plugins <str>   comma-separated list of plugins to include
    -srcdir  <path>  build using (fresh copy of) provided root mythtv directory
+   -pkgsrcdir  <path>  build using (fresh copy of) provided packaging directory
    -force           do not check for SVN validity
    -noclean         use with -nohead, do not re-run configure nor clean
    -bootstrap       exit after building all thirdparty components
@@ -390,6 +391,7 @@ Getopt::Long::GetOptions(\%OPT,
                          'm32',
                          'plugins=s',
                          'srcdir=s',
+                         'pkgsrcdir=s',
                          'force',
                          'noclean',
 			 'archives=s',
@@ -883,7 +885,14 @@ if ( $OPT{'srcdir'} )
     &Syscall(['mkdir', '-p', $GITDIR]);
     foreach my $dir ( @comps )
     {
-        &Syscall(['cp', '-pR', "$OPT{'srcdir'}/$dir", "$GITDIR/$dir"]);
+        if ($dir == 'packaging' && $OPT{'pkgsrcdir'})
+        {
+            &Syscall(['cp', '-pR', "$OPT{'pkgsrcdir'}", "$GITDIR/$dir"]);
+        }
+        else
+        {
+            &Syscall(['cp', '-pR', "$OPT{'srcdir'}/$dir", "$GITDIR/$dir"]);
+        }
     }
     &Syscall("mkdir -p $GITDIR/mythtv/config")
 }
