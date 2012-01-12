@@ -885,7 +885,7 @@ if ( $OPT{'srcdir'} )
     &Syscall(['mkdir', '-p', $GITDIR]);
     foreach my $dir ( @comps )
     {
-        if ($dir == 'packaging' && $OPT{'pkgsrcdir'})
+        if ($dir eq 'packaging' && $OPT{'pkgsrcdir'})
         {
             &Syscall(['cp', '-pR', "$OPT{'pkgsrcdir'}", "$GITDIR/$dir"]);
         }
