@@ -160,9 +160,12 @@ our %depend = (
     'conf' => [ '--disable-asm-optimizations' ]
   },
 
+  # pkgconfig 0.26 and above do not include glib which is required to compile
+  # glib requires pkgconfig to compile, so it's a chicken and egg problem.
+  # Use nothing newer than 0.25 on OSX.
   'pkgconfig' =>
   {
-    'url' => "http://pkgconfig.freedesktop.org/releases/pkg-config-0.26.tar.gz"
+    'url' => "http://pkgconfig.freedesktop.org/releases/pkg-config-0.25.tar.gz"
   },
 
   'dvdcss' =>
