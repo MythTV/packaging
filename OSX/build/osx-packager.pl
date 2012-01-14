@@ -65,6 +65,7 @@ our %build_profile = (
     'mythtv'
     => [
         'ccache',
+        'pkgconfig'
         'dvdcss',
         'freetype',
         'lame',
@@ -89,6 +90,7 @@ our %build_profile = (
     'mythtv'
     =>  [
         'ccache',
+        'pkgconfig'
         'dvdcss',
         'freetype',
         'lame',
@@ -156,6 +158,11 @@ our %depend = (
     'url' => "$sourceforge/sourceforge/flac/flac-1.1.4.tar.gz",
     # Workaround Intel problem - Missing _FLAC__lpc_restore_signal_asm_ia32
     'conf' => [ '--disable-asm-optimizations' ]
+  },
+
+  'pkgconfig' =>
+  {
+    'url' => "http://pkgconfig.freedesktop.org/releases/pkg-config-0.26.tar.gz"
   },
 
   'dvdcss' =>
