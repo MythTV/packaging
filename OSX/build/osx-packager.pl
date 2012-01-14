@@ -65,7 +65,7 @@ our %build_profile = (
     'mythtv'
     => [
         'ccache',
-        'pkgconfig'
+        'pkgconfig',
         'dvdcss',
         'freetype',
         'lame',
@@ -90,7 +90,7 @@ our %build_profile = (
     'mythtv'
     =>  [
         'ccache',
-        'pkgconfig'
+        'pkgconfig',
         'dvdcss',
         'freetype',
         'lame',
