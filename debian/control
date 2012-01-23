@@ -78,6 +78,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 libsoap-lite-perl,
                 libx264-dev,
                 libvpx-dev,
+                libavahi-compat-libdnssd-dev,
                 libxml-xpath-perl
 
 Package: mythtv
