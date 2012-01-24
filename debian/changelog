@@ -35,6 +35,7 @@ mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
   * Build with --enable-libvpx support for VP8 video.
   * Create a new "Streaming" storage group by default on the backend.
   * Build depends on avahi for airtunes/airplay support.
+  * Build depends on libssl for crypto support in airtunes.
 
   [ Pieter Hoekstra (pieter-hoekstra) ]
   * Add missing space to debian/rules preventing some plugin installation.
