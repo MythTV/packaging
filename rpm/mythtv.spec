@@ -65,10 +65,10 @@
 %define desktop_vendor  xris
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25pre-3945-gab02583
+%define vers_string v0.25pre-4209-g934041b
 
 # Git Revision number and branch ID
-%define _gitrev 3945.gab02583
+%define _gitrev 4209.g934041b
 %define branch master
 
 #
@@ -266,8 +266,6 @@ BuildRequires:  zlib-devel
 %if %{with_mythmusic}
 BuildRequires:  libcdaudio-devel >= 0.99.6
 BuildRequires:  cdparanoia-devel
-BuildRequires:  libvisual-devel
-BuildRequires:  SDL-devel
 %endif
 
 %if %{with_mythnews}
@@ -858,23 +856,21 @@ EOF
 # Add execute bits to the various python helper scripts
     find programs/scripts/metadata -name '*.py' -exec chmod +x "{}" \;
 
+# Fix /mnt/store -> /var/lib/mythtv
+    sed -i -e's,/mnt/store,%{_localstatedir}/lib/mythtv,' libs/libmythbase/storagegroup.cpp
+
 # On to mythplugins
 cd ..
 
 ##### MythPlugins
-%if %{with_plugins}
-
-cd mythplugins
-
-# Fix /mnt/store -> /var/lib/mythmusic
-    cd mythmusic
-    sed -i -e's,/mnt/store/music,%{_localstatedir}/lib/mythmusic,' mythmusic/globalsettings.cpp
-    cd ..
-
-# And back to the compile root
-cd ..
-
-%endif
+#%if %{with_plugins}
+#
+#cd mythplugins
+#
+## And back to the compile root
+#cd ..
+#
+#%endif
 
 ################################################################################
 
@@ -1030,9 +1026,7 @@ cd mythplugins
         --disable-mythnetvision \
     %endif
         --enable-opengl \
-        --enable-libvisual \
-        --enable-fftw \
-        --enable-sdl
+        --enable-fftw
 
     make %{?_smp_mflags}
 
@@ -1414,6 +1408,10 @@ fi
 ################################################################################
 
 %changelog
+
+* Sun Jan 29 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Remove mythmusic configure options that no longer exist
+- Fix storage group location from /mnt/store to /var/lib/mythtv
 
 * Wed Dec 28 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Remove official docs (now on the wiki)
