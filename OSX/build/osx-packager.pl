@@ -82,6 +82,7 @@ our %build_profile = (
         'libogg',
         'vorbis',
         'flac',
+        'libcddb',
         'libcdio',
        ],
      ],
@@ -294,6 +295,11 @@ exit 0"   > pkg-config ; '.
   'ccache' =>
   {
     'url'  => 'http://samba.org/ftp/ccache/ccache-3.1.4.tar.bz2',
+  },
+
+  'libcddb' =>
+  {
+    'url' => 'http://prdownloads.sourceforge.net/libcddb/libcddb-1.3.2.tar.bz2',
   },
 
   'libcdio' =>
