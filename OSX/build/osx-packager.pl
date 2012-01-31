@@ -82,6 +82,7 @@ our %build_profile = (
         'libogg',
         'vorbis',
         'flac',
+        'libcdio',
        ],
      ],
   '0.24-fixes'
@@ -293,6 +294,11 @@ exit 0"   > pkg-config ; '.
   'ccache' =>
   {
     'url'  => 'http://samba.org/ftp/ccache/ccache-3.1.4.tar.bz2',
+  },
+
+  'libcdio' =>
+  {
+    'url' => 'http://ftp.gnu.org/pub/gnu/libcdio/libcdio-0.83.tar.bz2',
   },
 
 );
