@@ -453,7 +453,6 @@ Package: mythnetvision
 Architecture: any
 Depends: mythtv-frontend (>= ${binary:Version}), 
          mythbrowser (>= ${binary:Version}), 
-         libmyth-python (>= ${binary:Version}), 
          python-feedparser, 
          python-pycurl,
          ${shlibs:Depends}, 
