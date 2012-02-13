@@ -1,12 +1,25 @@
-mythtv (2:0.25.0~master.20120213.b4c909a-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.25.0~master.20120214.ab4a02f-0ubuntu1) precise; urgency=low
 
   * debian/control.in:
     - BD on libcdio-paranoia-dev
     - Drop mythnetvision libmyth-python dependency.  It's already a dependency
       in mythtv-frontend (which is a dependency of mythnetvision)
   * Drop 0.25_abi patch, upstream now.
+  * New upstream checkout (ab4a02f)
+  * >>Upstream changes since last upload (b4c909a):
+  * [ab4a02f] Bump core libraries version to 0.25
+  * [975a9f9] Bump plugin lib version to 0.25
+  * [9cdbaeb] Ensure searchtype and searchfor strings are set properly
+    no matter how the RecordingRule was loaded.
+  * [2611243] Fix 'searchtype' string being set incorrectly by
+    eliminating duplicate code. This string is set in
+    RecordingRule::ToMap() which is called two lines earlier but there
+    it's more intelligent and won't set the string to 'Unknown Search'
+    when the rule isn't a search.
+  * [c1aadbb] Changed Licensing to GPL v2 or later.
+  * [36f1f1d] Added copyright/license info for gCompress
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 13 Feb 2012 14:43:55 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 13 Feb 2012 15:38:52 -0600
 
 mythtv (2:0.25.0~master.20120213.b4c909a-0ubuntu1) precise; urgency=low
 
