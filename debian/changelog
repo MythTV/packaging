@@ -1,5 +1,7 @@
-mythtv (2:0.25.0~master.20110103.86ab1b2-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.25.0~master.20120213.777b3c3-0ubuntu1) UNRELEASED; urgency=low
 
+  [ Mario Limonciello ]
+  * Update to pre-0.25 snapshot, post feature freeze.
   * Drop opengl vsync support.
   * Add new Tieresias fonts to mythtv-common.
   * Drop mythvideo readme file.
