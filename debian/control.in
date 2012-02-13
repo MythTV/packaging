@@ -247,6 +247,7 @@ Description: Common library code for MythTV and add-on modules (development)
 
 Package: php-mythtv
 Architecture: all
+Depends:  ${misc:Depends}
 Description: PHP Bindings for MythTV
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
