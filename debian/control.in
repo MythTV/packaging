@@ -81,6 +81,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 libavahi-compat-libdnssd-dev,
                 libssl-dev,
                 libcdio-cdda-dev,
+                libcdio-paranoia-dev,
                 libxml-xpath-perl
 
 Package: mythtv
