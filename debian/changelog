@@ -2,6 +2,7 @@ mythtv (2:0.25.0~master.20120213.b4c909a-0ubuntu2) UNRELEASED; urgency=low
 
   * debian/control.in:
     - BD on libcdio-paranoia-dev
+  * Drop 0.25_abi patch, upstream now.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 13 Feb 2012 14:43:55 -0600
 
