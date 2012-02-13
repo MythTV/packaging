@@ -40,6 +40,7 @@ mythtv (2:0.25.0~master.20120213.777b3c3-0ubuntu1) UNRELEASED; urgency=low
   * Create a new "Streaming" storage group by default on the backend.
   * Build depends on avahi for airtunes/airplay support.
   * Build depends on libssl for crypto support in airtunes.
+  * Build depends on libcdio-cdda-dev for mythmusic.
 
   [ Pieter Hoekstra (pieter-hoekstra) ]
   * Add missing space to debian/rules preventing some plugin installation.
