@@ -32,6 +32,8 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
 				--enable-nonfree
 ifeq "$(DEB_BUILD_ARCH)" "armel"
 	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl
+else ifeq "$(DEB_BUILD_ARCH)" "armhf"
+	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl
 else
 	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video
 endif
@@ -59,7 +61,9 @@ MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \
                               --qmake=/usr/bin/qmake \
 
 ifeq "$(DEB_BUILD_ARCH)" "armel"
-	  MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
+	MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
+else ifeq "$(DEB_BUILD_ARCH)" "armhf"
+	MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
 endif
 
 #Use moar CPUs for jya
