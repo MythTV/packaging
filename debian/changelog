@@ -53,7 +53,7 @@ mythtv (2:0.25.0~master.20120213.b4c909a-0ubuntu1) precise; urgency=low
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 13 Feb 2012 14:20:58 -0600
 
-mythtv (2:0.24.0+fixes.20111207.40f3bae-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.24.0+fixes.20120123.e4660d6-0ubuntu2) UNRELEASED; urgency=low
 
   [ Ryan Davies ]
   * Fix bad quote escaping on mythtv-database postinst.  (LP: #829066)
@@ -64,8 +64,38 @@ mythtv (2:0.24.0+fixes.20111207.40f3bae-0ubuntu2) UNRELEASED; urgency=low
     it started.
   * Don't offer to stop mythtv-backend if it's not running. (LP: #897467)
   * BD & Depends on libjson-perl. (LP: #911864)
+  * New upstream checkout (e4660d6)
+  * >>Upstream changes since last upload (40f3bae):
+  * [e4660d6] Fix "Clear Override" to not create invalid rules.
+  * [54c4d39] Fix a compiler warning
+  * [af6364b] CEA-708: Fix delayed presentation of some captions.
+  * [4627dc9] Bump version string in VERSION
+  * [440ad9c] Do not allow channels to be inserted from xmltv for
+    unsuitable source types
+  * [4e41fb2] Update HTML/PDF/TXT HOWTO for -fixes
+  * [6e86202] Update "Removing unwanted channels" instructions
+  * [60db2e9] Update references to SVN in -fixes docs
+  * [a99ab35] Fix warnings in 1262 DB upgrade.
+  * [b151996] Correct timestamps usage in Perl bindings
+  * [294968b] Fix %CHANNUM% being displayed in the Terra OSD for videos.
+  * [4f6c691] Per request from Devin, include error when FE_GET_INFO
+    ioctl fails.
+  * [cfcea7a] Fix yrnoxml weather script
+  * [9b7d10d] Oops, remove a debugging print from BBC Weather code
+    (cherry picked from commit e9417bd100ab976cfa3f206e110124e77edf40be)
+  * [623ae27] Redo BBC Weather source
+  * [662aa3d] MythVideo: Avoid crashing if child item no longer exists.
+  * [4125a40] Enhance UK EIT fixup to support "QuotedSubtitles".
+  * [f7b28e5] Fix a potential segfault if MDM::downloadNow() times out.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 08 Dec 2011 10:10:23 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 23 Jan 2012 21:47:11 -0600
+
+mythtv (2:0.24.0+fixes.20111207.40f3bae-0ubuntu2) precise; urgency=low
+
+  * Make libcrystalhd-dev build-dep only for i386 and amd64 since the
+    package is only available there. Test built on powerpc.
+
+ -- Ben Collins <bcollins@ubuntu.com>  Thu, 19 Jan 2012 04:25:57 +0000
 
 mythtv (2:0.24.0+fixes.20111207.40f3bae-0ubuntu1) precise; urgency=low
 
