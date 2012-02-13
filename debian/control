@@ -5,7 +5,7 @@ Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
 Uploaders: Mario Limonciello <superm1@ubuntu.com>,
            Andres Mejia <mcitadel@gmail.com>,
 Homepage: http://www.mythtv.org
-Standards-Version: 3.8.4
+Standards-Version: 3.9.2
 Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-master
 Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-master
 Build-Conflicts: libqt3-mt-dev
