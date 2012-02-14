@@ -1,14 +1,38 @@
-mythtv (2:0.25.0~master.20120214.ab4a02f-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.25.0~master.20120214.f853a5b-0ubuntu1) precise; urgency=low
 
   [ Mario Limonciello ]
   * Fix armhf FTBFS.
   * Conflicts/Replaces on libmyth-0.24-0 for now until a better place for
     some of the common libraries is found.
+  * New upstream checkout (f853a5b)
+  * >>Upstream changes since last upload (ab4a02f):
+  * [f853a5b] Fix mingw build.
+  * [494bc90] Merge branch 'master' of github.com:MythTV/mythtv
+  * [bcc9e8c] Minor compatibility changes for VS2010.
+  * [b758ea8] Alter the watched flag fix slightly to take into account
+    the need to ignore post-roll for recordings, something I forgot
+    before.
+  * [1f6d42e] Convert some case insensitive QString checks to use
+    compare().
+  * [f53a00f] Fix videos not being marked as watched. We had some code
+    to handle in-progress recordings where we didn't have the total
+    number of frames, this used the start/end time of the recording
+    which can't be trusted for video because they are based on the
+    length from downloaded metadata e.g. An episode of Frasier might
+    only be 22 minutes long without adverts but according to the
+    metadata it's 30 minutes. We now trust the totalFrames to be
+    accurate for anything which isn't an in-progress recording.
+  * [ac9ddbe] Revise database schema 1296
+  * [584647e] Fix ToggleUpmix return value.
+  * [c85b33c] Fix CanUpmix()
+  * [0ef4b58] Size in resampling output buffer is in frames, not samples
+  * [fe27dfe] Fix another case sensitive title check.
+  * [dcfe7b0] Make more title and callsign comparisons case insensitive.
 
   [ Karl Dietz ]
   * Let the configuration refer to the correct location for mythweb.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 13 Feb 2012 17:43:59 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 14 Feb 2012 15:23:31 -0600
 
 mythtv (2:0.25.0~master.20120214.ab4a02f-0ubuntu1) precise; urgency=low
 
