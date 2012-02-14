@@ -6,14 +6,14 @@ EAPI=2
 
 MYTHTV_VERSION=""
 MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="d0f3ba16ab2de06b5339f11f07d05f2cc21f74b0"
-MYTHTV_SREV="d0f3ba1"
+MYTHTV_REV="946deb7f68b575939de21a37142d568b3fdf6efd"
+MYTHTV_SREV="946deb7"
 
 inherit mythtv webapp depend.php
 
 DESCRIPTION="PHP scripts intended to manage MythTV from a web browser."
 IUSE=""
-KEYWORDS="amd64 ppc x86"
+KEYWORDS="amd64 x86 ~ppc"
 
 RDEPEND="dev-lang/php[curl,json,mysql,session,posix]
 	|| ( <dev-lang/php-5.3[spl,pcre] >=dev-lang/php-5.3 )

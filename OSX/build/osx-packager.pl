@@ -65,6 +65,7 @@ our %build_profile = (
     'mythtv'
     => [
         'ccache',
+        'pkgconfig',
         'dvdcss',
         'freetype',
         'lame',
@@ -81,6 +82,8 @@ our %build_profile = (
         'libogg',
         'vorbis',
         'flac',
+        'libcddb',
+        'libcdio',
        ],
      ],
   '0.24-fixes'
@@ -89,6 +92,7 @@ our %build_profile = (
     'mythtv'
     =>  [
         'ccache',
+        'pkgconfig',
         'dvdcss',
         'freetype',
         'lame',
@@ -156,6 +160,14 @@ our %depend = (
     'url' => "$sourceforge/sourceforge/flac/flac-1.1.4.tar.gz",
     # Workaround Intel problem - Missing _FLAC__lpc_restore_signal_asm_ia32
     'conf' => [ '--disable-asm-optimizations' ]
+  },
+
+  # pkgconfig 0.26 and above do not include glib which is required to compile
+  # glib requires pkgconfig to compile, so it's a chicken and egg problem.
+  # Use nothing newer than 0.25 on OSX.
+  'pkgconfig' =>
+  {
+    'url' => "http://pkgconfig.freedesktop.org/releases/pkg-config-0.25.tar.gz"
   },
 
   'dvdcss' =>
@@ -263,6 +275,7 @@ exit 0"   > pkg-config ; '.
                    'ln -sf libQtNetwork.dylib  libQtNetwork_debug.dylib  ; '.
                    'ln -sf libQtCore.dylib     libQtCore_debug.dylib     ; '.
                    'ln -sf libQtWebKit.dylib   libQtWebKit_debug.dylib   ; '.
+                   'ln -sf libQtScript.dylib   libQtScript_debug.dylib   ; '.
                    'rm -f $PREFIX/bin/pkg-config ; '.
                    '',
     'parallel-make' => 'yes'
@@ -282,6 +295,16 @@ exit 0"   > pkg-config ; '.
   'ccache' =>
   {
     'url'  => 'http://samba.org/ftp/ccache/ccache-3.1.4.tar.bz2',
+  },
+
+  'libcddb' =>
+  {
+    'url' => 'http://prdownloads.sourceforge.net/libcddb/libcddb-1.3.2.tar.bz2',
+  },
+
+  'libcdio' =>
+  {
+    'url' => 'http://ftp.gnu.org/pub/gnu/libcdio/libcdio-0.83.tar.bz2',
   },
 
 );
@@ -318,8 +341,11 @@ osx-packager.pl - build OS X binary packages for MythTV
    -m32             build for a 32-bit environment
    -plugins <str>   comma-separated list of plugins to include
    -srcdir  <path>  build using (fresh copy of) provided root mythtv directory
+   -pkgsrcdir  <path>  build using (fresh copy of) provided packaging directory
    -force           do not check for SVN validity
    -noclean         use with -nohead, do not re-run configure nor clean
+   -bootstrap       exit after building all thirdparty components
+   -nohacks         don't use Nigel's hacks
 
 =head1 DESCRIPTION
 
@@ -387,10 +413,13 @@ Getopt::Long::GetOptions(\%OPT,
                          'm32',
                          'plugins=s',
                          'srcdir=s',
+                         'pkgsrcdir=s',
                          'force',
                          'noclean',
 			 'archives=s',
 			 'buildprofile=s',
+			 'bootstrap',
+			 'nohacks',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -448,9 +477,12 @@ END
     die;
 }
 
-if ( $OPT{'nohead'} && ! $OPT{'force'} )
+our $WORKDIR = "$SCRIPTDIR/.osx-packager";
+mkdir $WORKDIR;
+
+if ( $OPT{'nohead'} && ! $OPT{'force'} && ! $OPT{'srcdir'} )
 {
-    my $GITTOP="$SCRIPTDIR/.osx-packager/src/myth-git/.git";
+    my $GITTOP="$WORKDIR/src/myth-git/.git";
 
     if ( ! -d $GITTOP )
     {   die "No source code to build?"   }
@@ -469,9 +501,6 @@ END
     die;
 }
 
-
-our $WORKDIR = "$SCRIPTDIR/.osx-packager";
-mkdir $WORKDIR;
 
 # Do we need to force a case-sensitive disk image?
 if (0 &&       # No. MythTV source doesn't require it at the moment.
@@ -811,6 +840,10 @@ foreach my $sw ( @build_depends )
     }
 }
 
+if ( $OPT{'bootstrap'} )
+{
+    exit;
+}
 
 ### build MythTV
 
@@ -874,7 +907,14 @@ if ( $OPT{'srcdir'} )
     &Syscall(['mkdir', '-p', $GITDIR]);
     foreach my $dir ( @comps )
     {
-        &Syscall(['cp', '-pR', "$OPT{'srcdir'}/$dir", "$GITDIR/$dir"]);
+        if ($dir eq 'packaging' && $OPT{'pkgsrcdir'})
+        {
+            &Syscall(['cp', '-pR', "$OPT{'pkgsrcdir'}", "$GITDIR/$dir"]);
+        }
+        else
+        {
+            &Syscall(['cp', '-pR', "$OPT{'srcdir'}/$dir", "$GITDIR/$dir"]);
+        }
     }
     &Syscall("mkdir -p $GITDIR/mythtv/config")
 }
@@ -897,7 +937,7 @@ elsif ( ! $OPT{'nohead'} )
 
     # Remove Nigel's frontend building speedup hack
     chdir "$GITDIR/mythtv" or die;
-    &DoSpeedupHacks('programs/programs.pro', '');
+    &DoSpeedupHacks('programs/programs.pro', '') unless $OPT{'nohacks'};
 
     my @gitcheckoutflags;
 
@@ -1010,7 +1050,7 @@ foreach my $comp (@comps)
     {
         # Remove/add Nigel's frontend building speedup hack
         &DoSpeedupHacks('programs/programs.pro',
-                        'mythfrontend mythavtest mythpreviewgen mythwelcome');
+                        'mythfrontend mythavtest mythpreviewgen mythwelcome') unless $OPT{'nohacks'};
     }
 
     &Verbose("Making $comp");

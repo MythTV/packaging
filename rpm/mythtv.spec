@@ -65,10 +65,10 @@
 %define desktop_vendor  xris
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25pre-3459-ge8909ce
+%define vers_string v0.25pre-4209-g934041b
 
 # Git Revision number and branch ID
-%define _gitrev 3459.ge8909ce
+%define _gitrev 4209.g934041b
 %define branch master
 
 #
@@ -266,8 +266,6 @@ BuildRequires:  zlib-devel
 %if %{with_mythmusic}
 BuildRequires:  libcdaudio-devel >= 0.99.6
 BuildRequires:  cdparanoia-devel
-BuildRequires:  libvisual-devel
-BuildRequires:  SDL-devel
 %endif
 
 %if %{with_mythnews}
@@ -290,6 +288,8 @@ BuildRequires:  perl(Image::Size)
 Requires:       perl(Image::Size)
 BuildRequires:  perl(SOAP::Lite)
 Requires:       perl(SOAP::Lite)
+BuildRequires:  perl(JSON)
+Requires:       perl(JSON)
 %endif
 
 %if %{with_mythzoneminder}
@@ -856,23 +856,21 @@ EOF
 # Add execute bits to the various python helper scripts
     find programs/scripts/metadata -name '*.py' -exec chmod +x "{}" \;
 
+# Fix /mnt/store -> /var/lib/mythtv
+    sed -i -e's,/mnt/store,%{_localstatedir}/lib/mythtv,' libs/libmythbase/storagegroup.cpp
+
 # On to mythplugins
 cd ..
 
 ##### MythPlugins
-%if %{with_plugins}
-
-cd mythplugins
-
-# Fix /mnt/store -> /var/lib/mythmusic
-    cd mythmusic
-    sed -i -e's,/mnt/store/music,%{_localstatedir}/lib/mythmusic,' mythmusic/globalsettings.cpp
-    cd ..
-
-# And back to the compile root
-cd ..
-
-%endif
+#%if %{with_plugins}
+#
+#cd mythplugins
+#
+## And back to the compile root
+#cd ..
+#
+#%endif
 
 ################################################################################
 
@@ -1028,9 +1026,7 @@ cd mythplugins
         --disable-mythnetvision \
     %endif
         --enable-opengl \
-        --enable-libvisual \
-        --enable-fftw \
-        --enable-sdl
+        --enable-fftw
 
     make %{?_smp_mflags}
 
@@ -1154,8 +1150,7 @@ fi
 %doc mythtv/README* mythtv/UPGRADING
 %doc mythtv/AUTHORS mythtv/COPYING mythtv/FAQ
 %doc mythtv/database mythtv/keys.txt
-%doc mythtv/docs/*.html mythtv/docs/*.png
-%doc mythtv/docs/*.txt mythtv/contrib
+%doc mythtv/contrib
 %doc %{_datadir}/mythtv/fonts/*.txt
 %doc mythtv/PACKAGE-LICENSING
 
@@ -1413,6 +1408,15 @@ fi
 ################################################################################
 
 %changelog
+
+* Sun Jan 29 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Remove mythmusic configure options that no longer exist
+- Fix storage group location from /mnt/store to /var/lib/mythtv
+
+* Wed Dec 28 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Remove official docs (now on the wiki)
+- Mythweather needs perl(JSON)
+
 * Sat Oct 06 2011 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Add mythutil
 

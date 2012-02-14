@@ -4,19 +4,20 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.24.1-101-g5da2367"
-MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="5da23672fc11e18dd1d1e691a5d7760d4c5f0b91"
-MYTHTV_SREV="5da2367"
+MYTHTV_VERSION="v0.25pre-3996-gd354002"
+MYTHTV_BRANCH="master"
+MYTHTV_REV="d35400280da1bfd95c4d43df2b5a82516914ee0d"
+MYTHTV_SREV="d354002"
 
 inherit mythtv-plugins
 
 DESCRIPTION="Module for MythTV."
 IUSE=""
-KEYWORDS="amd64 x86 ~ppc"
+KEYWORDS="~amd64 ~x86 ~ppc"
 
 RDEPEND=""
-DEPEND=""
+DEPEND="dev-python/imaging
+        media-video/dvdauthor"
 
 src_install() {
 	mythtv-plugins_src_install

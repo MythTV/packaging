@@ -4,10 +4,10 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.25pre-3673-g539171f"
+MYTHTV_VERSION="v0.25pre-3996-gd354002"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="539171fd9ef01e365af745f0264b2a51db404236"
-MYTHTV_SREV="539171f"
+MYTHTV_REV="d35400280da1bfd95c4d43df2b5a82516914ee0d"
+MYTHTV_SREV="d354002"
 
 inherit mythtv-plugins
 
@@ -23,4 +23,5 @@ DEPEND="dev-perl/DateManip
 	dev-perl/XML-SAX
 	dev-perl/DateTime-Format-ISO8601
 	dev-perl/XML-XPath
+	dev-perl/JSON
 	"

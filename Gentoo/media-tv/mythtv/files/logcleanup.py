@@ -22,6 +22,7 @@ from datetime import datetime, timedelta
 from optparse import OptionParser
 
 class LogFile( object ):
+    _re = re.compile("(?P<appname>[a-z]*(\.[a-z]+)?).(?P<date>[0-9]{14}).(?P<pid>[0-9]{1,6}).log((?P<sequence>.[0-9]+)\.(?P<compression>[a-zA-Z0-9]+)?)?")
     path = None
     application = None
     datetime = None
@@ -31,8 +32,7 @@ class LogFile( object ):
 
     @classmethod
     def filter(cls, path, filelist):
-        r = re.compile("[a-z]*.[0-9]{14}.[0-9]{1,6}.log(.[0-9]+(.[a-zA-Z0-9]+)?)?")
-        return [cls(path, f) for f in filelist if r.match(f)]
+        return [cls(path, f) for f in filelist if cls._re.match(f)]
 
     def __init__(self, path, filename):
         self.path = path
@@ -40,13 +40,13 @@ class LogFile( object ):
         self.lastmod = datetime.fromtimestamp(os.stat(
                             os.path.join(self.path, self.filename)).st_mtime)
 
-        s = filename.split('.')
-        self.application = s[0]
-        self.datetime = datetime.strptime(s[1], "%Y%m%d%H%M%S")
-        self.pid = int(s[2])
-        if len(s) > 4:
-            self.sequence = int(s[4])
-            if len(s) > 5:
+        m = self._re.match(filename)
+        self.application = m.group('appname')
+        self.datetime = datetime.strptime(m.group('date'), "%Y%m%d%H%M%S")
+        self.pid = int(m.group('pid'))
+        if m.group('sequence'):
+            self.sequence = int(m.group('sequence'))
+            if m.group('compression'):
                 self.compressed = True
         self.children = []
 
