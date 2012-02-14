@@ -1,8 +1,12 @@
 mythtv (2:0.25.0~master.20120214.ab4a02f-0ubuntu2) UNRELEASED; urgency=low
 
+  [ Mario Limonciello ]
   * Fix armhf FTBFS.
   * Conflicts/Replaces on libmyth-0.24-0 for now until a better place for
     some of the common libraries is found.
+
+  [ Karl Dietz ]
+  * Let the configuration refer to the correct location for mythweb.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 13 Feb 2012 17:43:59 -0600
 
