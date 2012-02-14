@@ -126,7 +126,13 @@ dch -b -v $EPOCH:0.$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TO
 
 #clean up any old patches (just in case)
 if [ -d .pc ]; then
-	quilt pop -a 2>/dev/null || true
+	quilt pop -a 2>/dev/null || rm -rf .pc
+fi
+
+#make sure that we have things stashed if necessary
+DELTA=$(git status -s -uno)
+if [ -n "$DELTA" ]; then
+	git stash -q
 fi
 
 #check out/update checkout
