@@ -157,6 +157,4 @@ override_dh_installdocs:
 	rm -r debian/mythweb/usr/share/mythtv/mythweb/data/cache
 
 	#(Myththemes)
-	rm -f debian/mythtv-theme-arclight/usr/share/mythtv/themes/Arclight/LICENSE
 	rm -f debian/mythtv-theme-childish/usr/share/mythtv/themes/Childish/COPYING
-	rm -f debian/mythtv-theme-graphite/usr/share/mythtv/themes/Graphite/LICENSE
