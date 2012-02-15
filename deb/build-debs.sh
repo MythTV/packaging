@@ -130,9 +130,9 @@ if [ -d .pc ]; then
 fi
 
 #make sure that we have things stashed if necessary
-DELTA=$(git status -s -uno)
+DELTA=$(git status -s -uno || true)
 if [ -n "$DELTA" ]; then
-	git stash -q
+	git stash -q 2>/dev/null || true
 fi
 
 #check out/update checkout
