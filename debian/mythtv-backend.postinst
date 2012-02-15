@@ -9,8 +9,7 @@ case "$1" in
         mkdir -p $HOMEDIR/.mythtv || true
         chown mythtv:mythtv $HOMEDIR/.mythtv || true
 
-        for dir in /var/log/mythtv \
-                   /var/lib/mythtv/recordings \
+        for dir in /var/lib/mythtv/recordings \
                    /var/cache/mythtv \
                    /var/lib/mythtv/banners \
                    /var/lib/mythtv/screenshots \
@@ -27,18 +26,11 @@ case "$1" in
             fi
         done
 
-        #fix rsyslog permissions
-	if [ -d "$dir" ] && ! dpkg-statoverride --list "$dir" >/dev/null; then
-            chown syslog:mythtv /var/log/mythtv
-        fi
-
         if [ -z "$2" ]; then
             # Migrate from old mythtv -> mythtv-backend
             [ -f /etc/logrotate.d/mythtv ] && \
                 mv /etc/logrotate.d/mythtv /etc/logrotate.d/mythtv-backend
 
-            # Errors now sent via cron
-            rm -f /var/log/mythtv/mythfilldatabase.log*
         fi
     ;;
 

@@ -31,6 +31,9 @@ if [ "$1" = install ] || [ "$1" = upgrade ]; then
 	if dpkg --compare-versions "$2" le "0.23.0~trunk23567-0ubuntu2"; then
 		rm_conffile "mythtv-backend" "/etc/default/mythtv-backend"
 	fi
+        if dpkg --compare-versions "$2" lt "2:0.25.0~master.20120216"; then
+		rm_conffile "mythtv-backend" "/etc/rsyslog.d/40-mythtv-rsyslog.conf"
+	fi
 	for dir in daily hourly weekly; do
 		if [ -e "/etc/cron.$dir/mythtv-backend" ]; then
 			rm_conffile "mythtv-backend" "/etc/cron.$dir/mythtv-backend"

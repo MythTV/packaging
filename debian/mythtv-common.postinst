@@ -98,6 +98,11 @@ EOF
         ln -s /etc/mythtv/mysql.txt $HOMEDIR/.mythtv/mysql.txt || true
     fi
 
+    #fix rsyslog permissions
+    if [ -d "$dir" ] && ! dpkg-statoverride --list "$dir" >/dev/null; then
+        chown syslog:adm /var/log/mythtv
+        chmod 2755 /var/log/mythtv
+    fi
 
 
     ;;
