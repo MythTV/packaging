@@ -153,6 +153,8 @@ override_dh_installdocs:
 		rm -f debian/mythweb/usr/share/mythtv/mythweb/$$file ;\
 	done
 	find debian/mythweb -name ".gitignore" -type f -delete || true
+	rm -r debian/mythweb/usr/share/mythtv/mythweb/data/tv_icons
+	rm -r debian/mythweb/usr/share/mythtv/mythweb/data/cache
 
 	#(Myththemes)
 	rm -f debian/mythtv-theme-arclight/usr/share/mythtv/themes/Arclight/LICENSE

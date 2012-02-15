@@ -8,6 +8,8 @@ mythtv (2:0.25.0~master.20120214.f853a5b-0ubuntu2) UNRELEASED; urgency=low
   * Drop special mythtv-frontend and mythwelcome logging functionality
     in favor of local7 rsyslog support.
   * Log mythtv-setup using local7 too.
+  * Don't include cache and tv_icons directories for mythweb.  They'll be 
+    symlinked to /var/cache for postinst.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 14 Feb 2012 23:46:56 -0600
 
