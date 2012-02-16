@@ -1,4 +1,4 @@
-mythtv (2:0.25.0~master.20120214.f853a5b-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.25.0~master.20120216.769dfae-0ubuntu1) precise; urgency=low
 
   * mythtv-common breaks/replaces on mythvideo.
   * Fix rsyslog logging permissions.
@@ -12,8 +12,35 @@ mythtv (2:0.25.0~master.20120214.f853a5b-0ubuntu2) UNRELEASED; urgency=low
     symlinked to /var/cache for postinst.
   * debian/rules:
     - Remove references to themes that are no longer shipped.
+  * New upstream checkout (769dfae)
+  * >>Upstream changes since last upload (f853a5b):
+  * [769dfae] Close unused stdout/stderr on child processes
+  * [774ceca] Fix looking metadata lookup with bad guide data.
+  * [2a74313] Add a long-form description string for recording status to
+    the ProgramInfo map. This meant a minor modification to
+    toDescription() so that we returned something sensible for
+    programmes which weren't scheduled to record.
+  * [0ac5565] Expose recording rule last/next recorded and deleted dates
+    in the UI.
+  * [75b8683] Expose category type as a statetype in PBB. Valid states
+    are movie, series, tvshow and sports (not especially useful in it's
+    current form)
+  * [2cb7fc6] Expose the media type as a statetype to the OSD, states
+    are recording, video, dvd, bluraydisc, httpstream and rtspstream
+  * [c60f331] Do not copy inetrefs from rule -> recording when the rule
+    is a search.
+  * [ef3fc49] Comply with coding conventions by using NULL instead of 0.
+  * [f471817] Fix metadata lookups for generic episodes, with thanks to
+    dekarl on IRC for reporting and testing the fix
+  * [e354a6d] Silence cppcheck warnings in subtitlescreen.h.
+  * [94d27c6] Fix the DeleteMap tracker for in-progress recordings.
+  * [c5c73bf] Fix perl bindings to accomodate IPv6
+  * [97a9a17] Remove debugging abort.  Sorry
+  * [7c1b737] Fix GetBackendServerIP
+  * [567278c] Correct automatic selection of address in
+    GetBackendServerIP.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 14 Feb 2012 23:46:56 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 16 Feb 2012 00:18:28 -0600
 
 mythtv (2:0.25.0~master.20120214.f853a5b-0ubuntu1) precise; urgency=low
 
