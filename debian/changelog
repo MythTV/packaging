@@ -1,3 +1,10 @@
+mythtv (2:0.25.0~master.20120216.769dfae-0ubuntu2) UNRELEASED; urgency=low
+
+  * Reset permissions on all logs in /var/log/mythtv to ensure
+    rsyslog is able to append to them.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 17 Feb 2012 02:32:35 -0600
+
 mythtv (2:0.25.0~master.20120216.769dfae-0ubuntu1) precise; urgency=low
 
   * mythtv-common breaks/replaces on mythvideo.
