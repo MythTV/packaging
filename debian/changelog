@@ -2,6 +2,7 @@ mythtv (2:0.25.0~master.20120216.769dfae-0ubuntu2) UNRELEASED; urgency=low
 
   * Reset permissions on all logs in /var/log/mythtv to ensure
     rsyslog is able to append to them.
+  * Fix mythtv-setup logging to be local7 not local 7.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 17 Feb 2012 02:32:35 -0600
 
