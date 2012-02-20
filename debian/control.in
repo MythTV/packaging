@@ -56,6 +56,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 python-pycurl,
 		python-urlgrabber,
                 libgl1-mesa-dev | xlibmesa-gl-dev | xlibmesa-dev | libgl-dev,
+                libgles2-mesa-dev | libgl1-mesa-dev (<< 7.7.2)
                 libdvdread-dev | libdvdread3-dev,
                 fftw-dev,
                 libvorbis-dev,
