@@ -86,6 +86,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 libcdio-cdda-dev,
                 libcdio-paranoia-dev,
                 libxml2-dev,
+                libass-dev,
                 libxml-xpath-perl
 
 Package: mythtv
