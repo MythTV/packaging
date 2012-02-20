@@ -6,6 +6,7 @@ mythtv (2:0.25.0~master.20120216.769dfae-0ubuntu2) UNRELEASED; urgency=low
   * debian/control.in:
     - B-d on libio-socket-inet6-perl, libdbd-mysql-perl to fix libmyth
       perl missing files.
+    - B-d on libxml2-dev to enable libxml2 support.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 17 Feb 2012 02:32:35 -0600
 
