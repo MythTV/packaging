@@ -46,6 +46,8 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 libudev-dev,
                 libclass-dbi-perl,
                 libnet-upnp-perl,
+                libio-socket-inet6-perl,
+                libdbd-mysql-perl,
                 libjson-perl,
                 libwww-perl,
                 python-oauth,
@@ -259,7 +261,7 @@ Description: PHP Bindings for MythTV
 Package: libmythtv-perl
 Architecture: all
 Section: perl
-Depends: ${misc:Depends}, ${perl:Depends}, libdbi-perl, libdbd-mysql-perl, libnet-upnp-perl
+Depends: ${misc:Depends}, ${perl:Depends}, libdbi-perl, libdbd-mysql-perl, libnet-upnp-perl, libio-socket-inet6-perl 
 Replaces: mythtv-common (<< 0.20.98 ), libmyth-perl
 Conflicts: mythtv-common (<< 0.20.98 ), libmyth-perl
 Description: A PERL library to access some MythTV features
