@@ -8,6 +8,7 @@ mythtv (2:0.25.0~master.20120216.769dfae-0ubuntu2) UNRELEASED; urgency=low
       perl missing files.
     - B-d on libxml2-dev to enable libxml2 support.
     - B-d on libass-dev to enable libass subtitle support.
+    - B-d on libxvidcore-dev to enable external xvid codec support.
   * Enable opengl ES2 on releases that support it.  Should be maverick+.
     Disabled on versions of mesa before it was introduced.
 
