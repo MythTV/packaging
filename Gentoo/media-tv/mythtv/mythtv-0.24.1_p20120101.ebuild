@@ -45,7 +45,7 @@ SDEPEND="
 	virtual/opengl
 	virtual/glu
     alsa? ( >=media-libs/alsa-lib-0.9 )
-    dvb? ( media-libs/libdvb media-tv/linuxtv-dvb-headers )
+    dvb? ( media-libs/libdvb virtual/linuxtv-dvb-headers )
     ieee1394? (	>=sys-libs/libraw1394-1.2.0
 			    >=sys-libs/libavc1394-0.5.3
 			    >=media-libs/libiec61883-1.0.0 )
