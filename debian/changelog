@@ -9,7 +9,6 @@ mythtv (2:0.25.0~master.20120216.769dfae-0ubuntu2) UNRELEASED; urgency=low
     - B-d on libxml2-dev to fix libxml2 support.
     - B-d on libass-dev to fix libass subtitle support.
     - B-d on libxvidcore-dev to fix external xvid codec support.
-    - B-d on libgles2-mesa-dev to fix opengl es2 support.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 17 Feb 2012 02:32:35 -0600
 
