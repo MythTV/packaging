@@ -29,6 +29,7 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
 				--enable-libx264 \
 				--enable-libmp3lame \
 				--enable-libfaac \
+				--enable-libxvid \
 				--enable-nonfree
 ifeq "$(DEB_BUILD_ARCH)" "armel"
 	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl
