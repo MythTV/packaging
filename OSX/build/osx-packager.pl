@@ -73,6 +73,7 @@ our %build_profile = (
         #'dbus',
         'qt-4.6',
         'yasm',
+        'liberation-sans',
        ],
     'mythplugins'
     => [
@@ -100,6 +101,7 @@ our %build_profile = (
         #'dbus',
         'qt-4.6',
         'yasm',
+        'liberation-sans',
       ],
     'mythplugins'
     =>  [
@@ -307,6 +309,12 @@ exit 0"   > pkg-config ; '.
     'url' => 'http://ftp.gnu.org/pub/gnu/libcdio/libcdio-0.83.tar.bz2',
   },
 
+  'liberation-sans' =>
+  {
+    'url'      => 'https://fedorahosted.org/releases/l/i/liberation-fonts/liberation-fonts-ttf-1.07.1.tar.gz',
+    'conf-cmd' => 'echo "all:" > Makefile',
+    'make'     => [ ],  # override the default 'make all install' targets
+  },
 );
 
 
@@ -1166,6 +1174,14 @@ foreach my $target ( @targets )
                    "$res/application.icns" ]) or die;
         &Syscall([ '/Developer/Tools/SetFile', '-a', 'C', $finalTarget ])
             or die;
+
+        # A font the Terra theme uses:
+        my $fonts = "$res/share/mythtv/fonts";
+        mkdir $fonts;
+        &RecursiveCopy("$SRCDIR/liberation-fonts-ttf-1.07.1/LiberationSans-Regular.ttf", $fonts);
+        &EditPList("$finalTarget/Contents/Info.plist",
+                   'ATSApplicationFontsPath', 'share/mythtv/fonts');
+
     }
 
     if ( $target eq "MythFrontend" )
@@ -1530,6 +1546,40 @@ sub AddFakeBinDir($)
 
     &Syscall("mkdir -p $target/Contents/Resources");
     &Syscall(['ln', '-sf', '../MacOS', "$target/Contents/Resources/bin"]);
+}
+
+###################################################################
+## Update or add <dict> properties in a (non-binary) .plist file ##
+###################################################################
+
+sub EditPList($$$)
+{
+    my ($file, $key, $value) = @_;
+
+    &Verbose("Looking for property $key in file $file");
+
+    open(IN,  $file)         or die;
+    open(OUT, ">$file.edit") or die;
+    while ( <IN> )
+    {
+        if ( m,\s<key>$key</key>, )
+        {
+            <IN>;
+            &Verbose("Value was $_");  # Does this work?
+            print OUT "<key>$key</key>\n<string>$value</string>\n";
+            next;
+        }
+        elsif ( m,^</dict>$, )  # Not there. Add at end
+        {
+            print OUT "<key>$key</key>\n<string>$value</string>\n";
+            print OUT "</dict>\n</plist>\n";
+            last;
+        }
+
+        print OUT;
+    }
+    close IN; close OUT;
+    rename("$file.edit", $file);
 }
 
 ### end file
