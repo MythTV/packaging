@@ -211,7 +211,6 @@ src_configure() {
 		myconf="${myconf} --enable-nonfree"
 	fi
 
-	use ass || myconf="${myconf} --disable-libass"
 	use input_devices_joystick || myconf="${myconf} --disable-joystick-menu"
 	use cec || myconf="${myconf} --disable-libcec"
 
