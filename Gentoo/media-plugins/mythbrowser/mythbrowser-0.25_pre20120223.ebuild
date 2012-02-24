@@ -4,22 +4,27 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.25pre-3996-gd354002"
+MYTHTV_VERSION="v0.25pre-4673-g89c34ef"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="d35400280da1bfd95c4d43df2b5a82516914ee0d"
-MYTHTV_SREV="d354002"
+MYTHTV_REV="89c34ef6b2e0e8688474ef546b799d54d8ec6242"
+MYTHTV_SREV="89c34ef"
 
-inherit mythtv-plugins
+inherit mythtv-plugins eutils
 
 DESCRIPTION="Module for MythTV."
 IUSE=""
 KEYWORDS="~amd64 ~x86 ~ppc"
 
 RDEPEND=""
-DEPEND="dev-python/imaging
-        media-video/dvdauthor"
+DEPEND="x11-libs/qt-webkit:4"
+
+src_prepare() {
+	if use experimental
+	then
+		true
+	fi
+}
 
 src_install() {
 	mythtv-plugins_src_install
 }
-
