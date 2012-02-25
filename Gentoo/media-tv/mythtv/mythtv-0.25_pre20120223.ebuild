@@ -4,10 +4,10 @@
 
 EAPI=2
 PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.25pre-3996-gd354002"
+MYTHTV_VERSION="v0.25pre-4673-g89c34ef"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="d35400280da1bfd95c4d43df2b5a82516914ee0d"
-MYTHTV_SREV="d354002"
+MYTHTV_REV="89c34ef6b2e0e8688474ef546b799d54d8ec6242"
+MYTHTV_SREV="89c34ef"
 
 inherit flag-o-matic multilib eutils qt4-r2 mythtv toolchain-funcs python
 inherit linux-info
@@ -18,91 +18,100 @@ KEYWORDS="~amd64 ~x86 ~ppc"
 
 IUSE_VIDEO_CARDS="video_cards_nvidia"
 IUSE_INPUT_DEVICES="input_devices_joystick"
-IUSE="altivec autostart dvb \
-dvd bluray \
-ieee1394 jack lcd lirc \
+IUSE="altivec ass autostart \
+dvb dvd bluray \
+ieee1394 lcd lirc cec \
 alsa jack pulseaudio \
-debug \
+debug hls raop fftw \
 perl python \
 vdpau vaapi crystalhd \
-xvid x264 vpx \
-+lame faac \
+xmltv xvid \
 ${IUSE_VIDEO_CARDS} \
 ${IUSE_INPUT_DEVICES}
 "
 
 SDEPEND="
-    >=media-sound/lame-3.93.1
-    virtual/glu
-    virtual/mysql
-    virtual/opengl
-    x11-libs/libX11
-    x11-libs/libXext
-    x11-libs/libXinerama
-    x11-libs/libXv
-    x11-libs/libXrandr
-    x11-libs/libXxf86vm
-    x11-libs/qt-core:4[qt3support]
-    x11-libs/qt-gui:4[qt3support]
-    x11-libs/qt-sql:4[qt3support,mysql]
-    x11-libs/qt-opengl:4[qt3support]
-    x11-libs/qt-webkit:4
-    alsa? ( >=media-libs/alsa-lib-0.9 )
-    dvb? ( media-libs/libdvb media-tv/linuxtv-dvb-headers )
-    ieee1394? ( >=sys-libs/libraw1394-1.2.0
-                >=sys-libs/libavc1394-0.5.3
-                >=media-libs/libiec61883-1.0.0 )
-    jack? ( media-sound/jack-audio-connection-kit )
-    lcd? ( app-misc/lcdproc )
-    lirc? ( app-misc/lirc )
-    perl? ( dev-perl/DBD-mysql
-            dev-perl/Net-UPnP
-            >=dev-perl/libwww-perl-5 )
-    pulseaudio? ( media-sound/pulseaudio )
-    python? ( dev-python/mysql-python
-              dev-python/lxml
-              dev-python/urlgrabber )
+	>=media-sound/lame-3.93.1
+	virtual/glu
+	virtual/mysql
+	virtual/opengl
+	x11-libs/libX11
+	x11-libs/libXext
+	x11-libs/libXinerama
+	x11-libs/libXv
+	x11-libs/libXrandr
+	x11-libs/libXxf86vm
+	x11-libs/qt-core:4[qt3support]
+	x11-libs/qt-gui:4[qt3support]
+	x11-libs/qt-sql:4[qt3support,mysql]
+	x11-libs/qt-opengl:4[qt3support]
+	x11-libs/qt-webkit:4
+	alsa? ( >=media-libs/alsa-lib-0.9 )
+	ass? ( media-libs/libass )
+	bluray? (	dev-libs/libxml2
+			media-libs/libbluray )
+	cec? (	dev-libs/libcec )
+	dvb? (	media-libs/libdvb
+		virtual/linuxtv-dvb-headers )
+	fftw? (	sci-libs/fftw )
+	hls? (	>=media-libs/x264-0.0.20100605
+		media-libs/libvpx
+		media-sound/lame 
+		media-libs/faac )
+	ieee1394? (	>=sys-libs/libraw1394-1.2.0
+			>=sys-libs/libavc1394-0.5.3
+			>=media-libs/libiec61883-1.0.0 )
+	jack? ( media-sound/jack-audio-connection-kit )
+	lcd? ( app-misc/lcdproc )
+	lirc? ( app-misc/lirc )
+	perl? (	dev-perl/DBD-mysql
+		dev-perl/Net-UPnP
+		dev-perl/LWP-Protocol-https
+		dev-perl/HTTP-Message
+		dev-perl/IO-Socket-INET6
+		>=dev-perl/libwww-perl-5 )
+	pulseaudio? ( media-sound/pulseaudio )
+	python? (	dev-python/mysql-python
+			dev-python/lxml
+			dev-python/urlgrabber )
+	raop? (	net-dns/avahi[mdnsresponder-compat] )
 	vaapi? ( x11-libs/libva )
-    vdpau? ( x11-libs/libvdpau )
-    x264? ( >=media-libs/x264-0.0.20100605 )
-    xvid? ( >=media-libs/xvid-1.1.0 )
-    vpx? ( media-libs/libvpx )
-    faac? ( media-libs/faac )
-    !media-tv/mythtv-bindings
-    !media-plugins/mythvideo
-    !x11-themes/mythtv-themes
-    "
+	vdpau? ( x11-libs/libvdpau )
+	xvid? ( >=media-libs/xvid-1.1.0 )
+	!media-tv/mythtv-bindings
+	!media-plugins/mythvideo
+	!x11-themes/mythtv-themes
+	"
 
 RDEPEND="${SDEPEND}
-    media-fonts/corefonts
-    media-fonts/dejavu
-    media-fonts/liberation-fonts
-    >=media-libs/freetype-2.0
-    x11-apps/xinit
-    || ( >=net-misc/wget-1.12-r3 >=media-tv/xmltv-0.5.43 )
-    autostart? ( net-dialup/mingetty
-                 x11-wm/evilwm
-                 x11-apps/xset )
-    bluray? ( media-libs/libbluray )
-    dvd? ( media-libs/libdvdcss )
-    video_cards_nvidia? ( x11-drivers/nvidia-drivers 
-                          vdpau? ( >=x11-drivers/nvidia-drivers-256 ) )
-    "
+	media-fonts/corefonts
+	media-fonts/dejavu
+	media-fonts/liberation-fonts
+	>=media-libs/freetype-2.0
+	x11-apps/xinit
+	autostart? (	net-dialup/mingetty
+			x11-wm/evilwm
+			x11-apps/xset )
+	dvd? ( media-libs/libdvdcss )
+	video_cards_nvidia? (	x11-drivers/nvidia-drivers 
+				vdpau? ( >=x11-drivers/nvidia-drivers-256 ) )
+	xmltv? ( >=media-tv/xmltv-0.5.43 )
+	"
 
 DEPEND="${SDEPEND}
-    x11-proto/xineramaproto
-    x11-proto/xf86vidmodeproto
-    x11-apps/xinit
-    dev-lang/yasm
-    "
+	x11-proto/xineramaproto
+	x11-proto/xf86vidmodeproto
+	x11-apps/xinit
+	dev-lang/yasm
+	"
 
 MYTHTV_GROUPS="video,audio,tty,uucp"
 
 pkg_setup() {
-    python_set_active_version 2
+	python_set_active_version 2
 
-    enewuser mythtv -1 /bin/bash /home/mythtv ${MYTHTV_GROUPS}
-    usermod -a -G ${MYTHTV_GROUPS} mythtv
+	enewuser mythtv -1 /bin/bash /home/mythtv ${MYTHTV_GROUPS}
+	usermod -a -G ${MYTHTV_GROUPS} mythtv
 }
 
 src_prepare() {
@@ -118,7 +127,7 @@ src_prepare() {
 	sed -e "s:pure_install:pure_install INSTALLDIRS=vendor:" \
 		-i "${S}"/bindings/perl/Makefile
 
-	epatch "${FILESDIR}/fixLdconfSandbox.patch"
+	epatch "${FILESDIR}/fixLdconfSandbox.25.patch"
 
 	if use experimental
 	then
@@ -191,19 +200,24 @@ src_configure() {
 		myconf="${myconf} --enable-crystalhd"
 	fi
 
-	myconf="${myconf} $(use_enable lame libmp3lame)"
 	myconf="${myconf} $(use_enable xvid libxvid)"
-	myconf="${myconf} $(use_enable x264 libx264)"
-    myconf="${myconf} $(use_enable vpx libvpx)"
-    myconf="${myconf} $(use_enable faac libfaac)"
-    myconf="${myconf} --enable-nonfree"
+
+	if use hls
+	then
+		myconf="${myconf} --enable-libmp3lame"
+		myconf="${myconf} --enable-libx264"
+		myconf="${myconf} --enable-libvpx"
+		myconf="${myconf} --enable-libfaac"
+		myconf="${myconf} --enable-nonfree"
+	fi
 
 	use input_devices_joystick || myconf="${myconf} --disable-joystick-menu"
+	use cec || myconf="${myconf} --disable-libcec"
 
 	myconf="${myconf} --enable-symbol-visibility"
 
-	hasq distcc ${FEATURES} || myconf="${myconf} --disable-distcc"
-	hasq ccache ${FEATURES} || myconf="${myconf} --disable-ccache"
+	has distcc ${FEATURES} || myconf="${myconf} --disable-distcc"
+	has ccache ${FEATURES} || myconf="${myconf} --disable-ccache"
 
 # let MythTV come up with our CFLAGS. Upstream will support this
 	strip-flags
@@ -245,18 +259,18 @@ src_install() {
 	insinto /etc/logrotate.d
 	newins "${FILESDIR}"/mythtv.25.logrotate.d mythtv
 
-    insinto /etc/cron.daily
-    insopts -m0544
-    newins "${FILESDIR}"/runlogcleanup mythtv.logcleanup
+	insinto /etc/cron.daily
+	insopts -m0544
+	newins "${FILESDIR}"/runlogcleanup mythtv.logcleanup
 
-    dodir /usr/share/mythtv/bin
-    insinto /usr/share/mythtv/bin
-    insopts -m0555
-    doins "${FILESDIR}"/logcleanup.py
+	dodir /usr/share/mythtv/bin
+	insinto /usr/share/mythtv/bin
+	insopts -m0555
+	doins "${FILESDIR}"/logcleanup.py
     
 
 	insinto /usr/share/mythtv/contrib
-    insopts -m0644
+	insopts -m0644
 	doins -r contrib/*
 
 	dobin "${FILESDIR}"/runmythfe

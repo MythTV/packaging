@@ -65,10 +65,10 @@
 %define desktop_vendor  xris
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25pre-4209-g934041b
+%define vers_string v0.25pre-4677-g5d7c01d
 
 # Git Revision number and branch ID
-%define _gitrev 4209.g934041b
+%define _gitrev 4677.g5d7c01d
 %define branch master
 
 #
@@ -210,6 +210,10 @@ BuildRequires:  pulseaudio-libs-devel
 
 # Video support, formerly MythVideo
 Requires:       perl(XML::Simple)
+
+# Perl Bindings
+Requires:       perl(IO::Socket::INET6)
+BuildRequires:  perl(IO::Socket::INET6)
 
 # Need dvb headers to build in dvb support
 BuildRequires: kernel-headers
@@ -1408,6 +1412,9 @@ fi
 ################################################################################
 
 %changelog
+
+* Wed Feb 22 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Add perl(IO::Socket::INET6) req for perl bindings
 
 * Sun Jan 29 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Remove mythmusic configure options that no longer exist

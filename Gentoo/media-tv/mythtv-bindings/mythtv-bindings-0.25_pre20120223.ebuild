@@ -4,10 +4,10 @@
 
 EAPI=2
 PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.25pre-3996-gd354002"
+MYTHTV_VERSION="v0.25pre-4673-g89c34ef"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="d35400280da1bfd95c4d43df2b5a82516914ee0d"
-MYTHTV_SREV="d354002"
+MYTHTV_REV="89c34ef6b2e0e8688474ef546b799d54d8ec6242"
+MYTHTV_SREV="89c34ef"
 
 inherit flag-o-matic multilib eutils qt4 mythtv toolchain-funcs python
 
@@ -18,29 +18,32 @@ KEYWORDS="~amd64 ~x86 ~ppc"
 IUSE="perl python php"
 
 RDEPEND="
-	perl?   (   dev-lang/perl
-                dev-perl/DBD-mysql
-                dev-perl/DateManip
-                dev-perl/Net-UPnP )
+	perl? (	dev-lang/perl
+		dev-perl/DBD-mysql
+		dev-perl/DateManip
+		dev-perl/LWP-Protocol-https
+		dev-perl/HTTP-Message
+		dev-perl/Net-UPnP )
 	python? ( >=dev-lang/python-2.6
-                dev-python/mysql-python
-                dev-python/lxml )
-    php?    ( >=dev-lang/php-5.3
-                dev-php/PEAR-Net_Socket
-                dev-php/PEAR-MDB2_Driver_mysqli )
-	!media-tv/mythtv"
+		dev-python/mysql-python
+		dev-python/lxml )
+	php? (	>=dev-lang/php-5.3
+		dev-php/PEAR-Net_Socket
+		dev-php/PEAR-MDB2_Driver_mysqli )
+	!media-tv/mythtv
+	"
 
 DEPEND="${RDEPEND}"
 
 src_configure() {
-    echo "PREFIX=/usr" > "${S}/config.mak"
-    echo "PYTHON=/usr/bin/python" >> "${S}/config.mak"
-    use perl   && echo "CONFIG_BINDINGS_PERL=yes" >> "${S}/config.mak"
-    use python && echo "CONFIG_BINDINGS_PYTHON=yes" >> "${S}/config.mak"
-    use php    && echo "CONFIG_BINDINGS_PHP=yes" >> "${S}/config.mak"
+	echo "PREFIX=/usr" > "${S}/config.mak"
+	echo "PYTHON=/usr/bin/python" >> "${S}/config.mak"
+	use perl   && echo "CONFIG_BINDINGS_PERL=yes" >> "${S}/config.mak"
+	use python && echo "CONFIG_BINDINGS_PYTHON=yes" >> "${S}/config.mak"
+	use php    && echo "CONFIG_BINDINGS_PHP=yes" >> "${S}/config.mak"
 
-    S="${S}/bindings"
-    cp "${FILESDIR}/Makefile" "${S}/Makefile"
+	S="${S}/bindings"
+	cp "${FILESDIR}/Makefile" "${S}/Makefile"
 }
 
 src_compile() {
