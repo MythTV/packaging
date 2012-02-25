@@ -71,7 +71,7 @@ our %build_profile = (
         'lame',
         'mysqlclient',
         #'dbus',
-        'qt',
+        'qt-4.6',
         'yasm',
         'liberation-sans',
        ],
@@ -99,7 +99,7 @@ our %build_profile = (
         'lame',
         'mysqlclient',
         #'dbus',
-        'qt',
+        'qt-4.6',
         'yasm',
         'liberation-sans',
       ],
@@ -114,6 +114,209 @@ our %build_profile = (
       ],
     ],
 );
+
+our %depend = (
+
+  'git' =>
+  {
+    'url' => 'http://www.kernel.org/pub/software/scm/git/git-1.7.3.4.tar.bz2',
+  },
+
+  'freetype' =>
+  {
+    'url' => "$sourceforge/sourceforge/freetype/freetype-2.1.10.tar.gz",
+  },
+
+  'lame' =>
+  {
+    'url'
+    =>  "$sourceforge/sourceforge/lame/lame-3.96.1.tar.gz",
+    'conf'
+    =>  [
+          '--disable-frontend',
+        ],
+  },
+
+  'libmad' =>
+  {
+    'url' => "$sourceforge/sourceforge/mad/libmad-0.15.0b.tar.gz"
+  },
+
+  'taglib' =>
+  {
+    'url' => 'http://developer.kde.org/~wheeler/files/src/taglib-1.6.3.tar.gz',
+  },
+
+  'libogg' =>
+  {
+    'url' => 'http://downloads.xiph.org/releases/ogg/libogg-1.1.2.tar.gz'
+  },
+
+  'vorbis' =>
+  {
+    'url' => 'http://downloads.xiph.org/releases/vorbis/libvorbis-1.1.1.tar.gz'
+  },
+
+  'flac' =>
+  {
+    'url' => "$sourceforge/sourceforge/flac/flac-1.1.4.tar.gz",
+    # Workaround Intel problem - Missing _FLAC__lpc_restore_signal_asm_ia32
+    'conf' => [ '--disable-asm-optimizations' ]
+  },
+
+  # pkgconfig 0.26 and above do not include glib which is required to compile
+  # glib requires pkgconfig to compile, so it's a chicken and egg problem.
+  # Use nothing newer than 0.25 on OSX.
+  'pkgconfig' =>
+  {
+    'url' => "http://pkgconfig.freedesktop.org/releases/pkg-config-0.25.tar.gz"
+  },
+
+  'dvdcss' =>
+  {
+    'url'
+    =>  'http://download.videolan.org/pub/videolan/libdvdcss/1.2.9/libdvdcss-1.2.9.tar.bz2'
+  },
+
+  'mysqlclient' =>
+  {
+    'url'
+    => 'http://downloads.mysql.com/archives/mysql-5.1/mysql-5.1.56.tar.gz',
+    'conf'
+    =>  [
+          '--without-debug',
+          '--without-docs',
+          '--without-man',
+          '--without-bench',
+          '--without-server',
+          '--without-geometry',
+          '--without-extra-tools',
+        ],
+  },
+
+  'dbus' =>
+  {
+    'url' => 'http://dbus.freedesktop.org/releases/dbus/dbus-1.0.3.tar.gz',
+    'post-make' => 'mv $PREFIX/lib/dbus-1.0/include/dbus/dbus-arch-deps.h '.
+                     ' $PREFIX/include/dbus-1.0/dbus ; '.
+                   'rm -fr $PREFIX/lib/dbus-1.0 ; '.
+                   'cd $PREFIX/bin ; '.
+                   'echo "#!/bin/sh
+if [ \"\$2\" = dbus-1 ]; then
+  case \"\$1\" in
+    \"--version\") echo 1.0.3  ;;
+    \"--cflags\")  echo -I$PREFIX/include/dbus-1.0 ;;
+    \"--libs\")    echo \"-L$PREFIX/lib -ldbus-1\" ;;
+  esac
+fi
+exit 0"   > pkg-config ; '.
+                   'chmod 755 pkg-config'
+  },
+
+  'qt-4.6'
+  =>
+  {
+    'url'
+    => 'http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz',
+    'conf-cmd'
+    =>  'echo yes | MAKEFLAGS=$parallel_make_flags ./configure',
+    'conf'
+    =>  [
+          '-opensource',
+          '-prefix', '"$PREFIX"',
+          '-release',
+          '-fast',
+          '-no-accessibility',
+          '-no-stl',
+          # When MythTV all ported:  '-no-qt3support',
+
+          # 10.7 and XCode 4.1 suggestion from Jean-Yves Avenard:
+          #'-sdk /Developer/SDKs/MacOSX10.6.sdk',
+
+
+          # When MySQL 5.1 is used, its plugin.h file clashes with Qt's.
+          # To work around that, replace these three lines:
+          # '-I"$PREFIX/include/mysql"',
+          # '-L"$PREFIX/lib/mysql"',
+          # '-qt-sql-mysql',
+          # with:
+          '-qt-sql-mysql -mysql_config "$PREFIX/bin/mysql_config"',
+
+          '-no-sql-sqlite',
+          '-no-sql-odbc',
+          '-system-zlib',
+          '-no-libtiff',
+          '-no-libmng',
+          '-nomake examples -nomake demos',
+          '-no-nis',
+          '-no-cups',
+          '-no-qdbus',
+          #'-dbus-linked',
+          '-no-framework',
+          '-no-multimedia',
+          '-no-phonon',
+          '-no-svg',
+          '-no-javascript-jit',
+          '-no-scripttools',
+       ],
+    'make'
+    =>  [
+          'sub-plugins-install_subtargets-ordered',
+          'install_qmake',
+          'install_mkspecs',
+        ],
+    # Using configure -release saves a lot of space and time,
+    # but by default, debug builds of mythtv try to link against
+    # debug libraries of Qt. This works around that:
+    'post-make' => 'cd $PREFIX/lib ; '.
+                   'ln -sf libQt3Support.dylib libQt3Support_debug.dylib ; '.
+                   'ln -sf libQtSql.dylib      libQtSql_debug.dylib      ; '.
+                   'ln -sf libQtXml.dylib      libQtXml_debug.dylib      ; '.
+                   'ln -sf libQtOpenGL.dylib   libQtOpenGL_debug.dylib   ; '.
+                   'ln -sf libQtGui.dylib      libQtGui_debug.dylib      ; '.
+                   'ln -sf libQtNetwork.dylib  libQtNetwork_debug.dylib  ; '.
+                   'ln -sf libQtCore.dylib     libQtCore_debug.dylib     ; '.
+                   'ln -sf libQtWebKit.dylib   libQtWebKit_debug.dylib   ; '.
+                   'ln -sf libQtScript.dylib   libQtScript_debug.dylib   ; '.
+                   'rm -f $PREFIX/bin/pkg-config ; '.
+                   '',
+    'parallel-make' => 'yes'
+  },
+
+  'exif' =>
+  {
+    'url'  => "$sourceforge/sourceforge/libexif/libexif-0.6.17.tar.bz2",
+    'conf' => [ '--disable-docs' ]
+  },
+
+  'yasm' =>
+  {
+    'url'  => 'http://www.tortall.net/projects/yasm/releases/yasm-1.1.0.tar.gz',
+  },
+
+  'ccache' =>
+  {
+    'url'  => 'http://samba.org/ftp/ccache/ccache-3.1.4.tar.bz2',
+  },
+
+  'libcddb' =>
+  {
+    'url' => 'http://prdownloads.sourceforge.net/libcddb/libcddb-1.3.2.tar.bz2',
+  },
+
+  'libcdio' =>
+  {
+    'url' => 'http://ftp.gnu.org/pub/gnu/libcdio/libcdio-0.83.tar.bz2',
+  },
+
+  'liberation-sans' =>
+  {
+    'url'      => 'https://fedorahosted.org/releases/l/i/liberation-fonts/liberation-fonts-ttf-1.07.1.tar.gz',
+    'conf-cmd' => 'echo "all:" > Makefile',
+    'make'     => [ ],  # override the default 'make all install' targets
+  },
+);
+
 
 =head1 NAME
 
@@ -151,7 +354,6 @@ osx-packager.pl - build OS X binary packages for MythTV
    -noclean         use with -nohead, do not re-run configure nor clean
    -bootstrap       exit after building all thirdparty components
    -nohacks         don't use Nigel's hacks
-   -noparallel      do not use parallel builds, Qt compilation can fail with them
 
 =head1 DESCRIPTION
 
@@ -222,11 +424,10 @@ Getopt::Long::GetOptions(\%OPT,
                          'pkgsrcdir=s',
                          'force',
                          'noclean',
-                         'archives=s',
-                         'buildprofile=s',
-                         'bootstrap',
-                         'nohacks',
-                         'noparallel',
+			 'archives=s',
+			 'buildprofile=s',
+			 'bootstrap',
+			 'nohacks',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -401,59 +602,10 @@ our $gitpath = dirname $git;
 $ENV{'PATH'} = "$PREFIX/bin:/bin:/usr/bin:/usr/sbin:$gitpath";
 $ENV{'PKG_CONFIG_PATH'} = "$PREFIX/lib/pkgconfig:";
 delete $ENV{'CPP'};
-delete $ENV{'CXX'};
-
-our $DEVROOT = `xcode-select -print-path`; chomp $DEVROOT;
-our $SDKVER = `xcodebuild -showsdks | grep macosx10 | sort | head -n 1 | awk '{ print \$4 }' `; chomp $SDKVER;
-our $SDKNAME = `xcodebuild -showsdks | grep macosx10 | sort | head -n 1 | awk '{ print \$6 }' `; chomp $SDKNAME;
-our $SDKROOT = "$DEVROOT/SDKs/MacOSX$SDKVER.sdk";
-
-$ENV{'DEVROOT'} = $DEVROOT;
-$ENV{'SDKVER'} = $SDKVER;
-$ENV{'SDKROOT'} = $SDKROOT;
-
-# Determine appropriate gcc/g++ path for the selected SDKs
-our $CCBIN = `xcodebuild -find gcc -sdk $SDKNAME`; chomp $CCBIN;
-our $CXXBIN = `xcodebuild -find g++ -sdk $SDKNAME`; chomp $CXXBIN;
-$ENV{'CC'} = $CCBIN;
-$ENV{'CXX'} = $CXXBIN;
-
-if ( ! -e "$SDKROOT" )
-{
-    #Handle special case for 10.4 where the SDK name is 10.4u.sdk
-    $SDKROOT = "$DEVROOT/SDKs/MacOSX${SDKVER}u.sdk";
-    if ( ! -e "$SDKROOT" )
-    {
-        # Handle XCode 4.3 new location
-        $SDKROOT = "$DEVROOT/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$SDKVER.sdk";
-        if ( ! -e "$SDKROOT" )
-        {
-            &Complain("$SDKROOT doesn't exist");
-            &Complain("Did you set your xcode environmment path properly ? (xcode-select utility)");
-            exit;
-        }
-    }
-}
-
-$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'CPPFLAGS'} = "-isysroot $SDKROOT -mmacosx-version-min=10.4 -I$PREFIX/include";
-$ENV{'LDFLAGS'} = "-Wl,-syslibroot,${SDKROOT} -mmacosx-version-min=10.4 -L$PREFIX/lib";
+delete $ENV{'CXXCPP'};
+$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'CPPFLAGS'} = "-I$PREFIX/include";
+$ENV{'LDFLAGS'} = "-F/System/Library/Frameworks -L/usr/lib -L$PREFIX/lib";
 $ENV{'PREFIX'} = $PREFIX;
-$ENV{'SDKROOT'} = $SDKROOT;
-$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'CPPFLAGS'} = "-mmacosx-version-min=10.4 -I$PREFIX/include";
-#$ENV{'LDFLAGS'} = "-F/System/Library/Frameworks -L/usr/lib -L$PREFIX/lib";
-
-if ( $SDKVER eq "10.4" )
-{
-    &Complain("10.4 isn't supported by Qt 4.8. Compilation will most likely not succeed");    
-    &Complain("Uninstall 10.4 SDKs in $SDKROOT");    
-}
-
-&Verbose("DEVROOT = $DEVROOT");
-&Verbose("SDKVER = $SDKVER");
-&Verbose("SDKROOT = $SDKROOT");
-&Verbose("CCBIN = $ENV{'CC'}");
-&Verbose("CXXBIN = $ENV{'CXX'}");
-&Verbose("CFLAGS = $ENV{'CFLAGS'}");
 
 # set up Qt environment
 $ENV{'QTDIR'} = $PREFIX;
@@ -484,22 +636,25 @@ if ( $cpus gt 1 )
     $parallel_make_flags = "-j$cpus";
 }
 
-if ($OPT{'noparallel'})
-{
-    $parallel_make_flags = '';
-}
 $parallel_make .= " $parallel_make_flags";
 
-our $ARCHARG = "";
-if ( `sysctl -n hw.machine` eq "x86_64\n" || `sysctl -n hw.machine` eq "i386\n" )
+# Auto-disable mixed 64/32bit:
+if ( `sysctl -n hw.cpu64bit_capable` eq "1\n" )
 {
-    &Verbose('Forcing x86 build...');
+    &Verbose('OS is 64bit. Disabling 64bit for this build...');
+    $OPT{'m32'} = 1;
+}
+
+# We set 32-bit mode via environment variables.
+# The messier alternative would be to tweak all the configure arguments.
+if ( $OPT{'m32'} )
+{
+    &Verbose('Forcing 32-bit mode');
     $ENV{'CFLAGS'}    .= ' -m32';
     $ENV{'CPPFLAGS'}  .= ' -m32';
     $ENV{'CXXFLAGS'}  .= ' -m32';
     $ENV{'ECXXFLAGS'} .= ' -m32';  # MythTV configure
     $ENV{'LDFLAGS'}   .= ' -m32';
-    $ARCHARG = "-arch x86";
 }
 
 ### Distclean?
@@ -516,216 +671,6 @@ if ( $OPT{'distclean'} )
     &Syscall([ 'find', $GITDIR, '-name', '*.rej',   '-delete' ]);
     exit;
 }
-
-our %depend = (
-
-    'git' =>
-    {
-        'url' => 'http://www.kernel.org/pub/software/scm/git/git-1.7.3.4.tar.bz2',
-    },
-
-    'freetype' =>
-    {
-        'url' => "$sourceforge/sourceforge/freetype/freetype-2.1.10.tar.gz",
-    },
-
-    'lame' =>
-    {
-        'url'
-        =>  "$sourceforge/sourceforge/lame/lame-3.96.1.tar.gz",
-        'conf'
-        =>  [
-        '--disable-frontend',
-        ],
-    },
-
-    'libmad' =>
-    {
-        'url' => "$sourceforge/sourceforge/mad/libmad-0.15.0b.tar.gz"
-    },
-
-    'taglib' =>
-    {
-        'url' => 'http://developer.kde.org/~wheeler/files/src/taglib-1.6.3.tar.gz',
-    },
-
-    'libogg' =>
-    {
-        'url' => 'http://downloads.xiph.org/releases/ogg/libogg-1.1.2.tar.gz'
-    },
-
-    'vorbis' =>
-    {
-        'url' => 'http://downloads.xiph.org/releases/vorbis/libvorbis-1.1.1.tar.gz'
-    },
-
-    'flac' =>
-    {
-        'url' => "$sourceforge/sourceforge/flac/flac-1.1.4.tar.gz",
-        # Workaround Intel problem - Missing _FLAC__lpc_restore_signal_asm_ia32
-        'conf' => [ '--disable-asm-optimizations' ]
-    },
-
-    # pkgconfig 0.26 and above do not include glib which is required to compile
-    # glib requires pkgconfig to compile, so it's a chicken and egg problem.
-    # Use nothing newer than 0.25 on OSX.
-    'pkgconfig' =>
-    {
-        'url' => "http://pkgconfig.freedesktop.org/releases/pkg-config-0.25.tar.gz"
-    },
-
-    'dvdcss' =>
-    {
-        'url'
-        =>  'http://download.videolan.org/pub/videolan/libdvdcss/1.2.9/libdvdcss-1.2.9.tar.bz2'
-    },
-
-    'mysqlclient' =>
-    {
-        'url'
-        => 'http://downloads.mysql.com/archives/mysql-5.1/mysql-5.1.56.tar.gz',
-        'conf'
-        =>  [
-        '--without-debug',
-        '--without-docs',
-        '--without-man',
-        '--without-bench',
-        '--without-server',
-        '--without-geometry',
-        '--without-extra-tools',
-        ],
-    },
-
-    'dbus' =>
-    {
-        'url' => 'http://dbus.freedesktop.org/releases/dbus/dbus-1.0.3.tar.gz',
-        'post-make' => 'mv $PREFIX/lib/dbus-1.0/include/dbus/dbus-arch-deps.h '.
-        ' $PREFIX/include/dbus-1.0/dbus ; '.
-        'rm -fr $PREFIX/lib/dbus-1.0 ; '.
-        'cd $PREFIX/bin ; '.
-        'echo "#!/bin/sh
-        if [ \"\$2\" = dbus-1 ]; then
-        case \"\$1\" in
-        \"--version\") echo 1.0.3  ;;
-        \"--cflags\")  echo -I$PREFIX/include/dbus-1.0 ;;
-        \"--libs\")    echo \"-L$PREFIX/lib -ldbus-1\" ;;
-        esac
-        fi
-        exit 0"   > pkg-config ; '.
-        'chmod 755 pkg-config'
-    },
-
-    'qt'
-    =>
-    {
-        'url'
-        => 'http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.8.0.tar.gz',
-        'pre-conf'
-        =>  # Get around Qt bug QTBUG-24498 (4.8.0) && stupid thing can't compile in release mode on mac without framework active
-        #also hack for QTBUG-23258
-        "find . -name \"*.pro\" -exec sed -i -e \"s:/Developer/SDKs/:.*:g\" {} \\; ; sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
-        'conf-cmd'
-        =>  'echo yes | ./configure $ARCHARG',
-        'conf'
-        =>  [
-        '-opensource',
-        '-prefix', '"$PREFIX"',
-        '-release',
-        '-fast',
-        '-no-accessibility',
-        '-no-stl',
-        '-sdk' , '$SDKROOT',
-        
-        # When MythTV all ported:  '-no-qt3support',
-        
-        # When MySQL 5.1 is used, its plugin.h file clashes with Qt's.
-        # To work around that, replace these three lines:
-        # '-I"$PREFIX/include/mysql"',
-        # '-L"$PREFIX/lib/mysql"',
-        # '-qt-sql-mysql',
-        # with:
-        '-qt-sql-mysql -mysql_config "$PREFIX/bin/mysql_config"',
-        
-        '-no-sql-sqlite',
-        '-no-sql-odbc',
-        '-system-zlib',
-        '-no-libtiff',
-        '-no-libmng',
-        '-nomake examples -nomake demos',
-        '-no-nis',
-        '-no-cups',
-        '-no-qdbus',
-        #'-dbus-linked',
-        '-no-framework',
-        '-no-multimedia',
-        '-no-phonon',
-        '-no-svg',
-        '-no-javascript-jit',
-        '-no-scripttools',
-        ],
-        # Get around Qt configure bug QTBUG-17203 when you define -arch
-        'post-conf'
-        => 'find . -name "Makefile*" -exec sed -i -e "s/ -arch -/ -/g;s/-arch$//g" {} \;', 
-        'make'
-        =>  [
-        'all',  # required due to QTBUG-13449
-        'sub-plugins-install_subtargets-ordered',
-        'install_qmake',
-        'install_mkspecs',
-        ],
-        # Using configure -release saves a lot of space and time,
-        # but by default, debug builds of mythtv try to link against
-        # debug libraries of Qt. This works around that:
-        'post-make' => 'cd $PREFIX/lib ; '.
-        'ln -sf libQt3Support.dylib libQt3Support_debug.dylib ; '.
-        'ln -sf libQtSql.dylib      libQtSql_debug.dylib      ; '.
-        'ln -sf libQtXml.dylib      libQtXml_debug.dylib      ; '.
-        'ln -sf libQtOpenGL.dylib   libQtOpenGL_debug.dylib   ; '.
-        'ln -sf libQtGui.dylib      libQtGui_debug.dylib      ; '.
-        'ln -sf libQtNetwork.dylib  libQtNetwork_debug.dylib  ; '.
-        'ln -sf libQtCore.dylib     libQtCore_debug.dylib     ; '.
-        'ln -sf libQtWebKit.dylib   libQtWebKit_debug.dylib   ; '.
-        'ln -sf libQtScript.dylib   libQtScript_debug.dylib   ; '.
-        'rm -f $PREFIX/bin/pkg-config ; '.
-        '',
-        #WebKit in Qt keeps erroring half way on my quad-core when using -jX, use -noparallel
-        'parallel-make' => 'yes'
-    },
-
-    'exif' =>
-    {
-        'url'  => "$sourceforge/sourceforge/libexif/libexif-0.6.17.tar.bz2",
-        'conf' => [ '--disable-docs' ]
-    },
-
-    'yasm' =>
-    {
-        'url'  => 'http://www.tortall.net/projects/yasm/releases/yasm-1.1.0.tar.gz',
-    },
-
-    'ccache' =>
-    {
-        'url'  => 'http://samba.org/ftp/ccache/ccache-3.1.4.tar.bz2',
-    },
-
-    'libcddb' =>
-    {
-        'url' => 'http://prdownloads.sourceforge.net/libcddb/libcddb-1.3.2.tar.bz2',
-    },
-
-    'libcdio' =>
-    {
-        'url' => 'http://ftp.gnu.org/pub/gnu/libcdio/libcdio-0.83.tar.bz2',
-    },
-
-    'liberation-sans' =>
-    {
-        'url'      => 'https://fedorahosted.org/releases/l/i/liberation-fonts/liberation-fonts-ttf-1.07.1.tar.gz',
-        'conf-cmd' => 'echo "all:" > Makefile',
-        'make'     => [ ],  # override the default 'make all install' targets
-    },
-);
-
 
 ### Check for app present in target location
 our $MFE = "$SCRIPTDIR/MythFrontend.app";
@@ -851,9 +796,7 @@ foreach my $sw ( @build_depends )
 
         if ( $pkg->{'conf-cmd'} )
         {
-            my $tmp = $pkg->{'conf-cmd'};
-            $tmp =~ s/\$ARCHARG/$ARCHARG/ge;
-            push(@configure, $tmp);
+            push(@configure, $pkg->{'conf-cmd'});
             $munge = 1;
         }
         else
@@ -1080,8 +1023,6 @@ foreach my $comp (@comps)
         &Verbose("Configuring $comp");
         my @config = './configure';
         push(@config, @{ $conf{$comp} }) if $conf{$comp};
-        push @config, "--cc=$CCBIN";
-        push @config, "--cxx=$CXXBIN";
         if ( $comp eq 'mythtv' && $backend )
         {
             push @config, '--enable-backend'
@@ -1231,30 +1172,16 @@ foreach my $target ( @targets )
         &Syscall([ 'cp',
                    "$GITDIR/mythtv/programs/mythfrontend/mythfrontend.icns",
                    "$res/application.icns" ]) or die;
-        &Syscall([ 'xcrun', '-sdk', "$SDKNAME", 'SetFile', '-a', 'C', $finalTarget ])
+        &Syscall([ '/Developer/Tools/SetFile', '-a', 'C', $finalTarget ])
             or die;
 
         # A font the Terra theme uses:
-        my $url = $depend{'liberation-sans'}->{'url'};
-        my $dirname = $url;
-        $dirname =~ s|^.+/([^/]+)$|$1|;
-        $dirname =~ s|\.tar\.gz$||;
-        $dirname =~ s|\.tar\.bz2$||;
-
         my $fonts = "$res/share/mythtv/fonts";
         mkdir $fonts;
-        &RecursiveCopy("$SRCDIR/$dirname/LiberationSans-Regular.ttf", $fonts);
+        &RecursiveCopy("$SRCDIR/liberation-fonts-ttf-1.07.1/LiberationSans-Regular.ttf", $fonts);
         &EditPList("$finalTarget/Contents/Info.plist",
                    'ATSApplicationFontsPath', 'share/mythtv/fonts');
 
-        # Qt 4.8.0 is using those extra files
-        $url = $depend{'qt'}->{'url'};
-        $dirname = $url;
-        $dirname =~ s|^.+/([^/]+)$|$1|;
-        $dirname =~ s|\.tar\.gz$||;
-        $dirname =~ s|\.tar\.bz2$||;
-
-        &RecursiveCopy("$SRCDIR/$dirname/src/gui/mac/qt_menu.nib", "$finalTarget/Contents/Frameworks/QtGui.framework/Versions/Current/Resources/");
     }
 
     if ( $target eq "MythFrontend" )
@@ -1473,9 +1400,6 @@ sub Syscall($%)
         foreach my $arg (@$arglist)
         {
             $arg =~ s/\$PREFIX/$PREFIX/ge;
-            $arg =~ s/\$SDKROOT/$SDKROOT/ge;
-            $arg =~ s/\$CFLAGS/$ENV{'CFLAGS'};/ge;
-            $arg =~ s/\$LDFLAGS/$ENV{'LDFLAGS'};/ge;
             $arg =~ s/\$parallel_make_flags/$parallel_make_flags/ge;
             push(@args, $arg);
         }
