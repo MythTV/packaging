@@ -38,18 +38,3 @@ git/packaging/OSX/build/osx-packager.pl -force -nohead -verbose -debug
 Common Troubleshooting:
 Q: Qt doesn't build and error-out on some header file
 A: If you've previously compiled MythFrontend.app using Qt 4.7, you are better off deleting the whole .osx-packager/build directory and all directories (except myth-git) in .osx-packager/src. Previously install 4.7 Qt header conflicts during the build of 4.8
-
-# Please enter the commit message for your changes. Lines starting
-# with '#' will be ignored, and an empty message aborts the commit.
-# On branch master
-# Changes to be committed:
-#   (use "git reset HEAD <file>..." to unstage)
-#
-#	new file:   osx-packager-10.4.pl
-#	modified:   osx-packager.pl
-#
-# Untracked files:
-#   (use "git add <file>..." to include in what will be committed)
-#
-#	osx-packager.pl.good
-#	../../lion.diff
