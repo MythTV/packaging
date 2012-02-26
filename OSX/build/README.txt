@@ -7,7 +7,7 @@ Unlike the previous build system, you need to have a properly setup xcode enviro
 Prior to XCode 4.3, SDKs were located by default in /Developer/SDKs/. This is no longer the case, the SDKs are now self contained within the XCode 4.3 application bundle, as such the location of the SDKs will vary depending on where you stored XCode 4.3
 
 Prior running osx-packager.pl, you have to ensure xcode is properly configured.
-In a terminal, run xcode-select -print
+In a terminal, run xcode-select -print-path
 
 With XCode <= 4.2 (includes 3.x), it should display: /Developer
 With XCode 4.3, assuming the XCode.app is stored in /Applications it should read:
@@ -35,6 +35,9 @@ On XCode 4.x with the clang/LLVM, MythTV will not compile and the compiler will 
 I personally compile MythTV like so:
 git/packaging/OSX/build/osx-packager.pl -force -nohead -verbose -debug 
 
+Common Troubleshooting:
+Q: Qt doesn't build and error-out on some header file
+A: If you've previously compiled MythFrontend.app using Qt 4.7, you are better off deleting the whole .osx-packager/build directory and all directories (except myth-git) in .osx-packager/src. Previously install 4.7 Qt header conflicts during the build of 4.8
 
 # Please enter the commit message for your changes. Lines starting
 # with '#' will be ignored, and an empty message aborts the commit.
