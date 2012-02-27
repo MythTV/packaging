@@ -51,7 +51,7 @@ mythtv-plugins_pkg_setup() {
 	MYTHPLUGINS="${MYTHPLUGINS} mythmusic"
 	MYTHPLUGINS="${MYTHPLUGINS} mythnetvision"
 	MYTHPLUGINS="${MYTHPLUGINS} mythnews"
-	if [[ ${MY_PV} == "0.24.1" ]]; then
+	if [[ ${MY_PV} =~ 0\.24\.[0-9] ]]; then
 		MYTHPLUGINS="${MYTHPLUGINS} mythvideo"
 	fi
 	MYTHPLUGINS="${MYTHPLUGINS} mythweather"
@@ -77,7 +77,7 @@ mythtv-plugins_src_prepare() {
 mythtv-plugins_src_configure() {
 	cd "${S}"
 
-	if hasq ${PN} ${MYTHPLUGINS} ; then
+	if has ${PN} ${MYTHPLUGINS} ; then
 		for x in ${MYTHPLUGINS} ; do
 			if [[ ${PN} == ${x} ]] ; then
 				myconf="${myconf} --enable-${x}"
@@ -99,7 +99,7 @@ mythtv-plugins_src_compile() {
 }
 
 mythtv-plugins_src_install() {
-	if hasq ${PN} ${MYTHPLUGINS}
+	if has ${PN} ${MYTHPLUGINS}
 	then
 		cd "${S}"/${PN}
 	else
