@@ -73,14 +73,14 @@
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythmetadata\parentalcontrols.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythmetadata\videoscan.h">
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythmetadata\mythuimetadataresults.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="GeneratedFiles\Debug\videoscan.moc">
-      <Filter>Generated Files\Debug</Filter>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythmetadata\mythuiimageresults.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="GeneratedFiles\Release\videoscan.moc">
-      <Filter>Generated Files\Release</Filter>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythmetadata\videoscan.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="GeneratedFiles\Debug\parentalcontrols.moc">
       <Filter>Generated Files\Debug</Filter>
@@ -88,21 +88,12 @@
     <CustomBuild Include="GeneratedFiles\Release\parentalcontrols.moc">
       <Filter>Generated Files\Release</Filter>
     </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythmetadata\mythuimetadataresults.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_parentalcontrols.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_parentalcontrols.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_videoscan.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_videoscan.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythmetadata\cleanup.cpp">
@@ -135,12 +126,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythmetadata\videoutils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythmetadata\parentalcontrols.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythmetadata\videoscan.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="bluraymetadata_vs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -155,6 +140,27 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_mythuimetadataresults.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythuiimageresults.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythuiimageresults.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythmetadata\mythuiimageresults.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythmetadata\videoscan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_videoscan.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_videoscan.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythmetadata\parentalcontrols.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

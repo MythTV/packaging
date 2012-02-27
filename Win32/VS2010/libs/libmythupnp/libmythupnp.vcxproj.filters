@@ -80,9 +80,6 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpexp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpimpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpmsrr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -134,11 +131,11 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpsubscription.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\xmlplistSerializer.h">
+      <Filter>Header Files\serializers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythupnp\threadpool.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythupnp\ssdpcache.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
@@ -160,12 +157,6 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_ssdpcache.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_threadpool.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_threadpool.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\bufferedsocketdevice.cpp">
@@ -199,9 +190,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\taskqueue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\threadpool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnp.cpp">
@@ -269,6 +257,9 @@
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpsubscription.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\xmlplistSerializer.cpp">
+      <Filter>Source Files\serializers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

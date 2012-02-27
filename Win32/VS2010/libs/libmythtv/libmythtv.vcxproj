@@ -55,6 +55,9 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\eitscanner.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\dxva2decoder.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\visualisations\videovisual.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\httplivestream.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\metadataimagehelper.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythtv\recordingquality.h" />
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythtv\fifowriter.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
@@ -588,7 +591,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\privatedecoder.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\profilegroup.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\programdata.cpp" />
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\programdetail.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\recorderbase.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\recordinginfo.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\recordingprofile.cpp" />
@@ -646,7 +648,9 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\osd.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\ringbuffer.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\subtitlereader.cpp" />
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\subtitlescreen.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\subtitlescreen.cpp">
+      <UndefinePreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">small</UndefinePreprocessorDefinitions>
+    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\teletextdecoder.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\teletextreader.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\teletextscreen.cpp" />
@@ -864,6 +868,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\visualisations\videovisual.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\httplivestream.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\metadataimagehelper.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mpeg\sctedescriptors.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mpeg\sctetables.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\mpeg\splicedescriptors.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythtv\recordingquality.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9B6BC8F2-BA46-4D47-BA86-9913259F88C9}</ProjectGuid>
@@ -916,7 +926,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Winmm.lib;libmythavcodec.lib;mythbase.lib;mythupnp.lib;mythui.lib;myth.lib;mythfreesurround.lib;mythsamplerate.lib;mythsoundtouch.lib;mythfreemheg.lib;libmythavutil.lib;libmythavformat.lib;libmythswscale.lib;freetype.lib;pthreadVC2.lib;QtCored4.lib;QtGuid4.lib;QtXmld4.lib;QtSqld4.lib;QtOpenGLd4.lib;opengl32.lib;glu32.lib;QtNetworkd4.lib;QtWebKitd4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Winmm.lib;libmythavcodec.lib;mythservicecontracts.lib;mythbase.lib;mythupnp.lib;mythui.lib;myth.lib;mythfreesurround.lib;mythsamplerate.lib;mythsoundtouch.lib;mythfreemheg.lib;libmythavutil.lib;libmythavformat.lib;libmythswscale.lib;freetype.lib;pthreadVC2.lib;QtCored4.lib;QtGuid4.lib;QtXmld4.lib;QtSqld4.lib;QtOpenGLd4.lib;opengl32.lib;glu32.lib;QtNetworkd4.lib;QtWebKitd4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ForceFileOutput>
       </ForceFileOutput>
       <ShowProgress>NotSet</ShowProgress>

@@ -55,6 +55,20 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\themeinfo.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\x11colors.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\xmlparsebase.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiactions.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuianimation.h" />
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiscrollbar.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -D_USE_MATH_DEFINES -DMUI_API -DUSE_OPENGL_PAINTER -DQT_LARGEFILE_SUPPORT -DQT_CORE_LIB -DQT_XML_LIB -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB -DQT_WEBKIT_LIB -DUSING_OPENGL -DUSING_MINGW -DUSING_BACKEND -DUSING_MHEG -DRUNPREFIX=\"../\" -DLIBDIRNAME=\"lib\" -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D_WINDOWS -DWIN32 -D_GNU_SOURCE -DQT_THREAD_SUPPORT -DQT_DLL -D_WINDLL "-I." "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\qtmain" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtNetwork" "-I." "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtWebKit" "-I$(SolutionDir)\." "-I$(SolutionDir)compat\include" "-I$(SolutionDir)libs" "-I$(SolutionDir)libs\libmythbase" "-I$(SolutionDir)libs\libmythtv" "-I$(SolutionDir)libs\libmythfreemheg" "-I$(mythtv_source)\mythtv\libs\libmythbase" "-I$(mythtv_source)\mythtv\libs\libmythupnp" "-I$(mythtv_source)\mythtv\libs\libmythui" "-I$(mythtv_source)\mythtv\libs\libmyth" "-I$(mythtv_source)\mythtv\libs\libmyth\audio" "-I$(mythtv_source)\mythtv\libs\libmythtv" "-I$(mythtv_source)\mythtv\libs\libmythtv\channelscan" "-I$(mythtv_source)\mythtv\libs\libmythtv\iptv" "-I$(mythtv_source)\mythtv\libs\libmythtv\mpeg" "-I$(mythtv_source)\mythtv\libs\libmythsamplerate" "-I$(mythtv_source)\mythtv\libs\libmythsoundtouch" "-I$(mythtv_source)\mythtv\libs\libmythfreesurround" "-I$(mythtv_source)\mythtv\libs\libmythdvdnav" "-I$(mythtv_source)\mythtv\libs\libmythbluray" "-I$(mythtv_source)\mythtv\libs\libmythmetadata" "-I$(mythtv_source)\mythtv\libs\libmythservicecontracts" "-I$(mythtv_source)\mythtv\libs\libmythhdhomerun" "-I$(mythtv_source)\mythtv\libs" "-I$(SolutionDir)thirdparty\zlib\include" "-I$(SolutionDir)thirdparty\pthreads\include" "-I$(SolutionDir)thirdparty\opengl\include" "-I$(SolutionDir)thirdparty\freetype\include" "-I$(SolutionDir)thirdparty\freetype\include\freetype2" "-I$(SolutionDir)thirdparty" "-I$(mythtv_source)\mythtv\external\FFmpeg" "-I$(NOINHERIT)\." "-I." "-I." "-I." "-I."</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DMUI_API -DUSE_OPENGL_PAINTER -DQT_LARGEFILE_SUPPORT -DQT_CORE_LIB -DQT_XML_LIB -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB -DQT_WEBKIT_LIB -DUSING_OPENGL -DUSING_MINGW -DUSING_BACKEND -DUSING_MHEG -DRUNPREFIX=\"../\" -DLIBDIRNAME=\"lib\" -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D_WINDOWS -DWIN32 -D_GNU_SOURCE -DQT_THREAD_SUPPORT -DQT_DLL -D_WINDLL "-I." "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtNetwork" "-I." "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtWebKit" "-I$(SolutionDir)\." "-I$(SolutionDir)compat\include" "-I$(SolutionDir)libs" "-I$(SolutionDir)libs\libmythbase" "-I$(SolutionDir)libs\libmythtv" "-I$(SolutionDir)libs\libmythfreemheg" "-I$(mythtv_source)\mythtv\libs\libmythbase" "-I$(mythtv_source)\mythtv\libs\libmythupnp" "-I$(mythtv_source)\mythtv\libs\libmythui" "-I$(mythtv_source)\mythtv\libs\libmyth" "-I$(mythtv_source)\mythtv\libs\libmyth\audio" "-I$(mythtv_source)\mythtv\libs\libmythtv" "-I$(mythtv_source)\mythtv\libs\libmythtv\channelscan" "-I$(mythtv_source)\mythtv\libs\libmythtv\iptv" "-I$(mythtv_source)\mythtv\libs\libmythtv\mpeg" "-I$(mythtv_source)\mythtv\libs\libmythsamplerate" "-I$(mythtv_source)\mythtv\libs\libmythsoundtouch" "-I$(mythtv_source)\mythtv\libs\libmythfreesurround" "-I$(mythtv_source)\mythtv\libs\libmythdvdnav" "-I$(mythtv_source)\mythtv\libs\libmythbluray" "-I$(mythtv_source)\mythtv\libs\libmythmetadata" "-I$(mythtv_source)\mythtv\libs\libmythservicecontracts" "-I$(mythtv_source)\mythtv\libs\libmythhdhomerun" "-I$(mythtv_source)\mythtv\libs" "-I$(SolutionDir)thirdparty\zlib\include" "-I$(SolutionDir)thirdparty\pthreads\include" "-I$(SolutionDir)thirdparty\opengl\include" "-I$(SolutionDir)thirdparty\freetype\include" "-I$(SolutionDir)thirdparty\freetype\include\freetype2" "-I$(SolutionDir)thirdparty" "-I$(mythtv_source)\mythtv\external\FFmpeg" "-I$(NOINHERIT)\." "-I." "-I." "-I." "-I."</Command>
+    </CustomBuild>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuisimpletext.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuistatetracker.h" />
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythmainwindow_internal.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
@@ -346,6 +360,9 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_mythuifilebrowser.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythuiscrollbar.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_mythuispinbox.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -403,6 +420,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_mythuifilebrowser.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythuiscrollbar.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_mythuispinbox.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -418,6 +438,10 @@
     <ClCompile Include="GeneratedFiles\Release\moc_mythvirtualkeyboard.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuianimation.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiscrollbar.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuisimpletext.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuistatetracker.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{145FB06B-4348-4226-9835-48FF732FE05E}</ProjectGuid>

@@ -71,13 +71,7 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmyth\dbsettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmyth\generictree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmyth\mediamonitor-windows.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmyth\mythcommandlineparser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmyth\mythexp.h">
@@ -119,6 +113,9 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmyth\audio\spdifencoder.h">
       <Filter>Source Files\audio</Filter>
     </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmyth\audio\eldutils.h">
+      <Filter>Header Files\audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\backendselect.h">
@@ -128,9 +125,6 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\langsettings.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\managedlist.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\mythconfigdialogs.h">
@@ -178,19 +172,10 @@
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\storagegroupeditor.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\uilistbtntype.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\uitypes.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\virtualkeyboard_qt.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\hardwareprofile.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmyth\filesysteminfo.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -211,12 +196,6 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_langsettings.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_managedlist.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_managedlist.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_mythconfigdialogs.cpp">
@@ -309,12 +288,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_storagegroupeditor.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_uilistbtntype.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_uilistbtntype.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_uitypes.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -372,13 +345,7 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\dialogbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\generictree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\langsettings.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\managedlist.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\mediamonitor-windows.cpp">
@@ -453,9 +420,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\storagegroupeditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\uilistbtntype.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\uitypes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -468,23 +432,8 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\audio\spdifencoder.cpp">
       <Filter>Source Files\audio</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\hardwareprofile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_hardwareprofile.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_hardwareprofile.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\filesysteminfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_filesysteminfo.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_filesysteminfo.cpp">
-      <Filter>Generated Files\Release</Filter>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmyth\audio\eldutils.cpp">
+      <Filter>Source Files\audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

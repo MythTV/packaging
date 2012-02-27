@@ -311,6 +311,24 @@
     <ClCompile Include="GeneratedFiles\Release\moc_mythmainwindow_internal.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuianimation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuisimpletext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuistatetracker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mythuiscrollbar.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mythuiscrollbar.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiscrollbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\DisplayRes.h">
@@ -445,6 +463,18 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\xmlparsebase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuianimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiactions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuisimpletext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythui\mythuistatetracker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythvirtualkeyboard.h">
@@ -502,6 +532,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythmainwindow_internal.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythui\mythuiscrollbar.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

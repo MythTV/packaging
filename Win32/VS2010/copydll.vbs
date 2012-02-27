@@ -10,7 +10,7 @@ DIM objFSO, objFolder, strFilenames, objSubFolder, objSubFile, colFolders, objFi
 ' The folder names.  Edit as required for your particular system.
 strStartFolder = "thirdparty"
 strDestinationFolder = ".\bin\debug\"
-strQtFolder = "c:\Qt\4.7.2\bin\"
+strQtFolder = "c:\Qt\4.8.0\bin\"
 strMySQLFolder = "c:\Program Files\MySQL\MySQL Connector C 6.0.2\lib\debug\"
 
 strQtDLL = strQtFolder & "\QtSQLd4.dll"

@@ -29,6 +29,15 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Header Files\services">
+      <UniqueIdentifier>{815fffd6-deea-4d7f-9956-f086fb836455}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\serviceHosts">
+      <UniqueIdentifier>{89b4122b-2d86-4cc4-8eb8-745a66ac5f6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\services">
+      <UniqueIdentifier>{e7e332af-5071-4160-91eb-cac4f47616d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythfrontend\action.h">
@@ -66,6 +75,9 @@
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythfrontend\commandlineparser.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythfrontend\serviceHosts\frontendServiceHost.h">
+      <Filter>Header Files\serviceHosts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -165,12 +177,6 @@
     <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythfrontend\videometadatasettings.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="GeneratedFiles\Debug\videodlg.moc">
-      <Filter>Generated Files\Debug</Filter>
-    </CustomBuild>
-    <CustomBuild Include="GeneratedFiles\Release\videodlg.moc">
-      <Filter>Generated Files\Release</Filter>
-    </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythfrontend\videodlg.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
@@ -190,6 +196,27 @@
       <Filter>Generated Files\Release</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythfrontend\editvideometadata.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythfrontend\services\frontend.h">
+      <Filter>Header Files\services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythfrontend\upnpscanner.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeneratedFiles\Debug\main.moc">
+      <Filter>Generated Files\Debug</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeneratedFiles\Release\main.moc">
+      <Filter>Generated Files\Release</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeneratedFiles\Debug\videodlg.moc">
+      <Filter>Generated Files\Debug</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeneratedFiles\Release\videodlg.moc">
+      <Filter>Generated Files\Release</Filter>
+    </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythfrontend\idlescreen.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -413,9 +440,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\keygrabber.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\manualschedule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -515,9 +539,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_videodlg.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\videodlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\videoplayercommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -561,6 +582,39 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\editvideometadata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_frontend.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_frontend.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\services\frontend.cpp">
+      <Filter>Source Files\services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\upnpscanner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_upnpscanner.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_upnpscanner.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\videodlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_idlescreen.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_idlescreen.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\idlescreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

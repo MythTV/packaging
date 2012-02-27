@@ -77,6 +77,9 @@
     <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\services\video.h">
       <Filter>Header Files\services</Filter>
     </CustomBuild>
+    <CustomBuild Include="$(mythtv_source)\mythtv\programs\mythbackend\services\capture.h">
+      <Filter>Header Files\services</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_autoexpire.cpp">
@@ -229,6 +232,15 @@
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\commandlineparser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythbackend\services\capture.cpp">
+      <Filter>Source Files\services</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_capture.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_capture.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\backendcontext.h">
@@ -296,6 +308,9 @@
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\commandlineparser.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\programs\mythbackend\serviceHosts\captureServiceHost.h">
+      <Filter>Header Files\serviceHosts</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
