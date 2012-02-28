@@ -1,4 +1,4 @@
-mythtv (2:0.25.0~master.20120216.769dfae-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.25.0~master.20120223.532cee8-0ubuntu1) precise; urgency=low
 
   * Reset permissions on all logs in /var/log/mythtv to ensure
     rsyslog is able to append to them.
@@ -9,8 +9,181 @@ mythtv (2:0.25.0~master.20120216.769dfae-0ubuntu2) UNRELEASED; urgency=low
     - B-d on libxml2-dev to fix libxml2 support.
     - B-d on libass-dev to fix libass subtitle support.
     - B-d on libxvidcore-dev to fix external xvid codec support.
+  * New upstream checkout (532cee8)
+  * >>Upstream changes since last upload (769dfae):
+  * [532cee8] Fix mouse support with groups. The code made bad
+    assumptions but just happened to work in the past because focusable
+    widgets were always no more than one level down.
+  * [8cbd24a] Silence gcc warning about an unused variable in
+    myththemedmenu.cpp
+  * [5f5e015] Fix bug caught by Daniel, variable 'selected' was set but
+    never used.
+  * [25fe663] Subtitles: Remove the OSDSubFont setting.
+  * [1f464e9] Ensure we use the right OpenGL libs.
+  * [e2f74e9] Refs #9277. Adds some closed caption and subtitle caption
+    track debugging.
+  * [194ad69] Refs #6948. Refs #8211. Fixes channel list bug introduced
+    in d14b660c.
+  * [003f2a5] Updated British English MythArchive, MythGallery,,
+    MythGame, MythMusic, MythNetvision, MythWeather and MythZoneMinder
+    translation from Nick Morrott.
+  * [ea22304] Allow relative path when using dvd: or bd: URIs
+  * [93d3631] Fix bluray playback if mounting path is a symbolic link
+  * [2fa00e7] Fix bluray playback when path to bluray mountpoint
+    contains a trailing /
+  * [765b8e4] Bump the binary verison for SHA1:e860c3f7
+  * [e860c3f] Fix a couple of virtual tuner card creation issues.
+  * [b304daf] Add some locking around cache access in
+    MythDownloadManager. Refs #10337
+  * [f6ca545] Guard against null/invalid pointers to the network cache
+    in getHeader(). Refs #10337
+  * [3e7f41e] GuideGrid was missing statetype corresponding to existing
+    text state. Fixes #4504
+  * [c5b6e92] Do not attempt to play audio with more than 8 channels if
+    not supported natively.
+  * [efcfee3] Subtitles: Fix layout to stay within the safe area.
+  * [f8cb0f7] Another attempt at regression fix in metadata lookup.
+  * [fc9f1cc] Revert "Fix recent regression with metadata lookup."
+  * [ebebfd2] Fix recent regression with metadata lookup.
+  * [4cdbbc8] Updated German MythFrontend, MythArchive, MythBrowser,
+    MythGallery, MythGame, MythMusic, MythNetvision, MythNews,
+    MythWeather, MythZoneminder translation.
+  * [860b32b] Complete DB fix from 4f549f7b7d.
+  * [feb3a94] Fix typo in 3d01ccf3cf936ed1228725a2fa92c11bf5f6191b
+  * [00f9a5f] Fix the MythDownloadManager User-Agent
+  * [3d01ccf] Fix iterator for bindvalue of cardinput update.
+  * [c3b546e] Fix some uint vs int issues in MHEG handling
+  * [6f07d1f] HTML Setup: Actually install the 3rdParty dir.
+  * [4f549f7] Slightly tweak the videocollection DB schema.
+  * [2175b3a] Use GetVideoDispDim rather than GetVideoDim in OSX
+  * [0e98fa2] Make the MythDownloadManager use the defined http proxy
+  * [ef62f60] Fix minor typo
+  * [1ed8ec2] MythUI: Fix scrolling with the mouse in MythUIWebBrowser
+  * [d07bf50] Fix the AVC HD icon in PBB. I think this was disabled at
+    the beginning because some themers wanted to prefer the states
+    showing HD resolution 1080/720 over the state which just indicates
+    codec and definition. However the code is written such that leaving
+    the state out of the theme means that we fall back to the next
+    matching state, so themers shouldn't see any difference if they
+    don't define the avchd state.
+  * [2c712c8] Updated Greek MythFrontend, MythArchive, MythBrowser,
+    MythGallery, MythMusic, MythNetvision, MythNews and MythWeather
+    translation from Yianni Vidalis
+  * [cd681be] mythccextractor: Recalculate each frame's duration.
+  * [d95479d] MythUI: Fix itemVisible issue introduced in 9b7eae2f
+  * [a072643] Merge branch 'master' of github.com:MythTV/mythtv
+  * [28fda64] Fix PPC build
+  * [37076dc] Remove include which was randomly added by Kdevelop
+  * [61fe17c] Merge branch 'master' of github.com:MythTV/mythtv
+  * [4d3accc] Always display StereoPCM option when digital audio is
+    available.
+  * [4d7c6d9] Fix visibility of digital options in the audio setup
+    screen.
+  * [30c0773] Add hdmi audio device type detection
+  * [d4dbd11] Fix prefix +for non-primitives (cppcheck)
+  * [8b509a0] Correct handling of IP addresses in Python bindings.
+  * [6045fa4] Fix copying of recording rule inetref to recordings.
+  * [7ad49a2] Better handling of exiting playback of a program in use
+    elsewhere.
+  * [0cd4ef2] Metadata Classes: Support lookup of series level artwork.
+  * [34e75b7] Add Collection support to developmental tmdb3 grabber.
+  * [459adc2] Add build dependency to audio headers
+  * [0c57031] Fix depends behaviour with button list. Also restrict
+    depends scope to siblings and exclude standalone widgets in base
+    files from the depends map.
+  * [9551bce] Fix recording deletion to always stop recording too.
+  * [ca69104] Merge branch 'master' of github.com:/MythTV/mythtv
+  * [4dcf12d] Added a -C (collection) option
+  * [c5a8933] MythMusic string consistency fixes.
+  * [4107b3f] Minor strings consistency fixes in MythWeather.
+  * [08cdb3a] MythGame strings consistency fixes.
+  * [a186aa0] Fix a small typo in MythGallery.
+  * [8db7c05] Leave the start/endyear strings empty if the year matches
+    the current. A temporary workaround which provides the behaviour
+    people want without risking breakage of existing themes, of course
+    it won't fix existing themes either. It only works for ProgramInfo
+    templated dates so won't be consistent across the UI. It also
+    doesn't work for users with years in the long-date formats, since
+    the year will be shown twice.
+  * [148314b] Subtitles: Try to ensure CEA-708 subtitles stay within the
+    safe area.
+  * [e44d341] I either misunderstood Daniel or he changed his mind.
+  * [fe42d2d] Add year to all 'long' form date strings from PI. After
+    discussing it with Daniel in IRC it was decided not to wait until
+    0.26 to fix this properly. As implemented the year will only be
+    added to the strings if the date falls outside the current year.
+  * [0a57c46] Allow backend video scan to scan for content on slave
+    backends.
+  * [8d2c41e] Disable HTML Setup pages and /Config/Save URL
+  * [982469f] Fix jwplayer.qsp spacing issues and add HLS test .qsp
+    page.
+  * [c512578] Don't use OpenGL ES if Qt doesn't suport it.
+  * [9b6ef6f] A couple JW Player related mythbackend webserver fixes.
+  * [9c05ccd] JumpPoints: Reset the menu selection for the Main Menu
+    jump point.
+  * [f4a1079] Fix default Network Control port in mythfrontend.
+  * [1a7c801] Metadata Classes: Parse various additional strings from
+    XML.
+  * [52df594] Merge branch 'master' of github.com:/MythTV/mythtv
+  * [0030709] MythUI: Simplify bounds protection in MythUIText::Layout
+  * [d6b0ef8] Merge branch 'master' of github.com:MythTV/mythtv
+  * [96c1310] Update the themestrings for 0.25.
+  * [9d481e7] Add the upcoming theme "Steppes" to the themestrings
+    run.sh script.
+  * [2038ba4] Add musicsettings-ui.xml as a new optional MythUI theme
+    file in the themestrings run.sh script.
+  * [7f80b9c] Merge branch 'master' of github.com:/MythTV/mythtv
+  * [830cfe2] Revert d028e4856, split hostname lock into two mutexes.
+  * [58164ee] Merge branch 'master' of github.com:/MythTV/mythtv
+  * [d028e48] Remove access lock to m_localHostname and see what
+    happens.
+  * [a29bbc0] Remove assert()s from cc708 decoder.
+  * [b67b116] Don't extract translatable strings from the Metallurgy
+    theme.
+  * [cfdab0b] Increase the page multiples for season spinboxes to 5 and
+    episode spinboxes to 10 to make paging through to large values a
+    little more bearable.
+  * [37157bf] Add new 'startyear' and 'endyear' strings to the available
+    recording metadata.
+  * [4588c0e] Fix reccount value for the Default group
+  * [d71adef] Merge branch 'master' of github.com:/MythTV/mythtv
+  * [f7b7f61] Subtitles: Improve the vertical layout of CEA-708
+    captions.
+  * [a25b8df] Guard against out-of-bounds asserts in
+    MythUIText::Layout().
+  * [1203e7c] Squelch warning in Python bindings.
+  * [bb154a8] Minor Smolt fixes.
+  * [8f9a9b1] More elegantly redirect stdout/stderr rather than just
+    closing
+  * [a0c9d00] Move fix from 7866a616c into MythCoreContext.
+  * [7866a61] Correct ProcessRequestQueue leak in VideoScan::SetDirs.
+  * [1a2c872] Add missing 'else' in 'if..else if..else' block.
+  * [3135176] Commflag: Avoid adding an artificial non-break region at
+    the end.
+  * [5af1950] Add functions to save and query total frames.
+  * [c2cfcb1] Fix minor inconsistencies and misfeatures in deleting
+    recordings.
+  * [69a3718] MythUI: Handle characters in fonts which exceed the
+    "width" and "height" of the font.
+  * [1fc5ed1] Reformat the README slightly
+  * [9815e65] Add some details to the README file
+  * [ae4983f] Add schema check to mythmediaserver.
+  * [5d3fa0a] Disable IPv6 configuration if no addresses present. 
+  * [1ffb7c7] A bit of log cleanup for IPv6/ServerPool.
+  * [a5d8b62] Don't segfault if no textarea was defined
+  * [59affb4] Don't segfault if no cursor image was defined
+  * [d7f40eb] Fix typo in doxygen comment
+  * [a597464] Fix position/duration display when recordings finish while
+    watched.
+  * [18f09a3] Don't repeatedly query the DeleteMap tracker while paused.
+  * [ccee693] Allow OSDSubFont changes to take effect without restarting
+    mythfrontend.
+  * [b283aa9] Correct placement of MediaRenderer placement in
+    mythfrontend.
+  * [ed946ab] Fix libmyth makefile.
+  * [db12303] Fix editing inetref/season/episode from the PBB.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 17 Feb 2012 02:32:35 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 23 Feb 2012 14:10:35 -0600
 
 mythtv (2:0.25.0~master.20120216.769dfae-0ubuntu1) precise; urgency=low
 
