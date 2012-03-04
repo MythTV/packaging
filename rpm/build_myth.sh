@@ -119,6 +119,27 @@ EOF
         fi
     }
 
+# Function to build mythtv packages
+    function buildmythweb {
+    # Clean up any old tarballs that might exist
+        rm -f "$ABSPATH"/mythtv/mythweb*.tar.bz2
+    # Create the appropriate tarballs
+        echo "Creating tarball from git clones at $GITDIR"
+        for file in mythweb; do
+            git archive --format tar --prefix "$file/" --remote "$GITDIR"/../"$file" HEAD | bzip2  > "$ABSPATH/mythtv/$file-$GITVER.tar.bz2"
+            echo "$ABSPATH/mythtv/$file-$GITVER.tar.bz2"
+        done
+    # Build MythTV
+        time rpmbuild -bb "$ABSPATH"/mythweb.spec \
+            --define "_sourcedir $ABSPATH/mythtv" \
+            --with debug
+    # Error?
+        if [ "$?" -ne 0 ]; then
+            echo "MythWeb build error."
+            return
+        fi
+    }
+
 # Function to build mythtv themes packages
     function buildthemes {
     # Update the SVN checkout -- make sure not to
@@ -169,6 +190,8 @@ EOF
             /usr/src/redhat/RPMS/x86_64/mythnetvision-$GITVER-0.1.git.$GITREV.*.rpm       \
             /usr/src/redhat/RPMS/x86_64/mythweather-$GITVER-0.1.git.$GITREV.*.rpm         \
             /usr/src/redhat/RPMS/x86_64/mythtv-debuginfo-$GITVER-0.1.git.$GITREV.*.rpm
+            # These are disabled because the developer doesn't use them
+            #/usr/src/redhat/RPMS/x86_64/mythweb-$GITVER-0.1.git.$GITREV.*.rpm  \
             #/usr/src/redhat/RPMS/x86_64/mythtv-themes-$GITVER-0.1.git.$GITREV.*.rpm  \
     }
 
@@ -275,18 +298,21 @@ EOF
     fi
 
 # Update the revision in the specfile
-    echo "Updating mythtv.spec _gitver to $VSTRING"
-    sed -i \
-        -e "s,define _gitrev .\+,define _gitrev $GITREV," \
-        -e "s,define branch .\+,define branch $BRANCH,"   \
-        -e "s,define vers_string .\+,define vers_string $DESCRIBE,"   \
-        -e "s,Version:.\+,Version: $GITVER,"              \
-        "$ABSPATH/mythtv.spec"
+    for SPEC in mythtv mythweb; do
+        echo "Updating $SPEC.spec _gitver to $VSTRING"
+        sed -i \
+            -e "s,define _gitrev .\+,define _gitrev $GITREV," \
+            -e "s,define branch .\+,define branch $BRANCH,"   \
+            -e "s,define vers_string .\+,define vers_string $DESCRIBE,"   \
+            -e "s,Version:.\+,Version: $GITVER,"              \
+            "$ABSPATH/$SPEC.spec"
+    done
 
 # Update the other spec files to the MythTV spec version
     # later...
 
 # Build MythTV
+    buildmythweb
     buildmyth
 
 # Done
