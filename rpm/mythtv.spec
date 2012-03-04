@@ -65,10 +65,10 @@
 %define desktop_vendor  xris
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25pre-4677-g5d7c01d
+%define vers_string v0.25pre-4799-g7b526c4
 
 # Git Revision number and branch ID
-%define _gitrev 4677.g5d7c01d
+%define _gitrev 4799.g7b526c4
 %define branch master
 
 #
