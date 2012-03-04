@@ -4,7 +4,7 @@
 # by:   Chris Petersen <cpetersen@mythtv.org>
 #       Jarod Wilson <jwilson@mythtv.org>
 #
-#  Modified/Extended from the great (non-svn based) work of:
+#  Modified/Extended from the great (non-git/svn based) work of:
 #     Axel Thimm <Axel.Thimm@ATrpms.net>
 #     David Bussenschutt <buzz@oska.com>
 #     and others; see changelog at bottom for details.
@@ -62,12 +62,12 @@
 %define desktop_applications mythfrontend mythtv-setup
 
 # The vendor name we should attribute the aforementioned entries to
-%define desktop_vendor  xris
+%define desktop_vendor  mythtv
 
 # MythTV Version string -- preferably the output from git --describe
 %define vers_string v0.25pre-4799-g7b526c4
 
-# Git Revision number and branch ID
+# Git Revision number and branch
 %define _gitrev 4799.g7b526c4
 %define branch master
 
