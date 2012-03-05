@@ -511,15 +511,16 @@ $ENV{'SDKROOT'} = $SDKROOT;
 our $CCBIN = `xcodebuild -find gcc -sdk $SDKNAME`; chomp $CCBIN;
 our $CXXBIN = `xcodebuild -find g++ -sdk $SDKNAME`; chomp $CXXBIN;
 my $XCODEVER = `xcodebuild -version`; chomp $XCODEVER;
-if ( $XCODEVER =~ m/Xcode\s+([0-9]+\.[0-9]+(\.[0-9]+)?)/ )
+if ( $XCODEVER =~ m/Xcode\s+(\d+\.\d+(\.\d+)?)/ && ! $OPT{'olevel'} )
 {
-    if ( $1 eq "4.2" )
+    if ( $1 =~ m/^4\.2/ )
     {
         &Complain("XCode 4.2 is buggy, upgrade to something else");
         &Verbose("Enabling -O2 compilation");
         $OPT{'olevel'} = "2";
     }
 }
+
 $ENV{'CC'} = $CCBIN;
 $ENV{'CXX'} = $CXXBIN;
 $ENV{'CPP'} = "$CCBIN -E";
