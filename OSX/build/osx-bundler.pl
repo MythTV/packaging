@@ -31,20 +31,17 @@ osx-bundler.pl target1.app/Contents/Resources/lib/extra.dylib [lib-dir...]
 # 2) copies them into the bundle's Framework directory
 # 3) uses install_name_tool to update the library load paths
 #
-# = KNOWN BUGS
-# Doesn't do anything about Universal Binaries yet
-#
 # = TO DO
 # Add more arguments to allow the user to specify
 # .pinfo fields like CFBundleIdentifier, CFBundleSignature,
 # NSHumanReadableCopyright, CFBundleGetInfoString, et c.
 #
 # = REVISION
-# $Id$
+# 2.0
 #
 # = AUTHORS
 # Nigel Pearson. Based on osx-packager by Jeremiah Morris,
-# with improvements by Geoffrey Kruse and David Abrahams
+# with improvements by Geoffrey Kruse, David Abrahams and Jean-Yves Avenard
 # ============================================================================
 
 use strict;
@@ -67,7 +64,8 @@ if ( $#ARGV < 0 )
 # ============================================================================
 
 my $verbose = 0;
-my $Id = '$Id$';  # Version of this script. From version control system
+our $arch = "";
+my $Id = '2.0';   # Version of this script
 my $binary;
 my $binbase;      # $binary without any directory path
 my $bundle;
@@ -76,12 +74,14 @@ my $target;  # Full path to the binary under $bundle
 
 # Process arguments:
 
-Getopt::Long::GetOptions('verbose' => \$verbose) or usage(-1);
+Getopt::Long::GetOptions('verbose' => \$verbose, 'arch=s' => \$arch) or usage(-1);
 
 $binary  = shift @ARGV;
 @libdirs = @ARGV;
 
 # ============================================================================
+
+&Verbose("Processing $binary");
 
 if ( $binary =~ m/(.*)\.app$/ )
 {
@@ -185,17 +185,37 @@ sub MakeFramework
     my ($dylib, $dest) = @_;
 
     my ($base, $vers) = &BaseVers($dylib);
+    if ( ! defined $vers )
+    {
+        $vers = "1.0";
+    }
     my $fw_dir = $dest . '/' . $base . '.framework';
 
+    &Verbose("MakeFramework: fw_fir = $fw_dir, dest = $dest, base = $base, dylib = $dylib");
     return '' if ( -e $fw_dir );
 
     &Verbose("Building $base framework");
 
     &Syscall([ '/bin/mkdir', '-p',
                "$fw_dir/Versions/A/Resources" ]) or die;
-    &Syscall([ '/bin/cp', $dylib,
-               "$fw_dir/Versions/A/$base" ]) or die;
-
+    if ( $arch eq "" )
+    {
+        &Syscall([ '/bin/cp', $dylib,
+                   "$fw_dir/Versions/A/$base" ]) or die;
+    }
+    else
+    {
+        &Verbose("Extracting $arch architecture from $dylib");
+        my @args = ( '/usr/bin/lipo', '-thin', $arch, $dylib, '-o', "$fw_dir/Versions/A/$base" );
+        &Verbose(@args);
+        # try to extract required architecture
+        system(@args);
+        if ( $? )
+        {
+            # if unsuccessful, just copy the lib
+            &Syscall([ '/bin/cp', $dylib, "$fw_dir/Versions/A/$base" ]) or die;
+        }
+    }
     &Syscall([ '/usr/bin/install_name_tool',
                '-id', $base, "$fw_dir/Versions/A/$base" ]) or die;
 
@@ -203,6 +223,19 @@ sub MakeFramework
     symlink('Versions/Current/Resources', "$fw_dir/Resources") or die;
     symlink("Versions/A/$base", "$fw_dir/$base") or die;
 
+    if ( $dylib =~ m/\.framework/ )
+    {
+        my $resdir = dirname($dylib) . "/Resources";
+        if ( -d $resdir )
+        {
+            &Verbose("$resdir exists, copy over $fw_dir/Resources");
+            my @files = glob "$resdir/*";
+            foreach (@files)
+            {
+                &Syscall([ '/bin/cp', '-R', "$_", "$fw_dir/Resources" ]);
+            }
+        }
+    }
     &Verbose("Writing Info.plist for $base framework");
     my $plist;
     unless (open($plist, '>' . "$fw_dir/Versions/A/Resources/Info.plist"))
@@ -345,7 +378,6 @@ sub ProcessDependencies(@)
         foreach my $dep (@deps)
         {
             chomp $dep;
-
             # otool returns lines like:
             #    libblah-7.dylib   (compatibility version 7, current version 7)
             # but we only want the file part
@@ -362,7 +394,7 @@ sub ProcessDependencies(@)
 
             # Any dependency which is already package relative can be ignored
             next if $dep =~ m/\@executable_path/;
-
+            
             # skip system library locations
             next if ($dep =~ m|^/System|  ||
                      $dep =~ m|^/usr/lib|);
@@ -371,6 +403,7 @@ sub ProcessDependencies(@)
 
             # Only add this dependency if needed. This assumes that 
             # we aren't mixing versions of the same library name
+            &Verbose("Process Dep $base");
             if ( ! -e "$bundle/Contents/Frameworks/$base.framework/$base" )
             {   $depfiles{$base} = $dep   }
 
@@ -402,6 +435,11 @@ sub BaseVers
     }
     elsif ($filename =~ m|^(?:.*/)?lib(.*?)\.dylib$|)
     {
+        return ($1, undef);
+    }
+    elsif ($filename =~ m|^.*?\.framework.*/(.*?)$|)
+    {
+        &Verbose("Framework : $1");
         return ($1, undef);
     }
 
