@@ -178,6 +178,7 @@ osx-packager.pl - build OS X binary packages for MythTV
   -bootstrap         exit after building all thirdparty components
   -disable-sysroot   compiling with sysroot only works with 0.25 or later
                      use -disable-sysroot if compiling earlier version of myth
+  -olevel <n>        compile with extra -On
 
 =head1 DESCRIPTION
 
@@ -272,6 +273,7 @@ Getopt::Long::GetOptions(\%OPT,
                          'qtbin=s',
                          'qtplugins=s',
                          'nobundle',
+                         'olevel=s',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -508,6 +510,16 @@ $ENV{'SDKROOT'} = $SDKROOT;
 # Determine appropriate gcc/g++ path for the selected SDKs
 our $CCBIN = `xcodebuild -find gcc -sdk $SDKNAME`; chomp $CCBIN;
 our $CXXBIN = `xcodebuild -find g++ -sdk $SDKNAME`; chomp $CXXBIN;
+my $XCODEVER = `xcodebuild -version`; chomp $XCODEVER;
+if ( $XCODEVER =~ m/Xcode\s+([0-9]+\.[0-9]+(\.[0-9]+)?)/ )
+{
+    if ( $1 eq "4.2" )
+    {
+        &Complain("XCode 4.2 is buggy, upgrade to something else");
+        &Verbose("Enabling -O2 compilation");
+        $OPT{'olevel'} = "2";
+    }
+}
 $ENV{'CC'} = $CCBIN;
 $ENV{'CXX'} = $CXXBIN;
 $ENV{'CPP'} = "$CCBIN -E";
@@ -544,7 +556,13 @@ $ENV{'QTDIR'} = "$QTSDK";
 $ENV{'QMAKESPEC'} = 'macx-g++';
 $ENV{'MACOSX_DEPLOYMENT_TARGET'} = $OSTARGET;
 
-$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'ECXXFLAGS'} = "$SDKISYSROOT -I$PREFIX/include -I$PREFIX/mysql";
+our $OLEVEL="";
+if ( $OPT{'olevel'} =~ /^\d+$/ )
+{
+    $OLEVEL="-O" . $OPT{'olevel'} . " ";
+}
+
+$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'ECXXFLAGS'} = "${OLEVEL}${SDKISYSROOT} -I$PREFIX/include -I$PREFIX/mysql";
 $ENV{'LDFLAGS'} = "$SDKLSYSROOT -L$PREFIX/lib -F$QTLIB";
 $ENV{'PREFIX'} = $PREFIX;
 $ENV{'SDKROOT'} = $SDKROOT;

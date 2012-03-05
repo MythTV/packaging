@@ -152,6 +152,7 @@ osx-packager.pl - build OS X binary packages for MythTV
    -bootstrap       exit after building all thirdparty components
    -nohacks         don't use Nigel's hacks
    -noparallel      do not use parallel builds, Qt compilation can fail with them
+   -olevel <n>      compile with extra -On
 
 =head1 DESCRIPTION
 
@@ -227,6 +228,7 @@ Getopt::Long::GetOptions(\%OPT,
                          'bootstrap',
                          'nohacks',
                          'noparallel',
+                         'olevel=s',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -415,6 +417,16 @@ $ENV{'SDKROOT'} = $SDKROOT;
 # Determine appropriate gcc/g++ path for the selected SDKs
 our $CCBIN = `xcodebuild -find gcc -sdk $SDKNAME`; chomp $CCBIN;
 our $CXXBIN = `xcodebuild -find g++ -sdk $SDKNAME`; chomp $CXXBIN;
+my $XCODEVER = `xcodebuild -version`; chomp $XCODEVER;
+if ( $XCODEVER =~ m/Xcode\s+([0-9]+\.[0-9]+(\.[0-9]+)?)/ )
+{
+    if ( $1 eq "4.2" )
+    {
+        &Complain("XCode 4.2 is buggy, upgrade to something else");
+        &Verbose("Enabling -O2 compilation");
+        $OPT{'olevel'} = "2";
+    }
+}
 $ENV{'CC'} = $CCBIN;
 $ENV{'CXX'} = $CXXBIN;
 
@@ -435,11 +447,17 @@ if ( ! -e "$SDKROOT" )
     }
 }
 
-$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'CPPFLAGS'} = "-isysroot $SDKROOT -mmacosx-version-min=10.4 -I$PREFIX/include";
+our $OLEVEL="";
+if ( $OPT{'olevel'} =~ /^\d+$/ )
+{
+    $OLEVEL="-O" . $OPT{'olevel'} . " ";
+}
+
+$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'CPPFLAGS'} = "${OLEVEL}-isysroot $SDKROOT -mmacosx-version-min=10.4 -I$PREFIX/include";
 $ENV{'LDFLAGS'} = "-Wl,-syslibroot,${SDKROOT} -mmacosx-version-min=10.4 -L$PREFIX/lib";
 $ENV{'PREFIX'} = $PREFIX;
 $ENV{'SDKROOT'} = $SDKROOT;
-$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'CPPFLAGS'} = "-mmacosx-version-min=10.4 -I$PREFIX/include";
+$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'CPPFLAGS'} = "${OLEVEL}-mmacosx-version-min=10.4 -I$PREFIX/include";
 #$ENV{'LDFLAGS'} = "-F/System/Library/Frameworks -L/usr/lib -L$PREFIX/lib";
 
 if ( $SDKVER eq "10.4" )
