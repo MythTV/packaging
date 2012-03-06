@@ -1,4 +1,4 @@
-mythtv (2:0.25.0~master.20120223.532cee8-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.25.0~master.20120305.6519666-0ubuntu1) precise; urgency=low
 
   * Drop mythtv-themes metapackage and childish theme.  Should be installed
     exclusively through theme chooser now.
@@ -6,8 +6,314 @@ mythtv (2:0.25.0~master.20120223.532cee8-0ubuntu2) UNRELEASED; urgency=low
   * Update configure without install patch.
   * Tweak default max_connections for mysql to be 100 per requests from
     mythtv mailing lists.
+  * Update to a checkout post mythtv 0.25 beta release.
+  * New upstream checkout (6519666)
+  * >>Upstream changes since last upload (532cee8):
+  * [6519666] Use deleteLater() when deleting server sockets in
+    ServerPool.
+  * [b08b41b] Silence unused variable warning
+  * [5112e25] Silence unused variable warning
+  * [40c69e1] AvFormatDecoder: add FORCE_DTS_TIMESTAMPS environment
+    variable
+  * [dbb5ffb] Merge branches 'master' and 'master' of
+    github.com:MythTV/mythtv
+  * [57687c8] Subtitles: Initialize the SRT error count to avoid bogus
+    diagnostics.
+  * [6c3a799] Increase kMaxUIWaitTime to 10 seconds. The theory is that
+    this timeout was to prevent a very delayed response to an
+    availability check causing playlists to resume playing long after
+    the user had moved on. The present timeout was very short though and
+    didn't account for delays caused by disks needing to be spun up or
+    just the latency of checking multiple storage groups for a file.
+    Almost certainly fixes #8316
+  * [dd9a92a] Subtitles: Fix a null pointer dereference when splitting
+    long lines.
+  * [5f98ce1] Fixes #10367. Adds new Motorolla DCX-3200 vendor and
+    device id.
+  * [7347bf5] Fix for WSDL generation.
+  * [a454b79] Allow the processing of uncompressed data from Schedules
+    Direct.
+  * [f19c9c2] Minor changes to allow compilation using VS2010
+  * [0607b58] Fix build after [6a200130eff4]
+  * [6a20013] Handle more ISO-639 codes
+  * [d1a6cc8] Fix universal package build with new osx-builder
+  * [20f2c45] Fix UPnP for Sony BluRay players
+  * [638192e] mythtranscode: --fifoinfo reports aspect ratio of first
+    uncut frame
+  * [18fdd67] Look in more than one location for libdvdcss on mac.
+  * [871a1cd] Giving up on Qt, doing it with an external command.
+  * [4392c16] Delay first call to QTextCodec until after main
+    QApplication has been created
+  * [da7626e] Do not disable mythmusic dependencies when using --
+    disable-all
+  * [ca996e0] Updated Norwegian Bokmal MythFrontend and all plugins
+    translation from Rune Evjen.
+  * [18ab21a] Rearrange code in AddRangeList to defeat compile warnings
+  * [2422b6f] Miscellaneous string fixes
+  * [5e898a1] Fix HLS AddVideoLiveStream with files in subdirectories.
+  * [f834940] MythArchive: Remove the Cancel options from the menus
+  * [366d96d] Correct issue passing python library name for dependency
+    checking.
+  * [c09418f] MythBrowser: Remove the Cancel options from the menus
+  * [002d7c5] MythMusic: Remove the Cancel options from the menus
+  * [bb3d1a8] MythMusic: Add some context menus on the playlist editor
+    screen
+  * [bf4ff78] Per 2075458f5 Remove deprecated attribute from
+    dispatchNow(), we know it's deprecated but it's not going away any
+    time soon
+  * [12bbcf0] Fix a warning about an unused variable in httpconfig.cpp
+  * [43dcfce] Fix a warning about an unused variable in videolist.cpp
+  * [4edcda6] Move the Recording Profiles editor into mythtv-setup where
+    it belongs. This constantly gets overlooked because it's not in the
+    right place, especially by users who chose to use a third party
+    frontend.
+  * [d7c8dfb] Better default device (when MediaMonitor disabled) on OS
+    X. Refs #10370
+  * [7b526c4] Rework AudioReencodeBuffer further to fix HLS audio
+    buffering
+  * [a130e74] Bump ABI version.
+  * [5e976b4] Rename util.h into mythmiscutil.h
+  * [efe385c] Fix dcraw detection on FreeBSD (old sh, not bash)
+  * [f5aa5e8] Use QNetworkAddressEntry to get proper broadcast address
+    for udplistener
+  * [b6f9e1d] Revert "Rename util.h into mythutil.h"
+  * [84275f1] Revert "util.h rename itself didn't get committed"
+  * [8ef8c0b] Merge branch 'master' of github.com:MythTV/mythtv
+  * [0fe6e14] Totally rework the AudioReencodeBuffer part in transcode
+  * [fb8004a] util.h rename itself didn't get committed
+  * [ef771da] Rename util.h into mythutil.h
+  * [ba9b5d3] Rewrite configure for mythplugins
+  * [a5557a3] Fix MythZoneMinder on mac; the proper way..
+  * [30ed8f0] DeleteMap tracker: Fix an error in 94d27c67f.
+  * [6ae9f66] Rewrite configure for mythplugins
+  * [0fc9853] Fix MythZoneMinder on mac; the proper way..
+  * [79f5133] Updated US English MythFrontend and all plugins
+    translation from the US English Language Translation Team.
+  * [6952dc4] Miscellaneous typo and case fixes.
+  * [b85f5bb] MythArchive: various minor mythburn.py script improvements
+  * [7e9cd56] Missed a change from cda7871f - I forgot to make install
+    when testing and missed the breakage.
+  * [9d83307] Remove an errant <value> tag from the mythgallery default
+    theme. This was causing some confusion for translators.
+  * [cda7871] Fix the channel icon not loading in the OSD on remote
+    frontends by switching to using the channel icon storage group. This
+    bug has been around for years so it's nice to finally have a fix.
+  * [e0e321f] Additional case and spacing fixes.
+  * [47c7c48] Add a few missing spaces...
+  * [736524b] Various case and punctuation fixes.
+  * [eba28f4] MythMusic: Only abort ripping upon confirmation
+  * [81acf24] Tweak the space available for the channel number so that
+    it remains hidden behind the poster.
+  * [fbba2ae] Show coverart in the Terra OSD, falling back to channel
+    icon if the artwork isn't available and channel number if the
+    channel icon isn't available.
+  * [ff4d601] DVD navigation: Reenable skipping past the last chapter of
+    a title, and skipping previous to the first chapter of a title.  The
+    limitation may have been left over from an older version of
+    libdvdnav.
+  * [8ea557a] Fix 'depends'. I'm surprised I didn't notice this earlier,
+    perhaps because I was using <group> a lot I missed that depends
+    behaviour didn't work for immediate children of <window>.
+  * [eb87f9e] Fix 'depends' for inherited and copied screens.
+  * [38221b8] Only show poster in the default-wide OSD when we're not
+    displaying the channum/icon/callsign. Also center the poster better
+    in the available space.
+  * [69cae58] Merge commit 'e965387441ff189bb2c096f8ed5bdbf2b2a473e6'
+  * [e965387] Add setup script and readme
+  * [905e8e5] Split 'mythtv/bindings/python/MythTV/tmdb3/' into commit
+    '565041dddf9d4937c31c0d57475c548e56882e89'
+  * [565041d] Enable search paging for TMDB v3 API.
+  * [367b05d] Enable search paging for TMDB v3 API.
+  * [6113151] Add proper language support to TMDB v3 API.
+  * [6410395] Add proper language support to TMDB v3 API.
+  * [c65d8eb] Remove TMDB API key from request.py
+  * [6c4c60a] Remove TMDB API key from request.py
+  * [b38f901] Fix some null strings in SQL inserts on NOT NULL columns.
+  * [55fd3bf] MythUI: Make ascent/descent/bearing adjustment a little
+    easier to follow, by using moveTop/moveLeft instead of setX/setY
+  * [d16575c] MythUI: fix a typo in MythUIText::DrawSelf that could
+    result in an incorrect canvas size.
+  * [64383c5] Fix a compiler warning.
+  * [ecea05d] Added ENO to an error log in avformatdecoder
+  * [03e2387] Services API: Fix cut and paste error.
+  * [99abdfe] Update xml schema declaration for 0.25
+  * [6e2f231] Fix typo
+  * [05e5cf7] Updated Spanish/Spain MythFrontend, MythArchive,
+    MythBrowser, MythGallery, MythGame, MythMusic, MythNetvision,
+    MythNews, MythWeather transation from the Spanish Language
+    Translation Team
+  * [2f895cb] Fix mythzoneminder on mac part #3
+  * [e34c8d7] Fix universal architecture compilation of myth on mac.
+  * [a513779] Fix MythZoneMinder part #2
+  * [700a58d] Remove stray include, same as <Qt>
+  * [d84d5c9] Add basic dead key support to mythuitextedit. Implemented
+    from scratch because I couldn't see a way of getting QT to handle
+    it. 
+  * [c3544ed] Fix mac compilation
+  * [6bfda0c] Fix mythoneminder compilation when using mysql universal
+    libraries.
+  * [21ad34b] Add --firewire-sdk configuration switch to configure
+  * [3196c2c] Fix FireWire compilation on mac when compiling in 64 bits
+    mode.
+  * [5dccbd5] Fix mac compilation when Qt Frameworks are in use.
+  * [20d6852] Fix libcec configure to work with v1.5
+  * [f16048b] Finish the db upgrade to 1299 (perl bindings)
+  * [d486b8a] Make artwork edit UI elements optional on video metadata
+    edit screen.
+  * [38dfa89] Updated British English MythFrontend, MythArchive,
+    MythGame and MythMusic translation from Nick Morrott
+  * [7e4740e] Refs #8941. Make sure we set the channum when switching to
+    a new card with either a specific chanid or inputid.
+  * [05bc5e1] plugins configure: Remove some debugging left by mistake
+  * [ff593fa] Clean up the mappings for network control jump points.
+  * [146ee76] Fixes #8744. Fixes crash in DVB-x channel scanning.
+  * [6f24f3b] Subtitles: Rename the OSDSubFont setting to
+    DefaultSubtitleFont.
+  * [6202c0d] Revert "Subtitles: Remove the OSDSubFont setting."
+  * [4a2420e] MythZoneMinder: Add support for the deep filesystem
+    hierarchy for events.
+  * [a6b1e3a] Program editor: don't seek too far when stepping to the
+    next keyframe.
+  * [97da8c8] Fix a doxygen comment
+  * [144c8bb] MythMusic: Do a full reload of the tracks and playlists
+    after doing a scan
+  * [f78f999] Change delete behaviour so that we always use the deleted
+    recording group allowing all recordings to be undeleted. By default
+    we will only keep recordings for a minimum of 5 minutes (max ~20m)
+    after their deletion, enough time to recover from a mistake but
+    still free up space quickly. As before the user can specify to keep
+    deleted recordings for a fixed number of days or until the space is
+    needed for a new recording instead. Post 0.25 this change will allow
+    us to strip out the old deletion code and simplify configuration
+    process, the functional change is being made now to fix a couple of
+    bugs caused by external processes such as MythPreviewGen blocking
+    deletes from the UI. Fixes #9536
+  * [cfd3fc0] MythMusic: Fix the sending of the MUSIC_SETTINGS_CHANGED
+    event
+  * [5932419] Merge branch 'compartist'
+  * [5206271] Subtitles: Apply OSDCC708TextZoom to CEA-608 captions as
+    well.
+  * [99512fb] Refs #10386.  Don't sent EXIT_TO_MAIN event to Live TV
+    jump point.
+  * [dfd909f] Fix crash on mac when no audio device exists.
+  * [bd68156] MythMusic: Fix the BLANKSCR keybinding not working
+  * [9016890] MythMusic: Check for some additional cdio headers
+  * [3570a99] MythMusic: Fix a memory leak in the playlist editor
+  * [7e6f5fa] Fixes #10386. Segfault fix. Check for null.
+  * [510da69] As noted in SHA1:9551bce2, MainServer doesn't know the
+    actual recording status because it defaults to rsRecorded when the
+    recordinginfo is initialized from the recorded table.  MainServer
+    doesn't account for this and tries to make any needed state change
+    which always ends up staying rsRecorded.  MainServer then passes
+    this bad status to the scheduler.  If the recording had already
+    failed, the rsFailed status gets overwritten.
+  * [3740d7d] Spelling consistency fixes
+  * [47d7c77] Fixes #9233. Refs #7408. Re-enables WindowResized().
+  * [a5447f1] MythMusic: Add a Compilations branch to the playlist
+    editor
+  * [1824969] Fixes #10153. Guess at DVB-S vs DVB-S2 when not explicitly
+    set.
+  * [21784ce] Fixes #10377. Prevent getting "stuck on a mux".
+  * [593d24b] Refs #10377. Some logging fixes. (VB_PLAYBACK-
+    >VB_CHANNEL).
+  * [14ec737] Change the rsTuning UI state equivalent from 'tuning' to
+    'running'. The UI states for the 'status' statetype are limited to 5
+    generic values (normal, running, warning, error, disabled) to allow
+    some portability to scenarios other than recording. (This was
+    supposed to save themers some time and effort although it also binds
+    their hands and doesn't allow as much creativity with how various
+    recording states are represented. For this reason it may be re-
+    visited post-0.25)
+  * [4d68d5e] Updated Russian MythFrontend, MythArchive, MythBrowser,
+    MythGallery, MythGame, MythMusic, MythNews, MythWeather and
+    MythZoneminder.
+  * [34c8767] Subtitles: fix an incorrect CEA-708 font mapping.
+  * [b967448] Fix the faulty exit code 139 issue in Ubuntu systems
+  * [723d798] Subtitles: improve vertical alignment for CEA-608
+    captions.
+  * [1af1aec] Fixes display of position in the Program Lister.
+    MythUIButtonList is zero indexed, to get a position for display we
+    must add one.
+  * [967208b] Fix the last, hopefully, remaining places where
+    livetvorder isn't honored.
+  * [0a301c0] Fix the scheduler to not write incorrect oldrecorded
+    entries.
+  * [5d5aef3] Subtitles: improve the layout.
+  * [878d5eb] String consistency updated
+  * [456bb42] Updated Estonian MythFrontend and all plugins translation
+    from Marko Punnar
+  * [e719d54] Replace tabs with spaces in Terra's schedule filter editor
+    window xml
+  * [a3d9891] Use proper capitalization for some common words and
+    prefixes.
+  * [5b19c4d] Populate the infomap from both RecordingRule and
+    RecordingInfo if available. This fixes recording rule specific
+    information not being available in the sub screens of the schedule
+    editor.
+  * [f77d001] Fix minor problems editing in-progress recordings.
+  * [006ded1] Fix recording status strings being set to 'Not scheduled'
+    when the reason for that is they were in the past and should have
+    been marked as Recorded/Aborted/Failed/Cancelled/etc instead
+  * [6bedf81] Correct handling of unrelated argument after arg-less
+    keyword.
+  * [7adbd54] Delay String processing until after QApplication has been
+    initialized.
+  * [f613a43] Fix LiveTV switching by videosource to honor livetvorder.
+  * [9b5b7b5] Exit cutlist edit mode cleanly when executing a jump
+    point.
+  * [c2a0b85] Updated British English translation MythFrontend
+    translation from Nick Morrott.
+  * [307dac8] Make jump points work during playback when the OSD is
+    present.
+  * [d59f4f4] Change dynamic cast to static. This is troubling because
+    we rely on dynamic casts in so many places but for at least one
+    person this cast was failing and causing popup menus in MythMusic to
+    no longer have any effect. Maybe a buggy version of gcc?
+  * [3de87c3] Subtitles: Fix a logic error.
+  * [23d5167] Make host checks in Video Library scanner case
+    insensitive.
+  * [5d7c01d] Cutlist editor: Update the edit bar for in-progress
+    recordings.
+  * [1ce3d21] Cutlist editor: Adjust "Cut to End" behavior for an in-
+    progress recording.
+  * [4a8546d] Merge branch 'master' of github.com:MythTV/mythtv
+  * [1d6485d] MythArchive consistency fixes.
+  * [89c34ef] Fix seeking backwards into a cut region.
+  * [6c3b564] Updated British English translation MythFrontend
+    translation from Nick Morrott.
+  * [5501fff] Fix long-standing bug that always cleared
+    record.next_record instead of updating it.
+  * [0c5de8e] Add missing menu closed event when closing the menu via
+    the mouse. Fixes the menu dialog not working in some screens after
+    being dismissed using a right click.
+  * [93c228d] Prevent crash when invoking the menu dialog via the right
+    mouse button in Watch Recordings. ShowMenu() is a virtual method in
+    MythScreenType, it's intended purpose is to load/display the context
+    menu but here it is displaying a menu loaded elsewhere with no
+    guards against duplicate popups being created. Move the menu display
+    code to DisplayPopupMenu(), restore ShowMenu() to behave the same as
+    the MENU key binding and re-instate the guards against multiple menu
+    dialogs being created. Also fixes #10248 - 'Cannot delete recording
+    if file is missing'
+  * [b755eca] Attempt to prevent a QString segfault if MythMenu changes
+    while a dialog is open.
+  * [f3efafe] Fix segfault in MythUIButtonTree when list is empty and we
+    attempt to navigate it. Refs #9101
+  * [b3e44a2] Rule type was missed from the RecordingRule text map.
+    Added so that it appears twice in the map, once under the correct
+    title of ruletype but also as rectype to be consistent with the
+    ProgramInfo map until after 0.25 when we can rename that instance.
+  * [2075458] Remove deprecated attribute from dispatchNow(), we know
+    it's deprecated but it's not going anywhere soon.
+  * [82fc1af] Add Collection support to developmental tmdb3 grabber.
+  * [0f0b0a7] Better backend metaclass, and people search support.
+  * [c47940a] Clean up and document background machinery
+  * [850fbc2] Replacement PagedList to temporarily work around bug in
+    search API
+  * [d13addf] Add caching to tmdbv3 requests.
+  * [fe97f23] In progress TMDB v3 grabber script.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 28 Feb 2012 00:35:48 -0600
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Mon, 05 Mar 2012 21:49:35 -0600
 
 mythtv (2:0.25.0~master.20120223.532cee8-0ubuntu1) precise; urgency=low
 
