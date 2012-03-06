@@ -7,5 +7,5 @@ cd $selfpath/../
 reponame=`cat profiles/repo_name`
 
 echo "Updating $reponame..."
-git pull
+git pull --rebase
 
