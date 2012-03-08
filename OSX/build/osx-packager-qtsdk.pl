@@ -678,7 +678,7 @@ for my $arch (@ARCHS)
 if ( ! $OPT{'qtsrc'} )
 {
     &Verbose("Testing Qt environment");
-    my $dir = tempdir( );#CLEANUP => 1 );
+    my $dir = tempdir( CLEANUP => 1 );
     my $tmpe = "$dir/test";
     my $tmpcpp = "$dir/test.cpp";
     my $tmppro = "$dir/test.pro";
@@ -690,9 +690,9 @@ if ( ! $OPT{'qtsrc'} )
     my $name = basename($tmpe);
     print fdpro "SOURCES=$tmpcpp\nTARGET=$name\nDESTDIR=$dir\nCONFIG-=app_bundle";
     close fdpro;
-    &Syscall("$QTBIN/qmake \"QMAKE_CC=$CCBIN\" \"QMAKE_CXX=$CXXBIN\" \"QMAKE_CXXFLAGS=$ENV{'ECXXFLAGS'}\" \"QMAKE_CFLAGS=$ENV{'CFLAGS'}\" \"QMAKE_LFLAGS+=$ENV{'LDFLAGS'}\" -o $make $tmppro");# 2> /dev/null > /dev/null");
+    &Syscall("$QTBIN/qmake \"QMAKE_CC=$CCBIN\" \"QMAKE_CXX=$CXXBIN\" \"QMAKE_CXXFLAGS=$ENV{'ECXXFLAGS'}\" \"QMAKE_CFLAGS=$ENV{'CFLAGS'}\" \"QMAKE_LFLAGS+=$ENV{'LDFLAGS'}\" -o $make $tmppro 2> /dev/null > /dev/null");
     &Syscall(['/bin/rm' , '-f', $tmpe]);
-    my $result = &Syscall("/usr/bin/make -C $dir -f $make $name");# 2>/dev/null >/dev/null");
+    my $result = &Syscall("/usr/bin/make -C $dir -f $make $name 2>/dev/null >/dev/null");
 
     if ( $result ne "1" )
     {
