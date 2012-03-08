@@ -4,10 +4,13 @@
 ### osx-packager-qtsdk.pl
 ###
 ### = revision
-### 1.0
+### 2.0
+####
+### Copyright (c) 2012 Jean-Yves Avenard
+### based on osx-packager.pl by by Jeremiah Morris <jm@whpress.com>
 ###
 ### = location
-### https://github.com/MythTV/packaging/raw/master/OSX/build/osx-packager-qtsdk.pl
+### https://github.com/MythTV/packaging//OSX/build/osx-packager-qtsdk.pl
 ###
 ### = description
 ### Tool for automating frontend builds on Mac OS X.
@@ -134,15 +137,13 @@ osx-packager.pl - build OS X binary packages for MythTV
   -help              print the usage message
   -man               print full documentation
   -verbose           print informative messages during the process
-  -version <str>     custom version suffix (defaults to "gitYYYYMMDD")
-  -noversion         don't use any version suffix
-                     (for building release versions)
   -distclean         throw away all myth installed and intermediates
                      files and exit
   -qtsdk <path>      path to Qt SDK Deskop
                      (e.g. -qtsdk ~/QtSDK/Desktop/Qt/4.8.0
   -qtbin <path>      path to Qt utilitities (qmake etc)
   -qtplugins <path>  path to Qt plugins
+  -qtsrc <version>   build Qt from source
   -m32               build for a 32-bit environment only
                      (default is to build for the host's architecture)
   -universal         build for both 32 and 64 bits architectures
@@ -155,6 +156,8 @@ osx-packager.pl - build OS X binary packages for MythTV
  Advanced Options:
   -srcdir  <path>    build using provided root mythtv directory
   -pkgsrcdir <path>  build using provided packaging directory
+  -archive <path>    specify where dependencies archives can be found
+                     (default is .osx-packager/src)
   -force             use myth source directory as-is,
                      with no GIT validity check
   -nodistclean       do not perform a distclean prior to building myth
@@ -173,12 +176,15 @@ osx-packager.pl - build OS X binary packages for MythTV
   -profile           build with compile-type=profile
   -debug             build with compile-type=debug
   -plugins <str>     comma-separated list of plugins to include
-  -noparallel        do not use parallel builds
+  -noparallel        do not use parallel builds.
+                     compiling Qt from source will fail will parallel builds
   -nobundle          only recompile, do not create application bundle
   -bootstrap         exit after building all thirdparty components
-  -disable-sysroot   compiling with sysroot only works with 0.25 or later
-                     use -disable-sysroot if compiling earlier version of myth
+  -nosysroot         compiling with sysroot only works with 0.25 or later
+                     use -nosysroot if compiling earlier version
   -olevel <n>        compile with extra -On
+  -buildprofile <x>  build either master or fixes-0.24 (default: master)
+
 
 =head1 DESCRIPTION
 
@@ -241,8 +247,6 @@ Getopt::Long::GetOptions(\%OPT,
                          'help|?',
                          'man',
                          'verbose',
-                         'version=s',
-                         'noversion',
                          'distclean',
                          'thirdclean',
                          'nodistclean',
@@ -272,74 +276,14 @@ Getopt::Long::GetOptions(\%OPT,
                          'qtsdk=s',
                          'qtbin=s',
                          'qtplugins=s',
+                         'qtsrc=s',
                          'nobundle',
                          'olevel=s',
+                         'nosysroot',
+                         
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
-
-our $QTSDK = "";
-our $QTBIN = "";
-our $QTLIB = "";
-our $QTPLUGINS = "";
-our $QTVERSION = "";
-if ( $OPT{'qtsdk'} )
-{
-    $QTSDK = $OPT{'qtsdk'};
-}
-
-if ( $OPT{'qtbin'} )
-{
-    $QTBIN = "$OPT{'qtbin'}";
-}
-elsif ( $OPT{'qtsdk'} )
-{
-    $QTBIN = "$OPT{'qtsdk'}/bin";
-}
-if ( $OPT{'qtplugins'} )
-{
-    $QTPLUGINS = "$OPT{'qtplugins'}";
-}
-elsif ( $OPT{'qtsdk'} )
-{
-    $QTPLUGINS = "$QTSDK/plugins";
-}
-
-# Test if Qt conf is valid, all paths must exist
-if ( ! ( (($QTBIN ne "") && ($QTPLUGINS ne "")) &&
-     ( -d $QTBIN && -d $QTPLUGINS )) )
-{
-    &Complain("bin:$QTBIN lib:$QTLIB plugins:$QTPLUGINS You must define a valid Qt SDK path with -qtsdk <path> or -qtbin <path> *and* -qtplugins <path>");
-    exit;
-}
-
-#Determine the version Qt SDK we are using, we need to retrieve the source code to build MySQL Qt plugin
-if ( ! -e "$QTBIN/qmake" )
-{
-    &Complain("$QTBIN isn't a valid Qt bin path (qmake not found)");
-    exit;
-}
-my @ret = `$QTBIN/qmake --version`;
-my $regexp = qr/Qt version (\d+\.\d+\.\d+) in (.*)$/;
-foreach my $line (@ret)
-{
-    chomp $line;
-    next if ($line !~ m/$regexp/);
-    $QTVERSION = $1;
-    $QTLIB = $2;
-    &Verbose("Qt version is $QTVERSION");
-}
-
-if ($QTVERSION eq "")
-{
-    &Complain("Couldn't identify Qt version");
-    exit;
-}
-if ( ! -d $QTLIB )
-{
-    &Complain("$QTLIB doesn't exist. Invalid Qt sdk");
-    exit;
-}
 
 if ( $OPT{'enable-backend'} )
 {   $backend = 1  }
@@ -349,19 +293,6 @@ if ( $OPT{'noclean'} )
 
 if ( $OPT{'enable-jobtools'} )
 {   $jobtools = 1  }
-
-# Get version string sorted out
-if ( $OPT{'gitrev'} && !$OPT{'version'} )
-{
-    $OPT{'version'} = $OPT{'gitrev'};
-}
-$OPT{'version'} = '' if $OPT{'noversion'};
-unless (defined $OPT{'version'})
-{
-    my @lt = gmtime(time);
-    $OPT{'version'} = sprintf('git%04d%02d%02d',
-                              $lt[5] + 1900, $lt[4] + 1, $lt[3]);
-}
 
 if ( $OPT{'srcdir'} )
 {
@@ -427,9 +358,100 @@ mkdir $SRCDIR;
 our $ARCHIVEDIR ='';
 if ( $OPT{'archives'} )
 {
-    $ARCHIVEDIR = "$SCRIPTDIR" . '/' . $OPT{'archives'};
+    $ARCHIVEDIR = "${SCRIPTDIR}/$OPT{'archives'}";
 } else {
     $ARCHIVEDIR = "$SRCDIR";
+}
+
+our $QTSDK = "";
+our $QTBIN = "";
+our $QTLIB = "";
+our $QTPLUGINS = "";
+our $QTVERSION = "";
+our $GITVERSION = "";
+
+if ( ! $OPT{'qtsrc'} )
+{
+    if ( $OPT{'qtsdk'} )
+    {
+        $QTSDK = $OPT{'qtsdk'};
+    }
+
+    if ( $OPT{'qtbin'} )
+    {
+        $QTBIN = "$OPT{'qtbin'}";
+    }
+    elsif ( $OPT{'qtsdk'} )
+    {
+        $QTBIN = "$OPT{'qtsdk'}/bin";
+    }
+    if ( $OPT{'qtplugins'} )
+    {
+        $QTPLUGINS = "$OPT{'qtplugins'}";
+    }
+    elsif ( $OPT{'qtsdk'} )
+    {
+        $QTPLUGINS = "$QTSDK/plugins";
+    }
+
+    # Test if Qt conf is valid, all paths must exist
+    if ( ! ( (($QTBIN ne "") && ($QTPLUGINS ne "")) &&
+         ( -d $QTBIN && -d $QTPLUGINS )) )
+    {
+        &Complain("bin:$QTBIN lib:$QTLIB plugins:$QTPLUGINS You must define a valid Qt SDK path with -qtsdk <path> or -qtbin <path> *and* -qtplugins <path>");
+        exit;
+    }
+
+    #Determine the version Qt SDK we are using, we need to retrieve the source code to build MySQL Qt plugin
+    if ( ! -e "$QTBIN/qmake" )
+    {
+        &Complain("$QTBIN isn't a valid Qt bin path (qmake not found)");
+        exit;
+    }
+    my @ret = `$QTBIN/qmake --version`;
+    my $regexp = qr/Qt version (\d+\.\d+\.\d+) in (.*)$/;
+    foreach my $line (@ret)
+    {
+        chomp $line;
+        next if ($line !~ m/$regexp/);
+        $QTVERSION = $1;
+        $QTLIB = $2;
+        &Verbose("Qt version is $QTVERSION");
+    }
+
+    if ($QTVERSION eq "")
+    {
+        &Complain("Couldn't identify Qt version");
+        exit;
+    }
+    if ( ! -d $QTLIB )
+    {
+        &Complain("$QTLIB doesn't exist. Invalid Qt sdk");
+        exit;
+    }
+}
+else
+{
+    $QTVERSION = $OPT{'qtsrc'};
+    if ( $QTVERSION !~ m/^\d.\d.\d$/ )
+    {
+        &Complain("$QTVERSION isn't a valid version number");
+        exit;
+    }
+    elsif ( $QTVERSION =~ m/^3|^4\.[0-5]/ )
+    {
+        &Complain("You must use Qt 4.6.0 and above");
+        exit;
+    }
+    my $hostos = `uname -r`; chomp $hostos;
+    if ( $hostos =~ m/^1[12]\./ && $QTVERSION !~ m/^4\.[89]\./ )
+    {
+        &Complain("You must use Qt 4.8.0 or above with your OS");
+        exit;
+    }
+    $QTBIN="$PREFIX/bin";
+    $QTPLUGINS="$PREFIX/plugins";
+    $QTLIB="$PREFIX/lib";
 }
 
 our %depend_order = '';
@@ -472,7 +494,6 @@ our %conf = (
   'mythtv'
   =>  [
         "--runprefix=../Resources",
-        "--firewire-sdk=$PREFIX/lib",
         "--enable-libmp3lame",
 
         # To "cross compile" something for a lesser Mac:
@@ -515,9 +536,7 @@ if ( $XCODEVER =~ m/Xcode\s+(\d+\.\d+(\.\d+)?)/ && ! $OPT{'olevel'} )
 {
     if ( $1 =~ m/^4\.2/ )
     {
-        &Complain("XCode 4.2 is buggy, upgrade to something else");
-        &Verbose("Enabling -O2 compilation");
-        $OPT{'olevel'} = "2";
+        &Complain("XCode 4.2 is buggy, please upgrade to 4.3 or later");
     }
 }
 
@@ -526,7 +545,7 @@ $ENV{'CXX'} = $CXXBIN;
 $ENV{'CPP'} = "$CCBIN -E";
 $ENV{'CXXCPP'} = "$CXXBIN -E";
 
-if ( ! -e "$SDKROOT" && ! $OPT{'disable-sysroot'} )
+if ( ! -e "$SDKROOT" && ! $OPT{'nosysroot'} )
 {
     #Handle special case for 10.4 where the SDK name is 10.4u.sdk
     $SDKROOT = "$DEVROOT/SDKs/MacOSX${SDKVER}u.sdk";
@@ -544,9 +563,9 @@ if ( ! -e "$SDKROOT" && ! $OPT{'disable-sysroot'} )
 }
 
 #Compilation was broken when using sysroots, mythtv code was fixed from 0.25 only. so this makes it configurable
-our $SDKISYSROOT = "-isysroot $SDKROOT -mmacosx-version-min=$OSTARGET";
-our $SDKLSYSROOT = "-Wl,-syslibroot,${SDKROOT} -mmacosx-version-min=$OSTARGET";
-if ( $OPT{'disable-sysroot'} )
+our $SDKISYSROOT = "-isysroot $SDKROOT";
+our $SDKLSYSROOT = "-Wl,-syslibroot,${SDKROOT}";
+if ( $OPT{'nosysroot'} )
 {
     $SDKISYSROOT = "";
     $SDKLSYSROOT = "";
@@ -563,8 +582,13 @@ if ( $OPT{'olevel'} =~ /^\d+$/ )
     $OLEVEL="-O" . $OPT{'olevel'} . " ";
 }
 
-$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'ECXXFLAGS'} = "${OLEVEL}${SDKISYSROOT} -I$PREFIX/include -I$PREFIX/mysql";
-$ENV{'LDFLAGS'} = "$SDKLSYSROOT -L$PREFIX/lib -F$QTLIB";
+my $SDK105FLAGS="";
+if ( $SDKVER =~ m/^10\.[3-5]/ )
+{
+    $SDK105FLAGS = " -D_USING_105SDK=1";
+}
+$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'ECXXFLAGS'} = "${OLEVEL}${SDKISYSROOT}${SDK105FLAGS} -mmacosx-version-min=$OSTARGET -I$PREFIX/include -I$PREFIX/mysql";
+$ENV{'LDFLAGS'} = "$SDKLSYSROOT -mmacosx-version-min=$OSTARGET -L$PREFIX/lib -F$QTLIB";
 $ENV{'PREFIX'} = $PREFIX;
 $ENV{'SDKROOT'} = $SDKROOT;
 
@@ -578,22 +602,26 @@ our @ARCHS;
 
 # Check host computer architecture and create list of architecture to build
 my $arch = `sysctl -n hw.machine`; chomp $arch;
+#hw.machine returns what the kernel is using, not if the machine is 64 bits capable
+#so compile for the appropriate 64 bits target if we can
+my $m64 = `sysctl hw.cpu64bit_capable`; chomp $m64;
+if ( $? == 0 && $m64 =~ m/\s+1$/ )
+{
+    if ( $arch eq "i386" )
+    {
+        $arch = "x86_64";
+    }
+}
 if ( $OPT{'m32'} && ! $OPT{'universal'} )
 {
     &Verbose('Forcing 32 bits build...');
-    $ENV{'CFLAGS'}    .= ' -m32';
-    $ENV{'CXXFLAGS'}  .= ' -m32';
-    $ENV{'ECXXFLAGS'} .= ' -m32';  # MythTV configure
-    $ENV{'LDFLAGS'}   .= ' -m32';
     if ( $arch eq "x86_64" || $arch eq "i386" )
     {
-        $ARCHARG = "-arch i386";
         push @ARCHS, "i386";
     }
     else
     {
         # assume PPC, what else could it be?
-        $ARCHARG = "-arch ppc7400";
         push @ARCHS, "ppc7400";
     }
 }
@@ -605,20 +633,10 @@ elsif ( $arch eq "x86_64" || $arch eq "ppc64" )
         &Verbose('Building 32/64 bits universal app...');
         if ( $arch eq "x86_64" )
         {
-            $ENV{'CFLAGS'}    .= ' -arch i386 -arch x86_64';
-            $ENV{'CXXFLAGS'}  .= ' -arch i386 -arch x86_64';
-            $ENV{'ECXXFLAGS'} .= ' -arch i386 -arch x86_64';  # MythTV configure
-            $ENV{'LDFLAGS'}   .= ' -arch i386 -arch x86_64';
-            $ARCHARG = "-arch i386 -arch x86_64";
             push @ARCHS, "i386", "x86_64";
         }
         else
         {
-            $ENV{'CFLAGS'}    .= ' -arch ppc7400 -arch ppc64';
-            $ENV{'CXXFLAGS'}  .= ' -arch ppc7400 -arch ppc64';
-            $ENV{'ECXXFLAGS'} .= ' -arch ppc7400 -arch ppc64';  # MythTV configure
-            $ENV{'LDFLAGS'}   .= ' -arch ppc7400 -arch ppc64';
-            $ARCHARG = ' -arch ppc7400 -arch ppc64';
             push @ARCHS, "ppc7400", "ppc64";
         }
     }
@@ -626,12 +644,10 @@ elsif ( $arch eq "x86_64" || $arch eq "ppc64" )
     {
         if ( $arch eq "x86_64" )
         {
-            $ARCHARG = "-arch x86_64";
             push @ARCHS, "x86_64";
         }
         else
         {
-            $ARCHARG = "-arch ppc64";
             push @ARCHS, "ppc64";
         }
     }
@@ -649,31 +665,44 @@ else
     $OPT{'universal'} = 0;
 }
 
-# Test if Qt libraries support required architectures. We do so by generating a dummy project and trying to compile it
-&Verbose("Testing Qt environment");
-my $dir = tempdir( );#CLEANUP => 1 );
-my $tmpe = "$dir/test";
-my $tmpcpp = "$dir/test.cpp";
-my $tmppro = "$dir/test.pro";
-my $make = "$dir/Makefile";
-open fdcpp, ">", $tmpcpp;
-print fdcpp "#include <QString>\nint main(void) { QString(); }\n";
-close fdcpp;
-open fdpro, ">", $tmppro;
-my $name = basename($tmpe);
-print fdpro "SOURCES=$tmpcpp\nTARGET=$name\nDESTDIR=$dir\nCONFIG-=app_bundle";
-close fdpro;
-&Syscall("$QTBIN/qmake \"QMAKE_CC=$CCBIN\" \"QMAKE_CXX=$CXXBIN\" \"QMAKE_CXXFLAGS=$ENV{'ECXXFLAGS'}\" \"QMAKE_CFLAGS=$ENV{'CFLAGS'}\" \"QMAKE_LFLAGS+=$ENV{'LDFLAGS'}\" -o $make $tmppro");# 2> /dev/null > /dev/null");
-&Syscall(['/bin/rm' , '-f', $tmpe]);
-my $result = &Syscall("/usr/bin/make -C $dir -f $make $name");# 2>/dev/null >/dev/null");
-
-if ( $result ne "1" )
+for my $arch (@ARCHS)
 {
-    &Complain("Couldn't use Qt for the architectures @ARCHS. If using -universal or -m32, make sure the Qt frameworks is build for those architectures");
-    exit;
+    $ENV{'CFLAGS'}    .= " -arch $arch";
+    $ENV{'CXXFLAGS'}  .= " -arch $arch";
+    $ENV{'ECXXFLAGS'} .= " -arch $arch";  # MythTV configure
+    $ENV{'LDFLAGS'}   .= " -arch $arch";
+    $ARCHARG .= " -arch $arch";
+}
+
+# Test if Qt libraries support required architectures. We do so by generating a dummy project and trying to compile it
+if ( ! $OPT{'qtsrc'} )
+{
+    &Verbose("Testing Qt environment");
+    my $dir = tempdir( );#CLEANUP => 1 );
+    my $tmpe = "$dir/test";
+    my $tmpcpp = "$dir/test.cpp";
+    my $tmppro = "$dir/test.pro";
+    my $make = "$dir/Makefile";
+    open fdcpp, ">", $tmpcpp;
+    print fdcpp "#include <QString>\nint main(void) { QString(); }\n";
+    close fdcpp;
+    open fdpro, ">", $tmppro;
+    my $name = basename($tmpe);
+    print fdpro "SOURCES=$tmpcpp\nTARGET=$name\nDESTDIR=$dir\nCONFIG-=app_bundle";
+    close fdpro;
+    &Syscall("$QTBIN/qmake \"QMAKE_CC=$CCBIN\" \"QMAKE_CXX=$CXXBIN\" \"QMAKE_CXXFLAGS=$ENV{'ECXXFLAGS'}\" \"QMAKE_CFLAGS=$ENV{'CFLAGS'}\" \"QMAKE_LFLAGS+=$ENV{'LDFLAGS'}\" -o $make $tmppro");# 2> /dev/null > /dev/null");
+    &Syscall(['/bin/rm' , '-f', $tmpe]);
+    my $result = &Syscall("/usr/bin/make -C $dir -f $make $name");# 2>/dev/null >/dev/null");
+
+    if ( $result ne "1" )
+    {
+        &Complain("Couldn't use Qt for the architectures @ARCHS. If using -universal or -m32, make sure the Qt frameworks is build for those architectures");
+        exit;
+    }
 }
 
 # show summary of build parameters.
+&Verbose("Target architectures: @ARCHS");
 &Verbose("DEVROOT = $DEVROOT");
 &Verbose("SDKVER = $SDKVER");
 &Verbose("SDKROOT = $SDKROOT");
@@ -850,6 +879,99 @@ our %depend = (
         'parallel-make' => 'yes'
     },
 
+    'qt-src'
+    =>
+    {
+        'url'
+        => "http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${QTVERSION}.tar.gz",
+        'arg-patches'
+        => "echo $QTVERSION",
+        'patches' =>
+        {
+            #also hack for QTBUG-23258
+            '4.8.0' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
+            '4.7.4' => "patch -f -p0 <<EOF\n" . <<EOF
+--- tools/qdoc3/cppcodemarker.cpp.ori	2012-03-07 10:26:46.000000000 +1100
++++ tools/qdoc3/cppcodemarker.cpp	2012-03-07 10:51:33.000000000 +1100
+@@ -43,6 +43,7 @@
+   cppcodemarker.cpp
+ */
+ 
++#include "ctype.h"
+ #include "atom.h"
+ #include "cppcodemarker.h"
+ #include "node.h"
+EOF
+            . "\nEOF",
+        },
+        'pre-conf'
+        =>  # Get around Qt bug QTBUG-24498 (4.8.0) && stupid thing can't compile in release mode on mac without framework active
+        "find . -name \"*.pro\" -exec sed -i -e \"s:/Developer/SDKs/:.*:g\" {} \\; ",
+        'conf-cmd'
+        # Using $LDFLAGS as the -arch blah confuses their Makefile
+        =>  "echo yes | LDFLAGS=\"$LDFLAGS\" ./configure $ARCHARG -v",
+        'conf'
+        =>  [
+        '-opensource',
+        '-prefix', '"$PREFIX"',
+        '-release',
+        '-fast',
+        '-no-accessibility',
+        '-no-stl',
+        '-sdk' , '$SDKROOT',
+        
+        # When MythTV all ported:  '-no-qt3support',
+        
+        '-no-sql-mysql',
+        '-no-sql-sqlite',
+        '-no-sql-odbc',
+        '-system-zlib',
+        '-no-libtiff',
+        '-no-libmng',
+        '-nomake examples -nomake demos',
+        '-no-nis',
+        '-no-cups',
+        '-no-qdbus',
+        '-no-framework',
+        '-no-multimedia',
+        '-no-phonon',
+        '-no-svg',
+        '-no-javascript-jit',
+        '-no-scripttools',
+        ],
+        # Get around Qt configure bug QTBUG-17203 when you define -arch
+        'post-conf'
+        => 'find . -name "Makefile*" -exec sed -i -e "s/ -arch -/ -/g;s/-arch$//g" {} \;', 
+        'make'
+        =>  [
+        'all',  # required due to QTBUG-13449
+        'sub-plugins-install_subtargets-ordered',
+        'install_qmake',
+        'install_mkspecs',
+        ],
+        # Build mysql module separately, the info provided by mysql_config confuses Qt makefile.
+        'post-make' => "if [ -d src/gui/mac/qt_menu.nib ]; then rm -rf $PREFIX/lib/qt_menu.nib ; cp -R src/gui/mac/qt_menu.nib $PREFIX/lib ; fi ; cd src/plugins/sqldrivers/mysql && $QTBIN/qmake \"QMAKE_CC=$CCBIN\" \"QMAKE_CXX=$CXXBIN\" \"QMAKE_CXXFLAGS=$ENV{'ECXXFLAGS'}\" \"QMAKE_CFLAGS=$ENV{'CFLAGS'}\" \"QMAKE_LFLAGS+=$LDFLAGS\" \"INCLUDEPATH+=$PREFIX/include/mysql\" \"LIBS+=-L$PREFIX/lib/mysql -lmysqlclient_r\" \"target.path=$PREFIX/qtplugins-$QTVERSION\" mysql.pro ; ".
+            'make install ; '.
+            'make -f Makefile.Release install ; '.
+            'cd $PREFIX/lib ; ln -s mysql lib; '.
+        # Using configure -release saves a lot of space and time,
+        # but by default, debug builds of mythtv try to link against
+        # debug libraries of Qt. This works around that:
+            'ln -sf libQt3Support.dylib libQt3Support_debug.dylib ; '.
+            'ln -sf libQtSql.dylib      libQtSql_debug.dylib      ; '.
+            'ln -sf libQtXml.dylib      libQtXml_debug.dylib      ; '.
+            'ln -sf libQtOpenGL.dylib   libQtOpenGL_debug.dylib   ; '.
+            'ln -sf libQtGui.dylib      libQtGui_debug.dylib      ; '.
+            'ln -sf libQtNetwork.dylib  libQtNetwork_debug.dylib  ; '.
+            'ln -sf libQtCore.dylib     libQtCore_debug.dylib     ; '.
+            'ln -sf libQtWebKit.dylib   libQtWebKit_debug.dylib   ; '.
+            'ln -sf libQtScript.dylib   libQtScript_debug.dylib   ; '.
+            'rm -f $PREFIX/bin/pkg-config ; '.
+            '',
+        #WebKit in Qt keeps erroring half way on my quad-core when using -jX, use -noparallel
+        'parallel-make' => 'yes'
+    },
+
     'exif' =>
     {
         'url'           => "$sourceforge/sourceforge/libexif/libexif-0.6.20.tar.bz2",
@@ -967,6 +1089,14 @@ foreach my $comp (@comps)
         }
     }
 }
+
+#Build qt-src instad of 'qt' if we are building Qt from source
+if ( $OPT{'qtsrc'} )
+{
+    my $depends = join(",", @build_depends);
+    $depends =~ s/qt/qt-src/;
+    @build_depends = split /,/, $depends;
+}
 foreach my $sw ( @build_depends )
 {
     # Get info about this package
@@ -1038,6 +1168,17 @@ foreach my $sw ( @build_depends )
 
         my (@configure, $munge);
 
+        my $arg = $pkg->{'arg-patches'};
+        my $patches = $pkg->{'patches'};
+        if ( $arg && $patches )
+        {
+            $arg        = `$arg`; chomp $arg;
+            my $patch   = $patches->{$arg};
+            if ( $patch )
+            {
+                &Syscall($patch);
+            }
+        }
         if ( $pkg->{'conf-cmd'} )
         {
             my $tmp = $pkg->{'conf-cmd'};
@@ -1277,16 +1418,34 @@ foreach my $arch (@ARCHS)
             push(@makecleancom, @{ $makecleanopt{$comp} }) if $makecleanopt{$comp};
             &Syscall([ @makecleancom ]) or die;
         }
+        
         if ( -e 'configure' && ! $OPT{'noclean'} )
         {
             &Verbose("Configuring $comp for $arch");
             my @config = './configure';
             push(@config, @{ $conf{$comp} }) if $conf{$comp};
-            push @config, "--prefix=$PREFIX/$arch";
+            if ( $OPT{'universal'} )
+            {
+                push @config, "--prefix=$PREFIX/$arch";
+            }
+            else
+            {
+                push @config, "--prefix=$PREFIX";
+            }
             push @config, "--cc=$CCBIN";
             push @config, "--cxx=$CXXBIN";
             push @config, "--qmake=$QTBIN/qmake";
             push @config, "--extra-libs=-F$QTLIB";
+
+            if ( $comp eq "mythtv" )
+            {
+                # Test if configure supports --firewire-sdk option
+                my $result = `./configure --help | grep -q firewire-sdk`;
+                if ( $? == 0 )
+                {
+                    push @config, "--firewire-sdk=$PREFIX/lib";
+                }
+            }
 
             if ( $OPT{'profile'} )
             {
@@ -1341,15 +1500,17 @@ if ( $OPT{'distclean'} )
 }
 &Complain("Compilation done ..");
 
-### Create universal binaries
-### BIN files
-&MakeFilesUniversal("bin", glob "$PREFIX/$ARCHS[0]/bin/*");
+if ( $OPT{'universal'} )
+{
+    ### Create universal binaries
+    ### BIN files
+    &MakeFilesUniversal("bin", $ARCHS[0], glob "$PREFIX/$ARCHS[0]/bin/*");
+    ### Libs
+    &MakeFilesUniversal("lib", $ARCHS[0], glob "$PREFIX/$ARCHS[0]/lib/*");
 
-### Libs
-&MakeFilesUniversal("lib", glob "$PREFIX/$ARCHS[0]/lib/*");
-
-&RecursiveCopy("$PREFIX/$ARCHS[0]/share", "$PREFIX");
-&RecursiveCopy("$PREFIX/$ARCHS[0]/include", "$PREFIX");
+    &RecursiveCopy("$PREFIX/$ARCHS[0]/share", "$PREFIX");
+    &RecursiveCopy("$PREFIX/$ARCHS[0]/include", "$PREFIX");
+}
 
 # stop here if no bundle is to be created
 if ( $OPT{'nobundle'} )
@@ -1357,27 +1518,27 @@ if ( $OPT{'nobundle'} )
     exit;
 }
 
-### Build version string
-our $VERS = `find $PREFIX/lib -name 'libmyth-[0-9].[0-9][0-9].[0-9].dylib'`;
-chomp $VERS;
-$VERS =~ s/^.*\-(.*)\.dylib$/$1/s;
-$VERS .= '.' . $OPT{'version'} if $OPT{'version'};
-
 ### Program which creates bundles:
 our @bundler = "$GITDIR/packaging/OSX/build/osx-bundler.pl";
 if ( $OPT{'verbose'} )
-{   push @bundler, '--verbose'   }
+{   push @bundler, '-verbose'   }
 
-# Strip unused architectures, this reduces the size quite significantly
-if ( (`sysctl -n hw.machine` eq "x86_64\n" && $OPT{'m32'})  || `sysctl -n hw.machine` eq "i386\n" )
+# Strip unused architectures, this reduces the size quite significantly when linking against universal libs
+if ( @ARCHS == 1)
 {
-    push @bundler, "--arch", "i386";
+    push @bundler, '-arch', $ARCHS[0];
 }
-elsif ( `sysctl -n hw.machine` eq "x86_64\n" && !$OPT{'universal'} )
+
+# Determine version number
+$GITVERSION = `cd $GITDIR && $git describe` ; chomp $GITVERSION;
+if ( $? != 0)
 {
-    #not universal bundle, on 64 bits host: only keep 64 bits binaries
-    push @bundler, "--arch", "x86_64";
+    $GITVERSION = `find $PREFIX/lib -name 'libmyth-[0-9].[0-9][0-9].[0-9].dylib' | tail -1`;
+    chomp $GITVERSION;
+    $GITVERSION =~ s/^.*\-(.*)\.dylib$/$1/s;
 }
+push @bundler, '-longversion', $GITVERSION;
+push @bundler, '-shortversion', $GITVERSION;
 
 ### Create each package.
 ### Note that this is a bit of a waste of disk space,
@@ -1444,10 +1605,15 @@ foreach my $target ( @targets )
         # Create PlugIns directory
         mkdir("$finalTarget/Contents/PlugIns");
         
-        # Tell Qt to use the PlugIns directory (doesn't work due QTBUG-24541, but in case they fix it)
+        # Tell Qt to use the PlugIns for the Qt plugins
         open FH, ">$res/qt.conf";
         print FH "[Paths]\nPlugins = $BundlePlugins\n";
         close FH;
+        
+        if ( $OPT{'qtsrc'} && -d "$PREFIX/lib/qt_menu.nib" )
+        {
+            &Syscall([ 'cp', '-R', "$PREFIX/lib/qt_menu.nib", "$finalTarget/Contents/Resources" ]);
+        }
 
         # Copy the required Qt plugins
         foreach my $plugin ( "sqldrivers", "imageformats")
@@ -1876,12 +2042,12 @@ sub Distclean
 
 #########################################################################
 ## Go through the list of files recursively and combine all architectures
-# together to form a "fat" universal file
+## together to form a "fat" universal file
 #########################################################################
 
 sub MakeFilesUniversal($@)
 {
-    my ($base, @files) = @_;
+    my ($base, $archbase, @files) = @_;
     if ( ! -d "$PREFIX/$base" )
     {
         &Syscall([ '/bin/mkdir', "$PREFIX/$base" ]);
@@ -1899,11 +2065,12 @@ sub MakeFilesUniversal($@)
         {
             # copy link as is
             &Syscall([ '/bin/cp', '-R',
-                "$PREFIX/$arch/$base/$name",
+                "$PREFIX/$archbase/$base/$name",
                 "$PREFIX/$base/$name" ]);
         }
         elsif ( -f $bin )
         {
+            &Verbose("ARCHS = @ARCHS");
             for my $arch (@ARCHS)
             {
                 push @lipo, "$PREFIX/$arch/$base/$name";
@@ -1913,7 +2080,7 @@ sub MakeFilesUniversal($@)
         }
         elsif ( -d $bin )
         {
-            &MakeFilesUniversal("$base/$name", glob "$PREFIX/$arch/$base/$name/*")
+            &MakeFilesUniversal("$base/$name", $archbase, glob "$PREFIX/$archbase/$base/$name/*")
         }
     }
 }

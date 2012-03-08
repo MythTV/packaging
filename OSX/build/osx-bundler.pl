@@ -12,6 +12,14 @@ osx-bundler.pl executable [lib-dir] [lib-dir...]
 osx-bundler.pl target.app [lib-dir] [lib-dir...]
 osx-bundler.pl target1.app/Contents/MacOS/target2 [lib-dir...]
 osx-bundler.pl target1.app/Contents/Resources/lib/extra.dylib [lib-dir...]
+
+options available:
+  -verbose              increase verbosity for debugging purposes
+  -arch         <arg>   extract arg architecture from library flat file
+  -longversion  <arg>   use arg for CFBundleGetInfoString in Info.plist
+  -shortversion <arg>   use arg for CFBundleShortVersionString in Info.plist
+  -copyright    <arg>   use arg for NSHumanReadableCopyright in Info.plist
+  -signature    <arg>   use arg for CFBundleSignature in Info.plist
 ';
 # The first form builds a new bundle, executable.app
 # The second form checks/adds Frameworks in an existing bundle
@@ -30,11 +38,6 @@ osx-bundler.pl target1.app/Contents/Resources/lib/extra.dylib [lib-dir...]
 #    (and any that the shared libs call)
 # 2) copies them into the bundle's Framework directory
 # 3) uses install_name_tool to update the library load paths
-#
-# = TO DO
-# Add more arguments to allow the user to specify
-# .pinfo fields like CFBundleIdentifier, CFBundleSignature,
-# NSHumanReadableCopyright, CFBundleGetInfoString, et c.
 #
 # = REVISION
 # 2.0
@@ -71,10 +74,20 @@ my $binbase;      # $binary without any directory path
 my $bundle;
 my @libdirs;
 my $target;  # Full path to the binary under $bundle
+our $shortversion = "";
+our $longversion = "";
+our $signature = "osx-bundler";
+our $copyright = "MythTV Team";
 
 # Process arguments:
 
-Getopt::Long::GetOptions('verbose' => \$verbose, 'arch=s' => \$arch) or usage(-1);
+Getopt::Long::GetOptions(
+    'verbose'        => \$verbose,
+    'arch=s'         => \$arch,
+    'shortversion=s' => \$shortversion,
+    'longversion=s'      => \$longversion,
+    'signature=s'    => \$signature,
+    'copyright=s'    => \$copyright) or usage(-1);
 
 $binary  = shift @ARGV;
 @libdirs = @ARGV;
@@ -251,17 +264,17 @@ sub MakeFramework
   <key>CFBundleName</key>
   <string>$base</string>
   <key>CFBundleIdentifier</key>
-  <string>org.osx-bundler.$base</string>
+  <string>org.$signature.$base</string>
   <key>CFBundleVersion</key>
-  <string>$vers</string>
+  <string>$longversion</string>
   <key>CFBundleSignature</key>
-  <string>osx-bundler</string>
+  <string>$signature</string>
   <key>CFBundlePackageType</key>
   <string>FMWK</string>
   <key>NSHumanReadableCopyright</key>
-  <string>Packaged by $Id</string>
+  <string>$copyright</string>
   <key>CFBundleGetInfoString</key>
-  <string>lib$base-$vers.dylib, packaged by $Id</string>
+  <string>lib$base-$shortversion.dylib, packaged by $signature</string>
 </dict>
 </plist>
 END
@@ -297,25 +310,25 @@ sub GeneratePlist
   <key>CFBundleIconFile</key>
   <string>application.icns</string>
   <key>CFBundleIdentifier</key>
-  <string>org.osx-bundler.$binary</string>
+  <string>org.$signature.$binary</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>CFBundleShortVersionString</key>
-  <string>$vers</string>
+  <string>$shortversion</string>
   <key>CFBundleSignature</key>
-  <string>osx-bundler</string>
+  <string>$signature</string>
   <key>CFBundleVersion</key>
   <string>$vers</string>
   <key>NSAppleScriptEnabled</key>
   <string>NO</string>
   <key>CFBundleGetInfoString</key>
-  <string>$vers, $Id</string>
+  <string>$longversion</string>
   <key>CFBundleName</key>
   <string>$binary</string>
   <key>NSHumanReadableCopyright</key>
-  <string>Packaged by $Id</string>
+  <string>$copyright</string>
 </dict>
 </plist>
 END
