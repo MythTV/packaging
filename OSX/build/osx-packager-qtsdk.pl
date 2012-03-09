@@ -867,7 +867,7 @@ our %depend = (
         #also hack for QTBUG-23258
         "find . -name \"*.pro\" -exec sed -i -e \"s:/Developer/SDKs/:.*:g\" {} \\;",
         'conf-cmd'
-        =>  "cd src/plugins/sqldrivers/mysql && $QTBIN/qmake \"QMAKE_CC=$CCBIN\" \"QMAKE_CXX=$CXXBIN\" \"QMAKE_CXXFLAGS=$ENV{'ECXXFLAGS'}\" \"QMAKE_CFLAGS=$ENV{'CFLAGS'}\" \"QMAKE_LFLAGS+=$ENV{'LDFLAGS'}\" \"INCLUDEPATH+=$PREFIX/include/mysql\" \"LIBS+=-L$PREFIX/lib/mysql -lmysqlclient_r\" \"target.path=$PREFIX/qtplugins-$QTVERSION\" mysql.pro",
+        =>  "cd src/plugins/sqldrivers/mysql && $QTBIN/qmake \"QMAKE_CC=$CCBIN\" \"QMAKE_CXX=$CXXBIN\" \"QMAKE_CXXFLAGS=$ENV{'ECXXFLAGS'}\" \"QMAKE_CFLAGS=$ENV{'CFLAGS'}\" \"QMAKE_LFLAGS+='$ENV{'LDFLAGS'}'\" \"INCLUDEPATH+=$PREFIX/include/mysql\" \"LIBS+=-L$PREFIX/lib/mysql -lmysqlclient_r\" \"target.path=$PREFIX/qtplugins-$QTVERSION\" mysql.pro",
         'make-cmd' => 'cd src/plugins/sqldrivers/mysql',
         'make' => [ ],
         'post-make' => 'cd src/plugins/sqldrivers/mysql ; make install ; '.
