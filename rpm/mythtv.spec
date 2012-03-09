@@ -31,13 +31,13 @@
 #
 # The following options are disabled by default.  Use these options to enable:
 #
-# * currently no disabled options *
+# --with systemd            Use systemd for backend rather than SysV init.
 #
 # The following options are enabled by default.  Use these options to disable:
 #
 # --without vdpau           Disable VDPAU support
+# --without vaapi           Disable VAAPI support
 # --without crystalhd       Disable Crystal HD support
-# --without xvmc            Disable XvMC support
 # --without perl            Disable building of the perl bindings
 # --without php             Disable building of the php bindings
 # --without python          Disable building of the python bindings
@@ -51,7 +51,6 @@
 # --without mythmusic
 # --without mythnetvision
 # --without mythnews
-# --without mythvideo
 # --without mythweather
 # --without mythzoneminder
 #
@@ -102,8 +101,12 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 # Set "--with debug" to enable MythTV debug compile mode
 %define with_debug         %{?_with_debug:         1} %{?!_with_debug:         0}
 
+# Use SysV init script by default but allow use of SystemD service.
+%define with_systemd       %{?_with_systemd:       1} %{?!_without_systemd:    0}
+
 # The following options are enabled by default.  Use --without to disable them
 %define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
+%define with_vaapi         %{?_without_vaapi:      0} %{?!_without_vaapi:      1}
 %define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
 %define with_xvmc          %{?_without_xvmc:       0} %{?!_without_xvmc:       1}
 %define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
@@ -131,6 +134,7 @@ Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
 Source103: mythbackend.logrotate
+Source104: mythbackend.service
 Source106: mythfrontend.png
 Source107: mythfrontend.desktop
 Source108: mythtv-setup.png
@@ -151,16 +155,26 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # Global MythTV and Shared Build Requirements
 
+%if %{with_systemd}
+# Use systemd
+BuildRequires:  systemd-units
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
+%else
+# Use SysV
+Requires(post): chkconfig
+Requires(preun): chkconfig
+Requires(preun): initscripts
+Requires(postun): initscripts
+%endif
+
 BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  gcc-c++
 BuildRequires:  mysql-devel >= 5
-%if 0%{?fedora} >= 14
 BuildRequires:  qt-webkit-devel
 BuildRequires:  qt-devel >= 4.5
-%else
-BuildRequires:  qt4-devel >= 4.5
-%endif
 BuildRequires:  phonon-devel
 
 BuildRequires:  lm_sensors-devel
@@ -225,6 +239,10 @@ BuildRequires:  libraw1394-devel
 
 %if %{with_vdpau}
 BuildRequires: libvdpau-devel
+%endif
+
+%if %{with_vaapi}
+BuildRequires: libva-devel
 %endif
 
 %if %{with_crystalhd}
@@ -449,6 +467,10 @@ Requires:  libraw1394-devel
 
 %if %{with_vdpau}
 Requires: libvdpau-devel
+%endif
+
+%if %{with_vaapi}
+Requires: libva-devel
 %endif
 
 %if %{with_crystalhd}
@@ -913,11 +935,11 @@ cd mythtv
 %if %{with_vdpau}
     --enable-vdpau                              \
 %endif
+%if %{with_vaapi}
+    --enable-vaapi                              \
+%endif
 %if %{with_crystalhd}
     --enable-crystalhd                          \
-%endif
-%if !%{with_xvmc}
-    --disable-xvmcw                             \
 %endif
 %if !%{with_perl}
     --without-bindings=perl                     \
@@ -1054,7 +1076,11 @@ cd mythtv
     mkdir -p %{buildroot}%{_localstatedir}/cache/mythtv
     mkdir -p %{buildroot}%{_localstatedir}/log/mythtv
     mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
+    %if %{with_systemd}
+    mkdir -p %{buildroot}%{_unitdir}
+    %else
     mkdir -p %{buildroot}%{_sysconfdir}/init.d
+    %endif
     mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
     mkdir -p %{buildroot}%{_sysconfdir}/mythtv
 
@@ -1064,7 +1090,11 @@ cd mythtv
 # mysql.txt and other config/init files
     install -m 644 %{SOURCE110} %{buildroot}%{_sysconfdir}/mythtv/
     echo "# to be filled in by mythtv-setup" > %{buildroot}%{_sysconfdir}/mythtv/config.xml
+    %if %{with_systemd}
+    install -D -p -m 0644 %{SOURCE104} %{buildroot}%{_unitdir}/
+    %else
     install -p -m 755 mythbackend.init %{buildroot}%{_sysconfdir}/init.d/mythbackend
+    %endif
     install -p -m 644 mythbackend.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/mythbackend
     install -p -m 644 mythbackend.logrotate  %{buildroot}%{_sysconfdir}/logrotate.d/mythbackend
 
@@ -1133,16 +1163,43 @@ rm -rf %{buildroot}
 %pre backend
 # Add the "mythtv" user, with membership in the video group
 /usr/sbin/useradd -c "mythtvbackend User" \
-    -s /sbin/nologin -r -d %{_localstatedir}/lib/mythtv -G video mythtv 2> /dev/null || :
+    -s /sbin/nologin -r -d %{_localstatedir}/lib/mythtv -G audio,video mythtv 2> /dev/null || :
 
 %post backend
+%if %{with_systemd}
+if [ $1 -eq 1 ] ; then
+    # Initial installation
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+fi
+%else
 /sbin/chkconfig --add mythbackend
+%endif
 
 %preun backend
+%if %{with_systemd}
+if [ $1 -eq 0 ] ; then
+    # Package removal, not upgrade
+    /bin/systemctl --no-reload disable mythbackend.service > /dev/null 2>&1 || :
+    /bin/systemctl stop mythbackend.service > /dev/null 2>&1 || :
+fi
+%else
 if [ $1 = 0 ]; then
     /sbin/service mythbackend stop > /dev/null 2>&1
     /sbin/chkconfig --del mythbackend
 fi
+
+%postun backend
+%if %{with_systemd}
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+if [ $1 -ge 1 ] ; then
+    # Package upgrade, not uninstall
+    /bin/systemctl try-restart mythbackend.service >/dev/null 2>&1 || :
+fi
+%else
+if [ "$1" -ge "1" ] ; then
+    /sbin/service mythbackend condrestart >/dev/null 2>&1 || :
+fi
+%endif
 
 ################################################################################
 
@@ -1190,7 +1247,11 @@ fi
 %{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
+%if %{with_systemd}
+%{_unitdir}/mythbackend.service
+%else
 %{_sysconfdir}/init.d/mythbackend
+%endif
 %config(noreplace) %{_sysconfdir}/sysconfig/mythbackend
 %config(noreplace) %{_sysconfdir}/logrotate.d/mythbackend
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
@@ -1412,6 +1473,12 @@ fi
 ################################################################################
 
 %changelog
+* Wed Mar 07 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-0.1.git
+- Update spec to allow for use of systemd for mythbackend.
+- Add systemd service file.
+- Remove conditionals for Fedora versions less than 14 since it's EOL.
+- Remove obsolete options for xvmc.
+- Add mythtv user to audio group as well for realtime audio support.
 
 * Wed Feb 22 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Add perl(IO::Socket::INET6) req for perl bindings
