@@ -2028,11 +2028,12 @@ sub Distclean
     {
         $arch .= "/";
     }
-    &Syscall("/bin/rm -f $PREFIX/${arch}bin/myth*"    );
-    &Syscall("/bin/rm -fr $PREFIX/${arch}lib/libmyth*");
-    &Syscall("/bin/rm -fr $PREFIX/${arch}lib/mythtv"  );
-    &Syscall("/bin/rm -fr $PREFIX/${arch}share/mythtv");
-    &Syscall("/bin/rm -fr $PREFIX/${arch}share/mythtv");
+    &Syscall("/bin/rm -f $PREFIX/${arch}include/mythtv");
+    &Syscall("/bin/rm -f $PREFIX/${arch}bin/myth*"     );
+    &Syscall("/bin/rm -fr $PREFIX/${arch}lib/libmyth*" );
+    &Syscall("/bin/rm -fr $PREFIX/${arch}lib/mythtv"   );
+    &Syscall("/bin/rm -fr $PREFIX/${arch}share/mythtv" );
+    &Syscall("/bin/rm -fr $PREFIX/${arch}share/mythtv" );
     &Syscall([ 'find', "$GITDIR/", '-name', '*.o',     '-delete' ]);
     &Syscall([ 'find', "$GITDIR/", '-name', '*.a',     '-delete' ]);
     &Syscall([ 'find', "$GITDIR/", '-name', '*.dylib', '-delete' ]);
