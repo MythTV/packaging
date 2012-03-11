@@ -26,9 +26,6 @@
 
 ################################################################################
 
-# A list of which applications we want to put into the desktop menu system
-%define desktop_applications mythfrontend mythtv-setup
-
 # The vendor name we should attribute the aforementioned entries to
 %define desktop_vendor  mythtv
 
