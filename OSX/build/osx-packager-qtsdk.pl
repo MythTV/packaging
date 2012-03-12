@@ -872,8 +872,8 @@ our %depend = (
         'make' => [ ],
         'post-make' => 'cd src/plugins/sqldrivers/mysql ; make install ; '.
             'make -f Makefile.Release install ; '.
-            'cd $PREFIX/lib ; ln -s mysql lib; '.
-            'rm -f $PREFIX/bin/pkg-config ; '.
+            "cd $PREFIX/lib ; ln -s mysql lib; ".
+            "rm -f $PREFIX/bin/pkg-config ; ".
             '',
         #WebKit in Qt keeps erroring half way on my quad-core when using -jX, use -noparallel
         'parallel-make' => 'yes'
