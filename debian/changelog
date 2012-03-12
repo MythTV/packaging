@@ -1,11 +1,15 @@
 mythtv (2:0.25.0~master.20120223.532cee8-0ubuntu2) UNRELEASED; urgency=low
 
+  [ Mario Limonciello ]
   * Drop mythtv-themes metapackage and childish theme.  Should be installed
     exclusively through theme chooser now.
   * Update Mythbuntu theme git links to still create that theme package.
   * Update configure without install patch.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 28 Feb 2012 00:35:48 -0600
+  [ Thomas Mashos ]
+  * Updated DB schema for standard plugins
+
+ -- Thomas Mashos <thomas@tmashos-wks>  Mon, 12 Mar 2012 12:30:10 -0700
 
 mythtv (2:0.25.0~master.20120223.532cee8-0ubuntu1) precise; urgency=low
 
