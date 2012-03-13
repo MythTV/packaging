@@ -64,10 +64,10 @@
 %define desktop_vendor  mythtv
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25pre-4799-g7b526c4
+%define vers_string v0.25-beta-99-gff73126
 
 # Git Revision number and branch
-%define _gitrev 4799.g7b526c4
+%define _gitrev 1
 %define branch master
 
 #
@@ -852,6 +852,8 @@ SOURCE_VERSION=%{vers_string}
 BRANCH=%{branch}
 EOF
 
+# Delete any git control files
+    find . -name .git\* -exec rm {} \+
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
 # And drop execute bit on theme html files
@@ -889,14 +891,17 @@ EOF
 cd ..
 
 ##### MythPlugins
-#%if %{with_plugins}
-#
-#cd mythplugins
-#
-## And back to the compile root
-#cd ..
-#
-#%endif
+%if %{with_plugins}
+
+cd mythplugins
+
+# Delete any git control files
+    find . -name .git\* -exec rm {} \+
+
+# And back to the compile root
+cd ..
+
+%endif
 
 ################################################################################
 
@@ -1474,6 +1479,9 @@ fi
 ################################################################################
 
 %changelog
+* Wed Mar 12 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Remove .git* meta data files before installing
+
 * Wed Mar 07 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-0.1.git
 - Update spec to allow for use of systemd for mythbackend.
 - Add systemd service file.

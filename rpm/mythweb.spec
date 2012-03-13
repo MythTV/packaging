@@ -30,7 +30,7 @@
 %define desktop_vendor  mythtv
 
 # Git Revision number and branch ID
-%define _gitrev 4799.g7b526c4
+%define _gitrev 1
 %define branch master
 
 #
@@ -75,6 +75,9 @@ The web interface to MythTV.
 
 %prep
 %setup -c -q
+
+# Delete any git control files
+    find . -name .git\* -exec rm {} \+
 
 # Fix up permissions for MythWeb
     chmod -R g-w mythweb/*
@@ -125,6 +128,9 @@ rm -rf %{buildroot}
 ################################################################################
 
 %changelog
+* Wed Mar 12 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Remove .git* meta data files before installing
+
 * Sun Mar 03 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Make this package compile
 
