@@ -690,9 +690,13 @@ if ( ! $OPT{'qtsrc'} )
     my $name = basename($tmpe);
     print fdpro "SOURCES=$tmpcpp\nTARGET=$name\nDESTDIR=$dir\nCONFIG-=app_bundle";
     close fdpro;
-    &Syscall("$QTBIN/qmake \"QMAKE_CC=$CCBIN\" \"QMAKE_CXX=$CXXBIN\" \"QMAKE_CXXFLAGS=$ENV{'ECXXFLAGS'}\" \"QMAKE_CFLAGS=$ENV{'CFLAGS'}\" \"QMAKE_LFLAGS+='$ENV{'LDFLAGS'}'\" -o $make $tmppro 2> /dev/null > /dev/null");
+    my $cmd = "$QTBIN/qmake \"QMAKE_CC=$CCBIN\" \"QMAKE_CXX=$CXXBIN\" \"QMAKE_CXXFLAGS=$ENV{'ECXXFLAGS'}\" \"QMAKE_CFLAGS=$ENV{'CFLAGS'}\" \"QMAKE_LFLAGS+='$ENV{'LDFLAGS'}'\" -o $make $tmppro";
+    $cmd .= " 2> /dev/null > /dev/null" if ( ! $OPT{'verbose'} );
+    &Syscall($cmd);
     &Syscall(['/bin/rm' , '-f', $tmpe]);
-    my $result = &Syscall("/usr/bin/make -C $dir -f $make $name 2>/dev/null >/dev/null");
+    $cmd = "/usr/bin/make -C $dir -f $make $name";
+    $cmd .= " 2>/dev/null >/dev/null" if ( ! $OPT{'verbose'} );
+    my $result = &Syscall($cmd);
 
     if ( $result ne "1" )
     {
