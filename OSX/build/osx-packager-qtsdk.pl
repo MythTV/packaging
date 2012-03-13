@@ -226,7 +226,7 @@ Building two snapshots, one with all plugins and one without:
 
 Building a "fixes" branch:
 
-  osx-packager.pl -gitrev fixes/0.24 -qtbin /usr/bin -qtplugins /Developer/Applications/Qt/plugins
+  osx-packager.pl -gitrev fixes/0.24 -qtsrc 4.6.4 -nosysroot -m32
 
 Note that this script will not build old branches.
 Please try the branched version instead. e.g.
@@ -672,7 +672,6 @@ for my $arch (@ARCHS)
 {
     $ENV{'CFLAGS'}    .= " -arch $arch";
     $ENV{'CXXFLAGS'}  .= " -arch $arch";
-    $ENV{'CPPFLAGS'}  .= " -arch $arch";
     $ENV{'ECXXFLAGS'} .= " -arch $arch";  # MythTV configure
     $ENV{'LDFLAGS'}   .= " -arch $arch";
     $ARCHARG .= " -arch $arch";
