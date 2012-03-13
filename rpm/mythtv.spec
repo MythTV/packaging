@@ -1187,6 +1187,7 @@ if [ $1 = 0 ]; then
     /sbin/service mythbackend stop > /dev/null 2>&1
     /sbin/chkconfig --del mythbackend
 fi
+%endif
 
 %postun backend
 %if %{with_systemd}
