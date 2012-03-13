@@ -493,8 +493,10 @@ our %conf = (
       ],
   'mythtv'
   =>  [
-        "--runprefix=../Resources",
-        "--enable-libmp3lame",
+        '--runprefix=../Resources',
+        '--enable-libmp3lame',
+        '--disable-lirc',
+        '--disable-distcc',
 
         # To "cross compile" something for a lesser Mac:
         #'--tune=G3',
@@ -587,7 +589,7 @@ if ( $SDKVER =~ m/^10\.[3-5]/ )
 {
     $SDK105FLAGS = " -D_USING_105SDK=1";
 }
-$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'ECXXFLAGS'} = "${OLEVEL}${SDKISYSROOT}${SDK105FLAGS} -mmacosx-version-min=$OSTARGET -I$PREFIX/include -I$PREFIX/mysql";
+$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'ECXXFLAGS'} = $ENV{'CPPFLAGS'} = "${OLEVEL}${SDKISYSROOT}${SDK105FLAGS} -mmacosx-version-min=$OSTARGET -I$PREFIX/include -I$PREFIX/mysql";
 $ENV{'LDFLAGS'} = "$SDKLSYSROOT -mmacosx-version-min=$OSTARGET -L$PREFIX/lib -F$QTLIB";
 $ENV{'PREFIX'} = $PREFIX;
 $ENV{'SDKROOT'} = $SDKROOT;
@@ -596,6 +598,7 @@ $ENV{'SDKROOT'} = $SDKROOT;
 our $CFLAGS    = $ENV{'CFLAGS'};
 our $CXXFLAGS  = $ENV{'CXXFLAGS'};
 our $ECXXFLAGS = $ENV{'ECXXFLAGS'};
+our $CPPFLAGS  = $ENV{'CPPFLAGS'};
 our $LDFLAGS   = $ENV{'LDFLAGS'};
 our $ARCHARG   = "";
 our @ARCHS;
@@ -669,6 +672,7 @@ for my $arch (@ARCHS)
 {
     $ENV{'CFLAGS'}    .= " -arch $arch";
     $ENV{'CXXFLAGS'}  .= " -arch $arch";
+    $ENV{'CPPFLAGS'}  .= " -arch $arch";
     $ENV{'ECXXFLAGS'} .= " -arch $arch";  # MythTV configure
     $ENV{'LDFLAGS'}   .= " -arch $arch";
     $ARCHARG .= " -arch $arch";
@@ -1382,6 +1386,7 @@ foreach my $arch (@ARCHS)
 
     $ENV{'CFLAGS'}    = "-arch $arch $CFLAGS";
     $ENV{'CXXFLAGS'}  = "-arch $arch $CXXFLAGS";
+    $ENV{'CPPFLAGS'}  = "-arch $arch $CPPFLAGS";
     $ENV{'LDFLAGS'}   = "-arch $arch $LDFLAGS";
     $ENV{'ECXXFLAGS'} = "-arch $arch $ECXXFLAGS";
 
