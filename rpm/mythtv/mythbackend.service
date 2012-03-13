@@ -40,7 +40,7 @@ Type=simple
 Environment=MYTHCONFDIR=/etc/mythtv
 Environment=HOME=/usr/share/mythtv
 User=mythtv
-ExecStart=/usr/bin/mythbackend --logpath /var/log/mythtv/mythbackend.log
+ExecStart=/usr/bin/mythbackend --logpath /var/log/mythtv/
 
 [Install]
 WantedBy=multi-user.target

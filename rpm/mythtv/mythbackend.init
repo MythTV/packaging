@@ -21,9 +21,9 @@ fi
 binary=/usr/bin/mythbackend
 prog=mythbackend
 RETVAL=0
-OPTIONS="$OPTIONS --daemon --logpath /var/log/mythtv/$prog.log --pidfile /var/run/$prog.pid"
+OPTIONS="$OPTIONS --daemon --logpath /var/log/mythtv/ --pidfile /var/run/$prog.pid"
 # Would be nice to run as non-root, but it doesn't work -- dvb/v4l devices owned by root become unusable
-#OPTIONS="$OPTIONS --daemon --user mythtv --logpath /var/log/mythtv/$prog.log --pidfile /var/run/$prog.pid"
+#OPTIONS="$OPTIONS --daemon --user mythtv --logpath /var/log/mythtv/ --pidfile /var/run/$prog.pid"
 
 start() {
   echo -n $"Starting $prog: "
