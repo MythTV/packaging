@@ -950,17 +950,13 @@ EOF
         'post-conf'
         => 'find . -name "Makefile*" -exec sed -i -e "s/ -arch -/ -/g;s/-arch$//g" {} \;', 
         'make'
-        =>  [
-        'all',  # required due to QTBUG-13449
-        'sub-plugins-install_subtargets-ordered',
-        'install_qmake',
-        'install_mkspecs',
-        ],
+        =>  [ ],
         # Build mysql module separately, the info provided by mysql_config confuses Qt makefile.
-        'post-make' => "if [ -d src/gui/mac/qt_menu.nib ]; then rm -rf $PREFIX/lib/qt_menu.nib ; cp -R src/gui/mac/qt_menu.nib $PREFIX/lib ; fi ; cd src/plugins/sqldrivers/mysql && $QTBIN/qmake \"QMAKE_CC=$CCBIN\" \"QMAKE_CXX=$CXXBIN\" \"QMAKE_CXXFLAGS=$ENV{'ECXXFLAGS'}\" \"QMAKE_CFLAGS=$ENV{'CFLAGS'}\" \"QMAKE_LFLAGS+=$LDFLAGS\" \"INCLUDEPATH+=$PREFIX/include/mysql\" \"LIBS+=-L$PREFIX/lib/mysql -lmysqlclient_r\" \"target.path=$PREFIX/qtplugins-$QTVERSION\" mysql.pro ; ".
+        'post-make' => "make sub-plugins-install_subtargets-ordered install_qmake install_mkspecs ;".
+        "if [ -d src/gui/mac/qt_menu.nib ]; then rm -rf $PREFIX/lib/qt_menu.nib ; cp -R src/gui/mac/qt_menu.nib $PREFIX/lib ; fi ; cd src/plugins/sqldrivers/mysql && $QTBIN/qmake \"QMAKE_CC=$CCBIN\" \"QMAKE_CXX=$CXXBIN\" \"QMAKE_CXXFLAGS=$ENV{'ECXXFLAGS'}\" \"QMAKE_CFLAGS=$ENV{'CFLAGS'}\" \"QMAKE_LFLAGS+=$LDFLAGS\" \"INCLUDEPATH+=$PREFIX/include/mysql\" \"LIBS+=-L$PREFIX/lib/mysql -lmysqlclient_r\" \"target.path=$PREFIX/qtplugins-$QTVERSION\" mysql.pro ; ".
             'make install ; '.
             'make -f Makefile.Release install ; '.
-            'cd $PREFIX/lib ; ln -s mysql lib; '.
+            "cd $PREFIX/lib ; ln -s mysql lib; ".
         # Using configure -release saves a lot of space and time,
         # but by default, debug builds of mythtv try to link against
         # debug libraries of Qt. This works around that:
@@ -973,7 +969,7 @@ EOF
             'ln -sf libQtCore.dylib     libQtCore_debug.dylib     ; '.
             'ln -sf libQtWebKit.dylib   libQtWebKit_debug.dylib   ; '.
             'ln -sf libQtScript.dylib   libQtScript_debug.dylib   ; '.
-            'rm -f $PREFIX/bin/pkg-config ; '.
+            "rm -f $PREFIX/bin/pkg-config ; ".
             '',
         #WebKit in Qt keeps erroring half way on my quad-core when using -jX, use -noparallel
         'parallel-make' => 'yes'
