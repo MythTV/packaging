@@ -1,3 +1,10 @@
+mythtv (2:0.25.0~master.20120305.6519666-0ubuntu2) UNRELEASED; urgency=low
+
+  [ Thomas Mashos ]
+  * Updated DB schema for standard plugins (LP: #944128)
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 15 Mar 2012 00:43:46 -0500
+
 mythtv (2:0.25.0~master.20120305.6519666-0ubuntu1) precise; urgency=low
 
   * Drop mythtv-themes metapackage and childish theme.  Should be installed
