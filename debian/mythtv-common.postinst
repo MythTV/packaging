@@ -99,7 +99,7 @@ EOF
     fi
 
     #fix rsyslog permissions
-    if [ -d "$dir" ] && ! dpkg-statoverride --list "$dir" >/dev/null; then
+    if [ -d "/var/log/mythtv" ] && ! dpkg-statoverride --list "/var/log/mythtv" >/dev/null; then
         chown syslog:adm -R /var/log/mythtv
         chmod 2755 /var/log/mythtv
     fi

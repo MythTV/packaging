@@ -5,6 +5,7 @@ mythtv (2:0.25.0~master.20120305.6519666-0ubuntu2) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * Remove references to mythmessage.
+  * Fix permissions on all existing log files on upgrade.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 15 Mar 2012 00:43:46 -0500
 
