@@ -124,9 +124,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\unzip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\util.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_lcddevice.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -241,6 +238,9 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\serverpool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\mythmiscutil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythbase\compat.h">
@@ -268,6 +268,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythbase\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythbase\mythmiscutil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -369,9 +372,6 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythbase\unzip_p.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythbase\util.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythbase\zipentry_p.h">

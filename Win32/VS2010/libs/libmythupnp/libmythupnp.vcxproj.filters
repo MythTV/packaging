@@ -134,6 +134,9 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\xmlplistSerializer.h">
       <Filter>Header Files\serializers</Filter>
     </ClInclude>
+    <ClInclude Include="xsd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythupnp\ssdpcache.h">
@@ -260,6 +263,9 @@
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\xmlplistSerializer.cpp">
       <Filter>Source Files\serializers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\xsd.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

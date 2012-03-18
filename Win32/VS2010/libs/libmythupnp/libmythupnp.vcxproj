@@ -45,6 +45,7 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpserviceimpl.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpsubscription.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\xmlplistSerializer.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythupnp\xsd.h" />
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythupnp\serverSideScripting.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
@@ -127,6 +128,7 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpserviceimpl.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\upnpsubscription.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\serializers\xmlplistSerializer.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythupnp\xsd.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F0EE3ABC-B1DA-45FB-A453-A0F4ED35769D}</ProjectGuid>

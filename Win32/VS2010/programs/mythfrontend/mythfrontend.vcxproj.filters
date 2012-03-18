@@ -602,9 +602,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_upnpscanner.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\videodlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -615,6 +612,9 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\idlescreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(mythtv_source)\mythtv\programs\mythfrontend\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

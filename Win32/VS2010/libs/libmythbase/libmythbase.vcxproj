@@ -175,7 +175,6 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\storagegroup.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\system-windows.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\unzip.cpp" />
-    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\util.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_filesysteminfo.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -274,6 +273,7 @@
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\mthread.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\mthreadpool.cpp" />
     <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\serverpool.cpp" />
+    <ClCompile Include="$(mythtv_source)\mythtv\libs\libmythbase\mythmiscutil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythbase\mythcommandlineparser.h" />
@@ -281,6 +281,7 @@
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythbase\mthreadpool.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythbase\mythbaseutil.h" />
     <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythbase\mythscheduler.h" />
+    <ClInclude Include="$(mythtv_source)\mythtv\libs\libmythbase\mythmiscutil.h" />
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythbase\serverpool.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
@@ -820,18 +821,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythbase\unzip_p.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing Custom Build Step</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing Custom Build Step</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Outputs)</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="$(mythtv_source)\mythtv\libs\libmythbase\util.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing Custom Build Step</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </Command>
