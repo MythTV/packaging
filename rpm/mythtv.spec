@@ -64,7 +64,7 @@
 %define desktop_vendor  mythtv
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25-beta-99-gff73126
+%define vers_string v0.25-rc
 
 # Git Revision number and branch
 %define _gitrev 1
