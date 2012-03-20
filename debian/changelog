@@ -1,4 +1,4 @@
-mythtv (2:0.25.0~master.20120305.6519666-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.25.0~master.20120316.53761e2-0ubuntu1) precise; urgency=low
 
   [ Thomas Mashos ]
   * Updated DB schema for standard plugins (LP: #944128)
@@ -6,8 +6,256 @@ mythtv (2:0.25.0~master.20120305.6519666-0ubuntu2) UNRELEASED; urgency=low
   [ Mario Limonciello ]
   * Remove references to mythmessage.
   * Fix permissions on all existing log files on upgrade.
+  * New upstream checkout (53761e2)
+  * >>Upstream changes since last upload (6519666):
+  * [53761e2] Use toLocal8Bit() for loading mysql.txt.
+  * [c3b022a] Don't display frontend status box log viewer button
+  * [8284bb7] Mention the detected character encoding
+  * [fa639a7] Make users have to figure out if their video works
+  * [5fb541e] Update Youtube player API to v3.
+  * [2ce3690] Identify DVD commentary tracks in the Audio track
+    selection dialog.
+  * [cbd9703] Prevent showing 0x0 artwork when a recording doesn't have
+    Seas/Ep.
+  * [9c4e7fd] Slight mod on [be81782c0] (function names).
+  * [187e37d] Close DB connections before running jobs.
+  * [be81782] Make sure we cleanup DB connections before thread exit
+    (non-MThread).
+  * [201c153] Missed a change from 1a651934c
+  * [9b6cdba] Rename 'file browse mode' to try and discourage it's use.
+    Browsing the database is now 'Browse Library (recommended) and what
+    was called file browse is now 'Browse Filesystem (slow)'
+  * [9e80861] Rename 'Enable/Disable Flat view' in the video browser to
+    'Show/Hide Directory Structure' to try and reduce the confusion this
+    mode currently causes.
+  * [1a65193] Only display the standby screen if the master backend is
+    configured to shut down when idle. We can assume that if the user
+    hasn't configured their backend to shut down then they don't care to
+    know that the frontends are idle.
+  * [15a85ec] Call DestoyMythMainWindow() before exit, even on error
+    exits.
+  * [d3b4762] Subtitles: Try to reenable the previously selected caption
+    type.
+  * [20a5628] Don't increment the number of channels returned by
+    libdvdnav. This was causing 5.1 audio to be wrongly identified as 7
+    channel, and stereo as 3 channel.
+  * [c61bb1e] Add debugging for the DVD audio language extension code
+    which may prove useful in the future.
+  * [f8d2de0] Fully clear the audio ringbuffer when using AC3 re-encoder
+  * [f6a8650] Partially revert 5dccbd5f6b3019a67ecc69213ee405bba4b30994
+  * [cc2ad7f] Revert "Fix potential leak"
+  * [3e26728] Merge branch 'master' of github.com:MythTV/mythtv
+  * [684272a] Fix the naming of some jumppoints.
+  * [8acfc87] Fix mac compilation using Qt 4.8.0
+  * [6ed2587] Allow more room for double-digit cardids in the
+    MythCenter[-wide] and default[-wide] themes.
+  * [f31d9a7] Fix potential leak
+  * [fd36db9] Ignore DVD commentary and AD tracks when auto-selecting
+    the audio track.
+  * [3e4ec54] Merge branch 'master' of github.com:MythTV/mythtv
+  * [5c1f50d] MythCenter-wide: Tidy up a few screen titles
+  * [9b6e4e1] Remove MythMessage binary.
+  * [1b29d50] MythCenter-wide: Tidy up the 'Custom Record Rules' screen
+  * [f56bdfc] MythCenter-wide: Make the multi-line edit resizeable
+  * [2b908b4] Squash a pesky compiler warning.
+  * [c050aca] Remove unused "oldJar".
+  * [ad7ee3f] Fix the frontend entering 'manual' standby mode instead of
+    'automatic' standby mode. The net effect of which being that you can
+    only exit standby by pressing escape when any input should have
+    exited.
+  * [7ccf016] MythCenter-wide: Add the MythArchive ui files and animate
+    a popup
+  * [706d0ed] MythArchive: Use the default popup background image for
+    both default themes
+  * [0df6e17] MythZoneminder: Use the default popup background image for
+    both default themes
+  * [499f86a] MythCenter-wide: Animate the MythZoneminder functionpopup
+  * [b80d1e2] MythCenter-wide: Add the popup keyboard so it can be
+    animated
+  * [898a01a] MythCenter-wide: Add the MythMusic theme files and animate
+    a few popups
+  * [3a09730] MythCenter-wide: Add the MythTimeInputDialog popup so it
+    can be animated
+  * [659bf60] MythCenter-wide: Animate some of the popups
+  * [a145733] Frontend Service: Fix Playback of recordings. The Setting
+    of the time spec was breaking playback.
+  * [5d1e0c3] Merge branch 'master' of github.com:MythTV/mythtv
+  * [658a4ec] MythMusic: Preserve the play state when switching views.
+    Fixes #10412.
+  * [de9b19d] XML plist serializer: Fix dictionary in array
+    serialization.
+  * [4fee6b1] XML plist serializer: Do not output invalid date/null
+    bytearrays.
+  * [e42b2db] Fix plist serializer.
+  * [86d4de8] Make XML plist serializer dates work with Apple plist
+    parser.
+  * [c25fb44] MythMusic: Tidy up the display of the play/paused/stopped
+    player state
+  * [36d87af] Update description of decoder field.
+  * [16ff44e] Add description for vda decoder
+  * [72497f6] Add default OpenGL playback profiles
+  * [cfd1ce2] Add default VDA playback profiles
+  * [2ab6d31] Merge branch 'master' of github.com:MythTV/mythtv
+  * [3cb4b6a] Ensure mount is available before
+    MythMediaDevice::ScanMediaType(). Refs #10450
+  * [a4d48df] MythMusic: Don't resume playback when switching views and
+    the playlist is empty
+  * [c09b076] MythMusic: change a couple of <dynamic_cast>  to
+    <static_cast>
+  * [47c9ac2] Various Ceton recorder fixes.
+  * [f261f8e] Add a couple more FreeSat transports to the EIT fixup
+    list. This helps keep Freeview and FreeSat guide data consistent
+  * [1399a9c] Make mythuiwebbrowser and mythdownloadmanager share
+    cookies
+  * [78a637c] NUV playback: Use a more accurate bitrate estimation if
+    available.
+  * [0f7651e] Do not disable LPCM if 16 bits audio isn't available
+  * [083fe59] Fix RingBuffer starvation when playing .nuv files.
+  * [c419275] Fix DB locking issue on MySQL 5.5
+  * [ff73126] Fix a PreviewGenerator dtor race.
+  * [0542a10] Refs #10414. Lower HDHomeRun recorder CPU usage a tiny bit
+    more.
+  * [1578678] Fixes #10420 - Invalid data type in VideoLookup XSD
+  * [6a0e4a2] Fixes #10441 - Invalid data types in Frontend web service
+    XSDs
+  * [2f6c4ee] Refs #10414. Lower DTVRecorder CPU use.
+  * [cc55c12] Add some sanity checking to manual cutlist input.
+  * [33fc9c4] Updated Russian Mythfrontend, MythBrowser, MythGallery,
+    MythGame, MythMusic and MythZoneMinder translation.
+  * [eac7f47] Subtitles: Improve layout of zoomed CEA-608 captions.
+  * [f51f5ea] Updated Greek MythFrontend, MythArchive, MythBrowser,
+    MythGallery, MythGame, MythMusic, MytWeather, MythZonMinder
+    translation from Yianni Visalis.
+  * [d2f4ae0] Fix a segfault when trying to search a buttonlist with no
+    items
+  * [836d501] Updated German MythFrontend, MythArchive, MythBrowser,
+    Mythgame, MythMusic and MythZoneminder translation from Florian
+    Bittner.
+  * [7862c79] Remove some unintended debugging print statements.
+  * [e1d3ac8] Add some intelligent behavior to help printout.
+  * [ebe802f] Make child options visible in help when an invalid option
+    is used.
+  * [46f6c4a] Tweak --help description in commandlineparser.
+  * [544094c] Correct handling of old --refresh-day option.
+  * [495e662] Change delete dialog text to read 'permanently delete'.
+    Just to avoid any doubt.
+  * [e05d654] Revert de7acc4ef now that we no longer focus 'OK' but
+    default in the delete confirmation dialog.
+  * [d353525] Always default to focusing the 'Cancel' button in
+    confirmation dialogs, confirmation dialogs are used when we want to
+    prevent the user making a mistake which is still too easy to do if
+    'OK' is selected by default.
+  * [3d2f68a] Add more detail to syslog logging
+  * [37cacb6] Fix RTP IPTV with multiple IPTV interfaces. 1ed419ad
+    applied a fix for udp IPTV where more than one interface was
+    available, it didn't apply the fix for rtp which uses the same
+    socket code. Fixes #8767, Refs #3873
+  * [1c2ce6a] Correct --inversecut handling in mythtranscode.
+  * [d62595d] Update python installer to properly remove installed
+    scripts.
+  * [f6f2fbb] Fix a couple of incorrect dtors
+  * [c114dd5] If the downloadable themes cache dir doesn't exist, force
+    redownload.
+  * [5201fb9] Remove unnecessary comment.
+  * [7d76de7] Add log messages missing from a couple of DB upgrades
+  * [4753c7a] Require a reasonably current DB version on upgrade
+  * [0bc768e] Fix some DB locking issues on MySQL 5.5
+  * [9fb1c3e] MythMusic: Add the nodetype statetype to the default 4:3
+    playlist tree
+  * [7d42720] Revert "Revert to using Any address."
+  * [bbfda96] Fix sub-folder node not displaying artwork of the first
+    child in the tree view. This was working in all the other views but
+    not in the tree view.
+  * [23f3e6f] Revert to using Any address.
+  * [177fdbb] Use MythDownloadManger for downloading icons in
+    mythfilldatabase. HttpComms doesn't support SSL.
+  * [1558b6e] Prompt on exit if configuration is ambiguous.
+  * [e022c2c] Remove limit from 1256 DB update.
+  * [3474fc2] Add explicit warning for removed -l and --logfile command
+    line options.
+  * [5ddc5aa] Prevent segfaults in mythuicheckbox if the theme xml is
+    missing required components.
+  * [e78a9ff] Add missing JOB_REBUILD flag for queuing seektable
+    rebuilds.
+  * [7a5db2b] Prevent segfault in mythuibuttontree with malformed theme
+    xml.
+  * [fa6fb44] Add NULL initializer to m_udpSend in ServerPool class.
+  * [48ba349] Fix new piano visualiser.
+  * [b522d60] Fix missing headers when compiling under mac 10.5
+  * [d65a742] Fix compilation when using 10.5 SDK.
+  * [814e880] MythUI: Optimize MythUIText::DrawSelf to quit if there is
+    nothing to draw.
+  * [c24c55a] Terra: Fix the defined area of the filebrowser and large
+    menu popup so that mouse click don't go to the window behind the
+    popup. Should also prevent redraw issues, especially with the QT
+    painter.
+  * [498f9f6] MythMusic: Add a nodetype statetype to the playlist tree
+  * [1ceab85] Add link to disable xslt translation of xsd in browsers
+    (also cleaned up display of array types).
+  * [293175a] Use a dedicated, unbound QUdpSocket for writeDatagram in
+    ServerPool.
+  * [63555a6] Add 'removed' options to assorted applications.
+  * [ddb9514] Fix getSetting method in javascript.
+  * [07abfa6] Add mechanism for marking command line options as removed.
+    ABI bump.
+  * [2be3dd9] Fixes #10414. Ensure sufficient buffering and sleep longer
+    when there is no data.
+  * [d8053e4] Refs #10414. Fix HDHomeRun makefile so it can compile
+    firmware update tool.
+  * [a8131eb] MythMusic: Remove some code left over from the old UI.
+    Fixes #10415.
+  * [e9e021a] MythNews: Fix some text that was causing
+    GetImageFromTextLayout() to complain
+  * [b65c43f] Allow rating changes even if no rating statetype is
+    defined in the body of the screen. The logic of not changing the
+    rating if the user cannot see the changes made is sound, however
+    making it so that we check if the buttonlist is displaying the
+    rating is not trivial and cannot be done in a feature freeze. It's
+    better than that THMBUP/THMBDOWN work than having them silently
+    fail.
+  * [1d8fcde] Fix OS X default for ejectOpticalDisc(), improve verbose
+    output. Refs #10370
+  * [67c86db] Verbose output - shorten a line to prevent wrap in 80col.
+  * [fef4aa4] setSpeed() - eliminate spurious -v media log line if Media
+    Monitor disabled.
+  * [ede2706] OS X setSpeed() - use correct drive path. Refs #10370
+  * [fd1800a] Remove --logfile and -l parameters
+  * [a9bf1d3] Rename vdpaubuffersize option to vdpaubuffercount.
+  * [9e62067] Fixes #7923. Listen for CAT changes.
+  * [f00264f] Change the idletimer from single shot so that we don't get
+    stuck in standby mode under certain conditions.
+  * [7433393] When the idle timer fires display the standby screen.
+  * [d8f180f] Add a jumppoint to enter standby mode manually.
+  * [a4ca569] Add a setting to configure how long the frontend remains
+    idle before we enter standby mode. Defaults to 90 minutes. A value
+    of zero will disable the timer. Video playback suspends the timer,
+    but currently listening to music does not.
+  * [d2edb8b] Add gitignore for smolt files.
+  * [3a51b83] Fixes #10400. Avoid getting stuck on mux in EPG channel
+    changes.
+  * [031d488] Fixes #10416. Really pause decoder thread when we are
+    changing the decoder for JumpToProgram.
+  * [f1937ea] 'Default Playlist' sounds better than 'Unnamed Playlist'
+  * [1d9ebef] Use QLocale::toString() to format some numerical strings
+    correctly
+  * [069c177] Remove dead code from musiccommon
+  * [c6c32d1] Use the host name from the request instead of localhost.
+  * [31a6a77] Set default playlist name to 'Unnamed Playlist' since
+    users will see it.
+  * [b907e36] Fix playlist mapped text not being available to use in the
+    UI
+  * [3e0d4c6] Include the playlist name in the mapped text.
+  * [bf67594] Fix images in buttonlists not being Reset() when passed an
+    empty filename string.
+  * [c5e5236] Don't hardcode the image shown when no albumart is
+    available. This allows the themer to not show any image instead or
+    to show their own image with a different path.
+  * [3430222] Fix a crash when executing a jump point during a playlist.
+  * [cf9ee65] Fix showing warnings on invalid schema versions
+  * [3758090] Mute address selection warning if using defaults.
+  * [79603b1] Add '!' missed during move in f5aa5e835b74.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 15 Mar 2012 00:43:46 -0500
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 16 Mar 2012 00:52:42 -0500
 
 mythtv (2:0.25.0~master.20120305.6519666-0ubuntu1) precise; urgency=low
 
