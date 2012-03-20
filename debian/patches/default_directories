@@ -3,8 +3,8 @@ Use /var/log/mythtv instead of just /var/log for mythtv logs.
 Change location of default storage groups to somewhere in /var/lib.
 Index: mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
 ===================================================================
---- mythtv-master.orig/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2012-02-09 18:07:34.000000000 -0600
-+++ mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2012-02-09 18:13:04.539477166 -0600
+--- mythtv-master.orig/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2012-03-16 01:00:10.055330063 -0500
++++ mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2012-03-20 00:00:03.136207457 -0500
 @@ -42,7 +42,7 @@
  #ifdef Q_WS_MACX
      gc->setValue(QDir::homePath() + "/Pictures");
@@ -25,8 +25,8 @@ Index: mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
                      "be copied. If it is an executable, it will be run."));
 Index: mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp
 ===================================================================
---- mythtv-master.orig/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2012-02-09 18:07:34.000000000 -0600
-+++ mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2012-02-09 18:13:04.539477166 -0600
+--- mythtv-master.orig/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2012-03-19 23:59:07.092255042 -0500
++++ mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2012-03-20 00:00:03.140207451 -0500
 @@ -16,7 +16,7 @@
  {
      HostLineEdit *gc = new HostLineEdit("MythArchiveTempDir");
@@ -34,12 +34,12 @@ Index: mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp
 -    gc->setValue("");
 +    gc->setValue("/var/lib/mytharchive/temp/");
      gc->setHelpText(QObject::tr("Location where MythArchive should create its "
-             "temporory work files. LOTS of free space required here."));
+             "temporary work files. LOTS of free space required here."));
      return gc;
 Index: mythtv-master/mythtv/libs/libmythmetadata/globals.cpp
 ===================================================================
---- mythtv-master.orig/mythtv/libs/libmythmetadata/globals.cpp	2011-10-21 14:56:15.000000000 -0500
-+++ mythtv-master/mythtv/libs/libmythmetadata/globals.cpp	2012-02-09 18:13:04.539477166 -0600
+--- mythtv-master.orig/mythtv/libs/libmythmetadata/globals.cpp	2012-03-16 01:00:10.015330163 -0500
++++ mythtv-master/mythtv/libs/libmythmetadata/globals.cpp	2012-03-20 00:00:03.140207451 -0500
 @@ -32,5 +32,5 @@
  #ifdef Q_WS_MACX
  const QString DEFAULT_VIDEOSTARTUP_DIR = QDir::homePath() + "/Movies";
