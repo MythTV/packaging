@@ -1,6 +1,7 @@
 mythtv (2:0.25.0~master.20120316.53761e2-0ubuntu2) UNRELEASED; urgency=low
 
   * refresh default_directories patch for changes upstream.
+  * Capture all logs from /var/log/mythtv for apport reports.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 20 Mar 2012 00:04:57 -0500
 
