@@ -273,7 +273,7 @@ EOF
         exit
     fi
     GITVER=`echo "$DESCRIBE" | sed -e 's,^\([^-]\+\)-.\+$,\1,'`
-    GITREV=`echo "$DESCRIBE" | sed -e 's,^[^-]\+-,,' -e 's,-,.,'`
+    GITREV=`echo "$DESCRIBE" | sed -e 's,^[^-]\+-,,' -e 's,-,.,g'`
     # do some magic here to detect v, b, rc, or pre notations
     if [[ $GITREV =~ ^rc ]]; then
         GITVER=${GITVER#v}
