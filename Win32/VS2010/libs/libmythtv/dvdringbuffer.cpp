@@ -338,6 +338,11 @@ int DVDRingBuffer::GetTrack(uint type)
     return 0;
 }
 
+int  DVDRingBuffer::GetAudioTrackType(uint stream_id)
+{
+	return 0;
+}
+
 uint8_t DVDRingBuffer::GetNumAudioChannels(int id)
 {
     return 0;
