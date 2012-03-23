@@ -30,7 +30,7 @@
 %define desktop_vendor  mythtv
 
 # Git Revision number and branch ID
-%define _gitrev 1
+%define _gitrev 0.0.rc.36.gaa59013
 %define branch master
 
 #

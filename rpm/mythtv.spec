@@ -64,10 +64,10 @@
 %define desktop_vendor  mythtv
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25-rc
+%define vers_string v0.25-rc-36-gaa59013
 
 # Git Revision number and branch
-%define _gitrev 1
+%define _gitrev 0.0.rc.36.gaa59013
 %define branch master
 
 #
@@ -1284,7 +1284,6 @@ fi
 %{_datadir}/mythtv/setup.xml
 %{_bindir}/mythavtest
 %{_bindir}/mythfrontend
-%{_bindir}/mythmessage
 %{_bindir}/mythlcdserver
 %{_bindir}/mythshutdown
 %{_bindir}/mythwelcome
@@ -1479,6 +1478,9 @@ fi
 ################################################################################
 
 %changelog
+* Thu Mar 22 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Remove mythmessage
+
 * Wed Mar 12 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Remove .git* meta data files before installing
 
