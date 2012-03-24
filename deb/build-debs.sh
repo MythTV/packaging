@@ -174,7 +174,7 @@ if [ "$TYPE" = "binary" ]; then
     fi
 
     #grab build dependencies
-    get-build-deps || die "Error installing build dependencies"
+    sudo apt-get build-dep mythtv || die "Error installing build dependencies"
 
 elif [ "$TYPE" = "source" ]; then
     DEBUILD_FLAGS="-S $DEBUILD_FLAGS"
