@@ -34,7 +34,7 @@ export QUILT_PATCHES="debian/patches"
 [ -n "$GIT_BRANCH" ] && GIT_BRANCH=""
 [ -n "$DIRECTORY" ] && DIRECTORY=""
 [ -n "$PATCHES" ] && PATCHES=""
-[ -z "$DEBUILD_FLAGS" ] && DEBUILD_FLAGS="-us -uc -i -I.git"
+[ -z "$DEBUILD_FLAGS" ] && DEBUILD_FLAGS="-d -us -uc -i -I.git"
 
 if [ -z "$1" ]; then
 	help
