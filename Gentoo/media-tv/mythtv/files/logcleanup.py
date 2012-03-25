@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #----------------------------
 # Name: logrotate.py
@@ -94,7 +94,7 @@ def deletelogs(instances, opts):
 def main(opts):
     ls = sorted(LogFile.filter(opts.logpath, os.listdir(opts.logpath)))
     if len(ls) == 0:
-        print "Warning: Empty log path!"
+        print("Warning: Empty log path!")
         sys.exit(1)
 
     cur = None
