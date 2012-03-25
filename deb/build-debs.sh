@@ -155,26 +155,8 @@ if [ ! -f ../mythtv_$UPSTREAM_VERSION.orig.tar.gz ]; then
 fi
 
 if [ "$TYPE" = "binary" ]; then
-    #Make sure we have the package for get-build-deps
-    if ! which get-build-deps 2>&1 1>/dev/null; then
-        echo "Missing ubuntu-dev-tools, marking for installation"
-        sudo apt-get install ubuntu-dev-tools --no-install-recommends || die "Error installing ubuntu-dev-tools"
-    fi
-
-    #pbuilder is used by get-build deps
-    if ! which pbuilder 2>&1 1>/dev/null; then
-        echo "Missing pbuilder, marking for installation"
-        sudo apt-get install pbuilder || die "Error installing pbuilder"
-    fi
-
-    #aptitude is used by get-build deps
-    if ! which aptitude 2>&1 1>/dev/null; then
-        echo "Missing aptitude, marking for installation"
-        sudo apt-get install aptitude || die "Error installing aptitude"
-    fi
-
     #grab build dependencies
-    get-build-deps || die "Error installing build dependencies"
+    sudo apt-get build-dep mythtv || die "Error installing build dependencies"
 
 elif [ "$TYPE" = "source" ]; then
     DEBUILD_FLAGS="-S $DEBUILD_FLAGS"
