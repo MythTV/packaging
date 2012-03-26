@@ -23,4 +23,5 @@ DEPEND="dev-perl/DateManip
 	dev-perl/XML-SAX
 	dev-perl/DateTime-Format-ISO8601
 	dev-perl/XML-XPath
+	dev-perl/JSON
 	"
