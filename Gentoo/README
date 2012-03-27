@@ -2,7 +2,8 @@ Instructions for use:
 sudo su -
 mkdir /usr/local/mythtv_portage
 git clone git://github.com/MythTV/packaging.git /usr/local/mythtv_portage/
-ln -s /usr/local/mythtv_portage/Gentoo/scripts/selfupdate /etc/portage/postsync.d/updateMythEbuilds
+ln -s /usr/local/mythtv_portage/Gentoo/scripts/selfupdate /etc/portage/postsync.d/UpdateMyth_1_git
+ln -s /usr/local/mythtv_portage/Gentoo/scripts/mythtv-buildebuild.py3 /etc/portage/postsync.d/UpdateMyth_2_ebuild
 
 edit /etc/make.conf
 add /usr/local/mythtv_portage/Gentoo to PORTDIR_OVERLAY
