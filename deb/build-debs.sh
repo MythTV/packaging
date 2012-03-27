@@ -156,25 +156,64 @@ fi
 
 if [ "$TYPE" = "binary" ]; then
     #Make sure we have the package for get-build-deps
-    if ! which get-build-deps 2>&1 1>/dev/null; then
-        echo "Missing ubuntu-dev-tools, marking for installation"
-        sudo apt-get install ubuntu-dev-tools --no-install-recommends || die "Error installing ubuntu-dev-tools"
-    fi
+    #If we are running Oneiric or later get-build-deps is
+    #replaced with mk-build-deps which is in the devscripts package
+    #If devscripts > 2.10.xx we are running Oneiric or later and will be using mk-build-deps
+    n1=$(apt-cache showpkg devscripts | tail -2 | cut -c3-4 | grep 10 > /dev/null; echo $?)
+    n2=0
+    if [ $n1 -gt $n2 ]; then
+	    echo ' '
+	    echo ' '
+	    echo '  ####################################'
+	    echo '  # We will be using mk-build-deps   #'
+	    echo '  ####################################'
+	    echo ' '
+	    echo ' '
+	    sleep 5
 
-    #pbuilder is used by get-build deps
-    if ! which pbuilder 2>&1 1>/dev/null; then
-        echo "Missing pbuilder, marking for installation"
-        sudo apt-get install pbuilder || die "Error installing pbuilder"
-    fi
+		#equivs is used by mk-build-deps
+		if ! which equivs-build 2>&1 1>/dev/null; then
+		    echo "Missing equivs, marking for installation"
+		    sudo apt-get install equivs || die "Error installing equivs"
+    		fi
 
-    #aptitude is used by get-build deps
-    if ! which aptitude 2>&1 1>/dev/null; then
-        echo "Missing aptitude, marking for installation"
-        sudo apt-get install aptitude || die "Error installing aptitude"
-    fi
+	    #grab build dependencies
+	    mk-build-deps -ir -s sudo || die "Error installing build dependencies"
 
-    #grab build dependencies
-    get-build-deps || die "Error installing build dependencies"
+	    #mk-build-deps is not totaly reliable yet
+	    #at the moment it misses libiec61883-dev (firewire support)
+	    #the following will make sure it is installed
+	    sudo apt-get build-dep mythtv || die "Error installing build-dep mythtv"
+    else
+	    echo ' '
+	    echo ' '
+	    echo '  #####################################'
+	    echo '  # We will be using get-build-deps   #'
+	    echo '  #####################################'
+	    echo ' '
+	    echo ' '
+	    sleep 5
+
+		if ! which get-build-deps 2>&1 1>/dev/null; then
+		    echo "Missing ubuntu-dev-tools, marking for installation"
+		    sudo apt-get install ubuntu-dev-tools --no-install-recommends || die "Error installing ubuntu-dev-tools"
+		fi
+
+		#pbuilder is used by get-build deps
+		if ! which pbuilder 2>&1 1>/dev/null; then
+		    echo "Missing pbuilder, marking for installation"
+		    sudo apt-get install pbuilder || die "Error installing pbuilder"
+		fi
+
+		#aptitude is used by get-build deps
+		if ! which aptitude 2>&1 1>/dev/null; then
+		    echo "Missing aptitude, marking for installation"
+		    sudo apt-get install aptitude || die "Error installing aptitude"
+		fi
+
+	    #grab build dependencies
+	    get-build-deps || die "Error installing build dependencies"
+    fi
 
 elif [ "$TYPE" = "source" ]; then
     DEBUILD_FLAGS="-S $DEBUILD_FLAGS"
