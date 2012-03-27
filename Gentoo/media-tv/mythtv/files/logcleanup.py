@@ -100,7 +100,6 @@ def main(opts):
 	cur = None
 	while len(ls):
 		f = ls.pop(0)
-		print (f)
 		if cur is None:
 			instances = [f]
 			cur = f
