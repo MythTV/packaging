@@ -92,6 +92,11 @@ if ! which debuild 1>/dev/null; then
     sudo apt-get install devscripts --no-install-recommends|| die "Error installing devscripts"
 fi
 
+#make sure we have build-essential
+if ! which gcc 2>&1 1>/dev/null; then
+    echo "Missing build-essential, marking for installation"
+    sudo apt-get install build-essential || die "Error installing build-essential"
+fi
 
 mkdir -p $DIRECTORY
 cd $DIRECTORY
