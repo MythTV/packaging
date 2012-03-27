@@ -8,7 +8,7 @@ die()
 
 help()
 {
-	echo "Usage: $0 git_branch [target_dir] [additional_patches]"
+	echo "Usage: sh /path/to/build-deps.sh $O git_branch [target_dir] [additional_patches]"
 	echo "git_branch -> mandatory: the GIT branch of MythTV to build"
 	echo "target_dir -> optional: the dir used for the BZR & GIT checkouts"
 	echo "additional_patches -> optional: space separated full path to all patches to apply"
