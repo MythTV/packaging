@@ -130,6 +130,11 @@ TODAY=$(date +%Y%m%d)
 dch -b -v $EPOCH:0.$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TODAY.-$DEBIAN_SUFFIX "Automated Build"
 
 #clean up any old patches (just in case)
+#this uses quilt
+if ! which quilt 2>&1 1>/dev/null; then
+    echo "Missing quilt, marking for installation"
+    sudo apt-get install quilt || die "Error installing quilt"
+fi
 if [ -d .pc ]; then
 	quilt pop -a 2>/dev/null || rm -rf .pc
 fi
