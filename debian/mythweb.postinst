@@ -104,6 +104,12 @@ s/\(^[ \t]*setenv[ \t]\+db_name[ \t]\+\"\)[^\"]*\"/\1$database\"/g;
 s/\(^[ \t]*setenv[ \t]\+db_login[ \t]\+\"\)[^\"]*\"/\1$mythtv_username\"/g;
 s/\(^[ \t]*setenv[ \t]\+db_password[ \t]\+\"\)[^\"]*\"/\1$mythtv_password\"/g;
             " > $NEW
+            
+        if [ -e /var/www/mythweb ]; then
+            # replace /var/www/html with /var/www/mythweb
+            perl -pi -e 's/\/var\/www\/html/\/var\/www\/mythweb/g;' $NEW
+        fi
+            
         mv -f $NEW $MYTHWEBCONF
 
         MYTHWEBDIR=/etc/apache2/sites-available/mythwebdir
