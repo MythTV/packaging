@@ -2,7 +2,7 @@ mythtv (2:0.25.0~master.20120316.53761e2-0ubuntu2) UNRELEASED; urgency=low
 
   [ John Baab ]
   * Fixed issue where an existing mythweb apache config would be 
-    re-used and incorrect paths were not updated. 
+    re-used and incorrect paths were not updated. (LP: #806221, #923785) 
   * Removed mythweb_paths.patch, no longer needed.
  
   [ Mario Limonciello ]
