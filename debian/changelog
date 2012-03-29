@@ -1,15 +1,266 @@
-mythtv (2:0.25.0~master.20120316.53761e2-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.25.0~master.20120329.c85fc55-0ubuntu1) precise; urgency=low
+
+  [ Mario Limonciello ]
+  * refresh default_directories patch for changes upstream.
+  * Capture all logs from /var/log/mythtv for apport reports.
+  * New upstream checkout - post RC but pre-release (c85fc55)
+  * >>Upstream changes since last upload (53761e2):
+  * [c85fc55] Correct command line option interdependencies for --
+    queuejob.
+  * [f73dbda] Ceton bug fix for handling failed tunings
+  * [5320353] Updated Hong Kong Chinese MythFrontend and MythArchive
+    translation from Walter Cheuk
+  * [ce22520] Updated French language MythFrontend and all plugins
+    translations from the French Language Translation Team.
+  * [c40f582] Rollup DB changes to 1299 for initial database.
+  * [1317eed] Merge commit '4663490f8fa99dd5869aff595f56873175e47826'
+  * [4663490] Split cache engines into own files. Add msvcrt locking for
+    file engine.
+  * [07b570b] Correct newline escape.
+  * [faa9f39] Updated Greek MythFrontend, MythArchive, MythBrowser,
+    MythGallery, MythGame, MythMusic, MythNetvision, MythWeather and
+    MythZoneMinder translation from Yianni Vidalis.
+  * [651d67a] Only attempt language fallthrough if polling function is
+    supplied.
+  * [9e53c8d] Extend the overrides fix in [973df175] to
+    GetSettingOnHost() and GetSettings().
+  * [5639e05] Fixes #10518. Fix CetonStreamHandler deadlock.
+  * [142489b] Refs #10518. Fix CetonStreamHandler error logging.
+  * [55cd239] Refs #9830. Fix some debugging output problems observed in
+    logs on ticket.
+  * [f8d32cb] Fix unhandled keypresses causing the mythmusic volume
+    display timer to stay on screen for longer than it normally would.
+    If something has changed then we do want to keep it on-screen, but
+    if the user was trying to control something on the screen beneath
+    the popup we shouldn't keep swallowing keypresses.
+  * [e967e30] Fixes #10501. Adapt to new return ioctl return value in
+    Linux 3.1.
+  * [b51e845] MPEGRecorder: _error is a QString not a bool, set it
+    appropriately.
+  * [401f846] MPEGRecorder: Close chanfd if we fail to initialize
+    device. One of the cases wasn't handled.
+  * [142b981] Move some database logging left over from the DB
+    connections re-write to VB_DATABASE. This makes for less log clutter
+    to wade through when debugging issues or reviewing logs with the new
+    log viewer.
+  * [973df17] Fix settings overrides. I accidentally broke these when
+    changing the DB connection code.
+  * [22cb74b] Fixes #10519. Adds workaround for cx8800 driver.
+  * [8bf3888] Re-fix HLS for AC3.  Argh. :)
+  * [713762d] Allow AudioReencodeBuffer to work DTS-sourced audio too
+  * [885ca53] Adds final attempt at internal name resolution in
+    MythSocket.
+  * [f3d65a5] Add Movie classmethods to readme.
+  * [a7f03a6] Clean up trailer handling.
+  * [dfab0a24] Some cleanup, gitignore, and a readme
+  * [292ac93] Updated Canadian English MythWeather translation.
+  * [40917b8] Move tmdb3 library for proper installation. Correct bugs
+    in tmdb3.py.
+  * [f404b65] Merge branch 'master' of github.com:MythTV/mythtv
+  * [36cdbfd] Updated MythFrontend, MythArchive, MythBrowser,
+    MythGallery, MythGame, MythMusic, MythNetvision, MythWeather,
+    MythZoneMinder translation from Marko Punnar.
+  * [12823e7] Merge commit 'd7d68c2f584ee9c7bc9b52567038cb14fa8b0ed0'
+  * [d7d68c2] Add Movie.fromIMDB method.
+  * [be6e6d7] Add exception type for unknown language or country.
+  * [5291ff0] Delete missed line causing syntax error.
+  * [094608c] Finish up locale and fallthough.
+  * [484d12d] Implement locale support in searches and data queries.
+  * [74d4a29] Updated US English MythFrontend and all plugins
+    translation from the US English Translation Team.
+  * [84cc01d] Update Canadian English qms
+  * [e85c523] Updated Canadian English MythFrontend and all plugins
+    translation
+  * [d5d5cba] Initial changes for improved locale support.
+  * [b4c922b] New Hong Kong Chinese locale file from Walter Cheuk
+  * [b3e3b03] Remove MythTV grabber script.  Script is now located in
+    the MythTV repo.
+  * [1caa3a3] Move tmdb3.py script into location used by metadata
+    libraries.
+  * [d3c219a] Merge commit '1e4b690a2d6a5854eca6038a7c67ded2df973ce6'
+  * [1e4b690] Correct import method to use installed package.
+  * [f0307c3] Correct missed variable name change.
+  * [61fad36] Generalize caching and allow post configuration.
+  * [78ad8be] Oops.  Fix const char * vs char *
+  * [fe8c8bf] Make the logging change more clear
+  * [4c93463] Fix a stupid brain-o
+  * [ba2ccfb] Updated Russian MythFrontend translation
+  * [dfadcda] Fix a memory corruption when logging strings with a '%'
+    character.
+  * [3b5ac82] Updated Spanish / Spain MythFrontend, MythArchive,
+    MythBrowser, MythGallery, MythGame, MythMusic, MythNetvision,
+    MythWeather, MythZoneMinder translation from the Spanish Language
+    Translation Team
+  * [76a5ca3] Updated Norwegian Bokmal MythFrontend, MythArchive,
+    MythBrowser, MythGallery, MythGame, MythMusic, MythNetvision and
+    MythZoneminder translation from Rune Evjen.
+  * [4f9cbeb] Convert strings using toUtf8() instead of toLocal8Bit()
+    before using ELF Hashing, fixes duplicate matching breaking where
+    the environment isn't 8bit and toLocal8Bit() will fail. There's a
+    small chance this will break duplicate matching for a few users who
+    are using an 8-bit character encoding which isn't UTF8 compatible
+    but it will fix it for far more users who might be running
+    mythfilldatabase from a cronjob with no proper locale or similar.
+    Refs #10449
+  * [83759ac] Fix initialization of histograms
+  * [778d811] Fixes #10054. Fixes handling of segmented SDT and PAT
+    tables.
+  * [19df7fb] Revert "Add a setting to enable/disable the UI effects."
+  * [797211c] Mythuitheme XSD, there is no limit on <stop> elements in a
+    <gradient>
+  * [608d7fe] Mythuitheme XSD, fix error, in this instance position is a
+    percentage value not coordinates.
+  * [6bd7ab7] Update mythui XSD to include recent additions such as
+    <animation>. Also added support for themeinfo.xml
+  * [af4c184] Fix duplicate <buttonarea> in the wrong place in default
+    theme. Found through validating against XSD
+  * [bcebfdc] Fix typo in Terra which caused a warning when validating
+    the theme.
+  * [d6f038c] Refs #10067. Fix event dequeing logic issue
+  * [cf0d7b0] Fix some theme validation issues in MythCenter-wide
+  * [aa59013] Properly initialize variables in Channel data contract.
+  * [15a7daf] Tabs to spaces and remove a commented line
+  * [cbf999d] Add a setting to enable/disable the UI effects.
+  * [8facdb7] Fix typo in Terra introduced in 5d81a9d0
+  * [ec1a8d2] Fix LF vs CRLF in file (formatting only)
+  * [0c567e1] Make Guide/GetProgramGuide's NumChannels parameter similar
+    to other methods.
+  * [4dbca61] Bump version.
+  * [ed46c2b] Move MythTV grabber script into scripts directory.
+  * [ae288e2] Setup Wizard: Fix the blank screens when moving back in
+    the wizard.
+  * [09eca8f] Updated British English MythFrontend, MythArchive,
+    MythGallery, MythGame, MythMusic and MythZoneminder translation from
+    Nick Morrott
+  * [aad0ac5] Fixes #10443. Update end time of recorded entries in
+    LiveTV.
+  * [7fa5023] Fix HLS transcoding audio with non-MP3 input
+  * [5c07d22] Add nowplaying(), mostpopular(), and toprated() methods
+    for Movie class.
+  * [af5dba1] Rework search result paging with a more generic base
+    class.
+  * [495ef16] Merge branch 'master' of github.com:MythTV/mythtv
+  * [dfbb6d3] Update the Russian translation of mythfrontend,
+    mytharchive, mythbrowser, mythgallery, mythgame, mythmusic,
+    mythnetvision, mythnews, mythweather and mythzoneminder.
+  * [414159d] Keep an unsigned counter from going negative
+  * [fd42b59] Update the themestrings with a few minor corrections.
+  * [4ec5bab] Default themes: In the audiowizard window, change "My
+    speaker" to "My audio subsystem"
+  * [c4f0f67] Another static definition fix.
+  * [6c00548] Merge branch 'master' of github.com:MythTV/mythtv
+  * [da7d2aa] Correct jobqueue job type definitions in python bindings.
+  * [2d1d6d5] Fix typo in 2451dc574..."Steppes-narrow", not "Stepped-
+    narrow".
+  * [7f8dda1] Limit the uPnP recording description length to 128
+    characters for compatibility. When a recording doesn't have a
+    subtitle, we currently insert the full description of the recording
+    into the title/subtitle. As this breaks some uPnP clients, let's
+    truncate the description at 128 characters for compatibility.
+  * [9bd93b2] Merge branch 'master' of github.com:MythTV/mythtv
+  * [a83aba6] Fix QStringList -> Stringlist in a few more backend
+    service API users
+  * [2451dc5] Add Steppes-narrow to the list of translatable themes. The
+    strings seems identical to Steppes at the moment, but let's include
+    it just to be on the safe side.
+  * [21da03d] Update the themestrings for the frontend due to a UTF-8
+    encoding error. Hopefully the very last update for 0.25?
+  * [fb448d6] Silence warning about testing a uint for less than zero
+    (detected by clang). Closes #10476
+  * [10a8dba] Correct initialization of pointer to be NULL, not false
+    (detected by clang). Closes #10475
+  * [db33108] Properly detect video files that have moved hosts.
+  * [f30ffd4] Fixes #10423. Refs #8744. Fixes A->B,B->A locking issue
+    introduced in [146ee7692]
+  * [64f9423] Fix UTF-8 encoded output in the themestringstool.
+  * [aefc7ce] Remove extraneous ; in MetadataFactory.
+  * [efdba7e] Fix type on return value in HTTPLiveStream::StopStream()
+  * [0ba4567] Redirect strings from music-base.xml to the mythmusic
+    translation files rather than the mythfrontend translation files.
+  * [118c9e0] Update the themestrings following the release of RC1.
+  * [b309cf1] Make comparison more explicit
+  * [425e1d7] Fixes #10474. Logic error discovered by Gary Buhrmaster.
+  * [ebf828d] =Add files missing from 5d81a9d000.
+  * [92f7d1f] Another small indent fix...
+  * [926d837] Line length/indent correction of commit ddc1e1e18
+  * [fe97637] Change directory for folder in MythArchive when it is used
+    to describe a place to store documents.
+  * [584f049] Fix some typos...
+  * [ddc1e1e] Add Chinese date and time formats to the list of date/time
+    formats.
+  * [95ad33f] Fix Theme Chooser downloads on remote frontends for 0.25
+  * [80e6e87] Make MythArchive theme descriptions translatable.
+  * [2005a52] Make additional text strings translatable.
+  * [8a5977d] Display the entire XMLTV grabber name.
+  * [6c526f0] MythCenter-wide: bump the version to better reflect the
+    progress made
+  * [0f7c765] default-wide: Change an edit to a multi-line edit
+  * [4b99fcc] MythCenter-wide: Change an edit to a multi-line edit
+  * [ddb8f54] MythMusic: Fix a problem when the resume mode is set to
+    Off
+  * [4951a25] Merge branch 'master' of github.com:MythTV/mythtv
+  * [0ee3022] MythMusic: Re-enable the playlist buttonlist search after
+    f57253536
+  * [f6113fb] Update the Swedish translation.
+  * [a1d573c] Refs #10472. Initialize pointer in ctor.
+  * [585ec0c] Update Polish MythFrontend and all plugins translation
+    from Warpme.
+  * [bf10d8d] MythArchiveHelper: Fix bad filenames when creating a
+    native archive directory
+  * [899ef48] MythMusic: Fix having to load the music library before
+    running a file scan
+  * [47e4a67] Prevent an infinite loop in MythUIButtonList when using
+    the itemVisible signal
+  * [29b66a1] Revert "Speed up initial loading of Watch Recordings
+    screen."
+  * [5d81a9d] Some fixes for Terra
+  * [0430596] Updated Norwegian Bokmal MythFrontend, MythMusic and
+    MythWeather translation from Rune Evjen
+  * [f572535] MythMusic: Speed up the creation of the playlist button
+    items
+  * [de4f093] Fix the missing handling of rsTuning in a few places.
+  * [3dbd1bd] Speed up initial loading of Watch Recordings screen.
+  * [759fea8] MythPlayer: add back code to handle seamless LiveTV
+    program transitions
+  * [43b55c9] Only create playback profiles when they are usable
+  * [972371e] MythMusic: reload the settings in the player when exiting
+    the setting pages
+  * [e1bf100] Only restart the idle timer if it was active to begin
+    with. This was broken by ad7ee3fd. Fixes #10467
+  * [b172de1] Updated Russian MythFrontend translation.
+  * [85ac156] Don't use the PLAYBACK_START/PLAYBACK_END events to pause
+    the idle timer, the problem is that MythMusic unpauses the timer
+    when it recieves the PLAYBACK_START event because it's just stopped
+    music playback. There's no simple way around this if we continue to
+    use the events, so just call PauseIdleTimer() directly instead. Refs
+    #10467
+  * [72d3fb5] Add debugging to PauseIdleTimer() to help diagnose any
+    problems with this code during the 0.25 release
+  * [22400f1] Call ItemVisible() signal earlier to reduce flickering in
+    mythmusic.
+  * [2c08a7d] Fix VDA playback for some videos.
+  * [111f0ed] Make sure we don't deref a NULL pointer to a
+    PreviewGenerator.
+  * [6cfb930] Make sure the previewWaitCondition.wakeAll() is heard by
+    using the proper lock.
+  * [3a6cb4a] Fix ordering of deletes in commandlineparser destructor.
+  * [01177a3] Performance/bug fix in media monitor ScanMediaType().
+  * [19fa996] Pause the frontend idle timer when mythbrowser or
+    mythflash is being used.
+  * [f6f8e73] Don't toggle the enteringStandby state unless we're using
+    the 'Standby Mode' jumppoint. It's only relevant when the standby
+    screen is being used.
+  * [df400e6] Pause the frontend idle timer when music is being played.
+    Fixes #10464
+  * [cc062d3] Fix Mac OS X media monitor error.
+  * [bfa84c5] Add __init__
 
   [ John Baab ]
   * Fixed issue where an existing mythweb apache config would be 
     re-used and incorrect paths were not updated. (LP: #806221, #923785) 
   * Removed mythweb_paths.patch, no longer needed.
- 
-  [ Mario Limonciello ]
-  * refresh default_directories patch for changes upstream.
-  * Capture all logs from /var/log/mythtv for apport reports.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 20 Mar 2012 00:04:57 -0500
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 29 Mar 2012 16:25:18 -0500
 
 mythtv (2:0.25.0~master.20120316.53761e2-0ubuntu1) precise; urgency=low
 
