@@ -208,7 +208,7 @@ if [ "$TYPE" = "binary" ]; then
 		fi
 
 		#pbuilder is used by get-build deps
-		if ! which pbuilder 2>&1 1>/dev/null; then
+		if ! which debuild-pbuilder 2>&1 1>/dev/null; then
 		    echo "Missing pbuilder, marking for installation"
 		    sudo apt-get install pbuilder || die "Error installing pbuilder"
 		fi
