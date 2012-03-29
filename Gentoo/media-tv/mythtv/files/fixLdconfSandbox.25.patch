@@ -2,7 +2,7 @@ Index: programs/mythfrontend/mythfrontend.pro
 ===================================================================
 --- programs/mythfrontend/mythfrontend.pro	(revision 26148)
 +++ programs/mythfrontend/mythfrontend.pro	(working copy)
-@@ -107,3 +107,5 @@
+@@ -110,3 +110,5 @@
      DEFINES += USING_LIBDNS_SD
      using_libcrypto: DEFINES += USING_RAOP
  }

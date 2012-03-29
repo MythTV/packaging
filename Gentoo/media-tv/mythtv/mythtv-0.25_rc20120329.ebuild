@@ -1,35 +1,40 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-tv/mythtv/mythtv-0.22_alpha18535.ebuild,v 1.4 2008/10/09 20:52:54 cardoe Exp $
+# $Header:$
 
 EAPI=2
-PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.24.2-15-gc29d36f"
-MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="c29d36f1634cd837276b4fd8cfea5d5d75304da8"
-MYTHTV_SREV="c29d36f"
+PYTHON_DEPEND="python? 2:2.6"
+MYTHTV_VERSION="v0.25-rc-106-gf73dbda"
+MYTHTV_BRANCH="master"
+MYTHTV_REV="f73dbda4d44e3694c1374c2332ddfb80e2e7f355"
+MYTHTV_SREV="f73dbda"
 
-inherit flag-o-matic multilib eutils qt4-r2 mythtv toolchain-funcs python linux-info
+inherit flag-o-matic multilib eutils qt4-r2 mythtv toolchain-funcs python
+inherit linux-info
 
 DESCRIPTION="Homebrew PVR project"
 SLOT="0"
-KEYWORDS="amd64 x86 ~ppc"
+KEYWORDS="~amd64 ~x86 ~ppc"
 
 IUSE_VIDEO_CARDS="video_cards_nvidia"
 IUSE_INPUT_DEVICES="input_devices_joystick"
-IUSE="altivec autostart dvb \
-dvd bluray \
-ieee1394 lcd lirc \
+IUSE="altivec ass autostart \
+dvb dvd bluray \
+ieee1394 lcd lirc cec \
 alsa jack pulseaudio \
-debug \
+debug hls raop fftw \
 perl python \
-xvmc vdpau \
+vdpau vaapi crystalhd \
+xmltv xvid \
 ${IUSE_VIDEO_CARDS} \
 ${IUSE_INPUT_DEVICES}
 "
 
 SDEPEND="
 	>=media-sound/lame-3.93.1
+	virtual/glu
+	virtual/mysql
+	virtual/opengl
 	x11-libs/libX11
 	x11-libs/libXext
 	x11-libs/libXinerama
@@ -41,11 +46,18 @@ SDEPEND="
 	x11-libs/qt-sql:4[qt3support,mysql]
 	x11-libs/qt-opengl:4[qt3support]
 	x11-libs/qt-webkit:4
-	virtual/mysql
-	virtual/opengl
-	virtual/glu
 	alsa? ( >=media-libs/alsa-lib-0.9 )
-	dvb? ( media-libs/libdvb virtual/linuxtv-dvb-headers )
+	ass? ( media-libs/libass )
+	bluray? (	dev-libs/libxml2
+			media-libs/libbluray )
+	cec? (	dev-libs/libcec )
+	dvb? (	media-libs/libdvb
+		virtual/linuxtv-dvb-headers )
+	fftw? (	sci-libs/fftw )
+	hls? (	>=media-libs/x264-0.0.20100605
+		media-libs/libvpx
+		media-sound/lame 
+		media-libs/faac )
 	ieee1394? (	>=sys-libs/libraw1394-1.2.0
 			>=sys-libs/libavc1394-0.5.3
 			>=media-libs/libiec61883-1.0.0 )
@@ -56,50 +68,48 @@ SDEPEND="
 		dev-perl/Net-UPnP
 		dev-perl/LWP-Protocol-https
 		dev-perl/HTTP-Message
+		dev-perl/IO-Socket-INET6
 		>=dev-perl/libwww-perl-5 )
 	pulseaudio? ( media-sound/pulseaudio )
 	python? (	dev-python/mysql-python
-			dev-python/lxml )
+			dev-python/lxml
+			dev-python/urlgrabber )
+	raop? (	net-dns/avahi[mdnsresponder-compat] )
+	vaapi? ( x11-libs/libva )
 	vdpau? ( x11-libs/libvdpau )
-	xvmc? ( x11-libs/libXvMC )
+	xvid? ( >=media-libs/xvid-1.1.0 )
 	!media-tv/mythtv-bindings
+	!media-plugins/mythvideo
 	!x11-themes/mythtv-themes
 	"
 
 RDEPEND="${SDEPEND}
 	media-fonts/corefonts
 	media-fonts/dejavu
+	media-fonts/liberation-fonts
 	>=media-libs/freetype-2.0
 	x11-apps/xinit
-	|| ( >=net-misc/wget-1.12-r3 >=media-tv/xmltv-0.5.43 )
 	autostart? (	net-dialup/mingetty
 			x11-wm/evilwm
 			x11-apps/xset )
-	bluray? ( media-libs/libbluray )
 	dvd? ( media-libs/libdvdcss )
 	video_cards_nvidia? (	x11-drivers/nvidia-drivers 
 				vdpau? ( >=x11-drivers/nvidia-drivers-256 ) )
+	xmltv? ( >=media-tv/xmltv-0.5.43 )
 	"
 
 DEPEND="${SDEPEND}
-	dev-lang/yasm
 	x11-proto/xineramaproto
 	x11-proto/xf86vidmodeproto
+	x11-apps/xinit
+	dev-lang/yasm
 	"
 
 MYTHTV_GROUPS="video,audio,tty,uucp"
 
 pkg_setup() {
-	einfo "This ebuild now uses a heavily stripped down version of your CFLAGS"
-
-	if use xvmc && use video_cards_nvidia
-	then
-		elog
-		elog "For NVIDIA based cards, the XvMC renderer only works on"
-		elog "the NVIDIA 4, 5, 6 & 7 series cards."
-	fi
-
 	python_set_active_version 2
+	python_pkg_setup
 
 	enewuser mythtv -1 /bin/bash /home/mythtv ${MYTHTV_GROUPS}
 	usermod -a -G ${MYTHTV_GROUPS} mythtv
@@ -118,13 +128,20 @@ src_prepare() {
 	sed -e "s:pure_install:pure_install INSTALLDIRS=vendor:" \
 		-i "${S}"/bindings/perl/Makefile
 
-	epatch "${FILESDIR}/ffmpeg-sync.patch"
-	epatch "${FILESDIR}/fixLdconfSandbox.patch"
+	epatch "${FILESDIR}/fixLdconfSandbox.25.patch"
 
-	if use experimental
-	then
-		true;
-	fi
+#	if use experimental
+#	then
+#		epatch "${FILESDIR}/optimizeMFDBClearingBySource-3.patch"
+#		epatch "${FILESDIR}/jobQueueIgnoreDeletedRecgroup.patch"
+#
+#		if has_version ">=virtual/mysql-5.5"
+#		then
+#			epatch "${FILESDIR}/mythtv-8585-use_proper_ISO_SQL_format_in_database_logging.patch"
+#		fi
+#
+#		true
+#	fi
 }
 
 src_configure() {
@@ -133,29 +150,16 @@ src_configure() {
 	myconf="${myconf} --libdir-name=$(get_libdir)"
 
 	myconf="${myconf} --enable-pic"
-	myconf="${myconf} --enable-proc-opt"
 
 	use alsa       || myconf="${myconf} --disable-audio-alsa"
 	use altivec    || myconf="${myconf} --disable-altivec"
 	use jack       || myconf="${myconf} --disable-audio-jack"
 	use pulseaudio || myconf="${myconf} --disable-audio-pulseoutput"
 
-#from bug #220857
-	if use xvmc; then
-		myconf="${myconf} --enable-xvmc"
-		myconf="${myconf} --enable-xvmcw"
-		myconf="${myconf} --disable-xvmc-vld"
-	else
-		myconf="${myconf} --disable-xvmc"
-		myconf="${myconf} --disable-xvmcw"
-	fi
-
 	myconf="${myconf} $(use_enable dvb)"
 	myconf="${myconf} $(use_enable ieee1394 firewire)"
 	myconf="${myconf} $(use_enable lirc)"
-	myconf="${myconf} --disable-directfb"
 	myconf="${myconf} --dvb-path=/usr/include"
-	myconf="${myconf} --enable-opengl-vsync"
 	myconf="${myconf} --enable-xrandr"
 	myconf="${myconf} --enable-xv"
 	myconf="${myconf} --enable-x11"
@@ -175,6 +179,11 @@ src_configure() {
 		myconf="${myconf} --without-bindings=perl,python"
 	fi
 
+	if use python
+	then
+		myconf="${myconf} --python=$(PYTHON)"
+	fi
+
 	if use debug
 	then
 		myconf="${myconf} --compile-type=debug"
@@ -183,33 +192,41 @@ src_configure() {
 		myconf="${myconf} --enable-proc-opt"
 	fi
 
-	if use xvmc && use video_cards_nvidia
-	then
-		myconf="${myconf} --xvmc-lib=XvMCNVIDIA"
-		myconf="${myconf} --enable-opengl-video"
-	fi
-
 	if use vdpau && use video_cards_nvidia
 	then
 		myconf="${myconf} --enable-vdpau"
 	fi
 
-	use input_devices_joystick || myconf="${myconf} --disable-joystick-menu"
-
-	if use experimental
+	if use vaapi
 	then
-		myconf="${myconf} --enable-symbol-visibility"
+		myconf="${myconf} --enable-vaapi"
+	fi
+	if use crystalhd
+	then
+		myconf="${myconf} --enable-crystalhd"
 	fi
 
-## CFLAG cleaning so it compiles
-	strip-flags
-	filter-flags "-march=*" "-mtune=*" "-mcpu=*"
-	filter-flags "-O" "-O?"
+	myconf="${myconf} $(use_enable xvid libxvid)"
+
+	if use hls
+	then
+		myconf="${myconf} --enable-libmp3lame"
+		myconf="${myconf} --enable-libx264"
+		myconf="${myconf} --enable-libvpx"
+		myconf="${myconf} --enable-libfaac"
+		myconf="${myconf} --enable-nonfree"
+	fi
+
+	use input_devices_joystick || myconf="${myconf} --disable-joystick-menu"
+	use cec || myconf="${myconf} --disable-libcec"
+
+	myconf="${myconf} --enable-symbol-visibility"
 
 	has distcc ${FEATURES} || myconf="${myconf} --disable-distcc"
 	has ccache ${FEATURES} || myconf="${myconf} --disable-ccache"
 
 # let MythTV come up with our CFLAGS. Upstream will support this
+	strip-flags
 	CFLAGS=""
 	CXXFLAGS=""
 
@@ -221,12 +238,11 @@ src_configure() {
 }
 
 src_compile() {
-#	eqmake4 mythtv.pro -o "Makefile" || die "eqmake4 failed"
 	emake || die "emake failed"
 }
 
 src_install() {
-	einstall INSTALL_ROOT="${D}" || die "install failed"
+	make INSTALL_ROOT="${D}" install || die "install failed"
 	dodoc AUTHORS FAQ UPGRADING  README
 
 	insinto /usr/share/mythtv/database
@@ -234,8 +250,8 @@ src_install() {
 
 	exeinto /usr/share/mythtv
 
-	newinitd "${FILESDIR}"/mythbackend-0.18.2.rc mythbackend
-	newconfd "${FILESDIR}"/mythbackend-0.18.2.conf mythbackend
+	newinitd "${FILESDIR}"/mythbackend-0.25.rc mythbackend
+	newconfd "${FILESDIR}"/mythbackend-0.25.conf mythbackend
 
 	dodoc keys.txt docs/*.{txt,pdf}
 	dohtml docs/*.html
@@ -245,10 +261,22 @@ src_install() {
 	keepdir /var/log/mythtv
 	chown -R mythtv "${D}"/var/log/mythtv
 
+
 	insinto /etc/logrotate.d
-	newins "${FILESDIR}"/mythtv.logrotate.d mythtv
+	newins "${FILESDIR}"/mythtv.25.logrotate.d mythtv
+
+	insinto /etc/cron.daily
+	insopts -m0544
+	newins "${FILESDIR}"/runlogcleanup mythtv.logcleanup
+
+	dodir /usr/share/mythtv/bin
+	insinto /usr/share/mythtv/bin
+	insopts -m0555
+	doins "${FILESDIR}"/logcleanup.py
+    
 
 	insinto /usr/share/mythtv/contrib
+	insopts -m0644
 	doins -r contrib/*
 
 	dobin "${FILESDIR}"/runmythfe
@@ -260,12 +288,15 @@ src_install() {
 
 		insinto /home/mythtv
 		newins "${FILESDIR}"/bash_profile .bash_profile
-		newins "${FILESDIR}"/xinitrc .xinitrc
+		newins "${FILESDIR}"/xinitrc.25 .xinitrc
 	fi
 
-	for file in `find ${D} -type f -name \*.py`; do chmod a+x $file; done
-	for file in `find ${D} -type f -name \*.sh`; do chmod a+x $file; done
-	for file in `find ${D} -type f -name \*.pl`; do chmod a+x $file; done
+	for file in `find ${D} -type f -name \*.py \
+						-o -type f -name \*.sh \
+						-o -type f -name \*.pl`;
+	do
+		chmod a+x $file;
+	done
 }
 
 pkg_preinst() {
@@ -275,7 +306,7 @@ pkg_preinst() {
 pkg_postinst() {
 	elog "Want mythfrontend to start automatically?"
 	elog "Set USE=autostart. Details can be found at:"
-	elog "http://dev.gentoo.org/~cardoe/mythtv/autostart.html"
+	elog "http://www.mythtv.org/wiki/Gentoo_Autostart"
 
 	elog
 	elog "To always have MythBackend running and available run the following:"
@@ -283,15 +314,6 @@ pkg_postinst() {
 	elog
 	ewarn "Your recordings folder must be owned by the user 'mythtv' now"
 	ewarn "chown -R mythtv /path/to/store"
-
-	if use xvmc && [[ ! -s "${ROOT}/etc/X11/XvMCConfig" ]]
-	then
-		ewarn
-		ewarn "No XvMC implementation has been selected yet"
-		ewarn "Use 'eselect xvmc list' for a list of available choices"
-		ewarn "Then use 'eselect xvmc set <choice>' to choose"
-		ewarn "'eselect xvmc set nvidia' for example"
-	fi
 
 	if use autostart
 	then
@@ -301,11 +323,6 @@ pkg_postinst() {
 		elog "c8:2345:respawn:/sbin/mingetty --autologin mythtv tty8"
 	fi
 
-}
-
-pkg_postrm()
-{
-	true;
 }
 
 pkg_info() {

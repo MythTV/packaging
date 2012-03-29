@@ -15,6 +15,8 @@
 #   and however many rotated files have been generated for it.
 #----------------------------
 
+from __future__ import print_function
+
 import os
 import re
 import sys
@@ -51,29 +53,48 @@ class LogFile( object ):
         self.children = []
 
     def __repr__(self):
-        return "<LogFile %s, %s%s%s>" % \
-                (self.application, self.datetime.strftime("%b %d, %H:%M"),
-                 " #%d" % self.sequence if self.sequence is not None else "",
-                 " (compressed)" if self.compressed else "")
+        return "<LogFile {0}, {1}{2}{3}>".format(
+                self.application, self.datetime.strftime("%b %d, %H:%M"),
+                " #{0}".format(self.sequence) if self.sequence is not None else "",
+                " (compressed)" if self.compressed else "")
 
-    def __cmp__(self, other):
+    def __lt__(self, other):
         if self.application != other.application:
-            return cmp(self.application, other.application)
-
+            return (self.application < other.application)
         if self.datetime != other.datetime:
-            return cmp(self.datetime, other.datetime)
-
+            return (self.datetime < other.datetime)
         if self.pid != other.pid:
-            return cmp(self.pid, other.pid)
+            return (self.pid < other.pid)
 
-        if self.sequence != other.sequence:
-            if self.sequence is None:
-                return -1
-            if other.sequence is None:
-                return 1
-            return cmp(self.sequence, other.sequence)
+        if self.sequence == other.sequence:
+            return False
+        if self.sequence is None:
+            return True
+        if other.sequence is None:
+            return False
+        return (self.sequence < other.sequence)
 
-        return 0
+    def __gt__(self, other):
+        if self.application != other.application:
+            return (self.application > other.application)
+        if self.datetime != other.datetime:
+            return (self.datetime > other.datetime)
+        if self.pid != other.pid:
+            return (self.pid > other.pid)
+
+        if self.sequence == other.sequence:
+            return False
+        if self.sequence is None:
+            return False
+        if other.sequence is None:
+            return True
+        return (self.sequence > other.sequence)
+
+    def __eq__(self, other):
+        return (self.application == other.application) and \
+               (self.datetime == other.datetime) and \
+               (self.pid == other.pid) and \
+               (self.sequence == other.sequence)
 
     def append(self, child):
         self.children.append(child)
@@ -81,53 +102,82 @@ class LogFile( object ):
     def delete(self):
         for child in self.children:
             child.delete()
-        #print 'deleting %s' % os.path.join(self.path, self.filename)
         os.unlink(os.path.join(self.path, self.filename))
 
 def deletelogs(instances, opts):
+    deletelist = []
+    instances.sort(reverse=True)
     while len(instances) > int(opts.minfiles):
-        if instances[0].lastmod > (datetime.now() -\
+        cur = instances.pop()
+        if instances[-1].lastmod < (datetime.now() -\
                                    timedelta(hours=24*int(opts.minage))):
-            return
-        instances.pop(0).delete()
+            deletelist.append(cur)
+    if len(deletelist):
+        print("Deleting {0} log sets ({1} files) for {2}".format(
+                        len(deletelist),
+                        sum([len(item.children)+1 for item in deletelist]),
+                        deletelist[0].application))
+        for item in deletelist:
+#            print("  deleting {0}".format(item))
+            item.delete()
 
 def main(opts):
-    ls = sorted(LogFile.filter(opts.logpath, os.listdir(opts.logpath)))
+    ls = LogFile.filter(opts.logpath, os.listdir(opts.logpath))
+    ls.sort(reverse=True)
+
     if len(ls) == 0:
-        print "Warning: Empty log path!"
+        print("Warning: Empty log path!")
         sys.exit(1)
 
     cur = None
     while len(ls):
-        f = ls.pop(0)
+        f = ls.pop()
         if cur is None:
+            # first run of a new application name
+            # start collecting instances
             instances = [f]
             cur = f
             continue
 
         if cur.application != f.application:
-            ls.insert(0,f)
+            # new application name, run existing instances and restart loop
+            ls.append(f)
             cur = None
             deletelogs(instances, opts)
             continue
 
-        if (cur.datetime != f.datetime) and (cur.pid != f.pid):
+        if (cur.datetime != f.datetime) or (cur.pid != f.pid):
+            # new instance of existing application
             cur = f
             instances.append(f)
             continue
 
+        # logrotate copy of current instance
+        # mark as child for collective handling
         cur.append(f)
 
     deletelogs(instances, opts)
 
 if __name__ == "__main__":
-    parser = OptionParser()
-    parser.add_option("-p", "--path", dest="logpath", default="/var/log/mythtv",
-                      help="Path where log files are stored")
-    parser.add_option("-n", "--min-files", dest="minfiles", default="5",
-                      help="Minimum number of logs per application to keep")
-    parser.add_option("-t", "--min-age", dest="minage", default="7",
-                      help="Minimum time (days) to keep log files")
+    try:
+        from argparse import ArgumentParser
+    except ImportError:
+        parser = OptionParser()
+        parser.add_option("-p", "--path", dest="logpath", default="/var/log/mythtv",
+                          help="Path where log files are stored")
+        parser.add_option("-n", "--min-files", dest="minfiles", default="5",
+                          help="Minimum number of logs per application to keep")
+        parser.add_option("-t", "--min-age", dest="minage", default="7",
+                          help="Minimum time (days) to keep log files")
+        (opts, args) = parser.parse_args()
+    else:
+        parser = ArgumentParser()
+        parser.add_argument('-p', "--path", dest="logpath", default="/var/log/mythtv",
+                            help="Path where log files are stored")
+        parser.add_argument('-n', "--min-files", dest="minfiles", type=int, default=5,
+                            help="Minimum number of logs per application to keep")
+        parser.add_argument("-t", "--min-age", dest="minage", type=int, default=7,
+                            help="Minimum time (days) to keep log files")
+        opts = parser.parse_args()
 
-    (opts, args) = parser.parse_args()
     main(opts)
