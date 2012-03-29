@@ -169,9 +169,7 @@ if [ "$TYPE" = "binary" ]; then
     #If we are running Oneiric or later get-build-deps is
     #replaced with mk-build-deps which is in the devscripts package
     #If devscripts > 2.10.xx we are running Oneiric or later and will be using mk-build-deps
-    n1=$(apt-cache showpkg devscripts | tail -2 | cut -c3-4 | grep 10 > /dev/null; echo $?)
-    n2=0
-    if [ $n1 -gt $n2 ]; then
+    if ! dpkg-query -s devscripts | sed '/^Version:/!d; s/Version: //' | cut -c3-4 | grep 10 > /dev/null; then
 	    echo ' '
 	    echo ' '
 	    echo '  ####################################'
@@ -179,7 +177,7 @@ if [ "$TYPE" = "binary" ]; then
 	    echo '  ####################################'
 	    echo ' '
 	    echo ' '
-	    sleep 5
+	    sleep 2
 
 		#equivs is used by mk-build-deps
 		if ! which equivs-build 2>&1 1>/dev/null; then
@@ -202,7 +200,7 @@ if [ "$TYPE" = "binary" ]; then
 	    echo '  #####################################'
 	    echo ' '
 	    echo ' '
-	    sleep 5
+	    sleep 2
 
 		if ! which get-build-deps 2>&1 1>/dev/null; then
 		    echo "Missing ubuntu-dev-tools, marking for installation"
