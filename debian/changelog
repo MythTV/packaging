@@ -1,3 +1,10 @@
+mythtv (2:0.25.0~master.20120329.c85fc55-0ubuntu2) precise; urgency=low
+
+  * Remove extra reference to libmysqlclient-16-dev.
+  * Add b-d on libmysqlclient-dev (LP: #894377).
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 05 Apr 2012 15:13:15 -0500
+
 mythtv (2:0.25.0~master.20120329.c85fc55-0ubuntu1) precise; urgency=low
 
   [ Mario Limonciello ]
