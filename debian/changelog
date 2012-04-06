@@ -1,10 +1,65 @@
-mythtv (2:0.25.0~master.20120329.c85fc55-0ubuntu2) precise; urgency=low
+mythtv (2:0.25.0~master.20120406.041ecad-0ubuntu1) precise; urgency=low
 
   * Remove extra reference to libmysqlclient-16-dev.
   * Add b-d on libmysqlclient-dev (LP: #894377).
   * Drop dependency on ttf-freefont.
+  * New upstream checkout (041ecad)
+  * >>Upstream changes since last upload (c85fc55):
+  * [041ecad] increases the maximal number of queued video packets to
+    220.
+  * [5824030] Bump API version following addition of plist decoding
+  * [91a2209] Add a binary property list parser.
+  * [1b24a76] Make RAOP server properly handle any size of decoded audio
+    packets.
+  * [2d365d6] Tweak Smolt handling of digital tuners.
+  * [65d89b5] Fix dates and time strings not being translated to the
+    user-selected language. We were always using the system language and
+    not respecting the language/country chosen in mythfrontend.
+  * [640b0cd] Refs #10490. Switch ringbuffers a little earlier in
+    LiveTV.
+  * [c49b780] Fix translation of <template> in <clock> markup.
+  * [fe354d9] Update the filename in the Playback Data OSD screen after
+    LiveTV program transitions.
+  * [ae63bc2] Fix translation of mapped text strings. Thanks to Nicolas
+    Riendeau for pointing it out.
+  * [0840578] Fix AAC decoding audio corruption
+  * [85969eb] Bah.  Fix tab -> spaces
+  * [86f5fd8] Fixed RAOP audio decoding to use all frames in a packet
+  * [a2cf165] Fix ostream commandline help typo
+  * [1af1b13] Fix unimportant typo in configure
+  * [58e2527] Move speaker configuration setup down
+  * [29f8994] Allow more room for simplified dates in MythCenter-wide.
+  * [8cad830] Move Setup Wizard at the top of settings menu
+  * [825975c] Rewrite Audio Setup Wizard
+  * [c0bc088] Do not activate 5.1 audio if only DTS is active
+  * [dbc978f] Minor cleanup
+  * [711386d] Fix cut and paste error discovered by Gary Buhrmaster.
+  * [a6136f9] Fix clang report
+  * [20ec299] Remove unnecessary logging.
+  * [98f0a52] DVR Service: Fix recording deletion API.
+  * [f81f712] Fixes #9830. Refs #10519. Fixes channel change on PVR350.
+  * [79d7af9] Fixes #10453. Fix deadlock in DVBStreamHandler.
+  * [98c855e] Refs #10490. Fix for LiveTV abort on empty recordings.
+  * [4de48af] Updated German MythFrontend, MythArchive, MythBrowser,
+    MythGallery, MythGame, MythMusic, MythNetvision, MythWeather
+    translation from Florian Bittner.
+  * [faf0745] Fix a translatation lookup so that it retrieves the
+    translated string correctly.
+  * [8a3ab52] Make Service API conform to new deletion behavior.
+  * [a38f191] Rec types from string need a kNotRecording too.
+  * [59be832] Fix overlap in string to rec type method.
+  * [8bbf302] Fix segfault in AddRecordSchedule API.
+  * [bbd0880] Fixes #10534.  Reenable the DB settings cache after the
+    schema check.
+  * [78948da] Fix false precision in backend status upcoming recordings.
+  * [c7a1e81] Fixes segfault on mythfrontend exit & related problems.
+  * [c3eaf78] Refs #10490. At least a partial LiveTV startup fix.
+  * [d0df4ce] Refs #10490. Debugging fixes. Makes it easier to track
+    which recordings are being started and stopped.
+  * [5439b8b] Services: Make frontend status date string conform to
+    required naming.
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 05 Apr 2012 15:13:15 -0500
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Fri, 06 Apr 2012 01:21:31 -0500
 
 mythtv (2:0.25.0~master.20120329.c85fc55-0ubuntu1) precise; urgency=low
 
