@@ -1,0 +1,49 @@
+Patch to include layout option for python 2.6
+==========================================================================
+Index: mythtv-master/mythtv/bindings/python/Makefile
+===================================================================
+--- mythtv-master.orig/mythtv/bindings/python/Makefile	2011-03-06 22:31:46.000000000 -0600
++++ mythtv-master/mythtv/bindings/python/Makefile	2011-04-09 22:57:12.162532463 -0500
+@@ -1,7 +1,7 @@
+ include ../../config.mak
+ 
+ ifdef INSTALL_ROOT
+-	ROOT_FLAGS = --root="$(INSTALL_ROOT)"
++	ROOT_FLAGS = --root="$(INSTALL_ROOT)/../libmyth-python"
+ endif
+ 
+ REAL_PREFIX = $(PREFIX)
+@@ -10,6 +10,7 @@
+ 		PREFIX_FLAGS=--prefix="$(PREFIX)"
+ 	endif
+ endif
++PREFIX_FLAGS="--install-layout=deb"
+ 
+ all: python_build
+ 
+Index: mythtv-master/mythtv/bindings/perl/Makefile
+===================================================================
+--- mythtv-master.orig/mythtv/bindings/perl/Makefile	2011-03-06 22:31:46.000000000 -0600
++++ mythtv-master/mythtv/bindings/perl/Makefile	2011-04-09 22:57:12.162532463 -0500
+@@ -1,7 +1,7 @@
+ include ../../config.mak
+ 
+ ifdef INSTALL_ROOT
+-ROOT_FLAGS = PERL_INSTALL_ROOT="$(INSTALL_ROOT)"
++ROOT_FLAGS = PERL_INSTALL_ROOT="$(INSTALL_ROOT)/../libmythtv-perl"
+ endif
+ 
+ ifneq ($(PREFIX:/=), /usr)
+Index: mythtv-master/mythtv/bindings/php/Makefile
+===================================================================
+--- mythtv-master.orig/mythtv/bindings/php/Makefile	2011-04-09 22:56:43.000000000 -0500
++++ mythtv-master/mythtv/bindings/php/Makefile	2011-04-09 22:57:49.806719139 -0500
+@@ -4,7 +4,7 @@
+ FILES += MythTV.php MythTVProgram.php MythTVRecording.php
+ FILES += MythTVStorageGroup.php
+ 
+-INSTDIR = ${INSTALL_ROOT}${PREFIX}/share/mythtv/bindings/php
++INSTDIR = ${INSTALL_ROOT}/../php-mythtv${PREFIX}/share/mythtv/bindings/php
+ 
+ all:
+ clean:

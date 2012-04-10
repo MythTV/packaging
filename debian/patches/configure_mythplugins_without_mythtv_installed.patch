@@ -1,16 +1,16 @@
-Index: mythtv-fixes/mythplugins/configure
+Index: mythtv-master/mythplugins/configure
 ===================================================================
---- mythtv-fixes.orig/mythplugins/configure	2012-03-07 18:08:51.850868381 -0600
-+++ mythtv-fixes/mythplugins/configure	2012-03-07 18:09:03.918867627 -0600
-@@ -126,6 +126,7 @@
+--- mythtv-master.orig/mythplugins/configure	2012-03-05 00:06:33.000000000 -0600
++++ mythtv-master/mythplugins/configure	2012-03-05 00:20:57.403144009 -0600
+@@ -303,6 +303,7 @@
  prefix="/usr/local"
  libdir_name="lib"
  sysroot=""
 +mythroot=""
+ ln_s="ln -sf"
  
  logfile="config.ep"
- 
-@@ -144,7 +145,8 @@
+@@ -322,7 +323,8 @@
  
  Generic options:
    --prefix=PREFIX          MythTV install location PREFIX [$prefix]
@@ -20,7 +20,7 @@ Index: mythtv-fixes/mythplugins/configure
    --qmake=QMAKE            use specified qmake [$qmake]
    --python=PATH            Force a specific python executable to use [$python]
    --libdir-name=LIBNAME    install/look for libs in PREFIX/LIBNAME [$libdir_name]
-@@ -221,6 +223,7 @@
+@@ -394,6 +396,7 @@
      qmake
      python
      sysroot
@@ -28,7 +28,7 @@ Index: mythtv-fixes/mythplugins/configure
  "
  
  CONFIGURATION_OPTS=""
-@@ -348,6 +351,7 @@
+@@ -462,6 +465,7 @@
  from distutils.sysconfig import get_python_lib
  import sys
  sys.path.append(get_python_lib(prefix='${prefix}'))
@@ -36,7 +36,20 @@ Index: mythtv-fixes/mythplugins/configure
  try:
      import $lib
  except:
-@@ -433,7 +437,7 @@
+@@ -525,7 +529,11 @@
+ }
+ 
+ # bring in mythtv config
+-if [ -e $prefix/include/mythtv/mythconfig.mak ] ; then
++if [ -e $mythroot$prefix/include/mythtv/mythconfig.mak ] ; then
++    rm mythconfig.mak 2> /dev/null
++    cp $mythroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
++    sed -i -e "s,^SYSROOT\=.*,SYSROOT=$mythroot,g" mythconfig.mak
++elif [ -e $prefix/include/mythtv/mythconfig.mak ] ; then
+     rm mythconfig.mak 2> /dev/null
+     ${ln_s} $prefix/include/mythtv/mythconfig.mak mythconfig.mak
+ else
+@@ -584,7 +592,7 @@
          disable netvision
      }
  
@@ -45,36 +58,23 @@ Index: mythtv-fixes/mythplugins/configure
      check_py_lib pycurl  || disable_netvision "Python pycurl library (pycurl)"
      check_py_lib lxml    || disable_netvision "Python lxml library (lxml)"
      check_py_lib xml     || disable_netvision "Python XML library (xml)"
-@@ -588,7 +592,11 @@
- ###########################################################
- 
- # bring in mythtv config
--if [ -e $sysroot$prefix/include/mythtv/mythconfig.mak ] ; then
-+if [ -e $mythroot$prefix/include/mythtv/mythconfig.mak ] ; then
-+  rm mythconfig.mak 2> /dev/null
-+  cp $mythroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
-+  sed -i -e "s,^SYSROOT\=.*,SYSROOT=$mythroot,g" mythconfig.mak
-+elif [ -e $sysroot$prefix/include/mythtv/mythconfig.mak ] ; then
-   rm mythconfig.mak 2> /dev/null
-   ln -s $sysroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
- else
-Index: mythtv-fixes/mythplugins/programs-libs.pro
+Index: mythtv-master/mythplugins/programs-libs.pro
 ===================================================================
---- mythtv-fixes.orig/mythplugins/programs-libs.pro	2011-11-22 15:30:01.019406530 -0600
-+++ mythtv-fixes/mythplugins/programs-libs.pro	2012-03-07 18:09:03.918867627 -0600
+--- mythtv-master.orig/mythplugins/programs-libs.pro	2012-02-23 14:13:57.000000000 -0600
++++ mythtv-master/mythplugins/programs-libs.pro	2012-03-05 00:19:18.107253175 -0600
 @@ -4,7 +4,7 @@
  INCLUDEPATH += $${SYSROOT}$${PREFIX}/include/mythtv/libmyth
  DEPENDPATH *= $${INCLUDEPATH}
  
--LIBS += -L$${LIBDIR} $$EXTRA_LIBS -lmythdb-$$LIBVERSION
-+LIBS += -L$${SYSROOT}$${LIBDIR} $$EXTRA_LIBS -lmythdb-$$LIBVERSION
+-LIBS += -L$${LIBDIR} $$EXTRA_LIBS -lmythbase-$$LIBVERSION
++LIBS += -L$${SYSROOT}$${LIBDIR} $$EXTRA_LIBS -lmythbase-$$LIBVERSION
  LIBS += -lmyth-$$LIBVERSION -lmythui-$$LIBVERSION -lmythupnp-$$LIBVERSION
+ LIBS += -lmythservicecontracts-$$LIBVERSION
  LIBS += -lmythavcodec
- LIBS += -lmythavcore
-Index: mythtv-fixes/mythplugins/targetdep.pro
+Index: mythtv-master/mythplugins/targetdep.pro
 ===================================================================
---- mythtv-fixes.orig/mythplugins/targetdep.pro	2011-11-22 15:30:01.019406530 -0600
-+++ mythtv-fixes/mythplugins/targetdep.pro	2012-03-07 18:09:03.918867627 -0600
+--- mythtv-master.orig/mythplugins/targetdep.pro	2012-02-23 14:13:57.000000000 -0600
++++ mythtv-master/mythplugins/targetdep.pro	2012-03-05 00:19:18.107253175 -0600
 @@ -10,7 +10,7 @@
  MYTH_LIB_EXT  =$${LIBVERSION}.$${QMAKE_EXTENSION_LIB}
  
@@ -84,10 +84,10 @@ Index: mythtv-fixes/mythplugins/targetdep.pro
  
  # On Windows, dlls were installed with exes:
  mingw : DEPLIBS = $${PREFIX}/bin
-Index: mythtv-fixes/mythplugins/mytharchive/mytharchive/mytharchive.pro
+Index: mythtv-master/mythplugins/mytharchive/mytharchive/mytharchive.pro
 ===================================================================
---- mythtv-fixes.orig/mythplugins/mytharchive/mytharchive/mytharchive.pro	2011-11-22 15:30:00.883406526 -0600
-+++ mythtv-fixes/mythplugins/mytharchive/mytharchive/mytharchive.pro	2012-03-07 18:09:03.926867625 -0600
+--- mythtv-master.orig/mythplugins/mytharchive/mytharchive/mytharchive.pro	2012-02-23 14:13:57.000000000 -0600
++++ mythtv-master/mythplugins/mytharchive/mytharchive/mytharchive.pro	2012-03-05 00:19:18.107253175 -0600
 @@ -33,28 +33,28 @@
  SOURCES += mythburn.cpp themeselector.cpp editmetadata.cpp thumbfinder.cpp
  SOURCES += exportnative.cpp importnative.cpp
@@ -122,6 +122,6 @@ Index: mythtv-fixes/mythplugins/mytharchive/mytharchive/mytharchive.pro
  
 -nativeuifiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/themes/default
 +nativeuifiles.path = $${PREFIX}/share/mythtv/themes/default
- nativeuifiles.files = mythnative-ui.xml 
+ nativeuifiles.files = mythnative-ui.xml
  
- INSTALLS +=  scriptfiles introfiles themefiles imagefiles musicfiles 
+ INSTALLS +=  scriptfiles introfiles themefiles imagefiles musicfiles

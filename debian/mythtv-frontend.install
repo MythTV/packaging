@@ -3,8 +3,8 @@ usr/bin/mythfrontend.real
 usr/bin/mythlcdserver
 usr/bin/mythreplex
 usr/bin/mythavtest
-usr/bin/mythtvosd
 usr/bin/mythwelcome
+usr/bin/mythmediaserver
 usr/lib/mythtv/filters
 usr/share/mythtv/i18n/mythfrontend_*
 
@@ -12,3 +12,4 @@ usr/share/mythtv/i18n/mythfrontend_*
 debian/mythtv.desktop usr/share/applications
 debian/mythfrontend.sh usr/share/mythtv
 debian/session-settings etc/mythtv
+

@@ -1,8 +1,0 @@
-/var/log/mythtv/jamu.log {
-        daily
-	size=10M
-        rotate 7
-        notifempty
-        copytruncate
-        missingok
-}

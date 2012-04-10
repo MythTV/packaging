@@ -2,12 +2,16 @@
 usr/share/mythtv/themes
 usr/bin/mythshutdown
 usr/bin/mythff*
+usr/bin/mythmetadatalookup
+usr/bin/mythccextractor
+usr/bin/mythutil
 usr/share/mythtv/*.xml
 usr/share/mythtv/*.pl
 usr/share/mythtv/locales
 usr/share/mythtv/fonts/Tiresias*.ttf
 usr/share/mythtv/internetcontent
 usr/share/mythtv/metadata
+usr/share/mythtv/hardwareprofile
 
 #Other bits that we are gonna copy in that aren't part of make install
 mythtv/contrib/config_files/config.xml usr/share/mythtv
@@ -18,3 +22,4 @@ debian/mysql.txt.dist usr/share/mythtv
 debian/mythbuntu-crashdb.conf etc/apport/crashdb.conf.d
 debian/source_mythtv.py usr/share/apport/package-hooks
 debian/mythtv.png usr/share/pixmaps
+debian/40-mythtv.conf etc/rsyslog.d

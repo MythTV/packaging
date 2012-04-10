@@ -32,7 +32,7 @@ if [ "$IGNORE_NOT" = "0" ]; then
 				$SU_TYPE stop mythtv-backend --message "Please enter your current login password to stop mythtv-backend."
 			fi
 		fi
-		xterm -title "MythTV Setup Terminal" -e taskset -c 0 /usr/bin/mythtv-setup.real "$@"
+		xterm -title "MythTV Setup Terminal" -e taskset -c 0 /usr/bin/mythtv-setup.real --syslog local7 "$@"
 		if [ -z "$RUNNING" ]; then
 			dialog_question "Start backend" "Would you like to start the mythtv backend?"
 			START_NOT=$?

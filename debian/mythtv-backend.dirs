@@ -8,4 +8,5 @@ var/lib/mythtv/banners
 var/lib/mythtv/coverart
 var/lib/mythtv/db_backups
 var/lib/mythtv/livetv
+var/lib/mythtv/streaming
 var/lib/mythtv/trailers

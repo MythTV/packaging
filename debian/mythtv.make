@@ -17,7 +17,6 @@ DATE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//
 GIT_HASH:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$3}')
 LAST_GIT_HASH:=$(shell dpkg-parsechangelog --offset 1 --count 1 | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$3}')
 DEBIAN_SUFFIX:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*-//;')
-THEMES=$(shell ls myththemes --full-time -l | grep '^d' | awk '{ print $$9 }' )
 AUTOBUILD=$(shell dpkg-parsechangelog | sed '/^Version/!d' | grep mythbuntu)
 EPOCH:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.* //; s/:.*//;')
 
@@ -25,7 +24,7 @@ TODAY=$(shell date +%Y%m%d)
 
 MAIN_GIT_URL=git://github.com/MythTV/mythtv.git
 MYTHWEB_GIT_URL=git://github.com/MythTV/mythweb.git
-MYTHTHEMES_GIT_URL=git://github.com/MythTV/myththemes.git
+MYTHBUNTU_THEME_GIT_URL=git://github.com/MythTV-Themes/Mythbuntu.git
 
 ifeq "$(GIT_TYPE)" "master"
         GIT_BRANCH:=master
@@ -74,18 +73,18 @@ get-git-source:
 		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 	fi
 
-	#checkout myththemes
-	if [ -d myththemes/.git ]; then \
-		cd myththemes; \
+	#checkout mythbuntu theme
+	if [ -d Mythbuntu/.git ]; then \
+		cd Mythbuntu; \
 		git fetch ;\
 		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 		git pull --rebase ;\
 	else \
-		mkdir -p myththemes ;\
-		git clone $(MYTHTHEMES_GIT_URL) tmp ;\
-		mv tmp/.git* tmp/* myththemes ;\
+		mkdir -p Mythbuntu ;\
+		git clone $(MYTHBUNTU_THEME_GIT_URL) tmp ;\
+		mv tmp/.git* tmp/* Mythbuntu ;\
 		rm -rf tmp ;\
-		cd myththemes ;\
+		cd Mythbuntu ;\
 		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 	fi
 
@@ -154,20 +153,9 @@ info:
                 "Current date: $(TODAY)\n" \
 
 update-control-files:
-	rm -f debian/control debian/mythtv-theme*.install
-	if [ -n "$(THEMES)" ]; then \
-		sed s/#THEMES#/$(shell echo $(THEMES) | tr '[A-Z]' '[a-z]' | sed s/^/mythtv-theme-/ | sed s/\ /,\\\\\ mythtv-theme-/g)/ \
-		   debian/control.in > debian/control ;\
-	else \
-		sed 's/#THEMES#,//' debian/control.in > debian/control ;\
-	fi
-	sed -i s/#TYPE#/$(GIT_TYPE)/ debian/control
-	sed -i s/#ABI#/$(ABI)/ debian/control
+	rm -f debian/control
+	sed "s/#TYPE#/$(GIT_TYPE)/; s/#ABI#/$(ABI)/" debian/control.in > debian/control
 	cp debian/libmyth.install.in debian/libmyth-$(ABI)-0.install
-	$(foreach theme,$(THEMES),\
-	   echo "myththemes/$(theme) usr/share/mythtv/themes" > debian/mythtv-theme-$(shell echo $(theme) | tr '[A-Z]' '[a-z]').install; \
-	   cat debian/theme.stub | sed s/#THEME#/$(shell echo $(theme) | tr '[A-Z]' '[a-z]')/ >> debian/control; \
- 	 )
 	if [ "$(GIT_TYPE)" = "master" ]; then \
 		sed -i debian/control -e 's/Recommends:\ mythtv-themes.*/Recommends:\ mythtv-themes, mythtv-dbg/' ;\
 	fi

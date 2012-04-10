@@ -23,22 +23,30 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
 				--with-bindings=perl \
 				--enable-ffmpeg-pthreads \
 				--enable-pic \
-				--perl-config-opts="INSTALLDIRS=vendor"
-
+				--enable-vaapi \
+				--perl-config-opts="INSTALLDIRS=vendor" \
+				--enable-libvpx \
+				--enable-libx264 \
+				--enable-libmp3lame \
+				--enable-libfaac \
+				--enable-libxvid \
+				--enable-nonfree
 ifeq "$(DEB_BUILD_ARCH)" "armel"
-	MYTHTV_CONFIGURE_OPTS += --disable-opengl-vsync  --disable-opengl-video --disable-opengl
+	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl
+else ifeq "$(DEB_BUILD_ARCH)" "armhf"
+	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl
 else
-	MYTHTV_CONFIGURE_OPTS += --enable-opengl-vsync  --enable-opengl-video
+	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video
 endif
 #                                    #
 # Architecture dependent build flags #
 #                                    #
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq "$(DEB_BUILD_ARCH)" "i386"
-	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx --disable-xvmc  --enable-vdpau
+	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx  --enable-vdpau
 endif
 ifeq "$(DEB_BUILD_ARCH)" "amd64"
-	MYTHTV_CONFIGURE_OPTS += --disable-xvmc --enable-vdpau
+	MYTHTV_CONFIGURE_OPTS += --enable-vdpau
 endif
 ifeq "$(DEB_BUILD_ARCH)" "armel"
 	MYTHTV_CONFIGURE_OPTS += --enable-vdpau --extra-cflags="-marm -fPIC -DPIC"
@@ -54,7 +62,9 @@ MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \
                               --qmake=/usr/bin/qmake \
 
 ifeq "$(DEB_BUILD_ARCH)" "armel"
-	  MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
+	MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
+else ifeq "$(DEB_BUILD_ARCH)" "armhf"
+	MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
 endif
 
 #Use moar CPUs for jya
@@ -83,7 +93,7 @@ override_dh_auto_install:
 	cd mythplugins && ./configure $(MYTHPLUGINS_CONFIGURE_OPTS) --mythroot=$(CURDIR)/debian/tmp
 	$(MAKE) -j$(PROCESSORS) -C mythplugins
 	for plugin in mytharchive \
-	mythgallery mythgame mythmusic mythmovies mythnews mythvideo \
+	mythgallery mythgame mythmusic mythmovies mythnews \
 	mythweather mythzoneminder mythbrowser mythnetvision ; do \
 		$(MAKE) -C mythplugins/$$plugin install INSTALL_ROOT=$(CURDIR)/debian/$$plugin; \
 	done
@@ -138,11 +148,14 @@ override_dh_installdocs:
 	find debian/mythtv-backend/usr/share/doc/mythtv-backend/contrib \
 		-name "COPYING" -delete
 	rm -f debian/mythtv-common/usr/share/mythtv/themes/Terra/watermarks/README.license
-	#(MythPlugins)
+
+	#(MythWeb)
 	for file in LICENSE README INSTALL; do \
 		rm -f debian/mythweb/usr/share/mythtv/mythweb/$$file ;\
 	done
+	find debian/mythweb -name ".gitignore" -type f -delete || true
+	rm -rf debian/mythweb/usr/share/mythtv/mythweb/data/tv_icons
+	rm -rf debian/mythweb/usr/share/mythtv/mythweb/data/cache
+
 	#(Myththemes)
-	rm -f debian/mythtv-theme-arclight/usr/share/mythtv/themes/Arclight/LICENSE
 	rm -f debian/mythtv-theme-childish/usr/share/mythtv/themes/Childish/COPYING
-	rm -f debian/mythtv-theme-graphite/usr/share/mythtv/themes/Graphite/LICENSE

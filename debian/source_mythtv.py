@@ -4,11 +4,11 @@ import apport.hookutils
 import apport.packaging
 
 def add_info(report):
-    logs = [ '/var/log/mythtv/mythbackend.log',
-             '/var/log/mythtv/mythfrontend.log',
-           ]
-    for log in logs:
-        apport.hookutils.attach_file_if_exists(report, log)
+    logdir = '/var/log/mythtv'
+    if os.path.isdir(logdir):
+        for logname in os.listdir(logdir):
+            if logname.endswith('.log'):
+                apport.hookutils.attach_file_if_exists(report, os.path.join(logdir, logname))
 
     report['MythTVDirectoryPermissions'] = apport.hookutils.command_output(['ls', '-l', '/var/lib/mythtv'])
 
