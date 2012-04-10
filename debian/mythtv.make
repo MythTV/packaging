@@ -32,7 +32,7 @@ ifeq "$(GIT_TYPE)" "master"
 	DELIMITTER="~"
 else
         GIT_BRANCH:=fixes/0.$(GIT_MAJOR_RELEASE)
-	GIT_BRANCH_FALLBACK=fixes/0.$(GIT_MAJOR_RELEASE)
+	GIT_BRANCH_FALLBACK=master
 	DELIMITTER="+"
 endif
 
