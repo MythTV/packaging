@@ -41,9 +41,11 @@ SUFFIX+=$(GIT_TYPE).$(DATE).$(GIT_HASH)
 
 ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/settings.pro 2>/dev/null || echo 0.$(GIT_MAJOR_RELEASE))
 
+TARFILE:=mythtv_$(GIT_RELEASE)$(DELIMITTER)$(SUFFIX).orig.tar.gz
+
 build-tarball:
 	#build the tarball
-	tar czf $(CURDIR)/../mythtv_$(GIT_RELEASE)$(DELIMITTER)$(SUFFIX).orig.tar.gz * --exclude-vcs --exclude .pc --exclude debian
+	tar czf $(CURDIR)/../$(TARFILE) * --exclude-vcs --exclude .pc --exclude debian
 
 get-git-source:
 	#checkout mythtv/mythplugins
