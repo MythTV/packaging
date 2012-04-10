@@ -1,3 +1,70 @@
+mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu1) precise; urgency=low
+
+  * Add a fallback to master for non-existant fixes branches.
+  * Update to 0.25 gold release.
+  * New upstream checkout (1f5962a)
+  * >>Upstream changes since last upload (041ecad):
+  * [1f5962a] RingBuffer: Make a few more attempts to read when
+    oldfile=true.
+  * [cffed2b] Merge branch 'master' of github.com:MythTV/mythtv
+  * [4f16846] Update the Danish translation of mythfrontend and all
+    plugins.
+  * [31fa9dd] Revert "Fix popup windows from disappearing in MythCenter-
+    wide when using the"
+  * [d824ea2] Fix issues with 805453a6 and df8548e7.
+  * [4b28a57] Remove the MythArchive date/time formats from the Hong
+    Kong Chinese locale file.
+  * [df8548e] Add a null pointer check on 'screen'
+  * [805453a] Don't trigger hide/show animations if the screens should
+    still be visible because the foreground screen isn't fullscreen.
+  * [d1b081e] Updated Czech MythFrontend translation
+  * [e6c4aa0] Updated Polish MythFrontend and alll plugins translation
+    from Warpme
+  * [39695b2] Revert "Fixes #10490. Don't return from safe_read() early
+    on stopreads if we haven't read any bytes, this looks like an eof to
+    higher levels of code."
+  * [28db6ca] Merge branch 'master' of github.com:MythTV/mythtv
+  * [e6d3ecb] Updated French MythFrontend, MythMusic, MythNetvision and
+    MythNews translation from the French Language Translation Team
+  * [6473241] Update the Danish translation of mythfrontend.
+  * [c52a7cf] Updated Czech MythFrontend and MythMusic translation
+  * [8c6c8cd] Updated German MythFrontend and MythZoneMinder translation
+    from Florian Bittner
+  * [aa2762f] Fix popup windows from disappearing in MythCenter-wide
+    when using the virtual keyboard.
+  * [393295c] Fixes #10490. Don't return from safe_read() early on
+    stopreads if we haven't read any bytes, this looks like an eof to
+    higher levels of code.
+  * [81e72c8] Clear the UI object stores when deleting MythThemeBase,
+    fixes themes using the wrong base window and fonts after displaying
+    the locale/database prompts. This was already done implicitly when
+    shutting down and explicitly when reloading themes but not in the
+    third case, where we construct a temporary main window and
+    MythMainWindow is torn down instead of being re-initialised.
+  * [a970d72] Fixes #10545.  Populate the Switch Input menu with all
+    available cards.
+  * [d80e54b] Fix #10558
+  * [14ca636] Bump binary version
+  * [00bd9eb] Fix compilation following previous commit
+  * [e84a9a8] Fix compilation following previous commit
+  * [4c5b039] Initialise locale if it's not been done already by the
+    time we call GetQLocale()
+  * [9c73366] Translate dates/times in the DateFormat settings
+  * [a0ae652] Move Setup Wizard at the top of settings menu (part #2)
+  * [02216ca] Fix video setup wizard if audio test wasn't stopped in the
+    previous screen
+  * [13652d7] Fix audio setup and add handling of extra cases.
+  * [b36827e] Better handling of unmounted volumes. Refs #10450.
+  * [83671d5] Revert "Better handling of unmounted volumes. Refs #10450"
+  * [58e8506] Better handling of unmounted volumes. Refs #10450
+  * [71a024d] Fix LoadFromOldRecorded query in ProgList.
+  * [957917c] Replicate the spelling change I had done in
+    3740d7dda16b2a082f8d833f4459294202cb2687
+  * [8df36ec] Translate missed string.
+  * [82f9818] Improve audio setup
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 10 Apr 2012 02:48:16 -0500
+
 mythtv (2:0.25.0~master.20120406.041ecad-0ubuntu1) precise; urgency=low
 
   * Remove extra reference to libmysqlclient-16-dev.
