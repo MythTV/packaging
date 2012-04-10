@@ -1,4 +1,4 @@
-mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu1) precise; urgency=low
 
   * Add a fallback to master for non-existant fixes branches.
   * Update to 0.25 gold release.
@@ -63,7 +63,7 @@ mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu1) UNRELEASED; urgency=low
   * [8df36ec] Translate missed string.
   * [82f9818] Improve audio setup
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 10 Apr 2012 02:46:06 -0500
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 10 Apr 2012 02:48:16 -0500
 
 mythtv (2:0.25.0~master.20120406.041ecad-0ubuntu1) precise; urgency=low
 
