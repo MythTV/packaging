@@ -1617,23 +1617,24 @@ foreach my $target ( @targets )
         
         if ( $OPT{'qtsrc'} && -d "$PREFIX/lib/qt_menu.nib" )
         {
-            &Syscall([ 'cp', '-R', "$PREFIX/lib/qt_menu.nib", "$finalTarget/Contents/Resources" ]);
+            if ( -d "$finalTarget/Contents/Frameworks/QtGui.framework/Resources" )
+            {
+                &Syscall([ 'cp', '-R', "$PREFIX/lib/qt_menu.nib", "$finalTarget/Contents/Frameworks/QtGui.framework/Resources" ]);
+            }
+            else
+            {
+                &Syscall([ 'cp', '-R', "$PREFIX/lib/qt_menu.nib", "$finalTarget/Contents/Resources" ]);
+            }
         }
 
         # Copy the required Qt plugins
-        foreach my $plugin ( "sqldrivers", "imageformats")
+        foreach my $plugin ( "imageformats" )
         {
             &Syscall([ 'mkdir', "$finalTarget/Contents/$BundlePlugins/$plugin" ]) or die;
             # Have to create links in application folder due to QTBUG-24541
             &Syscall([ 'ln', '-s', "../$BundlePlugins/$plugin", "$finalTarget/Contents/MacOs/$plugin" ]) or die;
         }
         
-        # copy the MySQL sqldriver
-        &Syscall([ 'cp', "$PREFIX/qtplugins-$QTVERSION/libqsqlmysql.dylib", "$finalTarget/Contents/$BundlePlugins/sqldrivers/" ])
-            or die;
-        &Syscall([ @bundler, "$finalTarget/Contents/$BundlePlugins/sqldrivers/libqsqlmysql.dylib", @libs ])
-            or die;
-
         foreach my $plugin ( 'imageformats/libqgif.dylib', 'imageformats/libqjpeg.dylib' )
         {
             my $pluginSrc = "$QTPLUGINS/$plugin";
@@ -1704,6 +1705,20 @@ foreach my $target ( @targets )
                                "../Resources/lib",     # filters/plugins
                    "$finalTarget/Contents/MacOS" ]) or die;
     }
+
+    # Copy the required Qt plugins
+    foreach my $plugin ( "sqldrivers" )
+    {
+        &Syscall([ 'mkdir', "-p", "$finalTarget/Contents/$BundlePlugins/$plugin" ]) or die;
+        # Have to create links in application folder due to QTBUG-24541
+        &Syscall([ 'ln', '-s', "../$BundlePlugins/$plugin", "$finalTarget/Contents/MacOs/$plugin" ]) or die;
+    }
+
+    # copy the MySQL sqldriver
+    &Syscall([ 'cp', "$PREFIX/qtplugins-$QTVERSION/libqsqlmysql.dylib", "$finalTarget/Contents/$BundlePlugins/sqldrivers/" ])
+    or die;
+    &Syscall([ @bundler, "$finalTarget/Contents/$BundlePlugins/sqldrivers/libqsqlmysql.dylib", @libs ])
+    or die;
 
     # rebase segfault on my mac, so disable it for the time being
     # Run 'rebase' on all the frameworks, for slightly faster loading.
