@@ -8,7 +8,7 @@ die()
 
 help()
 {
-	echo "Usage: $0 git_branch [target_dir] [additional_patches]"
+	echo "Usage: sh /path/to/build-deps.sh $O git_branch [target_dir] [additional_patches]"
 	echo "git_branch -> mandatory: the GIT branch of MythTV to build"
 	echo "target_dir -> optional: the dir used for the BZR & GIT checkouts"
 	echo "additional_patches -> optional: space separated full path to all patches to apply"
@@ -18,13 +18,13 @@ help()
 	echo "checkout being checked out to the branch indicated."
 	echo ""
 	echo "Example:"
-	echo " $0 master"
+	echo " $O master"
 	echo "  This would check out the master branch and master packaging and build debs in `pwd`"
 	echo ""
-	echo " $0 fixes/0.24 /tmp"
+	echo " $O fixes/0.24 /tmp"
 	echo "  This would checkout out the fixes/0.24 branch, fixes packaging and build debs in /tmp"
 	echo ""
-	echo " $0 fixes/0.24 /tmp /full/path/to/patch"
+	echo " $O fixes/0.24 /tmp /full/path/to/patch"
 	echo "  This would checkout the fixes/0.24 branch, fixes packaging, apply the patch called "
 	echo "  'patch' located at /full/path/to/ to the build and then produce debs"
 	exit 0
@@ -92,6 +92,11 @@ if ! which debuild 1>/dev/null; then
     sudo apt-get install devscripts --no-install-recommends|| die "Error installing devscripts"
 fi
 
+#make sure we have build-essential
+if ! which gcc 2>&1 1>/dev/null; then
+    echo "Missing build-essential, marking for installation"
+    sudo apt-get install build-essential || die "Error installing build-essential"
+fi
 
 mkdir -p $DIRECTORY
 cd $DIRECTORY
@@ -125,6 +130,11 @@ TODAY=$(date +%Y%m%d)
 dch -b -v $EPOCH:0.$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TODAY.-$DEBIAN_SUFFIX "Automated Build"
 
 #clean up any old patches (just in case)
+#this uses quilt
+if ! which quilt 2>&1 1>/dev/null; then
+    echo "Missing quilt, marking for installation"
+    sudo apt-get install quilt || die "Error installing quilt"
+fi
 if [ -d .pc ]; then
 	quilt pop -a 2>/dev/null || rm -rf .pc
 fi
@@ -156,25 +166,62 @@ fi
 
 if [ "$TYPE" = "binary" ]; then
     #Make sure we have the package for get-build-deps
-    if ! which get-build-deps 2>&1 1>/dev/null; then
-        echo "Missing ubuntu-dev-tools, marking for installation"
-        sudo apt-get install ubuntu-dev-tools --no-install-recommends || die "Error installing ubuntu-dev-tools"
-    fi
+    #If we are running Oneiric or later get-build-deps is
+    #replaced with mk-build-deps which is in the devscripts package
+    #If devscripts > 2.10.xx we are running Oneiric or later and will be using mk-build-deps
+    if ! dpkg-query -s devscripts | sed '/^Version:/!d; s/Version: //' | cut -c3-4 | grep 10 > /dev/null; then
+	    echo ' '
+	    echo ' '
+	    echo '  ####################################'
+	    echo '  # We will be using mk-build-deps   #'
+	    echo '  ####################################'
+	    echo ' '
+	    echo ' '
+	    sleep 2
 
-    #pbuilder is used by get-build deps
-    if ! which pbuilder 2>&1 1>/dev/null; then
-        echo "Missing pbuilder, marking for installation"
-        sudo apt-get install pbuilder || die "Error installing pbuilder"
-    fi
+		#equivs is used by mk-build-deps
+		if ! which equivs-build 2>&1 1>/dev/null; then
+		    echo "Missing equivs, marking for installation"
+		    sudo apt-get install equivs || die "Error installing equivs"
+    		fi
 
-    #aptitude is used by get-build deps
-    if ! which aptitude 2>&1 1>/dev/null; then
-        echo "Missing aptitude, marking for installation"
-        sudo apt-get install aptitude || die "Error installing aptitude"
-    fi
+	    #grab build dependencies
+	    mk-build-deps -ir -s sudo || die "Error installing build dependencies"
 
-    #grab build dependencies
-    get-build-deps || die "Error installing build dependencies"
+	    #mk-build-deps is not totaly reliable yet
+	    #at the moment it misses libiec61883-dev (firewire support)
+	    #the following will make sure it is installed
+	    sudo apt-get build-dep mythtv || die "Error installing build-dep mythtv"
+    else
+	    echo ' '
+	    echo ' '
+	    echo '  #####################################'
+	    echo '  # We will be using get-build-deps   #'
+	    echo '  #####################################'
+	    echo ' '
+	    echo ' '
+	    sleep 2
+
+		if ! which get-build-deps 2>&1 1>/dev/null; then
+		    echo "Missing ubuntu-dev-tools, marking for installation"
+		    sudo apt-get install ubuntu-dev-tools --no-install-recommends || die "Error installing ubuntu-dev-tools"
+		fi
+
+		#pbuilder is used by get-build deps
+		if ! which debuild-pbuilder 2>&1 1>/dev/null; then
+		    echo "Missing pbuilder, marking for installation"
+		    sudo apt-get install pbuilder || die "Error installing pbuilder"
+		fi
+
+		#aptitude is used by get-build deps
+		if ! which aptitude 2>&1 1>/dev/null; then
+		    echo "Missing aptitude, marking for installation"
+		    sudo apt-get install aptitude || die "Error installing aptitude"
+		fi
+
+	    #grab build dependencies
+	    get-build-deps || die "Error installing build dependencies"
+    fi
 
 elif [ "$TYPE" = "source" ]; then
     DEBUILD_FLAGS="-S $DEBUILD_FLAGS"
