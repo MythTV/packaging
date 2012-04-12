@@ -896,6 +896,7 @@ our %depend = (
         'patches' =>
         {
             #also hack for QTBUG-23258
+            '4.8.1' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
             '4.8.0' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
             '4.7.4' => "patch -f -p0 <<EOF\n" . <<EOF
 --- tools/qdoc3/cppcodemarker.cpp.ori	2012-03-07 10:26:46.000000000 +1100
@@ -1616,23 +1617,24 @@ foreach my $target ( @targets )
         
         if ( $OPT{'qtsrc'} && -d "$PREFIX/lib/qt_menu.nib" )
         {
-            &Syscall([ 'cp', '-R', "$PREFIX/lib/qt_menu.nib", "$finalTarget/Contents/Resources" ]);
+            if ( -d "$finalTarget/Contents/Frameworks/QtGui.framework/Resources" )
+            {
+                &Syscall([ 'cp', '-R', "$PREFIX/lib/qt_menu.nib", "$finalTarget/Contents/Frameworks/QtGui.framework/Resources" ]);
+            }
+            else
+            {
+                &Syscall([ 'cp', '-R', "$PREFIX/lib/qt_menu.nib", "$finalTarget/Contents/Resources" ]);
+            }
         }
 
         # Copy the required Qt plugins
-        foreach my $plugin ( "sqldrivers", "imageformats")
+        foreach my $plugin ( "imageformats" )
         {
             &Syscall([ 'mkdir', "$finalTarget/Contents/$BundlePlugins/$plugin" ]) or die;
             # Have to create links in application folder due to QTBUG-24541
             &Syscall([ 'ln', '-s', "../$BundlePlugins/$plugin", "$finalTarget/Contents/MacOs/$plugin" ]) or die;
         }
         
-        # copy the MySQL sqldriver
-        &Syscall([ 'cp', "$PREFIX/qtplugins-$QTVERSION/libqsqlmysql.dylib", "$finalTarget/Contents/$BundlePlugins/sqldrivers/" ])
-            or die;
-        &Syscall([ @bundler, "$finalTarget/Contents/$BundlePlugins/sqldrivers/libqsqlmysql.dylib", @libs ])
-            or die;
-
         foreach my $plugin ( 'imageformats/libqgif.dylib', 'imageformats/libqjpeg.dylib' )
         {
             my $pluginSrc = "$QTPLUGINS/$plugin";
@@ -1703,6 +1705,20 @@ foreach my $target ( @targets )
                                "../Resources/lib",     # filters/plugins
                    "$finalTarget/Contents/MacOS" ]) or die;
     }
+
+    # Copy the required Qt plugins
+    foreach my $plugin ( "sqldrivers" )
+    {
+        &Syscall([ 'mkdir', "-p", "$finalTarget/Contents/$BundlePlugins/$plugin" ]) or die;
+        # Have to create links in application folder due to QTBUG-24541
+        &Syscall([ 'ln', '-s', "../$BundlePlugins/$plugin", "$finalTarget/Contents/MacOs/$plugin" ]) or die;
+    }
+
+    # copy the MySQL sqldriver
+    &Syscall([ 'cp', "$PREFIX/qtplugins-$QTVERSION/libqsqlmysql.dylib", "$finalTarget/Contents/$BundlePlugins/sqldrivers/" ])
+    or die;
+    &Syscall([ @bundler, "$finalTarget/Contents/$BundlePlugins/sqldrivers/libqsqlmysql.dylib", @libs ])
+    or die;
 
     # rebase segfault on my mac, so disable it for the time being
     # Run 'rebase' on all the frameworks, for slightly faster loading.

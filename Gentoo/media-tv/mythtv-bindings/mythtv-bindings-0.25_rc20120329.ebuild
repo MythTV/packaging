@@ -3,11 +3,11 @@
 # $Header: /var/cvsroot/gentoo-x86/media-tv/mythtv/mythtv-0.22_alpha18535.ebuild,v 1.4 2008/10/09 20:52:54 cardoe Exp $
 
 EAPI=2
-PYTHON_DEPEND="2"
-MYTHTV_VERSION="v0.25pre-4673-g89c34ef"
+PYTHON_DEPEND="2:2.6"
+MYTHTV_VERSION="v0.25-rc-106-gf73dbda"
 MYTHTV_BRANCH="master"
-MYTHTV_REV="89c34ef6b2e0e8688474ef546b799d54d8ec6242"
-MYTHTV_SREV="89c34ef"
+MYTHTV_REV="f73dbda4d44e3694c1374c2332ddfb80e2e7f355"
+MYTHTV_SREV="f73dbda"
 
 inherit flag-o-matic multilib eutils qt4 mythtv toolchain-funcs python
 
@@ -35,9 +35,14 @@ RDEPEND="
 
 DEPEND="${RDEPEND}"
 
+pkg_setup() {
+	python_set_active_version 2
+	python_pkg_setup
+}
+
 src_configure() {
 	echo "PREFIX=/usr" > "${S}/config.mak"
-	echo "PYTHON=/usr/bin/python" >> "${S}/config.mak"
+	echo "PYTHON=$(PYTHON)" >> "${S}/config.mak"
 	use perl   && echo "CONFIG_BINDINGS_PERL=yes" >> "${S}/config.mak"
 	use python && echo "CONFIG_BINDINGS_PYTHON=yes" >> "${S}/config.mak"
 	use php    && echo "CONFIG_BINDINGS_PHP=yes" >> "${S}/config.mak"

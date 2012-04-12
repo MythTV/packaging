@@ -5,8 +5,8 @@
 EAPI=2
 
 NUVEXPORT_BRANCH="master"
-NUVEXPORT_REV="c18508f20448077762d23ab9207c5eb643324dc0"
-NUVEXPORT_SREV="c18508f"
+NUVEXPORT_REV="ad7e20af6e8961c4eea3b79b8022f86c6bf1b9d4"
+NUVEXPORT_SREV="ad7e20a"
 REPO="nuvexport"
 
 inherit mythtv
@@ -15,7 +15,7 @@ DESCRIPTION="Export recordings from MythTV"
 
 SLOT="0"
 KEYWORDS="~amd64 ~ppc ~x86"
-IUSE="+faac mplayer +x264 +xvid"
+IUSE="+faac mplayer +xvid"
 
 DEPEND=""
 RDEPEND=">=dev-lang/perl-5.6
@@ -26,7 +26,7 @@ RDEPEND=">=dev-lang/perl-5.6
 	media-sound/sox[encode]
 	media-libs/id3lib
 	mplayer? ( media-video/mplayer[encode,mp3,faac?,xvid?] )
-	>=media-tv/mythtv-0.25_pre20110408[perl,xvid?,x264?]"
+	>=media-tv/mythtv-0.25_pre20120223[perl,hls,xvid?]"
 
 src_install() {
 	einstall || die "einstall failed"

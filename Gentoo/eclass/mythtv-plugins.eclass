@@ -56,6 +56,11 @@ mythtv-plugins_pkg_setup() {
 	fi
 	MYTHPLUGINS="${MYTHPLUGINS} mythweather"
 	MYTHPLUGINS="${MYTHPLUGINS} mythzoneminder"
+
+	if [[ ${PYTHON_DEPEND} && ${PYTHON_DEPEND-x} ]]; then
+		python_set_active_version 2
+		python_pkg_setup
+	fi
 }
 
 mythtv-plugins_src_prepare() {
@@ -87,6 +92,10 @@ mythtv-plugins_src_configure() {
 		done
 	else
 		die "Package ${PN} is unsupported"
+	fi
+
+	if [[ ${PYTHON_DEPEND} && ${PYTHON_DEPEND-x} ]]; then
+		myconf="${myconf} --python=$(PYTHON)"
 	fi
 
 	chmod +x configure

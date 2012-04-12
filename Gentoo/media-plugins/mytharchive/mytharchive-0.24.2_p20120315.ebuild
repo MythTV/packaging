@@ -4,11 +4,10 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.24.2-15-gc29d36f"
+MYTHTV_VERSION="v0.24.2-27-g322de47"
 MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="c29d36f1634cd837276b4fd8cfea5d5d75304da8"
-MYTHTV_SREV="c29d36f"
-
+MYTHTV_REV="322de47d5b10a4d6f357a5941c0f690eb01a98ec"
+MYTHTV_SREV="322de47"
 
 inherit mythtv-plugins
 
@@ -16,8 +15,19 @@ DESCRIPTION="Module for MythTV."
 IUSE=""
 KEYWORDS="amd64 x86 ~ppc"
 
-RDEPEND=""
-DEPEND=""
+RDEPEND="
+	>=dev-lang/python-2.5
+	dev-python/mysql-python
+	dev-python/imaging
+	"
+
+DEPEND="
+	media-video/mjpegtools[png]
+	media-video/dvdauthor
+	app-cdr/dvd+rw-tools
+	virtual/cdrtools
+	media-video/transcode
+	"
 
 src_install() {
 	mythtv-plugins_src_install

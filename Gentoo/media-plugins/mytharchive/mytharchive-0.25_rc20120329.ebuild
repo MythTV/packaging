@@ -3,21 +3,20 @@
 # $Header: /var/cvsroot/gentoo-x86/media-plugins/mythvideo/mythvideo-0.21_p17595.ebuild,v 1.1 2008/08/01 16:35:22 cardoe Exp $
 
 EAPI="2"
+PYTHON_DEPEND="2:2.6"
+MYTHTV_VERSION="v0.25-rc-106-gf73dbda"
+MYTHTV_BRANCH="master"
+MYTHTV_REV="f73dbda4d44e3694c1374c2332ddfb80e2e7f355"
+MYTHTV_SREV="f73dbda"
 
-MYTHTV_VERSION="v0.24.2-15-gc29d36f"
-MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="c29d36f1634cd837276b4fd8cfea5d5d75304da8"
-MYTHTV_SREV="c29d36f"
-
-inherit mythtv-plugins
+inherit mythtv-plugins python
 
 DESCRIPTION="Module for MythTV."
 IUSE=""
-KEYWORDS="amd64 x86 ~ppc"
+KEYWORDS="~amd64 ~x86 ~ppc"
 
 RDEPEND="
-	>=dev-lang/python-2.5
-	dev-python/mysql-python
+	|| ( media-tv/mythtv[python] media-tv/mythtv-bindings[python] )
 	dev-python/imaging
 	"
 

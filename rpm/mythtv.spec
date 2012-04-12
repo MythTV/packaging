@@ -64,10 +64,10 @@
 %define desktop_vendor  mythtv
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25-rc-36-gaa59013
+%define vers_string v0.25-rc-68-g74d4a29
 
 # Git Revision number and branch
-%define _gitrev 0.0.rc.36.gaa59013
+%define _gitrev 0.0.rc.68.g74d4a29
 %define branch master
 
 #
@@ -936,6 +936,7 @@ cd mythtv
     --enable-dvb                                \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
+    --enable-libx264                            \
     --enable-libxvid                            \
 %if %{with_vdpau}
     --enable-vdpau                              \
@@ -1478,6 +1479,9 @@ fi
 ################################################################################
 
 %changelog
+* Sun Mar 25 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
+- Enable libx264, which we now have to specify explicitly
+
 * Thu Mar 22 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Remove mythmessage
 
