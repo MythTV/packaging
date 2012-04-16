@@ -6,8 +6,8 @@ Uploaders: Mario Limonciello <superm1@ubuntu.com>,
            Andres Mejia <mcitadel@gmail.com>,
 Homepage: http://www.mythtv.org
 Standards-Version: 3.9.2
-Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-master
-Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-master
+Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-fixes
+Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-fixes
 Build-Conflicts: libqt3-mt-dev
 Build-Depends:  debhelper (>= 7.0.50~),
                 quilt,
@@ -86,6 +86,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 libcdio-paranoia-dev,
                 libxml2-dev,
                 libass-dev,
+                libcec-dev,
                 libxml-xpath-perl
 
 Package: mythtv
