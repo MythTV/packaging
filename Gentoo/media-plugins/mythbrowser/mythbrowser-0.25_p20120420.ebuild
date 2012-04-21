@@ -4,22 +4,27 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.25-rc-106-gf73dbda"
-MYTHTV_BRANCH="master"
-MYTHTV_REV="f73dbda4d44e3694c1374c2332ddfb80e2e7f355"
-MYTHTV_SREV="f73dbda"
+MYTHTV_VERSION="v0.25-51-g1a671d0"
+MYTHTV_BRANCH="fixes/0.25"
+MYTHTV_REV="1a671d0b252d2b33bd1e96258e65a15d52a5fc7d"
+MYTHTV_SREV="1a671d0"
 
-
-inherit mythtv-plugins
+inherit mythtv-plugins eutils
 
 DESCRIPTION="Module for MythTV."
 IUSE=""
-KEYWORDS="~amd64 ~x86 ~ppc"
+KEYWORDS="amd64 x86 ~ppc"
 
 RDEPEND=""
-DEPEND=""
+DEPEND="x11-libs/qt-webkit:4"
+
+src_prepare() {
+	if use experimental
+	then
+		true
+	fi
+}
 
 src_install() {
 	mythtv-plugins_src_install
 }
-
