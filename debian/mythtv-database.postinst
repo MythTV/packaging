@@ -112,7 +112,7 @@ case "$1" in
     #and mysql binding checks
     if [ -f "${MYSQLCONFIG}" ]; then
         db_get mythtv/public_bind
-        if [ $RET = true ]; then
+        if [ -n "$RET" ] && [ $RET = true ]; then
             NEWIP=`ifconfig | grep "inet addr:" | grep --invert-match 127.0.0.1 | sed ' s/inet addr://g; s/^[ \t]*//;s/[ \t]*$//; q;' | awk '{print $1}'`
             sed -i -e 's/^#bind/bind/' ${MYSQLCONFIG}
         else
