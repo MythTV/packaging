@@ -3,6 +3,10 @@ mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu2) UNRELEASED; urgency=low
   * fix get-orig-source rule's broken tarball fetch from archive.
   * Enable libcec support (LP: #982272)
   * Add missingok to additional mythtv-backend logs. (LP: #982162)
+  * Pull an updated snapshot of Mythbuntu theme, to avoid theme
+    downloader telling the user there is an updated theme on first
+    boot.
+  * Test for an empty key on public mysql. (LP: #989371)
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 10 Apr 2012 14:20:32 -0500
 
