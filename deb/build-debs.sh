@@ -187,6 +187,7 @@ echo "Building the packages"
 debuild $DEBUILD_FLAGS
 
 #remove all patches and cleanup
+#seems newer dpkg-source might not need the extra quilt pop
 echo "Cleaning up"
-quilt pop -aqf
+quilt pop -aqf || true
 debian/rules clean
