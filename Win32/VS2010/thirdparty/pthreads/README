@@ -1,0 +1,9 @@
+Using pthreads for Win32 from:
+
+http://sourceware.org/pthreads-win32/
+ftp://sourceware.org/pub/pthreads-win32/
+
+Version used: pthreads-w32-2-8-0-release
+
+Expecting "include" & "lib" directories
+

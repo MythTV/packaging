@@ -1,0 +1,14 @@
+/var/log/mythtv/myth*.log {
+    notifempty
+    missingok
+    compress
+    compresscmd /usr/bin/bzip2
+    uncompresscmd /usr/bin/bunzip2
+    compressext .bz2
+    weekly
+    rotate 4
+    size 10M
+    postrotate
+       /bin/kill -HUP `cat /var/run/mythbackend.pid 2>/dev/null` 2> /dev/null || true
+    endscript
+}

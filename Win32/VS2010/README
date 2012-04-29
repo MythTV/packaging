@@ -1,0 +1,92 @@
+Visual Studio 2010 solution for MythTV
+
+The files located in this repository allow you to compile mythbackend using
+Visual Studio 2010.  
+
+This undertaking was done solely to allow the VS2010 debugger to be used to 
+develop for the backend.  Although mythbackend and mythfrontend compile and 
+run, there still is missing functionality such as recorder support (although 
+hdhomerun might not be that difficult to get working).
+
+Also note, that ffmpeg related files can't be compiled natively in VS2010 
+and that this solution expects you to build/locate MinWG built dll's for those
+dependencies.  (look to thirdparty/ffmpeg/README for details)
+
+A few things to note:
+
+  * So far, it can only compile the following projects:
+
+        libmyth
+        libmythbase
+        libfreemheg
+        libmythfreesurround
+        libmythmetadata
+        libmythsamplerate
+        libmythservicecontracts
+        libmythsoundtouch
+        libmythtv
+        libmythui
+        libmythupnp
+
+        mythbackend
+        mythfilldatabase
+        mythfrontend
+        mythtv-setup
+        
+  * I'm using the 4.8.0 version of Qt Library for VS2010 which can be 
+    downloaded and installed from: http://qt.nokia.com/downloads
+
+        "Qt libraries 4.8.0 for Windows (VS 2010, 275 MB)"
+
+    NOTE: You may need to build the Qt MySql plugin manually.
+
+  * This solution has been setup so that the MythTV source and this VS2010 
+    repository remain in a separate directory tree and/or drive.  It uses
+    a .props file to specify the MythTV source location.
+
+    NOTE:  Edit the following .props files _before_ opening the VS2010.sln
+           file.
+
+    You will need to edit the "mythtv.props" file to point the mythtv_source
+    UserMacro at the location of the source code.  Ensure that you specify the
+    top-level of the hierarchy, meaning that there are subdirectories for
+    mythplugins, mythtv, themestringtool, etc.
+
+    Here is a snippet from the .props file that needs to be changed.
+
+      <PropertyGroup Label="UserMacros">
+        <mythtv_source>y:\git\mythtv\mythtv</mythtv_source>
+      </PropertyGroup>
+
+  * You will need to update the "Qt4VSPropertySheet.props" file to make sure
+    the QTDIR value is set correctly.  
+    
+    NOTE: I also defined the QTDIR environment variable just in case, but it 
+          should not be needed.
+
+  * Run version.vbs to create version.h, which is a file normally generated
+    during the build process in Unix (You will need to edit the file to point
+    it to the correct path)
+
+  * The avconfig.h file is generated during the Linux configure, so move it
+    to mythtv/external/FFmpeg/libavutil
+
+  * I tried to limit the impact to the base MythTV source, so I create any
+    unix-only header files that were included and they are located in the
+    "compat" directory.
+
+  * Any third party library that is needed has a directory under the
+    "thirdparty" directory.  You will need to look at each folder's README
+    file to determine where/what is needed.
+
+  * Install the MySQL connector for C
+    (http://dev.mysql.com/downloads/connector/c/)
+
+  * Edit copydll.vbs and update the directories.
+
+  * Run copydll.vbs to copy various .dll's from thirdparty and other
+    locations into bin\debug.
+
+  * MythTV's version of ffmpeg still needs to be compiled using MingW and
+    import libraries need to be manually created (see README file).
+

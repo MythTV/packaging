@@ -1,0 +1,10 @@
+Using zlib for windows from:
+
+http://gnuwin32.sourceforge.net/packages/zlib.htm
+
+Version Used: zlib-1.2.3-lib
+
+Expected Directories
+  include
+  lib
+

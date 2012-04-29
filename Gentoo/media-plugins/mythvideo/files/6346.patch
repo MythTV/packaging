@@ -1,0 +1,2845 @@
+Index: mythbrowser/mythbrowser/main.cpp
+===================================================================
+--- mythbrowser/mythbrowser/main.cpp	(revision 21049)
++++ mythbrowser/mythbrowser/main.cpp	(working copy)
+@@ -19,7 +19,7 @@
+ 
+ using namespace std;
+ 
+-int handleMedia(const QString &url, const QString &, const QString &, const QString &, int, const QString &)
++int handleMedia(const QString &url, const QString &, const QString &, const QString &, const QString &, int, int, int, const QString &)
+ {
+     QStringList urls = url.split(" ", QString::SkipEmptyParts);
+     float zoom = gContext->GetSetting("WebBrowserZoomLevel", "1.4").toFloat();
+Index: mythvideo/theme/default/video-ui.xml
+===================================================================
+--- mythvideo/theme/default/video-ui.xml	(revision 21049)
++++ mythvideo/theme/default/video-ui.xml	(working copy)
+@@ -477,11 +477,23 @@
+         </buttonlist>
+ 
+         <textarea name="title" from="basetextarea">
+-            <area>40,20,700,100</area>
++            <area>40,15,700,100</area>
+             <multiline>yes</multiline>
+             <font>baseextralarge</font>
+         </textarea>
+ 
++        <textarea name="subtitle" from="basetextarea">
++            <area>40,45,500,100</area>
++            <multiline>yes</multiline>
++            <font>basemedium</font>
++        </textarea>
++
++        <textarea name="##x##" from="basetextarea">
++            <area>560,45,100,100</area>
++            <multiline>yes</multiline>
++            <font>basemedium</font>
++        </textarea>
++
+         <imagetype name="coverimage">
+             <area>30,90,203,311</area>
+             <preserveaspect>yes</preserveaspect>
+@@ -493,13 +505,13 @@
+         </textarea>
+ 
+         <textarea name="dirlbl" from="basetextarea">
+-            <area>240,65,115,35</area>
++            <area>240,68,115,35</area>
+             <value>Directed by</value>
+             <align>right</align>
+         </textarea>
+ 
+         <textarea name="director" from="basetextarea">
+-            <area>360,63,350,35</area>
++            <area>360,66,350,35</area>
+             <font>basemedium</font>
+         </textarea>
+ 
+@@ -586,11 +598,23 @@
+ 
+     <window name="gallery">
+         <textarea name="title" from="basetextarea">
+-            <area>70,20,460,50</area>
++            <area>70,15,460,50</area>
+             <cutdown>yes</cutdown>
+             <font>baselarge</font>
+         </textarea>
+ 
++        <textarea name="subtitle" from="basetextarea">
++            <area>70,40,360,50</area>
++            <cutdown>yes</cutdown>
++            <font>basemedium</font>
++        </textarea>
++
++        <textarea name="##x##" from="basetextarea">
++            <area>440,40,70,50</area>
++            <cutdown>yes</cutdown>
++            <font>basemedium</font>
++        </textarea>
++
+         <buttonlist name="videos">
+             <area>15,0,770,585</area>
+             <layout>grid</layout>
+@@ -662,7 +686,7 @@
+         </buttonlist>
+ 
+         <textarea name="position" from="basetextarea">
+-            <area>530,20,110,40</area>
++            <area>530,15,110,40</area>
+             <align>hcenter,vcenter</align>
+             <font>basemedium</font>
+         </textarea>
+@@ -728,24 +752,33 @@
+             <font>baselarge</font>
+         </textarea>
+ 
++        <textarea name="subtitle" from="basetextarea">
++            <area>50,360,425,30</area>
++        </textarea>
++
++        <textarea name="##x##" from="basetextarea">
++            <area>500,360,80,30</area>
++            <align>right</align>
++        </textarea>
++
+         <textarea name="director" from="basetextarea">
+-            <area>50,367,450,30</area>
++            <area>50,390,450,30</area>
+         </textarea>
+ 
+         <textarea name="year" from="basetextarea">
+-            <area>500,367,80,30</area>
++            <area>500,390,80,30</area>
+             <align>right</align>
+         </textarea>
+ 
+         <textarea name="plot" from="basetextarea">
+-            <area>40,395,530,80</area>
++            <area>40,418,530,80</area>
+             <align>left,top</align>
+             <multiline>yes</multiline>
+             <cutdown>yes</cutdown>
+         </textarea>
+ 
+         <textarea name="cast" from="basetextarea">
+-            <area>60,480,505,70</area>
++            <area>60,503,505,50</area>
+             <align>left,top</align>
+             <multiline>yes</multiline>
+             <cutdown>no</cutdown>
+@@ -867,28 +900,50 @@
+         <!-- Labels  -->
+ 
+         <textarea name="title_text" from="basetextarea">
+-            <area>50,90,250,40</area>
+-            <value>Name:</value>
++            <area>50,80,250,40</area>
++            <value>Title:</value>
+             <align>right,top</align>
+         </textarea>
+ 
++        <textarea name="subtitle_text" from="basetextarea">
++            <area>50,138,250,40</area>
++            <value>Subtitle:</value>
++            <align>right,top</align>
++        </textarea>
++
++        <textarea name="season_text" from="basetextarea">
++            <area>50,185,250,40</area>
++            <value>Season:</value>
++            <align>right,top</align>
++        </textarea>
++
++        <textarea name="episode_text" from="basetextarea">
++            <area>370,185,150,40</area>
++            <value>Episode:</value>
++            <align>right,top</align>
++        </textarea>
++
+         <textarea name="category_text" from="title_text">
+-            <position>50,152</position>
++            <area>370,232,150,40</area>
++            <align>right</align>
+             <value>Category:</value>
+         </textarea>
+ 
+         <textarea name="level_text" from="title_text">
+-            <position>50,202</position>
++            <area>20,232,200,40</area>
++            <align>right</align>
+             <value>Parental Control:</value>
+         </textarea>
+ 
+         <textarea name="child_text" from="title_text">
+-            <position>50,247</position>
++            <area>20,277,200,40</area>
++            <align>right</align>
+             <value>File to Always Play Next:</value>
+         </textarea>
+ 
+         <textarea name="browse_text" from="title_text">
+-            <position>50,292</position>
++            <area>500,277,200,40</area>
++            <align>left</align>
+             <value>Include while Browsing:</value>
+         </textarea>
+ 
+@@ -925,23 +980,35 @@
+         <!-- Widgets -->
+ 
+         <textedit name="title_edit" from="basetextedit">
+-            <position>310,80</position>
++            <position>310,70</position>
+         </textedit>
+ 
+-        <buttonlist name="category_select" from="baseselector">
+-            <position>310,145</position>
+-        </buttonlist>
++        <textedit name="subtitle_edit" from="basetextedit">
++            <position>310,126</position>
++        </textedit>
+ 
++        <spinbox name="season" from="basespinbox">
++            <position>310,181</position>
++        </spinbox>
++
++        <spinbox name="episode" from="basespinbox">
++            <position>530,181</position>
++        </spinbox>
++
+         <buttonlist name="level_select" from="baseselector">
+-            <position>310,195</position>
++            <position>230,225</position>
+         </buttonlist>
+ 
++        <buttonlist name="category_select" from="baseselector">
++            <position>530,225</position>
++        </buttonlist>
++
+         <buttonlist name="child_select" from="baseselector">
+-            <position>310,240</position>
++            <position>230,270</position>
+         </buttonlist>
+ 
+         <checkbox name="browse_check" from="basecheckbox">
+-            <position>310,290</position>
++            <position>680,275</position>
+         </checkbox>
+ 
+         <button name="coverart_button" from="basesearchbutton">
+Index: mythvideo/theme/default-wide/video-ui.xml
+===================================================================
+--- mythvideo/theme/default-wide/video-ui.xml	(revision 21049)
++++ mythvideo/theme/default-wide/video-ui.xml	(working copy)
+@@ -467,11 +467,17 @@
+         </imagetype>
+ 
+         <textarea name="title" from="basetextarea">
+-            <area>370,12,700,40</area>
++            <area>370,12,400,40</area>
+             <multiline>yes</multiline>
+             <font>baselarge</font>
+         </textarea>
+ 
++        <textarea name="subtitle" from="basetextarea">
++            <area>800,12,400,40</area>
++            <multiline>yes</multiline>
++            <font>baselarge</font>
++        </textarea>
++
+         <textarea name="currentvideo" from="basetextarea">
+             <area>150,486,500,35</area>
+             <align>top,vcenter</align>
+@@ -487,6 +493,11 @@
+             <font>basemedium</font>
+         </textarea>
+ 
++        <textarea name="s##e##" from="basetextarea">
++            <area>1010,63,150,35</area>
++            <font>basemedium</font>
++        </textarea>
++
+         <textarea name="plot" from="basetextarea">
+             <area>380,97,840,145</area>
+             <multiline>yes</multiline>
+@@ -572,7 +583,7 @@
+ 
+     <window name="gallery">
+         <textarea name="title" from="basetextarea">
+-            <area>70,15,800,50</area>
++            <area>70,15,420,50</area>
+             <cutdown>yes</cutdown>
+             <font>baselarge</font>
+         </textarea>
+@@ -646,9 +657,21 @@
+                 </state>
+             </statetype>
+         </buttonlist>
++       
++        <textarea name="subtitle" from="basetextarea">
++            <area>500,15,350,40</area>
++            <align>hcenter,vcenter</align>
++            <font>basemedium</font>
++        </textarea>
+ 
++        <textarea name="s##e##" from="basetextarea">
++            <area>870,15,100,40</area>
++            <align>hcenter,vcenter</align>
++            <font>basemedium</font>
++        </textarea>        
++
+         <textarea name="position" from="basetextarea">
+-            <area>890,15,200,40</area>
++            <area>1000,15,200,40</area>
+             <align>hcenter,vcenter</align>
+             <font>basemedium</font>
+         </textarea>
+@@ -713,35 +736,45 @@
+             <font>baselarge</font>
+         </textarea>
+ 
+-        <textarea name="director" from="basetextarea">
+-            <area>50,440,720,30</area>
+-        </textarea>
++         <textarea name="s##e##" from="basetextarea">
++             <area>50,380,400,30</area>
++             <font>basemedium</font>
++         </textarea>
+ 
+-        <textarea name="year" from="basetextarea">
+-            <area>800,440,80,30</area>
+-            <align>right</align>
+-        </textarea>
++         <textarea name="subtitle" from="basetextarea">
++             <area>50,420,400,30</area>
++             <font>basemedium</font>
++         </textarea>
+ 
+-        <textarea name="plot" from="basetextarea">
+-            <area>40,474,850,80</area>
+-            <align>left,top</align>
+-            <multiline>yes</multiline>
+-            <cutdown>yes</cutdown>
+-        </textarea>
++          <textarea name="director" from="basetextarea">
++             <area>50,467,450,30</area>
++          </textarea>
++  
++          <textarea name="year" from="basetextarea">
++             <area>500,467,80,30</area>
++              <align>right</align>
++          </textarea>
++  
++          <textarea name="plot" from="basetextarea">
++             <area>40,495,530,80</area>
++              <align>left,top</align>
++              <multiline>yes</multiline>
++              <cutdown>yes</cutdown>
++          </textarea>
++  
++          <textarea name="cast" from="basetextarea">
++             <area>60,580,505,70</area>
++              <align>left,top</align>
++              <multiline>yes</multiline>
++              <cutdown>no</cutdown>
++          </textarea>
++  
++          <textarea name="position" from="basetextarea">
++             <area>266,655,266,40</area>
++              <font>basemedium</font>
++              <align>hcenter,vcenter</align>
++          </textarea>
+ 
+-        <textarea name="cast" from="basetextarea">
+-            <area>60,576,800,70</area>
+-            <align>left,top</align>
+-            <multiline>yes</multiline>
+-            <cutdown>no</cutdown>
+-        </textarea>
+-
+-        <textarea name="position" from="basetextarea">
+-            <area>425,666,425,40</area>
+-            <font>basemedium</font>
+-            <align>hcenter,vcenter</align>
+-        </textarea>
+-
+         <imagetype name="coverimage">
+             <area>1000,400,225,250</area>
+             <preserveaspect>yes</preserveaspect>
+@@ -843,7 +876,7 @@
+     <window name="edit_metadata">
+ 
+         <textarea name="title" from="basetextarea">
+-            <area>10,50,1260,50</area>
++            <area>10,30,760,50</area>
+             <value>Edit Video Information</value>
+             <align>hcenter,vcenter</align>
+             <font>baselarge</font>
+@@ -852,134 +885,259 @@
+         <!-- Labels  -->
+ 
+         <textarea name="title_text" from="basetextarea">
+-            <area>250,110,250,40</area>
+-            <value>Name:</value>
++            <area>50,80,250,40</area>
++            <value>Title:</value>
+             <align>right,top</align>
+         </textarea>
+ 
++        <textarea name="subtitle_text" from="basetextarea">
++            <area>50,138,250,40</area>
++            <value>Subtitle:</value>
++            <align>right,top</align>
++        </textarea>
++
++        <textarea name="season_text" from="basetextarea">
++            <area>50,185,250,40</area>
++            <value>Season:</value>
++            <align>right,top</align>
++        </textarea>
++
++        <textarea name="episode_text" from="basetextarea">
++            <area>370,185,150,40</area>
++            <value>Episode:</value>
++            <align>right,top</align>
++        </textarea>
++
+         <textarea name="category_text" from="title_text">
+-            <position>250,172</position>
++            <area>420,232,150,40</area>
++            <align>right</align>
+             <value>Category:</value>
+         </textarea>
+ 
+         <textarea name="level_text" from="title_text">
+-            <position>250,222</position>
++            <area>20,232,200,40</area>
++            <align>right</align>
+             <value>Parental Control:</value>
+         </textarea>
+ 
+         <textarea name="child_text" from="title_text">
+-            <position>250,267</position>
++            <area>20,277,200,40</area>
++            <align>right</align>
+             <value>File to Always Play Next:</value>
+         </textarea>
+ 
+         <textarea name="browse_text" from="title_text">
+-            <position>250,312</position>
++            <area>470,277,280,40</area>
++            <align>left</align>
+             <value>Include while Browsing:</value>
+         </textarea>
+ 
+         <textarea name="coverart_text_label" from="title_text">
+-            <position>250,348</position>
++            <position>50,328</position>
+             <value>Cover Art:</value>
+         </textarea>
+ 
+         <textarea name="screenshot_text_label" from="title_text">
+-            <position>250,377</position>
++            <position>50,357</position>
+             <value>Screenshot:</value>
+         </textarea>
+ 
+         <textarea name="banner_text_label" from="title_text">
+-            <position>250,406</position>
++            <position>50,386</position>
+             <value>Banner:</value>
+         </textarea>
+ 
+         <textarea name="fanart_text_label" from="title_text">
+-            <position>250,435</position>
++            <position>50,415</position>
+             <value>Fanart:</value>
+         </textarea>
+ 
+         <textarea name="trailer_text_label" from="title_text">
+-            <position>250,464</position>
++            <position>50,447</position>
+             <value>Trailer:</value>
+         </textarea>
+ 
+         <textarea name="player_text" from="title_text">
+-            <position>250,510</position>
++            <position>50,487</position>
+             <value>Unique Player Command:</value>
+         </textarea>
+ 
+         <!-- Widgets -->
+ 
+         <textedit name="title_edit" from="basetextedit">
+-            <position>510,100</position>
++            <position>310,70</position>
+         </textedit>
+ 
+-        <buttonlist name="category_select" from="baseselector">
+-            <position>510,165</position>
+-        </buttonlist>
++        <textedit name="subtitle_edit" from="basetextedit">
++            <position>310,126</position>
++        </textedit>
+ 
++        <spinbox name="season" from="basespinbox">
++            <position>310,181</position>
++        </spinbox>
++
++        <spinbox name="episode" from="basespinbox">
++            <position>530,181</position>
++        </spinbox>
++
+         <buttonlist name="level_select" from="baseselector">
+-            <position>510,215</position>
++            <position>230,225</position>
+         </buttonlist>
+ 
++        <buttonlist name="category_select" from="baseselector">
++            <position>580,225</position>
++        </buttonlist>
++
+         <buttonlist name="child_select" from="baseselector">
+-            <position>510,260</position>
++            <position>230,270</position>
+         </buttonlist>
+ 
+         <checkbox name="browse_check" from="basecheckbox">
+-            <position>510,310</position>
++            <position>735,275</position>
+         </checkbox>
+ 
+-        <button name="coverart_button" from="basesearchbutton">
+-            <position>510,343</position>
++        <button name="coverart_button">
++            <area>310,323,32,32</area>
++            <statetype name="buttonstate">
++                <state name="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_off.png</filename>
++                    </imagetype>
++                </state>
++                <state name="selected" from="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_on.png</filename>
++                    </imagetype>
++                </state>
++                <state name="disabled" from="active" />
++                <state name="pushed" from="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_pushed.png</filename>
++                    </imagetype>
++                </state>
++            </statetype>
+         </button>
+ 
+         <textarea name="coverart_text" from="basetextarea">
+-            <area>550,348,250,40</area>
++            <area>350,328,250,40</area>
+             <value>/path/to/the/thing.jpg</value>
+         </textarea>
+ 
+-        <button name="screenshot_button" from="basesearchbutton">
+-            <position>510,372</position>
++        <button name="screenshot_button">
++            <area>310,352,32,32</area>
++            <statetype name="buttonstate">
++                <state name="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_off.png</filename>
++                    </imagetype>
++                </state>
++                <state name="selected" from="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_on.png</filename>
++                    </imagetype>
++                </state>
++                <state name="disabled" from="active" />
++                <state name="pushed" from="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_pushed.png</filename>
++                    </imagetype>
++                </state>
++            </statetype>
+         </button>
+ 
+         <textarea name="screenshot_text" from="basetextarea">
+-            <area>550,377,250,40</area>
++            <area>350,357,250,40</area>
+             <value>/path/to/the/thing.jpg</value>
+         </textarea>
+ 
+-        <button name="banner_button" from="basesearchbutton">
+-            <position>510,401</position>
++        <button name="banner_button">
++            <area>310,381,32,32</area>
++            <statetype name="buttonstate">
++                <state name="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_off.png</filename>
++                    </imagetype>
++                </state>
++                <state name="selected" from="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_on.png</filename>
++                    </imagetype>
++                </state>
++                <state name="disabled" from="active" />
++                <state name="pushed" from="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_pushed.png</filename>
++                    </imagetype>
++                </state>
++            </statetype>
+         </button>
+ 
+         <textarea name="banner_text" from="basetextarea">
+-            <area>550,406,250,40</area>
++            <area>350,386,250,40</area>
+             <value>/path/to/the/thing.jpg</value>
+         </textarea>
+ 
+-        <button name="fanart_button" from="basesearchbutton">
+-            <position>510,430</position>
++        <button name="fanart_button">
++            <area>310,412,32,32</area>
++            <statetype name="buttonstate">
++                <state name="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_off.png</filename>
++                    </imagetype>
++                </state>
++                <state name="selected" from="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_on.png</filename>
++                    </imagetype>
++                </state>
++                <state name="disabled" from="active" />
++                <state name="pushed" from="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_pushed.png</filename>
++                    </imagetype>
++                </state>
++            </statetype>
+         </button>
+ 
+         <textarea name="fanart_text" from="basetextarea">
+-            <area>550,435,250,40</area>
++            <area>350,415,250,40</area>
+             <value>/path/to/the/thing.jpg</value>
+         </textarea>
+ 
+-        <button name="trailer_button" from="basesearchbutton">
+-            <position>510,460</position>
++        <button name="trailer_button">
++            <area>310,442,32,32</area>
++            <statetype name="buttonstate">
++                <state name="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_off.png</filename>
++                    </imagetype>
++                </state>
++                <state name="selected" from="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_on.png</filename>
++                    </imagetype>
++                </state>
++                <state name="disabled" from="active" />
++                <state name="pushed" from="active">
++                    <imagetype name="background">
++                        <filename>blankbutton_pushed.png</filename>
++                    </imagetype>
++                </state>
++            </statetype>
+         </button>
+ 
+         <textarea name="trailer_text" from="basetextarea">
+-            <area>550,465,250,40</area>
++            <area>350,447,250,40</area>
+             <value>/path/to/the/thing.jpg</value>
+         </textarea>
+ 
++
+         <textedit name="player_edit" from="basetextedit">
+-            <position>510,495</position>
++            <position>310,477</position>
+         </textedit>
+ 
+         <button name="done_button" from="basebutton">
+-            <position>510,565</position>
++            <position>310,537</position>
+             <value>Done</value>
+         </button>
+ 
+Index: mythvideo/mythvideo/videodlg.h
+===================================================================
+--- mythvideo/mythvideo/videodlg.h	(revision 21049)
++++ mythvideo/mythvideo/videodlg.h	(working copy)
+@@ -28,6 +28,7 @@
+ 
+ enum CoverDownloadErrorState { esOK, esError, esTimeout };
+ enum FanartDownloadErrorState { fesOK, fesError, fesTimeout };
++enum BannerDownloadErrorState { besOK, besError, besTimeout };
+ 
+ class VideoDialog : public MythScreenType
+ {
+@@ -51,6 +52,12 @@
+     bool Create();
+     bool keyPressEvent(QKeyEvent *levent);
+ 
++  private:
++    void searchStart();
++
++  public slots:
++    void searchComplete(QString string);
++
+   private slots:
+     void UpdatePosition();
+     void UpdateText(MythUIButtonListItem *);
+@@ -68,6 +75,8 @@
+ 
+     void EditMetadata();
+     void VideoSearch();
++    void TitleSubtitleSearch();
++    void ImageOnlyDownload();
+     void ManualVideoUID();
+     void ManualVideoTitle();
+     void ResetMetadata();
+@@ -93,6 +102,7 @@
+ 
+     // Called when the underlying data for an item changes
+     void OnVideoSearchListSelection(QString video_uid);
++    void OnVideoImgSearchListSelection(QString video_uid);
+ 
+     void OnManualVideoUID(QString video_uid);
+     void OnManualVideoTitle(QString title);
+@@ -140,6 +150,7 @@
+     // OnVideoPosterSetDone() stop wait background
+     void StartVideoPosterSet(Metadata *metadata);
+     void StartVideoFanartSet(Metadata *metadata);
++    void StartVideoBannerSet(Metadata *metadata);
+ 
+     // StartVideoSearchByUID() start wait background
+     //   OnVideoSearchByUIDDone() stop wait background
+@@ -150,6 +161,8 @@
+     //   OnVideoSearchByTitleDone()
+     void StartVideoSearchByTitle(QString video_uid, QString title,
+             Metadata *metadata);
++    void StartVideoSearchByTitleSubtitle(QString title,
++            QString subtitle, Metadata *metadata);
+ 
+   private slots:
+     // called during StartVideoPosterSet
+@@ -159,17 +172,27 @@
+     void OnFanartURL(QString uri, Metadata *metadata);
+     void OnFanartCopyFinished(FanartDownloadErrorState error, QString errorMsg,
+                               Metadata *metadata);
++    void OnBannerURL(QString uri, Metadata *metadata);
++    void OnBannerCopyFinished(BannerDownloadErrorState error, QString errorMsg,
++                              Metadata *metadata);
+ 
+     // called during StartVideoSearchByTitle
+     void OnVideoSearchByTitleDone(bool normal_exit,
+                                   const SearchListResults &results,
+                                   Metadata *metadata);
++    void OnVideoSearchByTitleSubtitleDone(bool normal_exit,
++                                  QStringList result,
++                                  Metadata *metadata);
++    void OnVideoImageOnlyDone(bool normal_exit,
++                                  const SearchListResults &results,
++                                  Metadata *metadata);
+ 
+ // and now the end points
+ 
+     // StartVideoPosterSet end
+     void OnVideoPosterSetDone(Metadata *metadata);
+     void OnVideoFanartSetDone(Metadata *metadata);
++    void OnVideoBannerSetDone(Metadata *metadata);
+ 
+     // StartVideoSearchByUID end
+     void OnVideoSearchByUIDDone(bool normal_exit,
+Index: mythvideo/mythvideo/metadatalistmanager.cpp
+===================================================================
+--- mythvideo/mythvideo/metadatalistmanager.cpp	(revision 21049)
++++ mythvideo/mythvideo/metadatalistmanager.cpp	(working copy)
+@@ -112,10 +112,11 @@
+     MSqlQuery query(MSqlQuery::InitCon());
+     query.setForwardOnly(true);
+     const QString BaseMetadataQuery(
+-        "SELECT title, director, plot, rating, year, userrating,"
+-        "length, filename, showlevel, coverfile, inetref, childid,"
+-        "browse, playcommand, category, intid, trailer, screenshot,"
+-        "banner, fanart, host FROM videometadata");
++        "SELECT title, director, plot, rating, year, "
++        "userrating, length, filename, showlevel, "
++        "coverfile, inetref, childid, browse, playcommand, category, "
++        "intid, trailer, screenshot, banner, fanart, "
++        "subtitle, season, episode, host FROM videometadata");
+ 
+     query.prepare(BaseMetadataQuery);
+ 
+Index: mythvideo/mythvideo/metadata.cpp
+===================================================================
+--- mythvideo/mythvideo/metadata.cpp	(revision 21049)
++++ mythvideo/mythvideo/metadata.cpp	(working copy)
+@@ -89,10 +89,11 @@
+   public:
+     MetadataImp(const QString &filename, const QString &trailer, const QString &coverfile,
+              const QString &screenshot, const QString &banner, const QString &fanart,
+-             const QString &title, int year,
++             const QString &title, const QString &subtitle, int year,
+              const QString &inetref, const QString &director,
+              const QString &plot, float userrating,
+              const QString &rating, int length,
++             int season, int episode,
+              int id, ParentalLevel::Level showlevel, int categoryID,
+              int childID, bool browse,
+              const QString &playcommand, const QString &category,
+@@ -100,14 +101,15 @@
+              const country_list &countries,
+              const cast_list &cast,
+              const QString &host = "") :
+-        m_title(title),
++        m_title(title), m_subtitle(subtitle),
+         m_inetref(inetref), m_director(director), m_plot(plot),
+         m_rating(rating), m_playcommand(playcommand), m_category(category),
+         m_genres(genres), m_countries(countries), m_cast(cast),
+         m_filename(filename), m_trailer(trailer), m_coverfile(coverfile),
+         m_screenshot(screenshot), m_banner(banner), m_fanart(fanart),
+         m_host(host), m_categoryID(categoryID), m_childID(childID),
+-        m_year(year), m_length(length), m_showlevel(showlevel),
++        m_year(year), m_length(length), m_season(season),
++        m_episode(episode), m_showlevel(showlevel),
+         m_browse(browse), m_id(id), m_userrating(userrating)
+     {
+         VideoCategory::GetCategory().get(m_categoryID, m_category);
+@@ -128,6 +130,7 @@
+         if (this != &rhs)
+         {
+             m_title = rhs.m_title;
++            m_subtitle = rhs.m_subtitle;
+             m_inetref = rhs.m_inetref;
+             m_director = rhs.m_director;
+             m_plot = rhs.m_plot;
+@@ -148,6 +151,8 @@
+             m_childID = rhs.m_childID;
+             m_year = rhs.m_year;
+             m_length = rhs.m_length;
++            m_season = rhs.m_season;
++            m_episode = rhs.m_episode;
+             m_showlevel = rhs.m_showlevel;
+             m_browse = rhs.m_browse;
+             m_id = rhs.m_id;
+@@ -180,6 +185,9 @@
+         m_title = title;
+     }
+ 
++    const QString &getSubtitle() const { return m_subtitle; }
++    void SetSubtitle(const QString &subtitle) { m_subtitle = subtitle; }
++
+     const QString &GetInetRef() const { return m_inetref; }
+     void SetInetRef(const QString &inetRef) { m_inetref = inetRef; }
+ 
+@@ -249,6 +257,12 @@
+     int GetLength() const { return m_length; }
+     void SetLength(int length) { m_length = length; }
+ 
++    int GetSeason() const { return m_season; }
++    void SetSeason(int season) { m_season = season; }
++
++    int GetEpisode() const { return m_episode; }
++    void SetEpisode(int episode) { m_episode = episode; }
++
+     ParentalLevel::Level GetShowLevel() const { return m_showlevel; }
+     void SetShowLevel(ParentalLevel::Level showLevel)
+     {
+@@ -289,6 +303,7 @@
+ 
+   private:
+     QString m_title;
++    QString m_subtitle;
+     QString m_inetref;
+     QString m_director;
+     QString m_plot;
+@@ -310,6 +325,8 @@
+     int m_childID;
+     int m_year;
+     int m_length;
++    int m_season;
++    int m_episode;
+     ParentalLevel::Level m_showlevel;
+     bool m_browse;
+     unsigned int m_id;  // videometadata.intid
+@@ -383,10 +400,13 @@
+ {
+     MetadataImp tmp(m_filename, VIDEO_TRAILER_DEFAULT, VIDEO_COVERFILE_DEFAULT,
+                     VIDEO_SCREENSHOT_DEFAULT, VIDEO_BANNER_DEFAULT,
+-                    VIDEO_FANART_DEFAULT, Metadata::FilenameToTitle(m_filename),
+-                    VIDEO_YEAR_DEFAULT, VIDEO_INETREF_DEFAULT,
+-                    VIDEO_DIRECTOR_DEFAULT, VIDEO_PLOT_DEFAULT, 0.0,
+-                    VIDEO_RATING_DEFAULT, 0, m_id,
++                    VIDEO_FANART_DEFAULT, Metadata::FilenameToMeta(m_filename, 1),
++                    Metadata::FilenameToMeta(m_filename, 4), VIDEO_YEAR_DEFAULT, 
++                    VIDEO_INETREF_DEFAULT, VIDEO_DIRECTOR_DEFAULT, 
++                    VIDEO_PLOT_DEFAULT, 0.0,
++                    VIDEO_RATING_DEFAULT, 0, 
++                    Metadata::FilenameToMeta(m_filename, 2).toInt(), 
++                    Metadata::FilenameToMeta(m_filename, 3).toInt(), m_id,
+                     ParentalLevel::plLowest, 0, -1, true, "", "",
+                     Metadata::genre_list(), Metadata::country_list(),
+                     Metadata::cast_list(), m_host);
+@@ -484,7 +504,10 @@
+     m_screenshot = query.value(17).toString();
+     m_banner = query.value(18).toString();
+     m_fanart = query.value(19).toString();
+-    m_host = query.value(20).toString();
++    m_subtitle = query.value(20).toString();
++    m_season = query.value(21).toInt();
++    m_episode = query.value(22).toInt();
++    m_host = query.value(23).toString();
+ 
+     VideoCategory::GetCategory().get(m_categoryID, m_category);
+ 
+@@ -501,13 +524,19 @@
+ void MetadataImp::saveToDatabase()
+ {
+     if (m_title.isEmpty())
+-        m_title = Metadata::FilenameToTitle(m_filename);
++        m_title = Metadata::FilenameToMeta(m_filename, 1);
++    if (m_subtitle.isEmpty())
++        m_subtitle = Metadata::FilenameToMeta(m_filename, 4);
+     if (m_director.isEmpty())
+         m_director = VIDEO_DIRECTOR_UNKNOWN;
+     if (m_plot.isEmpty())
+         m_plot = VIDEO_PLOT_DEFAULT;
+     if (m_rating.isEmpty())
+         m_rating = VIDEO_RATING_DEFAULT;
++    if (m_season == 0)
++        m_season = Metadata::FilenameToMeta(m_filename, 2).toInt();
++    if (m_episode == 0)
++        m_episode = Metadata::FilenameToMeta(m_filename, 3).toInt();
+     if (m_coverfile.isEmpty())
+         m_coverfile = VIDEO_COVERFILE_DEFAULT;
+     if (m_screenshot.isEmpty())
+@@ -533,20 +562,21 @@
+     {
+         m_browse = gContext->GetNumSetting("VideoNewBrowsable", 1);
+ 
+-        query.prepare("INSERT INTO videometadata (title,director,plot,"
+-                      "rating,year,userrating,length,filename,showlevel,"
+-                      "coverfile,inetref,browse,trailer,screenshot,banner,"
+-                      "fanart,host) VALUES (:TITLE, :DIRECTOR, :PLOT, :RATING, "
+-                      ":YEAR, :USERRATING, :LENGTH, :FILENAME, :SHOWLEVEL, "
+-                      ":COVERFILE, :INETREF, :BROWSE, :TRAILER, :SCREENSHOT, "
+-                      ":BANNER, :FANART, :HOST)");
++        query.prepare("INSERT INTO videometadata (title,subtitle,director,plot,"
++                      "rating,year,userrating,length,season,episode,filename,"
++                      "showlevel,coverfile,inetref,browse,trailer,screenshot,banner,"
++                      "fanart,host) VALUES (:TITLE, :SUBTITLE, :DIRECTOR, :PLOT, "
++                      ":RATING, :YEAR, :USERRATING, :LENGTH, :SEASON, :EPISODE, "
++                      ":FILENAME, :SHOWLEVEL, :COVERFILE, :INETREF, :BROWSE, "
++                      ":TRAILER, :SCREENSHOT, :BANNER, :FANART, :HOST)");
+     }
+     else
+     {
+-        query.prepare("UPDATE videometadata SET title = :TITLE, "
++        query.prepare("UPDATE videometadata SET title = :TITLE, subtitle = :SUBTITLE, "
+                       "director = :DIRECTOR, plot = :PLOT, rating= :RATING, "
+                       "year = :YEAR, userrating = :USERRATING, "
+-                      "length = :LENGTH, filename = :FILENAME, trailer = :TRAILER, "
++                      "length = :LENGTH, season = :SEASON, episode = :EPISODE, "
++                      "filename = :FILENAME, trailer = :TRAILER, "
+                       "showlevel = :SHOWLEVEL, coverfile = :COVERFILE, "
+                       "screenshot = :SCREENSHOT, banner = :BANNER, fanart = :FANART, "
+                       "inetref = :INETREF, browse = :BROWSE, host = :HOST, "
+@@ -560,12 +590,15 @@
+     }
+ 
+     query.bindValue(":TITLE", m_title);
++    query.bindValue(":SUBTITLE", m_subtitle);
+     query.bindValue(":DIRECTOR", m_director);
+     query.bindValue(":PLOT", m_plot);
+     query.bindValue(":RATING", m_rating);
+     query.bindValue(":YEAR", m_year);
+     query.bindValue(":USERRATING", m_userrating);
+     query.bindValue(":LENGTH", m_length);
++    query.bindValue(":SEASON", m_season);
++    query.bindValue(":EPISODE", m_episode);
+     query.bindValue(":FILENAME", m_filename);
+     query.bindValue(":TRAILER", m_trailer);
+     query.bindValue(":SHOWLEVEL", m_showlevel);
+@@ -793,20 +826,53 @@
+     }
+ }
+ 
+-QString Metadata::FilenameToTitle(const QString &file_name)
++QString Metadata::FilenameToMeta(const QString &file_name, int position)
+ {
++    // position 1 returns title, 2 returns season,
++    //          3 returns episode, 4 returns subtitle
++ 
+     QString title = file_name.right(file_name.length() -
+                                     file_name.lastIndexOf('/') - 1);
++
+     title.replace(QRegExp("_"), " ");
+     title.replace(QRegExp("%20"), " ");
++    title.replace(QRegExp("-"), " ");
+     title = title.left(title.lastIndexOf('.'));
+     title.replace(QRegExp("\\."), " ");
+ 
+-    title = eatBraces(title, "[", "]");
+-    title = eatBraces(title, "(", ")");
+-    title = eatBraces(title, "{", "}");
++    QRegExp group("^(.*[^s0-9])" // title
++                  "(?:[s])?(\\d{1,3})(?:\\s|-)?(?:[ex])" //Season
++                  "(?:\\s|-)?(\\d{1,3})" // Episode
++                  "(.*)$", // subtitle
++                  Qt::CaseInsensitive);
++    int pos = group.indexIn(title);
++    if (pos > -1)
++    {
++        QString groupResult = group.cap(0);
++        QString title = group.cap(1);
++        QString season = group.cap(2);
++        QString episode = group.cap(3);
++        QString subtitle = group.cap(4);
++        if (position == 1 && !title.isEmpty())
++            return title.trimmed();
++        else if (position == 2)
++            return season.trimmed();
++        else if (position == 3)
++            return episode.trimmed();
++        else if (position == 4)
++            return subtitle.trimmed();
++    }
++    else if (position == 1)
++        {
++        title = eatBraces(title, "[", "]");
++        title = eatBraces(title, "(", ")");
++        title = eatBraces(title, "{", "}");
++        return title.trimmed();
++        }
++    else if (position == 2 || position == 3)
++        return QString("0");
+ 
+-    return title.trimmed();
++    return QString("");
+ }
+ 
+ namespace
+@@ -827,13 +893,14 @@
+     return ret;
+ }
+ 
+-Metadata::Metadata(const QString &filename, const QString &trailer,
+-             const QString &coverfile, const QString &screenshot,
+-             const QString &banner, const QString &fanart,
+-             const QString &title, int year,
++Metadata::Metadata(const QString &filename, const QString &trailer, 
++             const QString &coverfile, const QString &screenshot, 
++             const QString &banner, const QString &fanart, 
++             const QString &title, const QString &subtitle, int year,
+              const QString &inetref, const QString &director,
+              const QString &plot, float userrating,
+              const QString &rating, int length,
++             int season, int episode,
+              int id, ParentalLevel::Level showlevel, int categoryID,
+              int childID, bool browse,
+              const QString &playcommand, const QString &category,
+@@ -843,10 +910,10 @@
+              const QString &host)
+ {
+     m_imp = new MetadataImp(filename, trailer, coverfile, screenshot, banner,
+-                            fanart, title, year, inetref, director, plot,
+-                            userrating, rating, length, id, showlevel,
+-                            categoryID, childID, browse, playcommand, category,
+-                            genres, countries, cast, host);
++                            fanart, title, subtitle, year, inetref, director, plot,
++                            userrating, rating, length, season, episode, id, 
++                            showlevel, categoryID, childID, browse, playcommand,
++                            category, genres, countries, cast, host);
+ }
+ 
+ Metadata::~Metadata()
+@@ -909,6 +976,16 @@
+     m_imp->SetTitle(title);
+ }
+ 
++const QString &Metadata::GetSubtitle() const
++{
++    return m_imp->getSubtitle();
++}
++ 
++void Metadata::SetSubtitle(const QString &subtitle)
++{
++    m_imp->SetSubtitle(subtitle);
++}
++
+ int Metadata::GetYear() const
+ {
+     return m_imp->getYear();
+@@ -979,6 +1056,26 @@
+     m_imp->SetLength(length);
+ }
+ 
++int Metadata::GetSeason() const
++{
++    return m_imp->GetSeason();
++}
++
++void Metadata::SetSeason(int season)
++{
++    m_imp->SetSeason(season);
++}
++
++int Metadata::GetEpisode() const
++{
++    return m_imp->GetEpisode();
++}
++
++void Metadata::SetEpisode(int episode)
++{
++    m_imp->SetEpisode(episode);
++}
++
+ unsigned int Metadata::GetID() const
+ {
+     return m_imp->GetID();
+Index: mythvideo/mythvideo/globalsettings.cpp
+===================================================================
+--- mythvideo/mythvideo/globalsettings.cpp	(revision 21049)
++++ mythvideo/mythvideo/globalsettings.cpp	(working copy)
+@@ -235,6 +235,66 @@
+     return gc;
+ }
+ 
++HostLineEdit *SearchTVListingsCommand()
++{
++    HostLineEdit *gc = new HostLineEdit("mythvideo.TVListCommandLine");
++    gc->setLabel(QObject::tr("Command to search for TV shows in MythVideo"));
++    gc->setValue(GetShareDir() + "mythvideo/scripts/ttvdb.py -M");
++    gc->setHelpText(QObject::tr("This command must be "
++                    "executable by the user running MythVideo."));
++    return gc;
++}
++
++HostLineEdit *GetTVPostersCommand()
++{
++    HostLineEdit *gc = new HostLineEdit("mythvideo.TVPosterCommandLine");
++    gc->setLabel(QObject::tr("Command to search for TV Season posters"));
++    gc->setValue(GetShareDir() + "mythvideo/scripts/ttvdb.py -mP");
++    gc->setHelpText(QObject::tr("This command must be "
++                    "executable by the user running MythVideo."));
++    return gc;
++}
++
++HostLineEdit *GetTVFanartCommand()
++{
++    HostLineEdit *gc = new HostLineEdit("mythvideo.TVFanartCommandLine");
++    gc->setLabel(QObject::tr("Command to search for TV fanart"));
++    gc->setValue(GetShareDir() + "mythvideo/scripts/ttvdb.py -tF");
++    gc->setHelpText(QObject::tr("This command must be "
++                    "executable by the user running MythVideo."));
++    return gc;
++}
++
++HostLineEdit *GetTVBannerCommand()
++{
++    HostLineEdit *gc = new HostLineEdit("mythvideo.TVBannerCommandLine");
++    gc->setLabel(QObject::tr("Command to search for TV banners"));
++    gc->setValue(GetShareDir() + "mythvideo/scripts/ttvdb.py -tB");
++    gc->setHelpText(QObject::tr("This command must be "
++                    "executable by the user running MythVideo."));
++    return gc;
++}
++
++HostLineEdit *GetTVDataCommand()
++{
++    HostLineEdit *gc = new HostLineEdit("mythvideo.TVDataCommandLine");
++    gc->setLabel(QObject::tr("Command to extract data for TV Episodes"));
++    gc->setValue(GetShareDir() + "mythvideo/scripts/ttvdb.py -D");
++    gc->setHelpText(QObject::tr("This command must be "
++                    "executable by the user running MythVideo."));
++    return gc;
++}
++
++HostLineEdit *GetTVTitleSubCommand()
++{
++    HostLineEdit *gc = new HostLineEdit("mythvideo.TVTitleSubCommandLine");
++    gc->setLabel(QObject::tr("Command to search for TV by Title/Subtitle"));
++    gc->setValue(GetShareDir() + "mythvideo/scripts/ttvdb.py -N");
++    gc->setHelpText(QObject::tr("This command must be "
++                    "executable by the user running MythVideo."));
++    return gc;
++}
++
+ HostLineEdit *VideoStartupDirectory()
+ {
+     HostLineEdit *gc = new HostLineEdit("VideoStartupDir");
+@@ -780,6 +840,20 @@
+     VConfigPage page7(pages, false);
+     page7->addChild(trlr);
+ 
++    // page 8
++    VerticalConfigurationGroup *tvman =
++            new VerticalConfigurationGroup(true, false);
++    tvman->setLabel(QObject::tr("Television in MythVideo"));
++    tvman->addChild(SearchTVListingsCommand());
++    tvman->addChild(GetTVPostersCommand());
++    tvman->addChild(GetTVFanartCommand());
++    tvman->addChild(GetTVBannerCommand());
++    tvman->addChild(GetTVDataCommand());
++    tvman->addChild(GetTVTitleSubCommand());
++
++    VConfigPage page8(pages, false);
++    page8->addChild(tvman);
++
+     int page_num = 1;
+     for (ConfigPage::PageList::const_iterator p = pages.begin();
+          p != pages.end(); ++p, ++page_num)
+Index: mythvideo/mythvideo/videofilter.h
+===================================================================
+--- mythvideo/mythvideo/videofilter.h	(revision 21049)
++++ mythvideo/mythvideo/videofilter.h	(working copy)
+@@ -54,7 +54,8 @@
+         kOrderByUserRatingDescending = 2,
+         kOrderByLength = 3,
+         kOrderByFilename = 4,
+-        kOrderByID = 5
++        kOrderByID = 5,
++        kOrderBySeasonEp = 6
+     };
+ 
+     int GetCategory() const { return category; }
+Index: mythvideo/mythvideo/dbcheck.cpp
+===================================================================
+--- mythvideo/mythvideo/dbcheck.cpp	(revision 21049)
++++ mythvideo/mythvideo/dbcheck.cpp	(working copy)
+@@ -38,7 +38,7 @@
+     const QString lastMythDVDDBVersion = "1002";
+     const QString lastMythVideoVersion = "1010";
+ 
+-    const QString currentDatabaseVersion = "1023";
++    const QString currentDatabaseVersion = "1024";
+ 
+     const QString OldMythVideoVersionName = "VideoDBSchemaVer";
+     const QString OldMythDVDVersionName = "DVDDBSchemaVer";
+@@ -832,6 +832,17 @@
+             performActualUpdate(updates, "1023", dbver, MythVideoVersionName);
+         }
+ 
++        if (dbver == "1023")
++        {
++            QStringList updates;
++            updates += "ALTER TABLE videometadata ADD `subtitle` TEXT "
++                       "NOT NULL AFTER `title`;";
++            updates += "ALTER TABLE videometadata ADD `season` SMALLINT "
++                       "UNSIGNED NOT NULL DEFAULT '0' AFTER `length`;";
++            updates += "ALTER TABLE videometadata ADD `episode` SMALLINT "
++                       "UNSIGNED NOT NULL DEFAULT '0' AFTER `season`;";
++            performActualUpdate(updates, "1024", dbver, MythVideoVersionName);
++        }
+ 
+     }
+ }
+Index: mythvideo/mythvideo/main.cpp
+===================================================================
+--- mythvideo/mythvideo/main.cpp	(revision 21049)
++++ mythvideo/mythvideo/main.cpp	(working copy)
+@@ -322,6 +322,10 @@
+         REG_KEY("Video","INCPARENT","Increase Parental Level","],},F11");
+         REG_KEY("Video","DECPARENT","Decrease Parental Level","[,{,F10");
+ 
++        REG_KEY("Video","INCSEARCH","Show Incremental Search Dialog","Ctrl+S");
++        REG_KEY("Video","DOWNLOADDATA","Download metadata for current item","W");
++        REG_KEY("Video","ITEMDETAIL","Display Item Detail Popup", "");
++
+         REG_KEY("Video","HOME","Go to the first video","Home");
+         REG_KEY("Video","END","Go to the last video","End");
+ 
+Index: mythvideo/mythvideo/videoutils.cpp
+===================================================================
+--- mythvideo/mythvideo/videoutils.cpp	(revision 21049)
++++ mythvideo/mythvideo/videoutils.cpp	(working copy)
+@@ -139,6 +139,16 @@
+     return QString("%1 minutes").arg(length);
+ }
+ 
++QString GetDisplaySeasonEpisode(int seasEp, int digits)
++{
++    QString seasEpNum = QString::number(seasEp);
++
++    if (digits == 2 && seasEpNum.size() < 2)
++        seasEpNum.prepend("0");
++        
++    return seasEpNum;
++}
++
+ QString GetDisplayBrowse(bool browse)
+ {
+     return browse ? QObject::tr("Yes") : QObject::tr("No");
+Index: mythvideo/mythvideo/editmetadata.h
+===================================================================
+--- mythvideo/mythvideo/editmetadata.h	(revision 21049)
++++ mythvideo/mythvideo/editmetadata.h	(working copy)
+@@ -10,6 +10,7 @@
+ class MythUIText;
+ class MythUITextEdit;
+ class MythUIButton;
++class MythUISpinBox;
+ class MythUICheckBox;
+ 
+ class EditMetadataDialog : public MythScreenType
+@@ -34,8 +35,11 @@
+   public slots:
+     void SaveAndExit();
+     void SetTitle();
++    void SetSubtitle();
+     void SetCategory(MythUIButtonListItem*);
+     void SetPlayer();
++    void SetSeason();
++    void SetEpisode();
+     void SetLevel(MythUIButtonListItem*);
+     void SetChild(MythUIButtonListItem*);
+     void ToggleBrowse();
+@@ -60,7 +64,10 @@
+     //
+ 
+     MythUITextEdit      *m_titleEdit;
++    MythUITextEdit      *m_subtitleEdit;
+     MythUITextEdit      *m_playerEdit;
++    MythUISpinBox       *m_seasonSpin;
++    MythUISpinBox       *m_episodeSpin;
+     MythUIButtonList      *m_categoryList;
+     MythUIButtonList      *m_levelList;
+     MythUIButtonList      *m_childList;
+Index: mythvideo/mythvideo/videodlg.cpp
+===================================================================
+--- mythvideo/mythvideo/videodlg.cpp	(revision 21049)
++++ mythvideo/mythvideo/videodlg.cpp	(working copy)
+@@ -288,6 +288,113 @@
+         FanartDownloadErrorState m_error_state;
+     };
+ 
++    class BannerDownloadProxy : public QObject
++    {
++        Q_OBJECT
++
++      signals:
++        void SigFinished(BannerDownloadErrorState reason, QString errorMsg,
++                         Metadata *item);
++      public:
++        static BannerDownloadProxy *Create(const QUrl &url, const QString &dest,
++                                          Metadata *item)
++        {
++            return new BannerDownloadProxy(url, dest, item);
++        }
++
++      public:
++        void StartCopy()
++        {
++            m_id = m_http.get(m_url.toString(), &m_data_buffer);
++
++            m_timer.start(gContext->GetNumSetting("BannerDownloadTimeout", 30)
++                          * 1000);
++        }
++
++        void Stop()
++        {
++            if (m_timer.isActive())
++                m_timer.stop();
++
++            VERBOSE(VB_GENERAL, tr("Banner download stopped."));
++            m_http.abort();
++        }
++
++      private:
++        BannerDownloadProxy(const QUrl &url, const QString &dest,
++                           Metadata *item) : m_item(item), m_dest_file(dest),
++            m_id(0), m_url(url), m_error_state(besOK)
++        {
++            connect(&m_http, SIGNAL(requestFinished(int, bool)),
++                    SLOT(OnFinished(int, bool)));
++
++            connect(&m_timer, SIGNAL(timeout()), SLOT(OnDownloadTimeout()));
++            m_timer.setSingleShot(true);
++            m_http.setHost(m_url.host());
++        }
++
++        ~BannerDownloadProxy() {}
++
++      private slots:
++        void OnDownloadTimeout()
++        {
++            VERBOSE(VB_IMPORTANT, QString("Copying of '%1' timed out")
++                    .arg(m_url.toString()));
++            m_error_state = besTimeout;
++            Stop();
++        }
++
++        void OnFinished(int id, bool error)
++        {
++            QString errorMsg;
++            if (error)
++                errorMsg = m_http.errorString();
++
++            if (id == m_id)
++            {
++                if (m_timer.isActive())
++                    m_timer.stop();
++
++                if (!error)
++                {
++                    QFile dest_file(m_dest_file);
++                    if (dest_file.exists())
++                        dest_file.remove();
++
++                    if (dest_file.open(QIODevice::WriteOnly))
++                    {
++                        const QByteArray &data = m_data_buffer.data();
++                        qint64 size = dest_file.write(data);
++                        if (size != data.size())
++                        {
++                            errorMsg = tr("Error writing data to file %1.")
++                                    .arg(m_dest_file);
++                            m_error_state = besError;
++                        }
++                    }
++                    else
++                    {
++                        errorMsg = tr("Error: file error '%1' for file %2").
++                                arg(dest_file.errorString()).arg(m_dest_file);
++                        m_error_state = besError;
++                    }
++                }
++
++                emit SigFinished(m_error_state, errorMsg, m_item);
++            }
++        }
++
++      private:
++        Metadata *m_item;
++        QHttp m_http;
++        QBuffer m_data_buffer;
++        QString m_dest_file;
++        int m_id;
++        QTimer m_timer;
++        QUrl m_url;
++        BannerDownloadErrorState m_error_state;
++    };
++
+     /** \class ExecuteExternalCommand
+      *
+      * \brief Base class for executing an external script or other process, must
+@@ -467,16 +574,30 @@
+         void Run(QString title, Metadata *item)
+         {
+             m_item = item;
++            int m_season, m_episode; 
++            QString cmd;
++            m_season = m_item->GetSeason();
++            m_episode = m_item->GetEpisode();
+ 
+-            QString def_cmd = QDir::cleanPath(QString("%1/%2")
++            if (m_season > 0 || m_episode > 0)
++            {
++                const QString def_cmd = QDir::cleanPath(QString("%1/%2")
+                     .arg(GetShareDir())
++                    .arg("mythvideo/scripts/ttvdb.py -M"));
++                cmd = gContext->GetSetting("mythvideo.TVListCommandLine",
++                                                        def_cmd);
++            }
++            else
++            {
++                QString def_cmd = QDir::cleanPath(QString("%1/%2")
++                    .arg(GetShareDir())
+                     .arg("mythvideo/scripts/tmdb.pl -M"));
+ 
+-            QString cmd = gContext->GetSetting("MovieListCommandLine", def_cmd);
+-
+-            QStringList args;
+-            args += title;
+-            StartRun(cmd, args, "Video Search");
++                cmd = gContext->GetSetting("MovieListCommandLine", def_cmd);
++            }
++                QStringList args;
++                args += title;
++                StartRun(cmd, args, "Video Search");
+         }
+ 
+       private:
+@@ -505,6 +626,54 @@
+         Metadata *m_item;
+     };
+ 
++    /** \class VideoTitleSubtitleSearch
++     *
++     * \brief Executes the external command to do video title/subtitle searches.
++     *
++     */
++    class VideoTitleSubtitleSearch : public ExecuteExternalCommand
++    {
++        Q_OBJECT
++
++      signals:
++        void SigSearchResults(bool normal_exit, QStringList result,
++                Metadata *item);
++
++      public:
++        VideoTitleSubtitleSearch(QObject *oparent) :
++            ExecuteExternalCommand(oparent), m_item(0) {}
++
++        void Run(QString title, QString subtitle, Metadata *item)
++        {
++            m_item = item;
++            QString cmd;
++
++                const QString def_cmd = QDir::cleanPath(QString("%1/%2")
++                    .arg(GetShareDir())
++                    .arg("mythvideo/scripts/ttvdb.py -N"));
++                cmd = gContext->GetSetting("mythvideo.TVTitleSubCommandLine",
++                                                        def_cmd);
++                QStringList args;
++                args += title;
++                args += subtitle;
++                StartRun(cmd, args, "Video Search");
++        }
++
++      private:
++        ~VideoTitleSubtitleSearch() {}
++
++        void OnExecDone(bool normal_exit, QStringList out, QStringList err)
++        {
++            (void) err;
++
++            emit SigSearchResults(normal_exit, out, m_item);
++            deleteLater();
++        }
++
++      private:
++        Metadata *m_item;
++    };
++
+     /** \class VideoUIDSearch
+      *
+      * \brief Execute the command to do video searches based on their ID.
+@@ -525,15 +694,32 @@
+         void Run(QString video_uid, Metadata *item)
+         {
+             m_item = item;
+-            m_video_uid = video_uid;
++            m_video_uid = video_uid;            
++            int m_season, m_episode;
++            m_season = m_item->GetSeason();
++            m_episode = m_item->GetEpisode();
+ 
+-            const QString def_cmd = QDir::cleanPath(QString("%1/%2")
++            if (m_season > 0 || m_episode > 0)
++            {
++                const QString def_cmd = QDir::cleanPath(QString("%1/%2")
+                     .arg(GetShareDir())
++                    .arg("mythvideo/scripts/ttvdb.py -mD"));
++                const QString cmd = gContext->GetSetting("mythvideo.TVDataCommandLine",
++                                                        def_cmd);
++                QStringList args;
++                args << video_uid << QString::number(m_season) 
++                                  << QString::number(m_episode);
++                StartRun(cmd, args, "Video Data Query");
++            }
++            else
++            {
++                const QString def_cmd = QDir::cleanPath(QString("%1/%2")
++                    .arg(GetShareDir())
+                     .arg("mythvideo/scripts/tmdb.pl -D"));
+-            const QString cmd = gContext->GetSetting("MovieDataCommandLine",
++                const QString cmd = gContext->GetSetting("MovieDataCommandLine",
+                                                         def_cmd);
+-
+-            StartRun(cmd, QStringList(video_uid), "Video Data Query");
++                StartRun(cmd, QStringList(video_uid), "Video Data Query");
++            }
+         }
+ 
+       private:
+@@ -570,14 +756,33 @@
+         void Run(QString video_uid, Metadata *item)
+         {
+             m_item = item;
++            int m_season, m_episode;
++            m_season = m_item->GetSeason();
++            m_episode = m_item->GetEpisode();
+ 
+-            const QString default_cmd =
++            if (m_season > 0 || m_episode > 0)
++            {
++                const QString def_cmd = QDir::cleanPath(QString("%1/%2")
++                    .arg(GetShareDir())
++                    .arg("mythvideo/scripts/ttvdb.py -mP"));
++                const QString cmd = gContext->GetSetting("mythvideo.TVPosterCommandLine",
++                                                        def_cmd);
++                QStringList args;
++                args << video_uid << QString::number(m_season)
++                                  << QString::number(m_episode);
++                StartRun(cmd, args, "Poster Query");
++            }
++            else
++            {
++                const QString default_cmd =
+                     QDir::cleanPath(QString("%1/%2")
+                                         .arg(GetShareDir())
+                                         .arg("mythvideo/scripts/tmdb.pl -P"));
+-            const QString cmd = gContext->GetSetting("MoviePosterCommandLine",
++                const QString cmd = gContext->GetSetting("MoviePosterCommandLine",
+                                                         default_cmd);
+-            StartRun(cmd, QStringList(video_uid), "Poster Query");
++
++                StartRun(cmd, QStringList(video_uid), "Poster Query");
++            }
+         }
+ 
+       private:
+@@ -627,14 +832,32 @@
+         void Run(QString video_uid, Metadata *item)
+         {
+             m_item = item;
++            int m_season, m_episode;
++            m_season = m_item->GetSeason();
++            m_episode = m_item->GetEpisode();
+ 
+-            const QString default_cmd =
++            if (m_season > 0 || m_episode > 0)
++            {
++                const QString def_cmd = QDir::cleanPath(QString("%1/%2")
++                    .arg(GetShareDir())
++                    .arg("mythvideo/scripts/ttvdb.py -tF"));
++                const QString cmd = gContext->GetSetting("mythvideo.TVFanartCommandLine",
++                                                        def_cmd);
++                QStringList args;
++                args << video_uid << QString::number(m_season)
++                                  << QString::number(m_episode);
++                StartRun(cmd, args, "Fanart Query");
++            }
++            else
++            {
++                const QString default_cmd =
+                     QDir::cleanPath(QString("%1/%2")
+                                         .arg(GetShareDir())
+                                         .arg("mythvideo/scripts/tmdb.pl -B"));
+-            const QString cmd = gContext->GetSetting("MovieFanartCommandLine",
++                const QString cmd = gContext->GetSetting("MovieFanartCommandLine",
+                                                         default_cmd);
+-            StartRun(cmd, QStringList(video_uid), "Fanart Query");
++                StartRun(cmd, QStringList(video_uid), "Fanart Query");
++            }
+         }
+ 
+       private:
+@@ -665,7 +888,68 @@
+         Metadata *m_item;
+     };
+ 
++    /** \class VideoBannerSearch
++     *
++     * \brief Execute external video banner command.
++     *
++     */
++    class VideoBannerSearch : public ExecuteExternalCommand
++    {
++        Q_OBJECT
+ 
++      signals:
++        void SigBannerURL(QString url, Metadata *item);
++
++      public:
++        VideoBannerSearch(QObject *oparent) :
++            ExecuteExternalCommand(oparent), m_item(0) {}
++
++        void Run(QString video_uid, Metadata *item)
++        {
++            m_item = item;
++            int m_season, m_episode;
++            m_season = m_item->GetSeason();
++            m_episode = m_item->GetEpisode();
++
++            const QString def_cmd = QDir::cleanPath(QString("%1/%2")
++                    .arg(GetShareDir())
++                    .arg("mythvideo/scripts/ttvdb.py -tB"));
++            const QString cmd = gContext->GetSetting("mythvideo.TVBannerCommandLine",
++                                                        def_cmd);
++            QStringList args;
++            args << video_uid << QString::number(m_season)
++                                  << QString::number(m_episode);
++            StartRun(cmd, args, "Banner Query");
++        }
++
++      private:
++        ~VideoBannerSearch() {}
++
++        void OnExecDone(bool normal_exit, QStringList out, QStringList err)
++        {
++            (void) err;
++            QString url;
++            if (normal_exit && out.size())
++            {
++                for (QStringList::const_iterator p = out.begin();
++                        p != out.end(); ++p)
++                {
++                    if ((*p).length())
++                    {
++                        url = *p;
++                        break;
++                    }
++                }
++            }
++
++            emit SigBannerURL(url, m_item);
++            deleteLater();
++        }
++
++      private:
++        Metadata *m_item;
++    };
++
+     class ParentalLevelNotifyContainer : public QObject
+     {
+         Q_OBJECT
+@@ -790,8 +1074,9 @@
+         }
+     };
+ 
+-    bool GetLocalVideoPoster(const QString &video_uid, const QString &filename,
+-                             const QStringList &in_dirs, QString &poster)
++    bool GetLocalVideoImage(const QString &video_uid, const QString &filename,
++                             const QStringList &in_dirs, QString &image,
++                             QString title, int season)
+     {
+         QStringList search_dirs(in_dirs);
+ 
+@@ -821,6 +1106,10 @@
+                     ext != image_exts.end(); ++ext)
+             {
+                 QStringList sfn;
++                if (season > 0)
++                    sfn += fntm.arg(*dir).arg(QString("%1 Season %2")
++                                 .arg(title).arg(QString::number(season)))
++                                 .arg(*ext);
+                 sfn += fntm.arg(*dir).arg(base_name).arg(*ext);
+                 sfn += fntm.arg(*dir).arg(video_uid).arg(*ext);
+ 
+@@ -829,7 +1118,7 @@
+                 {
+                     if (QFile::exists(*i))
+                     {
+-                        poster = *i;
++                        image = *i;
+                         return true;
+                     }
+                 }
+@@ -946,7 +1235,8 @@
+             QString coverfile;
+             if ((metadata->IsHostSet()
+                 && !metadata->GetCoverFile().startsWith("/"))
+-                && (metadata->GetCoverFile() != "No Cover"))
++                && (metadata->GetCoverFile() != "No Cover")
++                && !metadata->GetCoverFile().isEmpty())
+             {
+                 coverfile = GenRemoteFileURL("Coverart", metadata->GetHost(),
+                         metadata->GetCoverFile());
+@@ -962,8 +1252,8 @@
+             tmp["coverfile"] = coverfile;
+ 
+             QString screenshotfile;
+-            if (metadata->IsHostSet() &&
+-                    !metadata->GetScreenshot().startsWith("/"))
++            if (metadata->IsHostSet() && !metadata->GetScreenshot().startsWith("/")
++                && !metadata->GetScreenshot().isEmpty())
+             {
+                 screenshotfile = GenRemoteFileURL("Screenshots",
+                         metadata->GetHost(), metadata->GetScreenshot());
+@@ -979,7 +1269,8 @@
+             tmp["screenshotfile"] = screenshotfile;
+ 
+             QString bannerfile;
+-            if (metadata->IsHostSet() && !metadata->GetBanner().startsWith("/"))
++            if (metadata->IsHostSet() && !metadata->GetBanner().startsWith("/")
++                && !metadata->GetBanner().isEmpty())
+             {
+                 bannerfile = GenRemoteFileURL("Banners", metadata->GetHost(),
+                         metadata->GetBanner());
+@@ -995,7 +1286,8 @@
+             tmp["bannerfile"] = bannerfile;
+ 
+             QString fanartfile;
+-            if (metadata->IsHostSet() && !metadata->GetFanart().startsWith("/"))
++            if (metadata->IsHostSet() && !metadata->GetFanart().startsWith("/")
++                && !metadata->GetFanart().isEmpty())
+             {
+                 fanartfile = GenRemoteFileURL("Fanart", metadata->GetHost(),
+                         metadata->GetFanart());
+@@ -1016,6 +1308,7 @@
+ 
+             tmp["filename"] = metadata->GetFilename();
+             tmp["title"] = metadata->GetTitle();
++            tmp["subtitle"] = metadata->GetSubtitle();
+             tmp["director"] = metadata->GetDirector();
+             tmp["plot"] = metadata->GetPlot();
+             tmp["genres"] = GetDisplayGenres(*metadata);
+@@ -1025,7 +1318,21 @@
+             tmp["length"] = GetDisplayLength(metadata->GetLength());
+             tmp["year"] = GetDisplayYear(metadata->GetYear());
+             tmp["userrating"] = GetDisplayUserRating(metadata->GetUserRating());
++            tmp["season"] = GetDisplaySeasonEpisode(metadata->GetSeason(), 1);
++            tmp["episode"] = GetDisplaySeasonEpisode(metadata->GetEpisode(), 1);
+ 
++            if (metadata->GetSeason() > 0 || metadata->GetEpisode() > 0)
++            {
++                tmp["s##e##"] = QString("s%1e%2").arg(GetDisplaySeasonEpisode
++                                                     (metadata->GetSeason(), 2))
++                                .arg(GetDisplaySeasonEpisode(metadata->GetEpisode(), 2));
++                tmp["##x##"] = QString("%1x%2").arg(GetDisplaySeasonEpisode
++                                                     (metadata->GetSeason(), 1))           
++                                .arg(GetDisplaySeasonEpisode(metadata->GetEpisode(), 2));
++            }
++            else
++                tmp["s##e##"] = tmp["##x##"] = "";
++
+             tmp["userratingstate"] =
+                     QString::number((int)(metadata->GetUserRating()));
+             tmp["videolevel"] = ParentalLevelToState(metadata->GetShowLevel());
+@@ -1075,6 +1382,7 @@
+         h.handleText("player");
+         h.handleText("filename");
+         h.handleText("title");
++        h.handleText("subtitle");
+         h.handleText("director");
+         h.handleText("plot");
+         h.handleText("genres");
+@@ -1082,6 +1390,10 @@
+         h.handleText("cast");
+         h.handleText("rating");
+         h.handleText("length");
++        h.handleText("season");
++        h.handleText("s##e##");
++        h.handleText("##x##");
++        h.handleText("episode");
+         h.handleText("year");
+         h.handleText("userrating");
+ 
+@@ -1254,6 +1566,7 @@
+ 
+         m_artDir = gContext->GetSetting("VideoArtworkDir");
+         m_fanDir = gContext->GetSetting("mythvideo.fanartDir");
++        m_banDir = gContext->GetSetting("mythvideo.bannerDir");
+     }
+ 
+     ~VideoDialogPrivate()
+@@ -1322,6 +1635,22 @@
+         }
+     }
+ 
++    void AddBannerDownload(BannerDownloadProxy *download)
++    {
++        m_running_bdownloads.insert(download);
++    }
++
++    void RemoveBannerDownload(BannerDownloadProxy *download)
++    {
++        if (download)
++        {
++            banner_download_list::iterator p =
++                    m_running_bdownloads.find(download);
++            if (p != m_running_bdownloads.end())
++                m_running_bdownloads.erase(p);
++        }
++    }
++
+     void StopAllRunningCoverDownloads()
+     {
+         cover_download_list tmp(m_running_downloads);
+@@ -1336,12 +1665,20 @@
+             (*p)->Stop();
+     }
+ 
++    void StopAllRunningBannerDownloads()
++    {
++        banner_download_list tmp(m_running_bdownloads);
++        for (banner_download_list::iterator p = tmp.begin(); p != tmp.end(); ++p)
++            (*p)->Stop();
++    }
+ 
+   public:
+     typedef std::set<CoverDownloadProxy *> cover_download_list;
+     cover_download_list m_running_downloads;
+     typedef std::set<FanartDownloadProxy *> fanart_download_list;
+     fanart_download_list m_running_fdownloads;
++    typedef std::set<BannerDownloadProxy *> banner_download_list;
++    banner_download_list m_running_bdownloads;
+     ParentalLevelNotifyContainer m_parentalLevel;
+     bool m_switchingLayout;
+ 
+@@ -1364,6 +1701,7 @@
+ 
+     QString m_artDir;
+     QString m_fanDir;
++    QString m_banDir;
+     VideoScanner *m_scanner;
+ 
+     QString m_lastTreeNodePath;
+@@ -2021,6 +2359,15 @@
+             if (!m_menuPopup)
+                 VideoMenu();
+         }
++        else if (action == "DOWNLOADDATA")
++        {
++            if (!m_menuPopup && GetMetadata(GetItemCurrent()))
++                VideoSearch();
++        }
++        else if (action == "INCSEARCH")
++            searchStart();
++        else if (action == "ITEMDETAIL")
++            DoItemDetailShow();
+         else if (action == "ESCAPE")
+         {
+             if (m_d->m_type != DLG_TREE
+@@ -2080,6 +2427,62 @@
+         m_popupStack->AddScreen(okPopup);
+ }
+ 
++void VideoDialog::searchComplete(QString string)
++{
++    VERBOSE(VB_GENERAL | VB_EXTRA,
++            QString("Switching to: %1").arg(string));
++
++    if (m_d->m_type == DLG_TREE)
++    {
++        MythGenericTree *parent = m_videoButtonTree->GetCurrentNode()->getParent();
++        MythGenericTree *new_node = parent->getChildByName(string);
++        if (new_node)
++        {
++            m_videoButtonTree->SetCurrentNode(new_node);
++            m_videoButtonTree->SetActive(true);
++        }
++    }
++    else
++    {
++        m_videoButtonList->MoveToNamedPosition(string);
++        m_videoButtonList->SetActive(true);
++    }
++}
++
++void VideoDialog::searchStart(void)
++{
++    MythGenericTree *parent = m_d->m_currentNode->getParent();
++
++    QStringList childList;
++    QList<MythGenericTree*>::iterator it;
++    QList<MythGenericTree*> *children;
++    if (parent && m_d->m_type == DLG_TREE)
++        children = parent->getAllChildren();
++    else
++        children = m_d->m_currentNode->getAllChildren();
++
++    for (it = children->begin(); it != children->end(); ++it)
++    {
++        MythGenericTree *child = *it;
++        childList << child->getString();
++    }
++
++    MythScreenStack *popupStack =
++        GetMythMainWindow()->GetStack("popup stack");
++    MythUISearchDialog *searchDialog = new MythUISearchDialog(popupStack,
++        tr("Video Search"), childList, false, "");
++
++    if (searchDialog->Create())
++    {
++        connect(searchDialog, SIGNAL(haveResult(QString)),
++                SLOT(searchComplete(QString)));
++
++        popupStack->AddScreen(searchDialog);
++    }
++    else
++        delete searchDialog;
++}
++
+ bool VideoDialog::goBack()
+ {
+     bool handled = false;
+@@ -2275,6 +2678,10 @@
+ 
+     m_menuPopup->AddButton(tr("Edit Metadata"), SLOT(EditMetadata()));
+     m_menuPopup->AddButton(tr("Download Metadata"), SLOT(VideoSearch()));
++    m_menuPopup->AddButton(tr("Download Images Only"),
++                          SLOT(ImageOnlyDownload()));
++    m_menuPopup->AddButton(tr("Search TV by Title/Subtitle"),
++                          SLOT(TitleSubtitleSearch()));
+     m_menuPopup->AddButton(tr("Manually Enter Video #"),
+             SLOT(ManualVideoUID()));
+     m_menuPopup->AddButton(tr("Manually Enter Video Title"),
+@@ -2582,6 +2989,35 @@
+                                 metadata);
+ }
+ 
++void VideoDialog::TitleSubtitleSearch()
++{
++    Metadata *metadata = GetMetadata(GetItemCurrent());
++
++    if (metadata)
++        StartVideoSearchByTitleSubtitle(metadata->GetTitle(),
++                                metadata->GetSubtitle(), metadata);
++}
++
++void VideoDialog::ImageOnlyDownload()
++{
++    Metadata *metadata = GetMetadata(GetItemCurrent());
++    QString title = metadata->GetTitle();
++
++    if (metadata->GetInetRef() != VIDEO_INETREF_DEFAULT)
++        StartVideoPosterSet(metadata);
++    else
++    {
++        createBusyDialog(title);
++
++        VideoTitleSearch *vts = new VideoTitleSearch(this);
++        connect(vts, SIGNAL(SigSearchResults(bool, const SearchListResults &,
++                                Metadata *)),
++                SLOT(OnVideoImageOnlyDone(bool, const SearchListResults &,
++                                Metadata *)));
++        vts->Run(title, metadata);
++    }
++}
++
+ void VideoDialog::ToggleBrowseable()
+ {
+     Metadata *metadata = GetMetadata(GetItemCurrent());
+@@ -2625,6 +3061,18 @@
+     }
+ }
+ 
++void VideoDialog::OnVideoImgSearchListSelection(QString video_uid)
++{
++    Metadata *metadata = GetMetadata(GetItemCurrent());
++    if (metadata && !video_uid.isEmpty())
++    {
++        metadata->SetInetRef(video_uid);
++        metadata->UpdateDatabase();
++        UpdateItem(GetItemCurrent());
++        StartVideoPosterSet(metadata);
++    }
++}
++
+ void VideoDialog::OnParentalChange(int amount)
+ {
+     Metadata *metadata = GetMetadata(GetItemCurrent());
+@@ -2758,12 +3206,29 @@
+         metadata->Reset();
+ 
+         QString cover_file;
+-        if (GetLocalVideoPoster(metadata->GetInetRef(), metadata->GetFilename(),
+-                        QStringList(m_d->m_artDir), cover_file))
++        if (GetLocalVideoImage(metadata->GetInetRef(), metadata->GetFilename(),
++                        QStringList(m_d->m_artDir), cover_file,
++                        metadata->GetTitle(), metadata->GetSeason()))
+         {
+             metadata->SetCoverFile(cover_file);
+         }
+ 
++        QString fanart_file;
++        if (GetLocalVideoImage(metadata->GetInetRef(), metadata->GetFilename(),
++                        QStringList(m_d->m_fanDir), fanart_file,
++                        metadata->GetTitle(), metadata->GetSeason()))
++        {
++            metadata->SetFanart(fanart_file);
++        }
++
++        QString banner_file;
++        if (GetLocalVideoImage(metadata->GetInetRef(), metadata->GetFilename(),
++                        QStringList(m_d->m_banDir), banner_file,
++                        metadata->GetTitle(), metadata->GetSeason()))
++        {
++            metadata->SetBanner(banner_file);
++        }
++
+         metadata->UpdateDatabase();
+ 
+         UpdateItem(item);
+@@ -2778,13 +3243,14 @@
+     //createBusyDialog(QObject::tr("Fetching poster for %1 (%2)")
+     //                    .arg(metadata->InetRef())
+     //                    .arg(metadata->Title()));
+-    QStringList search_dirs;
+-    search_dirs += m_d->m_artDir;
++    QStringList cover_dirs;
++    cover_dirs += m_d->m_artDir;
+ 
+     QString cover_file;
+ 
+-    if (GetLocalVideoPoster(metadata->GetInetRef(), metadata->GetFilename(),
+-                            search_dirs, cover_file))
++    if (GetLocalVideoImage(metadata->GetInetRef(), metadata->GetFilename(),
++                            cover_dirs, cover_file, metadata->GetTitle(),
++                            metadata->GetSeason()))
+     {
+         metadata->SetCoverFile(cover_file);
+         OnVideoPosterSetDone(metadata);
+@@ -2799,6 +3265,19 @@
+         vps->Run(metadata->GetInetRef(), metadata);
+     }
+ 
++    QStringList fanart_dirs;
++    fanart_dirs += m_d->m_fanDir;
++
++    QString fanart_file;
++
++    if (GetLocalVideoImage(metadata->GetInetRef(), metadata->GetFilename(),
++                            fanart_dirs, fanart_file, metadata->GetTitle(),
++                            metadata->GetSeason()))
++    {
++        metadata->SetFanart(fanart_file);
++        OnVideoFanartSetDone(metadata);
++    }
++
+     if (metadata->GetFanart().isEmpty())
+     {
+         // Obtain video fanart
+@@ -2807,6 +3286,29 @@
+                 SLOT(OnFanartURL(QString, Metadata *)));
+         vfs->Run(metadata->GetInetRef(), metadata);
+     }
++
++    QStringList banner_dirs;
++    banner_dirs += m_d->m_banDir;
++        
++    QString banner_file;
++        
++    if (GetLocalVideoImage(metadata->GetInetRef(), metadata->GetFilename(),
++                            banner_dirs, banner_file, metadata->GetTitle(),
++                            metadata->GetSeason()))
++    {
++        metadata->SetBanner(banner_file);
++        OnVideoBannerSetDone(metadata);
++    }
++
++    if (metadata->GetBanner().isEmpty() &&
++       (metadata->GetSeason() > 0 || metadata->GetEpisode() > 0))
++    {
++        // Obtain video banner (only for TV)
++        VideoBannerSearch *vbs = new VideoBannerSearch(this);
++        connect(vbs, SIGNAL(SigBannerURL(QString, Metadata *)),
++                SLOT(OnBannerURL(QString, Metadata *)));
++        vbs->Run(metadata->GetInetRef(), metadata);
++    }
+ }
+ 
+ void VideoDialog::OnPosterURL(QString uri, Metadata *metadata)
+@@ -2839,8 +3341,21 @@
+             QUrl url(uri);
+ 
+             QString ext = QFileInfo(url.path()).suffix();
+-            QString dest_file = QString("%1/%2.%3").arg(fileprefix)
+-                    .arg(metadata->GetInetRef()).arg(ext);
++            QString dest_file;
++
++            if (metadata->GetSeason() > 0 || 
++                metadata->GetEpisode() > 0)
++            {
++                // Name TV downloads so that they already work with the PBB
++                QString title = QString("%1 Season %2").arg(metadata->GetTitle())
++                        .arg(metadata->GetSeason());
++                dest_file = QString("%1/%2.%3").arg(fileprefix)
++                        .arg(title).arg(ext);
++            }
++            else
++                dest_file = QString("%1/%2.%3").arg(fileprefix)
++                        .arg(metadata->GetInetRef()).arg(ext);
++
+             VERBOSE(VB_IMPORTANT, QString("Copying '%1' -> '%2'...")
+                     .arg(url.toString()).arg(dest_file));
+ 
+@@ -2933,8 +3448,21 @@
+             QUrl url(uri);
+ 
+             QString ext = QFileInfo(url.path()).suffix();
+-            QString dest_file = QString("%1/%2.%3").arg(fileprefix)
+-                    .arg(metadata->GetInetRef()).arg(ext);
++            QString dest_file;
++
++            if (metadata->GetSeason() > 0 || 
++                metadata->GetEpisode() > 0)
++            { 
++                // Name TV downloads so that they already work with the PBB    
++                QString title = QString("%1 Season %2").arg(metadata->GetTitle())
++                        .arg(metadata->GetSeason());
++                dest_file = QString("%1/%2.%3").arg(fileprefix)
++                        .arg(title).arg(ext);
++            }
++            else
++                dest_file = QString("%1/%2.%3").arg(fileprefix)
++                        .arg(metadata->GetInetRef()).arg(ext);
++
+             VERBOSE(VB_IMPORTANT, QString("Copying '%1' -> '%2'...")
+                     .arg(url.toString()).arg(dest_file));
+ 
+@@ -2997,6 +3525,113 @@
+     UpdateItem(GetItemCurrent());
+ }
+ 
++void VideoDialog::OnBannerURL(QString uri, Metadata *metadata)
++{
++    if (metadata)
++    {
++        if (uri.length())
++        {
++            QString fileprefix = m_d->m_banDir;
++
++            QDir dir;
++
++            // If the fanart setting hasn't been set default to
++            // using ~/.mythtv/MythVideo/Banners
++            if (fileprefix.length() == 0)
++            {
++                fileprefix = GetConfDir();
++
++                dir.setPath(fileprefix);
++                if (!dir.exists())
++                    dir.mkdir(fileprefix);
++
++                fileprefix += "/MythVideo/Banners";
++            }
++
++            dir.setPath(fileprefix);
++            if (!dir.exists())
++                dir.mkdir(fileprefix);
++
++            QUrl url(uri);
++
++            QString ext = QFileInfo(url.path()).suffix();
++            QString dest_file;
++
++            if (metadata->GetSeason() > 0 || 
++                metadata->GetEpisode() > 0)
++            { 
++                // Name TV downloads so that they already work with the PBB    
++                QString title = QString("%1 Season %2").arg(metadata->GetTitle())
++                        .arg(metadata->GetSeason());
++                dest_file = QString("%1/%2.%3").arg(fileprefix)
++                        .arg(title).arg(ext);
++            }
++            else
++                dest_file = QString("%1/%2.%3").arg(fileprefix)
++                        .arg(metadata->GetInetRef()).arg(ext);
++
++            VERBOSE(VB_IMPORTANT, QString("Copying '%1' -> '%2'...")
++                    .arg(url.toString()).arg(dest_file));
++
++            BannerDownloadProxy *d =
++                    BannerDownloadProxy::Create(url, dest_file, metadata);
++            metadata->SetBanner(dest_file);
++
++            connect(d, SIGNAL(SigFinished(BannerDownloadErrorState,
++                                          QString, Metadata *)),
++                    SLOT(OnBannerCopyFinished(BannerDownloadErrorState,
++                                              QString, Metadata *)));
++
++            d->StartCopy();
++            m_d->AddBannerDownload(d);
++        }
++        else
++        {
++            metadata->SetBanner("");
++            OnVideoBannerSetDone(metadata);
++        }
++    }
++    else
++        OnVideoBannerSetDone(metadata);
++}
++
++void VideoDialog::OnBannerCopyFinished(BannerDownloadErrorState error,
++                                       QString errorMsg, Metadata *item)
++{
++    QObject *src = sender();
++    if (src)
++        m_d->RemoveBannerDownload(dynamic_cast<BannerDownloadProxy *>
++                                       (src));
++
++    if (error != besOK && item)
++        item->SetBanner("");
++
++    VERBOSE(VB_IMPORTANT, tr("Banner download finished: %1 %2")
++            .arg(errorMsg).arg(error));
++
++    if (error == besTimeout)
++    {
++        createOkDialog(tr("Banner exists for this item but could not be "
++                            "retrieved within the timeout period.\n"));
++    }
++
++    OnVideoBannerSetDone(item);
++}
++
++// This is the final call as part of a StartVideoBannerSet
++void VideoDialog::OnVideoBannerSetDone(Metadata *metadata)
++{
++    // The metadata has a banner set
++    if (m_busyPopup)
++    {
++        m_busyPopup->Close();
++        m_busyPopup = NULL;
++    }
++
++    metadata->UpdateDatabase();
++    UpdateItem(GetItemCurrent());
++}
++
+ void VideoDialog::StartVideoSearchByUID(QString video_uid, Metadata *metadata)
+ {
+     // Starting the busy dialog here triggers a bizarre segfault
+@@ -3027,15 +3662,29 @@
+         {
+             data[(*p).section(':', 0, 0)] = (*p).section(':', 1);
+         }
+-        // set known values
++        // Set known values, but always set Title.
++        // Allows for partial fill.  Reset Metadata for full fill.
++
+         metadata->SetTitle(data["Title"]);
+-        metadata->SetYear(data["Year"].toInt());
+-        metadata->SetDirector(data["Director"]);
+-        metadata->SetPlot(data["Plot"]);
+-        metadata->SetUserRating(data["UserRating"].toFloat());
+-        metadata->SetRating(data["MovieRating"]);
+-        metadata->SetLength(data["Runtime"].toInt());
++        metadata->SetSubtitle(data["Subtitle"]);        
+ 
++        if (metadata->GetYear() == 1895)
++            metadata->SetYear(data["Year"].toInt());
++        if (metadata->GetDirector() == VIDEO_DIRECTOR_UNKNOWN)
++            metadata->SetDirector(data["Director"]);
++        if (metadata->GetPlot() == VIDEO_PLOT_DEFAULT)
++            metadata->SetPlot(data["Plot"]);
++        if (metadata->GetUserRating() == 0)
++            metadata->SetUserRating(data["UserRating"].toFloat());
++        if (metadata->GetRating() == VIDEO_RATING_DEFAULT)
++            metadata->SetRating(data["MovieRating"]);
++        if (metadata->GetLength() == 0)
++            metadata->SetLength(data["Runtime"].toInt());
++        if (metadata->GetSeason() == 0)
++            metadata->SetSeason(data["Season"].toInt());
++        if (metadata->GetEpisode() == 0)
++            metadata->SetEpisode(data["Episode"].toInt());
++
+         m_d->AutomaticParentalAdjustment(metadata);
+ 
+         // Cast
+@@ -3167,6 +3816,114 @@
+     }
+ }
+ 
++void VideoDialog::OnVideoImageOnlyDone(bool normal_exit,
++        const SearchListResults &results, Metadata *metadata)
++{
++    if (m_busyPopup)
++    {
++        m_busyPopup->Close();
++        m_busyPopup = NULL;
++    }
++
++    (void) normal_exit;
++    VERBOSE(VB_IMPORTANT,
++            QString("GetVideoList returned %1 possible matches")
++            .arg(results.size()));
++
++    if (results.size() == 1)
++    {
++        // Only one search result, fetch data.
++        if (results.begin().value().isEmpty())
++            return;
++        else
++        {
++            metadata->SetInetRef(results.begin().key());
++            metadata->UpdateDatabase();
++            UpdateItem(GetItemCurrent());
++            StartVideoPosterSet(metadata);
++        }
++    }
++    else if (results.size() < 1)
++    {
++        createOkDialog(tr("No matches were found."));
++    }
++    else
++    {
++        SearchResultsDialog *resultsdialog =
++                new SearchResultsDialog(m_popupStack, results);
++
++        if (resultsdialog->Create())
++            m_popupStack->AddScreen(resultsdialog);
++
++        connect(resultsdialog, SIGNAL(haveResult(QString)),
++                SLOT(OnVideoImgSearchListSelection(QString)),
++                Qt::QueuedConnection);
++    }
++}
++
++void VideoDialog::StartVideoSearchByTitleSubtitle(QString title,
++                                            QString subtitle, Metadata *metadata)
++{
++        createBusyDialog(title);
++
++        VideoTitleSubtitleSearch *vtss = new VideoTitleSubtitleSearch(this);
++
++        connect(vtss, SIGNAL(SigSearchResults(bool, QStringList,
++                                Metadata *)),
++                SLOT(OnVideoSearchByTitleSubtitleDone(bool, QStringList,
++                                Metadata *)));
++        vtss->Run(title, subtitle, metadata);
++}
++
++void VideoDialog::OnVideoSearchByTitleSubtitleDone(bool normal_exit,
++        QStringList result, Metadata *metadata)
++{
++    if (m_busyPopup)
++    {
++        m_busyPopup->Close();
++        m_busyPopup = NULL;
++    }
++
++    (void) normal_exit;
++    QString SeasEp;
++
++    if (!result.isEmpty())
++        SeasEp = result.takeAt(0);
++
++    if (!SeasEp.isEmpty())
++    {
++
++        // Stuff to parse Season and Episode here
++        QString season, episode = NULL;
++
++        QRegExp group("(?:[s])?(\\d{1,3})(?:\\s|-)?(?:[ex])" //Season
++                      "(?:\\s|-)?(\\d{1,3})", // Episode
++                      Qt::CaseInsensitive);
++
++        int pos = group.indexIn(SeasEp);
++        if (pos > -1)
++        {
++        QString groupResult = group.cap(0);
++        season = group.cap(1);
++        episode = group.cap(2);
++        }
++
++        VERBOSE(VB_IMPORTANT,
++            QString("Season and Episode found!  It was: %1")
++            .arg(SeasEp));
++
++        if (!season.isNull() && !episode.isNull())
++        {
++            metadata->SetSeason(season.toInt());
++            metadata->SetEpisode(episode.toInt());
++            StartVideoSearchByTitle(VIDEO_INETREF_DEFAULT, 
++                                metadata->GetTitle(), metadata);
++        }
++    }
++    else
++        createOkDialog(tr("No matches were found."));
++}
++
+ void VideoDialog::doVideoScan()
+ {
+     if (!m_d->m_scanner)
+Index: mythvideo/mythvideo/videolist.cpp
+===================================================================
+--- mythvideo/mythvideo/videolist.cpp	(revision 21049)
++++ mythvideo/mythvideo/videolist.cpp	(working copy)
+@@ -826,7 +826,27 @@
+     for (meta_dir_node::const_entry_iterator entry = src->entries_begin();
+          entry != src->entries_end(); ++entry)
+     {
+-        AddFileNode(dst, (*entry)->getData()->GetTitle(), (*entry)->getData());
++        if (((*entry)->getData()->GetSeason() > 0) ||
++                 ((*entry)->getData()->GetEpisode() > 0))
++        {
++            QString seas = QString::number((*entry)->getData()->GetSeason());
++            QString ep = QString::number((*entry)->getData()->GetEpisode());
++            QString tit = (*entry)->getData()->GetTitle();
++            QString sub = (*entry)->getData()->GetSubtitle();
++            if (ep.size() < 2)
++                ep.prepend("0");
++            QString TitSeasEpSub = QString("%1 %2x%3 - %4").arg(tit).arg(seas)
++                                                           .arg(ep).arg(sub);
++            AddFileNode(dst, TitSeasEpSub, (*entry)->getData());
++        }
++        else if ((*entry)->getData()->GetSubtitle().isEmpty())
++            AddFileNode(dst, (*entry)->getData()->GetTitle(), (*entry)->getData());
++        else
++        {
++            QString TitleSub = QString("%1 - %2").arg((*entry)->getData()->GetTitle())
++                                                 .arg((*entry)->getData()->GetSubtitle());
++            AddFileNode(dst, TitleSub, (*entry)->getData());
++        }
+     }
+ }
+ 
+@@ -1267,7 +1287,7 @@
+             QString title = qfi.completeBaseName();
+             if (m_infer_title)
+             {
+-                QString tmptitle(Metadata::FilenameToTitle(file_string));
++                QString tmptitle(Metadata::FilenameToMeta(file_string, 1));
+                 if (tmptitle.length())
+                     title = tmptitle;
+             }
+Index: mythvideo/mythvideo/videoscan.cpp
+===================================================================
+--- mythvideo/mythvideo/videoscan.cpp	(revision 21049)
++++ mythvideo/mythvideo/videoscan.cpp	(working copy)
+@@ -267,11 +267,14 @@
+                                  VIDEO_SCREENSHOT_DEFAULT,
+                                  VIDEO_BANNER_DEFAULT,
+                                  VIDEO_FANART_DEFAULT,
+-                                 Metadata::FilenameToTitle(p->first),
++                                 Metadata::FilenameToMeta(p->first, 1),
++                                 Metadata::FilenameToMeta(p->first, 4),
+                                  VIDEO_YEAR_DEFAULT,
+                                  VIDEO_INETREF_DEFAULT, VIDEO_DIRECTOR_DEFAULT,
+-                                 VIDEO_PLOT_DEFAULT, 0.0, VIDEO_RATING_DEFAULT,
+-                                 0, 0, ParentalLevel::plLowest);
++                                 VIDEO_PLOT_DEFAULT, 0.0, VIDEO_RATING_DEFAULT, 0,
++                                 Metadata::FilenameToMeta(p->first, 2).toInt(), 
++                                 Metadata::FilenameToMeta(p->first, 3).toInt(), 
++                                 0, ParentalLevel::plLowest);
+ 
+                 VERBOSE(VB_GENERAL, QString("Adding : %1 : %2")
+                         .arg(newFile.GetHost()).arg(newFile.GetFilename()));
+Index: mythvideo/mythvideo/videofilter.cpp
+===================================================================
+--- mythvideo/mythvideo/videofilter.cpp	(revision 21049)
++++ mythvideo/mythvideo/videofilter.cpp	(working copy)
+@@ -353,6 +353,38 @@
+             ret = lhs_key < rhs_key;
+             break;
+         }
++        case kOrderBySeasonEp:
++        {
++            if ((lhs.GetSeason() == rhs.GetSeason())
++                && (lhs.GetEpisode() == rhs.GetEpisode())
++                && (lhs.GetSeason() == 0)
++                && (rhs.GetSeason() == 0)
++                && (lhs.GetEpisode() == 0)
++                && (rhs.GetEpisode() == 0))
++            {
++                Metadata::SortKey lhs_key;
++                Metadata::SortKey rhs_key;
++                if (lhs.HasSortKey() && rhs.HasSortKey())
++                {
++                    lhs_key = lhs.GetSortKey();
++                    rhs_key = rhs.GetSortKey();
++                }
++                else
++                {
++                    lhs_key = Metadata::GenerateDefaultSortKey(lhs,
++                                                               sort_ignores_case);
++                    rhs_key = Metadata::GenerateDefaultSortKey(rhs,
++                                                               sort_ignores_case);
++                }
++                ret = lhs_key < rhs_key;
++            }
++            else if (lhs.GetSeason() == rhs.GetSeason()
++                     && lhs.GetTitle() == rhs.GetTitle())
++                ret = lhs.GetEpisode() < rhs.GetEpisode();
++            else
++                ret = lhs.GetSeason() < rhs.GetSeason();
++            break;
++        }
+         case kOrderByYearDescending:
+         {
+             ret = lhs.GetYear() > rhs.GetYear();
+@@ -649,6 +681,8 @@
+     // Order by
+     new MythUIButtonListItem(m_orderbyList, QObject::tr("Title"),
+                            VideoFilterSettings::kOrderByTitle);
++    new MythUIButtonListItem(m_orderbyList, QObject::tr("Season/Episode"),
++                           VideoFilterSettings::kOrderBySeasonEp);
+     new MythUIButtonListItem(m_orderbyList, QObject::tr("Year"),
+                            VideoFilterSettings::kOrderByYearDescending);
+     new MythUIButtonListItem(m_orderbyList, QObject::tr("User Rating"),
+Index: mythvideo/mythvideo/metadata.h
+===================================================================
+--- mythvideo/mythvideo/metadata.h	(revision 21049)
++++ mythvideo/mythvideo/metadata.h	(working copy)
+@@ -13,6 +13,8 @@
+ 
+ enum { VIDEO_YEAR_DEFAULT = 1895 };
+ 
++const QString VIDEO_SUBTITLE_DEFAULT = "";
++
+ struct SortData;
+ 
+ class Metadata
+@@ -44,7 +46,7 @@
+ 
+   public:
+     static SortKey GenerateDefaultSortKey(const Metadata &m, bool ignore_case);
+-    static QString FilenameToTitle(const QString &file_name);
++    static QString FilenameToMeta(const QString &file_name, int position);
+     static QString TrimTitle(const QString &title, bool ignore_case);
+ 
+   public:
+@@ -55,6 +57,7 @@
+              const QString &banner = QString(),
+              const QString &fanart = QString(),
+              const QString &title = QString(),
++             const QString &subtitle = QString(),
+              int year = VIDEO_YEAR_DEFAULT,
+              const QString &inetref = QString(),
+              const QString &director = QString(),
+@@ -62,6 +65,8 @@
+              float userrating = 0.0,
+              const QString &rating = QString(),
+              int length = 0,
++             int season = 0,
++             int episode = 0, 
+              int id = 0,
+              ParentalLevel::Level showlevel = ParentalLevel::plLowest,
+              int categoryID = 0,
+@@ -89,6 +94,9 @@
+     const QString &GetTitle() const;
+     void SetTitle(const QString& title);
+ 
++    const QString &GetSubtitle() const;
++    void SetSubtitle(const QString &subtitle);
++
+     int GetYear() const;
+     void SetYear(int year);
+ 
+@@ -110,6 +118,12 @@
+     int GetLength() const;
+     void SetLength(int length);
+ 
++    int GetSeason() const;
++    void SetSeason(int season);
++
++    int GetEpisode() const;
++    void SetEpisode(int episode);
++
+     unsigned int GetID() const;
+     void SetID(int id);
+ 
+Index: mythvideo/mythvideo/editmetadata.cpp
+===================================================================
+--- mythvideo/mythvideo/editmetadata.cpp	(revision 21049)
++++ mythvideo/mythvideo/editmetadata.cpp	(working copy)
+@@ -12,6 +12,7 @@
+ #include <mythtv/libmythui/mythuitextedit.h>
+ #include <mythtv/libmythui/mythuibutton.h>
+ #include <mythtv/libmythui/mythuicheckbox.h>
++#include <mythtv/libmythui/mythuispinbox.h>
+ 
+ #include "globals.h"
+ #include "dbaccess.h"
+@@ -22,9 +23,10 @@
+ EditMetadataDialog::EditMetadataDialog(MythScreenStack *lparent,
+         QString lname, Metadata *source_metadata,
+         const MetadataListManager &cache) : MythScreenType(lparent, lname),
+-    m_origMetadata(source_metadata), m_titleEdit(0), m_playerEdit(0),
+-    m_categoryList(0), m_levelList(0), m_childList(0), m_browseCheck(0),
+-    m_coverartButton(0), m_coverartText(0),
++    m_origMetadata(source_metadata), m_titleEdit(0), m_subtitleEdit(0),
++    m_playerEdit(0), m_seasonSpin(0), m_episodeSpin(0),
++    m_categoryList(0), m_levelList(0), m_childList(0), 
++    m_browseCheck(0), m_coverartButton(0), m_coverartText(0),
+     m_screenshotButton(0), m_screenshotText(0),
+     m_bannerButton(0), m_bannerText(0),
+     m_fanartButton(0), m_fanartText(0),
+@@ -47,8 +49,12 @@
+ 
+     bool err = false;
+     UIUtilE::Assign(this, m_titleEdit, "title_edit", &err);
++    UIUtilE::Assign(this, m_subtitleEdit, "subtitle_edit", &err);
+     UIUtilE::Assign(this, m_playerEdit, "player_edit", &err);
+ 
++    UIUtilE::Assign(this, m_seasonSpin, "season", &err);
++    UIUtilE::Assign(this, m_episodeSpin, "episode", &err);
++
+     UIUtilE::Assign(this, m_coverartText, "coverart_text", &err);
+     UIUtilE::Assign(this, m_screenshotText, "screenshot_text", &err);
+     UIUtilE::Assign(this, m_bannerText, "banner_text", &err);
+@@ -79,8 +85,12 @@
+         VERBOSE(VB_IMPORTANT, "Failed to build a focuslist.");
+ 
+     connect(m_titleEdit, SIGNAL(valueChanged()), SLOT(SetTitle()));
++    connect(m_subtitleEdit, SIGNAL(valueChanged()), SLOT(SetSubtitle()));
+     connect(m_playerEdit, SIGNAL(valueChanged()), SLOT(SetPlayer()));
+ 
++    connect(m_seasonSpin, SIGNAL(LosingFocus()), SLOT(SetSeason()));
++    connect(m_episodeSpin, SIGNAL(LosingFocus()), SLOT(SetEpisode()));
++
+     connect(m_doneButton, SIGNAL(Clicked()), SLOT(SaveAndExit()));
+     connect(m_coverartButton, SIGNAL(Clicked()), SLOT(FindCoverArt()));
+     connect(m_bannerButton, SIGNAL(Clicked()), SLOT(FindBanner()));
+@@ -154,7 +164,13 @@
+ void EditMetadataDialog::fillWidgets()
+ {
+     m_titleEdit->SetText(m_workingMetadata->GetTitle());
++    m_subtitleEdit->SetText(m_workingMetadata->GetSubtitle());
+ 
++    m_seasonSpin->SetRange(0,100,1);
++    m_seasonSpin->SetValue(m_workingMetadata->GetSeason());
++    m_episodeSpin->SetRange(0,999,1);
++    m_episodeSpin->SetValue(m_workingMetadata->GetEpisode());
++
+     MythUIButtonListItem *button =
+         new MythUIButtonListItem(m_categoryList, VIDEO_CATEGORY_UNKNOWN);
+     const VideoCategory::entry_list &vcl =
+@@ -312,11 +328,26 @@
+     m_workingMetadata->SetTitle(m_titleEdit->GetText());
+ }
+ 
++void EditMetadataDialog::SetSubtitle()
++{
++    m_workingMetadata->SetSubtitle(m_subtitleEdit->GetText());
++}
++
+ void EditMetadataDialog::SetCategory(MythUIButtonListItem *item)
+ {
+     m_workingMetadata->SetCategoryID(item->GetData().toInt());
+ }
+ 
++void EditMetadataDialog::SetSeason()
++{
++    m_workingMetadata->SetSeason(m_seasonSpin->GetIntValue());
++}
++
++void EditMetadataDialog::SetEpisode()
++{
++    m_workingMetadata->SetEpisode(m_episodeSpin->GetIntValue());
++}
++
+ void EditMetadataDialog::SetPlayer()
+ {
+     m_workingMetadata->SetPlayCommand(m_playerEdit->GetText());
+Index: mythvideo/mythvideo/playercommand.cpp
+===================================================================
+--- mythvideo/mythvideo/playercommand.cpp	(revision 21049)
++++ mythvideo/mythvideo/playercommand.cpp	(working copy)
+@@ -75,26 +75,31 @@
+ {
+   private:
+     VideoPlayHandleMedia(const QString &handler, const QString &mrl,
+-            const QString &plot, const QString &title,
+-            const QString &director, int length, const QString &year) :
++            const QString &plot, const QString &title, const QString &subtitle,
++            const QString &director, int season, int episode,
++            int length, const QString &year) :
+         m_handler(handler), m_mrl(mrl), m_plot(plot), m_title(title),
+-        m_director(director), m_length(length), m_year(year)
++        m_subtitle(subtitle), m_director(director), m_season(season),
++        m_episode(episode), m_length(length), m_year(year)
+     {
+     }
+ 
+   public:
+     static VideoPlayHandleMedia *Create(const QString &handler,
+             const QString &mrl, const QString &plot, const QString &title,
+-            const QString &director, int length, const QString &year)
++            const QString &subtitle, const QString &director,
++            int season, int episode, 
++            int length, const QString &year)
+     {
+-        return new VideoPlayHandleMedia(handler, mrl, plot, title,
+-                director, length, year);
++        return new VideoPlayHandleMedia(handler, mrl, plot, title, subtitle,
++                director, season, episode, length, year);
+     }
+ 
+     bool Play() const
+     {
+         return gContext->GetMainWindow()->HandleMedia(m_handler, m_mrl,
+-                m_plot, m_title, m_director, m_length, m_year);
++                m_plot, m_title, m_subtitle, m_director, m_season,
++                m_episode, m_length, m_year);
+     }
+ 
+     QString GetCommandDisplayName() const
+@@ -112,7 +117,10 @@
+     QString m_mrl;
+     QString m_plot;
+     QString m_title;
++    QString m_subtitle;
+     QString m_director;
++    int m_season;
++    int m_episode;
+     int m_length;
+     QString m_year;
+ };
+@@ -200,8 +208,9 @@
+             if (play_command.length())
+             {
+                 AddPlayer(play_command, filename, item->GetPlot(),
+-                        item->GetTitle(), item->GetDirector(),
+-                        item->GetLength(),
++                        item->GetTitle(), item->GetSubtitle(),
++                        item->GetDirector(), item->GetSeason(),
++                        item->GetEpisode(), item->GetLength(),
+                         QString::number(item->GetYear()));
+             }
+             else
+@@ -237,8 +246,11 @@
+             play_command = "Internal";
+ 
+         QString plot;
+-        QString title = Metadata::FilenameToTitle(filename);
++        QString title = Metadata::FilenameToMeta(filename, 1);
++        QString subtitle = Metadata::FilenameToMeta(filename, 4);
+         QString director;
++        int season = 0;
++        int episode = 0;
+         int length = 0;
+         QString year = QString::number(VIDEO_YEAR_DEFAULT);
+ 
+@@ -246,12 +258,16 @@
+         {
+             plot = extraData->GetPlot();
+             title = extraData->GetTitle();
++            subtitle = extraData->GetSubtitle();
+             director = extraData->GetDirector();
++            season = extraData->GetSeason();
++            episode = extraData->GetEpisode();
+             length = extraData->GetLength();
+             year = QString::number(extraData->GetYear());
+         }
+ 
+-        AddPlayer(play_command, filename, plot, title, director, length, year);
++        AddPlayer(play_command, filename, plot, title, subtitle, director, 
++                                season, episode, length, year);
+     }
+ 
+     void ClearPlayerList()
+@@ -282,11 +298,13 @@
+ 
+   private:
+     void AddPlayer(const QString &player, const QString &filename,
+-            const QString &plot, const QString &title, const QString &director,
+-            int length, const QString &year)
++            const QString &plot, const QString &title, const QString &subtitle, 
++            const QString &director, int season, int episode, int length, 
++            const QString &year)
+     {
+         m_player_procs.push_back(VideoPlayHandleMedia::Create(player, filename,
+-                        plot, title, director, length, year));
++                        plot, title, subtitle, director, season, episode, 
++                        length, year));
+         m_player_procs.push_back(VideoPlayMythSystem::Create(player, filename));
+     }
+ 
+Index: mythvideo/mythvideo/videoutils.h
+===================================================================
+--- mythvideo/mythvideo/videoutils.h	(revision 21049)
++++ mythvideo/mythvideo/videoutils.h	(working copy)
+@@ -33,6 +33,7 @@
+ 
+ QString GetDisplayUserRating(float userrating);
+ QString GetDisplayLength(int length);
++QString GetDisplaySeasonEpisode(int seasEp, int digits);
+ QString GetDisplayBrowse(bool browse);
+ QString GetDisplayYear(int year);
+ QString GetDisplayRating(const QString &rating);

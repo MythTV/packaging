@@ -1,0 +1,27 @@
+The mythtv sources are all distributed under the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version, with the following exceptions:
+
+GPLv2 or QPL:
+-------------
+mythtv/libs/libmyth/mythwizard.*
+
+
+LGPLv2:
+-------
+mythtv/libs/libmyth/qmdcodec.*
+
+
+GPLv2+ or LGPLv2+:
+----------------
+mythtv/libs/libswscale/*.{c,h}
+
+
+LGPLv2+:
+--------
+mythtv/libs/libavcodec/*
+mythtv/libs/libavformat/*
+mythtv/libs/libavutil/*
+mythtv/libs/libmyth/bio2jack.*
+mythtv/libs/libmythlivemedia/*
+mythtv/libs/libmythsoundtouch/*

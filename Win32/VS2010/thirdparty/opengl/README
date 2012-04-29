@@ -1,0 +1,5 @@
+GL/glext.h needed to be download and placed in "include/GL" directory  here.
+
+Tested using verion from:
+
+   http://www.opengl.org/registry/
