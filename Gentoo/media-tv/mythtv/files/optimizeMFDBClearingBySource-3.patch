@@ -1,0 +1,137 @@
+Index: libs/libmythtv/programdata.cpp
+===================================================================
+--- libs/libmythtv/programdata.cpp	(revision 26134)
++++ libs/libmythtv/programdata.cpp	(working copy)
+@@ -910,7 +910,7 @@
+     QDateTime newTo   = to.addSecs(secs);
+ 
+     MSqlQuery query(MSqlQuery::InitCon());
+-    query.prepare("DELETE FROM program "
++    query.prepare("DELETE QUICK FROM program "
+                   "WHERE starttime >= :FROM AND starttime < :TO "
+                   "AND chanid = :CHANID ;");
+     query.bindValue(":FROM", newFrom);
+@@ -918,7 +918,7 @@
+     query.bindValue(":CHANID", chanid);
+     bool ok = query.exec();
+ 
+-    query.prepare("DELETE FROM programrating "
++    query.prepare("DELETE QUICK FROM programrating "
+                   "WHERE starttime >= :FROM AND starttime < :TO "
+                   "AND chanid = :CHANID ;");
+     query.bindValue(":FROM", newFrom);
+@@ -926,7 +926,7 @@
+     query.bindValue(":CHANID", chanid);
+     ok &= query.exec();
+ 
+-    query.prepare("DELETE FROM credits "
++    query.prepare("DELETE QUICK FROM credits "
+                   "WHERE starttime >= :FROM AND starttime < :TO "
+                   "AND chanid = :CHANID ;");
+     query.bindValue(":FROM", newFrom);
+@@ -934,7 +934,7 @@
+     query.bindValue(":CHANID", chanid);
+     ok &= query.exec();
+ 
+-    query.prepare("DELETE FROM programgenres "
++    query.prepare("DELETE QUICK FROM programgenres "
+                   "WHERE starttime >= :FROM AND starttime < :TO "
+                   "AND chanid = :CHANID ;");
+     query.bindValue(":FROM", newFrom);
+@@ -949,12 +949,49 @@
+     uint sourceid, const QDateTime &from, const QDateTime &to,
+     bool use_channel_time_offset)
+ {
+-    vector<uint> chanids = ChannelUtil::GetChanIDs(sourceid);
+-
++    MSqlQuery query(MSqlQuery::InitCon());
++    QString prepare, prepare2;
++    QList<QString> tables;
++    tables << "program" << "programrating" << "credits" << "programgenres";
+     bool ok = true;
+-    for (uint i = 0; i < chanids.size(); i++)
+-        ok &= ClearDataByChannel(chanids[i], from, to, use_channel_time_offset);
+ 
++    prepare ="DELETE QUICK FROM %1 "
++             "USING %1 INNER JOIN channel "
++             "WHERE channel.sourceid = :SOURCEID "
++             "AND channel.xmltvid != '' "
++             "AND channel.tmoffset = 0 "
++             "AND %1.chanid = channel.chanid "
++             "AND %1.starttime >= :FROM "
++             "AND %1.starttime < :TO";
++
++    prepare2 ="DELETE QUICK FROM %1 "
++              "USING %1 INNER JOIN channel "
++              "WHERE channel.sourceid = :SOURCEID "
++              "AND channel.xmltvid != '' "
++              "AND channel.tmoffset != 0 "
++              "AND %1.chanid = channel.chanid "
++              "AND %1.starttime >= "
++              "FROM_UNIXTIME(UNIX_TIMESTAMP(:FROM)+channel.tmoffset) "
++              "AND %1.starttime < "
++              "FROM_UNIXTIME(UNIX_TIMESTAMP(:TO)+channel.tmoffset) ";
++
++    query.exec("SET profiling = 1");
++
++    for (int i = 0; i < tables.size(); ++i) {
++        query.prepare(prepare.arg(tables.at(i)));
++        query.bindValue(":FROM", from);
++        query.bindValue(":TO", to);
++        query.bindValue(":SOURCEID", sourceid);
++        ok &= query.exec();
++        query.profile();
++
++        query.prepare(prepare2.arg(tables.at(i)));
++        query.bindValue(":FROM", from);
++        query.bindValue(":TO", to);
++        query.bindValue(":SOURCEID", sourceid);
++        ok &= query.exec();
++        query.profile();
++    }
+     return ok;
+ }
+ 
+Index: libs/libmythbase/mythdbcon.h
+===================================================================
+--- libs/libmythbase/mythdbcon.h	(revision 26134)
++++ libs/libmythbase/mythdbcon.h	(working copy)
+@@ -114,6 +114,9 @@
+     /// \brief Wrap QSqlQuery::exec() so we can display SQL
+     bool exec(void);
+ 
++    /// \brief Use community mysql features to profile the last ran query
++    bool profile(void);
++
+     /// \brief Wrap QSqlQuery::next() so we can display the query results
+     bool next(void);
+ 
+Index: libs/libmythbase/mythdbcon.cpp
+===================================================================
+--- libs/libmythbase/mythdbcon.cpp	(revision 26134)
++++ libs/libmythbase/mythdbcon.cpp	(working copy)
+@@ -505,6 +505,19 @@
+     return result;
+ }
+ 
++bool MSqlQuery::profile() {
++    QString log = "\t%1\t%2\t%3\t%4";
++    QSqlQuery::exec("SHOW PROFILE ALL");
++    while (QSqlQuery::next()) {
++        VERBOSE(VB_DATABASE+VB_EXTRA,log.arg(value(0).toString())
++                                        .arg(value(1).toString())
++                                        .arg(value(2).toString())
++                                        .arg(value(3).toString())
++               );
++    }
++    return true;
++}
++
+ bool MSqlQuery::next()
+ {
+     bool result = QSqlQuery::next();    
+@@ -670,4 +683,3 @@
+                               result.driver()->formatValue(f));
+     }
+ }
+-

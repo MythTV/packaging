@@ -1,0 +1,7 @@
+*.orig
+*.rej
+*kdev*
+*.def
+*~
+.DS_Store
+.*.swp

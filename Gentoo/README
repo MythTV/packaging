@@ -1,0 +1,10 @@
+Instructions for use:
+sudo su -
+mkdir /usr/local/mythtv_portage
+git clone git://github.com/MythTV/packaging.git /usr/local/mythtv_portage/
+ln -s /usr/local/mythtv_portage/Gentoo/scripts/selfupdate /etc/portage/postsync.d/updateMythEbuilds
+
+edit /etc/make.conf
+add /usr/local/mythtv_portage/Gentoo to PORTDIR_OVERLAY
+
+Enjoy

@@ -1,0 +1,10 @@
+MythTV RPM Build script
+
+See `build.sh -h` for usage information.
+
+Please note that since the git migration, this script is now only
+partially functional.  I will update this file when full branch
+support has been added.
+
+-- 
+Chris Petersen <cpetersen@mythtv.org>

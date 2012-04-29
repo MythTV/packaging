@@ -1,0 +1,681 @@
+Index: mythvideo/mythvideo/videodlg.h
+===================================================================
+--- mythvideo/mythvideo/videodlg.h	(revision 21234)
++++ mythvideo/mythvideo/videodlg.h	(working copy)
+@@ -39,6 +39,9 @@
+     enum DialogType { DLG_DEFAULT = 0, DLG_BROWSER = 0x1, DLG_GALLERY = 0x2,
+                       DLG_TREE = 0x4, DLG_MANAGER = 0x8, dtLast };
+ 
++    enum BrowseType { BRS_FOLDER = 0, BRS_GENRE = 0x1, BRS_CATEGORY = 0x2,
++                      BRS_YEAR = 0x4, BRS_DIRECTOR = 0x8, btLast };
++
+     typedef simple_ref_ptr<class VideoList> VideoListPtr;
+ 
+     typedef QPointer<class VideoListDeathDelay> VideoListDeathDelayPtr;
+@@ -47,7 +50,8 @@
+ 
+   public:
+     VideoDialog(MythScreenStack *lparent, QString lname,
+-            VideoListPtr video_list, DialogType type);
++            VideoListPtr video_list, DialogType type,
++            BrowseType browse);
+     ~VideoDialog();
+ 
+     bool Create();
+@@ -73,9 +77,15 @@
+     void SwitchGallery();
+     void SwitchBrowse();
+     void SwitchManager();
++    void SwitchVideoFolderGroup();
++    void SwitchVideoGenreGroup();
++    void SwitchVideoCategoryGroup();
++    void SwitchVideoYearGroup();
++    void SwitchVideoDirectorGroup();
+ 
+     void EditMetadata();
+     void VideoSearch();
++    void AllMetaDownload();
+     void TitleSubtitleSearch();
+     void ImageOnlyDownload();
+     void ManualVideoUID();
+@@ -90,6 +100,7 @@
+     void InfoMenu();
+     void ManageMenu();
+     void ViewMenu();
++    void MetadataBrowseMenu();
+ 
+     void ChangeFilter();
+ 
+@@ -139,7 +150,7 @@
+     void createBusyDialog(QString title);
+     void createOkDialog(QString title);
+ 
+-    void SwitchLayout(DialogType type);
++    void SwitchLayout(DialogType type, BrowseType browse);
+ 
+ // Start asynchronous functions.
+ 
+Index: mythvideo/mythvideo/videolist.h
+===================================================================
+--- mythvideo/mythvideo/videolist.h	(revision 21234)
++++ mythvideo/mythvideo/videolist.h	(working copy)
+@@ -25,12 +25,13 @@
+     VideoList();
+     ~VideoList();
+ 
+-    MythGenericTree *buildVideoList(bool filebrowser, bool flatlist,
++    MythGenericTree *buildVideoList(bool filebrowser,
++                                bool group_list, int group_type,
+                                 const ParentalLevel &parental_level,
+                                 bool include_updirs);
+ 
+     void refreshList(bool filebrowser, const ParentalLevel &parental_level,
+-                     bool flatlist);
++                     bool group_list, int group_type);
+ 
+     unsigned int count() const;
+ 
+Index: mythvideo/mythvideo/globalsettings.cpp
+===================================================================
+--- mythvideo/mythvideo/globalsettings.cpp	(revision 21234)
++++ mythvideo/mythvideo/globalsettings.cpp	(working copy)
+@@ -174,17 +174,30 @@
+     return hcb;
+ }
+ 
+-HostCheckBox *VideoDBFolderView()
++HostCheckBox *VideoDBGroupView()
+ {
+-    HostCheckBox *hcb = new HostCheckBox("mythvideo.db_folder_view");
+-    hcb->setLabel(QObject::tr("Show folders for database views"));
++    HostCheckBox *hcb = new HostCheckBox("mythvideo.db_group_view");
++    hcb->setLabel(QObject::tr("Show groups for database views"));
+     hcb->setValue(true);
+-    hcb->setHelpText(QObject::tr("If set, sub folders of your video "
++    hcb->setHelpText(QObject::tr("If set, metadata groupings of your video "
+                                  "directory will be shown in supported "
+-                                 "views."));
++                                 "views.  Default group is set below."));
+     return hcb;
+ }
+ 
++HostComboBox *VideoTreeGroup() 
++{ 
++    HostComboBox *gc = new HostComboBox("mythvideo.db_group_type"); 
++    gc->setLabel(QObject::tr("Group based on")); 
++    gc->addSelection(QObject::tr("Folder"),"0"); 
++    gc->addSelection(QObject::tr("Genres"),"1"); 
++    gc->addSelection(QObject::tr("Category"),"2");
++    gc->addSelection(QObject::tr("Year"),"3");
++    gc->addSelection(QObject::tr("Director"),"4");
++    gc->setHelpText(QObject::tr("Group videos in the tree")); 
++    return gc; 
++} 
++
+ HostCheckBox *VideoTreeRemember()
+ {
+     HostCheckBox *gc = new HostCheckBox("mythvideo.VideoTreeRemember");
+@@ -806,8 +819,9 @@
+     page2->addChild(VideoTreeNoMetaData());
+     page2->addChild(VideoNewBrowsable());
+     page2->addChild(VideoSortIgnoresCase());
+-    page2->addChild(VideoDBFolderView());
++    page2->addChild(VideoDBGroupView());
+     page2->addChild(VideoTreeRemember());
++    page2->addChild(VideoTreeGroup());
+ 
+     VConfigPage page3(pages, false);
+     page3->addChild(SetDVDDevice());
+Index: mythvideo/mythvideo/main.cpp
+===================================================================
+--- mythvideo/mythvideo/main.cpp	(revision 21234)
++++ mythvideo/mythvideo/main.cpp	(working copy)
+@@ -51,12 +51,37 @@
+                 video_list = saved->GetSaved();
+             }
+         }
++    
++        int browseNum = gContext->GetNumSetting("mythvideo.db_group_type", 0);
++        VideoDialog::BrowseType browse;
+ 
++        switch (browseNum)
++        {
++            case 0:
++                browse = VideoDialog::BRS_FOLDER;
++                break;
++            case 1:
++                browse = VideoDialog::BRS_GENRE;
++                break;
++            case 2:
++                browse = VideoDialog::BRS_CATEGORY;
++                break;
++            case 3:
++                browse = VideoDialog::BRS_YEAR;
++                break;
++            case 4:
++                browse = VideoDialog::BRS_DIRECTOR;
++                break;
++            default:
++                browse = VideoDialog::BRS_FOLDER;
++                break;
++        }
++
+         if (!video_list)
+             video_list = new VideoList;
+ 
+         VideoDialog *mythvideo =
+-                new VideoDialog(mainStack, "mythvideo", video_list, type);
++                new VideoDialog(mainStack, "mythvideo", video_list, type, browse);
+ 
+         if (mythvideo->Create())
+         {
+Index: mythvideo/mythvideo/videodlg.cpp
+===================================================================
+--- mythvideo/mythvideo/videodlg.cpp	(revision 21234)
++++ mythvideo/mythvideo/videodlg.cpp	(working copy)
+@@ -1724,11 +1724,12 @@
+     typedef VideoDialog::VideoListPtr VideoListPtr;
+ 
+   public:
+-    VideoDialogPrivate(VideoListPtr videoList, VideoDialog::DialogType type) :
++    VideoDialogPrivate(VideoListPtr videoList, VideoDialog::DialogType type,
++                       VideoDialog::BrowseType browse) :
+         m_switchingLayout(false), m_firstLoadPass(true),
+         m_rememberPosition(false), m_videoList(videoList), m_rootNode(0),
+         m_currentNode(0), m_treeLoaded(false), m_isFlatList(false),
+-        m_type(type), m_scanner(0)
++        m_type(type), m_browse(browse), m_scanner(0)
+     {
+         if (gContext->GetNumSetting("mythvideo.ParentalLevelFromRating", 0))
+         {
+@@ -1755,6 +1756,8 @@
+                 gContext->GetNumSetting("mythvideo.VideoTreeRemember", 0);
+ 
+         m_isFileBrowser = gContext->GetNumSetting("VideoDialogNoDB", 0);
++        m_isGroupList = gContext->GetNumSetting("mythvideo.db_group_view", 1);
++        m_groupType = gContext->GetNumSetting("mythvideo.db_group_type", 0); 
+ 
+         m_artDir = gContext->GetSetting("VideoArtworkDir");
+         m_sshotDir = gContext->GetSetting("mythvideo.screenshotDir");
+@@ -1917,8 +1920,11 @@
+     bool m_treeLoaded;
+ 
+     bool m_isFileBrowser;
++    bool m_isGroupList;
++    int  m_groupType;
+     bool m_isFlatList;
+     VideoDialog::DialogType m_type;
++    VideoDialog::BrowseType m_browse;
+ 
+     QString m_artDir;
+     QString m_sshotDir;
+@@ -1979,14 +1985,14 @@
+ }
+ 
+ VideoDialog::VideoDialog(MythScreenStack *lparent, QString lname,
+-        VideoListPtr video_list, DialogType type) :
++        VideoListPtr video_list, DialogType type, BrowseType browse) :
+     MythScreenType(lparent, lname), m_menuPopup(0), m_busyPopup(0),
+     m_videoButtonList(0), m_videoButtonTree(0), m_titleText(0),
+     m_novideoText(0), m_positionText(0), m_crumbText(0), m_coverImage(0),
+     m_screenshot(0), m_banner(0), m_fanart(0), m_trailerState(0), 
+     m_parentalLevelState(0)
+ {
+-    m_d = new VideoDialogPrivate(video_list, type);
++    m_d = new VideoDialogPrivate(video_list, type, browse);
+ 
+     m_popupStack = GetMythMainWindow()->GetStack("popup stack");
+ 
+@@ -2034,7 +2040,7 @@
+             break;
+         case DLG_MANAGER:
+             m_d->m_isFlatList =
+-                    gContext->GetNumSetting("mythvideo.db_folder_view", 1);
++                    gContext->GetNumSetting("mythvideo.db_group_view", 1);
+             windowName = "manager";
+             flatlistDefault = 1;
+             break;
+@@ -2043,8 +2049,28 @@
+             break;
+     }
+ 
++    switch (m_d->m_browse)
++    {
++        case BRS_GENRE:
++            m_d->m_groupType = 1;
++            break;
++        case BRS_CATEGORY:
++            m_d->m_groupType = 2;
++            break;
++        case BRS_YEAR:
++            m_d->m_groupType = 3;
++            break;
++        case BRS_DIRECTOR:
++            m_d->m_groupType = 4;
++            break;
++        case BRS_FOLDER:
++        default:
++            m_d->m_groupType = 0;
++            break;
++    }
++
+     m_d->m_isFlatList =
+-            gContext->GetNumSetting(QString("mythvideo.folder_view_%1")
++            gContext->GetNumSetting(QString("mythvideo.group_view_%1")
+                     .arg(m_d->m_type), flatlistDefault);
+ 
+     if (!LoadWindowFromXML("video-ui.xml", windowName, this))
+@@ -2222,12 +2248,14 @@
+     if (!m_d->m_treeLoaded)
+     {
+         m_d->m_rootNode = m_d->m_videoList->buildVideoList(m_d->m_isFileBrowser,
+-                m_d->m_isFlatList, m_d->m_parentalLevel.GetLevel(), true);
++                m_d->m_isGroupList, m_d->m_groupType,
++                m_d->m_parentalLevel.GetLevel(), true);
+     }
+     else
+     {
+         m_d->m_videoList->refreshList(m_d->m_isFileBrowser,
+-                m_d->m_parentalLevel.GetLevel(), m_d->m_isFlatList);
++                m_d->m_parentalLevel.GetLevel(),
++                m_d->m_isGroupList, m_d->m_groupType);
+         m_d->m_rootNode = m_d->m_videoList->GetTreeRoot();
+     }
+ 
+@@ -2861,6 +2889,8 @@
+     }
+     m_menuPopup->AddButton(tr("Scan For Changes"), SLOT(doVideoScan()));
+     m_menuPopup->AddButton(tr("Change View"), SLOT(ViewMenu()), true);
++    if (m_d->m_isGroupList)
++        m_menuPopup->AddButton(tr("Change Browse Type"), SLOT(MetadataBrowseMenu()), true);
+     m_menuPopup->AddButton(tr("Filter Display"), SLOT(ChangeFilter()));
+ 
+     m_menuPopup->AddButton(tr("Cancel"));
+@@ -2909,6 +2939,43 @@
+     m_menuPopup->AddButton(tr("Cancel"));
+ }
+ 
++void VideoDialog::MetadataBrowseMenu()
++{
++    QString label = tr("Browse By");
++
++    m_menuPopup = new MythDialogBox(label, m_popupStack, "videomenupopup");
++
++    if (m_menuPopup->Create())
++        m_popupStack->AddScreen(m_menuPopup);
++
++    m_menuPopup->SetReturnEvent(this, "view");
++
++    if (m_d->m_isGroupList)
++    {
++       if (m_d->m_groupType != 0)
++           m_menuPopup->AddButton(tr("Folder"),
++                    SLOT(SwitchVideoFolderGroup()));
++
++       if (m_d->m_groupType != 1)
++           m_menuPopup->AddButton(tr("Genre"),
++                     SLOT(SwitchVideoGenreGroup()));
++
++       if (m_d->m_groupType != 2)
++           m_menuPopup->AddButton(tr("Category"),
++                     SLOT(SwitchVideoCategoryGroup()));
++
++       if (m_d->m_groupType != 3)
++           m_menuPopup->AddButton(tr("Year"),
++                     SLOT(SwitchVideoYearGroup()));
++
++       if (m_d->m_groupType != 4)
++           m_menuPopup->AddButton(tr("Director"),
++                     SLOT(SwitchVideoDirectorGroup()));
++    }
++
++    m_menuPopup->AddButton(tr("Cancel"));
++}
++
+ void VideoDialog::InfoMenu()
+ {
+     QString label = tr("Select action");
+@@ -2972,7 +3039,7 @@
+ void VideoDialog::ToggleFlatView()
+ {
+     m_d->m_isFlatList = !m_d->m_isFlatList;
+-    gContext->SaveSetting(QString("mythvideo.folder_view_%1").arg(m_d->m_type),
++    gContext->SaveSetting(QString("mythvideo.group_view_%1").arg(m_d->m_type),
+                          QString("%1").arg((int)m_d->m_isFlatList));
+     // TODO: This forces a complete tree rebuild, this is SLOW and shouldn't
+     // be necessary since MythGenericTree can do a flat view without a rebuild,
+@@ -3015,26 +3082,51 @@
+ 
+ void VideoDialog::SwitchTree()
+ {
+-    SwitchLayout(DLG_TREE);
++    SwitchLayout(DLG_TREE, m_d->m_browse);
+ }
+ 
+ void VideoDialog::SwitchGallery()
+ {
+-    SwitchLayout(DLG_GALLERY);
++    SwitchLayout(DLG_GALLERY, m_d->m_browse);
+ }
+ 
+ void VideoDialog::SwitchBrowse()
+ {
+-    SwitchLayout(DLG_BROWSER);
++    SwitchLayout(DLG_BROWSER, m_d->m_browse);
+ }
+ 
+ void VideoDialog::SwitchManager()
+ {
+-    SwitchLayout(DLG_MANAGER);
++    SwitchLayout(DLG_MANAGER, m_d->m_browse);
+ }
+ 
+-void VideoDialog::SwitchLayout(DialogType type)
++void VideoDialog::SwitchVideoFolderGroup() 
++{ 
++    SwitchLayout(m_d->m_type, BRS_FOLDER);
++} 
++
++void VideoDialog::SwitchVideoGenreGroup() 
+ {
++    SwitchLayout(m_d->m_type, BRS_GENRE);
++} 
++
++void VideoDialog::SwitchVideoCategoryGroup() 
++{ 
++   SwitchLayout(m_d->m_type, BRS_CATEGORY);
++}
++
++void VideoDialog::SwitchVideoYearGroup()
++{
++   SwitchLayout(m_d->m_type, BRS_YEAR);
++}
++
++void VideoDialog::SwitchVideoDirectorGroup()
++{
++   SwitchLayout(m_d->m_type, BRS_DIRECTOR);
++}
++
++void VideoDialog::SwitchLayout(DialogType type, BrowseType browse)
++{
+     m_d->m_switchingLayout = true;
+ 
+     if (m_d->m_rememberPosition && m_videoButtonTree)
+@@ -3048,7 +3140,7 @@
+ 
+     VideoDialog *mythvideo =
+             new VideoDialog(GetMythMainWindow()->GetMainStack(), "mythvideo",
+-                    m_d->m_videoList, type);
++                    m_d->m_videoList, type, browse);
+ 
+     if (mythvideo->Create())
+     {
+Index: mythvideo/mythvideo/videolist.cpp
+===================================================================
+--- mythvideo/mythvideo/videolist.cpp	(revision 21234)
++++ mythvideo/mythvideo/videolist.cpp	(working copy)
+@@ -630,7 +630,9 @@
+     typedef std::vector<Metadata *> metadata_view_list;
+ 
+   private:
+-    enum metadata_list_type { ltNone, ltFileSystem, ltDBMetadata };
++    enum metadata_list_type { ltNone, ltFileSystem, ltDBMetadata,
++                              ltDBGenreGroup, ltDBCategoryGroup,
++                              ltDBYearGroup, ltDBDirectorGroup};
+     typedef MetadataListManager::metadata_list metadata_list;
+     typedef MetadataListManager::MetadataPtr MetadataPtr;
+ 
+@@ -639,12 +641,12 @@
+ 
+     void build_generic_tree(MythGenericTree *dst, meta_dir_node *src,
+                             bool include_updirs);
+-    MythGenericTree *buildVideoList(bool filebrowser, bool flatlist,
+-                                const ParentalLevel &parental_level,
++    MythGenericTree *buildVideoList(bool filebrowser, bool group_list,
++                                int group_type, const ParentalLevel &parental_level,
+                                 bool include_updirs);
+ 
+     void refreshList(bool filebrowser, const ParentalLevel &parental_level,
+-                     bool flat_list);
++                     bool group_list, int group_type);
+ 
+     unsigned int count() const
+     {
+@@ -705,6 +707,7 @@
+     void fillMetadata(metadata_list_type whence);
+ 
+     void buildFsysList();
++    void buildGroupList(metadata_list_type whence);
+     void buildDbList();
+     void buildFileList(smart_dir_node &directory, metadata_list &metalist,
+                        const QString &prefix);
+@@ -740,17 +743,20 @@
+     delete m_imp;
+ }
+ 
+-MythGenericTree *VideoList::buildVideoList(bool filebrowser, bool flatlist,
+-    const ParentalLevel &parental_level, bool include_updirs)
++MythGenericTree *VideoList::buildVideoList(bool filebrowser,
++    bool grouplist, int group_type, const ParentalLevel &parental_level,
++    bool include_updirs)
+ {
+-    return m_imp->buildVideoList(filebrowser, flatlist, parental_level,
+-                                 include_updirs);
++    return m_imp->buildVideoList(filebrowser, grouplist, group_type,
++                                 parental_level, include_updirs);
+ }
+ 
+ void VideoList::refreshList(bool filebrowser,
+-                            const ParentalLevel &parental_level, bool flat_list)
++                            const ParentalLevel &parental_level,
++                            bool group_list, int group_type)
+ {
+-    m_imp->refreshList(filebrowser, parental_level, flat_list);
++    m_imp->refreshList(filebrowser, parental_level, group_list,
++                       group_type);
+ }
+ 
+ unsigned int VideoList::count() const
+@@ -863,11 +869,12 @@
+ //      videos found.
+ //      If false, the hierarchy present on the filesystem or in the database
+ //      is preserved. In this mode, both sub-dirs and updirs are present.
+-MythGenericTree *VideoListImp::buildVideoList(bool filebrowser, bool flatlist,
++MythGenericTree *VideoListImp::buildVideoList(bool filebrowser,
++                                          bool grouplist, int group_type,
+                                           const ParentalLevel &parental_level,
+                                           bool include_updirs)
+ {
+-    refreshList(filebrowser, parental_level, flatlist);
++    refreshList(filebrowser, parental_level, grouplist, group_type);
+ 
+     typedef std::map<QString, MythGenericTree *> string_to_tree;
+     string_to_tree prefix_tree_map;
+@@ -891,12 +898,50 @@
+ 
+ void VideoListImp::refreshList(bool filebrowser,
+                                const ParentalLevel &parental_level,
+-                               bool flat_list)
++                               bool group_list, int group_type)
+ {
++    bool flat_list = false;
++
+     m_video_filter.setParentalLevel(parental_level.GetLevel());
+ 
+-    fillMetadata(filebrowser ? ltFileSystem : ltDBMetadata);
+-
++    if (filebrowser) 
++    { 
++        fillMetadata(ltFileSystem); 
++    }
++    else 
++    { 
++        if (group_list) 
++        { 
++            switch (group_type) 
++            { 
++                case 0: 
++                    fillMetadata(ltDBMetadata); 
++                    VERBOSE(VB_IMPORTANT,QString("Using Folder mode")); 
++                    break; 
++                case 1: 
++                    fillMetadata(ltDBGenreGroup); 
++                    VERBOSE(VB_IMPORTANT,QString("Using Group mode")); 
++                    break; 
++                case 2: 
++                    fillMetadata(ltDBCategoryGroup); 
++                    VERBOSE(VB_IMPORTANT,QString("Using Category mode")); 
++                    break; 
++                case 3:
++                    fillMetadata(ltDBYearGroup);
++                    VERBOSE(VB_IMPORTANT,QString("Using Year mode"));
++                    break;
++                case 4:
++                    fillMetadata(ltDBDirectorGroup);
++                    VERBOSE(VB_IMPORTANT,QString("Using Director mode"));
++                    break;
++            } 
++        } 
++        else 
++        { 
++            fillMetadata(ltDBMetadata); 
++            flat_list = true; 
++        } 
++    } 
+     update_meta_view(flat_list);
+ }
+ 
+@@ -925,17 +970,127 @@
+         m_metadata.setList(ml);
+         m_metadata_tree.clear();
+ 
+-        if (whence == ltFileSystem)
++        switch (whence)
+         {
+-            buildFsysList();
++            case ltFileSystem:  
++                buildFsysList(); 
++                break; 
++            case ltDBMetadata: 
++                buildDbList(); 
++                break; 
++            case ltDBGenreGroup: 
++            case ltDBCategoryGroup:
++            case ltDBYearGroup:
++            case ltDBDirectorGroup: 
++                buildGroupList(whence); 
++                break; 
++            case ltNone: 
++                break;  
+         }
+-        else
+-        {
+-            buildDbList();
+-        }
+     }
+ }
+ 
++void VideoListImp::buildGroupList(metadata_list_type whence) 
++{ 
++    metadata_list ml; 
++    MetadataListManager::loadAllFromDatabase(ml); 
++    m_metadata.setList(ml); 
++ 
++    metadata_view_list mlist; 
++    mlist.reserve(m_metadata.getList().size()); 
++
++    std::back_insert_iterator<metadata_view_list> mli(mlist); 
++    std::transform(m_metadata.getList().begin(), m_metadata.getList().end(), 
++                   mli, to_metadata_ptr()); 
++
++    metadata_path_sort mps(m_sort_ignores_case); 
++    std::sort(mlist.begin(), mlist.end(), mps); 
++
++    typedef std::map<QString, meta_dir_node *> group_to_node_map; 
++    group_to_node_map gtnm; 
++
++    meta_dir_node *video_root = &m_metadata_tree; 
++
++    smart_dir_node sdn = video_root->addSubDir("All"); 
++    meta_dir_node* all_group_node = sdn.get(); 
++
++    for (metadata_view_list::iterator p = mlist.begin(); p != mlist.end(); ++p) 
++    { 
++        Metadata *data = *p; 
++
++        all_group_node->addEntry(smart_meta_node(new meta_data_node(data))); 
++ 
++        std::vector <QString> groups; 
++
++        switch (whence) 
++        {
++            case ltDBGenreGroup: 
++            { 
++                std::vector <std::pair <int, QString> > genres = data->GetGenres(); 
++
++                for (std::vector <std::pair <int, QString> >::iterator i =  
++                                         genres.begin(); i != genres.end(); i++) 
++                { 
++                    std::pair <int, QString> item = *i; 
++                    groups.push_back(item.second); 
++                } 
++                break; 
++            } 
++            case ltDBCategoryGroup: 
++            { 
++                groups.push_back(data->GetCategory()); 
++                break; 
++            } 
++            case ltDBYearGroup:
++            {
++                groups.push_back(QString::number(data->GetYear()));
++                break;
++            }
++            case ltDBDirectorGroup:
++            {
++                groups.push_back(data->GetDirector());
++                break;
++            }
++            default: 
++            { 
++                VERBOSE(VB_IMPORTANT, 
++                    QString("Invalid type of grouping")); 
++                break; 
++            } 
++        } 
++
++        if (groups.size() == 0) 
++        { 
++            meta_dir_node *group_node = gtnm["Unknown"]; 
++
++            if (group_node == NULL) 
++            { 
++                smart_dir_node sdn = video_root->addSubDir("Unknown"); 
++                group_node = sdn.get(); 
++                gtnm["Unknown"] = group_node; 
++            } 
++
++            group_node->addEntry(smart_meta_node(new meta_data_node(data))); 
++        } 
++ 
++        for (std::vector <QString>::iterator i = groups.begin();  
++                                                         i != groups.end(); i++) 
++        { 
++            QString item = *i; 
++ 
++            meta_dir_node *group_node = gtnm[item]; 
++ 
++            if (group_node == NULL) 
++            { 
++                smart_dir_node sdn = video_root->addSubDir(item); 
++                group_node = sdn.get(); 
++                gtnm[item] = group_node; 
++            } 
++ 
++            group_node->addEntry(smart_meta_node(new meta_data_node(data))); 
++        } 
++    } 
++} 
+ void VideoListImp::buildDbList()
+ {
+     metadata_list ml;

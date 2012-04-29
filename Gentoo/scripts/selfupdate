@@ -1,0 +1,11 @@
+#!/bin/bash
+
+self=`readlink -f $0`
+selfpath=`dirname $self`
+cd $selfpath/../
+
+reponame=`cat profiles/repo_name`
+
+echo "Updating $reponame..."
+git pull
+

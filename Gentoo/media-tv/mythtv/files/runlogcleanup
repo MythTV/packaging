@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec /usr/share/mythtv/bin/logcleanup.py --path=/var/log/mythtv --min-files=5 --min-age=7
