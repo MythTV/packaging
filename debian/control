@@ -3,7 +3,7 @@ Section: graphics
 Priority: optional
 Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
 Uploaders: Mario Limonciello <superm1@ubuntu.com>,
-           Andres Mejia <mcitadel@gmail.com>,
+           Andres Mejia <amejia@debian.org>,
 Homepage: http://www.mythtv.org
 Standards-Version: 3.9.2
 Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-fixes
