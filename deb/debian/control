@@ -6,8 +6,7 @@ Uploaders: Mario Limonciello <superm1@ubuntu.com>,
            Andres Mejia <amejia@debian.org>,
 Homepage: http://www.mythtv.org
 Standards-Version: 3.9.2
-Vcs-Bzr: bzr+ssh://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-fixes
-Vcs-Browser: http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-fixes
+Vcs-Git: git://github.com/MythTV/packaging.git
 Build-Conflicts: libqt3-mt-dev
 Build-Depends:  debhelper (>= 7.0.50~),
                 quilt,
