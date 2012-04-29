@@ -7,6 +7,7 @@ mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu2) UNRELEASED; urgency=low
     downloader telling the user there is an updated theme on first
     boot.
   * Test for an empty key on public mysql. (LP: #989371)
+  * Update amejia's email on uploaders field.
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 10 Apr 2012 14:20:32 -0500
 
