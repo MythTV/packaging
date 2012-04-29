@@ -8,9 +8,9 @@ die()
 
 help()
 {
-	echo "Usage: $0 git_branch [target_dir] [additional_patches]"
-	echo "git_branch -> mandatory: the GIT branch of MythTV to build"
-	echo "target_dir -> optional: the dir used for the BZR & GIT checkouts"
+	echo "Usage: $0 [git_branch] [target_dir] [additional_patches]"
+	echo "git_branch -> optional: the GIT branch of MythTV to build"
+	echo "target_dir -> optional: the dir used for the & GIT checkouts"
 	echo "additional_patches -> optional: space separated full path to all patches to apply"
 	echo ""
 	echo "If the target_dir already contains git and bzr checkouts, they"
@@ -18,14 +18,14 @@ help()
 	echo "checkout being checked out to the branch indicated."
 	echo ""
 	echo "Example:"
-	echo " $0 master"
-	echo "  This would check out the master branch and master packaging and build debs in `pwd`"
+	echo " $0"
+	echo "  This would check out the branch matching packaging branch name and build debs in `pwd`"
 	echo ""
-	echo " $0 fixes/0.24 /tmp"
-	echo "  This would checkout out the fixes/0.24 branch, fixes packaging and build debs in /tmp"
+	echo " $0 fixes/0.25 /tmp"
+	echo "  This would checkout out the fixes/0.25 branch, local packaging and build debs in /tmp"
 	echo ""
-	echo " $0 fixes/0.24 /tmp /full/path/to/patch"
-	echo "  This would checkout the fixes/0.24 branch, fixes packaging, apply the patch called "
+	echo " $0 fixes/0.25 /tmp /full/path/to/patch"
+	echo "  This would checkout the fixes/0.25 branch, local packaging, apply the patch called "
 	echo "  'patch' located at /full/path/to/ to the build and then produce debs"
 	exit 0
 }
@@ -36,48 +36,45 @@ export QUILT_PATCHES="debian/patches"
 [ -n "$PATCHES" ] && PATCHES=""
 [ -z "$DEBUILD_FLAGS" ] && DEBUILD_FLAGS="-us -uc -i -I.git"
 
-if [ -z "$1" ]; then
-	help
+
+for arg in $@; do
+	if [ "$1" = "help" ]; then
+		help
+	fi
+	if [ -z "$DIRECTORY" ] && [ -d "$arg" ]; then
+		DIRECTORY=$arg
+		continue
+	fi
+	if [ -f "$arg" ]; then
+		PATCHES="$PATCHES $arg"
+		continue
+	fi
+	if [ -z "$GIT_BRANCH" ]; then
+		GIT_BRANCH=$arg
+		continue
+	fi
+done
+if [ -z "$GIT_BRANCH" ]; then
+	GIT_BRANCH=`git branch | sed '/*/!d; s,^* ,,'`
+fi
+if [ -z "$DIRECTORY" ]; then
+	DIRECTORY=`pwd`
+fi
+if echo "$GIT_BRANCH" | grep fixes 2>&1 1>/dev/null; then
+	GIT_TYPE="fixes"
+	GIT_MAJOR_RELEASE=$(echo $1 |sed 's,.*0.,,')
+	DELIMITTER="+"
+	echo "Building for fixes, v0.$GIT_MAJOR_RELEASE in $DIRECTORY"
 else
-	for arg in $@; do
-		if [ -z "$GIT_BRANCH" ]; then
-			GIT_BRANCH=$arg
-			continue
-		fi
-		if [ -z "$DIRECTORY" ] && [ -d "$arg" ]; then
-			DIRECTORY=$arg
-			continue
-		fi
-		if [ -f "$arg" ]; then
-			PATCHES="$PATCHES $arg"
-			continue
-		fi
-	done
-	if echo "$GIT_BRANCH" | grep fixes 2>&1 1>/dev/null; then
-		GIT_TYPE="fixes"
-		GIT_MAJOR_RELEASE=$(echo $1 |sed 's,.*0.,,')
-		DELIMITTER="+"
-		echo "Building for fixes, v0.$GIT_MAJOR_RELEASE"
-	else
-		GIT_TYPE="master"
-		DELIMITTER="~"
-		echo "Building for master"
-	fi
-	if [ -z "$DIRECTORY" ]; then
-		DIRECTORY=`pwd`
-	fi
+	GIT_TYPE="master"
+	DELIMITTER="~"
+	echo "Building for master in $DIRECTORY"
 fi
 
 if [ "`basename $0`" = "build-dsc.sh" ]; then
     TYPE="source"
 else
     TYPE="binary"
-fi
-
-#for checking out packaging
-if ! which bzr 1>/dev/null; then
-	echo "Missing bzr, marking for installation"
-	sudo apt-get install bzr || die "Error installing bzr"
 fi
 
 #for checking out git
@@ -92,26 +89,11 @@ if ! which debuild 1>/dev/null; then
     sudo apt-get install devscripts --no-install-recommends|| die "Error installing devscripts"
 fi
 
-
-mkdir -p $DIRECTORY
-cd $DIRECTORY
-
-#update bzr branches that are supported
-#reset them and stage the proper one
-if [ ! -d ".bzr" ]; then
-	bzr init-repo .
-fi
-if [ ! -d bzr-$GIT_TYPE ]; then
-	bzr branch http://bazaar.launchpad.net/~mythbuntu/mythtv/mythtv-$GIT_TYPE bzr-$GIT_TYPE
-else
-	cd bzr-$GIT_TYPE && bzr pull && cd ..
-fi
-mkdir -p git
-cd git
-rm -rf .bzr
-ln -s ../bzr-$GIT_TYPE/.bzr .
-bzr revert
-bzr clean-tree --force
+#clone in our packaging branch
+mkdir -p $DIRECTORY/mythtv
+rm -rf $DIRECTORY/mythtv/debian
+cp -R `dirname $0`/debian $DIRECTORY/mythtv
+cd $DIRECTORY/mythtv
 
 ##set changelog entry
 #these can be filled in potentially from external sources
