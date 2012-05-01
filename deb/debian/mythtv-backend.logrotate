@@ -1,0 +1,84 @@
+/var/log/mythtv/mythbackend.log {
+        daily
+	size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+	postrotate
+		reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mythcommflag.log {
+        daily
+	size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+	postrotate
+		reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mythfilldatabase.log {
+        daily
+	size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+	postrotate
+		reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mythjobqueue.log {
+        daily
+	size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+	postrotate
+		reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mythpreviewgen.log {
+        daily
+	size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+	postrotate
+		reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mythtv-setup.log {
+        daily
+	size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+	postrotate
+		reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mirobridge.log {
+        daily
+        size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+	postrotate
+		reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+

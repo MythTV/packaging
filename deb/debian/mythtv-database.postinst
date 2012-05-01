@@ -1,0 +1,162 @@
+#!/bin/sh -e
+MYSQL="/usr/share/mythtv/sql/mythtv*.sql"
+MYSQLCONFIG="/etc/mysql/conf.d/mythtv.cnf"
+FSTAB="/etc/fstab"
+NEWIP="127.0.0.1"
+LOCALHOSTNAME=`cat /etc/hostname`
+
+prepare_database() {
+
+    #Preload tables and default values
+    cat $MYSQL | sed -e "s/Terra/Mythbuntu/g; s/OLDHOSTNAME/$LOCALHOSTNAME/g; s/127.0.0.1/$NEWIP/g; s/blueosd/BlackCurves-OSD/g" |\
+        mysql $SECURITY_INFO $database
+
+    #Set up local IP and hostname
+    if ! echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'BackendServerIP' AND settings.hostname = '$LOCALHOSTNAME';" | \
+        mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
+        fail_database
+    fi
+
+    #Set up master IP and hostname
+    if ! echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'MasterServerIP';" | \
+        mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
+        fail_database
+    fi
+}
+
+#Used to fail at some point but not abort postinst
+fail_database() {
+    echo "Failed to create or modify database (incorrect admin username/password?)" >&2
+    echo "Try:" >&2
+    echo "sudo dpkg-reconfigure mythtv-database" >&2
+
+    db_set mythtv/mysql_admin_password ""
+    exit 0
+}
+
+#ask the root password a few times if it's still not working
+ask_root_pw() {
+    db_input high mythtv/mysql_host || true
+    db_input high mythtv/mysql_admin_user || true
+    db_input high mythtv/mysql_admin_password || true
+    db_go || true
+    db_get mythtv/mysql_host
+    hostname="$RET"
+    db_get mythtv/mysql_admin_user
+    admin_username="$RET"
+    db_get mythtv/mysql_admin_password
+    admin_password="$RET"
+    if [ "$admin_password" != "" ]; then
+        admin_password="-p$admin_password"
+    fi
+    SECURITY_INFO="--host=$hostname --user=$admin_username $admin_password"
+}
+
+update_database() {
+    #Set up privs for mythtv@localhost
+    if ! echo "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@localhost IDENTIFIED BY '$mythtv_password';" | \
+        mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
+        fail_database
+    fi
+
+    #Set up privs for mythtv@network
+    if ! echo "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@'%' IDENTIFIED BY '$mythtv_password';" | \
+        mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
+        fail_database
+    fi
+}
+
+case "$1" in
+    configure)
+    . /usr/share/debconf/confmodule
+
+    db_get mythtv/mysql_mythtv_dbname
+    database="$RET"
+
+    db_get mythtv/mysql_mythtv_user
+    mythtv_username="$RET"
+
+    db_get mythtv/mysql_mythtv_password
+    mythtv_password="$RET"
+
+    db_get mythtv/mysql_admin_user
+    admin_username="$RET"
+
+    if [ "$admin_username" = "debian-sys-maint" ]; then
+        SECURITY_INFO="--defaults-file=/etc/mysql/debian.cnf"
+    else
+        db_get mythtv/mysql_host
+        hostname="$RET"
+
+        db_get mythtv/mysql_admin_password
+        admin_password="$RET"
+
+        if [ "$admin_password" != "" ]; then
+            admin_password="-p$admin_password"
+        fi
+        SECURITY_INFO="--host=$hostname --user=$admin_username $admin_password"
+    fi
+    
+    #If we are running locally, make sure to start mysql first
+    #It's okay if it fails, we'll fall back cleanly later
+    if [ "$hostname" = "localhost" ]; then
+        #redirection of 3 is because of debconf internally using it.
+        if [ -x /usr/sbin/invoke-rc.d ]; then
+            invoke-rc.d mysql start 3> /dev/null || true
+        else
+            /etc/init.d/mysql start 3> /dev/null || true
+        fi
+    fi
+
+    #For database fillings
+    #and mysql binding checks
+    if [ -f "${MYSQLCONFIG}" ]; then
+        db_get mythtv/public_bind
+        if [ -n "$RET" ] && [ $RET = true ]; then
+            NEWIP=`ifconfig | grep "inet addr:" | grep --invert-match 127.0.0.1 | sed ' s/inet addr://g; s/^[ \t]*//;s/[ \t]*$//; q;' | awk '{print $1}'`
+            sed -i -e 's/^#bind/bind/' ${MYSQLCONFIG}
+        else
+            sed -i -e 's/^bind/#bind/' ${MYSQLCONFIG}
+        fi
+    fi
+
+    #Check for existing database
+    if ! echo "SELECT NULL;" | mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
+        #No existing database, create a database
+        i=1
+        while ! echo "CREATE DATABASE $database;" | mysql $SECURITY_INFO ; do
+#>/dev/null 2>&1; do
+            if [ $i -ge 5 ]; then
+                fail_database
+            fi
+            ask_root_pw
+            i=$(($i+1))
+        done
+    fi
+
+    #Preload tables
+    if ! echo "SELECT value FROM settings LIMIT 1, 1;" | mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
+        prepare_database
+    fi
+
+    #Update Permissions
+    update_database
+
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+    echo "postinst called with unknown argument \`$1'" >&2
+    db_set mythtv/mysql_admin_password ""
+    db_set mythtv/mysql_mythtv_password ""
+    exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+db_set mythtv/mysql_admin_password ""
+db_set mythtv/mysql_mythtv_password ""
+exit 0

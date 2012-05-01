@@ -1,0 +1,17 @@
+Don't throw errors when starting the backend if no tuner was defined.  The user can configure it later.
+http://code.mythtv.org/trac/ticket/9626
+
+Index: mythtv-master/mythtv/programs/mythbackend/scheduler.cpp
+===================================================================
+--- mythtv-master.orig/mythtv/programs/mythbackend/scheduler.cpp	2012-02-09 18:07:35.263467627 -0600
++++ mythtv-master/mythtv/programs/mythbackend/scheduler.cpp	2012-02-09 18:14:18.879479319 -0600
+@@ -171,8 +171,7 @@
+         LOG(VB_GENERAL, LOG_ERR, LOC +
+                 "No capture cards are defined in the database.\n\t\t\t"
+                 "Perhaps you should re-read the installation instructions?");
+-        error = GENERIC_EXIT_SETUP_ERROR;
+-        return false;
++        return true;
+     }
+ 
+     query.prepare("SELECT sourceid,name FROM videosource ORDER BY sourceid;");

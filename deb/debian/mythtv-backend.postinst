@@ -1,0 +1,49 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+case "$1" in
+    configure)
+
+        HOMEDIR=$(getent passwd mythtv | awk -F: '{ print $6 }')
+        mkdir -p $HOMEDIR/.mythtv || true
+        chown mythtv:mythtv $HOMEDIR/.mythtv || true
+
+        for dir in /var/lib/mythtv/recordings \
+                   /var/cache/mythtv \
+                   /var/lib/mythtv/banners \
+                   /var/lib/mythtv/screenshots \
+                   /var/lib/mythtv/fanart \
+                   /var/lib/mythtv/coverart \
+                   /var/lib/mythtv/db_backups \
+                   /var/lib/mythtv/livetv \
+                   /var/lib/mythtv/trailers \
+                   /var/lib/mythtv/streaming \
+                   /var/lib/mythtv/videos; do
+	    if [ -d "$dir" ] && ! dpkg-statoverride --list "$dir" >/dev/null; then
+                chown mythtv:mythtv "$dir" || true
+                chmod 2775 "$dir" || true
+            fi
+        done
+
+        if [ -z "$2" ]; then
+            # Migrate from old mythtv -> mythtv-backend
+            [ -f /etc/logrotate.d/mythtv ] && \
+                mv /etc/logrotate.d/mythtv /etc/logrotate.d/mythtv-backend
+
+        fi
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

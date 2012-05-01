@@ -1,0 +1,45 @@
+#!/bin/sh
+
+set -e
+
+. /usr/share/debconf/confmodule
+
+# Function to cleanly handle reloading apache
+reload_apache()
+{
+    if apache2ctl configtest 2>/dev/null; then
+        if invoke-rc.d apache2 status 2>/dev/null 1>/dev/null; then
+            invoke-rc.d apache2 force-reload || true
+        fi
+    else
+        echo "Your apache2 configuration is broken, so we're not restarting it for you."
+    fi
+}
+
+case "$1" in
+    remove|purge)
+	#These files may have been created during installation
+	rm -f /etc/mythtv/mythweb-htaccess
+	rm -f /etc/mythtv/mythweb-digest
+    rm -f /etc/apache2/sites-available/mythweb.conf
+    if [ -e /etc/apache2/sites-enabled/default-mythbuntu ]; then
+        a2dissite default-mythbuntu > /dev/null || true
+        a2ensite default > /dev/null || true
+        rm -f /etc/apache2/sites-available/default-mythbuntu
+        reload_apache
+    fi
+    ;;
+
+    upgrade|abort-upgrade|abort-remove|abort-deconfigure)
+
+    ;;
+
+    *)
+        echo "postrm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

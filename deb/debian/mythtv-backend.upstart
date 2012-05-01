@@ -1,0 +1,24 @@
+# MythTV Backend service
+
+description     "MythTV Backend"
+author          "Mario Limonciello <superm1@ubuntu.com>"
+
+start on (local-filesystems and net-device-up IFACE!=lo and started udev-finish)
+stop on runlevel [016]
+
+#expect fork
+respawn
+respawn limit 2 3600
+
+pre-start script 
+    [ -x /usr/sbin/mysqld ] || exit 0
+    for i in `seq 1 30` ; do
+       /usr/bin/mysqladmin --defaults-file=/etc/mysql/debian.cnf ping && exit 0
+       sleep .5
+    done
+end script
+
+script
+	test -f /etc/default/locale && . /etc/default/locale || true
+	LANG=$LANG /usr/bin/mythbackend --syslog local7 --user mythtv
+end script

@@ -1,0 +1,6 @@
+#are added in (not part of make install)
+mythtv/database/*.sql usr/share/mythtv/sql
+
+#Come from debian/
+debian/mythtv.cnf etc/mysql/conf.d
+debian/*.sql usr/share/mythtv/sql

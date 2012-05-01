@@ -1,0 +1,160 @@
+# Brazilian Portuguese translation for mythtv
+# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# This file is distributed under the same license as the mythtv package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: mythtv\n"
+"Report-Msgid-Bugs-To: mythtv@packages.debian.org\n"
+"POT-Creation-Date: 2010-03-24 22:35-0500\n"
+"PO-Revision-Date: 2007-08-31 15:38+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2007-10-05 08:18+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:1001
+msgid "Database to be used to hold MythTV data:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:1001
+msgid "If a database with this name already exists, it will be used."
+msgstr "Se um banco de dados com este nome já existir, ele será utilizado."
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:2001
+msgid "Username used by MythTV to access its database:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:2001
+msgid ""
+"This user will automatically be granted appropriate permissions to the "
+"database."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../mythtv-common.templates:3001
+msgid "Password used by MythTV to access its database:"
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../mythtv-common.templates:3001
+msgid "If you give an empty password, a random one will be generated."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:4001
+msgid "Host MySQL server resides in:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-database.templates:1001
+#, fuzzy
+#| msgid "What is the name of the MySQL administrator account:"
+msgid "MySQL administrator account:"
+msgstr "Qual o nome da conta administrativa do MySQL:"
+
+#. Type: string
+#. Description
+#. Type: password
+#. Description
+#: ../mythtv-database.templates:1001 ../mythtv-database.templates:2001
+msgid "This information will be used to create a database and user for MythTV."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-database.templates:1001
+msgid ""
+"Unless you have explicitly changed this on the MySQL server, and understand "
+"MySQL's privilege system, use the default of 'root'."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../mythtv-database.templates:2001
+#, fuzzy
+#| msgid "What is the name of the MySQL administrator account:"
+msgid "Password for the MySQL administrator account '${user}':"
+msgstr "Qual o nome da conta administrativa do MySQL:"
+
+#. Type: password
+#. Description
+#: ../mythtv-database.templates:2001
+msgid ""
+"Unless you have explicitly changed the password on the MySQL server, leave "
+"this blank."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../mythtv-database.templates:3001
+msgid "Will other computers run MythTV?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../mythtv-database.templates:3001
+msgid ""
+"If any other computers (that includes other Front End machines) with MythTV "
+"will be used, this computer needs to be configured to allow remote "
+"connections."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../mythtv-database.templates:3001
+msgid ""
+"Note that this is a security risk, as both the MythTV and MySQL services "
+"will be exposed. Be sure to place this machine behind a firewall."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../mythtv-database.templates:3001
+msgid ""
+"If multiple interfaces are used, the first one listed in 'ifconfig' will be "
+"used."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-frontend.templates:1001
+msgid "Hostname of the system where the MythTV backend is installed:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mythtv-frontend.templates:2001
+msgid "Port number the MythTV server is listening on:"
+msgstr ""
+
+#~ msgid "sudo /etc/init.d/mythtv-backend start"
+#~ msgstr "sudo /etc/init.d/mythtv-backend start"
+
+#~ msgid "This can be done by: 'sudo dpkg-reconfigure mythtv-common'."
+#~ msgstr ""
+#~ "Isto pode ser finalizado através de: 'sudo dpkg-reconfigure mythtv-"
+#~ "common'."
+
+#~ msgid "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
+#~ msgstr "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
+
+#~ msgid "${files}"
+#~ msgstr "${files}"

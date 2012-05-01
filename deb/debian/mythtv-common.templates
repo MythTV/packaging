@@ -1,0 +1,22 @@
+Template: mythtv/mysql_mythtv_dbname
+Type: string
+Default: mythconverg
+_Description: Database to be used to hold MythTV data:
+ If a database with this name already exists, it will be used.
+
+Template: mythtv/mysql_mythtv_user
+Type: string
+Default: mythtv
+_Description: Username used by MythTV to access its database:
+ This user will automatically be granted appropriate permissions to the
+ database.
+
+Template: mythtv/mysql_mythtv_password
+Type: password
+_Description: Password used by MythTV to access its database:
+ If you give an empty password, a random one will be generated.
+
+Template: mythtv/mysql_host
+Type: string
+Default: localhost
+_Description: Host MySQL server resides in:

@@ -1,0 +1,127 @@
+Index: mythtv-master/mythplugins/configure
+===================================================================
+--- mythtv-master.orig/mythplugins/configure	2012-03-05 00:06:33.000000000 -0600
++++ mythtv-master/mythplugins/configure	2012-03-05 00:20:57.403144009 -0600
+@@ -303,6 +303,7 @@
+ prefix="/usr/local"
+ libdir_name="lib"
+ sysroot=""
++mythroot=""
+ ln_s="ln -sf"
+ 
+ logfile="config.ep"
+@@ -322,7 +323,8 @@
+ 
+ Generic options:
+   --prefix=PREFIX          MythTV install location PREFIX [$prefix]
+-  --sysroot=SYSROOT        MythTV sysroot location SYSROOT [$sysroot]
++  --sysroot=SYSROOT        General sysroot location SYSROOT [$sysroot]
++  --mythroot=SYSROOT       MythTV specific sysroot location [$mythroot]
+   --qmake=QMAKE            use specified qmake [$qmake]
+   --python=PATH            Force a specific python executable to use [$python]
+   --libdir-name=LIBNAME    install/look for libs in PREFIX/LIBNAME [$libdir_name]
+@@ -394,6 +396,7 @@
+     qmake
+     python
+     sysroot
++    mythroot
+ "
+ 
+ CONFIGURATION_OPTS=""
+@@ -462,6 +465,7 @@
+ from distutils.sysconfig import get_python_lib
+ import sys
+ sys.path.append(get_python_lib(prefix='${prefix}'))
++#sys.path.append('debian/libmyth-python/usr/lib/python2.6/dist-packages')
+ try:
+     import $lib
+ except:
+@@ -525,7 +529,11 @@
+ }
+ 
+ # bring in mythtv config
+-if [ -e $prefix/include/mythtv/mythconfig.mak ] ; then
++if [ -e $mythroot$prefix/include/mythtv/mythconfig.mak ] ; then
++    rm mythconfig.mak 2> /dev/null
++    cp $mythroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
++    sed -i -e "s,^SYSROOT\=.*,SYSROOT=$mythroot,g" mythconfig.mak
++elif [ -e $prefix/include/mythtv/mythconfig.mak ] ; then
+     rm mythconfig.mak 2> /dev/null
+     ${ln_s} $prefix/include/mythtv/mythconfig.mak mythconfig.mak
+ else
+@@ -584,7 +592,7 @@
+         disable netvision
+     }
+ 
+-    check_py_lib MythTV  || disable_netvision "MythTV Python bindings (MythTV)"
++    #check_py_lib MythTV  || disable_netvision "MythTV Python bindings (MythTV)"
+     check_py_lib pycurl  || disable_netvision "Python pycurl library (pycurl)"
+     check_py_lib lxml    || disable_netvision "Python lxml library (lxml)"
+     check_py_lib xml     || disable_netvision "Python XML library (xml)"
+Index: mythtv-master/mythplugins/programs-libs.pro
+===================================================================
+--- mythtv-master.orig/mythplugins/programs-libs.pro	2012-02-23 14:13:57.000000000 -0600
++++ mythtv-master/mythplugins/programs-libs.pro	2012-03-05 00:19:18.107253175 -0600
+@@ -4,7 +4,7 @@
+ INCLUDEPATH += $${SYSROOT}$${PREFIX}/include/mythtv/libmyth
+ DEPENDPATH *= $${INCLUDEPATH}
+ 
+-LIBS += -L$${LIBDIR} $$EXTRA_LIBS -lmythbase-$$LIBVERSION
++LIBS += -L$${SYSROOT}$${LIBDIR} $$EXTRA_LIBS -lmythbase-$$LIBVERSION
+ LIBS += -lmyth-$$LIBVERSION -lmythui-$$LIBVERSION -lmythupnp-$$LIBVERSION
+ LIBS += -lmythservicecontracts-$$LIBVERSION
+ LIBS += -lmythavcodec
+Index: mythtv-master/mythplugins/targetdep.pro
+===================================================================
+--- mythtv-master.orig/mythplugins/targetdep.pro	2012-02-23 14:13:57.000000000 -0600
++++ mythtv-master/mythplugins/targetdep.pro	2012-03-05 00:19:18.107253175 -0600
+@@ -10,7 +10,7 @@
+ MYTH_LIB_EXT  =$${LIBVERSION}.$${QMAKE_EXTENSION_LIB}
+ 
+ 
+-DEPLIBS = $${LIBDIR}
++DEPLIBS = $${SYSROOT}$${LIBDIR}
+ 
+ # On Windows, dlls were installed with exes:
+ mingw : DEPLIBS = $${PREFIX}/bin
+Index: mythtv-master/mythplugins/mytharchive/mytharchive/mytharchive.pro
+===================================================================
+--- mythtv-master.orig/mythplugins/mytharchive/mytharchive/mytharchive.pro	2012-02-23 14:13:57.000000000 -0600
++++ mythtv-master/mythplugins/mytharchive/mytharchive/mytharchive.pro	2012-03-05 00:19:18.107253175 -0600
+@@ -33,28 +33,28 @@
+ SOURCES += mythburn.cpp themeselector.cpp editmetadata.cpp thumbfinder.cpp
+ SOURCES += exportnative.cpp importnative.cpp
+ 
+-burnuifiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/themes/default
++burnuifiles.path = $${PREFIX}/share/mythtv/themes/default
+ burnuifiles.files = mythburn-ui.xml
+ 
+-scriptfiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/mytharchive/scripts
++scriptfiles.path = $${PREFIX}/share/mythtv/mytharchive/scripts
+ scriptfiles.files = ../mythburn/scripts/*
+ 
+-introfiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/mytharchive/intro
++introfiles.path = $${PREFIX}/share/mythtv/mytharchive/intro
+ introfiles.files = ../mythburn/intro/*.mpg
+ 
+-musicfiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/mytharchive/music
++musicfiles.path = $${PREFIX}/share/mythtv/mytharchive/music
+ musicfiles.files = ../mythburn/music/*.ac3
+ 
+-imagefiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/mytharchive/images
++imagefiles.path = $${PREFIX}/share/mythtv/mytharchive/images
+ imagefiles.files = ../mythburn/images/*.png
+ 
+-themefiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/mytharchive/themes
++themefiles.path = $${PREFIX}/share/mythtv/mytharchive/themes
+ themefiles.files = ../mythburn/themes/*
+ 
+-profilefiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/mytharchive/encoder_profiles
++profilefiles.path = $${PREFIX}/share/mythtv/mytharchive/encoder_profiles
+ profilefiles.files = ../mythburn/encoder_profiles/*.xml
+ 
+-nativeuifiles.path = $${SYSROOT}$${PREFIX}/share/mythtv/themes/default
++nativeuifiles.path = $${PREFIX}/share/mythtv/themes/default
+ nativeuifiles.files = mythnative-ui.xml
+ 
+ INSTALLS +=  scriptfiles introfiles themefiles imagefiles musicfiles

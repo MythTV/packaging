@@ -1,0 +1,509 @@
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-naming-policy toplevel-contextual -->
+  <object class="GtkVBox" id="tab_mirobridge">
+    <property name="visible">True</property>
+    <property name="border_width">6</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkAlignment" id="headings_alignment">
+        <property name="visible">True</property>
+        <property name="xalign">0</property>
+        <property name="yalign">0</property>
+        <property name="xscale">0</property>
+        <child>
+          <object class="GtkVBox" id="headings_vbox">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel" id="heading_label">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">&lt;big&gt;&lt;b&gt;MiroBridge Installation/Configuration&lt;/b&gt;&lt;/big&gt;</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHSeparator" id="headings_hseparator">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="desc_label">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Enjoy the best videos the Internet has to offer with
+MiroBridge providing an automated interface
+between Miro's videos and MythTV's
+Watch Recordings screen and MythVideo.</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLinkButton" id="wiki_linkbutton">
+                <property name="label" translatable="yes">MiroBridge Wiki</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="relief">none</property>
+                <property name="xalign">0</property>
+                <property name="uri">http://www.mythtv.org/wiki/MiroBridge</property>
+              </object>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLinkButton" id="miro_linkbutton">
+                <property name="label" translatable="yes">Miro</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="relief">none</property>
+                <property name="xalign">0</property>
+                <property name="uri">http://www.getmiro.com/</property>
+              </object>
+              <packing>
+                <property name="position">4</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkHSeparator" id="under_window_title_hseparator">
+        <property name="visible">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="padding">6</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkVBox" id="all_fields">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkAlignment" id="install_alignment">
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
+            <property name="xscale">0</property>
+            <property name="left_padding">25</property>
+            <child>
+              <object class="GtkCheckButton" id="install_checkbutton">
+                <property name="label" translatable="yes">Step #1: Install Miro and/or dependancies</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="tooltip_text" translatable="yes">Check this box then click the "Apply" button to install the dependencies and automatically configure MiroBridge. Until the install is complete the other options on this tab are hidden.
+
+This option will appear even after the initial install if individual components have been removed or delete. In effect you can repair a broken install.</property>
+                <property name="draw_indicator">True</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHSeparator" id="under_install_hseparator">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="padding">6</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkAlignment" id="cronjobs_alignment">
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
+            <property name="xscale">0</property>
+            <child>
+              <object class="GtkVBox" id="cronjobs_vbox">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkAlignment" id="enable_disable_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="xscale">0</property>
+                    <child>
+                      <object class="GtkHBox" id="enable_disable_hbox">
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This selection stops or restarts MiroBridge processing. Suspend the MiroBridge cronjob by selecting "Disable".</property>
+                        <child>
+                          <object class="GtkAlignment" id="enable_disable_label_alignment">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="xscale">0</property>
+                            <child>
+                              <object class="GtkLabel" id="enable_disable_label">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">MiroBridge cronjob:</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkAlignment" id="enable_disable_combobox_alignment">
+                            <property name="visible">True</property>
+                            <property name="left_padding">10</property>
+                            <child>
+                              <object class="GtkComboBox" id="enable_disable_combobox">
+                                <property name="visible">True</property>
+                                <property name="model">enable_disable_liststore</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="enable_disable_cellrenderertext"/>
+                                  <attributes>
+                                    <attribute name="text">0</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="cronjob_freq_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="xscale">0</property>
+                    <child>
+                      <object class="GtkHBox" id="cronjob_freq_hbox">
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">Select one of three options for how frequent the MiroBridge processing is run:
+1) Hourly starts: 45th minute of each hour (Default)
+2) Daily  starts: 2:00AM everyday
+3) Weekly starts: Sunday Midnight each week</property>
+                        <child>
+                          <object class="GtkAlignment" id="cronjob_freq_label_alignment">
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkLabel" id="cronjob_freq_label">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">MiroBridge conjob frequency:</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkAlignment" id="cronjob_freq_combobox_alignment">
+                            <property name="visible">True</property>
+                            <property name="left_padding">10</property>
+                            <child>
+                              <object class="GtkComboBox" id="cronjob_freq_combobox">
+                                <property name="visible">True</property>
+                                <property name="model">cronjob_freq_liststore</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="cronjob_freq_cellrenderertext"/>
+                                  <attributes>
+                                    <attribute name="text">0</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkAlignment" id="behavior_alignment">
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
+            <property name="xscale">0</property>
+            <child>
+              <object class="GtkVBox" id="behaviour_vbox1">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkHSeparator" id="under_cronobs_hseparator">
+                    <property name="visible">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="padding">6</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="behaviour_label_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="xscale">0</property>
+                    <child>
+                      <object class="GtkLabel" id="behaviour_label">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Behaviour Options&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="behaviour_combobox_alignment">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkComboBox" id="behaviour_combobox">
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">Default: Emulate Miro video processing:
+All newly downloaded videos are added to the Watch Recordings screen, after they have been watched they are moved to MythVideo and eventually are removed by Miro according to Miro's own expiry settings (X number of days).
+
+Watched Recordings screen only:
+Force all Miro videos to never be added to MythVideo. This is a watch-and-forget option. The Videos will be removed by Miro according to Miro's own expiry settings (X number of days)
+
+Copy all Miro videos directly to MythVideo:
+Force all Miro Channel videos to be copied directly to MythVideo and never displayed in the MythTV's "Watch Recordings" screen. These copied videos are removed from Miro entirely. Miro never expires/removes a copied video which act like any other MythVideo video file.
+
+Watch Miro videos then copy to MythVideo:
+Force all Miro videos to be copied directly to MythVideo AFTER they have been watched in the MythTV "Watch Recordings" screen. This option is a good balance between having new videos highlighted through the MythTV's "Watch Recordings" screen and automatically saving the video in MythVideo once it has been watched. This option is most frequently used for Movie trailers. Miro never expires/removes a copied video which act like any other MythVideo video file.</property>
+                        <property name="model">behaviour_liststore</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="behaviour_cellrenderertext"/>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHSeparator" id="under_behaviourhseparator">
+                    <property name="visible">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="padding">6</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkAlignment" id="last_elems_alignment">
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
+            <property name="xscale">0</property>
+            <child>
+              <object class="GtkVBox" id="last_elems_vbox">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel" id="config_miro_channels_label">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Configure Miro Video Channels&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="launch_miro_alignment">
+                    <property name="visible">True</property>
+                    <property name="xscale">0.60000002384185791</property>
+                    <child>
+                      <object class="GtkButton" id="launch_miro_button">
+                        <property name="label" translatable="yes">Launch Miro (Channel Add/Change/Delete)</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Launch the Miro GUI application so that you can:
+1) Set the location where Miro will download videos
+2) Add or change Miro video channels
+3) Modify the channel names
+4) Set the auto expiry days
+5) Ensure that auto download is enabled</property>
+                        <signal name="clicked" handler="callBacks"/>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="import_opml_label">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Import an OPML file (*.opml)&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="import_opml_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xscale">0.60000002384185791</property>
+                    <child>
+                      <object class="GtkFileChooserButton" id="import_opml_filechooserbutton">
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">*** The file browser window stays displayed while the OPML file is being imported ***
+
+Import an OPML file that has been exported from a separate Miro configuration. The import file must have an extension of ".opml". This is an excellent way of copying your Miro Channel configuration from a previous Miro install or for using a separate PC with a keyboard to choose and rename your Miro Channels.</property>
+                        <property name="create_folders">False</property>
+                        <signal name="selection_changed" handler="callBacks" after="yes"/>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHSeparator" id="over_uninstall_hseparator">
+                    <property name="visible">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="padding">12</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="uninstall_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="xscale">0</property>
+                    <property name="left_padding">25</property>
+                    <child>
+                      <object class="GtkCheckButton" id="uninstall_checkbutton">
+                        <property name="label" translatable="yes">Uninstall MiroBridge</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Uninstall the Miro package and remove MiroBridge related files including images, configuration file and the cronjob.
+Uninstall does not remove any existing Watch Recordings or MythVideo records or video files. Those must be removed by the through either the Watch Recordings screen delete 'd' and/or MythVideo delete 'd' options.</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">4</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="padding">6</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+  </object>
+  <object class="GtkListStore" id="enable_disable_liststore">
+    <columns>
+      <!-- column-name enable_disable_array -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes"></col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="behaviour_liststore">
+    <columns>
+      <!-- column-name behaviour_array -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes"></col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="cronjob_freq_liststore">
+    <columns>
+      <!-- column-name cronjob_freq_array -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes"></col>
+      </row>
+    </data>
+  </object>
+</interface>

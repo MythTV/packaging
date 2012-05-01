@@ -1,0 +1,17 @@
+#!/bin/sh
+# /etc/cron.weekly/mythtv-database script - check and backup mythconverg tables
+# Copyright 2005/12/02 2006/10/08 Paul Andreassen 
+#                      2010 Mario Limonciello
+
+set -e -u
+
+DBNAME="mythconverg"
+DEBIAN="--defaults-extra-file=/etc/mysql/debian.cnf"
+
+/usr/bin/mysqlcheck $DEBIAN -s $DBNAME
+
+/usr/share/mythtv/mythconverg_backup.pl
+
+/usr/bin/logger -p daemon.info -i -t${0##*/} "$DBNAME checked and backedup."
+
+# End of file.

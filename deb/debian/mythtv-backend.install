@@ -1,0 +1,22 @@
+#Come from make install
+usr/bin/mythbackend
+usr/bin/mythcommflag
+usr/bin/mythfilldatabase
+usr/bin/mythjobqueue
+usr/bin/mythtv-setup.real
+usr/bin/mythpreviewgen
+usr/share/mythtv/html
+usr/share/mythtv/backend-config
+
+#Copied in from debian/
+debian/mythtv-setup.desktop 			usr/share/applications
+debian/41-mythtv-permissions.rules		lib/udev/rules.d
+debian/mythtv-backend.if-up.d 			etc/network/if-up.d
+debian/mythtv-setup.sh				usr/share/mythtv
+
+## Mythbuntu control centre
+# plugin for mcc-mirobridge
+#Disable mirobridge since they're not set up  
+#to work with 0.24 bindings yet.
+#debian/mcc-mirobridge/python  usr/share/mythbuntu/plugins
+#debian/mcc-mirobridge/ui      usr/share/mythbuntu/plugins

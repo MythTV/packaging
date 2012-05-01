@@ -1,0 +1,47 @@
+#!/bin/sh
+
+set -e
+
+# Remove a no-longer used conffile
+rm_conffile() {
+    PKGNAME="$1"
+    CONFFILE="$2"
+    if [ -e "$CONFFILE" ]; then
+        md5sum="`md5sum \"$CONFFILE\" | sed -e \"s/ .*//\"`"
+        old_md5sum="`dpkg-query -W -f='${Conffiles}' $PKGNAME | sed -n -e \"\\\\' $CONFFILE '{s/ obsolete$//;s/.* //p}\"`"
+        if [ "$md5sum" != "$old_md5sum" ]; then
+            echo "Obsolete conffile $CONFFILE has been modified by you."
+            echo "Saving as $CONFFILE.dpkg-bak ..."
+            mv -f "$CONFFILE" "$CONFFILE".dpkg-bak
+        else
+            echo "Removing obsolete conffile $CONFFILE ..."
+            rm -f "$CONFFILE"
+        fi
+    fi
+}
+
+
+if [ "$1" = install ] || [ "$1" = upgrade ]; then
+	if [ -f "/etc/rsyslog.d/mythtv-rsyslog.conf" ]; then
+		rm_conffile "mythtv-backend" "/etc/rsyslog.d/mythtv-rsyslog.conf"
+	fi
+	if [ -e "/etc/udev.rules.d/41-mythtv-permissions.rules" ]; then
+		rm_conffile "mythtv-backend" "/etc/udev.rules.d/41-mythtv-permissions.rules"
+        fi
+	if dpkg --compare-versions "$2" le "0.23.0~trunk23567-0ubuntu2"; then
+		rm_conffile "mythtv-backend" "/etc/default/mythtv-backend"
+	fi
+        if dpkg --compare-versions "$2" lt "2:0.25.0~master.20120216"; then
+		rm_conffile "mythtv-backend" "/etc/rsyslog.d/40-mythtv-rsyslog.conf"
+	fi
+	for dir in daily hourly weekly; do
+		if [ -e "/etc/cron.$dir/mythtv-backend" ]; then
+			rm_conffile "mythtv-backend" "/etc/cron.$dir/mythtv-backend"
+		fi
+		if [ -e "/etc/cron.$dir/mythvideo" ]; then
+			rm_conffile "mythvideo" "/etc/cron.$dir/mythvideo"
+		fi
+	done
+fi
+
+#DEBHELPER#

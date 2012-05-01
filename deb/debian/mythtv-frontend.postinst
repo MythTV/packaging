@@ -1,0 +1,31 @@
+#!/bin/sh -e
+
+case "$1" in
+    configure)
+        . /usr/share/debconf/confmodule
+
+        # Unregister questions we used to ask
+        db_unregister mythtv/server_host || true
+        db_unregister mythtv/server_port || true
+
+        for dir in /var/lib/mythdvd /var/lib/mythdvd/temp; do
+            if ! dpkg-statoverride --list $dir >/dev/null; then
+                chown mythtv:mythtv $dir || true
+                chmod 2775 $dir || true
+            fi
+        done
+        ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+
+        ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=MythTV Frontend
+Comment=A frontend for all content on a mythtv-backend
+GenericName=MythTV Viewer
+Exec=mythfrontend --service
+Type=Application
+Encoding=UTF-8
+Icon=mythtv
+Categories=GNOME;Application;AudioVideo;Audio;Video
+X-AppInstall-Package=mythtv

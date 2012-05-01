@@ -1,0 +1,2 @@
+etc/mythtv/mythweb-htaccess usr/share/mythtv/mythweb/.htaccess
+usr/share/mythtv/mythweb var/www/mythweb

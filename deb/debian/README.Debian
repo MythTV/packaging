@@ -1,0 +1,96 @@
+--------------------------
+MythTV for Debian & Ubuntu
+--------------------------
+The MythTV package is actually a giant source package that includes all of the
+work that upstream MythTV works on.  It's organized this way for maintainer 
+simplicity and to workaround some limitations within Launchpad.
+
+If it's decoupled into many individual packages, the maintainer will need to 
+always make sure they're uploaded in sync.  This can mean 3-5 uploads each time 
+rather than a single one.
+
+Launchpad's PPA system can sometimes get backed up, meaning package builds will 
+skew on different architectures as well as for plugins/themes versus the main 
+package.
+
+---------------------
+>Preparing an upload<
+---------------------
+When uploading a package to the archive, you have a few different steps for how 
+to prepare the package than the rest of Ubuntu or Debian.
+
+-------------
+>>Automated<<
+-------------
+If you are making no changes to the packaging or switching to a newer major
+version, there is a helper script available that will automate steps 1-4 below.
+
+# debian/do-new-release.sh $DISTRIBUTION
+
+----------
+>>Manual<<
+----------
+1) Update the revision of the checkout to a current revision.  
+   # debian/rules get-git-source
+
+2) Rebuild the control files.  They need to hardcode the ABI of libmyth as well
+   as all of the themes supported for the myththemes metapackage.
+# debian/rules update-control-files
+
+-------------------------
+> MythTV version string <
+-------------------------
+All of the scripts for the special rules are dependent upon finding the MythTV
+version string in a special format to represent individual data.
+
+Here's a sample string for mythtv-fixes 0.24:
+1:0.24.0+fixes.20101202.ee329fe-0ubuntu1
+
+Let's break it apart:
+1:        -> epoch.  standard debian thing.
+0.24.0    -> upstream version number.
++         -> delimitter indicating this is newer than the 0.24.0 release
+fixes     -> indicates this is a checkout from release-X-YZ-fixes
+20101202  -> date
+.ee329fe  -> git hash
+-0ubuntu1 -> indicates not in debian, but this is ubuntu package iteration 1
+
+
+Here's a sample string for mythtv master 0.25:
+1:0.24.0+master.20101202.ee329fe-0ubuntu1
+
+Let's break it apart:
+1:        -> epoch.  standard debian thing.
+0.25.0    -> upstream version number.
+~         -> delimitter indicating this is less than the 0.25.0 release that hasn't yet happened
+master    -> indicates this is a checkout from trunk
+20101202  -> date
+.ee329fe  -> git hash
+-0ubuntu1 -> indicates not in debian, but this is ubuntu package iteration 1
+
+
+---------------------
+>-fPIC support<
+---------------------
+The builds do have --enable-pic passed to them which should enable -fPIC where 
+applicable.  There are certain portions of the ffmpeg code that intentionally
+disable this functionality though. The same libraries in the 'ffmpeg' 
+package don't have -fPIC either.
+
+These are all caused by inline assmebly referring to absolute memory on 
+x86/x86_64 that matches on MMX flags.
+On other architectures this code will not be compiled.
+
+libmyth-0.24-0: shlib-with-non-pic-code usr/lib/libmythavcodec.so.52.86.1
+ - mythtv/external/FFmpeg/libavcodec/x86/vp8dsp-init.c
+ - ff_vp8dsp_init_x86
+
+libmyth-0.24-0: shlib-with-non-pic-code usr/lib/libmythpostproc.so.51.2.0
+ - mythtv/external/libpostproc/postprocess.c
+ - pp_get_mode_by_name_and_quality
+
+libmyth-0.24-0: shlib-with-non-pic-code usr/lib/libmythswscale.so.0.11.0
+ - libswscale/utils.c
+ - sws_rgb2rgb_init
+ - sws_getCachedContext
+ - sws_getDefaultFilter

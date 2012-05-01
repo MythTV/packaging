@@ -1,0 +1,161 @@
+#!/usr/bin/make -f
+
+#For our custom rules on all mythtv packages
+# get-orig-source
+# info
+# newest-revision
+include debian/mythtv.make
+
+#                                      #
+# Architecture Independent Build flags #
+#                                      #
+MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
+				--prefix=/usr \
+				--runprefix=/usr \
+				--enable-crystalhd \
+				--enable-lirc \
+				--enable-audio-alsa \
+				--enable-audio-oss \
+				--enable-dvb \
+				--enable-ivtv \
+				--enable-firewire \
+				--enable-joystick-menu \
+				--with-bindings=perl \
+				--enable-ffmpeg-pthreads \
+				--enable-pic \
+				--enable-vaapi \
+				--perl-config-opts="INSTALLDIRS=vendor" \
+				--enable-libvpx \
+				--enable-libx264 \
+				--enable-libmp3lame \
+				--enable-libfaac \
+				--enable-libxvid \
+				--enable-nonfree
+ifeq "$(DEB_BUILD_ARCH)" "armel"
+	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl
+else ifeq "$(DEB_BUILD_ARCH)" "armhf"
+	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl
+else
+	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video
+endif
+#                                    #
+# Architecture dependent build flags #
+#                                    #
+DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
+ifeq "$(DEB_BUILD_ARCH)" "i386"
+	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx  --enable-vdpau
+endif
+ifeq "$(DEB_BUILD_ARCH)" "amd64"
+	MYTHTV_CONFIGURE_OPTS += --enable-vdpau
+endif
+ifeq "$(DEB_BUILD_ARCH)" "armel"
+	MYTHTV_CONFIGURE_OPTS += --enable-vdpau --extra-cflags="-marm -fPIC -DPIC"
+endif
+ifeq "$(DEB_BUILD_ARCH)" "powerpc"
+	MYTHTV_CONFIGURE_OPTS += --enable-altivec --extra-cxxflags="-maltivec"
+endif
+
+#Mythplugins configure opts
+MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \
+                              --enable-all  \
+                              --zm-version=1.22.3 \ 
+                              --qmake=/usr/bin/qmake \
+
+ifeq "$(DEB_BUILD_ARCH)" "armel"
+	MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
+else ifeq "$(DEB_BUILD_ARCH)" "armhf"
+	MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
+endif
+
+#Use moar CPUs for jya
+PROCESSORS       ?= $(shell grep -ic ^processor /proc/cpuinfo)
+ifeq (0,$(PROCESSORS))
+PROCESSORS := 1
+endif
+
+%:
+	dh $@
+
+#Rather than have a configure/build/install phase, combine them all so we can do each part in order
+override_dh_auto_install:
+	if [ -f mythtv/VERSION ] && [ -f debian/DESCRIBE ]; then \
+		mv mythtv/VERSION mythtv/VERSION.old ;\
+		cp debian/DESCRIBE mythtv/VERSION ;\
+	fi
+	cd mythtv && sh version.sh `pwd`
+
+	#mythtv
+	cd mythtv && ./configure $(MYTHTV_CONFIGURE_OPTS)
+	$(MAKE) -j$(PROCESSORS) -C mythtv
+	$(MAKE) -C mythtv install INSTALL_ROOT=$(CURDIR)/debian/tmp
+
+	#mythplugins
+	cd mythplugins && ./configure $(MYTHPLUGINS_CONFIGURE_OPTS) --mythroot=$(CURDIR)/debian/tmp
+	$(MAKE) -j$(PROCESSORS) -C mythplugins
+	for plugin in mytharchive \
+	mythgallery mythgame mythmusic mythmovies mythnews \
+	mythweather mythzoneminder mythbrowser mythnetvision ; do \
+		$(MAKE) -C mythplugins/$$plugin install INSTALL_ROOT=$(CURDIR)/debian/$$plugin; \
+	done
+
+	#(MythTV) We replace these with shell scripts
+	mv debian/tmp/usr/bin/mythfrontend debian/tmp/usr/bin/mythfrontend.real
+	mv debian/tmp/usr/bin/mythtv-setup debian/tmp/usr/bin/mythtv-setup.real
+
+	#(All) Make sure python/perl scripts are executable
+	find debian/tmp/usr/share -name "*.p[y|l]" -type f -size +1b -exec chmod 755 {} \;
+
+override_dh_install:
+	dh_install -Xusr/share/mythtv/fonts/Free -Xusr/share/mythtv/fonts/tiresias_gpl3.txt --fail-missing
+
+override_dh_installinit:
+	dh_installinit
+
+	#(MythTV) Remove license files
+	find debian/tmp -name "COPYING" -delete
+	find debian/tmp -name "README.license" -delete
+
+	#(MythTV) Set correct permissions for png and html files
+	find debian/tmp -regex '.*\.png$$' -print0 | xargs -0 -r chmod 644
+	find debian/tmp -regex '.*\.html$$' -print0 | xargs -0 -r chmod 644
+
+override_dh_strip:
+	dh_strip --dbg-package=mythtv-dbg
+
+override_dh_makeshlibs:
+	dh_makeshlibs -V -Xusr/lib/mythtv/filters
+
+override_dh_compress:
+	dh_compress -X.pl -X.py
+
+override_dh_fixperms:
+	dh_fixperms -X.pl -X.py
+	#themes shouldn't be like this
+	for type in png html txt jpg xml ; do \
+		find debian -name "*.$$type" -type f -exec chmod -x {} \; ;\
+	done
+
+override_dh_auto_clean:
+	[ -f mythtv/config.mak ] && $(MAKE) -C mythtv distclean || true
+	[ -f mythplugins/config.pro ] && $(MAKE) -C mythplugins distclean || true
+	[ -f mythtv/VERSION.old ] && mv mythtv/VERSION.old mythtv/VERSION || true
+	dh_auto_clean
+	debconf-updatepo
+
+override_dh_installdocs:
+	dh_installdocs
+	#(MythTV) Remove license files from contrib documentation.
+	find debian/mythtv-backend/usr/share/doc/mythtv-backend/contrib \
+		-name "COPYING" -delete
+	rm -f debian/mythtv-common/usr/share/mythtv/themes/Terra/watermarks/README.license
+
+	#(MythWeb)
+	for file in LICENSE README INSTALL; do \
+		rm -f debian/mythweb/usr/share/mythtv/mythweb/$$file ;\
+	done
+	find debian/mythweb -name ".gitignore" -type f -delete || true
+	rm -rf debian/mythweb/usr/share/mythtv/mythweb/data/tv_icons
+	rm -rf debian/mythweb/usr/share/mythtv/mythweb/data/cache
+
+	#(Myththemes)
+	rm -f debian/mythtv-theme-childish/usr/share/mythtv/themes/Childish/COPYING

@@ -1,0 +1,309 @@
+# Italian translation for mythtv
+# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# This file is distributed under the same license as the mythtv package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: mythtv\n"
+"Report-Msgid-Bugs-To: mythtv@packages.debian.org\n"
+"POT-Creation-Date: 2010-03-24 22:35-0500\n"
+"PO-Revision-Date: 2007-09-27 09:35+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Italian <it@li.org>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2007-10-05 08:18+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:1001
+#, fuzzy
+#| msgid "What database should be used to hold MythTV data:"
+msgid "Database to be used to hold MythTV data:"
+msgstr "Il database da usare per archiviare i dati MythTV:"
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:1001
+msgid "If a database with this name already exists, it will be used."
+msgstr "Se esiste già un database con questo nome, verrà usato."
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:2001
+#, fuzzy
+#| msgid "What username should MythTV use to access its database:"
+msgid "Username used by MythTV to access its database:"
+msgstr "Il nome utente da usare per accedere al database:"
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:2001
+msgid ""
+"This user will automatically be granted appropriate permissions to the "
+"database."
+msgstr ""
+"A questo utente saranno concessi automaticamente i permessi necessari per il "
+"database."
+
+#. Type: password
+#. Description
+#: ../mythtv-common.templates:3001
+#, fuzzy
+#| msgid "What password should MythTV use to access its database:"
+msgid "Password used by MythTV to access its database:"
+msgstr "La password da usare per accedere al database:"
+
+#. Type: password
+#. Description
+#: ../mythtv-common.templates:3001
+msgid "If you give an empty password, a random one will be generated."
+msgstr "Non scrivendo alcuna password ne verrà generata una casuale."
+
+#. Type: string
+#. Description
+#: ../mythtv-common.templates:4001
+#, fuzzy
+#| msgid "On what host does the MySQL server reside:"
+msgid "Host MySQL server resides in:"
+msgstr "L'host in cui si trova il database MySQL:"
+
+#. Type: string
+#. Description
+#: ../mythtv-database.templates:1001
+#, fuzzy
+#| msgid "What is the name of the MySQL administrator account:"
+msgid "MySQL administrator account:"
+msgstr "Nome dell'account amministratore di MySQL:"
+
+#. Type: string
+#. Description
+#. Type: password
+#. Description
+#: ../mythtv-database.templates:1001 ../mythtv-database.templates:2001
+msgid "This information will be used to create a database and user for MythTV."
+msgstr ""
+"Questa informazioni verrà utilizzata per creare un database e un utente per "
+"MythTV."
+
+#. Type: string
+#. Description
+#: ../mythtv-database.templates:1001
+msgid ""
+"Unless you have explicitly changed this on the MySQL server, and understand "
+"MySQL's privilege system, use the default of 'root'."
+msgstr ""
+"A meno che non sia stato cambiato nel server MySQL e si comprende il sistema "
+"dei privilegi di MySQL, usare il predefinito di \"root\"."
+
+#. Type: password
+#. Description
+#: ../mythtv-database.templates:2001
+#, fuzzy
+#| msgid "What is the password for the MySQL administrator account '${user}':"
+msgid "Password for the MySQL administrator account '${user}':"
+msgstr "Password per l'account amministratore di MySQL \"${user}\":"
+
+#. Type: password
+#. Description
+#: ../mythtv-database.templates:2001
+msgid ""
+"Unless you have explicitly changed the password on the MySQL server, leave "
+"this blank."
+msgstr ""
+"A meno che non sia stata cambiata nel server MySQL, lasciare questo campo "
+"vuoto."
+
+#. Type: boolean
+#. Description
+#: ../mythtv-database.templates:3001
+#, fuzzy
+#| msgid "Will you be using other computers running MythTV?"
+msgid "Will other computers run MythTV?"
+msgstr "Verranno usati altri computer con MythTV?"
+
+#. Type: boolean
+#. Description
+#: ../mythtv-database.templates:3001
+#, fuzzy
+#| msgid ""
+#| "If you will be using any other computers with MythTV, this computer needs "
+#| "to be configured to allow remote connections.  Do you want to enable "
+#| "remote  connectivity?"
+msgid ""
+"If any other computers (that includes other Front End machines) with MythTV "
+"will be used, this computer needs to be configured to allow remote "
+"connections."
+msgstr ""
+"Se verranno usati altri computer con MythTV, questo computer deve essere "
+"configurato per consentire connessioni remote. Abilitare le connessioni "
+"remote?"
+
+#. Type: boolean
+#. Description
+#: ../mythtv-database.templates:3001
+msgid ""
+"Note that this is a security risk, as both the MythTV and MySQL services "
+"will be exposed. Be sure to place this machine behind a firewall."
+msgstr ""
+"Notare che potrebbe essere un rischio per la sicurezza, dato che entrambi i "
+"servizi MythTV e MySQL saranno esposti. Assicurarsi di posizionare questo "
+"computer dietro un firewall."
+
+#. Type: boolean
+#. Description
+#: ../mythtv-database.templates:3001
+#, fuzzy
+#| msgid ""
+#| "If you have multiple interfaces, the first one listed in 'ifconfig' will "
+#| "be used."
+msgid ""
+"If multiple interfaces are used, the first one listed in 'ifconfig' will be "
+"used."
+msgstr ""
+"Se si dispone di più di un'interfaccia, verrà usata la prima presente in "
+"\"ifconfig\"."
+
+#. Type: string
+#. Description
+#: ../mythtv-frontend.templates:1001
+#, fuzzy
+#| msgid ""
+#| "What is the hostname of the system where the MythTV backend is installed:"
+msgid "Hostname of the system where the MythTV backend is installed:"
+msgstr "Nome dell'host del sistema in cui è installato il backend MythTV:"
+
+#. Type: string
+#. Description
+#: ../mythtv-frontend.templates:2001
+#, fuzzy
+#| msgid "On what port number is the MythTV server listening:"
+msgid "Port number the MythTV server is listening on:"
+msgstr "Porta di ascolto del server MythTV:"
+
+#~ msgid "mythtv-setup must be run in order to complete MythTV installation"
+#~ msgstr ""
+#~ "mythtv-setup deve essere eseguito per completare l'installazione di MythTV"
+
+#~ msgid ""
+#~ "You must run mythtv-setup as a user in the 'mythtv' group in order to "
+#~ "complete  mythtv configuration.  Note that this program requires an X "
+#~ "display, so you must either login to an X session as a user in the "
+#~ "'mythtv' group, or otherwise  arrange for that user to have access to "
+#~ "your X display."
+#~ msgstr ""
+#~ "È necessario eseguire mythtv-setup come un utente nel gruppo \"mythtv\" "
+#~ "per poter configurare completamente mythtv. Questo programma richiede un "
+#~ "display X, potrebbe quindi essere necessario accedere a una sessione X "
+#~ "come l'utente appartenente al gruppo \"mythtv\" oppure fare in modo che "
+#~ "quell'utente abbia accesso al proprio display X."
+
+#~ msgid "You must complete all four steps presented in the program."
+#~ msgstr ""
+#~ "È necessario completare tutti e quattro i passi presentati in questo "
+#~ "programma."
+
+#~ msgid ""
+#~ "Once you have done this, you may start the backend by executing the "
+#~ "following command:"
+#~ msgstr ""
+#~ "Uno volta fatto questo, è possibile avviare il backend eseguendo il "
+#~ "comando seguente:"
+
+#~ msgid "sudo /etc/init.d/mythtv-backend start"
+#~ msgstr "sudo /etc/init.d/mythtv-backend start"
+
+#~ msgid ""
+#~ "You must run mythtv-setup as a user in the 'mythtv' group in order to "
+#~ "complete mythtv configuration."
+#~ msgstr ""
+#~ "È necessario avviare \"mythtv-setup\" come un utente nel gruppo \"mythtv"
+#~ "\" per completare la configurazione di mythtv."
+
+#~ msgid ""
+#~ "If you are not in the mythtv group when launching setup, you will be "
+#~ "given  the opportunity to be automatically added."
+#~ msgstr ""
+#~ "Se non si è nel gruppo mythtv quando viene lanciata la configurazione, è "
+#~ "possibile aggiungersi automaticamente."
+
+#~ msgid "The Ubuntu MythTV packages generate a random MySQL password."
+#~ msgstr "Il pacchetto MythTV di Ubuntu genera una password MySQL casuale."
+
+#~ msgid ""
+#~ "The generated password for this machine is '${password}'.  If you are "
+#~ "adding this machine to an existing mythtv-network, you will want to "
+#~ "update this password to the one in use by the network after completing "
+#~ "installation."
+#~ msgstr ""
+#~ "La password generata è \"${password}\". Nel caso si stia aggiungendo "
+#~ "questo computer all'interno di una mythtv-network, potrebbe essere "
+#~ "necessario, al termine dell'installazione, aggiornare la password con "
+#~ "quella in uso nella rete."
+
+#~ msgid "This can be done by: 'sudo dpkg-reconfigure mythtv-common'."
+#~ msgstr ""
+#~ "Questo può essere fatto con il comando: \"sudo dpkg-reconfigure mythtv-"
+#~ "common\"."
+
+#~ msgid ""
+#~ "In case you forget this password, it is also stored in '/etc/mythtv/mysql."
+#~ "txt'."
+#~ msgstr ""
+#~ "Nel caso in cui la password venga persa, è archiviata in \"/etc/mythtv/"
+#~ "mysql.txt\"."
+
+#~ msgid "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
+#~ msgstr "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
+
+#~ msgid "Which XMLTV grabber should be used to retrieve program listings:"
+#~ msgstr ""
+#~ "Quale strumento XMLTV usare per ottenere gli elenchi della programmazione:"
+
+#~ msgid ""
+#~ " - tv_grab_na retrieves listings for North America (US and Canada)\n"
+#~ " - tv_grab_de retrieves listings for Germany and Austria\n"
+#~ " - tv_grab_sn retrieves listings for Sweden or Norway\n"
+#~ " - tv_grab_uk retrieves listings for the United Kingdom\n"
+#~ " - tv_grab_uk_rt retrieves listings for the United Kingdom (alternate)"
+#~ msgstr ""
+#~ " - tv_grab_na recupera gli elenchi per il nord Americo (US e Canada)\n"
+#~ " - tv_grab_de recupera gli elenchi per Germani e Austria\n"
+#~ " - tv_grab_sn recupera gli elenchi per Svezia e Norvegia\n"
+#~ " - tv_grab_uk recupera gli elenchi per la Gran Bretegna\n"
+#~ " - tv_grab_uk_rt retrieves recupera gli elenchi per la Gran Bretagna "
+#~ "(alternativo)"
+
+#~ msgid "Which television standard should be used by MythTV:"
+#~ msgstr "Lo standard televisivo da usaer con MythTV:"
+
+#~ msgid "Which channel frequency table should be used by MythTV:"
+#~ msgstr "La frequanza del canale da usare con MythTV:"
+
+#~ msgid "WARNING: old MythTV binaries found"
+#~ msgstr "Attenzione: trovati binari di una vecchia versione di MythTV"
+
+#~ msgid ""
+#~ "It appears that you have installed mythtv from source previously, and "
+#~ "some files remain from the previous installation, including at least:"
+#~ msgstr ""
+#~ "Sembra che mythtv sia stato installato da sorgenti e sono rimasti alcuni "
+#~ "file dell'installazione precedente, compresi:"
+
+#~ msgid "${files}"
+#~ msgstr "${files}"
+
+#~ msgid ""
+#~ "Installation of these packages should succeed, but you MUST remove these "
+#~ "files in order for the packaged version of MythTV to work properly."
+#~ msgstr ""
+#~ "L'installazione di questi pacchetti dovrebbe avere successo, ma è "
+#~ "necessario rimuovere questi file per fare in modo che la versione di "
+#~ "MythTV pacchettizzata funzioni correttamente."
+
+#~ msgid "Is it OK to create the video4linux device nodes?"
+#~ msgstr "Creare i nodi per il device video4linux?"

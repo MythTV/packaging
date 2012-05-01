@@ -1,0 +1,24 @@
+###############################################################################
+# This file is used if /usr/bin/mythfrontend is called with --service         #
+# as in mythtv.desktop which ships with the mythtv-frontend package           #
+###############################################################################
+
+# Enable mythwelcome
+# Note: if you enable this, MYTHFRONTEND_OPTS is ignored
+# You will have to specify your startup options for mythfrontend in mythwelcome
+#
+# Note: a log file is available at /var/log/mythtv/mythwelcome.log
+# which should also include mythfrontend output
+#
+# MYTHWELCOME=true
+
+# Startup options for mythfrontend
+# "--verbose all,nodatabase" is just an example. You will get LOTS of output!
+# To obtain a list of verbose levels, run "mythfrontend --verbose help"
+# To find out more about other available options, run "mythfrontend --help"
+# 
+# Note: a log file is already available at /var/log/mythtv/mythfrontend.log,
+# so there's no need to specify --logfile (or -l) unless you want to log to a
+# non-standard location
+#
+# MYTHFRONTEND_OPTS="--verbose all,nodatabase"

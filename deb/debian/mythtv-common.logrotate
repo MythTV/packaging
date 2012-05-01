@@ -1,0 +1,47 @@
+/var/log/mythtv/mythccextractor.log {
+        daily
+        size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+        postrotate
+                reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mythutil.log {
+        daily
+        size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+        postrotate
+                reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mythmetadatalookup.log {
+        daily
+        size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+        postrotate
+                reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mythshutdown.log {
+        daily
+        size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+        postrotate
+                reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}

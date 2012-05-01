@@ -1,0 +1,58 @@
+/var/log/mythtv/mythavtest.log {
+        daily
+	size=10M
+        rotate 7
+        notifempty
+        copytruncate
+	missingok
+        postrotate
+                reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mythfrontend.log {
+        daily
+	size=10M
+        rotate 7
+        notifempty
+        copytruncate
+	missingok
+        postrotate
+                reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mythlcdserver.log {
+        daily
+	size=10M
+        rotate 7
+        notifempty
+        copytruncate
+	missingok
+        postrotate
+                reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mythmediaserver.log {
+        daily
+        size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        postrotate
+                reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}
+
+/var/log/mythtv/mythwelcome.log {
+        daily
+	size=10M
+        rotate 7
+        notifempty
+        copytruncate
+        missingok
+        postrotate
+                reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}

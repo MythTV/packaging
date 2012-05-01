@@ -1,0 +1,124 @@
+#!/bin/sh -e
+. /usr/share/debconf/confmodule
+
+case "$1" in
+    configure)
+
+    #only create a user if they don't already exist
+    if ! getent passwd mythtv 1>/dev/null; then
+        adduser --quiet --system --group --disabled-password --system \
+            --shell /bin/sh mythtv
+    fi
+    HOMEDIR=$(getent passwd mythtv | awk -F: '{ print $6 }')
+
+    adduser --quiet mythtv video
+    adduser --quiet mythtv audio
+    adduser --quiet mythtv cdrom
+    adduser --quiet mythtv dialout
+
+    db_get mythtv/mysql_host
+    hostname="$RET"
+    export hostname
+
+    db_get mythtv/mysql_mythtv_dbname
+    database="$RET"
+    export database
+
+    db_get mythtv/mysql_mythtv_user
+    mythtv_username="$RET"
+    export mythtv_username
+
+    db_get mythtv/mysql_mythtv_password
+    if [ -z "$RET" ]; then
+        mythtv_password="$(pwgen -s 8)"
+        db_set mythtv/mysql_mythtv_password "$mythtv_password"
+        db_subst mythtv/display_password password "$mythtv_password"
+        db_input high mythtv/display_password || true
+        db_go || true
+    else
+        mythtv_password="$RET"
+    fi
+    export mythtv_password
+
+    NEW=$(mktemp -t mysql.txt-XXXXXX)
+    if [ -s /etc/mythtv/mysql.txt ]; then
+        INPUT=/etc/mythtv/mysql.txt
+        chown --reference="$INPUT" "$NEW"
+        chmod --reference="$INPUT" "$NEW"
+    else
+        INPUT=/usr/share/mythtv/mysql.txt.dist
+        chown mythtv:mythtv "$NEW"
+        chmod 660 "$NEW"
+    fi
+
+    cat $INPUT | grep -v 'DBPassword=' | sed -e "
+s/^\(\(str  *\)\?DBHostName\)=.*$/\1=$hostname/g;
+s/^\(\(str  *\)\?DBUserName\)=.*$/\1=$mythtv_username/g;
+s/^\(\(str  *\)\?DBName\)=.*$/\1=$database/g;" > $NEW
+        cat <<EOF >> $NEW
+DBPassword=$mythtv_password
+EOF
+
+    mv $NEW /etc/mythtv/mysql.txt
+
+    NEW=$(mktemp -t config.xml-XXXXXX)
+    if [ -s /etc/mythtv/config.xml ]; then
+        INPUT=/etc/mythtv/config.xml
+        chown --reference="$INPUT" "$NEW"
+        chmod --reference="$INPUT" "$NEW"
+    else
+        INPUT=/usr/share/mythtv/config.xml
+        chown mythtv:mythtv "$NEW"
+        chmod 660 "$NEW"
+    fi
+
+    cat $INPUT > $NEW 
+
+    perl -pi -e 's/(<DBHostName>).*?(<\/DBHostName>)/$1$ENV{'hostname'}$2/;' $NEW
+    perl -pi -e 's/(<DBUserName>).*?(<\/DBUserName>)/$1$ENV{'mythtv_username'}$2/;' $NEW
+    perl -pi -e 's/(<DBPassword>).*?(<\/DBPassword>)/$1$ENV{'mythtv_password'}$2/;' $NEW
+    perl -pi -e 's/(<DBName>).*?(<\/DBName>)/$1$ENV{'database'}$2/;' $NEW
+    perl -pi -e 's/^\s+<LocalHostName>.*?<\/LocalHostName>\n//m;' $NEW
+
+    mv $NEW /etc/mythtv/config.xml
+
+    mkdir -p /root/.mythtv || true
+    mkdir -p $HOMEDIR/.mythtv || true
+    chown mythtv:mythtv $HOMEDIR/.mythtv || true
+
+    if [ ! -e /root/.mythtv/config.xml ]; then
+        ln -s /etc/mythtv/config.xml /root/.mythtv/config.xml || true
+    fi
+
+    if [ ! -e $HOMEDIR/.mythtv/config.xml ]; then
+        ln -s /etc/mythtv/config.xml $HOMEDIR/.mythtv/config.xml || true
+    fi
+
+    if [ ! -e $HOMEDIR/.mythtv/mysql.txt ]; then
+        ln -s /etc/mythtv/mysql.txt $HOMEDIR/.mythtv/mysql.txt || true
+    fi
+
+    #fix rsyslog permissions
+    if [ -d "/var/log/mythtv" ] && ! dpkg-statoverride --list "/var/log/mythtv" >/dev/null; then
+        chown syslog:adm -R /var/log/mythtv
+        chmod 2755 /var/log/mythtv
+    fi
+
+
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+
+    ;;
+
+    *)
+    echo "postinst called with unknown argument \`$1'" >&2
+    db_set mythtv/mysql_mythtv_password ""
+    exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+db_set mythtv/mysql_mythtv_password ""
+exit 0
