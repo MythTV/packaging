@@ -9,7 +9,7 @@ include debian/mythtv.make
 #                                      #
 # Architecture Independent Build flags #
 #                                      #
-MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
+MYTHTV_CONFIGURE_OPTS +=    --compile-type=release \
 				--prefix=/usr \
 				--runprefix=/usr \
 				--enable-crystalhd \
