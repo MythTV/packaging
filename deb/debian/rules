@@ -9,7 +9,8 @@ include debian/mythtv.make
 #                                      #
 # Architecture Independent Build flags #
 #                                      #
-MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
+# TODO: Make the compile-type selectable depending on DEB_BUILD_OPTIONS.
+MYTHTV_CONFIGURE_OPTS +=    --compile-type=release \
 				--prefix=/usr \
 				--runprefix=/usr \
 				--enable-crystalhd \
@@ -74,7 +75,7 @@ PROCESSORS := 1
 endif
 
 %:
-	dh $@
+	dh $@ --parallel
 
 #Rather than have a configure/build/install phase, combine them all so we can do each part in order
 override_dh_auto_install:

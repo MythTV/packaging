@@ -5,7 +5,7 @@ Maintainer: MythTV Ubuntu Maintainers <ubuntu-mythtv@lists.ubuntu.com>
 Uploaders: Mario Limonciello <superm1@ubuntu.com>,
            Andres Mejia <amejia@debian.org>,
 Homepage: http://www.mythtv.org
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Vcs-Git: git://github.com/MythTV/packaging.git
 Build-Conflicts: libqt3-mt-dev
 Build-Depends:  debhelper (>= 7.0.50~),
@@ -52,7 +52,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 python-lxml,
                 python-mysqldb,
                 python-pycurl,
-		python-urlgrabber,
+                python-urlgrabber,
                 libgl1-mesa-dev | xlibmesa-gl-dev | xlibmesa-dev | libgl-dev,
                 libdvdread-dev | libdvdread3-dev,
                 fftw-dev,
