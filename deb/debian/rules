@@ -75,7 +75,7 @@ PROCESSORS := 1
 endif
 
 %:
-	dh $@
+	dh $@ --parallel
 
 #Rather than have a configure/build/install phase, combine them all so we can do each part in order
 override_dh_auto_install:
