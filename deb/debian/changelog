@@ -1,10 +1,16 @@
-mythtv (2:0.26.0~master.20120410.1f5962a-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.26.0~master.20120505.4b8b3cc-0ubuntu1) UNRELEASED; urgency=low
 
+  [ Mario Limonciello ]
   * Switch to 0.26 branch for master builds.
   * Cleanup lintian errors:
     - debian/control.in: description-synopsis-starts-with-article
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 10 Apr 2012 02:52:25 -0500
+  [ Andres Mejia ]
+  * Bump to Standards-Version 3.9.3.
+  * Build 'release' type builds instead of 'profile'.
+  * Support parallel builds.
+
+ -- Andres Mejia <amejia@debian.org>  Mon, 07 May 2012 18:37:17 -0400
 
 mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu2) UNRELEASED; urgency=low
 
