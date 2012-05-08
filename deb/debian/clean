@@ -26,3 +26,4 @@ mythplugins/mytharchive/mytharchive/config.h
 mythplugins/mytharchive/mytharchive/config.pro
 mythplugins/cleanup/Makefile
 .qmake*
+mythtv/external/FFmpeg/myth*
