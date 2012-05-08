@@ -1,6 +1,8 @@
 mythtv (2:0.26.0~master.20120410.1f5962a-0ubuntu1) UNRELEASED; urgency=low
 
   * Switch to 0.26 branch for master builds.
+  * Cleanup lintian errors:
+    - debian/control.in: description-synopsis-starts-with-article
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 10 Apr 2012 02:52:25 -0500
 
