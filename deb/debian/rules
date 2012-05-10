@@ -119,7 +119,8 @@ override_dh_auto_install:
 	find debian/tmp/usr/share -name "*.p[y|l]" -type f -size +1b -exec chmod 755 {} \;
 
 override_dh_install:
-	dh_install -Xusr/share/mythtv/fonts/Free -Xusr/share/mythtv/fonts/tiresias_gpl3.txt --fail-missing
+	dh_install -Xusr/share/mythtv/fonts/Free -Xusr/share/mythtv/fonts/tiresias_gpl3.txt \
+		-XLICENSE --fail-missing
 
 override_dh_installinit:
 	dh_installinit
