@@ -5,6 +5,7 @@ mythtv (2:0.26.0~master.20120505.4b8b3cc-0ubuntu1) UNRELEASED; urgency=low
   * Cleanup lintian errors:
     - debian/control.in: description-synopsis-starts-with-article
     - debian/mythweb.config: maintainer-script-ignores-errors
+  * Add build dependency for uuid-dev.
 
   [ Andres Mejia ]
   * Bump to Standards-Version 3.9.3.
