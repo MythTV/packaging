@@ -2,12 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/www-apps/mythweb/mythweb-0.23.1_p25396.ebuild,v 1.1 2010/07/27 03:14:08 cardoe Exp $
 
-EAPI=2
+EAPI=4
 
 MYTHTV_VERSION=""
 MYTHTV_BRANCH="master"
-MYTHTV_REV="56e714fbc22e1e39331a8e750200c2397280b1dd"
-MYTHTV_SREV="56e714f"
+MYTHTV_REV="8c43d8da31d738c75ec6abc9daff2772b16310c8"
+MYTHTV_SREV="8c43d8d"
 
 inherit mythtv webapp depend.php
 
@@ -15,8 +15,8 @@ DESCRIPTION="PHP scripts intended to manage MythTV from a web browser."
 IUSE=""
 KEYWORDS="~amd64 ~x86 ~ppc"
 
-RDEPEND="<dev-lang/php-5.4[curl,json,mysql,session,posix]
-	|| ( <dev-lang/php-5.3[spl,pcre] =dev-lang/php-5.3 )
+RDEPEND="dev-lang/php:5.3[curl,json,mysql,session,posix]
+	|| ( ~media-tv/mythtv-bindings-0.26[php(+)] ~media-tv/mythtv-0.26[php(+)] )
 	dev-perl/DBI
 	dev-perl/DBD-mysql
 	dev-perl/Net-UPnP"
