@@ -26,11 +26,7 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
 				--enable-vaapi \
 				--perl-config-opts="INSTALLDIRS=vendor" \
 				--enable-libvpx \
-				--enable-libx264 \
-				--enable-libmp3lame \
-				--enable-libfaac \
-				--enable-libxvid \
-				--enable-nonfree
+				--enable-libx264
 ifeq "$(DEB_BUILD_ARCH)" "armel"
 	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl
 else ifeq "$(DEB_BUILD_ARCH)" "armhf"
