@@ -16,7 +16,7 @@ IUSE=""
 KEYWORDS="amd64 x86 ~ppc"
 
 RDEPEND="dev-lang/php:5.3[curl,json,mysql,session,posix]
-	|| ( ~media-tv/mythtv-bindings-0.25[php(+)] ~media-tv/mythtv-0.25[php(+)] )
+	|| ( =media-tv/mythtv-bindings-0.25*[php(+)] =media-tv/mythtv-0.25*[php(+)] )
 	dev-perl/DBI
 	dev-perl/DBD-mysql
 	dev-perl/Net-UPnP"
