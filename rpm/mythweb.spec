@@ -30,7 +30,7 @@
 %define desktop_vendor  mythtv
 
 # Git Revision number and branch ID
-%define _gitrev 0.0.rc.68.g74d4a29
+%define _gitrev 0.0.pre.520.gf842d1b
 %define branch master
 
 #
@@ -42,7 +42,7 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version: 0.25
+Version: 0.26
 %if "%{branch}" == "master"
 Release: 0.1.git.%{_gitrev}%{?dist}
 %else

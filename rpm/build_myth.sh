@@ -99,6 +99,7 @@ EOF
         time rpmbuild -bb "$ABSPATH"/mythtv.spec \
             --define "_sourcedir $ABSPATH/mythtv" \
             --with debug            \
+            --without crystalhd    \
             --without mytharchive   \
             --without mythgallery   \
             --without mythgame      \

@@ -31,13 +31,13 @@
 #
 # The following options are disabled by default.  Use these options to enable:
 #
-# --with systemd            Use systemd for backend rather than SysV init.
+# --with crystalhd       Enable Crystal HD support
 #
 # The following options are enabled by default.  Use these options to disable:
 #
+# --without systemd         Use systemd for backend rather than SysV init.
 # --without vdpau           Disable VDPAU support
 # --without vaapi           Disable VAAPI support
-# --without crystalhd       Disable Crystal HD support
 # --without perl            Disable building of the perl bindings
 # --without php             Disable building of the php bindings
 # --without python          Disable building of the python bindings
@@ -64,10 +64,10 @@
 %define desktop_vendor  mythtv
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.25-rc-68-g74d4a29
+%define vers_string v0.26-pre-520-gf842d1b
 
 # Git Revision number and branch
-%define _gitrev 0.0.rc.68.g74d4a29
+%define _gitrev 0.0.pre.520.gf842d1b
 %define branch master
 
 #
@@ -79,7 +79,7 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version: 0.25
+Version: 0.26
 %if "%{branch}" == "master"
 Release: 0.1.git.%{_gitrev}%{?dist}
 %else
@@ -101,13 +101,15 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 # Set "--with debug" to enable MythTV debug compile mode
 %define with_debug         %{?_with_debug:         1} %{?!_with_debug:         0}
 
-# Use SysV init script by default but allow use of SystemD service.
-%define with_systemd       %{?_with_systemd:       1} %{?!_without_systemd:    0}
+# Use SystemD service by default but allow use of SysV init script.
+%define with_systemd       %{?_without_systemd:    0} %{?!_without_systemd:    1}
+
+# The following options are disabled by default.  Use --with to enable them
+%define with_crystalhd     %{?_with_crystalhd:     1} %{?!_with_crystalhd:     0}
 
 # The following options are enabled by default.  Use --without to disable them
 %define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
 %define with_vaapi         %{?_without_vaapi:      0} %{?!_without_vaapi:      1}
-%define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
 %define with_xvmc          %{?_without_xvmc:       0} %{?!_without_xvmc:       1}
 %define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
 %define with_php           %{?_without_php:        0} %{!?_without_php:        1}
@@ -1479,6 +1481,10 @@ fi
 ################################################################################
 
 %changelog
+* Wed Jun 06 2012 Chris Petersen <cpetersen@mythtv.org> 0.26-0.1.git
+- Systemd is now on by default
+- Disable crystalhd by default
+
 * Sun Mar 25 2012 Chris Petersen <cpetersen@mythtv.org> 0.25-0.1.git
 - Enable libx264, which we now have to specify explicitly
 
