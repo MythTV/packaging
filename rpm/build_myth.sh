@@ -26,7 +26,7 @@
 ###############################################################################
 
 # Hard-code the version of MythTV
-    VERSION="0.25"
+    VERSION="0.26"
 
 # Branch should be "master" or "stable"
     BRANCH="master"
@@ -275,12 +275,9 @@ EOF
     GITVER=`echo "$DESCRIBE" | sed -e 's,^\([^-]\+\)-.\+$,\1,'`
     GITREV=`echo "$DESCRIBE" | sed -e 's,^[^-]\+-,,' -e 's,-,.,g'`
     # do some magic here to detect v, b, rc, or pre notations
-    if [[ $GITREV =~ ^rc ]]; then
+    if [[ $GITREV =~ ^rc || $GITREV =~ ^pre ]]; then
         GITVER=${GITVER#v}
         GITREV="0.0.$GITREV"
-    elif [[ $GITVER =~ pre$ ]]; then
-        GITVER=${GITVER#v}
-        GITVER=${GITVER%pre}
     elif [[ $GITVER =~ ^v ]]; then
         GITVER=${GITVER#v}
         GITREV=1
