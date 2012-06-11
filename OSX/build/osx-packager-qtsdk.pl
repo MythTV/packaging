@@ -839,10 +839,8 @@ our %depend = (
             '--without-debug',
             '--without-docs',
             '--without-man',
-            '--without-bench',
             '--without-server',
             '--without-geometry',
-            '--without-extra-tools',
         ],
     },
 
