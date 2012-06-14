@@ -64,10 +64,10 @@
 %define desktop_vendor  mythtv
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.26-pre-520-gf842d1b
+%define vers_string v0.26-pre-550-gb92683a
 
 # Git Revision number and branch
-%define _gitrev 0.0.pre.520.gf842d1b
+%define _gitrev 0.0.pre.550.gb92683a
 %define branch master
 
 #
@@ -1297,6 +1297,7 @@ fi
 %dir %{_datadir}/mythtv/i18n
 %dir %{_datadir}/mythtv/fonts
 %{_datadir}/mythtv/fonts/*.ttf
+%{_datadir}/mythtv/fonts/*.otf
 %{_datadir}/mythtv/i18n/mythfrontend_*.qm
 %{_datadir}/applications/*mythfrontend.desktop
 %{_datadir}/pixmaps/myth*.png
@@ -1327,7 +1328,6 @@ fi
 %files -n mythffmpeg
 %defattr(-,root,root,-)
 %{_bindir}/mythffmpeg
-%{_bindir}/mythffplay
 
 %if %{with_perl}
 %files -n perl-MythTV
@@ -1481,6 +1481,10 @@ fi
 ################################################################################
 
 %changelog
+* Wed Jun 13 2012 Chris Petersen <cpetersen@mythtv.org> 0.26-0.1.git
+- no more mythffplay
+- include *.otf fonts
+
 * Wed Jun 06 2012 Chris Petersen <cpetersen@mythtv.org> 0.26-0.1.git
 - Systemd is now on by default
 - Disable crystalhd by default
