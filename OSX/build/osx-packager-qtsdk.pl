@@ -922,7 +922,6 @@ EOF
         '-release',
         '-fast',
         '-no-accessibility',
-        '-no-stl',
         '-sdk' , '$SDKROOT',
         
         # When MythTV all ported:  '-no-qt3support',
