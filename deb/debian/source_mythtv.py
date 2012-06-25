@@ -1,3 +1,6 @@
+#!/usr/bin/python
+
+from __future__ import print_function
 import os.path, os
 import subprocess
 import apport.hookutils
@@ -18,7 +21,7 @@ def add_info(report):
         status = '0.0'
     report["Installed_mythtv_dbg"] = status
 
-    if report.has_key('Package') and not apport.packaging.is_distro_package(report['Package'].split()[0]):
+    if 'Package' in report and not apport.packaging.is_distro_package(report['Package'].split()[0]):
         report['CrashDB'] = 'mythbuntu'
 
 ## DEBUGING ##
@@ -26,4 +29,4 @@ if __name__ == '__main__':
     report = {}
     add_info(report)
     for key in report:
-        print '[%s]\n%s' % (key, report[key])
+        print('[%s]\n%s' % (key, report[key]))
