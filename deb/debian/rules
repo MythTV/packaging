@@ -112,6 +112,9 @@ override_dh_install:
                    -Xusr/share/mythtv/fonts/Droid \
                    -Xusr/include/QJson \
                    -Xusr/lib/libmythqjson.prl \
+                   -Xusr/lib/pkgconfig/libzmq.pc \
+                   -Xusr/lib/libzmq.*a \
+                   -Xusr/include/*zmq* \
                    -Xusr/share/mythtv/fonts/tiresias_gpl3.txt \
                    --fail-missing
 
