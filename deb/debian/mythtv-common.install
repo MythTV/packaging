@@ -5,6 +5,7 @@ usr/bin/mythff*
 usr/bin/mythmetadatalookup
 usr/bin/mythccextractor
 usr/bin/mythutil
+usr/bin/mythlogserver
 usr/share/mythtv/*.xml
 usr/share/mythtv/*.pl
 usr/share/mythtv/locales
