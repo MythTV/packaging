@@ -1,3 +1,10 @@
+usr/share/fonts/truetype/droid/DroidSans.ttf usr/share/mythtv/fonts/DroidSans.ttf
+usr/share/fonts/truetype/droid/DroidSerif-Bold.ttf usr/share/mythtv/fonts/DroidSerif-Bold.ttf
+usr/share/fonts/truetype/droid/DroidSerif-Regular.ttf usr/share/mythtv/fonts/DroidSerif-Regular.ttf
+usr/share/fonts/truetype/droid/DroidSans-Bold.ttf usr/share/mythtv/fonts/DroidSans-Bold.ttf
+usr/share/fonts/truetype/droid/DroidSansMono.ttf usr/share/mythtv/fonts/DroidSansMono.ttf
+usr/share/fonts/truetype/droid/DroidSerif-Italic.ttf usr/share/mythtv/fonts/DroidSerif-Italic.ttf
+usr/share/fonts/truetype/droid/DroidSerif-BoldItalic.ttf usr/share/mythtv/fonts/DroidSerif-BoldItalic.ttf
 usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf usr/share/mythtv/themes/BlackCurves-OSD/DejaVuSans.ttf
 usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Oblique.ttf usr/share/mythtv/themes/BlackCurves-OSD/DejaVuSans-Oblique.ttf
 usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf usr/share/mythtv/themes/Gray-OSD/DejaVuSans-Bold.ttf
