@@ -111,6 +111,7 @@ override_dh_install:
                    -Xusr/share/mythtv/fonts/Purisa \
                    -Xusr/share/mythtv/fonts/Droid \
                    -Xusr/include/QJson \
+                   -Xusr/lib/libmythqjson.prl \
                    -Xusr/share/mythtv/fonts/tiresias_gpl3.txt \
                    --fail-missing
 
