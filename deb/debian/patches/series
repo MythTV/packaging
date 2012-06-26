@@ -2,7 +2,6 @@
 default_directories
 
 ##mythtv##
-zeromq_install_paths.patch
 bindings_install_paths.patch
 allow_no_tuners.patch
 
