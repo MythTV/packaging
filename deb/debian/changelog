@@ -10,6 +10,7 @@ mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu2) UNRELEASED; urgency=low
   * Update amejia's email on uploaders field.
   * Drop recommends on adept-notifier.
   * Bump standards version.
+  * Update apport hook for python3 (LP: #1013171)
 
  -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 10 Apr 2012 14:20:32 -0500
 
