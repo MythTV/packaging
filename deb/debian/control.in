@@ -179,7 +179,7 @@ Description: A personal video recorder application (documentation)
 Package: mythtv-database
 Architecture: all
 Depends: mythtv-common, libdbd-mysql-perl, mysql-client, cron, ${misc:Depends}
-Recommends: update-notifier | update-notifier-kde | adept-notifier
+Recommends: update-notifier | update-notifier-kde
 Conflicts: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
 Replaces: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
 Description: A personal video recorder application (database)
