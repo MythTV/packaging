@@ -1,0 +1,40 @@
+From 6cb5dd73c229d99befc5808c6ed9518183352ea5 Mon Sep 17 00:00:00 2001
+From: Mario Limonciello <superm1@ubuntu.com>
+Date: Mon, 25 Jun 2012 15:42:25 -0500
+Subject: [PATCH] Pass INSTALL_ROOT onto the zeromq build process so that it
+ will obey paths while building for packages
+
+---
+ mythtv/Makefile          |    2 +-
+ mythtv/external/Makefile |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/Makefile b/mythtv/Makefile
+index fb23f69..72e037c 100644
+--- a/mythtv/Makefile
++++ b/mythtv/Makefile
+@@ -62,7 +62,7 @@ $(addsuffix /Makefile,$(QT_SUBDIRS)): %/Makefile :
+ 	cd $*; $(QMAKE) QMAKE=$(QMAKE) -o $(@F) $(<F)
+ 
+ $(SUBDIRS): $(addsuffix /Makefile,$(SUBDIRS)) libs/libmythbase/version.h
+-	$(MAKE) -C $@
++	$(MAKE) -C $@ INSTALL_ROOT=${INSTALL_ROOT}
+ 
+ $(addsuffix _clean,$(SUBDIRS)): $(addsuffix /Makefile,$(SUBDIRS))
+ 	$(MAKE) -C $(subst _clean,,$@) clean
+diff --git a/mythtv/external/Makefile b/mythtv/external/Makefile
+index ca438a9..bc5a646 100644
+--- a/mythtv/external/Makefile
++++ b/mythtv/external/Makefile
+@@ -23,7 +23,7 @@ zeromq-all:	zeromq/Makefile
+ 	${MAKE} -C zeromq all
+ 
+ zeromq/Makefile:	zeromq/configure
+-	(cd zeromq ; ./configure --without-documentation --prefix=${PREFIX})
++	(cd zeromq ; ./configure --without-documentation --prefix=${INSTALL_ROOT}/${PREFIX})
+ 
+ zeromq-install zeromq-uninstall zeromq-clean zeromq-distclean:
+ 	${MAKE} -C zeromq ${@:zeromq-%=%} 
+-- 
+1.7.9.5
+
