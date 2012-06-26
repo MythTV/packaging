@@ -114,7 +114,8 @@ override_dh_install:
                    -Xusr/lib/libmythqjson.prl \
                    -Xusr/lib/pkgconfig/libzmq.pc \
                    -Xusr/lib/libzmq.*a \
-                   -Xusr/include/*zmq* \
+                   -Xusr/include/zmq \
+                   -Xusr/include/nzmq \
                    -Xusr/share/mythtv/fonts/tiresias_gpl3.txt \
                    --fail-missing
 
