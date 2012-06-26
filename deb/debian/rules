@@ -87,7 +87,7 @@ override_dh_auto_install:
 
 	#mythtv
 	cd mythtv && ./configure $(MYTHTV_CONFIGURE_OPTS)
-	$(MAKE) -j$(PROCESSORS) -C mythtv INSTALL_ROOT=$(CURDIR)/debian/tmp
+	$(MAKE) -j$(PROCESSORS) -C mythtv
 	$(MAKE) -C mythtv install INSTALL_ROOT=$(CURDIR)/debian/tmp
 
 	#mythplugins
