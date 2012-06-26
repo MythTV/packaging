@@ -8,6 +8,7 @@ mythtv (2:0.26.0~master.20120505.4b8b3cc-0ubuntu1) UNRELEASED; urgency=low
   * Add build dependency for uuid-dev.
   * Add a workaround for FTBFS w/ linking when using binutils 2.21
     - See http://goo.gl/KDK9o for more information.
+  * Drop recommends on adept-notifier.
 
   [ Andres Mejia ]
   * Bump to Standards-Version 3.9.3.
