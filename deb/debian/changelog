@@ -1,4 +1,4 @@
-mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu2) UNRELEASED; urgency=low
+mythtv (2:0.25.0+fixes.20120626.25dd4ce-0ubuntu1) quantal; urgency=low
 
   * fix get-orig-source rule's broken tarball fetch from archive.
   * Enable libcec support (LP: #982272)
@@ -11,8 +11,9 @@ mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu2) UNRELEASED; urgency=low
   * Drop recommends on adept-notifier.
   * Bump standards version.
   * Update apport hook for python3 (LP: #1013171)
+  * New upstream checkout (25dd4ce)
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 10 Apr 2012 14:20:32 -0500
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 26 Jun 2012 11:22:57 -0500
 
 mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu1) precise; urgency=low
 
