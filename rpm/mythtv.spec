@@ -64,10 +64,10 @@
 %define desktop_vendor  mythtv
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.26-pre-550-gb92683a
+%define vers_string v0.26-pre-724-g5e3803e
 
 # Git Revision number and branch
-%define _gitrev 0.0.pre.550.gb92683a
+%define _gitrev 0.0.pre.724.g5e3803e
 %define branch master
 
 #
@@ -839,9 +839,10 @@ on demand content.
 # Replace static lib paths with %{_lib} so we build properly on x86_64
 # systems, where the libs are actually in lib64.
     if [ "%{_lib}" != "lib" ]; then
-        grep -rlZ '/lib/' . | xargs -r0 sed -i -e 's,/lib/,/%{_lib}/,g'
-        grep -rlZ '/lib$' . | xargs -r0 sed -i -e 's,/lib$,/%{_lib},'
-        grep -rlZ '/lib ' . | xargs -r0 sed -i -e 's,/lib ,/%{_lib} ,g'
+         find \( -name 'configure' -o -name '*pro' -o -name 'Makefile' \) -exec sed -r -i -e 's,/lib\b,/%{_lib},g' {} \+
+#        grep -rlZ '/lib/' . | xargs -r0 sed -i -e 's,/lib/,/%{_lib}/,g'
+#        grep -rlZ '/lib$' . | xargs -r0 sed -i -e 's,/lib$,/%{_lib},'
+#        grep -rlZ '/lib ' . | xargs -r0 sed -i -e 's,/lib ,/%{_lib} ,g'
     fi
 
 ##### MythTV
@@ -1002,6 +1003,7 @@ cd mythplugins
         -exec sed -i -e "s,DEPLIBS = \$\${LIBDIR},DEPLIBS = $temp%{_libdir}," {} \; \
         -exec sed -i -e "s,\$\${PREFIX}/include/mythtv,$temp%{_includedir}/mythtv," {} \;
     echo "INCLUDEPATH -= \$\${PREFIX}/include" >> settings.pro
+    echo "INCLUDEPATH -= \$\${SYSROOT}/\$\${PREFIX}/include" >> settings.pro
     echo "INCLUDEPATH -= %{_includedir}"       >> settings.pro
     echo "INCLUDEPATH += $temp%{_includedir}"  >> settings.pro
     echo "INCLUDEPATH += %{_includedir}"       >> settings.pro
@@ -1126,6 +1128,11 @@ cd mythtv
 
     cd ..
 
+# Clean up some stuff we don't want to include
+rm -f %{buildroot}%{_libdir}/libmythqjson.prl \
+      %{buildroot}%{_libdir}/libmythzmq.la    \
+      %{buildroot}%{_libdir}/pkgconfig/libmythzmq.pc
+
 # MythPlugins
 %if %{with_plugins}
 cd mythplugins
@@ -1237,6 +1244,7 @@ fi
 %{_bindir}/mythwikiscripts
 %{_bindir}/mythmetadatalookup
 %{_bindir}/mythutil
+%{_bindir}/mythlogserver
 %{_datadir}/mythtv/mythconverg*.pl
 %dir %{_datadir}/mythtv/locales
 %dir %{_datadir}/mythtv/metadata
@@ -1481,6 +1489,10 @@ fi
 ################################################################################
 
 %changelog
+* Tue Jun 26 2012 Chris Petersen <cpetersen@mythtv.org> 0.26-0.1.git
+- Fix lib -> lib64 replacement command to be more accurate and support mythzmq
+- Add mythzmq stuff
+
 * Wed Jun 13 2012 Chris Petersen <cpetersen@mythtv.org> 0.26-0.1.git
 - no more mythffplay
 - include *.otf fonts
