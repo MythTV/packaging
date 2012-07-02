@@ -110,13 +110,9 @@ override_dh_install:
 	dh_install -Xusr/share/mythtv/fonts/Free \
                    -Xusr/share/mythtv/fonts/Purisa \
                    -Xusr/share/mythtv/fonts/Droid \
-                   -Xusr/include/QJson \
-                   -Xusr/lib/libmythqjson.prl \
                    -Xusr/lib/pkgconfig/libmythzmq.pc \
                    -Xusr/lib/libmythzmq.a \
                    -Xusr/lib/libmythzmq.la \
-                   -Xusr/include/zmq \
-                   -Xusr/include/nzmq \
                    -Xusr/share/mythtv/fonts/tiresias_gpl3.txt \
                    --fail-missing
 
