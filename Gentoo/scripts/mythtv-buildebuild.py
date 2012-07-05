@@ -187,14 +187,14 @@ class Ebuild( object ):
 
         if type != 4:
             if self.opts.hash is None:
-                commits = json.load(urllib.urlopen("http://github.com/api/v2/json/commits/list/mythtv/MythTV/"+self.branch))
-                self.opts.hash = commits['commits'][0]['id']
+                commit = json.load(urllib.urlopen("https://api.github.com/repos/mythtv/MythTV/commits/" + urllib.quote(self.branch, '')))
+                self.opts.hash = commit['sha']
                 if self.opts.date is None:
-                    self.opts.date = process_date(commits['commits'][0]['committed_date']).strftime('%Y%m%d')
+                    self.opts.date = process_date(commit['commit']['committer']['date']).strftime('%Y%m%d')
                 print "Autoselecting hash: "+self.opts.hash
             elif self.opts.date is None:
-                commit = json.load(urllib.urlopen("http://github.com/api/v2/json/commits/list/mythtv/MythTV/"+self.opts.hash))
-                self.opts.date = process_date(commit['committed_date']).strftime('%Y%m%d')
+                commit = json.load(urllib.urlopen("https://api.github.com/repos/mythtv/MythTV/commits/" + self.opts.hash))
+                self.opts.date = process_date(commit['commit']['committer']['date']).strftime('%Y%m%d')
 
         self.cur = (version, type, self.opts.date)
         if self.opts.verbose: print 'New version set to: {0}-{1}'.format(self.name,self.get_version(self.cur))
