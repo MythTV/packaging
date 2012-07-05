@@ -184,6 +184,7 @@ osx-packager.pl - build OS X binary packages for MythTV
                      use -nosysroot if compiling earlier version
   -olevel <n>        compile with extra -On
   -buildprofile <x>  build either master or fixes-0.24 (default: master)
+  -gcc               build using gcc (deprecated, default is clang/clang++)
 
 
 =head1 DESCRIPTION
@@ -280,7 +281,7 @@ Getopt::Long::GetOptions(\%OPT,
                          'nobundle',
                          'olevel=s',
                          'nosysroot',
-                         
+                         'gcc',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -530,16 +531,34 @@ $ENV{'DEVROOT'} = $DEVROOT;
 $ENV{'SDKVER'} = $SDKVER;
 $ENV{'SDKROOT'} = $SDKROOT;
 
+our $GCC = $OPT{'gcc'};
+our $CCBIN;
+our $CXXBIN;
 # Determine appropriate gcc/g++ path for the selected SDKs
-our $CCBIN = `xcodebuild -find gcc -sdk $SDKNAME`; chomp $CCBIN;
-our $CXXBIN = `xcodebuild -find g++ -sdk $SDKNAME`; chomp $CXXBIN;
-my $XCODEVER = `xcodebuild -version`; chomp $XCODEVER;
-if ( $XCODEVER =~ m/Xcode\s+(\d+\.\d+(\.\d+)?)/ && ! $OPT{'olevel'} )
+if ($GCC)
 {
-    if ( $1 =~ m/^4\.2/ )
+    $CCBIN = `xcodebuild -find gcc -sdk $SDKNAME`; chomp $CCBIN;
+    $CXXBIN = `xcodebuild -find g++ -sdk $SDKNAME`; chomp $CXXBIN;
+    my $XCODEVER = `xcodebuild -version`; chomp $XCODEVER;
+    if ( $XCODEVER =~ m/Xcode\s+(\d+\.\d+(\.\d+)?)/ && ! $OPT{'olevel'} )
     {
-        &Complain("XCode 4.2 is buggy, please upgrade to 4.3 or later");
+        if ( $1 =~ m/^4\.2/ )
+        {
+            &Complain("XCode 4.2 is buggy, please upgrade to 4.3 or later");
+        }
     }
+    # Test if llvm-gcc, mythtv doesn't compile unless you build in debug mode
+    my $out = `$CCBIN --version`;
+    if ( $out =~ m/llvm-gcc/ )
+    {
+        $OPT{'debug'} = 1;
+        &Verbose('Using llvm-gcc: Forcing debug compile...');
+    }
+}
+else
+{
+    $CCBIN = `xcodebuild -find clang -sdk $SDKNAME`; chomp $CCBIN;
+    $CXXBIN = `xcodebuild -find clang++ -sdk $SDKNAME`; chomp $CXXBIN;
 }
 
 $ENV{'CC'} = $CCBIN;
@@ -575,7 +594,14 @@ if ( $OPT{'nosysroot'} )
 
 # set up Qt environment
 $ENV{'QTDIR'} = "$QTSDK";
-$ENV{'QMAKESPEC'} = 'macx-g++';
+if ($GCC)
+{
+    $ENV{'QMAKESPEC'} = 'macx-g++';
+}
+else
+{
+    $ENV{'QMAKESPEC'} = 'macx-llvm';
+}
 $ENV{'MACOSX_DEPLOYMENT_TARGET'} = $OSTARGET;
 
 our $OLEVEL="";
@@ -717,14 +743,6 @@ if ( ! $OPT{'qtsrc'} )
 &Verbose("CXXBIN = $ENV{'CXX'}");
 &Verbose("CFLAGS = $ENV{'CFLAGS'}");
 &Verbose("LDFLAGS = $ENV{'LDFLAGS'}");
-
-# Test if LLVM, mythtv doesn't compile unless you build in debug mode
-my $out = `$CCBIN --version`;
-if ( $out =~ m/llvm/ )
-{
-    $OPT{'debug'} = 1;
-    &Verbose('Using LLVM: Forcing debug compile...');
-}
 
 our $standard_make = '/usr/bin/make';
 our $parallel_make = $standard_make;
@@ -893,6 +911,7 @@ our %depend = (
         'patches' =>
         {
             #also hack for QTBUG-23258
+            '4.8.2' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
             '4.8.1' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
             '4.8.0' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
             '4.7.4' => "patch -f -p0 <<EOF\n" . <<EOF
@@ -1635,12 +1654,19 @@ foreach my $target ( @targets )
             my $pluginSrc = "$QTPLUGINS/$plugin";
             if ( -e $pluginSrc )
             {
-                &Syscall([ 'cp', "$QTPLUGINS/$plugin",
-                       "$finalTarget/Contents/$BundlePlugins/$plugin" ])
-                    or die;
-                &Syscall([ @bundler,
-                       "$finalTarget/Contents/$BundlePlugins/$plugin", @libs ])
-                    or die;
+                if ( -e "$QTPLUGINS/$plugin" )
+                {
+                    &Syscall([ 'cp', "$QTPLUGINS/$plugin",
+                           "$finalTarget/Contents/$BundlePlugins/$plugin" ])
+                        or die;
+                    &Syscall([ @bundler,
+                           "$finalTarget/Contents/$BundlePlugins/$plugin", @libs ])
+                        or die;
+		}
+                else
+                {
+                    &Complain("missing plugin $QTPLUGINS/$plugin");
+                }
             }
         }
 
