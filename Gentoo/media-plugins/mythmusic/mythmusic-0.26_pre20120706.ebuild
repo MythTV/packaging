@@ -4,40 +4,36 @@
 
 EAPI="2"
 
-MYTHTV_VERSION="v0.24.2-27-g322de47"
-MYTHTV_BRANCH="fixes/0.24"
-MYTHTV_REV="322de47d5b10a4d6f357a5941c0f690eb01a98ec"
-MYTHTV_SREV="322de47"
+MYTHTV_VERSION="v0.26pre-800-gbde24c5"
+MYTHTV_BRANCH="master"
+MYTHTV_REV="bde24c5cd3050252687890f9261e4706b513acd3"
+MYTHTV_SREV="bde24c5"
 
 inherit mythtv-plugins flag-o-matic toolchain-funcs eutils
 
 DESCRIPTION="Music player module for MythTV."
-IUSE="aac cdr fftw libvisual projectm opengl sdl"
-KEYWORDS="amd64 x86 ~ppc"
+IUSE="aac cdr fftw projectm opengl"
+KEYWORDS="~amd64 ~x86 ~ppc"
 
-RDEPEND=">=media-sound/cdparanoia-3.9.8
+RDEPEND="
 	>=media-libs/libmad-0.15.1b
 	>=media-libs/libvorbis-1.0
-	>=media-libs/libcdaudio-0.99.6
 	>=media-libs/flac-1.1.2
 	>=media-libs/taglib-1.4
+	dev-libs/libcdio
 	media-gfx/dcraw
 	fftw? ( sci-libs/fftw )
 	opengl? ( virtual/opengl )
-	sdl? ( >=media-libs/libsdl-1.2.5 )
 	cdr? ( virtual/cdrtools )
-	libvisual? ( =media-libs/libvisual-0.4*
-				 media-plugins/libvisual-plugins
-				 >=media-libs/libsdl-1.2.5
-				 )
 	projectm? ( media-plugins/libvisual-projectm
 				>=media-libs/libsdl-1.2.5 
 				=media-libs/libvisual-0.4*
-				)"
+				)
+	"
 
 DEPEND="${RDEPEND}"
 
 #pkg_config() {
 #}
 
-MTVCONF="$(use_enable fftw) $(use_enable sdl) $(use_enable opengl) $(use_enable libvisual)"
+MTVCONF="$(use_enable fftw) $(use_enable opengl)"

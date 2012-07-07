@@ -12,7 +12,7 @@ depend() {
 
 start() {
 	[ -z "${MYTH_VERBOSE}"  ] && MYTH_VERBOSE="general"
-    [ -z "${MYTH_LOGLEVEL}" ] && MYTH_LOGLEVEL="info"
+	[ -z "${MYTH_LOGLEVEL}" ] && MYTH_LOGLEVEL="info"
 
 	export HOME=/etc/mythtv
 		
