@@ -77,6 +77,73 @@ our %build_profile = (
         'yasm',
         'liberation-sans',
         'firewiresdk',
+        'libx264'
+       ],
+    'mythplugins'
+    => [
+        'exif',
+# MythMusic needs these:
+        'libtool',
+        'autoconf',
+        'automake',
+        'taglib',
+        'libogg',
+        'vorbis',
+        'flac',
+        'libcddb',
+        'libcdio',
+       ],
+     ],
+  '0.26-fixes'
+   => [
+    'branch' => 'fixes/0.26',
+    'mythtv'
+    => [
+        'ccache',
+        'pkgconfig',
+        'dvdcss',
+        'freetype',
+        'lame',
+        'mysqlclient',
+        #'dbus',
+        'qt',
+        'yasm',
+        'liberation-sans',
+        'firewiresdk',
+        'libx264'
+       ],
+    'mythplugins'
+    => [
+        'exif',
+# MythMusic needs these:
+        'libtool',
+        'autoconf',
+        'automake',
+        'taglib',
+        'libogg',
+        'vorbis',
+        'flac',
+        'libcddb',
+        'libcdio',
+       ],
+     ],
+  '0.25-fixes'
+   => [
+    'branch' => 'fixes/0.25',
+    'mythtv'
+    => [
+        'ccache',
+        'pkgconfig',
+        'dvdcss',
+        'freetype',
+        'lame',
+        'mysqlclient',
+        #'dbus',
+        'qt',
+        'yasm',
+        'liberation-sans',
+        'firewiresdk',
+        'libx264'
        ],
     'mythplugins'
     => [
@@ -457,12 +524,26 @@ else
 
 our %depend_order = '';
 my $gitrevision = 'master';  # Default thingy to checkout
-if ( $OPT{'buildprofile'} && $OPT{'buildprofile'} == '0.24-fixes' )
+if ( $OPT{'buildprofile'} == '0.24-fixes' )
 {
     &Verbose('Building using 0.24-fixes profile');
     %depend_order = @{ $build_profile{'0.24-fixes'} };
     $gitrevision = 'fixes/0.24'
-} else {
+}
+elsif ( $OPT{'buildprofile'} == '0.25-fixes' )
+{
+    &Verbose('Building using 0.25-fixes profile');
+    %depend_order = @{ $build_profile{'0.25-fixes'} };
+    $gitrevision = 'fixes/0.25'
+}
+elsif ( $OPT{'buildprofile'} == '0.26-fixes' )
+{
+    &Verbose('Building using 0.26-fixes profile');
+    %depend_order = @{ $build_profile{'0.26-fixes'} };
+    $gitrevision = 'fixes/0.26'
+}
+else
+{
     &Verbose('Building using master profile');
     %depend_order = @{ $build_profile{'master'} };
 }
@@ -1048,11 +1129,16 @@ EOF
     {
         'url'     => 'http://ftp.gnu.org/gnu/autoconf/autoconf-2.68.tar.gz',
     },
+
     'automake'    =>
     {
         'url'     => 'http://ftp.gnu.org/gnu/automake/automake-1.11.tar.gz',
     },
 
+    'libx264'     =>
+    {
+        'url'     => 'ftp://ftp.videolan.org/pub/x264/snapshots/x264-snapshot-20120716-2245-stable.tar.bz2',
+    }
 );
 
 
@@ -1463,6 +1549,10 @@ foreach my $arch (@ARCHS)
                 if ( $? == 0 )
                 {
                     push @config, "--firewire-sdk=$PREFIX/lib";
+                }
+                if ( exists $seen_depends{"libx264"} )
+                {
+                    push @config, "--enable-libx264";
                 }
             }
 
