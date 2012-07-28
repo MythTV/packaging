@@ -10,8 +10,8 @@
 #  s/+.*//      -> kill everything after and including the +
 #  s/.*+//      -> kill everything before and including the +
 
-GIT_MAJOR_RELEASE:=$(shell dpkg-parsechangelog | dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $$1 }')
-GIT_MINOR_RELEASE:=$(shell dpkg-parsechangelog | dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $$2 }')
+GIT_MAJOR_RELEASE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $$1 }')
+GIT_MINOR_RELEASE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $$2 }')
 GIT_TYPE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$1}')
 DATE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$2}')
 GIT_HASH:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$3}')
