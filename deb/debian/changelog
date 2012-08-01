@@ -1,3 +1,13 @@
+mythtv (2:0.25.2+fixes.20120801.46cab93-0ubuntu1) quantal; urgency=low
+
+  * New upstream fixes branch checkout (46cab93)
+  * Updated to 0.25.2 point release. (LP: #1029522)
+    - Major fixes:
+    - Mythfilldatabase takes hours instead of minutes to run (LP: #997367)
+    - A popular tuner card doesn't record in digital cable mode (trac 10712)
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Wed, 01 Aug 2012 09:04:32 -0500
+
 mythtv (2:0.25.0+fixes.20120626.25dd4ce-0ubuntu1) quantal; urgency=low
 
   * fix get-orig-source rule's broken tarball fetch from archive.
