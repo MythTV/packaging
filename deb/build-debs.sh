@@ -93,6 +93,7 @@ fi
 mkdir -p $DIRECTORY/mythtv
 rm -rf $DIRECTORY/mythtv/debian
 cp -R `dirname $0`/debian $DIRECTORY/mythtv
+mv $DIRECTORY/mythtv/debian/changelog.in $DIRECTORY/mythtv/debian/changelog
 cd $DIRECTORY/mythtv
 
 ##set changelog entry
