@@ -67,10 +67,12 @@ our %build_profile = (
     'mythtv'
     => [
         'ccache',
+        'libtool',
         'pkgconfig',
         'dvdcss',
         'freetype',
         'lame',
+        'cmake',
         'mysqlclient',
         #'dbus',
         'qt',
@@ -100,10 +102,12 @@ our %build_profile = (
     'mythtv'
     => [
         'ccache',
+        'libtool',
         'pkgconfig',
         'dvdcss',
         'freetype',
         'lame',
+        'cmake',
         'mysqlclient',
         #'dbus',
         'qt',
@@ -133,10 +137,12 @@ our %build_profile = (
     'mythtv'
     => [
         'ccache',
+        'libtool',
         'pkgconfig',
         'dvdcss',
         'freetype',
         'lame',
+        'cmake',
         'mysqlclient',
         #'dbus',
         'qt',
@@ -166,10 +172,12 @@ our %build_profile = (
     'mythtv'
     =>  [
         'ccache',
+        'libtool',
         'pkgconfig',
         'dvdcss',
         'freetype',
         'lame',
+        'cmake',
         'mysqlclient',
         #'dbus',
         'qt',
@@ -933,13 +941,14 @@ our %depend = (
 
     'mysqlclient' =>
     {
-        'url'           => 'http://downloads.mysql.com/archives/mysql-5.1/mysql-5.1.56.tar.gz',
-        'conf'          =>  [
-            '--without-debug',
-            '--without-docs',
-            '--without-man',
-            '--without-server',
-            '--without-geometry',
+        'url'           => 'http://downloads.mysql.com/archives/mysql-5.5/mysql-5.5.24.tar.gz',
+        'conf-cmd'      => "rm -rf $PREFIX/include/mysql ; $PREFIX/bin/cmake",
+        'conf'          => [
+            "-DCMAKE_INSTALL_PREFIX=$PREFIX",
+        ],
+        'make'          => [
+            'mysqlclient',
+            'libmysql',
         ],
     },
 
@@ -1115,9 +1124,15 @@ EOF
         'make'     => [ ],
     },
 
+    #mysql 5.5.24 required cmake 2.8.7 and choke with 2.8.8
     'cmake'       =>
     {
-        'url'      => 'http://www.cmake.org/files/v2.8/cmake-2.8.7.tar.gz',
+        'url'     => 'http://www.cmake.org/files/v2.8/cmake-2.8.7.tar.gz',
+        'conf-cmd'      =>  "./configure",
+        'conf'          => [
+            "--prefix=$PREFIX",
+        ],
+        'parallel-make' => 'yes'
     },
 
     'libtool'     =>
