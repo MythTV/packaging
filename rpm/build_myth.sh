@@ -276,7 +276,7 @@ EOF
     GITVER=`echo "$DESCRIBE" | sed -e 's,^\([^-]\+\)-.\+$,\1,'`
     GITREV=`echo "$DESCRIBE" | sed -e 's,^[^-]\+-,,' -e 's,-,.,g'`
     # do some magic here to detect v, b, rc, or pre notations
-    if [[ $GITREV =~ ^rc || $GITREV =~ ^pre ]]; then
+    if [[ $GITREV =~ ^rc || $GITREV =~ ^pre || $GITREV =~ ^alpha ]]; then
         GITVER=${GITVER#v}
         GITREV="0.0.$GITREV"
     elif [[ $GITVER =~ ^v ]]; then
