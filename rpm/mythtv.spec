@@ -64,10 +64,10 @@
 %define desktop_vendor  mythtv
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.26-pre-724-g5e3803e
+%define vers_string v0.26-alpha-80-gf2cc39d
 
 # Git Revision number and branch
-%define _gitrev 0.0.pre.724.g5e3803e
+%define _gitrev 0.0.alpha.80.gf2cc39d
 %define branch master
 
 #
@@ -135,7 +135,7 @@ Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
-Source103: mythbackend.logrotate
+Source103: mythtv.logrotate
 Source104: mythbackend.service
 Source106: mythfrontend.png
 Source107: mythfrontend.desktop
@@ -1106,7 +1106,7 @@ cd mythtv
     install -p -m 755 mythbackend.init %{buildroot}%{_sysconfdir}/init.d/mythbackend
     %endif
     install -p -m 644 mythbackend.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/mythbackend
-    install -p -m 644 mythbackend.logrotate  %{buildroot}%{_sysconfdir}/logrotate.d/mythbackend
+    install -p -m 644 mythtv.logrotate  %{buildroot}%{_sysconfdir}/logrotate.d/mythtv
 
 # Desktop entries
     mkdir -p %{buildroot}%{_datadir}/pixmaps
@@ -1270,7 +1270,7 @@ fi
 %{_sysconfdir}/init.d/mythbackend
 %endif
 %config(noreplace) %{_sysconfdir}/sysconfig/mythbackend
-%config(noreplace) %{_sysconfdir}/logrotate.d/mythbackend
+%config(noreplace) %{_sysconfdir}/logrotate.d/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
 %dir %{_datadir}/mythtv/internetcontent
 %{_datadir}/mythtv/internetcontent/*
@@ -1433,6 +1433,7 @@ fi
 %doc mythplugins/mythmusic/README
 %{_libdir}/mythtv/plugins/libmythmusic.so
 %{_localstatedir}/lib/mythmusic
+%{_datadir}/mythtv/mythmusic/streams.xml
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
@@ -1489,6 +1490,10 @@ fi
 ################################################################################
 
 %changelog
+* Fri Aug 06 2012 Chris Petersen <cpetersen@mythtv.org> 0.26-0.1.git
+- Update logrotate config, rename from mythbackend to mythtv
+- add mythmusic/streams.xml file
+
 * Tue Jun 26 2012 Chris Petersen <cpetersen@mythtv.org> 0.26-0.1.git
 - Fix lib -> lib64 replacement command to be more accurate and support mythzmq
 - Add mythzmq stuff
