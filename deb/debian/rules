@@ -26,6 +26,7 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
 				--enable-vaapi \
 				--perl-config-opts="INSTALLDIRS=vendor" \
 				--enable-libvpx \
+				--enable-sdl \
 				--enable-libmp3lame \
 				--enable-libx264
 ifeq "$(DEB_BUILD_ARCH)" "armel"
