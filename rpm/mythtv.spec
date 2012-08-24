@@ -427,7 +427,7 @@ Requires:  libXxf86vm-devel
 Requires:  mesa-libGLU-devel
 Requires:  xorg-x11-proto-devel
 %ifarch %{ix86} x86_64
-Requires:  xorg-x11-drv-i810-devel
+Requires:  xorg-x11-drv-intel-devel
 Requires:  xorg-x11-drv-openchrome-devel
 %endif
 
@@ -1490,6 +1490,9 @@ fi
 ################################################################################
 
 %changelog
+* Thu Aug 09 2012 Chris Petersen <cpetersen@mythtv.org> 0.26-0.1.git
+- rename i810 driver BR to intel
+
 * Fri Aug 06 2012 Chris Petersen <cpetersen@mythtv.org> 0.26-0.1.git
 - Update logrotate config, rename from mythbackend to mythtv
 - add mythmusic/streams.xml file
