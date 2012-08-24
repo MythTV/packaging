@@ -64,6 +64,11 @@ update_database() {
         mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
         fail_database
     fi
+
+    # load timezone data
+    if ! mysql_tzinfo_to_sql /usr/share/zoneinfo/ | mysql $SECURITY_INFO mysql >/dev/null 2>&1; then
+        fail_database
+    fi
 }
 
 case "$1" in
