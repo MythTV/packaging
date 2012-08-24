@@ -20,7 +20,6 @@ mythtv/contrib/config_files/config.xml usr/share/mythtv
 
 #These are added in from debian/
 debian/dialog_functions.sh usr/share/mythtv
-debian/mysql.txt.dist usr/share/mythtv
 debian/mythbuntu-crashdb.conf etc/apport/crashdb.conf.d
 debian/source_mythtv.py usr/share/apport/package-hooks
 debian/mythtv.png usr/share/pixmaps

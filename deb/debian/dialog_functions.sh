@@ -180,13 +180,5 @@ else
 fi
 }
 
-symlink ()
-{
-mkdir -p $HOME/.mythtv
-if [ ! -e $HOME/.mythtv/mysql.txt ]; then
-	ln -s /etc/mythtv/mysql.txt $HOME/.mythtv/mysql.txt
-fi
-
-}
 ###################################################################
 

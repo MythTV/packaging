@@ -15,9 +15,6 @@ find_su
 #check that we are in the mythtv group
 check_groups
 
-#create a symbolic link for mysql.txt so it can't be overwritten
-symlink
-
 if [ "$1" = "--service" ]; then
     #source frontend session settings
     if [ -f /etc/mythtv/session-settings ]; then

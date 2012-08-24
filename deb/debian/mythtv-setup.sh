@@ -12,9 +12,6 @@ find_su
 #check that we are in the mythtv group
 check_groups
 
-#create a symbolic link for mysql.txt so it can't be overwritten
-symlink
-
 #if group membership is okay, go ahead and continue
 if [ "$IGNORE_NOT" = "0" ]; then
 	RUNNING=$(status mythtv-backend | grep running)
