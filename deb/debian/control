@@ -126,6 +126,7 @@ Depends: pwgen,
          ttf-dejavu,
          fonts-tlwg-purisa,
          python,
+         libxml-xpath-perl,
          ${shlibs:Depends},
          ${misc:Depends}
 Suggests: mythtv-doc
