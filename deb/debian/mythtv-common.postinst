@@ -53,10 +53,10 @@ case "$1" in
 
     cat $INPUT > $NEW
 
-    perl -pi -e 's/(<DBHostName>).*?(<\/DBHostName>)/$1$ENV{'hostname'}$2/;' $NEW
-    perl -pi -e 's/(<DBUserName>).*?(<\/DBUserName>)/$1$ENV{'mythtv_username'}$2/;' $NEW
-    perl -pi -e 's/(<DBPassword>).*?(<\/DBPassword>)/$1$ENV{'mythtv_password'}$2/;' $NEW
-    perl -pi -e 's/(<DBName>).*?(<\/DBName>)/$1$ENV{'database'}$2/;' $NEW
+    perl -pi -e 's/(<Host>).*?(<\/Host>)/$1$ENV{'hostname'}$2/;' $NEW
+    perl -pi -e 's/(<UserName>).*?(<\/UserName>)/$1$ENV{'mythtv_username'}$2/;' $NEW
+    perl -pi -e 's/(<Password>).*?(<\/Password>)/$1$ENV{'mythtv_password'}$2/;' $NEW
+    perl -pi -e 's/(<DatabaseName>).*?(<\/DatabaseName>)/$1$ENV{'database'}$2/;' $NEW
     perl -pi -e 's/^\s+<LocalHostName>.*?<\/LocalHostName>\n//m;' $NEW
 
     mv $NEW /etc/mythtv/config.xml
