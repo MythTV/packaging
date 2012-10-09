@@ -1,4 +1,4 @@
-mythtv (2:0.26.0~master.20120505.4b8b3cc-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.26.0+fixes.20120505.4b8b3cc-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
   * Switch to 0.26 branch for master builds.
