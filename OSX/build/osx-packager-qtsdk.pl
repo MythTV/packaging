@@ -79,7 +79,6 @@ our %build_profile = (
         'yasm',
         'liberation-sans',
         'firewiresdk',
-        'libx264'
        ],
     'mythplugins'
     => [
@@ -114,7 +113,6 @@ our %build_profile = (
         'yasm',
         'liberation-sans',
         'firewiresdk',
-        'libx264'
        ],
     'mythplugins'
     => [
@@ -149,7 +147,6 @@ our %build_profile = (
         'yasm',
         'liberation-sans',
         'firewiresdk',
-        'libx264'
        ],
     'mythplugins'
     => [
@@ -716,6 +713,7 @@ our $ECXXFLAGS = $ENV{'ECXXFLAGS'};
 our $CPPFLAGS  = $ENV{'CPPFLAGS'};
 our $LDFLAGS   = $ENV{'LDFLAGS'};
 our $ARCHARG   = "";
+our $CROSS     = 0;
 our @ARCHS;
 
 # Check host computer architecture and create list of architecture to build
@@ -742,6 +740,11 @@ if ( $OPT{'m32'} && ! $OPT{'universal'} )
         # assume PPC, what else could it be?
         push @ARCHS, "ppc7400";
     }
+    # Test if we're cross compiling
+    if ( $arch eq "x86_64" || $arch eq "ppc64" )
+    {
+        $CROSS = 1;
+    }
 }
 elsif ( $arch eq "x86_64" || $arch eq "ppc64" )
 {
@@ -757,6 +760,7 @@ elsif ( $arch eq "x86_64" || $arch eq "ppc64" )
         {
             push @ARCHS, "ppc7400", "ppc64";
         }
+        $CROSS = 1;
     }
     else
     {
@@ -894,18 +898,29 @@ our %depend = (
     'libogg' =>
     {
         'url'           => 'http://downloads.xiph.org/releases/ogg/libogg-1.3.0.tar.gz',
+        'pre-conf'      =>  'sed -i -e "s:-O4:-O3:g" configure',
+
     },
 
     'vorbis' =>
     {
         'url'           => 'http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.2.tar.gz',
+        'pre-conf'      =>  'sed -i -e "s:-O4:-O3:g" configure',
     },
 
     'flac' =>
     {
         'url'  => "$sourceforge/sourceforge/flac/flac-1.2.1.tar.gz",
+        #Xcode 4.4 and later breaks universal build, so regenerate configure script
+        'pre-conf'      => 'sed -i "" \'/if test "x$enable_xmms_plugin/,/fi/d\' configure.in ; ' .
+            'sed -i -e \'s/AM_ICONV/AC_DEFINE([HAVE_ICONV], [], 1]) LIBICONV="-liconv"/g\' configure.in ; ' .
+            'sed -i -e \'s/AM_LANGINFO_CODESET/AC_SUBST(LIBICONV)/g\' configure.in ; ' .
+            "cp $PREFIX/share/libtool/config/ltmain.sh . ; " .
+            "$PREFIX/bin/aclocal ; $PREFIX/bin/autoconf",
+
         # Workaround Intel problem - Missing _FLAC__lpc_restore_signal_asm_ia32
         'conf' => [
+            '--disable-xmms-plugin',
             '--disable-asm-optimizations',
         ],
         # patch to support universal compilation and fix incorrect sizeof
@@ -947,9 +962,10 @@ our %depend = (
             "-DCMAKE_INSTALL_PREFIX=$PREFIX",
         ],
         'make'          => [
-            'mysqlclient',
-            'libmysql',
+            'all',
         ],
+        'parallel-make' => 'yes',
+        'post-make' => "SEGMENTS='SharedLibraries Development' ; for segment in \$SEGMENTS ; do $PREFIX/bin/cmake -DCMAKE_INSTALL_COMPONENT=\$segment -P cmake_install.cmake ; done",
     },
 
     'dbus' =>
@@ -974,7 +990,8 @@ our %depend = (
     'qt'
     =>
     {
-        'url' => "http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${QTVERSION}.tar.gz",
+        #'url' => "http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${QTVERSION}.tar.gz",
+        'url' => "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${QTVERSION}.tar.gz",
         'pre-conf'
         =>  # Get around Qt bug QTBUG-24498 (4.8.0) && stupid thing can't compile in release mode on mac without framework active
         #also hack for QTBUG-23258
@@ -985,7 +1002,7 @@ our %depend = (
         'make' => [ ],
         'post-make' => 'cd src/plugins/sqldrivers/mysql ; make install ; '.
             'make -f Makefile.Release install ; '.
-            "cd $PREFIX/lib ; ln -s mysql lib; ".
+            "cd $PREFIX/lib ; ln -fs mysql lib; ".
             '',
         #WebKit in Qt keeps erroring half way on my quad-core when using -jX, use -noparallel
         'parallel-make' => 'yes'
@@ -1152,7 +1169,7 @@ EOF
 
     'libx264'     =>
     {
-        'url'     => 'ftp://ftp.videolan.org/pub/x264/snapshots/x264-snapshot-20120716-2245-stable.tar.bz2',
+        'url'     => 'ftp://ftp.videolan.org/pub/x264/snapshots/x264-snapshot-20121018-2245-stable.tar.bz2',
     }
 );
 
@@ -1216,6 +1233,15 @@ if ( $OPT{'qtsrc'} )
     $depends =~ s/qt/qt-src/;
     @build_depends = split /,/, $depends;
 }
+
+#If building backend, include libx264 only if not cross-compiling
+if ( $backend && ! $CROSS)
+{
+    &Verbose("Adding x264 encoding capabilities");
+    push(@build_depends,'libx264');
+    $seen_depends{'libx264'} = 1;
+}
+
 foreach my $sw ( @build_depends )
 {
     # Get info about this package
