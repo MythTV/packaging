@@ -1056,6 +1056,7 @@ EOF
         '-no-sql-mysql',
         '-no-sql-sqlite',
         '-no-sql-odbc',
+        '-no-sql-psql',
         '-system-zlib',
         '-no-libtiff',
         '-no-libmng',
