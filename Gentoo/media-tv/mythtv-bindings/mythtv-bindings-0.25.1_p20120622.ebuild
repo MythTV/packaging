@@ -9,7 +9,7 @@ MYTHTV_BRANCH="fixes/0.25"
 MYTHTV_REV="1d41f74720f0c89ef73e25fe7586e33caf946802"
 MYTHTV_SREV="1d41f74"
 
-inherit flag-o-matic multilib eutils qt4 mythtv toolchain-funcs python
+inherit flag-o-matic multilib eutils qt4-r2 mythtv toolchain-funcs python
 
 DESCRIPTION="Homebrew PVR project language bindings"
 SLOT="0"
