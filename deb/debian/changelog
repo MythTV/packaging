@@ -1,7 +1,8 @@
-mythtv (2:0.26.0+fixes.20120505.4b8b3cc-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.26.0+fixes.20121118.340b5d4-0ubuntu1) raring; urgency=low
 
   [ Mario Limonciello ]
-  * Switch to 0.26 branch for master builds.
+  * Switch to 0.26 branch.
+  * New upstream checkout (340b5d4)
   * Cleanup lintian errors:
     - debian/control.in: description-synopsis-starts-with-article
     - debian/mythweb.config: maintainer-script-ignores-errors
@@ -9,16 +10,6 @@ mythtv (2:0.26.0+fixes.20120505.4b8b3cc-0ubuntu1) UNRELEASED; urgency=low
   * Add a workaround for FTBFS w/ linking when using binutils 2.21
     - See http://goo.gl/KDK9o for more information.
   * Drop recommends on adept-notifier.
-
-  [ Andres Mejia ]
-  * Bump to Standards-Version 3.9.3.
-  * Build 'release' type builds instead of 'profile'.
-  * Support parallel builds.
-
- -- Andres Mejia <amejia@debian.org>  Mon, 07 May 2012 18:37:17 -0400
-
-mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu2) UNRELEASED; urgency=low
-
   * fix get-orig-source rule's broken tarball fetch from archive.
   * Enable libcec support (LP: #982272)
   * Add missingok to additional mythtv-backend logs. (LP: #982162)
@@ -27,7 +18,12 @@ mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu2) UNRELEASED; urgency=low
     boot.
   * Test for an empty key on public mysql. (LP: #989371)
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 10 Apr 2012 14:20:32 -0500
+  [ Andres Mejia ]
+  * Bump to Standards-Version 3.9.3.
+  * Build 'release' type builds instead of 'profile'.
+  * Support parallel builds.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 18 Nov 2012 23:18:31 -0600
 
 mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu1) precise; urgency=low
 
