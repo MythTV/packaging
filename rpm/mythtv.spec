@@ -64,10 +64,10 @@
 %define desktop_vendor  mythtv
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.26-alpha-80-gf2cc39d
+%define vers_string v0.27-pre2-583-g031c724
 
 # Git Revision number and branch
-%define _gitrev 0.0.alpha.80.gf2cc39d
+%define _gitrev 0.0.pre2.583.g031c724
 %define branch master
 
 #
@@ -79,7 +79,7 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version: 0.26
+Version: 0.27
 %if "%{branch}" == "master"
 Release: 0.1.git.%{_gitrev}%{?dist}
 %else
@@ -921,7 +921,6 @@ cd mythtv
     --libdir=%{_libdir}                         \
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
-    --enable-iptv                               \
     --enable-pthreads                           \
     --enable-ffmpeg-pthreads                    \
     --enable-joystick-menu                      \
@@ -1260,6 +1259,7 @@ fi
 %{_bindir}/mythjobqueue
 %{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
+%{_bindir}/mythhdhomerun_config
 %{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
@@ -1296,6 +1296,7 @@ fi
 %{_bindir}/mythavtest
 %{_bindir}/mythfrontend
 %{_bindir}/mythlcdserver
+%{_bindir}/mythscreenwizard
 %{_bindir}/mythshutdown
 %{_bindir}/mythwelcome
 %dir %{_libdir}/mythtv
@@ -1336,6 +1337,8 @@ fi
 %files -n mythffmpeg
 %defattr(-,root,root,-)
 %{_bindir}/mythffmpeg
+%{_bindir}/mythffprobe
+%{_bindir}/mythffserver
 
 %if %{with_perl}
 %files -n perl-MythTV
@@ -1490,6 +1493,9 @@ fi
 ################################################################################
 
 %changelog
+* Tue Jan 29 2013 Chris Petersen <cpetersen@mythtv.org> 0.27-0.1.git
+- add mythscreenwizard, mythffserver, mythffprobe, mythhdhomerun_config
+
 * Thu Aug 09 2012 Chris Petersen <cpetersen@mythtv.org> 0.26-0.1.git
 - rename i810 driver BR to intel
 
