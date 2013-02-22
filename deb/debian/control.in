@@ -461,6 +461,7 @@ Depends: mythtv-transcode-utils(>= ${binary:Version}),
          python-mysqldb, 
          ${shlibs:Depends}, 
          ${misc:Depends}
+Recommends: m2vrequantiser
 Suggests: transcode, project-x
 Replaces: mytharchive-data
 Conflicts: mytharchive-data
