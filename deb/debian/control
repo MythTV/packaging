@@ -270,8 +270,8 @@ Package: libmyth-0.26-0
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}, libqt4-sql-mysql, ${misc:Depends}
-Conflicts: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0
-Replaces: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0
+Conflicts: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0, libmyth-0.25-0, libmyth-0.26-0
+Replaces: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0, libmyth-0.25-0, libmyth-0.26-0
 Description: Common library code for MythTV and add-on modules (runtime)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -422,6 +422,7 @@ Depends: mythtv-frontend (>= ${binary:Version}),
          libcarp-clan-perl, 
          libsoap-lite-perl, 
          libdate-manip-perl, 
+         libdate-calc-perl,
          libwww-perl,
          libxml-simple-perl,
          libdatetime-format-iso8601-perl,
