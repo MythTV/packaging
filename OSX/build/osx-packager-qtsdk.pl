@@ -1094,6 +1094,7 @@ EOF
             'ln -sf libQtCore.dylib     libQtCore_debug.dylib     ; '.
             'ln -sf libQtWebKit.dylib   libQtWebKit_debug.dylib   ; '.
             'ln -sf libQtScript.dylib   libQtScript_debug.dylib   ; '.
+            'ln -sf libQtTest.dylib     libQtTest_debug.dylib     ; '.
             '',
         #WebKit in Qt keeps erroring half way on my quad-core when using -jX, use -noparallel
         'parallel-make' => 'yes'
