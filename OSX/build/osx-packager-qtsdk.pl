@@ -1012,7 +1012,7 @@ our %depend = (
     =>
     {
         'url'
-        => "http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${QTVERSION}.tar.gz",
+        => "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${QTVERSION}.tar.gz",
         'arg-patches'
         => "echo $QTVERSION",
         'patches' =>
