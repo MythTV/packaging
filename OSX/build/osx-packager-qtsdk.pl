@@ -1126,7 +1126,7 @@ EOF
 
     'libcdio' =>
     {
-        'url'           => 'http://ftp.gnu.org/pub/gnu/libcdio/libcdio-0.83.tar.bz2',
+        'url'      => 'http://ftp.gnu.org/gnu/libcdio/libcdio-0.90.tar.gz',
     },
 
     'liberation-sans' =>
