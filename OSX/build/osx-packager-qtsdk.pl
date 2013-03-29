@@ -1787,19 +1787,13 @@ foreach my $target ( @targets )
             my $pluginSrc = "$QTPLUGINS/$plugin";
             if ( -e $pluginSrc )
             {
-                if ( -e "$QTPLUGINS/$plugin" )
-                {
-                    &Syscall([ 'cp', "$QTPLUGINS/$plugin",
-                           "$finalTarget/Contents/$BundlePlugins/$plugin" ])
-                        or die;
-                    &Syscall([ @bundler,
-                           "$finalTarget/Contents/$BundlePlugins/$plugin", @libs ])
-                        or die;
-		}
-                else
-                {
-                    &Complain("missing plugin $QTPLUGINS/$plugin");
-                }
+                my $pluginCp = "$finalTarget/Contents/$BundlePlugins/$plugin";
+                &Syscall([ 'cp', $pluginSrc, $pluginCp ]) or die;
+                &Syscall([ @bundler, $pluginCp, @libs ])  or die;
+            }
+            else
+            {
+                &Complain("missing plugin $pluginSrc");
             }
         }
 
