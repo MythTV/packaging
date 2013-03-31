@@ -686,7 +686,7 @@ if ($GCC)
 }
 else
 {
-    $ENV{'QMAKESPEC'} = 'macx-llvm';
+    $ENV{'QMAKESPEC'} = 'unsupported/macx-clang';
 }
 $ENV{'MACOSX_DEPLOYMENT_TARGET'} = $OSTARGET;
 
@@ -957,7 +957,8 @@ our %depend = (
     'mysqlclient' =>
     {
         'url'           => 'http://downloads.mysql.com/archives/mysql-5.5/mysql-5.5.24.tar.gz',
-        'conf-cmd'      => "rm -rf $PREFIX/include/mysql ; $PREFIX/bin/cmake",
+        'pre-conf'      => "rm -rf $PREFIX/include/mysql",
+        'conf-cmd'      => "$PREFIX/bin/cmake",
         'conf'          => [
             "-DCMAKE_INSTALL_PREFIX=$PREFIX",
         ],
@@ -1014,15 +1015,25 @@ our %depend = (
         'url'
         => "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${QTVERSION}.tar.gz",
         'arg-patches'
-        => "echo $QTVERSION",
+        => "echo $QTVERSION | sed -E 's/([0-9]+\.[0-9]+\.)[0-9]+/\\1*/g'",
         'patches' =>
         {
             #also hack for QTBUG-23258
-            '4.8.3' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
-            '4.8.2' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
-            '4.8.1' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
-            '4.8.0' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
-            '4.7.4' => "patch -f -p0 <<EOF\n" . <<EOF
+            '4.8.*' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm ; patch -f -p0 <<EOF\n" . <<EOF
+--- src/gui/kernel/qt_cocoa_helpers_mac_p.h.orig	2013-03-23 21:51:52.000000000 +1100
++++ src/gui/kernel/qt_cocoa_helpers_mac_p.h	2013-03-23 21:53:15.000000000 +1100
+@@ -158,7 +158,7 @@
+ bool qt_mac_handleMouseEvent(void * /*QCocoaView * */view, void * /*NSEvent * */event, QEvent::Type eventType, Qt::MouseButton button);
+ bool qt_mac_handleTabletEvent(void * /*QCocoaView * */view, void * /*NSEvent * */event);
+ inline QApplication *qAppInstance() { return static_cast<QApplication *>(QCoreApplication::instance()); }
+-struct ::TabletProximityRec;
++//struct ::TabletProximityRec;
+ void qt_dispatchTabletProximityEvent(const ::TabletProximityRec &proxRec);
+ Qt::KeyboardModifiers qt_cocoaModifiers2QtModifiers(ulong modifierFlags);
+ Qt::KeyboardModifiers qt_cocoaDragOperation2QtModifiers(uint dragOperations);
+EOF
+            . "\nEOF",
+            '4.7.*' => "patch -f -p0 <<EOF\n" . <<EOF
 --- tools/qdoc3/cppcodemarker.cpp.ori	2012-03-07 10:26:46.000000000 +1100
 +++ tools/qdoc3/cppcodemarker.cpp	2012-03-07 10:51:33.000000000 +1100
 @@ -43,6 +43,7 @@
@@ -1060,7 +1071,7 @@ EOF
         '-system-zlib',
         '-no-libtiff',
         '-no-libmng',
-        '-nomake examples -nomake demos',
+        '-nomake examples -nomake demos -nomake docs -nomake designer',
         '-no-nis',
         '-no-cups',
         '-no-qdbus',
@@ -1146,11 +1157,7 @@ EOF
     #mysql 5.5.24 required cmake 2.8.7 and choke with 2.8.8
     'cmake'       =>
     {
-        'url'     => 'http://www.cmake.org/files/v2.8/cmake-2.8.7.tar.gz',
-        'conf-cmd'      =>  "./configure",
-        'conf'          => [
-            "--prefix=$PREFIX",
-        ],
+        'url'           => 'http://www.cmake.org/files/v2.8/cmake-2.8.7.tar.gz',
         'parallel-make' => 'yes'
     },
 
