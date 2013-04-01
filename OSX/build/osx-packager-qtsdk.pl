@@ -1822,7 +1822,8 @@ foreach my $target ( @targets )
     {
         my $extralib;
 
-        foreach my $extra ( 'mythavtest', 'ignyte', 'mythpreviewgen', 'mtd' )
+        foreach my $extra ( 'mythavtest', 'ignyte', 'mythpreviewgen', 'mtd',
+                            'mythlogserver' )
         {
             if ( -e "$PREFIX/bin/$extra" )
             {
@@ -1907,7 +1908,8 @@ if ( $backend && grep(m/MythBackend/, @targets) )
 
     # The backend gets all the useful binaries it might call:
     foreach my $binary ( 'mythjobqueue', 'mythcommflag',
-                         'mythpreviewgen', 'mythtranscode', 'mythfilldatabase' )
+                         'mythpreviewgen', 'mythtranscode', 'mythfilldatabase',
+                         'mythlogserver' )
     {
         my $SRC  = "$PREFIX/bin/$binary";
         if ( -e $SRC )
