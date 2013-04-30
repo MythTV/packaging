@@ -37,6 +37,10 @@ export QUILT_PATCHES="debian/patches"
 [ -z "$DEBUILD_FLAGS" ] && DEBUILD_FLAGS="-us -uc -i -I.git"
 
 
+if [ ! -d `dirname $0`/debian ]; then
+	die "WARNING: This script will not work without a full checkout from git://github.com/MythTV/packaging.git"
+fi
+
 for arg in "$@"; do
 	if [ "$1" = "help" ]; then
 		help
