@@ -6,7 +6,10 @@ author          "Mario Limonciello <superm1@ubuntu.com>"
 start on (local-filesystems and net-device-up IFACE!=lo and started udev-finish)
 stop on runlevel [016]
 
-kill timeout 10
+#should die within 5 seconds, but we don't want data loss, so set it to 30
+#before we send SIGKILL
+kill timeout 30
+
 respawn
 respawn limit 2 3600
 
