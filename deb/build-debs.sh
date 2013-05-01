@@ -161,6 +161,7 @@ if [ "$TYPE" = "binary" ]; then
 
     #test and install deps as necessary
     if ! dpkg-checkbuilddeps 1>/dev/null 2>&1; then
+	echo "Missing build dependencies for mythtv, will install them now:"
         sudo mk-build-deps debian/control.in -ir || die "error installing dependencies"
     fi
 elif [ "$TYPE" = "source" ]; then
