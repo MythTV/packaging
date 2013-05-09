@@ -13,7 +13,7 @@ respawn limit 2 3600
 pre-start script 
     [ -x /usr/sbin/mysqld ] || exit 0
     for i in `seq 1 30` ; do
-       /usr/bin/mysqladmin --defaults-file=/etc/mysql/debian.cnf ping && exit 0
+       /usr/bin/mysqladmin --defaults-file=/etc/mysql/debian.cnf ping >/dev/null && exit 0
        sleep .5
     done
 end script
