@@ -6,7 +6,7 @@ author          "Mario Limonciello <superm1@ubuntu.com>"
 start on (local-filesystems and net-device-up IFACE!=lo and started udev-finish)
 stop on runlevel [016]
 
-#expect fork
+kill timeout 10
 respawn
 respawn limit 2 3600
 
@@ -20,5 +20,5 @@ end script
 
 script
 	test -f /etc/default/locale && . /etc/default/locale || true
-	LANG=$LANG /usr/bin/mythbackend --syslog local7 --user mythtv
+	LANG=$LANG exec /usr/bin/mythbackend --syslog local7 --user mythtv
 end script

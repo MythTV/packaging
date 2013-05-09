@@ -79,7 +79,6 @@ our %build_profile = (
         'yasm',
         'liberation-sans',
         'firewiresdk',
-        'libx264'
        ],
     'mythplugins'
     => [
@@ -114,7 +113,6 @@ our %build_profile = (
         'yasm',
         'liberation-sans',
         'firewiresdk',
-        'libx264'
        ],
     'mythplugins'
     => [
@@ -149,7 +147,6 @@ our %build_profile = (
         'yasm',
         'liberation-sans',
         'firewiresdk',
-        'libx264'
        ],
     'mythplugins'
     => [
@@ -689,7 +686,7 @@ if ($GCC)
 }
 else
 {
-    $ENV{'QMAKESPEC'} = 'macx-llvm';
+    $ENV{'QMAKESPEC'} = 'unsupported/macx-clang';
 }
 $ENV{'MACOSX_DEPLOYMENT_TARGET'} = $OSTARGET;
 
@@ -716,6 +713,7 @@ our $ECXXFLAGS = $ENV{'ECXXFLAGS'};
 our $CPPFLAGS  = $ENV{'CPPFLAGS'};
 our $LDFLAGS   = $ENV{'LDFLAGS'};
 our $ARCHARG   = "";
+our $CROSS     = 0;
 our @ARCHS;
 
 # Check host computer architecture and create list of architecture to build
@@ -742,6 +740,11 @@ if ( $OPT{'m32'} && ! $OPT{'universal'} )
         # assume PPC, what else could it be?
         push @ARCHS, "ppc7400";
     }
+    # Test if we're cross compiling
+    if ( $arch eq "x86_64" || $arch eq "ppc64" )
+    {
+        $CROSS = 1;
+    }
 }
 elsif ( $arch eq "x86_64" || $arch eq "ppc64" )
 {
@@ -757,6 +760,7 @@ elsif ( $arch eq "x86_64" || $arch eq "ppc64" )
         {
             push @ARCHS, "ppc7400", "ppc64";
         }
+        $CROSS = 1;
     }
     else
     {
@@ -894,18 +898,29 @@ our %depend = (
     'libogg' =>
     {
         'url'           => 'http://downloads.xiph.org/releases/ogg/libogg-1.3.0.tar.gz',
+        'pre-conf'      =>  'sed -i -e "s:-O4:-O3:g" configure',
+
     },
 
     'vorbis' =>
     {
         'url'           => 'http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.2.tar.gz',
+        'pre-conf'      =>  'sed -i -e "s:-O4:-O3:g" configure',
     },
 
     'flac' =>
     {
         'url'  => "$sourceforge/sourceforge/flac/flac-1.2.1.tar.gz",
+        #Xcode 4.4 and later breaks universal build, so regenerate configure script
+        'pre-conf'      => 'sed -i "" \'/if test "x$enable_xmms_plugin/,/fi/d\' configure.in ; ' .
+            'sed -i -e \'s/AM_ICONV/AC_DEFINE([HAVE_ICONV], [], 1]) LIBICONV="-liconv"/g\' configure.in ; ' .
+            'sed -i -e \'s/AM_LANGINFO_CODESET/AC_SUBST(LIBICONV)/g\' configure.in ; ' .
+            "cp $PREFIX/share/libtool/config/ltmain.sh . ; " .
+            "$PREFIX/bin/aclocal ; $PREFIX/bin/autoconf",
+
         # Workaround Intel problem - Missing _FLAC__lpc_restore_signal_asm_ia32
         'conf' => [
+            '--disable-xmms-plugin',
             '--disable-asm-optimizations',
         ],
         # patch to support universal compilation and fix incorrect sizeof
@@ -942,14 +957,16 @@ our %depend = (
     'mysqlclient' =>
     {
         'url'           => 'http://downloads.mysql.com/archives/mysql-5.5/mysql-5.5.24.tar.gz',
-        'conf-cmd'      => "rm -rf $PREFIX/include/mysql ; $PREFIX/bin/cmake",
+        'pre-conf'      => "rm -rf $PREFIX/include/mysql",
+        'conf-cmd'      => "$PREFIX/bin/cmake",
         'conf'          => [
             "-DCMAKE_INSTALL_PREFIX=$PREFIX",
         ],
         'make'          => [
-            'mysqlclient',
-            'libmysql',
+            'all',
         ],
+        'parallel-make' => 'yes',
+        'post-make' => "SEGMENTS='SharedLibraries Development' ; for segment in \$SEGMENTS ; do $PREFIX/bin/cmake -DCMAKE_INSTALL_COMPONENT=\$segment -P cmake_install.cmake ; done",
     },
 
     'dbus' =>
@@ -974,7 +991,8 @@ our %depend = (
     'qt'
     =>
     {
-        'url' => "http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${QTVERSION}.tar.gz",
+        #'url' => "http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${QTVERSION}.tar.gz",
+        'url' => "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${QTVERSION}.tar.gz",
         'pre-conf'
         =>  # Get around Qt bug QTBUG-24498 (4.8.0) && stupid thing can't compile in release mode on mac without framework active
         #also hack for QTBUG-23258
@@ -985,7 +1003,7 @@ our %depend = (
         'make' => [ ],
         'post-make' => 'cd src/plugins/sqldrivers/mysql ; make install ; '.
             'make -f Makefile.Release install ; '.
-            "cd $PREFIX/lib ; ln -s mysql lib; ".
+            "cd $PREFIX/lib ; ln -fs mysql lib; ".
             '',
         #WebKit in Qt keeps erroring half way on my quad-core when using -jX, use -noparallel
         'parallel-make' => 'yes'
@@ -995,16 +1013,27 @@ our %depend = (
     =>
     {
         'url'
-        => "http://download.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${QTVERSION}.tar.gz",
+        => "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${QTVERSION}.tar.gz",
         'arg-patches'
-        => "echo $QTVERSION",
+        => "echo $QTVERSION | sed -E 's/([0-9]+\.[0-9]+\.)[0-9]+/\\1*/g'",
         'patches' =>
         {
             #also hack for QTBUG-23258
-            '4.8.2' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
-            '4.8.1' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
-            '4.8.0' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm",
-            '4.7.4' => "patch -f -p0 <<EOF\n" . <<EOF
+            '4.8.*' => "sed -i -e \"s:#elif defined(Q_OS_SYMBIAN) && defined (QT_NO_DEBUG):#else:g\" src/corelib/kernel/qcoreapplication.cpp; sed -i -e \"s:#if\\( \\!defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD) || defined (Q_OS_SYMBIAN)\\):#if 1 //\1:g\" src/corelib/kernel/qcoreapplication_p.h; sed -i -e \"s:^\\(#import <QTKit/QTKit.h>\\):#if defined(slots)\\\\\n#undef slots\\\\\n#endif\\\\\n \\1:g\" src/3rdparty/webkit/Source/WebCore/platform/graphics/mac/MediaPlayerPrivateQTKit.mm ; patch -f -p0 <<EOF\n" . <<EOF
+--- src/gui/kernel/qt_cocoa_helpers_mac_p.h.orig	2013-03-23 21:51:52.000000000 +1100
++++ src/gui/kernel/qt_cocoa_helpers_mac_p.h	2013-03-23 21:53:15.000000000 +1100
+@@ -158,7 +158,7 @@
+ bool qt_mac_handleMouseEvent(void * /*QCocoaView * */view, void * /*NSEvent * */event, QEvent::Type eventType, Qt::MouseButton button);
+ bool qt_mac_handleTabletEvent(void * /*QCocoaView * */view, void * /*NSEvent * */event);
+ inline QApplication *qAppInstance() { return static_cast<QApplication *>(QCoreApplication::instance()); }
+-struct ::TabletProximityRec;
++//struct ::TabletProximityRec;
+ void qt_dispatchTabletProximityEvent(const ::TabletProximityRec &proxRec);
+ Qt::KeyboardModifiers qt_cocoaModifiers2QtModifiers(ulong modifierFlags);
+ Qt::KeyboardModifiers qt_cocoaDragOperation2QtModifiers(uint dragOperations);
+EOF
+            . "\nEOF",
+            '4.7.*' => "patch -f -p0 <<EOF\n" . <<EOF
 --- tools/qdoc3/cppcodemarker.cpp.ori	2012-03-07 10:26:46.000000000 +1100
 +++ tools/qdoc3/cppcodemarker.cpp	2012-03-07 10:51:33.000000000 +1100
 @@ -43,6 +43,7 @@
@@ -1038,10 +1067,11 @@ EOF
         '-no-sql-mysql',
         '-no-sql-sqlite',
         '-no-sql-odbc',
+        '-no-sql-psql',
         '-system-zlib',
         '-no-libtiff',
         '-no-libmng',
-        '-nomake examples -nomake demos',
+        '-nomake examples -nomake demos -nomake docs -nomake designer',
         '-no-nis',
         '-no-cups',
         '-no-qdbus',
@@ -1106,7 +1136,7 @@ EOF
 
     'libcdio' =>
     {
-        'url'           => 'http://ftp.gnu.org/pub/gnu/libcdio/libcdio-0.83.tar.bz2',
+        'url'      => 'http://ftp.gnu.org/gnu/libcdio/libcdio-0.90.tar.gz',
     },
 
     'liberation-sans' =>
@@ -1127,11 +1157,7 @@ EOF
     #mysql 5.5.24 required cmake 2.8.7 and choke with 2.8.8
     'cmake'       =>
     {
-        'url'     => 'http://www.cmake.org/files/v2.8/cmake-2.8.7.tar.gz',
-        'conf-cmd'      =>  "./configure",
-        'conf'          => [
-            "--prefix=$PREFIX",
-        ],
+        'url'           => 'http://www.cmake.org/files/v2.8/cmake-2.8.7.tar.gz',
         'parallel-make' => 'yes'
     },
 
@@ -1152,7 +1178,7 @@ EOF
 
     'libx264'     =>
     {
-        'url'     => 'ftp://ftp.videolan.org/pub/x264/snapshots/x264-snapshot-20120716-2245-stable.tar.bz2',
+        'url'     => 'ftp://ftp.videolan.org/pub/x264/snapshots/x264-snapshot-20121018-2245-stable.tar.bz2',
     }
 );
 
@@ -1216,6 +1242,15 @@ if ( $OPT{'qtsrc'} )
     $depends =~ s/qt/qt-src/;
     @build_depends = split /,/, $depends;
 }
+
+#If building backend, include libx264 only if not cross-compiling
+if ( $backend && ! $CROSS)
+{
+    &Verbose("Adding x264 encoding capabilities");
+    push(@build_depends,'libx264');
+    $seen_depends{'libx264'} = 1;
+}
+
 foreach my $sw ( @build_depends )
 {
     # Get info about this package
@@ -1759,19 +1794,13 @@ foreach my $target ( @targets )
             my $pluginSrc = "$QTPLUGINS/$plugin";
             if ( -e $pluginSrc )
             {
-                if ( -e "$QTPLUGINS/$plugin" )
-                {
-                    &Syscall([ 'cp', "$QTPLUGINS/$plugin",
-                           "$finalTarget/Contents/$BundlePlugins/$plugin" ])
-                        or die;
-                    &Syscall([ @bundler,
-                           "$finalTarget/Contents/$BundlePlugins/$plugin", @libs ])
-                        or die;
-		}
-                else
-                {
-                    &Complain("missing plugin $QTPLUGINS/$plugin");
-                }
+                my $pluginCp = "$finalTarget/Contents/$BundlePlugins/$plugin";
+                &Syscall([ 'cp', $pluginSrc, $pluginCp ]) or die;
+                &Syscall([ @bundler, $pluginCp, @libs ])  or die;
+            }
+            else
+            {
+                &Complain("missing plugin $pluginSrc");
             }
         }
 
@@ -1793,7 +1822,8 @@ foreach my $target ( @targets )
     {
         my $extralib;
 
-        foreach my $extra ( 'mythavtest', 'ignyte', 'mythpreviewgen', 'mtd' )
+        foreach my $extra ( 'mythavtest', 'ignyte', 'mythpreviewgen', 'mtd',
+                            'mythlogserver' )
         {
             if ( -e "$PREFIX/bin/$extra" )
             {
@@ -1878,7 +1908,8 @@ if ( $backend && grep(m/MythBackend/, @targets) )
 
     # The backend gets all the useful binaries it might call:
     foreach my $binary ( 'mythjobqueue', 'mythcommflag',
-                         'mythpreviewgen', 'mythtranscode', 'mythfilldatabase' )
+                         'mythpreviewgen', 'mythtranscode', 'mythfilldatabase',
+                         'mythlogserver' )
     {
         my $SRC  = "$PREFIX/bin/$binary";
         if ( -e $SRC )

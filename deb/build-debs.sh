@@ -37,6 +37,10 @@ export QUILT_PATCHES="debian/patches"
 [ -z "$DEBUILD_FLAGS" ] && DEBUILD_FLAGS="-us -uc -i -I.git"
 
 
+if [ ! -d `dirname $0`/debian ]; then
+	die "WARNING: This script will not work without a full checkout from git://github.com/MythTV/packaging.git"
+fi
+
 for arg in "$@"; do
 	if [ "$1" = "help" ]; then
 		help
@@ -137,27 +141,28 @@ if [ ! -f ../mythtv_$UPSTREAM_VERSION.orig.tar.gz ]; then
 fi
 
 if [ "$TYPE" = "binary" ]; then
-    #Make sure we have the package for get-build-deps
-    if ! which get-build-deps 2>&1 1>/dev/null; then
-        echo "Missing ubuntu-dev-tools, marking for installation"
-        sudo apt-get install ubuntu-dev-tools --no-install-recommends || die "Error installing ubuntu-dev-tools"
+    #Make sure we have the package for dpkg-checkbuilddeps
+    if ! which dpkg-checkbuilddeps 2>&1 1>/dev/null; then
+        echo "Missing dpkg-dev, marking for installation"
+        sudo apt-get install dpkg-dev --no-install-recommends -y || die "Error installing dpkg-dev"
     fi
 
-    #pbuilder is used by get-build deps
-    if ! which pbuilder 2>&1 1>/dev/null; then
-        echo "Missing pbuilder, marking for installation"
-        sudo apt-get install pbuilder || die "Error installing pbuilder"
+    #mk-build-deps is used
+    if ! which mk-build-deps 2>&1 1>/dev/null; then
+        echo "Missing mk-build-deps, marking for installation"
+        sudo apt-get install devscripts -y --no-install-recommends || die "Error installing devscripts"
     fi
 
-    #aptitude is used by get-build deps
-    if ! which aptitude 2>&1 1>/dev/null; then
-        echo "Missing aptitude, marking for installation"
-        sudo apt-get install aptitude || die "Error installing aptitude"
+    #equivs needed for mk-build-deps
+    if ! which equivs-build 2>&1 1>/dev/null; then
+        echo "Missing equivs-build, marking for installation"
+        sudo apt-get install equivs -y --no-install-recommends || die "Error installing equivs"
     fi
 
-    #grab build dependencies
-    get-build-deps || die "Error installing build dependencies"
-
+    #test and install deps as necessary
+    if ! dpkg-checkbuilddeps 1>/dev/null 2>&1; then
+        sudo mk-build-deps debian/control.in -ir || die "error installing dependencies"
+    fi
 elif [ "$TYPE" = "source" ]; then
     DEBUILD_FLAGS="-S $DEBUILD_FLAGS"
 fi
