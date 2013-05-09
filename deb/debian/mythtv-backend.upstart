@@ -10,8 +10,12 @@ stop on runlevel [016]
 #before we send SIGKILL
 kill timeout 30
 
+#if we crash, but not quickly
 respawn
 respawn limit 2 3600
+
+#because we're daemonizing to avoid logging to upstart log
+expect fork
 
 pre-start script 
     [ -x /usr/sbin/mysqld ] || exit 0
@@ -23,5 +27,5 @@ end script
 
 script
 	test -f /etc/default/locale && . /etc/default/locale || true
-	LANG=$LANG exec /usr/bin/mythbackend --syslog local7 --user mythtv
+	LANG=$LANG exec /usr/bin/mythbackend --syslog local7 --user mythtv --daemon
 end script
