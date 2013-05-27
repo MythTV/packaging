@@ -79,6 +79,7 @@ our %build_profile = (
         'yasm',
         'liberation-sans',
         'firewiresdk',
+        'taglib',
        ],
     'mythplugins'
     => [
@@ -87,7 +88,6 @@ our %build_profile = (
         'libtool',
         'autoconf',
         'automake',
-        'taglib',
         'libogg',
         'vorbis',
         'flac',
