@@ -364,6 +364,14 @@ sub FindLibraryFile($@)
         $path = "$dir/$dylib";
         if ( -e $path ) { return Cwd::abs_path($path) }
     }
+
+    # try without the path (to handle install_name starting with stuff @rpath/
+    $dylib = basename($dylib);
+    foreach my $dir ( @libdirs )
+    {
+        $path = "$dir/$dylib";
+        if ( -e $path ) { return Cwd::abs_path($path) }
+    }
     &Complain("Could not find $dylib");
     die;
 }
@@ -407,14 +415,14 @@ sub ProcessDependencies(@)
 
             # Any dependency which is already package relative can be ignored
             next if $dep =~ m/\@executable_path/;
-            
+
             # skip system library locations
             next if ($dep =~ m|^/System|  ||
                      $dep =~ m|^/usr/lib|);
 
             my ($base) = &BaseVers($dep);
 
-            # Only add this dependency if needed. This assumes that 
+            # Only add this dependency if needed. This assumes that
             # we aren't mixing versions of the same library name
             &Verbose("Process Dep $base");
             if ( ! -e "$bundle/Contents/Frameworks/$base.framework/$base" )
