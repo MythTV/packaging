@@ -1,15 +1,17 @@
 <?xml version="1.0"?>
 <manifest package="org.mythtv.mythfrontend" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0" android:versionCode="1" android:installLocation="auto">
-	<application android:hardwareAccelerated="true" 
-		android:name="org.qtproject.qt5.android.bindings.QtApplication" 
-		android:label="Mythfrontend" android:icon="@drawable/ic_launcher" 
-		android:debuggable="true"
-		android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
-        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="org.qtproject.qt5.android.bindings.QtActivity" android:label="mythfrontend" android:screenOrientation="landscape" android:launchMode="singleTop">
+    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="mythfrontend" android:icon="@drawable/ic_launcher" android:debuggable="true" android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="org.qtproject.qt5.android.bindings.QtActivity" android:label="mythfrontend" android:screenOrientation="landscape" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <!-- Application arguments -->
+            <!-- meta-data android:name="android.app.arguments" android:value="arg1 arg2 arg3"/ -->
+            <meta-data android:name="android.app.arguments" android:value="-v general,gui,playback --loglevel debug"/>
+            <!-- Application arguments -->
+
             <meta-data android:name="android.app.lib_name" android:value="mythfrontend"/>
             <meta-data android:name="android.app.qt_sources_resource_id" android:resource="@array/qt_sources"/>
             <meta-data android:name="android.app.repository" android:value="default"/>
@@ -23,7 +25,7 @@
             <meta-data android:name="android.app.use_local_qt_libs" android:value="1"/>
             <meta-data android:name="android.app.libs_prefix" android:value="/data/local/tmp/qt/"/>
             <meta-data android:name="android.app.load_local_libs" android:value="plugins/platforms/android/libqtforandroid.so:plugins/bearer/libqandroidbearer.so:plugins/sensors/libqtsensors_android.so:plugins/position/libqtposition_android.so:lib/libQt5QuickParticles.so:plugins/mediaservice/libqtmedia_android.so:lib/libQt5MultimediaQuick_p.so"/>
-            <meta-data android:name="android.app.load_local_jars" android:value="jar/QtAndroid.jar:jar/QtAndroidAccessibility.jar:jar/QtAndroid-bundled.jar:jar/QtAndroidAccessibility-bundled.jar:jar/QtAndroidBearer.jar:jar/QtAndroidBearer-bundled.jar:jar/QtSensors.jar:jar/QtSensors-bundled.jar:jar/QtPositioning.jar:jar/QtPositioning-bundled.jar:jar/QtMultimedia.jar:jar/QtMultimedia-bundled.jar"/>
+            <meta-data android:name="android.app.load_local_jars" android:value="jar/QtAndroid.jar:jar/QtAndroid-bundled.jar:jar/QtAndroidBearer.jar:jar/QtAndroidBearer-bundled.jar:jar/QtSensors.jar:jar/QtSensors-bundled.jar:jar/QtPositioning.jar:jar/QtPositioning-bundled.jar:jar/QtMultimedia.jar:jar/QtMultimedia-bundled.jar"/>
             <meta-data android:name="android.app.static_init_classes" android:value="org.qtproject.qt5.android.sensors.QtSensors:org.qtproject.qt5.android.sensors.QtSensors:org.qtproject.qt5.android.positioning.QtPositioning:org.qtproject.qt5.android.positioning.QtPositioning:org.qtproject.qt5.android.multimedia.QtMultimediaUtils:org.qtproject.qt5.android.multimedia.QtMultimediaUtils"/>
             <!--  Messages maps -->
             <meta-data android:value="@string/ministro_not_found_msg" android:name="android.app.ministro_not_found_msg"/>
@@ -32,9 +34,10 @@
             <!--  Messages maps -->
 
             <!-- Splash screen -->
-            <!--
-            <meta-data android:name="android.app.splash_screen_drawable" android:resource="@drawable/logo"/>
-            -->
+	    <!--
+            <meta-data android:name="android.app.splash_screen_drawable" android:resource="@drawable/splash"/>
+            <meta-data android:name="android.app.splash_screen_sticky" android:value="false"/>
+-->
             <!-- Splash screen -->
 
             <!-- Background running -->
@@ -44,23 +47,41 @@
                           signal is sent! -->
             <meta-data android:name="android.app.background_running" android:value="false"/>
             <!-- Background running -->
+
+            <!-- auto screen scale factor -->
+            <meta-data android:name="android.app.auto_screen_scale_factor" android:value="false"/>
+            <!-- auto screen scale factor -->
+
+            <!-- extract android style -->
+            <!-- available android:values :
+                * full - useful QWidget & Quick Controls 1 apps
+                * minimal - useful for Quick Controls 2 apps, it is much faster than "full"
+                * none - useful for apps that don't use any of the above Qt modules
+                -->
+            <meta-data android:name="android.app.extract_android_style" android:value="full"/>
+            <!-- extract android style -->
         </activity>
+
+        <!-- For adding service(s) please check: https://wiki.qt.io/AndroidServices -->
+
     </application>
-    <uses-sdk android:minSdkVersion="17" android:targetSdkVersion="17"/>
+
+    <uses-sdk android:minSdkVersion="17" android:targetSdkVersion="21"/>
     <supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true"/>
 
     <!-- The following comment will be replaced upon deployment with default permissions based on the dependencies of the application.
          Remove the comment if you do not require these default permissions. -->
-        <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
 
     <!-- The following comment will be replaced upon deployment with default features based on the dependencies of the application.
          Remove the comment if you do not require these default features. -->
-        <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
     <uses-feature android:name="android.hardware.microphone" android:required="false"/>
     <uses-feature android:glEsVersion="0x00020000" android:required="true"/>

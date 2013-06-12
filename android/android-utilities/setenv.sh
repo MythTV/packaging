@@ -13,9 +13,9 @@ export ANDROID_SDK_ROOT=$ANDROID_SDK
 export ANDROID_NDK_ROOT=$ANDROID_NDK
 export JAVA_HOME=/usr/lib/jvm/jdk-7-oracle-x64
 export JDK_PATH=/usr/lib/jvm/jdk-7-oracle-x64/bin
-export ANDROID_KEYSTORE=$ANDROID_ROOT/yourname.keystore
+export ANDROID_KEYSTORE=$ANDROID_ROOT/digivation.keystore
 
-export KEYSTORE=~/android/yourname-release.keystore
+export KEYSTORE=~/android/digivation-release.keystore
 export KEYALIAS=digivatn
 export KEYSTOREPASSWORD="password"
 
