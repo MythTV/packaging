@@ -79,6 +79,9 @@ our %build_profile = (
         'yasm',
         'liberation-sans',
         'firewiresdk',
+        'libtool',
+        'autoconf',
+        'automake',
         'taglib',
        ],
     'mythplugins'
@@ -226,9 +229,10 @@ osx-packager.pl - build OS X binary packages for MythTV
  You must provide either -qtsdk or -qtbin *and * -qtplugins
 
  Advanced Options:
-  -srcdir  <path>    build using provided root mythtv directory
+  -gitdir    <path>  build using provided myth git cloned directory
+  -srcdir    <path>  build using provided root source directory
   -pkgsrcdir <path>  build using provided packaging directory
-  -archive <path>    specify where dependencies archives can be found
+  -archive   <path>  specify where dependencies archives can be found
                      (default is .osx-packager/src)
   -force             use myth source directory as-is,
                      with no GIT validity check
@@ -257,6 +261,8 @@ osx-packager.pl - build OS X binary packages for MythTV
   -olevel <n>        compile with extra -On
   -buildprofile <x>  build either master or fixes-0.24 (default: master)
   -gcc               build using gcc (deprecated, default is clang/clang++)
+  -no-optimization   build mythtv without compiler optimization
+                     Useful for debugging
 
 
 =head1 DESCRIPTION
@@ -338,6 +344,7 @@ Getopt::Long::GetOptions(\%OPT,
                          'm32',
                          'universal',
                          'plugins=s',
+                         'gitdir=s',
                          'srcdir=s',
                          'pkgsrcdir=s',
                          'force',
@@ -354,6 +361,7 @@ Getopt::Long::GetOptions(\%OPT,
                          'olevel=s',
                          'nosysroot',
                          'gcc',
+                         'no-optimization'
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -398,7 +406,7 @@ END
 our $WORKDIR = "$SCRIPTDIR/.osx-packager";
 mkdir $WORKDIR;
 
-if ( $OPT{'nohead'} && ! $OPT{'force'} && ! $OPT{'srcdir'} )
+if ( $OPT{'nohead'} && ! $OPT{'force'} && ! $OPT{'srcdir'} && !$OPT{'gitdir'})
 {
     my $GITTOP="$WORKDIR/src/myth-git/.git";
 
@@ -554,6 +562,15 @@ else
 }
 
 our $GITDIR = "$SRCDIR/myth-git";
+if ( $OPT{'gitdir'} && ! $OPT{'srcdir'} )
+{
+    if ( ! -d "$OPT{'gitdir'}/.git" )
+    {
+        &Complain("$OPT{'gitdir'} isn't a valid git directory");
+        exit;
+    }
+    $GITDIR = $OPT{'gitdir'};
+}
 
 our @pluginConf;
 if ( $OPT{plugins} )
@@ -1604,6 +1621,10 @@ foreach my $arch (@ARCHS)
                 if ( exists $seen_depends{"libx264"} )
                 {
                     push @config, "--enable-libx264";
+                }
+                if ( $OPT{'no-optimization'} )
+                {
+                    push @config, "--disable-optimizations";
                 }
             }
 
