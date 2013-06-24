@@ -723,6 +723,11 @@ $ENV{'LDFLAGS'} = "$SDKLSYSROOT -mmacosx-version-min=$OSTARGET -L$PREFIX/lib -F$
 $ENV{'PREFIX'} = $PREFIX;
 $ENV{'SDKROOT'} = $SDKROOT;
 
+if ( $OPT{'qtbin'} )
+{
+    $ENV{'ECXXFLAGS'} .= " -F$QTLIB";
+}
+
 # compilation flags used for compiling dependency tools, do not use multi-architecture
 our $CFLAGS    = $ENV{'CFLAGS'};
 our $CXXFLAGS  = $ENV{'CXXFLAGS'};
