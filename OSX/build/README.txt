@@ -38,6 +38,10 @@ osx-packager-qtsdk.pl will determine what the lowest SDKs available is and attem
 So if you have a system with the 10.5, 10.6 and 10.7 SDK installed, it will build against the 10.5 SDK.
 Having the 10.4 SDK installed will result in an early compilation failure. So either move it outside the /SDKs directory, or delete it.
 
+Using the latest version of XCode is highly recommended, at time of writing it's 4.6.2.
+Newer versions of XCode ships with the latest clang/clang++ compiler.
+Older versions of clang have been known to cause unexpected behaviour in h264 playback and fail to compile some myth video filters.
+
 2) Building using pre-packaged Qt
 
 You need to have installed either Qt SDK (64 bits only) or Qt libraries package (both 32 and 64 bits) from http://qt-project.org/downloads/
