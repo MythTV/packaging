@@ -626,8 +626,8 @@ delete $ENV{'CPP'};
 delete $ENV{'CXX'};
 
 our $DEVROOT = `xcode-select -print-path`; chomp $DEVROOT;
-our $SDKVER = `xcodebuild -showsdks | grep macosx10 | sort | head -n 1 | awk '{ print \$4 }' `; chomp $SDKVER;
-our $SDKNAME = `xcodebuild -showsdks | grep macosx10 | sort | head -n 1 | awk '{ print \$6 }' `; chomp $SDKNAME;
+our $SDKNAME = `xcodebuild -showsdks | grep macosx10 | sort | head -n 1 | awk '{ print \$NF }' `; chomp $SDKNAME;
+our $SDKVER = $SDKNAME; $SDKVER =~ s/macosx//g;
 our $SDKROOT = "$DEVROOT/SDKs/MacOSX$SDKVER.sdk";
 
 $ENV{'DEVROOT'} = $DEVROOT;
