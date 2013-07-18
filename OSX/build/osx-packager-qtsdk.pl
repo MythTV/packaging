@@ -743,6 +743,8 @@ my $arch = `sysctl -n hw.machine`; chomp $arch;
 #hw.machine returns what the kernel is using, not if the machine is 64 bits capable
 #so compile for the appropriate 64 bits target if we can
 my $m64 = `sysctl hw.cpu64bit_capable`; chomp $m64;
+my $PPC = 0;
+
 if ( $? == 0 && $m64 =~ m/\s+1$/ )
 {
     if ( $arch eq "i386" )
@@ -761,6 +763,7 @@ if ( $OPT{'m32'} && ! $OPT{'universal'} )
     {
         # assume PPC, what else could it be?
         push @ARCHS, "ppc7400";
+        $PPC = 1;
     }
     # Test if we're cross compiling
     if ( $arch eq "x86_64" || $arch eq "ppc64" )
@@ -781,6 +784,7 @@ elsif ( $arch eq "x86_64" || $arch eq "ppc64" )
         else
         {
             push @ARCHS, "ppc7400", "ppc64";
+            $PPC = 1
         }
         $CROSS = 1;
     }
@@ -793,6 +797,7 @@ elsif ( $arch eq "x86_64" || $arch eq "ppc64" )
         else
         {
             push @ARCHS, "ppc64";
+            $PPC = 1
         }
     }
 }
@@ -805,9 +810,13 @@ else
     else
     {
         push @ARCHS, "ppc7400";
+        $PPC = 1
     }
     $OPT{'universal'} = 0;
 }
+
+# using a friendlier variable name
+my $UNIVERSAL = $OPT{'universal'};
 
 for my $arch (@ARCHS)
 {
@@ -1201,7 +1210,14 @@ EOF
 
     'libx264'     =>
     {
-        'url'     => 'ftp://ftp.videolan.org/pub/x264/snapshots/x264-snapshot-20121018-2245-stable.tar.bz2',
+        'url'     => 'ftp://ftp.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-20130716-2245-stable.tar.bz2',
+        'conf-cmd' => "cd",
+        'make-cmd' => "if [ '$CROSS' == '1' ]; then CFLAGS='' LDFLAGS='' ./configure --host=i386-apple-darwin --prefix=$PREFIX --enable-shared; make $parallel_make_flags ; mv libx264.133.dylib libx264.133.dylib.32; fi; " .
+            "CFLAGS='' LDFLAGS='' ./configure --prefix=$PREFIX --enable-shared; make $parallel_make_flags; " .
+            "if [ '$CROSS' == '1' ]; then if [ '$UNIVERSAL' == '1' ]; then lipo -arch i386 libx264.133.dylib.32 -arch x86_64 libx264.133.dylib -create -output libx264.133.dylib.universal; cp libx264.133.dylib.universal libx264.133.dylib; " .
+            "else cp libx264.133.dylib.32 libx264.133.dylib; fi; fi; " .
+            "make install",
+        'make'    => [ ],
     }
 );
 
@@ -1266,8 +1282,8 @@ if ( $OPT{'qtsrc'} )
     @build_depends = split /,/, $depends;
 }
 
-#If building backend, include libx264 only if not cross-compiling
-if ( $backend && ! $CROSS)
+#If building backend, include libx264 except on PPC system
+if ( $backend && ! $PPC)
 {
     &Verbose("Adding x264 encoding capabilities");
     push(@build_depends,'libx264');
@@ -1561,6 +1577,7 @@ foreach my $arch (@ARCHS)
 
     # show summary of build parameters.
     &Verbose("CFLAGS = $ENV{'CFLAGS'}");
+    &Verbose("CXXFLAGS = $ENV{'CXXFLAGS'}");
     &Verbose("LDFLAGS = $ENV{'LDFLAGS'}");
 
     # Build MythTV and any plugins
