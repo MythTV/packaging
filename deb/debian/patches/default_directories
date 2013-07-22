@@ -3,44 +3,44 @@ Use /var/log/mythtv instead of just /var/log for mythtv logs.
 Change location of default storage groups to somewhere in /var/lib.
 Index: mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
 ===================================================================
---- mythtv-master.orig/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2012-03-16 01:00:10.055330063 -0500
-+++ mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2012-03-20 00:00:03.136207457 -0500
-@@ -42,7 +42,7 @@
+--- mythtv-master.orig/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2013-07-22 20:50:57.000000000 +1000
++++ mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2013-07-22 20:54:12.216592441 +1000
+@@ -45,7 +45,7 @@
  #ifdef Q_OS_MAC
      gc->setValue(QDir::homePath() + "/Pictures");
  #else
 -    gc->setValue("/var/lib/pictures");
 +    gc->setValue("/var/lib/mythtv/pictures");
  #endif
-     gc->setHelpText(QObject::tr("This directory must exist and "
-                        "MythGallery needs to have read permission."));
-@@ -97,7 +97,7 @@
+     gc->setHelpText(GallerySettings::tr("This directory must exist and "
+                                         "MythGallery needs to have read "
+@@ -107,7 +107,7 @@
  {
      HostLineEdit *gc = new HostLineEdit("GalleryImportDirs");
-     gc->setLabel(QObject::tr("Paths to import images from"));
+     gc->setLabel(GallerySettings::tr("Paths to import images from"));
 -    gc->setValue("/mnt/cdrom:/mnt/camera");
 +    gc->setValue("/media/cdrom:/media/usbdisk");
-     gc->setHelpText(QObject::tr("This is a colon separated list of paths. "
-                     "If the path in the list is a directory, its contents will "
-                     "be copied. If it is an executable, it will be run."));
+     gc->setHelpText(GallerySettings::tr("This is a colon separated list of "
+                     "paths. If the path in the list is a directory, its "
+                     "contents will be copied. If it is an executable, "
 Index: mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp
 ===================================================================
---- mythtv-master.orig/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2012-03-19 23:59:07.092255042 -0500
-+++ mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2012-03-20 00:00:03.140207451 -0500
-@@ -17,7 +17,7 @@
- {
+--- mythtv-master.orig/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2013-07-22 20:50:57.000000000 +1000
++++ mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2013-07-22 20:54:39.968193616 +1000
+@@ -18,7 +18,7 @@
      HostLineEdit *gc = new HostLineEdit("MythArchiveTempDir");
-     gc->setLabel(QObject::tr("MythArchive Temp Directory"));
+ 
+     gc->setLabel(ArchiveSettings::tr("MythArchive Temp Directory"));
 -    gc->setValue("");
 +    gc->setValue("/var/lib/mytharchive/temp/");
-     gc->setHelpText(QObject::tr("Location where MythArchive should create its "
-             "temporary work files. LOTS of free space required here."));
-     return gc;
+ 
+     gc->setHelpText(ArchiveSettings::tr("Location where MythArchive should "
+                                         "create its temporary work files. "
 Index: mythtv-master/mythtv/libs/libmythmetadata/globals.cpp
 ===================================================================
---- mythtv-master.orig/mythtv/libs/libmythmetadata/globals.cpp	2012-03-16 01:00:10.015330163 -0500
-+++ mythtv-master/mythtv/libs/libmythmetadata/globals.cpp	2012-03-20 00:00:03.140207451 -0500
-@@ -32,5 +32,5 @@
+--- mythtv-master.orig/mythtv/libs/libmythmetadata/globals.cpp	2013-07-22 20:50:58.000000000 +1000
++++ mythtv-master/mythtv/libs/libmythmetadata/globals.cpp	2013-07-22 20:52:51.701749530 +1000
+@@ -42,5 +42,5 @@
  #ifdef Q_OS_MAC
  const QString DEFAULT_VIDEOSTARTUP_DIR = QDir::homePath() + "/Movies";
  #else

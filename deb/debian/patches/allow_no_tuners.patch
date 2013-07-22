@@ -3,9 +3,9 @@ http://code.mythtv.org/trac/ticket/9626
 
 Index: mythtv-master/mythtv/programs/mythbackend/scheduler.cpp
 ===================================================================
---- mythtv-master.orig/mythtv/programs/mythbackend/scheduler.cpp	2012-02-09 18:07:35.263467627 -0600
-+++ mythtv-master/mythtv/programs/mythbackend/scheduler.cpp	2012-02-09 18:14:18.879479319 -0600
-@@ -171,8 +171,7 @@
+--- mythtv-master.orig/mythtv/programs/mythbackend/scheduler.cpp	2013-07-22 20:50:58.871371003 +1000
++++ mythtv-master/mythtv/programs/mythbackend/scheduler.cpp	2013-07-22 20:55:00.071904699 +1000
+@@ -178,8 +178,7 @@
          LOG(VB_GENERAL, LOG_ERR, LOC +
                  "No capture cards are defined in the database.\n\t\t\t"
                  "Perhaps you should re-read the installation instructions?");
