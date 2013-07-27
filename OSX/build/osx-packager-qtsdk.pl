@@ -1830,7 +1830,7 @@ foreach my $target ( @targets )
         {
             &Syscall([ 'mkdir', "$finalTarget/Contents/$BundlePlugins/$plugin" ]) or die;
             # Have to create links in application folder due to QTBUG-24541
-            &Syscall([ 'ln', '-s', "../$BundlePlugins/$plugin", "$finalTarget/Contents/MacOs/$plugin" ]) or die;
+            &Syscall([ 'ln', '-s', "../$BundlePlugins/$plugin", "$finalTarget/Contents/MacOS/$plugin" ]) or die;
         }
         
         foreach my $plugin ( 'imageformats/libqgif.dylib', 'imageformats/libqjpeg.dylib' )
@@ -1911,7 +1911,7 @@ foreach my $target ( @targets )
     {
         &Syscall([ 'mkdir', "-p", "$finalTarget/Contents/$BundlePlugins/$plugin" ]) or die;
         # Have to create links in application folder due to QTBUG-24541
-        &Syscall([ 'ln', '-s', "../$BundlePlugins/$plugin", "$finalTarget/Contents/MacOs/$plugin" ]) or die;
+        &Syscall([ 'ln', '-s', "../$BundlePlugins/$plugin", "$finalTarget/Contents/MacOS/$plugin" ]) or die;
     }
 
     # copy the MySQL sqldriver
