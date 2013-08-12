@@ -440,6 +440,7 @@ Depends: mythtv-common (>= ${binary:Version}),
          apache2-mpm-prefork | httpd, php5 | libapache2-mod-php5, 
          php5-mysql, 
          php-mythtv,
+         libhttp-date-perl,
          ${misc:Depends}
 Recommends: libmath-round-perl
 Description: Web interface add-on module for MythTV
