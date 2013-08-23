@@ -6,19 +6,26 @@ author          "Mario Limonciello <superm1@ubuntu.com>"
 start on (local-filesystems and net-device-up IFACE!=lo and started udev-finish)
 stop on runlevel [016]
 
-kill timeout 10
+#should die within 5 seconds, but we don't want data loss, so set it to 30
+#before we send SIGKILL
+kill timeout 30
+
+#if we crash, but not quickly
 respawn
 respawn limit 2 3600
+
+#because we're daemonizing to avoid logging to upstart log
+expect fork
 
 pre-start script 
     [ -x /usr/sbin/mysqld ] || exit 0
     for i in `seq 1 30` ; do
-       /usr/bin/mysqladmin --defaults-file=/etc/mysql/debian.cnf ping && exit 0
+       /usr/bin/mysqladmin --defaults-file=/etc/mysql/debian.cnf ping >/dev/null && exit 0
        sleep .5
     done
 end script
 
 script
 	test -f /etc/default/locale && . /etc/default/locale || true
-	LANG=$LANG exec /usr/bin/mythbackend --syslog local7 --user mythtv
+	LANG=$LANG exec /usr/bin/mythbackend --syslog local7 --user mythtv --daemon
 end script
