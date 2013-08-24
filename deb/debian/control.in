@@ -129,7 +129,8 @@ Depends: pwgen,
          libxml-xpath-perl,
          ${shlibs:Depends},
          ${misc:Depends}
-Suggests: mythtv-doc
+Suggests: mythtv-dbg,
+          mythtv-doc
 Conflicts: mythtv (<< 0.8-1), 
            mythmusic (<< 0.20.99+trunk14393), 
            mythweather (<< 0.20.99+trunk14393), 
