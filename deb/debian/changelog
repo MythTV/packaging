@@ -1,7 +1,7 @@
-mythtv (2:0.26.0~master.20120505.4b8b3cc-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.27.0~master.20120505.4b8b3cc-0ubuntu1) UNRELEASED; urgency=low
 
   [ Mario Limonciello ]
-  * Switch to 0.26 branch for master builds.
+  * Switch to 0.27 branch for master builds.
   * Cleanup lintian errors:
     - debian/control.in: description-synopsis-starts-with-article
     - debian/mythweb.config: maintainer-script-ignores-errors
