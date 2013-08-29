@@ -13,7 +13,7 @@ help()
 	echo "target_dir -> optional: the dir used for the & GIT checkouts"
 	echo "additional_patches -> optional: space separated full path to all patches to apply"
 	echo ""
-	echo "If the target_dir already contains git and bzr checkouts, they"
+	echo "If the target_dir already contains git checkouts, they"
 	echo "will just be updated to the latest HEAD followed by the git"
 	echo "checkout being checked out to the branch indicated."
 	echo ""
@@ -21,11 +21,11 @@ help()
 	echo " $0"
 	echo "  This would check out the branch matching packaging branch name and build debs in `pwd`"
 	echo ""
-	echo " $0 fixes/0.25 /tmp"
-	echo "  This would checkout out the fixes/0.25 branch, local packaging and build debs in /tmp"
+	echo " $0 fixes/0.27 /tmp"
+	echo "  This would checkout out the fixes/0.27 branch, local packaging and build debs in /tmp"
 	echo ""
-	echo " $0 fixes/0.25 /tmp /full/path/to/patch"
-	echo "  This would checkout the fixes/0.25 branch, local packaging, apply the patch called "
+	echo " $0 fixes/0.27 /tmp /full/path/to/patch"
+	echo "  This would checkout the fixes/0.27 branch, local packaging, apply the patch called "
 	echo "  'patch' located at /full/path/to/ to the build and then produce debs"
 	exit 0
 }
@@ -42,7 +42,7 @@ if [ ! -d `dirname $0`/debian ]; then
 fi
 
 for arg in "$@"; do
-	if [ "$1" = "help" ]; then
+	if [ "$1" = "help" ] || [ "$1" = "--help" ] || [ "$1" = "/?" ]; then
 		help
 	fi
 	if [ -z "$DIRECTORY" ] && [ -d "$arg" ]; then
