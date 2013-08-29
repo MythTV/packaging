@@ -97,7 +97,19 @@ fi
 mkdir -p $DIRECTORY/mythtv
 rm -rf $DIRECTORY/mythtv/debian
 cp -R `dirname $0`/debian $DIRECTORY/mythtv
+cp $DIRECTORY/mythtv/debian/changelog.in $DIRECTORY/mythtv/debian/changelog
+
+#build packaging changelog
+DATE=$(dpkg-parsechangelog -l$DIRECTORY/mythtv/debian/changelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $2}')
+TODAY=$(date +%Y%m%d)
+PACKAGING_HASH=$(git log -1 --oneline | awk '{ print $1 }')
+if [ "$DATE" != "$TODAY" ]; then \
+	echo "Packaging changes between $DATE and $TODAY:" > $DIRECTORY/mythtv/.gitout
+	GIT_DATE=`echo $DATE | sed 's/^\(.\{4\}\)/\1./; s/^\(.\{7\}\)/\1./'`
+	git log --grep="^deb: " --oneline --since="$GIT_DATE" | sed 's/^/[/; s/ deb:/]/' >> $DIRECTORY/mythtv/.gitout
+fi
 cd $DIRECTORY/mythtv
+
 
 ##set changelog entry
 #these can be filled in potentially from external sources
@@ -106,9 +118,15 @@ cd $DIRECTORY/mythtv
 [ -z "$DEBIAN_SUFFIX" ] && DEBIAN_SUFFIX=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*-//;')
 #these should always be parsed from the old changelog
 EPOCH=$(dpkg-parsechangelog | sed '/^Version/!d; s/.* //; s/:.*//;')
-TODAY=$(date +%Y%m%d)
 #actually bump the changelog up. don't include a git hash here right now.
-dch -b -v $EPOCH:0.$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TODAY.-$DEBIAN_SUFFIX "Automated Build"
+dch -b -v $EPOCH:0.$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TODAY.-$DEBIAN_SUFFIX "Scripted Build from $GIT_TYPE git packaging [$PACKAGING_HASH]"
+if [ -f $DIRECTORY/mythtv/.gitout ]; then
+	while read line
+	do
+		dch -a "$line"
+	done < .gitout
+	rm .gitout
+fi
 
 #clean up any old patches (just in case)
 if [ -d .pc ]; then
