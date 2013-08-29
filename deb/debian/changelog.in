@@ -1,4 +1,78 @@
-mythtv (2:0.27.0~master.20120505.4b8b3cc-0ubuntu1) UNRELEASED; urgency=low
+mythtv (2:0.27.0~master.20130828.b2b7022-0ubuntu1) saucy; urgency=low
+
+  * New upstream checkout (b2b7022)
+  * Scripted Build from master git packaging [18ab870]
+  * Packaging changes between 20120505 and 20130828:
+  * [18ab870] build packaging changes into debian/changelog upon release
+  * [39d4449] switch to 0.27 builds for master
+  * [efe0e0c] fix instances of test-virtualbox in SQL file (LP: #1215440)
+  * [223a44c] rename 0.26 to 0.27 sql
+  * [b02a69d] remove debian/control - it's generated every time on build
+  * [ac72833] actually make mythtv-dbg recommends rather than suggests
+    so it will be installed by default
+  * [06e718d] add missing dependency on libhttp-date-perl
+  * [7e395a1] daemonize mythbackend to avoid logging to upstart console.
+    expect an extra fork in the upstart job
+  * [7bd8396] don't log to upstart log that mysql is alive, only errors
+  * [5ae84f0] add a message on why we are using sudo for installing
+    build-deps
+  * [08101bc] set SIGKILL timeout on upstart job to 30 seconds
+  * [72cf6a0] remove versioned dependency on libiec61883-dev
+  * [364850c] use mk-build-deps to resolve binary build dependencies
+  * [7bfd285] don't allow the scripts to run without a debian/ directory
+  * [6a8e25f] ignore warnings when loading time zones into mysql
+  * [1809a5d] toggle public_bind setting in debconf database based on
+    what's in flat files (LP: #1159992)
+  * [7568a9c] depends on libdate-calc-perl for mythweather
+  * [9a84893] recommends on m2vrequantiser for mytharchive (LP: #1131506)
+  * [9a351c7] add FreeSansBold.ttf to the symlinks (LP: #1131280)
+  * [d585530] set the kill timeout on the upstart job to 10 seconds to
+    be safer on shutdown.
+  * [aa67a49] let upstart handle the backend process correctly
+  * [41a8fb2] add the new mythscreenwizard binary to the frontend
+    packaging
+  * [c5afd80] add conflict to older library versions
+  * [623b954] rename 0.25 stuff to 0.26
+  * [00027cc] drop support for mysql.txt, using only config.xml going
+    forward
+  * [b2acc53] mythtv-common depends on libxml-xpath-perl for config.xml
+    parsing
+  * [a7d0a63] load timezones into mysql during mythtv-database postinst
+    (LP: #1010491)
+  * [5bb2c43] enable sdl so that mythffplay will work (see fb90f73)
+  * [a634b5b] install README's for fonts in mythtv-doc
+  * [9587925] switch libtiff5-dev and libtiff4-dev order to fix FTBFS on
+    quantal
+  * [37abce8] let libtiff5-dev resolve build dependencies too.
+  * [c4b25d5] Remove extra dpkg-parsechangelog call that was mistakenly
+    added.
+  * [b071647] missed mythfrontend, add that in logging too.
+  * [3dfd8f9] update rsyslog for 0.26.
+  * [5240276] Install MythTV specific sysctl.conf file
+  * [d861262] install libmythzmq pkgconfig pc file to libmyth-dev
+    package
+  * [928bfb4] install pkgconfig and static library for libmythzmq into
+    the -dev package. the libtool library still needs an override (it
+    probably shouldn't be installed anywhere)
+  * [b8545e8] zmq/nzmq/QJson include paths were moved to
+    usr/include/mythtv.  remove override
+  * [c1e4604] explicitly ignore libmythzmq.la as wildcards don't appear
+    to work properly with dh_install
+  * [28553da] fix wildcard matching for ignoring zmq files
+  * [d29ecda] add zeromq_install_paths.patch to fix FTBFS.
+  * [b42d0e4] drop recommends on adept-notifier
+  * [9d06c29] update source_mythtv apport hook to python3 compatible
+  * [e81f08d] install copy of zeromq libaries
+  * [144e1d2] ignore libmythqjson.prl
+  * [89f5e74] Don't install QJson libararies or headers.
+  * [6fd1730] install mythlogserver
+  * [f1298b5] Install otf fonts too
+  * [c63df57] add support for droid fonts
+  * [ae0095e] Add purisa font support
+  * [d055b85] mythtv-common dependencies-> move to 1 for each line (more
+    readable)
+  * [9020a36] Pass INSTALL_ROOT during the build process of mythtv as
+    well so that it gets applied to the zeromq ./configure run as well
 
   [ Mario Limonciello ]
   * Switch to 0.27 branch for master builds.
@@ -9,16 +83,6 @@ mythtv (2:0.27.0~master.20120505.4b8b3cc-0ubuntu1) UNRELEASED; urgency=low
   * Add a workaround for FTBFS w/ linking when using binutils 2.21
     - See http://goo.gl/KDK9o for more information.
   * Drop recommends on adept-notifier.
-
-  [ Andres Mejia ]
-  * Bump to Standards-Version 3.9.3.
-  * Build 'release' type builds instead of 'profile'.
-  * Support parallel builds.
-
- -- Andres Mejia <amejia@debian.org>  Mon, 07 May 2012 18:37:17 -0400
-
-mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu2) UNRELEASED; urgency=low
-
   * fix get-orig-source rule's broken tarball fetch from archive.
   * Enable libcec support (LP: #982272)
   * Add missingok to additional mythtv-backend logs. (LP: #982162)
@@ -27,7 +91,12 @@ mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu2) UNRELEASED; urgency=low
     boot.
   * Test for an empty key on public mysql. (LP: #989371)
 
- -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 10 Apr 2012 14:20:32 -0500
+  [ Andres Mejia ]
+  * Bump to Standards-Version 3.9.3.
+  * Build 'release' type builds instead of 'profile'.
+  * Support parallel builds.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 28 Aug 2013 22:06:14 -0500
 
 mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu1) precise; urgency=low
 
