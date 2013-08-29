@@ -129,7 +129,8 @@ Depends: pwgen,
          libxml-xpath-perl,
          ${shlibs:Depends},
          ${misc:Depends}
-Suggests: mythtv-doc
+Suggests: mythtv-dbg,
+          mythtv-doc
 Conflicts: mythtv (<< 0.8-1), 
            mythmusic (<< 0.20.99+trunk14393), 
            mythweather (<< 0.20.99+trunk14393), 
@@ -440,6 +441,7 @@ Depends: mythtv-common (>= ${binary:Version}),
          apache2-mpm-prefork | httpd, php5 | libapache2-mod-php5, 
          php5-mysql, 
          php-mythtv,
+         libhttp-date-perl,
          ${misc:Depends}
 Recommends: libmath-round-perl
 Description: Web interface add-on module for MythTV
