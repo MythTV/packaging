@@ -123,7 +123,7 @@ readonly myargs="$*"
 : ${FLAC:="flac-1.2.1"}
 : ${FLAC_URL:="http://$SOURCEFORGE/project/flac/flac-src/$FLAC-src/$FLAC.tar.gz"}
 : ${LIBCDIO:="libcdio-0.82"}
-: ${LIBCDIO_URL:="ftp://mirror.cict.fr/gnu/libcdio/$LIBCDIO.tar.gz"}
+: ${LIBCDIO_URL:="ftp.gnu.org/gnu/libcdio/$LIBCDIO.tar.gz"}
 : ${TAGLIB:="taglib-1.6.3"}
 : ${TAGLIB_URL:="http://developer.kde.org/~wheeler/files/src/$TAGLIB.tar.gz"}
 : ${FFTW:="fftw-3.2.2"}
@@ -139,25 +139,25 @@ readonly myargs="$*"
 : ${LIBXSLT:="libxslt-1.1.26"}
 : ${LIBXSLT_URL:="ftp://xmlsoft.org/libxslt/${LIBXSLT}.tar.gz"}
 # 16-Sep-2011 latest: mysql-5.5.16
-: ${MYSQL:="mysql-5.1.58"}
+: ${MYSQL:="mysql-5.1.71"}
 : ${MYSQL_URL:="http://mirrors.ircam.fr/pub/mysql/Downloads/MySQL-${MYSQL:6:3}/$MYSQL.tar.gz"}
 # Pre-built win32 install. NB mysql-5.1 requires winXP-SP2, 5.0 works on win2k
 # 5.0.89 unavailable 11-feb-11
 #: ${MYSQLW:="mysql-5.0.89-win32"}
 # 5.1.55 unavailable 15-sep-11
 #: ${MYSQLW:="mysql-5.1.55-win32"}
-: ${MYSQLW:="mysql-5.1.58-win32"}
+: ${MYSQLW:="mysql-5.1.71-win32"}
 : ${MYSQLW_URL:="ftp://mirrors.ircam.fr/pub/mysql/Downloads/MySQL-${MYSQLW:6:3}/${MYSQLW/mysql-/mysql-noinstall-}.zip"}
 #: ${MYSQLW_URL:="ftp://ftp.mirrorservice.org/sites/ftp.mysql.com/Downloads/MySQL-${MYSQLW:6:3}/${MYSQLW/mysql-/mysql-noinstall-}.zip"}
 # Pre-built MacOSX install
-: ${MYSQLM:="mysql-5.1.58-osx10.6-x86"}
+: ${MYSQLM:="mysql-5.1.71-osx10.6-x86"}
 : ${MYSQLM_URL:="ftp://mirrors.ircam.fr/pub/mysql/Downloads/MySQL-${MYSQLM:6:3}/$MYSQLM.tar.gz"}
 # Pre-built MacOSX powerpc
 : ${MYSQLX:="mysql-standard-4.1.22-apple-darwin7.9.0-powerpc"}
 : ${MYSQLX_URL:="ftp://mirrors.ircam.fr/pub/mysql/Downloads/MySQL-${MYSQLX:15:3}/$MYSQLX.tar.gz"}
-#: ${QT:="qt-everywhere-opensource-src-4.7.4"} # Builds for host OK but win32 & mac need updated patches
-: ${QT:="qt-everywhere-opensource-src-4.7.0"}
-: ${QT_URL:="http://get.qt.nokia.com/qt/source/$QT.tar.gz"}
+#: ${QT:="qt-everywhere-opensource-src-4.8.5"} # Builds for host OK but win32 & mac need updated patches
+: ${QT:="qt-everywhere-opensource-src-4.8.5"}
+: ${QT_URL:="http://download.qt-project.org/official_releases/qt/4.8/4.8.5/$QT.tar.gz"}
 # Configurable libraries
 readonly packages1="MYTHTV MYTHPLUGINS QT MYSQL FREETYPE LAME LIBEXIF LIBXML2"
 readonly packages2="LIBXSLT LIBOGG LIBVORBIS FLAC LIBCDIO TAGLIB FFTW LIBSDL"
@@ -508,6 +508,7 @@ function undopatches() {
 # $1= URL $2= dir
 function gitclone() {
     banner "git clone $*"
+    git config --global core.autocrlf false
     git clone "$@"
 }
 
@@ -2079,7 +2080,7 @@ if [ ! -e "$stampconfig${MYTHBUILD:+.$MYTHBUILD}" -o -n "$MYTHTV_CFG" \
     case "$MYTHVER" in
         0.23*) args="$args --disable-directfb" ;;
         0.24*) args="$args --disable-directfb --enable-vaapi" ;;
-        ""|0.25*|master) args="$args --enable-vaapi" ;;
+        ""|0.25*|0.26*|0.27*|master) args="$args --enable-vaapi" ;;
     esac
     rprefix=".."
     case "$MYTHTARGET" in
@@ -2180,7 +2181,7 @@ if [ ! -e "$stampconfig${MYTHBUILD:+.$MYTHBUILD}" -o -n "$MYTHPLUGINS_CFG" \
     plugins="--enable-all --enable-fftw"
     case "$MYTHVER" in
         0.23*|0.24*) plugins="$plugins --enable-libvisual" ;;
-        ""|0.25*|master) ;;
+        ""|0.25*|0.26*|0.27*|master) ;;
     esac
 
     if ! isdebug QT ; then
@@ -2189,7 +2190,7 @@ if [ ! -e "$stampconfig${MYTHBUILD:+.$MYTHBUILD}" -o -n "$MYTHPLUGINS_CFG" \
         [ "$MYTHNETVISION" = "yes" ] || plugins="$plugins --disable-mythnetvision"
         case "$MYTHVER" in
             ""|0.23*|0.24*) [ "$MYTHWEATHER" = "yes" ] || plugins="$plugins --disable-mythweather" ;;
-            0.25*|master) ;;
+            0.25*|0.26*|0.27*|master) ;;
         esac
     fi
 
@@ -2286,24 +2287,26 @@ if [ -z "$MYTHVER" ]; then
         *-master) MYTHVER="master" ;;
         *-0*24)   MYTHVER="0.24" ;;
         *-0*25)   MYTHVER="0.25" ;;
+        *-0*26)   MYTHVER="0.26" ;;
+        *-0*27)   MYTHVER="0.27" ;;
     esac
 fi
 case "$MYTHVER" in
     0.23*)        mythlibs="$mythlibs mythdb" ;;
     0.24*)        mythlibs="$mythlibs mythdb mythmetadata" ;;
-    0.25*|master) mythlibs="$mythlibs mythbase mythmetadata mythservicecontracts mythprotoserver" ;;
+    0.25*|0.26*|0.27*|master) mythlibs="$mythlibs mythbase mythmetadata mythservicecontracts mythprotoserver" ;;
     *)            mythlibs="$mythlibs mythbase mythmetadata mythservicecontracts mythprotoserver"
                   echo "WARNING Installation untested with this version." ;;
 esac
 ffmpeglibs="mythavcodec mythavformat mythavutil mythswscale"
 case "$MYTHVER" in
     0.24*|0.23*)     ffmpeglibs="$ffmpeglibs mythavcore mythpostproc" ;;
-    0.25*|master|"") ffmpeglibs="$ffmpeglibs mythpostproc" ;;
+    0.25*|0.26*|0.27*|master|"") ffmpeglibs="$ffmpeglibs mythpostproc" ;;
 esac
 xtralibs="xml2 xslt freetype mp3lame dvdcss exif ogg vorbis vorbisenc tag cdio cdio_cdda cdio_paranoia udf visual-0.4"
 QTDLLS="QtCore QtGui QtNetwork QtOpenGL QtSql QtSvg QtWebKit QtXml Qt3Support"
 case "$MYTHVER" in
-    ""|0.25*|master) QTDLLS="$QTDLLS QtScript" ;;
+    ""|0.25*|0.26*|0.27*|master) QTDLLS="$QTDLLS QtScript" ;;
 esac
 
 if isWinTarget ; then
