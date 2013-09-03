@@ -263,6 +263,7 @@ osx-packager.pl - build OS X binary packages for MythTV
   -gcc               build using gcc (deprecated, default is clang/clang++)
   -no-optimization   build mythtv without compiler optimization
                      Useful for debugging
+  -enable-mythlogserver Enable mythlogserver (required for building myth <= 0.26)
 
 
 =head1 DESCRIPTION
@@ -361,7 +362,8 @@ Getopt::Long::GetOptions(\%OPT,
                          'olevel=s',
                          'nosysroot',
                          'gcc',
-                         'no-optimization'
+                         'no-optimization',
+                         'enable-mythlogserver'
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -601,6 +603,7 @@ our %conf = (
         '--enable-libmp3lame',
         '--disable-lirc',
         '--disable-distcc',
+        '--python=/usr/bin/python2.6',
 
         # To "cross compile" something for a lesser Mac:
         #'--tune=G3',
@@ -633,6 +636,8 @@ our $SDKROOT = "$DEVROOT/SDKs/MacOSX$SDKVER.sdk";
 $ENV{'DEVROOT'} = $DEVROOT;
 $ENV{'SDKVER'} = $SDKVER;
 $ENV{'SDKROOT'} = $SDKROOT;
+$ENV{'DYLD_LIBRARY_PATH'} = "$PREFIX/lib";
+$ENV{'PYTHONPATH'} = "$PREFIX/lib/python2.6/site-packages";
 
 our $GCC = $OPT{'gcc'};
 our $CCBIN;
@@ -1648,6 +1653,10 @@ foreach my $arch (@ARCHS)
                 {
                     push @config, "--disable-optimizations";
                 }
+                if ( ! $OPT{'enable-mythlogserver'} )
+                {
+                    push @config, "--disable-mythlogserver";
+                }
             }
 
             if ( $OPT{'profile'} )
@@ -1865,9 +1874,13 @@ foreach my $target ( @targets )
     if ( $target eq "MythFrontend" )
     {
         my $extralib;
+        my @list = ( 'mythavtest', 'ignyte', 'mythpreviewgen', 'mtd' );
+        if ( $OPT{'enable-mythlogserver'} )
+        {
+            push @list, "mythlogserver";
+        }
 
-        foreach my $extra ( 'mythavtest', 'ignyte', 'mythpreviewgen', 'mtd',
-                            'mythlogserver' )
+        foreach my $extra (@list)
         {
             if ( -e "$PREFIX/bin/$extra" )
             {
@@ -1951,9 +1964,14 @@ if ( $backend && grep(m/MythBackend/, @targets) )
     &Syscall([ 'cp', '-pR', "$PREFIX/share/mythtv/html", $share ]) or die;
 
     # The backend gets all the useful binaries it might call:
-    foreach my $binary ( 'mythjobqueue', 'mythcommflag',
-                         'mythpreviewgen', 'mythtranscode', 'mythfilldatabase',
-                         'mythlogserver' )
+    my @list = ( 'mythjobqueue', 'mythcommflag',
+    'mythpreviewgen', 'mythtranscode', 'mythfilldatabase' );
+    if ( $OPT{'enable-mythlogserver'} )
+    {
+        push @list, "mythlogserver";
+    }
+
+    foreach my $binary (@list)
     {
         my $SRC  = "$PREFIX/bin/$binary";
         if ( -e $SRC )
@@ -2249,12 +2267,12 @@ sub Distclean
     {
         $arch .= "/";
     }
-    &Syscall("/bin/rm -f $PREFIX/${arch}include/mythtv");
-    &Syscall("/bin/rm -f $PREFIX/${arch}bin/myth*"     );
-    &Syscall("/bin/rm -fr $PREFIX/${arch}lib/libmyth*" );
-    &Syscall("/bin/rm -fr $PREFIX/${arch}lib/mythtv"   );
-    &Syscall("/bin/rm -fr $PREFIX/${arch}share/mythtv" );
-    &Syscall("/bin/rm -fr $PREFIX/${arch}share/mythtv" );
+    &Syscall("/bin/rm -fr $PREFIX/${arch}include/mythtv");
+    &Syscall("/bin/rm -f  $PREFIX/${arch}bin/myth*"     );
+    &Syscall("/bin/rm -fr $PREFIX/${arch}lib/libmyth*"  );
+    &Syscall("/bin/rm -fr $PREFIX/${arch}lib/mythtv"    );
+    &Syscall("/bin/rm -fr $PREFIX/${arch}share/mythtv"  );
+    &Syscall("/bin/rm -fr $PREFIX/${arch}share/mythtv"  );
     &Syscall([ 'find', "$GITDIR/", '-name', '*.o',     '-delete' ]);
     &Syscall([ 'find', "$GITDIR/", '-name', '*.a',     '-delete' ]);
     &Syscall([ 'find', "$GITDIR/", '-name', '*.dylib', '-delete' ]);
