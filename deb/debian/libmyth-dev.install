@@ -1,5 +1,3 @@
-usr/lib/libmyth*.a
 usr/include/mythtv
-usr/lib/pkgconfig/libmyth*.pc
 
 debian/mythtv.make usr/share/mythtv
