@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 die()
 {
@@ -36,7 +36,6 @@ export QUILT_PATCHES="debian/patches"
 [ -n "$PATCHES" ] && PATCHES=""
 [ -z "$DEBUILD_FLAGS" ] && DEBUILD_FLAGS="-us -uc -i -I.git"
 
-
 if [ ! -d `dirname $0`/debian ]; then
 	die "WARNING: This script will not work without a full checkout from git://github.com/MythTV/packaging.git"
 fi
@@ -59,14 +58,16 @@ for arg in "$@"; do
 	fi
 done
 if [ -z "$GIT_BRANCH" ]; then
-	GIT_BRANCH=`git branch | sed '/*/!d; s,^* ,,'`
+	pushd `dirname $0` >/dev/null
+	GIT_BRANCH=`git branch| sed '/*/!d; s,^* ,,'`
+	popd > /dev/null
 fi
 if [ -z "$DIRECTORY" ]; then
 	DIRECTORY=`pwd`
 fi
 if echo "$GIT_BRANCH" | grep fixes 2>&1 1>/dev/null; then
 	GIT_TYPE="fixes"
-	GIT_MAJOR_RELEASE=$(echo $1 |sed 's,.*0.,,')
+	GIT_MAJOR_RELEASE=$(echo $GIT_BRANCH |sed 's,.*0.,,')
 	DELIMITTER="+"
 	echo "Building for fixes, v0.$GIT_MAJOR_RELEASE in $DIRECTORY"
 else
@@ -102,12 +103,14 @@ cp $DIRECTORY/mythtv/debian/changelog.in $DIRECTORY/mythtv/debian/changelog
 #build packaging changelog
 DATE=$(dpkg-parsechangelog -l$DIRECTORY/mythtv/debian/changelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $2}')
 TODAY=$(date +%Y%m%d)
+pushd `dirname $0` >/dev/null
 PACKAGING_HASH=$(git log -1 --oneline | awk '{ print $1 }')
 if [ "$DATE" != "$TODAY" ]; then \
 	echo "Packaging changes between $DATE and $TODAY:" > $DIRECTORY/mythtv/.gitout
 	GIT_DATE=`echo $DATE | sed 's/^\(.\{4\}\)/\1./; s/^\(.\{7\}\)/\1./'`
 	git log --grep="^deb: " --oneline --since="$GIT_DATE" | sed 's/^/[/; s/ deb:/]/' >> $DIRECTORY/mythtv/.gitout
 fi
+popd >/dev/null
 cd $DIRECTORY/mythtv
 
 
