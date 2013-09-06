@@ -57,10 +57,21 @@ for arg in "$@"; do
 		continue
 	fi
 done
+
+#identify running branch
+pushd `dirname $0` >/dev/null
+RUNNING_BRANCH=`git branch| sed '/*/!d; s,^* ,,'`
+popd > /dev/null
+
 if [ -z "$GIT_BRANCH" ]; then
-	pushd `dirname $0` >/dev/null
-	GIT_BRANCH=`git branch| sed '/*/!d; s,^* ,,'`
-	popd > /dev/null
+	GIT_BRANCH=$RUNNING_BRANCH
+elif [ "$GIT_BRANCH" != "$RUNNING_BRANCH" ]; then
+	pushd `dirname $0` > /dev/null
+	echo "Requested to build $GIT_BRANCH but running on $RUNNING_BRANCH."
+	echo "Repeating checkout process."
+	git checkout $GIT_BRANCH
+	$0 $@
+	exit 0
 fi
 if [ -z "$DIRECTORY" ]; then
 	DIRECTORY=`pwd`
