@@ -1,3 +1,17 @@
+mythtv (2:0.27.0+fixes.20130907.ac841f0-0ubuntu1) saucy; urgency=low
+
+  * New upstream checkout (ac841f0).
+  * Scripted Build from fixes git packaging [cdb4b3f]
+  * Packaging changes between 20130828 and 20130907:
+  * [cdb4b3f] disable libmyth-dev zeromq related stuff
+  * [7d7feaa] if requesting a build for a different branch then
+    currently running, switch branches
+  * [eb8d08d] make build script identify branches properly even when
+    executed in a different working directory
+  * [48c3cd3] disable mythlogserver (LP: #1101395)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sat, 07 Sep 2013 01:08:53 -0500
+
 mythtv (2:0.27.0~master.20130828.b2b7022-0ubuntu1) saucy; urgency=low
 
   * New upstream checkout (b2b7022)
