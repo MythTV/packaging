@@ -24,18 +24,15 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
 				--with-bindings=perl \
 				--enable-ffmpeg-pthreads \
 				--enable-pic \
-				--enable-vaapi \
 				--perl-config-opts="INSTALLDIRS=vendor" \
 				--enable-libvpx \
 				--enable-sdl \
 				--enable-libmp3lame \
 				--enable-libx264
-ifeq "$(DEB_BUILD_ARCH)" "armel"
-	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl
-else ifeq "$(DEB_BUILD_ARCH)" "armhf"
-	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl
+ifeq "$(DEB_BUILD_ARCH)" "armhf"
+	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl --disable-vaapi
 else
-	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video
+	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video --enable-vaapi
 endif
 #                                    #
 # Architecture dependent build flags #
@@ -47,9 +44,6 @@ endif
 ifeq "$(DEB_BUILD_ARCH)" "amd64"
 	MYTHTV_CONFIGURE_OPTS += --enable-vdpau
 endif
-ifeq "$(DEB_BUILD_ARCH)" "armel"
-	MYTHTV_CONFIGURE_OPTS += --enable-vdpau --extra-cflags="-marm -fPIC -DPIC"
-endif
 ifeq "$(DEB_BUILD_ARCH)" "powerpc"
 	MYTHTV_CONFIGURE_OPTS += --enable-altivec --extra-cxxflags="-maltivec"
 endif
@@ -60,9 +54,7 @@ MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \
                               --zm-version=1.22.3 \ 
                               --qmake=/usr/bin/qmake \
 
-ifeq "$(DEB_BUILD_ARCH)" "armel"
-	MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
-else ifeq "$(DEB_BUILD_ARCH)" "armhf"
+ifeq "$(DEB_BUILD_ARCH)" "armhf"
 	MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
 endif
 
