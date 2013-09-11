@@ -1,6 +1,20 @@
+mythtv (2:0.27.0+fixes.20130907.ac841f0-0ubuntu3) saucy; urgency=low
+
+  * Add a patch to readjust the inclusion order to fix FTBFS on PPC.
+    - Submitted upstream at http://code.mythtv.org/trac/ticket/11835
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 10 Sep 2013 12:29:00 -0500
+
+mythtv (2:0.27.0+fixes.20130907.ac841f0-0ubuntu2) saucy; urgency=low
+
+  * debian/rules:
+    - Build without VAAPI support on armhf to try to resolve FTBFS.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 09 Sep 2013 10:39:55 -0500
+
 mythtv (2:0.27.0+fixes.20130907.ac841f0-0ubuntu1) saucy; urgency=low
 
-  * New upstream checkout (ac841f0).
+  * New upstream checkout (ac841f0)
   * Scripted Build from fixes git packaging [cdb4b3f]
   * Packaging changes between 20130828 and 20130907:
   * [cdb4b3f] disable libmyth-dev zeromq related stuff
