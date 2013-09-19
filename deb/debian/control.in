@@ -84,6 +84,7 @@ Build-Depends:  debhelper (>= 7.0.50~),
                 libxml2-dev,
                 libass-dev,
                 libcec-dev,
+                libexiv2-dev,
                 uuid-dev,
                 libxml-xpath-perl
 
