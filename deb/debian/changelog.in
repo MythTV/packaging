@@ -1,3 +1,14 @@
+mythtv (2:0.27.0+fixes.20130919.5b917e8-0ubuntu1) saucy; urgency=low
+
+  * Scripted Build from fixes git packaging [8e8fe6d]
+  * Packaging changes between 20130907 and 20130919:
+  * [f641350] drop armel build flags and disable VAAPI on armhf builds
+    to fix FTBFS in Ubuntu
+  * New upstream checkout (5b917e8)
+    - Final 0.27 release.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Wed, 18 Sep 2013 20:43:03 -0500
+
 mythtv (2:0.27.0+fixes.20130907.ac841f0-0ubuntu3) saucy; urgency=low
 
   * Add a patch to readjust the inclusion order to fix FTBFS on PPC.
