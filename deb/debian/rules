@@ -6,10 +6,23 @@
 # newest-revision
 include debian/mythtv.make
 
+# Set this to yes for releases
+MYTHTV_RELEASE ?= no
+ifeq (yes,$(MYTHTV_RELEASE))
+MYTHTV_COMPILE_TYPE = release
+else
+MYTHTV_COMPILE_TYPE = profile
+endif
+
+# Use the 'profile' compile type when nostrip or noopt is used
+ifneq (,$(filter nostrip noopt,$(DEB_BUILD_OPTIONS)))
+MYTHTV_COMPILE_TYPE = profile
+endif
+
 #                                      #
 # Architecture Independent Build flags #
 #                                      #
-MYTHTV_CONFIGURE_OPTS +=    --compile-type=profile \
+MYTHTV_CONFIGURE_OPTS +=    --compile-type=$(MYTHTV_COMPILE_TYPE) \
 				--prefix=/usr \
 				--runprefix=/usr \
                                 --disable-mythlogserver \
