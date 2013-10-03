@@ -368,7 +368,7 @@ Depends: ${misc:Depends},
          mythbrowser,
          mythnetvision
 Description: Metapackage package for MythTV plugins
- This Meta-package will install all available MythTV plugins.
+ This Metapackage will install all available MythTV plugins.
 
 Package: mythgallery
 Architecture: any
