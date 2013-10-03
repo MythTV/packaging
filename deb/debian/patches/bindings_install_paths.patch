@@ -1,4 +1,7 @@
-Patch to include layout option for python 2.6
+Description: Patch to include layout option for python in Debian
+Author: Mario Limonciello <superm1@ubuntu.com>
+Forwarded: not-needed
+
 ==========================================================================
 Index: mythtv-master/mythtv/bindings/python/Makefile
 ===================================================================

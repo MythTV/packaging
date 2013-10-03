@@ -1,5 +1,11 @@
-Don't throw errors when starting the backend if no tuner was defined.  The user can configure it later.
-http://code.mythtv.org/trac/ticket/9626
+Description: Don't throw errors when starting the backend 
+ if no tuner was defined.  The user can configure it later.
+ .
+ This is intended to allow mythtv-backend to run with a fresh install.
+ .
+ Upstream doesn't agree with this direction, but it's a priority for us.
+Author: Mario Limonciello <superm1@ubuntu.com>
+Bug: http://code.mythtv.org/trac/ticket/9626
 
 Index: mythtv-master/mythtv/programs/mythbackend/scheduler.cpp
 ===================================================================

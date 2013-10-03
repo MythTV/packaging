@@ -1,3 +1,7 @@
+Description: Allow building mythplugins without a mythtv tree installed
+Author: Mario Limonciello <superm1@ubuntu.com>
+Forwarded: not-needed
+
 Index: mythtv-master/mythplugins/configure
 ===================================================================
 --- mythtv-master.orig/mythplugins/configure	2013-07-22 20:50:57.299393593 +1000
