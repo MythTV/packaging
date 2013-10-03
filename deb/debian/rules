@@ -110,6 +110,7 @@ override_dh_install:
                    -X.git \
                    -Xscriptaculous \
                    -Xprototype.js \
+                   -Xjquery.min.js \
                    --fail-missing
 
 override_dh_installinit:
