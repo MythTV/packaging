@@ -1,0 +1,7 @@
+#upstream mythtv explicitly wants to use their copy of ffmpeg stuff here
+#they have patches that aren't applicable to upstream ffmpeg
+embedded-library usr/lib/libmythavdevice.so.*: libavdevice
+embedded-library usr/lib/libmythavfilter.so.*: libavfilter
+embedded-library usr/lib/libmythavutil.so.*: libavutil
+embedded-library usr/lib/libmythpostproc.so.*: libpostproc
+
