@@ -13,6 +13,7 @@ mythtv/libs/libmythbase/version.h
 mythtv/external/FFmpeg/.config
 mythtv/external/FFmpeg/.version
 mythtv/external/FFmpeg/config.h
+mythtv/external/FFmpeg/mythff*
 mythplugins/debian
 mythplugins/config.pro
 mythplugins/config.log
