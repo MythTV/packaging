@@ -1,0 +1,2 @@
+#The builds for Debian don't use zeromq as it causes mythlogserver issues.
+mythtv source: outdated-autotools-helper-file *
