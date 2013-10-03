@@ -7,3 +7,4 @@ allow_no_tuners.patch
 
 ##mythplugins##
 configure_mythplugins_without_mythtv_installed.patch
+pass_ldflags_qmake.patch

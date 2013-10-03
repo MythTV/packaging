@@ -1,0 +1,23 @@
+Description: Pass ldflags into qmake.  Currently only configured to do it on Darwin
+ as of 5dccbd5f6b3019a67ecc69213ee405bba4b30994
+ .
+ Needed to make hardening work properly with DH9.  See for more info:
+ https://wiki.debian.org/Hardening
+Author: Mario Limonciello <superm1@ubuntu.com>
+
+Index: mythtv/mythtv/configure
+===================================================================
+--- mythtv.orig/mythtv/configure	2013-10-03 06:07:45.225981221 +0000
++++ mythtv/mythtv/configure	2013-10-03 20:25:33.730957796 +0000
+@@ -6393,10 +6393,7 @@
+ 
+ #echo "endif # FFMPEG_CONFIG_MAK" >> $TMPMAK
+ 
+-# Should be done on all platforms, but for the time being limit it to mac only
+-if enabled darwin; then
+-  echo "QMAKE_LFLAGS+=\"$LDFLAGS\"" >> $TMPMAK
+-fi
++echo "QMAKE_LFLAGS+=\"$LDFLAGS\"" >> $TMPMAK
+ 
+ cp_if_changed $TMPH $MYTH_CONFIG_H
+ 
