@@ -45,7 +45,7 @@ TARFILE:=mythtv_$(GIT_RELEASE)$(DELIMITTER)$(SUFFIX).orig.tar.gz
 
 build-tarball:
 	#build the tarball
-	tar czf $(CURDIR)/../$(TARFILE) * --exclude-vcs --exclude .pc --exclude debian
+	tar czf $(CURDIR)/../$(TARFILE) * --exclude-vcs --exclude .pc --exclude-tag-all mythtv.make
 
 get-git-source:
 	#checkout mythtv/mythplugins
