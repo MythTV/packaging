@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mythtv\n"
-"Report-Msgid-Bugs-To: mythtv@packages.debian.org\n"
-"POT-Creation-Date: 2010-03-24 22:35-0500\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-10-03 11:17-0500\n"
 "PO-Revision-Date: 2007-09-18 07:44+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -170,24 +170,18 @@ msgstr ""
 "Si tiene varias interfaces, será utilizada la primera que aparezca en "
 "'ifconfig'."
 
-#. Type: string
-#. Description
-#: ../mythtv-frontend.templates:1001
 #, fuzzy
-#| msgid ""
-#| "What is the hostname of the system where the MythTV backend is installed:"
-msgid "Hostname of the system where the MythTV backend is installed:"
-msgstr ""
-"Cuál es el nombre de host del sistema donde está instalado el backend de "
-"MythTV:"
+#~| msgid ""
+#~| "What is the hostname of the system where the MythTV backend is installed:"
+#~ msgid "Hostname of the system where the MythTV backend is installed:"
+#~ msgstr ""
+#~ "Cuál es el nombre de host del sistema donde está instalado el backend de "
+#~ "MythTV:"
 
-#. Type: string
-#. Description
-#: ../mythtv-frontend.templates:2001
 #, fuzzy
-#| msgid "On what port number is the MythTV server listening:"
-msgid "Port number the MythTV server is listening on:"
-msgstr "En qué número de puerto está escuchando el servidor MythTV:"
+#~| msgid "On what port number is the MythTV server listening:"
+#~ msgid "Port number the MythTV server is listening on:"
+#~ msgstr "En qué número de puerto está escuchando el servidor MythTV:"
 
 #~ msgid "mythtv-setup must be run in order to complete MythTV installation"
 #~ msgstr ""
