@@ -441,6 +441,8 @@ Depends: mythtv-common (>= ${binary:Version}),
          php5-mysql, 
          php-mythtv,
          libhttp-date-perl,
+         libjs-prototype,
+         libjs-scriptaculous,
          ${misc:Depends}
 Recommends: libmath-round-perl
 Description: Web interface add-on module for MythTV
