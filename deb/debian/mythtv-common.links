@@ -14,5 +14,6 @@ usr/share/fonts/truetype/freefont/FreeSans.ttf usr/share/mythtv/fonts/FreeSans.t
 usr/share/fonts/truetype/freefont/FreeMono.ttf usr/share/mythtv/fonts/FreeMono.ttf
 usr/share/fonts/truetype/freefont/FreeSansBold.ttf usr/share/mythtv/fonts/FreeSansBold.ttf
 usr/share/fonts/truetype/tlwg/Purisa.ttf usr/share/mythtv/fonts/Purisa.ttf
+/usr/share/texmf/fonts/opentype/public/tex-gyre/texgyrechorus-mediumitalic.otf usr/share/mythtv/fonts/texgyrechorus-mediumitalic.otf
 usr/share/apport/package-hooks/source_mythtv.py usr/share/apport/package-hooks/source_mythplugins.py
 usr/share/apport/package-hooks/source_mythtv.py usr/share/apport/package-hooks/source_myththemes.py

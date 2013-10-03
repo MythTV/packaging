@@ -109,6 +109,7 @@ override_dh_install:
 	dh_install -Xusr/share/mythtv/fonts/Free \
                    -Xusr/share/mythtv/fonts/Purisa \
                    -Xusr/share/mythtv/fonts/Droid \
+                   -Xusr/share/mythtv/fonts/texgyrechorus \
                    -Xusr/lib/libmythzmq.la \
                    -Xusr/share/mythtv/fonts/tiresias_gpl3.txt \
                    -XLICENSE \
