@@ -105,6 +105,9 @@ override_dh_auto_install:
 	#(All) Make sure python/perl scripts are executable
 	find debian/tmp/usr/share -name "*.p[y|l]" -type f -size +1b -exec chmod 755 {} \;
 
+	#Set up python package properly
+	dh_python2 -plibmyth-python
+
 override_dh_install:
 	dh_install -Xusr/share/mythtv/fonts/Free \
                    -Xusr/share/mythtv/fonts/Purisa \
