@@ -1,0 +1,3 @@
+#This project can't meaningfully use a debian watch file right now.
+#It's packaged such that it pulls from several different git trees 
+#rather than just on point releases.
