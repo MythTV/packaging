@@ -356,6 +356,7 @@ Description: Debug symbols for mythtv packages
 
 Package: mythplugins
 Architecture: all
+Section: metapackages
 Conflicts: mythflix, mythmovies
 Replaces: mythmovies
 Depends: ${misc:Depends},
