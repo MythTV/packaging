@@ -110,6 +110,8 @@ override_dh_install:
                    -Xusr/share/mythtv/fonts/Droid \
                    -Xusr/lib/libmythzmq.la \
                    -Xusr/share/mythtv/fonts/tiresias_gpl3.txt \
+                   -XLICENSE \
+                   -X.git \
                    --fail-missing
 
 override_dh_installinit:
