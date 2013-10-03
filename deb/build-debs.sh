@@ -93,16 +93,48 @@ else
     TYPE="binary"
 fi
 
+if [ `id -ru` -ne 0 ]; then
+	if which sudo 1>/dev/null; then
+		root=sudo
+	else
+		die "Need to be root or have sudo installed"
+	fi
+fi
+
 #for checking out git
 if ! which git 1>/dev/null; then
 	echo "Missing git-core, marking for installation"
-	sudo apt-get install git-core || die "Error installing git-core"
+	$root apt-get install git-core || die "Error installing git-core"
 fi
 
 #make sure we have debuild no matter what
 if ! which debuild 1>/dev/null; then
     echo "Missing debuild, marking for installation"
-    sudo apt-get install devscripts --no-install-recommends|| die "Error installing devscripts"
+    $root apt-get install devscripts --no-install-recommends|| die "Error installing devscripts"
+fi
+
+#check for LSB information
+if ! which lsb_release 1>/dev/null; then
+	echo "Missing lsb-release, marking for installation"
+	$root apt-get install lsb-release || die "Error installing lsb-release"
+fi
+
+#quilt needed for patching tests
+if ! which quilt 1>/dev/null; then
+	echo "Missing quilt, marking for installation"
+	$root apt-get install quilt || die "Error installing quilt"
+fi
+
+#need for debuild
+if ! which fakeroot 1>/dev/null; then
+	echo "Missing fakeroot, marking for installation"
+	$root apt-get install fakeroot || die "Error installing fakeroot"
+fi
+
+#need debhelper
+if ! which dh 1>/dev/null; then
+	echo "Missing debhelper, marking for installation"
+	$root apt-get install debhelper || die "Error installing debhelper"
 fi
 
 #clone in our packaging branch
@@ -172,36 +204,36 @@ if [ ! -f ../mythtv_$UPSTREAM_VERSION.orig.tar.gz ]; then
 	fi
 fi
 
+#update changelog and control files
+debian/rules update-control-files
+
 if [ "$TYPE" = "binary" ]; then
     #Make sure we have the package for dpkg-checkbuilddeps
     if ! which dpkg-checkbuilddeps 2>&1 1>/dev/null; then
         echo "Missing dpkg-dev, marking for installation"
-        sudo apt-get install dpkg-dev --no-install-recommends -y || die "Error installing dpkg-dev"
+        $root apt-get install dpkg-dev --no-install-recommends -y || die "Error installing dpkg-dev"
     fi
 
     #mk-build-deps is used
     if ! which mk-build-deps 2>&1 1>/dev/null; then
         echo "Missing mk-build-deps, marking for installation"
-        sudo apt-get install devscripts -y --no-install-recommends || die "Error installing devscripts"
+        $root apt-get install devscripts -y --no-install-recommends || die "Error installing devscripts"
     fi
 
     #equivs needed for mk-build-deps
     if ! which equivs-build 2>&1 1>/dev/null; then
         echo "Missing equivs-build, marking for installation"
-        sudo apt-get install equivs -y --no-install-recommends || die "Error installing equivs"
+        $root apt-get install equivs -y --no-install-recommends || die "Error installing equivs"
     fi
 
     #test and install deps as necessary
     if ! dpkg-checkbuilddeps 1>/dev/null 2>&1; then
 	echo "Missing build dependencies for mythtv, will install them now:"
-        sudo mk-build-deps debian/control.in -ir || die "error installing dependencies"
+        $root mk-build-deps -ir || die "error installing dependencies"
     fi
 elif [ "$TYPE" = "source" ]; then
     DEBUILD_FLAGS="-S $DEBUILD_FLAGS"
 fi
-
-#update changelog and control files
-debian/rules update-control-files
 
 #mark the ubuntu target in the changelog
 [ -z "$UBUNTU_RELEASE" ] && UBUNTU_RELEASE=$(lsb_release -s -c)
