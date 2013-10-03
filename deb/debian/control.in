@@ -308,7 +308,7 @@ Section: perl
 Depends: ${misc:Depends}, ${perl:Depends}, libdbi-perl, libdbd-mysql-perl, libnet-upnp-perl, libio-socket-inet6-perl 
 Replaces: mythtv-common (<< 0.20.98 ), libmyth-perl
 Conflicts: mythtv-common (<< 0.20.98 ), libmyth-perl
-Description: A PERL library to access some MythTV features
+Description: Perl library to access some MythTV features
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
  .
@@ -318,10 +318,10 @@ Description: A PERL library to access some MythTV features
 Package: libmyth-python
 Architecture: all
 Section: libs
-Depends: ${python:Depends}, python-mysqldb, python-lxml, python-urlgrabber, ${misc:Depends}
+Depends: ${python:Depends}, python, python-mysqldb, python-lxml, python-urlgrabber, ${misc:Depends}
 Replaces: mythtv-common (<< 0.20.98 )
 Conflicts: mythtv-common (<< 0.20.98 )
-Description: A python library to access some MythTV features
+Description: Python library to access some MythTV features
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
  .
@@ -406,7 +406,7 @@ Architecture: any
 Depends: mythtv-frontend (>= ${binary:Version}), 
          ${shlibs:Depends}, 
          ${misc:Depends}
-Description: An RSS feed news reader module for MythTV
+Description: RSS feed news reader module for MythTV
  MythNews will fetch RSS feeds for you to read.
 
 Package: mythweather
@@ -494,7 +494,7 @@ Architecture: any
 Depends: mythtv-frontend (>= ${binary:Version}), 
          ${shlibs:Depends}, 
          ${misc:Depends}
-Description: A web browser for MythTV
+Description: Web browser plugin for MythTV
  Mythbrowser is a standards compliant web browser plugin for MythTV built
  on top of Webkit.
 
@@ -507,7 +507,7 @@ Depends: mythtv-frontend (>= ${binary:Version}),
          ${shlibs:Depends}, 
          ${misc:Depends} 
 Recommends: flashplugin-installer | adobe-flashplugin
-Description: A Internet Video Player plugin for MythTV
+Description: Internet Video Player plugin for MythTV
  MythNetvision is a plugin designed to make adding Internet video sources to 
  MythTV fun and easy. MythNetvision consists of two components:
  - a search screen
@@ -520,3 +520,6 @@ Architecture: all
 Depends: mythtv-common, ttf-dejavu, ${misc:Depends}
 Replaces: mythtv-common (<< 1:0.22.0~zrc1-0ubuntu1)
 Description: MythTV Theme used in the Mythbuntu distribution
+ This theme is the default theme that MythTV is using when installed
+ with the Mythbuntu OS distribution.  It's also available to anyone
+ not running the Mythbuntu OS distribution.
