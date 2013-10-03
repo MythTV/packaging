@@ -1,0 +1,3 @@
+#We don't actually install any files in here.
+#Just a symlink to make it work "out of the box"
+mythweb binary: dir-or-file-in-var-www
