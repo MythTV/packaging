@@ -1,0 +1,3 @@
+#upstart confusion in lintian it looks like
+mythtv-backend binary: init.d-script-not-marked-as-conffile
+mythtv-backend binary: init.d-script-not-included-in-package
