@@ -65,12 +65,13 @@ PROCESSORS := 1
 endif
 
 #hardening https://wiki.debian.org/Hardening
-CPPFLAGS:=$(shell dpkg-buildflags --get CPPFLAGS)
-CFLAGS:=$(shell dpkg-buildflags --get CFLAGS)
-CXXFLAGS:=$(shell dpkg-buildflags --get CXXFLAGS)
+MYTHTV_CONFIGURE_OPTS += --extra-cflags="$(shell dpkg-buildflags --get CFLAGS)" \
+                         --extra-cxxflags="$(shell dpkg-buildflags --get CXXFLAGS)" \
+                         --extra-ldflags="$(shell dpkg-buildflags --get LDFLAGS)"
+
 #link problem with binutils 2.21 in precise
 #and ffmpeg sync from 0.26, libswscale
-LDFLAGS:=$(shell DEB_LDFLAGS_MAINT_STRIP="-Wl,-Bsymbolic-functions" dpkg-buildflags --get LDFLAGS)
+#LDFLAGS:=$(shell DEB_LDFLAGS_MAINT_STRIP="-Wl,-Bsymbolic-functions" dpkg-buildflags --get LDFLAGS)
 
 %:
 	dh $@ --parallel
