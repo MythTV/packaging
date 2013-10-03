@@ -30,6 +30,18 @@ help()
 	exit 0
 }
 
+check_install_package()
+{
+	command=$1
+	package=$2
+	flags=$3
+	[ -z "$package" ] && package=$1
+	if ! which $1 1>/dev/null; then
+		echo "Missing $command, marking $package for installation"
+		$root apt-get install $package -y $flags || die "Error installing $package"
+	fi
+}
+
 export QUILT_PATCHES="debian/patches"
 [ -n "$GIT_BRANCH" ] && GIT_BRANCH=""
 [ -n "$DIRECTORY" ] && DIRECTORY=""
@@ -102,40 +114,22 @@ if [ `id -ru` -ne 0 ]; then
 fi
 
 #for checking out git
-if ! which git 1>/dev/null; then
-	echo "Missing git-core, marking for installation"
-	$root apt-get install git-core || die "Error installing git-core"
-fi
+check_install_package git git-core
 
 #make sure we have debuild no matter what
-if ! which debuild 1>/dev/null; then
-    echo "Missing debuild, marking for installation"
-    $root apt-get install devscripts --no-install-recommends|| die "Error installing devscripts"
-fi
+check_install_package debuild devscripts --no-install-recommends
 
 #check for LSB information
-if ! which lsb_release 1>/dev/null; then
-	echo "Missing lsb-release, marking for installation"
-	$root apt-get install lsb-release || die "Error installing lsb-release"
-fi
+check_install_package lsb_release lsb-release
 
 #quilt needed for patching tests
-if ! which quilt 1>/dev/null; then
-	echo "Missing quilt, marking for installation"
-	$root apt-get install quilt || die "Error installing quilt"
-fi
+check_install_package quilt
 
 #need for debuild
-if ! which fakeroot 1>/dev/null; then
-	echo "Missing fakeroot, marking for installation"
-	$root apt-get install fakeroot || die "Error installing fakeroot"
-fi
+check_install_package fakeroot
 
 #need debhelper
-if ! which dh 1>/dev/null; then
-	echo "Missing debhelper, marking for installation"
-	$root apt-get install debhelper || die "Error installing debhelper"
-fi
+check_install_package dh debhelper
 
 #clone in our packaging branch
 mkdir -p $DIRECTORY/mythtv
@@ -209,22 +203,13 @@ debian/rules update-control-files
 
 if [ "$TYPE" = "binary" ]; then
     #Make sure we have the package for dpkg-checkbuilddeps
-    if ! which dpkg-checkbuilddeps 2>&1 1>/dev/null; then
-        echo "Missing dpkg-dev, marking for installation"
-        $root apt-get install dpkg-dev --no-install-recommends -y || die "Error installing dpkg-dev"
-    fi
+    check_install_package dpkg-checkbuilddeps dpkg-dev --no-install-recommmends
 
     #mk-build-deps is used
-    if ! which mk-build-deps 2>&1 1>/dev/null; then
-        echo "Missing mk-build-deps, marking for installation"
-        $root apt-get install devscripts -y --no-install-recommends || die "Error installing devscripts"
-    fi
+    check_install_package mk-build-deps devscripts --no-install-recommends
 
     #equivs needed for mk-build-deps
-    if ! which equivs-build 2>&1 1>/dev/null; then
-        echo "Missing equivs-build, marking for installation"
-        $root apt-get install equivs -y --no-install-recommends || die "Error installing equivs"
-    fi
+    check_install_package equivs-build equivs --no-install-recommends
 
     #test and install deps as necessary
     if ! dpkg-checkbuilddeps 1>/dev/null 2>&1; then
