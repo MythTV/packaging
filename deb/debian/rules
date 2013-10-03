@@ -64,6 +64,10 @@ ifeq (0,$(PROCESSORS))
 PROCESSORS := 1
 endif
 
+#hardening https://wiki.debian.org/Hardening
+CPPFLAGS:=$(shell dpkg-buildflags --get CPPFLAGS)
+CFLAGS:=$(shell dpkg-buildflags --get CFLAGS)
+CXXFLAGS:=$(shell dpkg-buildflags --get CXXFLAGS)
 #link problem with binutils 2.21 in precise
 #and ffmpeg sync from 0.26, libswscale
 LDFLAGS:=$(shell DEB_LDFLAGS_MAINT_STRIP="-Wl,-Bsymbolic-functions" dpkg-buildflags --get LDFLAGS)
