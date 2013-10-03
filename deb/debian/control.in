@@ -111,7 +111,7 @@ Description: Personal video recorder application (client and server)
  up and running switfly.
  .
  If you are intended on installing this on a standalone/non-desktop machine,
- you should look into the metapackages available:
+ you should look into the Metapackages available:
  mythtv-backend-master (backend with a local database)
  mythtv-backend (backend needing a remote database)
 
@@ -333,8 +333,8 @@ Architecture: all
 Section: metapackages
 Depends: mysql-server, ntp | time-daemon | ntp-simple, mythtv-database, mythtv-backend, ${misc:Depends}
 Recommends: mythweb
-Description: Metapackage to setup and configure a "Master Backend" profile of MythTV.
- This meta-package will install and configure all necessary packages for this 
+Description: Metapackage to setup and configure a "Master Backend" profile of MythTV
+ This Meta-package will install and configure all necessary packages for this 
  machine to behave as a "Master" Backend for a mythtv network.  This package 
  is intended to be installed on the machine that will behave as the first 
  (and possibly only) backend for the network.  Typically, this package will be
@@ -368,7 +368,7 @@ Depends: ${misc:Depends},
          mythbrowser,
          mythnetvision
 Description: Metapackage package for MythTV plugins
- This meta-package will install all available MythTV plugins.
+ This Meta-package will install all available MythTV plugins.
 
 Package: mythgallery
 Architecture: any
@@ -475,7 +475,7 @@ Description: create and burn DVD's from MythTV - binary file
  description and cut list information which will mean you can create backups
  of myth recordings which can later be restored or it will also allow you to
  move recordings between myth systems without losing any of the metadata. It
- is a complete rewrite of the old MythBurn bash scripts, now using python,
+ is a complete rewrite of the old MythBurn bash scripts, now using Python,
  and the mythfrontend UI plugin.
 
 Package: mythzoneminder
@@ -519,6 +519,4 @@ Package: mythtv-theme-mythbuntu
 Architecture: all
 Depends: mythtv-common, ttf-dejavu, ${misc:Depends}
 Replaces: mythtv-common (<< 1:0.22.0~zrc1-0ubuntu1)
-Description: The mythbuntu MythTV Theme
- This package provides the mythbuntu theme for MythTV.
-
+Description: MythTV Theme used in the Mythbuntu distribution
