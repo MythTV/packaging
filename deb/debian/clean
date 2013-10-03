@@ -1,5 +1,6 @@
 debian/shlibs.local
 version.cpp
+mythtv/TMPMAK
 mythtv/config.ep
 mythtv/config.fate
 mythtv/config.mak
