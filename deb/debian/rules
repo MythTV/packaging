@@ -177,3 +177,7 @@ override_dh_installdocs:
 
 	#(Myththemes)
 	rm -f debian/mythtv-theme-childish/usr/share/mythtv/themes/Childish/COPYING
+
+override_dh_installman:
+	debian/generate_manpages.sh
+	dh_installman
