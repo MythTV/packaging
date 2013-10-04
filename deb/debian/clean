@@ -1,4 +1,4 @@
-debian/man
+debian/man/*
 debian/shlibs.local
 version.cpp
 mythtv/TMPMAK
