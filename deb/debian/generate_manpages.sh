@@ -1,5 +1,6 @@
 #!/bin/sh
 export LD_LIBRARY_PATH=debian/tmp/usr/lib
+export LD_PRELOAD=''
 VERSION=`dpkg-parsechangelog | sed '/^Version/!d; s/.* //; s/.*://;'`
 generate()
 {
@@ -31,6 +32,8 @@ generate "MythTV Screen Wizard" debian/tmp/usr/bin/mythscreenwizard
 generate "MythTV Setup (real)" debian/tmp/usr/bin/mythtv-setup.real
 generate "MythTV Archive helper" debian/mytharchive/usr/bin/mytharchivehelper
 generate "MythTV Netvision helper" debian/mythnetvision/usr/bin/mythfillnetvision
-generate "MythTV Python shell" debian/libmyth-python/usr/bin/mythpython
-generate "MythTV wiki scripts" debian/libmyth-python/usr/bin/mythwikiscripts
 generate "MythTV Zoneminder server" debian/mythzoneminder/usr/bin/mythzmserver
+#these don't have a --help right now
+#export PYTHONPATH=debian/libmyth-python/usr/share/pyshared:$PYTHONPATH
+#generate "MythTV Python shell" debian/libmyth-python/usr/bin/mythpython
+#generate "MythTV wiki scripts" debian/libmyth-python/usr/bin/mythwikiscripts
