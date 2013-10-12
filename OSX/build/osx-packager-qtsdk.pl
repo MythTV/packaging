@@ -98,6 +98,42 @@ our %build_profile = (
         'libcdio',
        ],
      ],
+  '0.27-fixes'
+   => [
+    'branch' => 'fixes/0.27',
+    'mythtv'
+    => [
+        'ccache',
+        'libtool',
+        'pkgconfig',
+        'dvdcss',
+        'freetype',
+        'lame',
+        'cmake',
+        'mysqlclient',
+        #'dbus',
+        'qt',
+        'yasm',
+        'liberation-sans',
+        'firewiresdk',
+        'libtool',
+        'autoconf',
+        'automake',
+        'taglib',
+       ],
+    'mythplugins'
+    => [
+        'exif',
+        'libtool',
+        'autoconf',
+        'automake',
+        'libogg',
+        'vorbis',
+        'flac',
+        'libcddb',
+        'libcdio',
+       ],
+     ],
   '0.26-fixes'
    => [
     'branch' => 'fixes/0.26',
