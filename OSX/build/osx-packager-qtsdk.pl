@@ -83,6 +83,7 @@ our %build_profile = (
         'autoconf',
         'automake',
         'taglib',
+        'exiv2',
        ],
     'mythplugins'
     => [
@@ -1223,7 +1224,13 @@ EOF
             "else cp libx264.133.dylib.32 libx264.133.dylib; fi; fi; " .
             "make install",
         'make'    => [ ],
-    }
+    },
+
+    'exiv2' =>
+    {
+        'url' => "http://www.exiv2.org/exiv2-0.23.tar.gz",
+    },
+
 );
 
 
