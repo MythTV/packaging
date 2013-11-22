@@ -850,7 +850,7 @@ on demand content.
 cd mythtv
 
 # Set the mythtv --version string
-    cat > VERSION <<EOF
+    cat > EXPORTED_VERSION <<EOF
 SOURCE_VERSION=%{vers_string}
 BRANCH=%{branch}
 EOF
