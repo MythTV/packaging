@@ -68,6 +68,9 @@ endif
 #and ffmpeg sync from 0.26, libswscale
 LDFLAGS:=$(shell DEB_LDFLAGS_MAINT_STRIP="-Wl,-Bsymbolic-functions" dpkg-buildflags --get LDFLAGS)
 
+# Need a writable home directory for ccache
+export HOME=$(CURDIR)/debian/home
+
 %:
 	dh $@ --parallel
 
@@ -78,6 +81,8 @@ override_dh_auto_install:
 		cp debian/DESCRIBE mythtv/VERSION ;\
 	fi
 	cd mythtv && sh version.sh `pwd`
+
+	mkdir $(CURDIR)/debian/home
 
 	#mythtv
 	cd mythtv && ./configure $(MYTHTV_CONFIGURE_OPTS)
@@ -141,6 +146,7 @@ override_dh_auto_clean:
 	[ -f mythtv/VERSION.old ] && mv mythtv/VERSION.old mythtv/VERSION || true
 	dh_auto_clean
 	debconf-updatepo
+	rm -rf $(CURDIR)/debian/home
 
 override_dh_installdocs:
 	dh_installdocs
