@@ -455,7 +455,6 @@ Architecture: any
 Depends: mythtv-transcode-utils(>= ${binary:Version}), 
          mythtv-frontend (>= ${binary:Version}), 
          mjpegtools, 
-         ffmpeg, 
          dvdauthor, 
          genisoimage, 
          dvd+rw-tools, 
