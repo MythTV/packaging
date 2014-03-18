@@ -27,13 +27,17 @@ MYTHWEB_GIT_URL=git://github.com/MythTV/mythweb.git
 MYTHBUNTU_THEME_GIT_URL=git://github.com/MythTV-Themes/Mythbuntu.git
 
 ifeq "$(GIT_TYPE)" "master"
-        GIT_BRANCH:=master
+	GIT_BRANCH:=master
 	GIT_BRANCH_FALLBACK=master
 	DELIMITTER="~"
-else
-        GIT_BRANCH:=fixes/0.$(GIT_MAJOR_RELEASE)
+endif
+ifeq "$(GIT_TYPE)" "fixes"
+	GIT_BRANCH:=fixes/0.$(GIT_MAJOR_RELEASE)
 	GIT_BRANCH_FALLBACK=master
 	DELIMITTER="+"
+endif
+ifeq "$(GIT_TYPE)" "arbitrary"
+	DELIMITTER="~"
 endif
 
 GIT_RELEASE=0.$(GIT_MAJOR_RELEASE).$(GIT_MINOR_RELEASE)
