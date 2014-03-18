@@ -80,10 +80,14 @@ if [ -z "$GIT_BRANCH" ]; then
 elif [ "$GIT_BRANCH" != "$RUNNING_BRANCH" ]; then
 	pushd `dirname $0` > /dev/null
 	echo "Requested to build $GIT_BRANCH but running on $RUNNING_BRANCH."
-	echo "Repeating checkout process."
-	git checkout $GIT_BRANCH
-	$0 $@
-	exit 0
+	if git branch | grep $GIT_BRANCH 2>/dev/null; then
+		echo "Repeating checkout process."
+		git checkout $GIT_BRANCH
+		$0 $@
+		exit 0
+	fi
+	echo "$GIT_BRANCH not found.  Assuming development branch"
+	echo "Building $GIT_BRANCH using packaging $RUNNING_BRANCH"
 fi
 if [ -z "$DIRECTORY" ]; then
 	DIRECTORY=`pwd`
@@ -92,11 +96,18 @@ if echo "$GIT_BRANCH" | grep fixes 2>&1 1>/dev/null; then
 	GIT_TYPE="fixes"
 	GIT_MAJOR_RELEASE=$(echo $GIT_BRANCH |sed 's,.*0.,,')
 	DELIMITTER="+"
+	GIT_BRANCH_FALLBACK="master"
 	echo "Building for fixes, v0.$GIT_MAJOR_RELEASE in $DIRECTORY"
-else
+elif echo "$GIT_BRANCH" | grep master 2>&1 1>/dev/null; then
 	GIT_TYPE="master"
 	DELIMITTER="~"
+	GIT_BRANCH_FALLBACK="master"
 	echo "Building for master in $DIRECTORY"
+else
+	GIT_TYPE="arbitrary"
+	DELIMITTER="~"
+	GIT_BRANCH_FALLBACK="$RUNNING_BRANCH"
+	echo "Building for arbitrary (likely development) branch $GIT_BRANCH using packaging from $RUNNING_BRANCH."
 fi
 
 if [ "`basename $0`" = "build-dsc.sh" ]; then
@@ -180,7 +191,7 @@ if [ -n "$DELTA" ]; then
 fi
 
 #check out/update checkout
-debian/rules get-git-source LAST_GIT_HASH='' GIT_BRANCH=$GIT_BRANCH
+debian/rules get-git-source LAST_GIT_HASH='' GIT_BRANCH=$GIT_BRANCH GIT_BRANCH_FALLBACK=$GIT_BRANCH_FALLBACK
 
 #new upstream version
 UPSTREAM_VERSION=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/-.*//')
