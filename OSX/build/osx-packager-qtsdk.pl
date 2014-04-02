@@ -6,7 +6,7 @@
 ### = revision
 ### 2.0
 ####
-### Copyright (c) 2012 Jean-Yves Avenard
+### Copyright (c) 2012-2014 Jean-Yves Avenard
 ### based on osx-packager.pl by by Jeremiah Morris <jm@whpress.com>
 ###
 ### = location
@@ -14,7 +14,7 @@
 ###
 ### = description
 ### Tool for automating frontend builds on Mac OS X.
-### Run "osx-packager.pl -man" for full documentation.
+### Run "osx-packager-qtsdk.pl -man" for full documentation.
 
 use strict;
 use Getopt::Long qw(:config auto_abbrev);
@@ -56,6 +56,8 @@ our @targetsBE = ( 'MythBackend',  'MythFillDatabase', 'MythTV-Setup');
 # Name of the PlugIns directory in the application bundle
 our $BundlePlugins = "PlugIns";
 our $OSTARGET = "10.5";
+our $PYVER = "2.6";
+our $PYTHON = "python$PYVER";
 
 # Patches for MythTV source
 our %patches = ();
@@ -84,6 +86,11 @@ our %build_profile = (
         'automake',
         'taglib',
         'exiv2',
+        'python-mysql',
+        'python-lxml',
+        'python-pycurl',
+        'python-urlgrabber',
+        'python-simplejson',
        ],
     'mythplugins'
     => [
@@ -121,6 +128,11 @@ our %build_profile = (
         'autoconf',
         'automake',
         'taglib',
+        'python-mysql',
+        'python-lxml',
+        'python-pycurl',
+        'python-urlgrabber',
+        'python-simplejson',
        ],
     'mythplugins'
     => [
@@ -153,6 +165,11 @@ our %build_profile = (
         'yasm',
         'liberation-sans',
         'firewiresdk',
+        'python-mysql',
+        'python-lxml',
+        'python-pycurl',
+        'python-urlgrabber',
+        'python-simplejson',
        ],
     'mythplugins'
     => [
@@ -187,6 +204,11 @@ our %build_profile = (
         'yasm',
         'liberation-sans',
         'firewiresdk',
+        'python-mysql',
+        'python-lxml',
+        'python-pycurl',
+        'python-urlgrabber',
+        'python-simplejson',
        ],
     'mythplugins'
     => [
@@ -201,6 +223,7 @@ our %build_profile = (
         'flac',
         'libcddb',
         'libcdio',
+        'python-mysql',
        ],
      ],
   '0.24-fixes'
@@ -221,6 +244,11 @@ our %build_profile = (
         'yasm',
         'liberation-sans',
         'firewiresdk',
+        'python-mysql',
+        'python-lxml',
+        'python-pycurl',
+        'python-urlgrabber',
+        'python-simplejson',
       ],
     'mythplugins'
     =>  [
@@ -640,7 +668,7 @@ our %conf = (
         '--enable-libmp3lame',
         '--disable-lirc',
         '--disable-distcc',
-        '--python=/usr/bin/python2.6',
+        "--python=/usr/bin/$PYTHON",
 
         # To "cross compile" something for a lesser Mac:
         #'--tune=G3',
@@ -674,7 +702,7 @@ $ENV{'DEVROOT'} = $DEVROOT;
 $ENV{'SDKVER'} = $SDKVER;
 $ENV{'SDKROOT'} = $SDKROOT;
 $ENV{'DYLD_LIBRARY_PATH'} = "$PREFIX/lib";
-$ENV{'PYTHONPATH'} = "$PREFIX/lib/python2.6/site-packages";
+$ENV{'PYTHONPATH'} = "$PREFIX/lib/$PYTHON/site-packages";
 
 our $GCC = $OPT{'gcc'};
 our $CCBIN;
@@ -747,7 +775,9 @@ else
 {
     $ENV{'QMAKESPEC'} = 'unsupported/macx-clang';
 }
-$ENV{'MACOSX_DEPLOYMENT_TARGET'} = $OSTARGET;
+
+# Can't set this if we want python to work
+#$ENV{'MACOSX_DEPLOYMENT_TARGET'} = $OSTARGET;
 
 our $OLEVEL="";
 if ( $OPT{'olevel'} =~ /^\d+$/ )
@@ -760,7 +790,11 @@ if ( $SDKVER =~ m/^10\.[3-5]/ )
 {
     $SDK105FLAGS = " -D_USING_105SDK=1";
 }
-$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'ECXXFLAGS'} = $ENV{'CPPFLAGS'} = "${OLEVEL}${SDKISYSROOT}${SDK105FLAGS} -mmacosx-version-min=$OSTARGET -I$PREFIX/include -I$PREFIX/mysql";
+
+# For Xcode 5.1
+my $ECFLAGS = ""; #-Wunused-command-line-argument-hard-error-in-future";
+
+$ENV{'CFLAGS'} = $ENV{'CXXFLAGS'} = $ENV{'ECXXFLAGS'} = $ENV{'CPPFLAGS'} = "${OLEVEL}${SDKISYSROOT}${SDK105FLAGS} -mmacosx-version-min=$OSTARGET -I$PREFIX/include -I$PREFIX/mysql $ECFLAGS";
 $ENV{'LDFLAGS'} = "$SDKLSYSROOT -mmacosx-version-min=$OSTARGET -L$PREFIX/lib -F$QTLIB";
 $ENV{'PREFIX'} = $PREFIX;
 $ENV{'SDKROOT'} = $SDKROOT;
@@ -909,6 +943,7 @@ if ( ! $OPT{'qtsrc'} )
 &Verbose("CXXBIN = $ENV{'CXX'}");
 &Verbose("CFLAGS = $ENV{'CFLAGS'}");
 &Verbose("LDFLAGS = $ENV{'LDFLAGS'}");
+&Verbose("PYTHONPATH = $ENV{'PYTHONPATH'}");
 
 our $standard_make = '/usr/bin/make';
 our $parallel_make = $standard_make;
@@ -958,14 +993,15 @@ our %depend = (
         'parallel-make' => 'yes'
     },
 
-    # default generated taglib configure is bugger and won't compile universal file. So need to regenerate it
-    # new version of taglib 1.7 uses cmake which takes excessively long time to compile. So stick with 1.6.3
     'taglib' =>
     {
-        'url'           => 'http://developer.kde.org/~wheeler/files/src/taglib-1.6.3.tar.gz',
-        'pre-conf'      => "cp $PREFIX/share/libtool/config/ltmain.sh admin/ ; " .
-            "cp $PREFIX/share/aclocal/libtool.m4 admin/libtool.m4.in ; " .
-            "$PREFIX/bin/autoreconf",
+        'url'           => 'http://taglib.github.io/releases/taglib-1.9.1.tar.gz',
+        'conf-cmd'      => "$PREFIX/bin/cmake",
+        'conf'          => [
+            "-DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "-DCMAKE_RELEASE_TYPE=Release",
+            "."
+        ],
     },
 
     'libogg' =>
@@ -1013,7 +1049,7 @@ our %depend = (
     'pkgconfig' =>
     {
         'url'           => "http://pkgconfig.freedesktop.org/releases/pkg-config-0.25.tar.gz",
-        'conf-cmd'      =>  "CFLAGS=\"\" LDFLAGS=\"\" ./configure",
+        'conf-cmd'      =>  "CFLAGS=\"$ECFLAGS\" LDFLAGS=\"\" ./configure",
         'conf'          => [
             "--prefix=$PREFIX",
             "--disable-static",
@@ -1029,17 +1065,45 @@ our %depend = (
 
     'mysqlclient' =>
     {
-        'url'           => 'http://downloads.mysql.com/archives/mysql-5.5/mysql-5.5.24.tar.gz',
-        'pre-conf'      => "rm -rf $PREFIX/include/mysql",
+        'url'           => 'http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.17.tar.gz',
+        # Need to do some cleanup, as mysql will not build if there's any old mysql headers installed there
+        'pre-conf'      => "rm -rf $PREFIX/include/mysql $PREFIX/lib/libmysql*  $PREFIX/include/m_ctype.h $PREFIX/include/m_string.h $PREFIX/include/my_*.h $PREFIX/include/sql_*.h $PREFIX/include/mysql*.h $PREFIX/include/keycache.h $PREFIX/include/plugin.h $PREFIX/include/typelib.h $PREFIX/include/plugin_audit.h $PREFIX/include/sslopt-*.h $PREFIX/include/decimal.h $PREFIX/include/errmsg.h",
         'conf-cmd'      => "$PREFIX/bin/cmake",
         'conf'          => [
             "-DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "-DCURSES_LIBRARY=$SDKROOT/usr/lib/libncurses.dylib",
+            "-DCURSES_INCLUDE_PATH=$SDKROOT/usr/include",
+            "-DWITHOUT_SERVER=ON",
         ],
         'make'          => [
             'all',
         ],
         'parallel-make' => 'yes',
         'post-make' => "SEGMENTS='SharedLibraries Development' ; for segment in \$SEGMENTS ; do $PREFIX/bin/cmake -DCMAKE_INSTALL_COMPONENT=\$segment -P cmake_install.cmake ; done",
+        'arg-patches'   => "echo 5.6.17",
+        'patches'       => {
+            '5.6.17' => "patch -f -p0 <<EOF\n" . <<EOF
+--- CMakeLists.txt~	2014-03-15 06:07:26.000000000 +1100
++++ CMakeLists.txt	2014-04-01 21:52:17.000000000 +1100
+@@ -454,6 +454,7 @@
+ ADD_SUBDIRECTORY(mysys)
+ ADD_SUBDIRECTORY(mysys_ssl)
+ ADD_SUBDIRECTORY(libmysql)
++ADD_SUBDIRECTORY(scripts)
+ 
+ IF(WITH_UNIT_TESTS)
+   ADD_SUBDIRECTORY(unittest)
+@@ -483,7 +484,6 @@
+   ADD_SUBDIRECTORY(mysql-test)
+   ADD_SUBDIRECTORY(mysql-test/lib/My/SafeProcess)
+   ADD_SUBDIRECTORY(support-files)
+-  ADD_SUBDIRECTORY(scripts)
+   ADD_SUBDIRECTORY(sql-bench)
+   IF(UNIX)
+     ADD_SUBDIRECTORY(man)
+EOF
+            . "\nEOF",
+        },
     },
 
     'dbus' =>
@@ -1252,19 +1316,97 @@ EOF
 
     'libx264'     =>
     {
-        'url'     => 'ftp://ftp.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-20130716-2245-stable.tar.bz2',
+        'url'     => 'ftp://ftp.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-20140331-2245-stable.tar.bz2',
         'conf-cmd' => "cd",
-        'make-cmd' => "if [ '$CROSS' == '1' ]; then CFLAGS='' LDFLAGS='' ./configure --host=i386-apple-darwin --prefix=$PREFIX --enable-shared; make $parallel_make_flags ; mv libx264.133.dylib libx264.133.dylib.32; fi; " .
-            "CFLAGS='' LDFLAGS='' ./configure --prefix=$PREFIX --enable-shared; make $parallel_make_flags; " .
-            "if [ '$CROSS' == '1' ]; then if [ '$UNIVERSAL' == '1' ]; then lipo -arch i386 libx264.133.dylib.32 -arch x86_64 libx264.133.dylib -create -output libx264.133.dylib.universal; cp libx264.133.dylib.universal libx264.133.dylib; " .
-            "else cp libx264.133.dylib.32 libx264.133.dylib; fi; fi; " .
+        'make-cmd' => "if [ '$CROSS' == '1' ]; then CFLAGS=\"$ECFLAGS\" LDFLAGS='' ./configure --host=i386-apple-darwin --prefix=$PREFIX --enable-shared; make $parallel_make_flags ; mv libx264.142.dylib libx264.142.dylib.32; fi; " .
+            "CFLAGS=\"$ECFLAGS\" LDFLAGS='' ./configure --prefix=$PREFIX --enable-shared; make $parallel_make_flags; " .
+            "if [ '$CROSS' == '1' ]; then if [ '$UNIVERSAL' == '1' ]; then lipo -arch i386 libx264.142.dylib.32 -arch x86_64 libx264.142.dylib -create -output libx264.142.dylib.universal; cp libx264.142.dylib.universal libx264.142.dylib; " .
+            "else cp libx264.142.dylib.32 libx264.142.dylib; fi; fi; " .
             "make install",
         'make'    => [ ],
+        'arg-patches'   => "echo 20140331",
+        'patches'       => {
+            '20140331' => "patch -f -p0 <<EOF\n" . <<EOF
+--- configure~	2014-04-01 07:45:07.000000000 +1100
++++ configure	2014-04-02 00:07:16.000000000 +1100
+@@ -467,7 +467,6 @@
+         ;;
+     darwin*)
+         SYS=\"MACOSX\"
+-        CFLAGS=\"\\\$CFLAGS -falign-loops=16\"
+         libm=\"-lm\"
+         if [ \"\\\$pic\" = \"no\" ]; then
+             cc_check \"\" -mdynamic-no-pic && CFLAGS=\"\\\$CFLAGS -mdynamic-no-pic\"
+EOF
+            . "\nEOF",
+        },
     },
 
     'exiv2' =>
     {
         'url' => "http://www.exiv2.org/exiv2-0.23.tar.gz",
+    },
+
+    'python-mysql' =>
+    {   # we compile this module in static mode, as it's just too much work to use a dynamic library at this stage
+        'url'           => 'https://pypi.python.org/packages/source/M/MySQL-python/MySQL-python-1.2.5.zip',
+        'pre-conf'      => "mkdir -p $PREFIX/lib/$PYTHON/site-packages",
+        'conf-cmd'      => "cd",
+        'make-cmd'      => "sed -i -e 's:static = False:static = True:g' site.cfg && MACOSX_DEPLOYMENT_TARGET='' $PYTHON setup.py install --prefix=$PREFIX",
+        'make'          => [ ],
+    },
+
+    'python-lxml' =>
+    {
+        'url'           => 'https://pypi.python.org/packages/source/l/lxml/lxml-3.3.3.tar.gz',
+        'pre-conf'      => "mkdir -p $PREFIX/lib/$PYTHON/site-packages",
+        'conf-cmd'      => "cd",
+        'make-cmd'      => "MACOSX_DEPLOYMENT_TARGET='' $PYTHON setup.py install --prefix=$PREFIX",
+        'make'          => [ ],
+    },
+
+    'python-pycurl' =>
+    {
+        'url'           => 'http://pycurl.sourceforge.net/download/pycurl-7.19.3.1.tar.gz',
+        'pre-conf'      => "mkdir -p $PREFIX/lib/$PYTHON/site-packages",
+        'conf-cmd'      => "cd",
+        'make-cmd'      => "MACOSX_DEPLOYMENT_TARGET='' $PYTHON setup.py --with-ssl install --prefix=$PREFIX",
+        'make'          => [ ],
+        'arg-patches'   => "echo 7.19.3.1",
+        'patches'       => {
+            '7.19.3.1' => "patch -f -p0 <<EOF\n" . <<EOF
+--- src/pycurl.c~	2014-02-06 20:27:56.000000000 +1100
++++ src/pycurl.c	2014-04-02 16:46:41.000000000 +1100
+@@ -4455,7 +4455,7 @@
+     /* Our compiled crypto locks should correspond to runtime ssl library. */
+     if (vi->ssl_version == NULL) {
+         runtime_ssl_lib = \"none/other\";
+-    } else if (!strncmp(vi->ssl_version, \"OpenSSL/\", 8)) {
++    } else if (!strncmp(vi->ssl_version, \"OpenSSL/\", 8) || !strncmp(vi->ssl_version, \"SecureTransport\", 15)) {
+         runtime_ssl_lib = \"openssl\";
+     } else if (!strncmp(vi->ssl_version, \"GnuTLS/\", 7)) {
+         runtime_ssl_lib = \"gnutls\";
+EOF
+            . "\nEOF",
+        },
+    },
+
+    'python-urlgrabber' =>
+    {
+        'url'           => 'https://pypi.python.org/packages/source/u/urlgrabber/urlgrabber-3.9.1.tar.gz',
+        'pre-conf'      => "mkdir -p $PREFIX/lib/$PYTHON/site-packages",
+        'conf-cmd'      => "cd",
+        'make-cmd'      => "MACOSX_DEPLOYMENT_TARGET='' $PYTHON setup.py install --prefix=$PREFIX",
+        'make'          => [ ],
+    },
+
+    'python-simplejson' =>
+    {
+        'url'           => 'https://pypi.python.org/packages/source/s/simplejson/simplejson-3.3.3.tar.gz',
+        'pre-conf'      => "mkdir -p $PREFIX/lib/$PYTHON/site-packages",
+        'conf-cmd'      => "cd",
+        'make-cmd'      => "MACOSX_DEPLOYMENT_TARGET='' $PYTHON setup.py install --prefix=$PREFIX",
+        'make'          => [ ],
     },
 
 );
@@ -1349,6 +1491,7 @@ foreach my $sw ( @build_depends )
     $filename = $ARCHIVEDIR . '/' . $filename;
     $dirname =~ s|\.tar\.gz$||;
     $dirname =~ s|\.tar\.bz2$||;
+    $dirname =~ s|\.zip$||;
 
     chdir($SRCDIR);
 
@@ -1392,6 +1535,8 @@ foreach my $sw ( @build_depends )
         {   &Syscall([ '/usr/bin/tar', '-xzf', $filename ]) or die   }
         elsif ( substr($filename,-4) eq ".bz2" )
         {   &Syscall([ '/usr/bin/tar', '-xjf', $filename ]) or die   }
+        elsif ( substr($filename,-4) eq ".zip" )
+        {   &Syscall([ '/usr/bin/unzip', $filename ])       or die   }
         else
         {
             &Complain("Cannot unpack file $filename");
@@ -1917,7 +2062,7 @@ foreach my $target ( @targets )
     if ( $target eq "MythFrontend" )
     {
         my $extralib;
-        my @list = ( 'mythavtest', 'ignyte', 'mythpreviewgen', 'mtd' );
+        my @list = ( 'mythavtest', 'ignyte', 'mythpreviewgen', 'mtd', 'mythscreenwizard' );
         if ( $OPT{'enable-mythlogserver'} )
         {
             push @list, "mythlogserver";
@@ -1975,6 +2120,18 @@ foreach my $target ( @targets )
     or die;
     &Syscall([ @bundler, "$finalTarget/Contents/$BundlePlugins/sqldrivers/libqsqlmysql.dylib", @libs ])
     or die;
+
+    if ( $target eq "MythFrontend" or $target eq "MythBackend" )
+    {
+        # copy python plugins
+        &Syscall([ 'mkdir', "-p", "$finalTarget/Contents/Resources/lib/$PYTHON" ]) or die;
+        &RecursiveCopy("$PREFIX/lib/$PYTHON/site-packages", "$finalTarget/Contents/Resources/lib/$PYTHON");
+        if ( $OPT{'universal'} )
+        {
+            &RecursiveCopy("$PREFIX/$ARCHS[0]/lib/$PYTHON/site-packages/MythTV", "$finalTarget/Contents/Resources/lib/$PYTHON/site-packages");
+            &Syscall([ 'cp', "$PREFIX/$ARCHS[0]/lib/$PYTHON/site-packages/MythTV-*", "$finalTarget/Contents/Resources/lib/$PYTHON/site-packages/" ])
+        }
+    }
 
     # rebase segfault on my mac, so disable it for the time being
     # Run 'rebase' on all the frameworks, for slightly faster loading.
