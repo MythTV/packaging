@@ -71,7 +71,21 @@ case "$1" in
         PASSWORD="$RET";
         db_get mythweb/only || true
         ONLY="$RET"
-        
+
+	REL=$(lsb_release -c -s)
+	if [ "$REL" \> "raring" ]; then
+		SYMLINK="/var/www/html/mythweb"
+		CONFIG="000-default.conf"
+		CONFIG_MYTHBUNTU="000-default-mythbuntu.conf"
+	else
+		SYMLINK="/var/www/mythweb"
+		CONFIG="default"
+		CONFIG_MYTHBUNTU="default-mythbuntu"
+	fi
+	if [ ! -L $SYMLINK ]; then
+		ln -s /usr/share/mythtv/mythweb $SYMLINK
+	fi
+
         DEFAULT_CONFIG=/etc/default/mythweb
         cat > $DEFAULT_CONFIG << EOF
 [cfg]
@@ -104,23 +118,15 @@ s/\(^[ \t]*setenv[ \t]\+db_name[ \t]\+\"\)[^\"]*\"/\1$database\"/g;
 s/\(^[ \t]*setenv[ \t]\+db_login[ \t]\+\"\)[^\"]*\"/\1$mythtv_username\"/g;
 s/\(^[ \t]*setenv[ \t]\+db_password[ \t]\+\"\)[^\"]*\"/\1$mythtv_password\"/g;
             " > $NEW
-            
-        if [ -e /var/www/mythweb ]; then
-            # replace /var/www/html with /var/www/mythweb
-            perl -pi -e 's/\/var\/www\/html/\/var\/www\/mythweb/g;' $NEW
-        fi
-            
+	if [ "$INPUT" != "$MYTHWEBCONF" ]; then
+		sed "s,/var/www/html,$SYMLINK,;" -i $NEW
+	fi
         mv -f $NEW $MYTHWEBCONF
 
         MYTHWEBDIR=/etc/apache2/sites-available/mythwebdir
         if test -f $MYTHWEBDIR; then
             a2dissite mythwebdir >/dev/null || true
             mv $MYTHWEBDIR ${MYTHWEBDIR}.dpkg-old
-        fi
-
-        CONFIG=/etc/mythtv/mythweb-settings.php
-        if test -f $CONFIG; then
-            mv $CONFIG ${CONFIG}.dpkg-old
         fi
 
         cachedir=/var/cache/mythweb/image_cache
@@ -134,7 +140,7 @@ s/\(^[ \t]*setenv[ \t]\+db_password[ \t]\+\"\)[^\"]*\"/\1$mythtv_password\"/g;
             chgrp www-data $datadir
             chmod 775 $datadir
         fi
-        
+
         LINKS='
 /var/lib/mythtv/music^music
 /var/lib/mythtv/recordings^recordings
@@ -181,19 +187,18 @@ s/\(^[ \t]*setenv[ \t]\+db_password[ \t]\+\"\)[^\"]*\"/\1$mythtv_password\"/g;
             BASE=/etc/apache2
             DIR_AVAILABLE=${BASE}/sites-available
             DIR_ENABLED=${BASE}/sites-enabled
-            CONFIG=default
 
             #not enabled & we want to enable redirect
-            if [ ! -e ${DIR_ENABLED}/${CONFIG}-mythbuntu ] && [ "$ONLY" = true ] && \
+            if [ ! -e ${DIR_ENABLED}/${CONFIG_MYTHBUNTU} ] && [ "$ONLY" = true ] && \
                [   -e ${DIR_AVAILABLE}/${CONFIG} ]; then
-                cp ${DIR_AVAILABLE}/${CONFIG} ${DIR_AVAILABLE}/${CONFIG}-mythbuntu
-                perl -pi -e 's/(<VirtualHost \*:80>)/$1\n\tDirectoryIndex mythweb/i' ${DIR_AVAILABLE}/${CONFIG}-mythbuntu
+                cp ${DIR_AVAILABLE}/${CONFIG} ${DIR_AVAILABLE}/${CONFIG_MYTHBUNTU}
+                perl -pi -e 's/(<VirtualHost \*:80>)/$1\n\tDirectoryIndex mythweb/i' ${DIR_AVAILABLE}/${CONFIG_MYTHBUNTU}
                 DISABLE=${CONFIG}
-                ENABLE=${CONFIG}-mythbuntu
+                ENABLE=${CONFIG_MYTHBUNTU}
             #already enabled & we want to disable redirect
-            elif [ -e ${DIR_ENABLED}/${CONFIG}-mythbuntu ] && [ "$ONLY" = false ]; then
+            elif [ -e ${DIR_ENABLED}/${CONFIG_MYTHBUNTU} ] && [ "$ONLY" = false ]; then
                 ENABLE=${CONFIG}
-                DISABLE=${CONFIG}-mythbuntu
+                DISABLE=${CONFIG_MYTHBUNTU}
             fi
             if [ -n "${ENABLE}" ]  && [ -e "${DIR_AVAILABLE}/${ENABLE}" ]; then
                 a2ensite ${ENABLE} > /dev/null || true

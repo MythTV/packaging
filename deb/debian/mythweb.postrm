@@ -20,13 +20,28 @@ case "$1" in
     remove|purge)
 	#These files may have been created during installation
 	rm -f /etc/mythtv/mythweb-digest
-    rm -f /etc/apache2/sites-available/mythweb.conf
-    if [ -e /etc/apache2/sites-enabled/default-mythbuntu ]; then
-        a2dissite default-mythbuntu > /dev/null || true
-        a2ensite default > /dev/null || true
-        rm -f /etc/apache2/sites-available/default-mythbuntu
-        reload_apache
-    fi
+	rm -f /etc/apache2/sites-available/mythweb.conf
+
+        REL=$(lsb_release -c -s)
+        if [ "$REL" \> "raring" ]; then
+                SYMLINK="/var/www/html/mythweb"
+                CONFIG="000-default.conf"
+                CONFIG_MYTHBUNTU="000-default-mythbuntu.conf"
+        else
+                SYMLINK="/var/www/mythweb"
+                CONFIG="default"
+                CONFIG_MYTHBUNTU="default-mythbuntu"
+        fi
+        if [ -L $SYMLINK ]; then
+                rm -f$SYMLINK
+        fi
+
+	if [ -e /etc/apache2/sites-enabled/default-mythbuntu ]; then
+		a2dissite $CONFIG_MYTHBUNTU > /dev/null || true
+		a2ensite $CONFIG > /dev/null || true
+		rm -f /etc/apache2/sites-available/$CONFIG_MYTHBUNTU
+		reload_apache
+	fi
     ;;
 
     upgrade|abort-upgrade|abort-remove|abort-deconfigure)
