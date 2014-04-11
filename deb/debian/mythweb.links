@@ -1,4 +1,3 @@
-etc/mythtv/mythweb-htaccess usr/share/mythtv/mythweb/.htaccess
 usr/share/mythtv/mythweb var/www/mythweb
 usr/share/javascript/prototype/prototype.js usr/share/mythtv/mythweb/js/prototype.js
 usr/share/javascript/scriptaculous usr/share/mythtv/mythweb/js/scriptaculous

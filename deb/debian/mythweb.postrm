@@ -19,7 +19,6 @@ reload_apache()
 case "$1" in
     remove|purge)
 	#These files may have been created during installation
-	rm -f /etc/mythtv/mythweb-htaccess
 	rm -f /etc/mythtv/mythweb-digest
     rm -f /etc/apache2/sites-available/mythweb.conf
     if [ -e /etc/apache2/sites-enabled/default-mythbuntu ]; then
