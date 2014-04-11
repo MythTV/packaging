@@ -118,11 +118,6 @@ s/\(^[ \t]*setenv[ \t]\+db_password[ \t]\+\"\)[^\"]*\"/\1$mythtv_password\"/g;
             mv $MYTHWEBDIR ${MYTHWEBDIR}.dpkg-old
         fi
 
-        ACCESS=/etc/mythtv/mythweb-htaccess.conf
-        if test -f $ACCESS; then
-            mv $ACCESS ${ACCESS}.dpkg-old
-        fi
-
         CONFIG=/etc/mythtv/mythweb-settings.php
         if test -f $CONFIG; then
             mv $CONFIG ${CONFIG}.dpkg-old
@@ -208,12 +203,6 @@ s/\(^[ \t]*setenv[ \t]\+db_password[ \t]\+\"\)[^\"]*\"/\1$mythtv_password\"/g;
             fi
 
             reload_apache
-        fi
-
-        # This is a known issue precipitaing from older installs
-        # LP Bug: 329053
-        if [ -e /etc/mythtv/mythweb-htaccess ]; then
-            mv /etc/mythtv/mythweb-htaccess /etc/mythtv/mythweb-htaccess.obsolete
         fi
     ;;
 
