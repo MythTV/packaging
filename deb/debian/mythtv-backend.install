@@ -1,6 +1,7 @@
 #Come from make install
 usr/bin/mythbackend
 usr/bin/mythcommflag
+usr/bin/mythfilerecorder
 usr/bin/mythfilldatabase
 usr/bin/mythhdhomerun_config
 usr/bin/mythjobqueue
