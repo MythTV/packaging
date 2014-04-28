@@ -33,7 +33,7 @@ case "$1" in
                 CONFIG_MYTHBUNTU="default-mythbuntu"
         fi
         if [ -L $SYMLINK ]; then
-                rm -f$SYMLINK
+                rm -f $SYMLINK
         fi
 
 	if [ -e /etc/apache2/sites-enabled/default-mythbuntu ]; then
