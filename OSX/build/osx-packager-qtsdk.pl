@@ -428,7 +428,8 @@ Getopt::Long::GetOptions(\%OPT,
                          'nosysroot',
                          'gcc',
                          'no-optimization',
-                         'enable-mythlogserver'
+                         'enable-mythlogserver',
+                         'disable-checks',
                         ) or Pod::Usage::pod2usage(2);
 Pod::Usage::pod2usage(1) if $OPT{'help'};
 Pod::Usage::pod2usage('-verbose' => 2) if $OPT{'man'};
@@ -1844,6 +1845,10 @@ foreach my $arch (@ARCHS)
                 if ( ! $OPT{'enable-mythlogserver'} )
                 {
                     push @config, "--disable-mythlogserver";
+                }
+                if ( $OPT{'disable-checks'} )
+                {
+                    push @config, '--extra-cxxflags=-DIGNORE_SCHEMA_VER_MISMATCH=1 -DIGNORE_PROTO_VER_MISMATCH=1';
                 }
             }
 
