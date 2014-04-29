@@ -1361,7 +1361,7 @@ EOF
         'url'           => 'https://pypi.python.org/packages/source/l/lxml/lxml-3.3.3.tar.gz',
         'pre-conf'      => "mkdir -p $PREFIX/lib/$PYTHON/site-packages",
         'conf-cmd'      => "cd",
-        'make-cmd'      => "MACOSX_DEPLOYMENT_TARGET='' $PYTHON setup.py install --prefix=$PREFIX",
+        'make-cmd'      => "MACOSX_DEPLOYMENT_TARGET='' CFLAGS=\"$CFLAGS -I$SDKROOT/usr/include/libxml2\" $PYTHON setup.py install --prefix=$PREFIX",
         'make'          => [ ],
     },
 
