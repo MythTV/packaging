@@ -23,6 +23,8 @@ enableauth()
 
 disableauth()
 {
+
+
     sed -i \
     -e "s/^    AuthType/    \#    AuthType/" \
     -e "s/^    AuthName/    \#    AuthName/" \
@@ -73,14 +75,18 @@ case "$1" in
         ONLY="$RET"
 
 	REL=$(lsb_release -c -s)
-	if [ "$REL" \> "raring" ]; then
-		SYMLINK="/var/www/html/mythweb"
-		CONFIG="000-default.conf"
-		CONFIG_MYTHBUNTU="000-default-mythbuntu.conf"
-	else
-		SYMLINK="/var/www/mythweb"
+	if [ "$REL" = "precise" ]; then
+        SYMLINK="/var/www/mythweb"
 		CONFIG="default"
 		CONFIG_MYTHBUNTU="default-mythbuntu"
+    elif [ "$REL" = "saucy" ]; then
+        SYMLINK="/var/www/mythweb"
+		CONFIG="default"
+		CONFIG_MYTHBUNTU="default-mythbuntu"
+	else
+        SYMLINK="/var/www/html/mythweb"
+		CONFIG="000-default.conf"
+		CONFIG_MYTHBUNTU="000-default-mythbuntu.conf"
 	fi
 	if [ ! -L $SYMLINK ]; then
 		ln -s /usr/share/mythtv/mythweb $SYMLINK
