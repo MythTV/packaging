@@ -23,6 +23,8 @@ enableauth()
 
 disableauth()
 {
+
+
     sed -i \
     -e "s/^    AuthType/    \#    AuthType/" \
     -e "s/^    AuthName/    \#    AuthName/" \
@@ -73,14 +75,15 @@ case "$1" in
         ONLY="$RET"
 
 	REL=$(lsb_release -c -s)
-	if [ "$REL" \> "raring" ]; then
-		SYMLINK="/var/www/html/mythweb"
-		CONFIG="000-default.conf"
-		CONFIG_MYTHBUNTU="000-default-mythbuntu.conf"
-	else
-		SYMLINK="/var/www/mythweb"
+	if [ "$REL" = "precise" ] || [ "$REL" = "saucy" ]; then
+        SYMLINK="/var/www/mythweb"
 		CONFIG="default"
 		CONFIG_MYTHBUNTU="default-mythbuntu"
+	else
+        mkdir -p /var/www/html
+        SYMLINK="/var/www/html/mythweb"
+		CONFIG="000-default.conf"
+		CONFIG_MYTHBUNTU="000-default-mythbuntu.conf"
 	fi
 	if [ ! -L $SYMLINK ]; then
 		ln -s /usr/share/mythtv/mythweb $SYMLINK
@@ -179,8 +182,9 @@ s/\(^[ \t]*setenv[ \t]\+db_password[ \t]\+\"\)[^\"]*\"/\1$mythtv_password\"/g;
                 disableauth "${MYTHWEBCONF}" || true
             fi
 
-            # Enable rewrite_module and reload apache.
+            # Enable rewrite_module and cgi and reload apache.
             a2enmod rewrite >/dev/null || true
+            a2enmod cgi >/dev/null || true
             a2ensite mythweb.conf >/dev/null || true
 
             # Usability feature to make / redirect to /mythweb in apache
