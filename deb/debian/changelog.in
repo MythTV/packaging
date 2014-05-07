@@ -135,6 +135,9 @@ mythtv (2:0.27.0~master.20130828.b2b7022-0ubuntu1) saucy; urgency=low
   * Build 'release' type builds instead of 'profile'.
   * Support parallel builds.
 
+  [ Thomas Mashos ]
+  * Fix wanting to install mythweb to html dir on older releases (LP: #1309813)
+
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 28 Aug 2013 22:06:14 -0500
 
 mythtv (2:0.25.0+fixes.20120410.1f5962a-0ubuntu1) precise; urgency=low
