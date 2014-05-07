@@ -75,11 +75,7 @@ case "$1" in
         ONLY="$RET"
 
 	REL=$(lsb_release -c -s)
-	if [ "$REL" = "precise" ]; then
-        SYMLINK="/var/www/mythweb"
-		CONFIG="default"
-		CONFIG_MYTHBUNTU="default-mythbuntu"
-    elif [ "$REL" = "saucy" ]; then
+	if [ "$REL" = "precise" ] || [ "$REL" = "saucy" ]; then
         SYMLINK="/var/www/mythweb"
 		CONFIG="default"
 		CONFIG_MYTHBUNTU="default-mythbuntu"
