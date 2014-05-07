@@ -84,6 +84,7 @@ case "$1" in
 		CONFIG="default"
 		CONFIG_MYTHBUNTU="default-mythbuntu"
 	else
+        mkdir -p /var/www/html
         SYMLINK="/var/www/html/mythweb"
 		CONFIG="000-default.conf"
 		CONFIG_MYTHBUNTU="000-default-mythbuntu.conf"
