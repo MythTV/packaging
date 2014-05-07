@@ -182,8 +182,9 @@ s/\(^[ \t]*setenv[ \t]\+db_password[ \t]\+\"\)[^\"]*\"/\1$mythtv_password\"/g;
                 disableauth "${MYTHWEBCONF}" || true
             fi
 
-            # Enable rewrite_module and reload apache.
+            # Enable rewrite_module and cgi and reload apache.
             a2enmod rewrite >/dev/null || true
+            a2enmod cgi >/dev/null || true
             a2ensite mythweb.conf >/dev/null || true
 
             # Usability feature to make / redirect to /mythweb in apache

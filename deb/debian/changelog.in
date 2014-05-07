@@ -137,6 +137,7 @@ mythtv (2:0.27.0~master.20130828.b2b7022-0ubuntu1) saucy; urgency=low
 
   [ Thomas Mashos ]
   * Fix wanting to install mythweb to html dir on older releases (LP: #1309813)
+  * Enable CGI module on apache2 for mythweb (LP: #1316409)
 
  -- Mario Limonciello <superm1@ubuntu.com>  Wed, 28 Aug 2013 22:06:14 -0500
 
