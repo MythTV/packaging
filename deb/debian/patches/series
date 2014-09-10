@@ -4,6 +4,7 @@ default_directories
 ##mythtv##
 bindings_install_paths.patch
 allow_no_tuners.patch
+default_theme.patch
 
 ##mythplugins##
 configure_mythplugins_without_mythtv_installed.patch
