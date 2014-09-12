@@ -1,0 +1,15 @@
+Index: mythtv/mythtv/libs/libmythui/mythuihelper.h
+===================================================================
+--- mythtv.orig/mythtv/libs/libmythui/mythuihelper.h	2014-09-10 12:21:38.874197462 -0500
++++ mythtv/mythtv/libs/libmythui/mythuihelper.h	2014-09-10 12:29:51.350217343 -0500
+@@ -10,8 +10,8 @@
+ #include "mythuiexp.h"
+ #include "themeinfo.h"
+ 
+-#define DEFAULT_UI_THEME "Terra"
+-#define FALLBACK_UI_THEME "MythCenter-wide"
++#define DEFAULT_UI_THEME "Mythbuntu"
++#define FALLBACK_UI_THEME "Terra"
+ 
+ class MythUIHelperPrivate;
+ class MythPainter;
