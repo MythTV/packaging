@@ -5,25 +5,6 @@ FSTAB="/etc/fstab"
 NEWIP="127.0.0.1"
 LOCALHOSTNAME=`cat /etc/hostname`
 
-prepare_database() {
-
-    #Preload tables and default values
-    cat $MYSQL | sed -e "s/Terra/Mythbuntu/g; s/OLDHOSTNAME/$LOCALHOSTNAME/g; s/127.0.0.1/$NEWIP/g; s/blueosd/BlackCurves-OSD/g" |\
-        mysql $SECURITY_INFO $database
-
-    #Set up local IP and hostname
-    if ! echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'BackendServerIP' AND settings.hostname = '$LOCALHOSTNAME';" | \
-        mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
-        fail_database
-    fi
-
-    #Set up master IP and hostname
-    if ! echo "UPDATE settings SET data = '$NEWIP' WHERE settings.value = 'MasterServerIP';" | \
-        mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
-        fail_database
-    fi
-}
-
 #Used to fail at some point but not abort postinst
 fail_database() {
     echo "Failed to create or modify database (incorrect admin username/password?)" >&2
@@ -53,12 +34,6 @@ ask_root_pw() {
 }
 
 update_database() {
-    #Set up privs for mythtv@localhost
-    if ! echo "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@localhost IDENTIFIED BY '$mythtv_password';" | \
-        mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
-        fail_database
-    fi
-
     #Set up privs for mythtv@network
     if ! echo "GRANT ALL PRIVILEGES ON $database.* TO $mythtv_username@'%' IDENTIFIED BY '$mythtv_password';" | \
         mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
@@ -137,11 +112,6 @@ case "$1" in
             ask_root_pw
             i=$(($i+1))
         done
-    fi
-
-    #Preload tables
-    if ! echo "SELECT value FROM settings LIMIT 1, 1;" | mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
-        prepare_database
     fi
 
     #Update Permissions
