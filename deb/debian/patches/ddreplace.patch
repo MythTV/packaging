@@ -1,0 +1,13 @@
+Index: mythtv/mythtv/libs/libmythtv/datadirect.cpp
+===================================================================
+--- mythtv-master.orig/mythtv/libs/libmythtv/datadirect.cpp	2014-10-02 18:28:09.716596182 -0700
++++ mythtv-master/mythtv/libs/libmythtv/datadirect.cpp	2014-10-02 18:33:26.728969184 -0700
+@@ -555,7 +555,7 @@
+         "/ztvws/ztvws_login/1,1059,TMS01-1,00.html");
+     DataDirectURLs urls1(
+         "Schedules Direct",
+-        "http://webservices.schedulesdirect.tmsdatadirect.com"
++        "http://dd.schedulesdirect.org"
+         "/schedulesdirect/tvlistings/xtvdService",
+         "http://schedulesdirect.org",
+         "/login/index.php");
