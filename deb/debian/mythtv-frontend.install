@@ -7,7 +7,6 @@ usr/bin/mythwelcome
 usr/bin/mythmediaserver
 usr/bin/mythscreenwizard
 usr/lib/mythtv/filters
-usr/share/mythtv/i18n/mythfrontend_*
 
 #Stuff we add from debian/
 debian/mythtv.desktop usr/share/applications
