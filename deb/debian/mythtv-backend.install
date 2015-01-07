@@ -7,7 +7,6 @@ usr/bin/mythhdhomerun_config
 usr/bin/mythjobqueue
 usr/bin/mythtv-setup.real
 usr/bin/mythpreviewgen
-usr/share/mythtv/html
 usr/share/mythtv/backend-config
 
 #Copied in from debian/

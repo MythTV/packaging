@@ -165,11 +165,13 @@ Replaces:  mythtv (<< 0.8-1),
            mythtv-theme-mythcenter-wide, 
            mythtv-theme-isthmus, 
            mythtv-theme-gray-osd, 
-           mythtv-backend (<< 1:0.24.0+fixes27252), 
+           mythtv-backend (<< 2:0.27.4+fixes.20150106.40506c2-0ubuntu4), 
            mythtv-database (<< 0.24.0~trunk25638), 
-           mythvideo
-Breaks:    mythtv-backend (<< 1:0.24.0+fixes27252), 
-           mythvideo
+           mythvideo,
+           mythtv-frontend (<< 2:0.27.4+fixes.20150106.40506c2-0ubuntu4)
+Breaks:    mythtv-backend (<< 2:0.27.4+fixes.20150106.40506c2-0ubuntu4), 
+           mythvideo,
+           mythtv-frontend (<< 2:0.27.4+fixes.20150106.40506c2-0ubuntu4)
 Description: Personal video recorder application (common data)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
