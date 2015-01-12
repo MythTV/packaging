@@ -130,6 +130,7 @@ Depends: pwgen,
          fonts-texgyre | tex-gyre,
          python,
          libxml-xpath-perl,
+         pwgen,
          ${shlibs:Depends},
          ${misc:Depends}
 Suggests: mythtv-doc
