@@ -469,6 +469,7 @@ Depends: mythtv-transcode-utils(>= ${binary:Version}),
          python, 
          python-imaging, 
          python-mysqldb, 
+         pmount,
          ${shlibs:Depends}, 
          ${misc:Depends}
 Recommends: m2vrequantiser
