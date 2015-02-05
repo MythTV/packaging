@@ -120,7 +120,7 @@ Package: mythtv-common
 Architecture: any
 Depends: pwgen,
          adduser,
-         mysql-client,
+         mysql-client | virtual-mysql-client,
          fonts-liberation | ttf-liberation,
          fonts-droid | ttf-droid,
          ttf-dejavu,
@@ -190,7 +190,7 @@ Description: Personal video recorder application (documentation)
 
 Package: mythtv-database
 Architecture: all
-Depends: mythtv-common, libdbd-mysql-perl, mysql-client, cron, ${misc:Depends}
+Depends: mythtv-common, libdbd-mysql-perl, mysql-client | virtual-mysql-client, cron, ${misc:Depends}
 Recommends: update-notifier | update-notifier-kde
 Conflicts: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
 Replaces: mythtv (<< 0.8-1), mythtv-common (<< 0.8-2)
