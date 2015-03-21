@@ -70,7 +70,19 @@ Setting up the Options
     * After this, setup wont work properly, but playing video will
     * if you want to do intensive setup work, switch back to Qt painter temporarily
 
+Playback Usage
+--------------
 
+There are click zones in the playback window. The window is divided into a 3x3 grid with the
+following hard coded actions.
+
+PAUSE         |   UP   | VOLUMEUP
+LEFT          | SELECT | RIGHT
+ADJUSTSTRETCH |  DOWN  | VOLUMEDOWN
+
+note volume does not currently work but you can use the side buttons.
+This will probably change to a 4x3 grid to add commercial skip buttons
+See tv_play.cpp regionActionList
 
 Also see the wiki page Ill put together on this.
 
