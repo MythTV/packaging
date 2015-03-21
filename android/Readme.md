@@ -55,6 +55,23 @@ Currently there is no automated way to get all dependencies and build an apk in 
 
 Cross your fingers and hope I didnt miss a step.
 
+Setting up the Options
+----------------------
+
+1. Select country/language
+2. Add DB details.
+  * Note: Un check ping server otherwise it wont work. There is no ping
+3. In Setup (you can only go back with Qt painter painter but video doesnt work with Qt theme Painter)
+  * select Theme first
+  * set key bindings for your back key and menu key
+  * Menu to Global.Menu
+  * Back to TV Playback.Back
+  * Finally in Appearance set painter to OpenGL
+    * After this, setup wont work properly, but playing video will
+    * if you want to do intensive setup work, switch back to Qt painter temporarily
+
+
+
 Also see the wiki page Ill put together on this.
 
 YMMV
