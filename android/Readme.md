@@ -22,6 +22,7 @@ Currently there is no automated way to get all dependencies and build an apk in 
    * create a toolchain for the correct version. see maketoolchain.sh for this. sdk 17 is the default
 
    You should have a dir structure like this after you are done:
+```
    ~/android
 	Qt
 	android-cmake
@@ -33,6 +34,7 @@ Currently there is no automated way to get all dependencies and build an apk in 
 	digivation.keystore
 	maketoolchain.sh
 	setenv.sh
+```
 
 2. Get a sufficiently suitable version of java. I used oracle-java7-jdk_7u76_amd64.deb
   * Install it and make it the active one. Note that you cant use java8.
@@ -48,10 +50,14 @@ Currently there is no automated way to get all dependencies and build an apk in 
    8. qt-everywhere-opensource-src-5.4.1.tar.xz
 
 4. build all the libraries
+```
    ./makelibs.sh
+```
 
 5. build it (debug by default)
+```
    ./mythbuild.sh
+```
 
 Cross your fingers and hope I didnt miss a step.
 
