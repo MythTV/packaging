@@ -76,10 +76,10 @@ Playback Usage
 There are click zones in the playback window. The window is divided into a 4x3 grid with the
 following hard coded key presses.
 
-:---:|:------:|:------:|:-----:
-P    |   Up   |   Z    |   [
+```P    |   Up   |   Z    |   [
 Left | Return | Return | Right
 A    |  Down  |   Q    |   ]
+```
 
 * A is time stretch
 * P is pause
