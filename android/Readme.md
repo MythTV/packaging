@@ -73,7 +73,7 @@ Setting up the Options
 Playback Usage
 --------------
 
-There are click zones in the playback window. The window is divided into a 3x3 grid with the
+There are click zones in the playback window. The window is divided into a 4x3 grid with the
 following hard coded key presses.
 
 P    |   Up   |   Z    |   [
