@@ -74,15 +74,21 @@ Playback Usage
 --------------
 
 There are click zones in the playback window. The window is divided into a 3x3 grid with the
-following hard coded actions.
+following hard coded key presses.
 
-PAUSE         |   UP   | VOLUMEUP
-LEFT          | SELECT | RIGHT
-ADJUSTSTRETCH |  DOWN  | VOLUMEDOWN
+P    |   Up   |   Z    |   [
+Left | Return | Return | Right
+A    |  Down  |   Q    |   ]
+
+A is time stretch
+P is pause
+Z is skip commercial
+Q is skip back commercial
+[ is volume down
+] is volume up
 
 note volume does not currently work but you can use the side buttons.
-This will probably change to a 4x3 grid to add commercial skip buttons
-See tv_play.cpp regionActionList
+See tv_play.cpp regionKeyList
 
 Also see the wiki page Ill put together on this.
 
