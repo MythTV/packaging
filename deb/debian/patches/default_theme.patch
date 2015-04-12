@@ -1,7 +1,7 @@
 Index: mythtv/mythtv/libs/libmythui/mythuihelper.h
 ===================================================================
---- mythtv.orig/mythtv/libs/libmythui/mythuihelper.h	2014-09-10 12:21:38.874197462 -0500
-+++ mythtv/mythtv/libs/libmythui/mythuihelper.h	2014-09-10 12:29:51.350217343 -0500
+--- mythtv.orig/mythtv/libs/libmythui/mythuihelper.h	2015-04-12 15:24:03.598909276 +0000
++++ mythtv/mythtv/libs/libmythui/mythuihelper.h	2015-04-12 15:24:03.598909276 +0000
 @@ -9,8 +9,8 @@
  #include "mythuiexp.h"
  #include "themeinfo.h"
@@ -12,4 +12,4 @@ Index: mythtv/mythtv/libs/libmythui/mythuihelper.h
 +#define FALLBACK_UI_THEME "Terra"
  
  class MythUIHelperPrivate;
- class MythPainter;
+ class MThreadPool;
