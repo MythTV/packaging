@@ -13,9 +13,9 @@ Build-Depends:  debhelper (>= 9),
                 ccache,
                 yasm,
                 help2man,
-                libqt4-dev,
-                libqtwebkit-dev | libqt4-webkit-dev | libqt4-dev (<< 4:4.7.0~beta1),
-                libqt4-opengl-dev,
+                qtdeclarative5-dev,
+                libqt5webkit5-dev,
+                libqt5-opengl5-dev,
                 libdvb-dev,
                 po-debconf,
                 linux-kernel-headers,
@@ -277,7 +277,7 @@ Description: Personal video recorder application (client)
 Package: libmyth-#ABI#-0
 Architecture: any
 Section: libs
-Depends: ${shlibs:Depends}, libqt4-sql-mysql, ${misc:Depends}
+Depends: ${shlibs:Depends}, libqt5sql5-mysql, ${misc:Depends}
 Conflicts: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0, libmyth-0.25-0, libmyth-0.26-0, libmyth-0.27-0
 Replaces: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0, libmyth-0.25-0, libmyth-0.26-0, libmyth-0.27-0
 Description: Common library code for MythTV and add-on modules (runtime)
