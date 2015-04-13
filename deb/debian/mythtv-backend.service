@@ -1,0 +1,12 @@
+[Unit]
+Description=MythTV Backend
+Wants=mysql.service
+After=mysql.service
+
+[Service]
+ExecStart=/usr/bin/mythbackend --syslog local7 --user mythtv
+Restart=on-failure
+StartLimitInterval=10min
+
+[Install]
+WantedBy=multi-user.target
