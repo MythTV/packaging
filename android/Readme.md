@@ -76,29 +76,39 @@ Setting up the Options
     * After this, setup wont work properly, but playing video will
     * if you want to do intensive setup work, switch back to Qt painter temporarily
 
-Playback Usage
---------------
+Playback and LiveTV Usage
+-------------------------
 
 There are click zones in the playback window. The window is divided into a 4x3 grid with the
-following hard coded key presses.
+following configurable key presses.
+
+* Settings Name : PlaybackScreenPressKeyMap
+* Default: "P,Up,Z,],Left,Return,Return,Right,A,Down,Q,["
 
 ```
 P    |   Up   |   Z    |   [
 Left | Return | Return | Right
 A    |  Down  |   Q    |   ]
 ```
+* Settings Name : LiveTVScreenPressKeyMap
+* Default: "P,Up,Z,S,Left,Return,Return,Right,A,Down,Q,F"
+
+```
+P    |   Up   |   Z    |   S
+Left | Return | Return | Right
+A    |  Down  |   Q    |   F
+```
 
 * A is time stretch
 * P is pause
 * Z is skip commercial
 * Q is skip back commercial
+* S is program guide
+* F is function toggle
 * [ is volume down
 * ] is volume up
 
-note volume does not currently work but you can use the side buttons.
-See tv_play.cpp regionKeyList
-
-Also see the wiki page Ill put together on this.
+Also see the wiki page https://www.mythtv.org/wiki/MythTV_on_Android
 
 YMMV
 Mark
