@@ -89,7 +89,8 @@ Build-Depends:  debhelper (>= 9),
                 libcec-dev,
                 libexiv2-dev,
                 uuid-dev,
-                libxml-xpath-perl
+                libxml-xpath-perl,
+                git
 
 Package: mythtv
 Architecture: all
