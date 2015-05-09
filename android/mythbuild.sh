@@ -74,9 +74,23 @@ function makeapk() {
 RELEASE=0
 TARGETAPK=$INSTALLROOT/bin/QtApp-debug.apk
 CONFIGUREBUILDTYPE="debug --enable-small"
-DEPLOYTYPE=--debug
+NEONFLAGS="-mfpu=neon"
+#NEONFLAGS="$NEONFLAGS -funsafe-math-optimizations"
+CPU=armv7-a
+DEPLOYTYPE="--debug"
+EXTRASPECS="-after QMAKE_CFLAGS-=-mfpu=vfp QMAKE_CXXFLAGS-=-mfpu=vfp"
+
 while : ; do
 case "$1" in
+	-no-neon)
+		EXTRASPECS=
+		NEONFLAGS=
+		shift
+		;;
+	-cortex-a9)
+		CPU=cortex-a9
+		shift
+		;;
 	release)
 		BUNDLESIGN="--sign $KEYSTORE $KEYALIAS --storepass $KEYSTOREPASSWORD"
 		RELEASE=1
@@ -123,7 +137,7 @@ if [ ! -e stamp_configure_android ] ; then
 ./configure \
 	--disable-ccache \
 	--cross-prefix=$CROSSPREFIX \
-	--arch=arm7a --cpu=armv7-a \
+	--arch=arm7a --cpu=$CPU \
 	--target-os=android \
 	--compile-type=$CONFIGUREBUILDTYPE \
 	--prefix=/ \
@@ -132,10 +146,10 @@ if [ ! -e stamp_configure_android ] ; then
 	--enable-backend \
 	--enable-cross-compile \
 	--sysroot=$SYSROOT \
-	--extra-cflags="-DANDROID -I$INSTALLROOT/include $IGNOREDEFINES" \
-	--extra-cxxflags="-DANDROID -I$INSTALLROOT/include $IGNOREDEFINES" \
+	--extra-cflags="-DANDROID -I$INSTALLROOT/include $IGNOREDEFINES $NEONFLAGS " \
+	--extra-cxxflags="-DANDROID -I$INSTALLROOT/include $IGNOREDEFINES $NEONFLAGS " \
 	--qmake=$QTBASE/bin/qmake \
-	--qmakespecs=android-g++ \
+	--qmakespecs="android-g++ $EXTRASPECS" \
 	--disable-qtwebkit \
 	--disable-qtdbus \
 	--disable-dvb \
@@ -177,6 +191,5 @@ if [ -e stamp_configure_android ] ; then
 		--jdk $JDK_PATH $BUNDLESIGN \
 		--input programs/mythfrontend/android-libmythfrontend.so-deployment-settings.json
 	cp $TARGETAPK $BASE/mythfrontend.apk
-
 fi
 
