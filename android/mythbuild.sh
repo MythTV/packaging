@@ -3,13 +3,9 @@
 BASE=`pwd`
 source ~/android/setenv.sh
 
-#SYSROOT=$ANDROID_NDK/platforms/android-17/arch-arm
-#SYSINC=$ANDROID_NDK/platforms/android-17/arch-arm/usr/include
-#CROSSPREFIX=$ANDROID_NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-
 SYSROOT=$ANDROID_NDK/my-android-toolchain/sysroot
 SYSINC=$ANDROID_NDK/my-android-toolchain
-#SYSINC=$INSTALLROOT
-CROSSPREFIX=$ANDROID_NDK/my-android-toolchain/bin/arm-linux-androideabi-
+#CROSSPREFIX=$ANDROID_NDK/my-android-toolchain/bin/arm-linux-androideabi-
 CROSSPREFIX=$ANDROID_NDK/my-android-toolchain/arm-linux-androideabi/bin/
 export ANDROID_NDK_ROOT=$ANDROID_NDK
 
@@ -27,8 +23,6 @@ export MYTHPACKAGEBASE=$BASE
 PATH="$INSTALLROOT/bin:$PATH"
 
 export PKG_CONFIG_DIR=
-#export PKG_CONFIG_LIBDIR=${SYSROOT}/usr/lib/pkgconfig:${SYSROOT}/usr/share/pkgconfig
-#export PKG_CONFIG_SYSROOT_DIR=${SYSROOT}
 export PKG_CONFIG_LIBDIR=$INSTALLROOT/lib/pkgconfig:$INSTALLROOT/share/pkgconfig
 export PKG_CONFIG_SYSROOT_DIR=$INSTALLROOT
 
@@ -43,8 +37,6 @@ export PKG_CONFIG_SYSROOT_DIR=$INSTALLROOT
 cd mythtv/mythtv
 
 export ANDROID_EXTRA_LIBS="$INSTALLROOT"
-#export ANDROID_EXTRA_LIBS="$INSTALLROOT/libs/armeabi-v7a/libmyth-0.28.so"
-#export ANDROID_EXTRA_LIBS="$INSTALLROOT/libs/armeabi-v7a"
 
 function deploy-extra-libs() {
 	pushd $INSTALLROOT/libs/$ANDROID_TARGET_ARCH
@@ -59,11 +51,6 @@ function deploy-extra-libs() {
 	popd
 }
 
-# these go in the json
-#ANDROID_EXTRA_LIBS=`$BASE/findlibdeps.pl $INSTALLROOT/libs/armeabi-v7a $INSTALLROOT/lib $INSTALLROOT/libs/armeabi-v7a/libmythfrontend.so` \
-#ANDROID_EXTRA_PLUGINS="sqlmysql" \
-#ANDROID_PACKAGE_SOURCE_DIR="$BASE/android-package-source" \
-
 function makeapk() {
 	$ANDROID_SDK_ROOT/tools/android update project \
 		--path $INSTALLROOT/ \
@@ -75,7 +62,6 @@ RELEASE=0
 TARGETAPK=$INSTALLROOT/bin/QtApp-debug.apk
 CONFIGUREBUILDTYPE="debug --enable-small"
 NEONFLAGS="-mfpu=neon"
-#NEONFLAGS="$NEONFLAGS -funsafe-math-optimizations"
 CPU=armv7-a
 DEPLOYTYPE="--debug"
 EXTRASPECS="-after QMAKE_CFLAGS-=-mfpu=vfp QMAKE_CXXFLAGS-=-mfpu=vfp"
@@ -85,6 +71,10 @@ case "$1" in
 	-no-neon)
 		EXTRASPECS=
 		NEONFLAGS=
+		shift
+		;;
+	-unsafe-neon)
+		NEONFLAGS="$NEONFLAGS -funsafe-math-optimizations"
 		shift
 		;;
 	-cortex-a9)
