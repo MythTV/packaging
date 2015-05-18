@@ -382,11 +382,9 @@ popd
 
 build_webkit() {
 rm -rf build
-#pushd qtwebkit-opensource-src-5.4.0
-pushd qt-everywhere-opensource-src-5.4.0/qtwebkit
+pushd qt-everywhere-opensource-src-$QTVERSION/qtwebkit
 OPATH=$PATH
 
-#../qt-everywhere-opensource-src-5.4.0/qtbase/src/3rdparty/sqlite
 export ANDROID_NDK_PLATFORM=android-17
 export ANDROID_TARGET_ARCH=armeabi-v7a
 export ANDROID_NDK_TOOLS_PREFIX=arm-linux-androideabi
