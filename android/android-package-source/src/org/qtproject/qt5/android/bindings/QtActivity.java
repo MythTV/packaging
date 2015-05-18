@@ -196,6 +196,25 @@ public class QtActivity extends Activity
         }
     }
 
+    // added for suspending sleep
+    public void setSuspendSleep()
+    {
+        this.runOnUiThread( new Runnable() {
+            public void run() {
+                getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
+            }
+        } );
+    }
+
+    public void setAllowSleep()
+    {
+        this.runOnUiThread( new Runnable() {
+            public void run() {
+                getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
+            }
+        } );
+    }
+
     // this function is used to load and start the loader
     private void loadApplication(Bundle loaderParams)
     {
@@ -1183,6 +1202,14 @@ public class QtActivity extends Activity
     @Override
     protected void onPause()
     {
+        //View view = getWindow().getCurrentFocus();
+        View view = getWindow().peekDecorView();
+        if (view != null) {
+            view = view.getRootView();
+        }
+        if (view != null) {
+            view.setVisibility(View.GONE);
+        }
         super.onPause();
         QtApplication.invokeDelegate();
     }
@@ -1414,10 +1441,25 @@ public class QtActivity extends Activity
     {
         if (!QtApplication.invokeDelegate(hasFocus).invoked)
             super.onWindowFocusChanged(hasFocus);
+        //View view = View.getRootView();
+        View view = getWindow().peekDecorView();
+        if (view != null) {
+            view = view.getRootView();
+        }
+        if (hasFocus && view != null && view.getVisibility() == View.GONE) {
+            view.setVisibility(View.VISIBLE);
+        }
     }
     public void super_onWindowFocusChanged(boolean hasFocus)
     {
         super.onWindowFocusChanged(hasFocus);
+        View view = getWindow().peekDecorView();
+        if (view != null) {
+            view = view.getRootView();
+        }
+        if (hasFocus && view != null && view.getVisibility() == View.GONE) {
+            view.setVisibility(View.VISIBLE);
+        }
     }
     //---------------------------------------------------------------------------
 
