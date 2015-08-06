@@ -1,0 +1,13 @@
+diff --git a/client/sendProfile.py b/client/sendProfile.py
+index a582607..23ac0f6 100644
+--- a/client/sendProfile.py
++++ b/client/sendProfile.py
+@@ -170,7 +170,7 @@ if not opts.autoSend:
+     if opts.printOnly:
+         for line in profile.getProfile():
+             if not line.startswith('#'):
+-                print line
++                print line.encode('utf-8')
+         sys.exit(0)
+ 
+     def inner_indent(text):

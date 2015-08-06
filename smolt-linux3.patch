@@ -1,0 +1,14 @@
+--- smolt-1.4.3/client/smolt.py.linux3	2011-01-11 08:25:19.000000000 -0700
++++ smolt-1.4.3/client/smolt.py	2011-08-25 14:22:31.487468322 -0600
+@@ -1347,10 +1347,9 @@
+ def read_memory():
+     un = os.uname()
+     kernel = un[2]
+-    if kernel[:3] == "2.6":
+-        return read_memory_2_6()
+     if kernel[:3] == "2.4":
+         return read_memory_2_4()
++    return read_memory_2_6()
+ 
+ def read_memory_2_4():
+     if not os.access("/proc/meminfo", os.R_OK):
