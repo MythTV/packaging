@@ -5,8 +5,8 @@ Version: 1.4.3
 Release: 7%{?dist}
 License: GPLv2+
 Group: Applications/Internet
-URL: http://fedorahosted.org/smolt
-Source: https://fedorahosted.org/releases/s/m/%{name}/%{name}-%{version}.tar.gz
+URL: https://github.com/MythTV/smolt
+Source: %{name}/%{name}-%{version}.tar.gz
 Patch0: smolt-linux3.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
