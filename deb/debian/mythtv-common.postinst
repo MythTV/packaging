@@ -75,7 +75,12 @@ case "$1" in
 
     #fix rsyslog permissions
     if [ -d "/var/log/mythtv" ] && ! dpkg-statoverride --list "/var/log/mythtv" >/dev/null; then
-        chown syslog:adm -R /var/log/mythtv
+        #syslog user not normally present on debian
+        if getent passwd syslog 1>/dev/null; then
+            chown syslog:adm -R /var/log/mythtv
+        else
+            chown root:adm -R /var/log/mythtv
+        fi
         chmod 2755 /var/log/mythtv
     fi
 
