@@ -16,7 +16,6 @@ if [ ! -e /usr/bin/mythbackend ]; then
 	exit 0
 fi
 
-stop mythtv-backend || true
-start mythtv-backend || true
+invoke-rc.d mythtv-backend restart || true
 
 exit 0
