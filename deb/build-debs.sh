@@ -167,6 +167,8 @@ cd $DIRECTORY/mythtv
 [ -z "$GIT_MAJOR_RELEASE" ] && GIT_MAJOR_RELEASE=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $1 }')
 [ -z "$GIT_MINOR_RELEASE_FIXES" ] && GIT_MINOR_RELEASE=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $2 }')
 [ -z "$DEBIAN_SUFFIX" ] && DEBIAN_SUFFIX=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*-//;')
+[ -z "$DEBEMAIL" ] && export DEBEMAIL=$(whoami)@$(hostname)
+[ -z "$DEBFULLNAME" ] && export DEBFULLNAME=$(whoami)
 #these should always be parsed from the old changelog
 EPOCH=$(dpkg-parsechangelog | sed '/^Version/!d; s/.* //; s/:.*//;')
 #actually bump the changelog up. don't include a git hash here right now.
