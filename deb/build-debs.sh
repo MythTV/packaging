@@ -83,7 +83,7 @@ elif [ "$GIT_BRANCH" != "$RUNNING_BRANCH" ]; then
 	if git branch -a | grep $GIT_BRANCH 2>/dev/null >/dev/null; then
 		echo "Repeating checkout process."
 		git checkout $GIT_BRANCH
-		$0 $@
+		./`basename $0` $@
 		exit 0
 	fi
 	echo "$GIT_BRANCH not found.  Assuming development branch"
