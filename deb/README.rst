@@ -1,5 +1,5 @@
 =====
-Ubuntu Packaging (.deb)
+Debian & Ubuntu Packaging (.deb)
 =====
 
 The deb packaging directory contains two scripts "build-debs.sh" and 
@@ -29,7 +29,7 @@ checkout being checked out to the branch indicated.
 
 Examples:
  - ./build-debs.sh
-	This would check out the branch matching packaging branch name and build debs in /home/supermario/src/mythtv-packaging/deb
+	This would check out the branch matching packaging branch name and build debs in `pwd`
  - ./build-debs.sh fixes/0.27 /tmp
 	This would checkout out the fixes/0.27 branch, local packaging and build debs in /tmp
  - ./build-debs.sh fixes/0.27 /tmp /full/path/to/patch
