@@ -80,7 +80,7 @@ if [ -z "$GIT_BRANCH" ]; then
 elif [ "$GIT_BRANCH" != "$RUNNING_BRANCH" ]; then
 	pushd `dirname $0` > /dev/null
 	echo "Requested to build $GIT_BRANCH but running on $RUNNING_BRANCH."
-	if git branch | grep $GIT_BRANCH 2>/dev/null; then
+	if git branch -a | grep $GIT_BRANCH 2>/dev/null >/dev/null; then
 		echo "Repeating checkout process."
 		git checkout $GIT_BRANCH
 		$0 $@
