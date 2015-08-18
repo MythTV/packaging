@@ -1,6 +1,7 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
+EAPI="3"
 
 inherit eutils multilib distutils confutils fdo-mime versionator
 
@@ -11,8 +12,6 @@ SRC_URI="http://ftp.osuosl.org/pub/pculture.org/miro/src/${MY_P}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="x86 amd64"
-
-EAPI="2"
 
 IUSE="libnotify gstreamer xine"
 

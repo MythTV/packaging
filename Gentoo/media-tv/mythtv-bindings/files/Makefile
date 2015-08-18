@@ -13,6 +13,7 @@ ifdef CONFIG_BINDINGS_PYTHON
 endif
 
 ifdef CONFIG_BINDINGS_PHP
+	INSTALL=install
 	ifndef SUBDIRS
 		SUBDIRS = php
 	else
