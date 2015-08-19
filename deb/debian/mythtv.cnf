@@ -1,3 +1,3 @@
 [mysqld]
-#bind-address=0.0.0.0
+#bind-address=::
 max_connections=100
