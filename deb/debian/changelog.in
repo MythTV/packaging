@@ -1,11 +1,11 @@
-mythtv (2:0.27.5~dummy_changelog_entry-manualbuild) jessie; urgency=low
+mythtv (2:0.27.5~dummychangelogentry-manualbuild) jessie; urgency=low
 
   * Dummy changelog entry to bump version to 0.27.5 as
     this changelog.in in packaging is not automatically updated
     at present.  This entry allows build-{dsc/debs}.sh to pick
     up "0.27.5" version at present.
 
- -- Simon Iremonger <debian@iremonger.me.uk>  Fri, 21 Aug 2015 15:35:00 +0100
+ -- Simon Iremonger <debian@iremonger.me.uk>  Fri, 21 Aug 2015 15:39:00 +0100
 
 mythtv (2:0.27.0~master.20130828.b2b7022-0ubuntu1) saucy; urgency=low
 
