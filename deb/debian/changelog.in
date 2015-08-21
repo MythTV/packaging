@@ -1,3 +1,12 @@
+mythtv (2:0.27.5~dummychangelogentry-manualbuild) jessie; urgency=low
+
+  * Dummy changelog entry to bump version to 0.27.5 as
+    this changelog.in in packaging is not automatically updated
+    at present.  This entry allows build-{dsc/debs}.sh to pick
+    up "0.27.5" version at present.
+
+ -- Simon Iremonger <debian@iremonger.me.uk>  Fri, 21 Aug 2015 15:39:00 +0100
+
 mythtv (2:0.27.0+fixes.20130919.5b917e8-0ubuntu1) saucy; urgency=low
 
   * Scripted Build from fixes git packaging [8e8fe6d]
