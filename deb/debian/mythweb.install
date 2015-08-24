@@ -1,1 +1,4 @@
 mythplugins/mythweb usr/share/mythtv
+
+#These are added in from debian/
+debian/20-mythweb.ini etc/php5/apache2/conf.d
