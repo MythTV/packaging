@@ -1,0 +1,23 @@
+#!/bin/sh -e
+MYSQLCONFIG="/etc/mysql/conf.d/mythtv.cnf"
+MYSQLCONFIGUPDATEHINT="/etc/mysql/conf.d/mythtv.cnf.ipv6update-with-public_bind.tmp"
+
+#This script (in combination with postinst amendment) purely to handle update-cases
+#  from old installations with public_bind enabled so they seamlessly update to ipv6-
+#  compatible mysql-socket without needless "configuration modified by user" prompts.
+
+case "$1" in
+    upgrade)
+    if [ -f "${MYSQLCONFIG}" ]; then
+        if grep ^bind-address=0.0.0.0$ ${MYSQLCONFIG} > /dev/null; then
+          echo "#" > ${MYSQLCONFIGUPDATEHINT}
+          sed -i -e 's/^bind-address=0.0.0.0$/#bind-address=0.0.0.0/' ${MYSQLCONFIG}
+        fi
+        #In the case that public-binding was enabled, restore the original default-config,
+        #  allowing dpkg todo the config-file-update without prompt, then the postinst
+        #  will fix this up upon postinst configure.
+        #Only users who actually modified /etc/mysql/conf.d/mythtv.cnf manually will get prompted.
+    fi
+esac
+
+exit 0
