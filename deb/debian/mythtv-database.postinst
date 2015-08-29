@@ -1,6 +1,7 @@
 #!/bin/sh -e
 MYSQL="/usr/share/mythtv/sql/mythtv*.sql"
 MYSQLCONFIG="/etc/mysql/conf.d/mythtv.cnf"
+MYSQLCONFIGUPDATEHINT="/etc/mysql/conf.d/mythtv.cnf.ipv6update-with-public_bind.tmp"
 FSTAB="/etc/fstab"
 NEWIP="127.0.0.1"
 LOCALHOSTNAME=`cat /etc/hostname`
@@ -48,6 +49,15 @@ update_database() {
 
 case "$1" in
     configure)
+
+    #Fixup mysql binding ipv6-compatibility config-update when public_bind was in use (hint from preinst)
+    if [ -f "${MYSQLCONFIG}" ]; then
+        if [ -f "${MYSQLCONFIGUPDATEHINT}" ]; then
+            sed -i -e 's/^#bind-address=::$/bind-address=::/' ${MYSQLCONFIG}
+            rm ${MYSQLCONFIGUPDATEHINT}
+        fi
+    fi
+
     . /usr/share/debconf/confmodule
 
     db_get mythtv/mysql_mythtv_dbname
