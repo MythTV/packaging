@@ -35,4 +35,17 @@ Examples:
  - ./build-debs.sh fixes/0.27 /tmp /full/path/to/patch
 	This would checkout the fixes/0.27 branch, local packaging, apply the patch called
 	'patch' located at /full/path/to/ to the build and then produce debs
-
+ - DEBUILD_FLAGS='-sa' ./build-dsc.sh fixes/0.27 /tmp /full/path/to/patch
+	This would build source packages (that could be later built somewhere such as 
+	launchpad PPA's) from the 0.27 fixes branch, in the tmp directory, while
+	apply the patch /full/path/to/patch
+ - DEBIAN_SUFFIX='0ubuntu4' DEBUILD_FLAGS='-sa' ./build-dsc.sh fixes/0.27 /tmp /full/path/to/patch
+	This would build source packages (that could be later built somewhere such as 
+	launchpad PPA's) from the 0.27 fixes branch, in the tmp directory, while
+	apply the patch /full/path/to/patch. It would also force the debian suffix
+        '0ubuntu4' in the version rather than default to '0ubuntu1'
+ - UBUNTU_RELEASE='wily' DEBIAN_SUFFIX='0ubuntu3' DEBUILD_FLAGS='-sa' ./build-dsc.sh fixes/0.27 /tmp /full/path/to/patch
+	This would build source packages (that could be later built somewhere such as 
+	launchpad PPA's) from the 0.27 fixes branch, in the tmp directory, while
+	apply the patch /full/path/to/patch for Ubuntu Wily. It would also force the 
+        debian suffix '0ubuntu3' (in case of multiple builds in a single day)
