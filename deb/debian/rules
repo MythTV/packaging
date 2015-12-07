@@ -41,7 +41,9 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=$(MYTHTV_COMPILE_TYPE) \
 				--enable-libvpx \
 				--enable-sdl \
 				--enable-libmp3lame \
-				--enable-libx264
+				--enable-libx264 \
+				--enable-vdpau
+
 ifeq "$(DEB_BUILD_ARCH)" "armhf"
 	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl --disable-vaapi
 else
@@ -52,10 +54,7 @@ endif
 #                                    #
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq "$(DEB_BUILD_ARCH)" "i386"
-	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx  --enable-vdpau
-endif
-ifeq "$(DEB_BUILD_ARCH)" "amd64"
-	MYTHTV_CONFIGURE_OPTS += --enable-vdpau
+	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx  
 endif
 ifeq "$(DEB_BUILD_ARCH)" "powerpc"
 	MYTHTV_CONFIGURE_OPTS += --enable-altivec --extra-cxxflags="-maltivec"
