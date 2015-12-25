@@ -59,6 +59,9 @@ endif
 ifeq "$(DEB_BUILD_ARCH)" "powerpc"
 	MYTHTV_CONFIGURE_OPTS += --enable-altivec --extra-cxxflags="-maltivec"
 endif
+ifeq "$(DEB_BUILD_ARCH)" "armhf"
+        MYTHTV_CONFIGURE_OPTS += --extra-cflags="-I/opt/vc/include" --extra-cxxflags="-I/opt/vc/include" --extra-libs="-L/opt/vc/lib" --extra-cflags="-I/opt/vc/include/interface/vcos/pthreads" --extra-cxxflags="-I/opt/vc/include/interface/vcos/pthreads" --extra-cflags="-I/opt/vc/include/interface/vmcs_host/linux" --extra-cxxflags="-I/opt/vc/include/interface/vmcs_host/linux" --extra-libs="-lEGL"
+endif
 
 #Mythplugins configure opts
 MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \

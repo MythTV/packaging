@@ -89,7 +89,8 @@ Build-Depends:  debhelper (>= 9),
                 libexiv2-dev,
                 uuid-dev,
                 libxml-xpath-perl,
-                git
+                git,
+                libraspberrypi-dev [armhf] | hello,
 
 Package: mythtv
 Architecture: all
