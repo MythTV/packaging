@@ -1,4 +1,4 @@
-mythtv (2:0.27.5~dummychangelogentry-manualbuild) jessie; urgency=low
+mythtv (2:0.28.0~dummychangelogentry-manualbuild) jessie; urgency=low
 
   * Dummy changelog entry to bump version to 0.27.5 as
     this changelog.in in packaging is not automatically updated
