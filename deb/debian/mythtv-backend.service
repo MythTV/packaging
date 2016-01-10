@@ -1,15 +1,17 @@
 [Unit]
 Description=MythTV Backend
-Wants=mysql.service
-After=mysql.service
-
+Documentation=https://www.mythtv.org/wiki/Mythbackend
+After=mysqld.service network-online.target
+ 
 [Service]
-Type=simple
 User=mythtv
-ExecStart=/usr/bin/mythbackend --syslog local7
+EnvironmentFile=-/etc/mythtv/additional.args
+ExecStartPre=/usr/bin/nm-online --quiet --timeout=5
+ExecStart=/usr/local/bin/mythbackend --quiet --syslog local7 $ADDITIONAL_ARGS
+StartLimitBurst=10
+StartLimitInterval=10m
 Restart=on-failure
-StartLimitInterval=10min
-StandardOutput=null
-
+RestartSec=1
+ 
 [Install]
 WantedBy=multi-user.target
