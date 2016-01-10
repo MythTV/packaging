@@ -5,6 +5,7 @@ MYSQLCONFIGUPDATEHINT="/etc/mysql/conf.d/mythtv.cnf.ipv6update-with-public_bind.
 FSTAB="/etc/fstab"
 NEWIP="127.0.0.1"
 LOCALHOSTNAME=`cat /etc/hostname`
+NEWMYSQLCONFDIR="/etc/mysql/mysql.conf.d/"
 
 prepare_database() {
 
@@ -81,6 +82,11 @@ case "$1" in
             sed -i -e 's/^#bind-address=::$/bind-address=::/' ${MYSQLCONFIG}
             rm ${MYSQLCONFIGUPDATEHINT}
         fi
+    fi
+
+    ## This will need to exist until we no longer support 14.04
+    if [ -d "${NEWMYSQLCONFDIR}" ]; then
+      ln -s "${MYSQLCONFIG}" "${NEWMYSQLCONFDIR}"
     fi
 
     . /usr/share/debconf/confmodule
