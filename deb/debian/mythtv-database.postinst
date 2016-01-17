@@ -61,7 +61,7 @@ case "$1" in
 
     ## This will need to exist until we no longer support 14.04
     if [ -d "${NEWMYSQLCONFDIR}" ]; then
-      if ! [ -e "${NEWMYSQLCONFDIR}/mythtv.cnf"]; then
+      if [ ! -f "${NEWMYSQLCONFDIR}/mythtv.cnf" ]; then
         ln -s "${MYSQLCONFIG}" "${NEWMYSQLCONFDIR}"
       fi
     fi
