@@ -6,7 +6,6 @@ After=mysqld.service network.target
 [Service]
 User=mythtv
 EnvironmentFile=-/etc/mythtv/additional.args
-ExecStartPre=/usr/bin/nm-online --quiet --timeout=5
 ExecStart=/usr/bin/mythbackend --quiet --syslog local7 $ADDITIONAL_ARGS
 StartLimitBurst=10
 StartLimitInterval=10m
