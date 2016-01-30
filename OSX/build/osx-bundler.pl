@@ -365,6 +365,14 @@ sub FindLibraryFile($@)
         if ( -e $path ) { return Cwd::abs_path($path) }
     }
 
+    foreach my $dir ( @libdirs )
+    {
+        $path = "$dir/$dylib";
+        $path =~ s/\@rpath//ig;
+
+        if ( -e $path ) { return Cwd::abs_path($path) }
+    }
+
     # try without the path (to handle install_name starting with stuff @rpath/
     $dylib = basename($dylib);
     foreach my $dir ( @libdirs )
