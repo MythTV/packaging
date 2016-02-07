@@ -58,14 +58,14 @@ case "$1" in
 	;;
   stop)
 	echo -n "Stopping $DESC: $NAME "
-	start-stop-daemon --stop --oknodo --pidfile $RUNDIR/$NAME.pid \
+	start-stop-daemon --stop --retry=TERM/30/KILL/5 --oknodo --pidfile $RUNDIR/$NAME.pid \
 		--chuid $USER --exec $DAEMON -- $ARGS
 	test -e $RUNDIR/$NAME.pid && rm $RUNDIR/$NAME.pid
 	echo "."
 	;;
   restart|force-reload)
 	echo -n "Restarting $DESC: $NAME "
-	start-stop-daemon --stop --oknodo --retry 10 --pidfile $RUNDIR/$NAME.pid \
+	start-stop-daemon --stop --retry=TERM/30/KILL/5 --oknodo --pidfile $RUNDIR/$NAME.pid \
                 --chuid $USER --exec $DAEMON -- $ARGS
 	echo "."
 	start-stop-daemon --start --pidfile $RUNDIR/$NAME.pid \
