@@ -5,6 +5,7 @@ default_directories
 bindings_install_paths.patch
 allow_no_tuners.patch
 default_theme.patch
+avoid_bswap_conflict.patch
 
 ##mythplugins##
 configure_mythplugins_without_mythtv_installed.patch
