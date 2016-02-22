@@ -19,6 +19,9 @@ ifneq (,$(filter nostrip noopt,$(DEB_BUILD_OPTIONS)))
 MYTHTV_COMPILE_TYPE = profile
 endif
 
+## Export QT version explicitely (fixes issues for non x86/arm builders)
+export QT_SELECT = 5
+
 #                                      #
 # Architecture Independent Build flags #
 #                                      #
