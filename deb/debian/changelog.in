@@ -1,11 +1,21 @@
-mythtv (2:0.28.0~dummychangelogentry-manualbuild) jessie; urgency=low
+mythtv (2:0.28.0+fixes.20160217.44fd8a6-0ubuntu4) xenial; urgency=medium
 
-  * Dummy changelog entry to bump version to 0.27.5 as
-    this changelog.in in packaging is not automatically updated
-    at present.  This entry allows build-{dsc/debs}.sh to pick
-    up "0.27.5" version at present.
+  * Export QT version to fix builds on non x86/arm archs.
 
- -- Simon Iremonger <debian@iremonger.me.uk>  Fri, 21 Aug 2015 15:39:00 +0100
+ -- Mario Limonciello <mario_limonciello@dell.com>  Mon, 22 Feb 2016 16:28:08 -0600
+
+mythtv (2:0.28.0+fixes.20160217.44fd8a6-0ubuntu3) xenial; urgency=medium
+
+  * mythtv-common: Depend on fonts-droid-fallback.
+
+ -- Matthias Klose <doko@ubuntu.com>  Mon, 22 Feb 2016 16:37:49 +0100
+
+mythtv (2:0.28.0+fixes.20160217.44fd8a6-0ubuntu1) xenial; urgency=medium
+
+  * New upstream version (0.28)
+  * Scripted Build from fixes git packaging [257769a]
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Wed, 17 Feb 2016 11:46:40 -0600
 
 mythtv (2:0.27.0~master.20130828.b2b7022-0ubuntu1) saucy; urgency=low
 
