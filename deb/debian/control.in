@@ -140,6 +140,8 @@ Depends: pwgen,
          python,
          libxml-xpath-perl,
          pwgen,
+         pciutils,
+         usbutils,
          ${shlibs:Depends},
          ${misc:Depends}
 Suggests: mythtv-doc
@@ -267,7 +269,6 @@ Depends: mythtv-common,
          transcode,
          python,
          python-imdbpy,
-         pciutils,
 Recommends: libmythtv-perl, python-imaging, udisks2 | udisks
 Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythgame, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0), mythflix (<< 0.23.0)
