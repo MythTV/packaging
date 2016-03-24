@@ -140,6 +140,8 @@ Depends: pwgen,
          python,
          libxml-xpath-perl,
          pwgen,
+         pciutils,
+         usbutils,
          ${shlibs:Depends},
          ${misc:Depends}
 Suggests: mythtv-doc
