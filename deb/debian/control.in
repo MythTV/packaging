@@ -464,7 +464,7 @@ Description: Weather add-on module for MythTV
 Package: mythweb
 Architecture: all
 Depends: mythtv-common (>= ${binary:Version}), 
-         apache2-mpm-prefork | httpd, php5 | libapache2-mod-php5, 
+         apache2 | httpd, php5 | libapache2-mod-php5, 
          php5-mysql, 
          php-mythtv,
          libhttp-date-perl,
