@@ -95,7 +95,7 @@ Build-Depends:  debhelper (>= 9),
 
 Package: mythtv
 Architecture: all
-Depends: mysql-server | virtual-mysql-server | mysql-server-5.6 | mariadb-server,
+Depends: mysql-server | virtual-mysql-server | mysql-server-5.7 | mysql-server-5.6 | mariadb-server,
          mythtv-database,
          mythtv-frontend,
          mythtv-backend,
@@ -131,7 +131,7 @@ Package: mythtv-common
 Architecture: any
 Depends: pwgen,
          adduser,
-         mysql-client | virtual-mysql-client | mysql-client-5.6 | mariadb-client,
+         mysql-client | virtual-mysql-client | mysql-client-5.7 | mysql-client-5.6 | mariadb-client,
          fonts-liberation | ttf-liberation,
          fonts-droid-fallback | fonts-droid | ttf-droid,
          ttf-dejavu,
@@ -207,7 +207,7 @@ Package: mythtv-database
 Architecture: all
 Depends: mythtv-common,
          libdbd-mysql-perl,
-         mysql-client | virtual-mysql-client | mysql-client-5.6 | mariadb-client,
+         mysql-client | virtual-mysql-client | mysql-client-5.7 | mysql-client-5.6 | mariadb-client,
          cron,
          ${misc:Depends}
 Recommends: update-notifier | update-notifier-kde
@@ -353,7 +353,7 @@ Description: Python library to access some MythTV features
 Package: mythtv-backend-master
 Architecture: all
 Section: metapackages
-Depends: mysql-server | virtual-mysql-server | mysql-server-5.6 | mariadb-server,
+Depends: mysql-server | virtual-mysql-server | mysql-server-5.7 | mysql-server-5.6 | mariadb-server,
          ntp | time-daemon | ntp-simple,
          mythtv-database,
          mythtv-backend,
