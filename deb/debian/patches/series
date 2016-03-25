@@ -10,3 +10,4 @@ avoid_bswap_conflict.patch
 ##mythplugins##
 configure_mythplugins_without_mythtv_installed.patch
 pass_ldflags_qmake.patch
+mysql_57_support.patch

@@ -1,0 +1,29 @@
+Filed upstream here:
+https://code.mythtv.org/trac/ticket/12696
+
+Index: mythtv/mythplugins/configure
+===================================================================
+--- mythtv.orig/mythplugins/configure	2016-03-25 10:08:23.000000000 -0500
++++ mythtv/mythplugins/configure	2016-03-25 11:07:13.620453193 -0500
+@@ -706,7 +706,7 @@
+ fi
+ 
+ if enabled zoneminder ; then
+-    if ! check_header mysql/mysql.h ; then
++    if ! check_header mysql/mysql.h -I/usr/include/mysql; then
+         echo "Disabling MythZoneMinder. Requires mysql/mysql.h header"
+         disable zoneminder
+     fi
+Index: mythtv/mythplugins/mythzoneminder/mythzmserver/mythzmserver.pro
+===================================================================
+--- mythtv.orig/mythplugins/mythzoneminder/mythzmserver/mythzmserver.pro	2016-02-17 08:23:52.260355416 -0600
++++ mythtv/mythplugins/mythzoneminder/mythzmserver/mythzmserver.pro	2016-03-25 11:08:21.276452859 -0500
+@@ -10,6 +10,8 @@
+ 
+ INSTALLS = target
+ 
++INCLUDEPATH += /usr/include/mysql
++
+ macx {
+     CONFIG += qt
+     QT += sql
