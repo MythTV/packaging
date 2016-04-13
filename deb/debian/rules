@@ -6,6 +6,9 @@
 # newest-revision
 include debian/mythtv.make
 
+#build goes here
+buildroot       := debian/tmp
+
 # Set this to yes for releases
 MYTHTV_RELEASE ?= no
 ifeq (yes,$(MYTHTV_RELEASE))
