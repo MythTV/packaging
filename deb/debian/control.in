@@ -91,6 +91,7 @@ Build-Depends:  debhelper (>= 9),
                 libxml-xpath-perl,
                 git,
                 dh-systemd,
+                php | php5,
                 libraspberrypi-dev [armhf] | hello,
 
 Package: mythtv
