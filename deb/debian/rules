@@ -127,6 +127,13 @@ override_dh_auto_install:
 	dh_python2 -plibmyth-python
 
 override_dh_install:
+	if [ -d /etc/php5 ]; then \
+		mkdir -p ${buildroot}/etc/php5/apache2/conf.d; \
+		cp debian/20-mythweb.ini   ${buildroot}/etc/php5/apache2/conf.d; \
+	elif [ -d /etc/php/7.0 ]; then \
+		mkdir -p ${buildroot}/etc/php/7.0/apache2/conf.d; \
+		cp debian/20-mythweb.ini   ${buildroot}/etc/php/7.0/apache2/conf.d; \
+	fi
 	dh_install -Xusr/share/mythtv/fonts/Free \
                    -Xusr/share/mythtv/fonts/Purisa \
                    -Xusr/share/mythtv/fonts/Droid \
