@@ -1,3 +1,51 @@
+mythtv (2:0.28.0+fixes.20160325.2520617-0ubuntu3) xenial; urgency=medium
+
+  [ Nishanth Aravamudan ]
+  * Update to PHP7.0 dependencies (LP: #1562184).
+  * debian/patches/update_mythweb_for_php7.patch: Update  documentation
+    and nginx configuration for php7.0.
+  * Use dpkg-maintscript-helper to move the apache conf files.
+
+  [ Steve Langasek ]
+  * Use debian/mythweb.maintscript and dh_installdeb for the
+    dpkg-maintscript-helper bits, to avoid code duplication everywhere.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Wed, 30 Mar 2016 18:03:18 +0000
+
+mythtv (2:0.28.0+fixes.20160325.2520617-0ubuntu2) xenial; urgency=medium
+
+  * cover one more pro file for mysql5.7 fix
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Sat, 26 Mar 2016 19:42:13 -0500
+
+mythtv (2:0.28.0+fixes.20160325.2520617-0ubuntu1) xenial; urgency=medium
+
+  * Scripted Build from fixes git packaging [8e429df]
+  * Packaging changes between 20160321 and 20160325:
+  * [7547247] let mysql-server 5.7 resolve things
+  * [35b1bba] Add in support to compile against mysql 5.7 (LP: #1528583)
+  * New upstream checkout (2520617)
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Fri, 25 Mar 2016 15:34:02 -0500
+
+mythtv (2:0.28.0+fixes.20160321.39e409d-0ubuntu2) xenial; urgency=medium
+
+  * Fix apache2 dependency to prevent aolserver4 coming into ISO.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Thu, 24 Mar 2016 09:00:36 -0500
+
+mythtv (2:0.28.0+fixes.20160321.39e409d-0ubuntu1) xenial; urgency=medium
+
+  * Scripted Build from fixes git packaging [dc25446]
+  * Packaging changes between 20160217 and 20160321:
+  * [dc25446] sync changelog with ubuntu xenial
+  * [2f24fa2] ignore .github directory that is throwing off builds
+  * [ec3572f] fix building with systemd
+  * [8c94617] depends on fonts-droid-fallback
+  * New upstream checkout (39e409d)
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Mon, 21 Mar 2016 10:17:49 -0500
+
 mythtv (2:0.28.0+fixes.20160217.44fd8a6-0ubuntu4) xenial; urgency=medium
 
   * Export QT version to fix builds on non x86/arm archs.
