@@ -116,10 +116,10 @@ EOF
         fi
 
         cat $INPUT | sed -e "
-s/^.\+\?\(setenv\sdb_server\s\+\"\).*\"/\t\1$hostname\"/g;
-s/^.\+\?\(setenv\sdb_name\s\+\"\).*\"/\t\1$database\"/g;
-s/^.\+\?\(setenv\sdb_login\s\+\"\).*\"/\t\1$mythtv_username\"/g;
-s/^.\+\?\(setenv\sdb_password\s\+\"\).*\"/\t\1$mythtv_password\"/g;
+s/^.*\(setenv\sdb_server\s\+\"\).*\"/\t\1$hostname\"/g;
+s/^.*\(setenv\sdb_name\s\+\"\).*\"/\t\1$database\"/g;
+s/^.*\(setenv\sdb_login\s\+\"\).*\"/\t\1$mythtv_username\"/g;
+s/^.*\(setenv\sdb_password\s\+\"\).*\"/\t\1$mythtv_password\"/g;
             " > $NEW
 	if [ "$INPUT" != "$MYTHWEBCONF" ]; then
 		sed "s,/var/www/html,$SYMLINK,;" -i $NEW
