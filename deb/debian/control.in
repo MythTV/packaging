@@ -466,7 +466,7 @@ Package: mythweb
 Architecture: all
 Depends: mythtv-common (>= ${binary:Version}), 
          apache2 | httpd,
-         php | libapache2-mod-php | php5 | libapache2-mod-php5, 
+         libapache2-mod-php | libapache2-mod-php5 | php | php5, 
          php-mysql | php5-mysql, 
          php-mythtv,
          libhttp-date-perl,
