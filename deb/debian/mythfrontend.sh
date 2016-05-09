@@ -14,8 +14,8 @@ find_su
 
 #check that we are in the mythtv group
 check_groups
-
-codename=`lsb_release -c|cut -f 2`
+arch=`dpkg-architecture -q DEB_TARGET_ARCH`
+codename=`lsb_release -c -s`
 if [[ "$arch" == armhf && "$codename" == xenial ]] ; then
     environ="env LD_LIBRARY_PATH=/usr/lib/arm-linux-gnueabihf/mesa-egl:$LD_LIBRARY_PATH"
 else
@@ -38,9 +38,9 @@ if [ "$1" = "--service" ]; then
             # Note: if mythwelcome would support -O to override database settings,
             # we could tell it to start the frontend with $MYTHFRONTEND_OPTS
             # This is not possible yet, but maybe it'll happen in the future
-            exec mythwelcome --syslog local7
+            exec $environ mythwelcome --syslog local7
         else
-            until /usr/bin/mythfrontend.real --syslog local7 ${MYTHFRONTEND_OPTS}
+            until $environ /usr/bin/mythfrontend.real --syslog local7 ${MYTHFRONTEND_OPTS}
                   RET=$?
                   [ "$RET" = "0" -o "$RET" = "1" -o "$RET" = "254" ]
             do
@@ -52,7 +52,7 @@ if [ "$1" = "--service" ]; then
 elif [ "$1" != "--service" ]; then
     # if group membership is okay, go ahead and launch
     if [ "$IGNORE_NOT" = "0" ]; then
-        exec /usr/bin/mythfrontend.real --syslog local7 "$@"
+        exec $environ /usr/bin/mythfrontend.real --syslog local7 "$@"
     fi
 fi
  
