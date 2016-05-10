@@ -14,9 +14,9 @@ find_su
 
 #check that we are in the mythtv group
 check_groups
-arch=`dpkg-architecture -q DEB_TARGET_ARCH`
+arch=`arch | cut -b 1-3`
 codename=`lsb_release -c -s`
-if [[ "$arch" == armhf && "$codename" == xenial ]] ; then
+if [ "$arch" = arm -a "$codename" = xenial ] ; then
     environ="env LD_LIBRARY_PATH=/usr/lib/arm-linux-gnueabihf/mesa-egl:$LD_LIBRARY_PATH"
 else
     environ=
@@ -55,4 +55,5 @@ elif [ "$1" != "--service" ]; then
         exec $environ /usr/bin/mythfrontend.real --syslog local7 "$@"
     fi
 fi
+ 
  
