@@ -7,9 +7,9 @@ Author: Mario Limonciello <superm1@ubuntu.com>
 
 Index: mythtv/mythtv/configure
 ===================================================================
---- mythtv.orig/mythtv/configure	2013-10-03 06:07:45.225981221 +0000
-+++ mythtv/mythtv/configure	2013-10-03 20:25:33.730957796 +0000
-@@ -6393,10 +6393,7 @@
+--- mythtv.orig/mythtv/configure
++++ mythtv/mythtv/configure
+@@ -8498,10 +8498,7 @@ EOF
  
  #echo "endif # FFMPEG_CONFIG_MAK" >> $TMPMAK
  

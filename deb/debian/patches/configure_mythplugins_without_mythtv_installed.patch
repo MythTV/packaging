@@ -2,11 +2,11 @@ Description: Allow building mythplugins without a mythtv tree installed
 Author: Mario Limonciello <superm1@ubuntu.com>
 Forwarded: not-needed
 
-Index: mythtv-master/mythplugins/configure
+Index: mythtv/mythplugins/configure
 ===================================================================
---- mythtv-master.orig/mythplugins/configure	2013-07-22 20:50:57.299393593 +1000
-+++ mythtv-master/mythplugins/configure	2013-07-22 20:55:06.079818357 +1000
-@@ -302,6 +302,7 @@
+--- mythtv.orig/mythplugins/configure
++++ mythtv/mythplugins/configure
+@@ -307,6 +307,7 @@ disable $DEPRECATED_PLUGIN_LIST
  prefix="/usr/local"
  libdir_name="lib"
  sysroot=""
@@ -14,7 +14,7 @@ Index: mythtv-master/mythplugins/configure
  ln_s="ln -sf"
  
  logfile="config.ep"
-@@ -321,7 +322,8 @@
+@@ -326,7 +327,8 @@ NB:      all --enable-* options can be r
  
  Generic options:
    --prefix=PREFIX          MythTV install location PREFIX [$prefix]
@@ -24,7 +24,7 @@ Index: mythtv-master/mythplugins/configure
    --qmake=QMAKE            use specified qmake [$qmake]
    --python=PATH            Force a specific python executable to use [$python]
    --libdir-name=LIBNAME    install/look for libs in PREFIX/LIBNAME [$libdir_name]
-@@ -393,6 +395,7 @@
+@@ -399,6 +401,7 @@ CMDLINE_SET="
      qmake
      python
      sysroot
@@ -32,7 +32,7 @@ Index: mythtv-master/mythplugins/configure
  "
  
  CONFIGURATION_OPTS=""
-@@ -461,6 +464,7 @@
+@@ -469,6 +472,7 @@ check_py_lib(){
  from distutils.sysconfig import get_python_lib
  import sys
  sys.path.append(get_python_lib(prefix='${prefix}'))
@@ -40,7 +40,7 @@ Index: mythtv-master/mythplugins/configure
  try:
      import $lib
  except:
-@@ -528,7 +532,11 @@
+@@ -536,7 +540,11 @@ is_qmake4(){
  }
  
  # bring in mythtv config
@@ -53,7 +53,7 @@ Index: mythtv-master/mythplugins/configure
      rm mythconfig.mak 2> /dev/null
      ${ln_s} $prefix/include/mythtv/mythconfig.mak mythconfig.mak
  else
-@@ -591,7 +599,7 @@
+@@ -620,7 +628,7 @@ if enabled netvision; then
          disable netvision
      }
  
@@ -62,12 +62,12 @@ Index: mythtv-master/mythplugins/configure
      check_py_lib pycurl  || disable_netvision "Python pycurl library (pycurl)"
      check_py_lib lxml    || disable_netvision "Python lxml library (lxml)"
      check_py_lib xml     || disable_netvision "Python XML library (xml)"
-Index: mythtv-master/mythplugins/programs-libs.pro
+Index: mythtv/mythplugins/programs-libs.pro
 ===================================================================
---- mythtv-master.orig/mythplugins/programs-libs.pro	2013-07-22 20:50:57.943384339 +1000
-+++ mythtv-master/mythplugins/programs-libs.pro	2013-07-22 20:55:06.079818357 +1000
-@@ -4,7 +4,7 @@
- INCLUDEPATH += $${SYSROOT}$${PREFIX}/include/mythtv/libmyth
+--- mythtv.orig/mythplugins/programs-libs.pro
++++ mythtv/mythplugins/programs-libs.pro
+@@ -5,7 +5,7 @@ INCLUDEPATH += $${SYSROOT}$${PREFIX}/inc
+ INCLUDEPATH += $${SYSROOT}$${PREFIX}/include/mythtv/libmythservicecontracts
  DEPENDPATH *= $${INCLUDEPATH}
  
 -LIBS += -L$${LIBDIR} $$EXTRA_LIBS -lmythbase-$$LIBVERSION
@@ -75,11 +75,11 @@ Index: mythtv-master/mythplugins/programs-libs.pro
  LIBS += -lmyth-$$LIBVERSION -lmythui-$$LIBVERSION -lmythupnp-$$LIBVERSION
  LIBS += -lmythservicecontracts-$$LIBVERSION
  LIBS += -lmythavcodec
-Index: mythtv-master/mythplugins/targetdep.pro
+Index: mythtv/mythplugins/targetdep.pro
 ===================================================================
---- mythtv-master.orig/mythplugins/targetdep.pro	2013-07-22 20:50:57.943384339 +1000
-+++ mythtv-master/mythplugins/targetdep.pro	2013-07-22 20:55:06.079818357 +1000
-@@ -10,7 +10,7 @@
+--- mythtv.orig/mythplugins/targetdep.pro
++++ mythtv/mythplugins/targetdep.pro
+@@ -10,7 +10,7 @@ MYTH_SHLIB_EXT=$${LIBVERSION}.$${QMAKE_E
  MYTH_LIB_EXT  =$${LIBVERSION}.$${QMAKE_EXTENSION_LIB}
  
  
@@ -88,11 +88,11 @@ Index: mythtv-master/mythplugins/targetdep.pro
  
  # On Windows, dlls were installed with exes:
  mingw : DEPLIBS = $${PREFIX}/bin
-Index: mythtv-master/mythplugins/mytharchive/mytharchive/mytharchive.pro
+Index: mythtv/mythplugins/mytharchive/mytharchive/mytharchive.pro
 ===================================================================
---- mythtv-master.orig/mythplugins/mytharchive/mytharchive/mytharchive.pro	2013-07-22 20:50:57.363392673 +1000
-+++ mythtv-master/mythplugins/mytharchive/mytharchive/mytharchive.pro	2013-07-22 20:55:06.079818357 +1000
-@@ -33,28 +33,28 @@
+--- mythtv.orig/mythplugins/mytharchive/mytharchive/mytharchive.pro
++++ mythtv/mythplugins/mytharchive/mytharchive/mytharchive.pro
+@@ -38,28 +38,28 @@ SOURCES += dbcheck.cpp archiveutil.cpp s
  SOURCES += mythburn.cpp themeselector.cpp editmetadata.cpp thumbfinder.cpp
  SOURCES += exportnative.cpp importnative.cpp
  
