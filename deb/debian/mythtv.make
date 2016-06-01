@@ -161,8 +161,6 @@ info:
 update-control-files:
 	rm -f debian/control
 	sed "s/#TYPE#/$(GIT_TYPE)/; s/#ABI#/$(ABI)/" debian/control.in > debian/control
-	cp debian/libmyth.install.in debian/libmyth-$(ABI)-0.install
-	cp debian/libmyth.lintian-overrides.in debian/libmyth-$(ABI)-0.lintian-overrides
 	if [ "$(GIT_TYPE)" = "master" ]; then \
 		sed -i debian/control -e 's/Recommends:\ mythtv-themes.*/Recommends:\ mythtv-themes, mythtv-dbg/' ;\
 	fi
