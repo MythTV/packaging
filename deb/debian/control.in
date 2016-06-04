@@ -294,8 +294,8 @@ Package: libmyth
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}, libqt5sql5-mysql, ${misc:Depends}
-Conflicts: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0, libmyth-0.25-0, libmyth-0.26-0, libmyth-0.27-0, libmyth-0.28-0, libmyth-0.29-0
-Replaces: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0, libmyth-0.25-0, libmyth-0.26-0, libmyth-0.27-0, libmyth-0.28-0, libmyth-0.29-0
+Conflicts: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0, libmyth-0.25-0, libmyth-0.26-0, libmyth-0.27-0, libmyth-0.28-0, libmyth-0.29-0, libmyth-29-0
+Replaces: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0, libmyth-0.25-0, libmyth-0.26-0, libmyth-0.27-0, libmyth-0.28-0, libmyth-0.29-0, libmyth-29-0
 Description: Common library code for MythTV and add-on modules (runtime)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -307,8 +307,8 @@ Package: libmyth-dev
 Architecture: any
 Section: libdevel
 Depends: libmyth (= ${binary:Version}), ${misc:Depends}
-Conflicts: libmyth-0.23-0-dev, libmyth-0.24-0-dev, libmyth-0.25-0-dev, libmyth-0.26-0-dev, libmyth-0.27-0-dev, libmyth-0.28-0-dev, libmyth-0.29-0-dev
-Replaces: libmyth-0.23-0-dev, libmyth-0.24-0-dev, libmyth-0.25-0-dev, libmyth-0.26-0-dev, libmyth-0.27-0-dev, libmyth-0.28-0-dev, libmyth-0.29-0-dev
+Conflicts: libmyth-0.23-0-dev, libmyth-0.24-0-dev, libmyth-0.25-0-dev, libmyth-0.26-0-dev, libmyth-0.27-0-dev, libmyth-0.28-0-dev, libmyth-0.29-0-dev, libmyth-29-0-dev
+Replaces: libmyth-0.23-0-dev, libmyth-0.24-0-dev, libmyth-0.25-0-dev, libmyth-0.26-0-dev, libmyth-0.27-0-dev, libmyth-0.28-0-dev, libmyth-0.29-0-dev, libmyth-29-0-dev
 Description: Common library code for MythTV and add-on modules (development)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
