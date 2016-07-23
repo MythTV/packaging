@@ -14,13 +14,6 @@ find_su
 
 #check that we are in the mythtv group
 check_groups
-arch=`arch | cut -b 1-3`
-codename=`lsb_release -c -s`
-if [ "$arch" = arm -a "$codename" = xenial ] ; then
-    environ="env LD_LIBRARY_PATH=/usr/lib/arm-linux-gnueabihf/mesa-egl:$LD_LIBRARY_PATH"
-else
-    environ=
-fi
 
 if [ "$1" = "--service" ]; then
     #source frontend session settings
