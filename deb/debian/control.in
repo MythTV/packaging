@@ -266,7 +266,6 @@ Depends: mythtv-common,
          libxml-simple-perl,
          libwww-perl,
          libmyth-python,
-         transcode,
          python,
          python-imdbpy,
          libgles2-mesa-dev [armhf],
@@ -496,7 +495,7 @@ Depends: mythtv-transcode-utils(>= ${binary:Version}),
          ${shlibs:Depends}, 
          ${misc:Depends}
 Recommends: m2vrequantiser
-Suggests: transcode, project-x
+Suggests: project-x
 Replaces: mytharchive-data
 Conflicts: mytharchive-data
 Description: create and burn DVD's from MythTV - binary file
