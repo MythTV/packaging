@@ -15,6 +15,7 @@ usr/share/mythtv/hardwareprofile
 usr/share/mythtv/fonts/*.otf
 usr/share/mythtv/i18n/mythfrontend_*
 usr/share/mythtv/html
+usr/lib/mythtv/filters
 
 #Other bits that we are gonna copy in that aren't part of make install
 mythtv/contrib/config_files/config.xml usr/share/mythtv
