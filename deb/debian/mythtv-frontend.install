@@ -6,10 +6,8 @@ usr/bin/mythavtest
 usr/bin/mythwelcome
 usr/bin/mythmediaserver
 usr/bin/mythscreenwizard
-usr/lib/mythtv/filters
 
 #Stuff we add from debian/
 debian/mythtv.desktop usr/share/applications
 debian/mythfrontend.sh usr/share/mythtv
 debian/session-settings etc/mythtv
-
