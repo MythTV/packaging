@@ -49,9 +49,9 @@ if [ "$IGNORE_NOT" = "0" ]; then
 	if [ "$CLOSE_NOT" = "0" ]; then
 		if [ -n "$RUNNING" ]; then
 			if [ "$DE" = "kde" ]; then
-				$SU_TYPE /etc/init.d/mythtv-backend stop
+				$SU_TYPE /usr/sbin/service mythtv-backend stop
 			else
-				$SU_TYPE /etc/init.d/mythtv-backend stop --message "Please enter your current login password to stop mythtv-backend."
+				$SU_TYPE /usr/sbin/service mythtv-backend stop --message "Please enter your current login password to stop mythtv-backend."
 			fi
 		fi
 		xterm -title "MythTV Setup Terminal" -e taskset -c 0 /usr/bin/mythtv-setup.real --syslog local7 "$@"
@@ -63,9 +63,9 @@ if [ "$IGNORE_NOT" = "0" ]; then
 		fi
 		if [ "$START_NOT" = "0" ]; then
 			if [ "$DE" = "kde" ]; then
-				$SU_TYPE /etc/init.d/mythtv-backend start
+				$SU_TYPE /usr/sbin/service mythtv-backend start
 			else
-				$SU_TYPE /etc/init.d/mythtv-backend start --message "Please enter your current login password to start mythtv-backend."
+				$SU_TYPE /usr/sbin/service mythtv-backend start --message "Please enter your current login password to start mythtv-backend."
 			fi
 		fi
 		dialog_question "Fill Database?" "Would you like to run mythfilldatabase?"
