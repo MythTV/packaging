@@ -180,10 +180,10 @@ Replaces:  mythtv (<< 0.8-1),
            mythtv-backend (<< 2:0.28.0~master.20150106.b8b9a1e-0ubuntu0mythbuntu4),
            mythtv-database (<< 0.24.0~trunk25638),
            mythvideo,
-           mythtv-frontend (<< 2:0.28.0~master.20160925.38d9ba2-0ubuntu0mythbuntu4)
+           mythtv-frontend (<< 2:0.28.0+fixes.20161010.38d9ba2-0ubuntu0mythbuntu4)
 Breaks:    mythtv-backend (<< 2:0.28.0~master.20150106.b8b9a1e-0ubuntu0mythbuntu4),
            mythvideo,
-           mythtv-frontend (<< 2:0.28.0~master.20160925.38d9ba2-0ubuntu0mythbuntu4)
+           mythtv-frontend (<< 2:0.28.0+fixes.20161010.38d9ba2-0ubuntu0mythbuntu4)
 Description: Personal video recorder application (common data)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
