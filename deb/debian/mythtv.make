@@ -10,8 +10,8 @@
 #  s/+.*//      -> kill everything after and including the +
 #  s/.*+//      -> kill everything before and including the +
 
-GIT_MAJOR_RELEASE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $$1 }')
-GIT_MINOR_RELEASE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]:0.//; s/~.*//; s/+.*//' | awk -F. '{print $$2 }')
+GIT_MAJOR_RELEASE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/~.*//; s/+.*//' | awk -F. '{print $$1 }')
+GIT_MINOR_RELEASE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/~.*//; s/+.*//' | awk -F. '{print $$2 }')
 GIT_TYPE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$1}')
 DATE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$2}')
 GIT_HASH:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$3}')
@@ -32,7 +32,7 @@ ifeq "$(GIT_TYPE)" "master"
 	DELIMITTER="~"
 endif
 ifeq "$(GIT_TYPE)" "fixes"
-	GIT_BRANCH:=fixes/0.$(GIT_MAJOR_RELEASE)
+	GIT_BRANCH:=fixes/$(GIT_MAJOR_RELEASE)
 	GIT_BRANCH_FALLBACK=master
 	DELIMITTER="+"
 endif
@@ -40,10 +40,10 @@ ifeq "$(GIT_TYPE)" "arbitrary"
 	DELIMITTER="~"
 endif
 
-GIT_RELEASE=0.$(GIT_MAJOR_RELEASE).$(GIT_MINOR_RELEASE)
+GIT_RELEASE=$(GIT_MAJOR_RELEASE).$(GIT_MINOR_RELEASE)
 SUFFIX+=$(GIT_TYPE).$(DATE).$(GIT_HASH)
 
-ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/settings.pro 2>/dev/null || echo 0.$(GIT_MAJOR_RELEASE))
+ABI:=$(shell awk  -F= '/^LIBVERSION/ { gsub(/[ \t]+/, ""); print $$2}' mythtv/settings.pro 2>/dev/null || echo $(GIT_MAJOR_RELEASE))
 
 TARFILE:=mythtv_$(GIT_RELEASE)$(DELIMITTER)$(SUFFIX).orig.tar.gz
 
@@ -115,7 +115,7 @@ get-git-source:
 		GIT_HASH=$$CURRENT_GIT_HASH ;\
 		LAST_GIT_HASH=$(GIT_HASH) ;\
 		if [ -n "$(AUTOBUILD)" ]; then \
-			LAST_GIT_HASH=`python debian/PPA-published-git-checker.py 0.$(GIT_MAJOR_RELEASE)` ;\
+			LAST_GIT_HASH=`python debian/PPA-published-git-checker.py $(GIT_MAJOR_RELEASE)` ;\
 			AUTOBUILD="Automated Build: " ;\
 		fi ;\
 		dch -b -v $(EPOCH):$(GIT_RELEASE)$(DELIMITTER)$(GIT_TYPE).$(TODAY).$$GIT_HASH-$(DEBIAN_SUFFIX) "$${AUTOBUILD}New upstream checkout ($$GIT_HASH)";\
