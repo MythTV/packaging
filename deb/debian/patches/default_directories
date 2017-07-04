@@ -4,11 +4,11 @@ Description: Default directories for all plugins
 Author: Mario Limonciello <superm1@ubuntu.com>
 Forwarded: not-needed
 
-Index: mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
+Index: mythtv/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
 ===================================================================
---- mythtv-master.orig/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2013-07-22 20:50:57.000000000 +1000
-+++ mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2013-07-22 20:54:12.216592441 +1000
-@@ -45,7 +45,7 @@
+--- mythtv.orig/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
++++ mythtv/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
+@@ -45,7 +45,7 @@ static HostFileBrowserSetting *MythGalle
  #ifdef Q_OS_MAC
      gc->setValue(QDir::homePath() + "/Pictures");
  #else
@@ -17,21 +17,21 @@ Index: mythtv-master/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
  #endif
      gc->setHelpText(GallerySettings::tr("This directory must exist and "
                                          "MythGallery needs to have read "
-@@ -107,7 +107,7 @@
+@@ -107,7 +107,7 @@ static HostTextEditSetting *MythGalleryI
  {
-     HostLineEdit *gc = new HostLineEdit("GalleryImportDirs");
+     HostTextEditSetting *gc = new HostTextEditSetting("GalleryImportDirs");
      gc->setLabel(GallerySettings::tr("Paths to import images from"));
 -    gc->setValue("/mnt/cdrom:/mnt/camera");
 +    gc->setValue("/media/cdrom:/media/usbdisk");
      gc->setHelpText(GallerySettings::tr("This is a colon separated list of "
                      "paths. If the path in the list is a directory, its "
                      "contents will be copied. If it is an executable, "
-Index: mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp
+Index: mythtv/mythplugins/mytharchive/mytharchive/archivesettings.cpp
 ===================================================================
---- mythtv-master.orig/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2013-07-22 20:50:57.000000000 +1000
-+++ mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp	2013-07-22 20:54:39.968193616 +1000
-@@ -18,7 +18,7 @@
-     HostLineEdit *gc = new HostLineEdit("MythArchiveTempDir");
+--- mythtv.orig/mythplugins/mytharchive/mytharchive/archivesettings.cpp
++++ mythtv/mythplugins/mytharchive/mytharchive/archivesettings.cpp
+@@ -18,7 +18,7 @@ static HostFileBrowserSetting *MythArchi
+     HostFileBrowserSetting *gc = new HostFileBrowserSetting("MythArchiveTempDir");
  
      gc->setLabel(ArchiveSettings::tr("MythArchive Temp Directory"));
 -    gc->setValue("");
@@ -39,11 +39,11 @@ Index: mythtv-master/mythplugins/mytharchive/mytharchive/archivesettings.cpp
  
      gc->setHelpText(ArchiveSettings::tr("Location where MythArchive should "
                                          "create its temporary work files. "
-Index: mythtv-master/mythtv/libs/libmythmetadata/globals.cpp
+Index: mythtv/mythtv/libs/libmythmetadata/globals.cpp
 ===================================================================
---- mythtv-master.orig/mythtv/libs/libmythmetadata/globals.cpp	2013-07-22 20:50:58.000000000 +1000
-+++ mythtv-master/mythtv/libs/libmythmetadata/globals.cpp	2013-07-22 20:52:51.701749530 +1000
-@@ -42,5 +42,5 @@
+--- mythtv.orig/mythtv/libs/libmythmetadata/globals.cpp
++++ mythtv/mythtv/libs/libmythmetadata/globals.cpp
+@@ -44,5 +44,5 @@ const QString JUMP_GALLERY_DEFAULT = "Ga
  #ifdef Q_OS_MAC
  const QString DEFAULT_VIDEOSTARTUP_DIR = QDir::homePath() + "/Movies";
  #else
