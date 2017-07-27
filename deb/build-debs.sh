@@ -94,7 +94,7 @@ if [ -z "$DIRECTORY" ]; then
 fi
 if echo "$GIT_BRANCH" | grep fixes 2>&1 1>/dev/null; then
 	GIT_TYPE="fixes"
-	GIT_MAJOR_RELEASE=$(echo $GIT_BRANCH |sed 's,.*0.,,')
+	GIT_MAJOR_RELEASE=$(echo $GIT_BRANCH |sed 's,.*/,,')
 	DELIMITTER="+"
 	GIT_BRANCH_FALLBACK="master"
 	echo "Building for fixes, v0.$GIT_MAJOR_RELEASE in $DIRECTORY"
