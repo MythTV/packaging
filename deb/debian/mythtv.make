@@ -59,7 +59,7 @@ get-git-source:
 		git pull --rebase; \
 	else \
 		git clone $(MAIN_GIT_URL) tmp ;\
-		mv tmp/.git* tmp/* . ;\
+		mv tmp/.[!.]* tmp/* . ;\
 		rm -rf tmp ;\
 		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 	fi
