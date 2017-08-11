@@ -73,7 +73,7 @@ get-git-source:
 	else \
 		mkdir -p mythplugins/mythweb ;\
 		git clone $(MYTHWEB_GIT_URL) tmp ;\
-		mv tmp/.git* tmp/* mythplugins/mythweb ;\
+		mv tmp/.[!.]* tmp/* mythplugins/mythweb ;\
 		rm -rf tmp ;\
 		cd mythplugins/mythweb ;\
 		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
@@ -88,7 +88,7 @@ get-git-source:
 	else \
 		mkdir -p Mythbuntu ;\
 		git clone $(MYTHBUNTU_THEME_GIT_URL) tmp ;\
-		mv tmp/.git* tmp/* Mythbuntu ;\
+		mv tmp/.[!.]* tmp/* Mythbuntu ;\
 		rm -rf tmp ;\
 		cd Mythbuntu ;\
 		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
