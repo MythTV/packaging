@@ -142,6 +142,9 @@ Depends: pwgen,
          pwgen,
          pciutils,
          usbutils,
+         python-future,
+         python-requests,
+         python-requests-cache,
          ${shlibs:Depends},
          ${misc:Depends}
 Suggests: mythtv-doc
