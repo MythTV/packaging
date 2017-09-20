@@ -10,7 +10,17 @@ DEBIAN="--defaults-extra-file=/etc/mysql/debian.cnf"
 
 /usr/bin/mysqlcheck $DEBIAN -s $DBNAME
 
-/usr/share/mythtv/mythconverg_backup.pl
+if [ -e "/etc/default/mythtv-backend" ]; then
+   . /etc/default/mythtv-backend
+fi
+
+if [ "$USER" = "" ]; then
+   CMDPREFIX=""
+else
+   CMDPREFIX="sudo -u $USER"
+fi
+
+$CMDPREFIX /usr/share/mythtv/mythconverg_backup.pl
 
 /usr/bin/logger -p daemon.info -i -t${0##*/} "$DBNAME checked and backed up."
 
