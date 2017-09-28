@@ -71,7 +71,6 @@ endif
 
 #Mythplugins configure opts
 MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \
-                              --enable-all  \
                               --zm-version=1.22.3 \ 
                               --qmake=/usr/bin/qmake \
 
