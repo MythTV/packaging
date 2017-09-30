@@ -71,7 +71,7 @@ Build-Depends:  debhelper (>= 9),
                 libxv-dev,
                 libtag1-dev,
                 libvisual-0.4-dev,
-                libmysqlclient-dev,
+                default-libmysqlclient-dev | libmysqlclient-dev,
                 libdate-manip-perl,
                 libxml-simple-perl,
                 libimage-size-perl,
@@ -95,7 +95,7 @@ Build-Depends:  debhelper (>= 9),
 
 Package: mythtv
 Architecture: all
-Depends: mysql-server | virtual-mysql-server | mysql-server-5.7 | mysql-server-5.6 | mariadb-server,
+Depends: default-mysql-server | virtual-mysql-server | mysql-server-5.7 | mysql-server-5.6 | mariadb-server,
          mythtv-database,
          mythtv-frontend,
          mythtv-backend,
@@ -129,9 +129,9 @@ Description: Personal video recorder application (client and server)
 
 Package: mythtv-common
 Architecture: any
-Depends: pwgen,
-         adduser,
-         mysql-client | virtual-mysql-client | mysql-client-5.7 | mysql-client-5.6 | mariadb-client,
+Pre-Depends: pwgen,
+Depends: adduser,
+         default-mysql-client | virtual-mysql-client | mysql-client-5.7 | mysql-client-5.6 | mariadb-client,
          fonts-liberation | ttf-liberation,
          fonts-droid-fallback | fonts-droid | ttf-droid,
          ttf-dejavu,
@@ -139,7 +139,6 @@ Depends: pwgen,
          fonts-texgyre | tex-gyre,
          python,
          libxml-xpath-perl,
-         pwgen,
          pciutils,
          usbutils,
          python-future,
@@ -210,7 +209,7 @@ Package: mythtv-database
 Architecture: all
 Depends: mythtv-common,
          libdbd-mysql-perl,
-         mysql-client | virtual-mysql-client | mysql-client-5.7 | mysql-client-5.6 | mariadb-client,
+         default-mysql-client | virtual-mysql-client | mysql-client-5.7 | mysql-client-5.6 | mariadb-client,
          cron,
          ${misc:Depends}
 Recommends: update-notifier | update-notifier-kde
@@ -357,7 +356,7 @@ Description: Python library to access some MythTV features
 Package: mythtv-backend-master
 Architecture: all
 Section: metapackages
-Depends: mysql-server | virtual-mysql-server | mysql-server-5.7 | mysql-server-5.6 | mariadb-server,
+Depends: default-mysql-server | virtual-mysql-server | mysql-server-5.7 | mysql-server-5.6 | mariadb-server,
          ntp | time-daemon | ntp-simple,
          mythtv-database,
          mythtv-backend,

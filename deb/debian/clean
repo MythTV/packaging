@@ -34,7 +34,7 @@ mythtv/config.fate
 mythtv/config.mak
 mythtv/config.h
 mythtv/config.log
-mythtv/bindings/python/build
+mythtv/bindings/python/build/
 mythtv/programs/mythbackend/version.cpp
 mythtv/programs/mythfrontend/version.cpp
 mythtv/libs/libmythupnp/version.cpp
@@ -42,7 +42,7 @@ mythtv/libs/libmythbase/version.h
 mythtv/external/FFmpeg/.config
 mythtv/external/FFmpeg/.version
 mythtv/external/FFmpeg/config.h
-mythplugins/debian
+mythplugins/debian/
 mythplugins/config.pro
 mythplugins/config.log
 mythplugins/config.mak
