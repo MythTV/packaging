@@ -2,7 +2,7 @@
 
 #Figure out what we're working with by parsing the project and debian changelog
 #To make sense of these sed rules that are used:
-#  Sample version string: 
+#  Sample version string:
 #                  Version: 1:0.25.0+master.20101129.a8acde8-0ubuntu1
 #  /^Version/!d  -> only version line from dpkg-parsechangelog
 #  s/.*1:0.//   -> kill the epoch and Version bit and 0. leading the version
@@ -49,7 +49,8 @@ TARFILE:=mythtv_$(GIT_RELEASE)$(DELIMITTER)$(SUFFIX).orig.tar.gz
 
 build-tarball:
 	#build the tarball
-	tar czf $(CURDIR)/../$(TARFILE) * --exclude-vcs --exclude .pc --exclude-tag-all mythtv.make
+	tar czf $(CURDIR)/../$(TARFILE) --exclude-vcs --exclude .pc --exclude-tag-all mythtv.make *
+
 
 get-git-source:
 	#checkout mythtv/mythplugins
@@ -164,4 +165,3 @@ update-control-files:
 	if [ "$(GIT_TYPE)" = "master" ]; then \
 		sed -i debian/control -e 's/Recommends:\ mythtv-themes.*/Recommends:\ mythtv-themes, mythtv-dbg/' ;\
 	fi
-
