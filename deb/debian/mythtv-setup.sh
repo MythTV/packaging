@@ -39,7 +39,7 @@ check_groups
 
 #if group membership is okay, go ahead and continue
 if [ "$IGNORE_NOT" = "0" ]; then
-	RUNNING=$(status mythtv-backend | grep running)
+	RUNNING=$(ps -A | grep mythbackend)
 	if [ -n "$RUNNING" ]; then
 		dialog_question "MythTV Setup Preparation" "Mythbackend must be closed before continuing.\nIs it OK to close any currently running mythbackend processes?"
 		CLOSE_NOT=$?
