@@ -1032,7 +1032,7 @@ EOF
 
     'firewiresdk' =>
     {
-        'url'      => 'http://www.avenard.org/files/mac/AVCVideoServices.framework.tar.gz',
+        'url'      => 'https://www.avenard.org/files/mac/AVCVideoServices.framework.tar.gz',
         'conf-cmd' => 'cd',
         'make-cmd' => "rm -rf $PREFIX/lib/AVCVideoServices.framework ; cp -R . $PREFIX/lib/AVCVideoServices.framework ; install_name_tool -id $PREFIX/lib/AVCVideoServices.framework/Versions/Current/AVCVideoServices $PREFIX/lib/AVCVideoServices.framework/Versions/Current/AVCVideoServices",
         'make'     => [ ],
