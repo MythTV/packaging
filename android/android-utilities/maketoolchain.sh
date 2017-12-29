@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ -z "$SDKVERSION" ] && SDKVERSION=17
+[ -z "$SDKVERSION" ] && SDKVERSION=21
 [ -z "$GCCVERSION" ] && GCCVERSION=4.9
 
 cd android-ndk

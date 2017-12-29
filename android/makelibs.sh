@@ -185,7 +185,7 @@ else
 	QTINSTALLROOT=$BASE/mythinstall/qt
 	QTBUILDROOT=build
 fi
-CPUOPT="-mtune=$CPU -march=$CPU_ARCH"
+CPUOPT="-march=$CPU_ARCH"
 CMAKE_TOOLCHAIN_FILE=$BASE/libs/android-cmake/android.toolchain.cmake
 CMAKE_TOOLCHAIN_FILE2=$ANDROID_NDK/build/cmake/android.toolchain.cmake
 
@@ -398,7 +398,8 @@ build_mariadb() {
 MARIADB_CONNECTOR_C_VERSION=2.1.0
 MARIADB_CONNECTOR_C=mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src
 echo -e "\n**** $MARIADB_CONNECTOR_C ****"
-setup_lib https://downloads.mariadb.org/interstitial/connector-c-$MARIADB_CONNECTOR_C_VERSION/source-tgz/mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src.tar.gz/from/http%3A//ftp.hosteurope.de/mirror/archive.mariadb.org/ $MARIADB_CONNECTOR_C
+#setup_lib https://downloads.mariadb.org/interstitial/connector-c-$MARIADB_CONNECTOR_C_VERSION/source-tgz/mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src.tar.gz/from/http%3A//ftp.hosteurope.de/mirror/archive.mariadb.org/ $MARIADB_CONNECTOR_C
+setup_lib https://downloads.mariadb.org/interstitial/connector-c-$MARIADB_CONNECTOR_C_VERSION/source-tgz/mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src.tar.gz $MARIADB_CONNECTOR_C
 pushd $MARIADB_CONNECTOR_C
 pushd libmariadb
 { patch -p0 -Nt || true; } <<'END'
@@ -443,8 +444,8 @@ pushd libmariadb
  #
  # Installation
 index 68be4aa..cef0af8 100644
---- libmariadb/mf_pack.c
-+++ libmariadb/mf_pack.c
+--- mf_pack.c
++++ mf_pack.c
 @@ -314,7 +314,7 @@ static my_string NEAR_F expand_tilde(my_string *path)
  {
    if (path[0][0] == FN_LIBCHAR)
