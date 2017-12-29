@@ -736,6 +736,7 @@ echo -e "\n**** $FFI ****"
 setup_lib ftp://sourceware.org/pub/libffi/$FFI.tar.gz
 pushd $FFI
 OPATH=$PATH
+PATH=$CROSSPATH:$PATH
 
 if [ $CLEAN == 1 ]; then
 	make distclean || true
