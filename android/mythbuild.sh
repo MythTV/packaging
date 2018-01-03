@@ -314,7 +314,6 @@ $MYTHTVSRC/configure \
 	--disable-vaapi \
 	--disable-dxva2 \
 	--enable-opengl-video \
-	--enable-opengl-vsync \
 	--enable-opengl \
 	--without-bindings=perl,python,php \
 	&& touch stamp_configure_android

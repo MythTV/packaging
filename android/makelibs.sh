@@ -154,7 +154,7 @@ QTMAJORVERSION=5.9
 QTVERSION=$QTMAJORVERSION.1
 export ANDROID_SDK_PLATFORM=android-21
 export ANDROID_NDK_PLATFORM=android-21
-export ANDROID_BUILD_TOOLS_REVISION=23.0.1
+export ANDROID_BUILD_TOOLS_REVISION=27.0.3
 # for cmake projects
 export ANDROID_NATIVE_API_LEVEL=21
 export ANDROID_API_DEF="-D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL"
@@ -557,7 +557,7 @@ echo -e "\n**** $EXIV2 ****"
 setup_lib http://www.exiv2.org/releases/$EXIV2.tar.gz $EXIV2
 pushd $EXIV2
 OPATH=$PATH
-{ patch -p0 -Nt || true; } <<'END'
+{ patch -p1 -Nt || true; } <<'END'
 diff --git a/config/config.sub b/config/config.sub
 index 320e303..4b80d8d 100755
 --- a/config/config.sub
