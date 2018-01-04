@@ -46,8 +46,8 @@ function deploy-extra-libs() {
 	[ -d "$INSTALLROOT/jni" ] || mkdir $INSTALLROOT/jni
 	pushd "$INSTALLROOT/jni"
 	echo << END > Android.mk
-LOCAL_PATH := $(call my-dir)
-include $(CLEAR_VARS)
+LOCAL_PATH := \$(call my-dir)
+include \$(CLEAR_VARS)
 LOCAL_MODULE    := mythfrontend
 END
 	echo << END > Application.mk

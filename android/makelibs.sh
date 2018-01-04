@@ -1489,6 +1489,7 @@ build_mysqlplugin() {
 	popd
 }
 
+[ -d libs ] || mkdir libs
 pushd libs
 
 get_android_cmake
