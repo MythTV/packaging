@@ -92,7 +92,9 @@ function bundle_apk() {
 	else
 		TARGETVERSION=`date +"%F" | tr -d '-'`-$BUNDLE_NAME-`grep "define MYTH_SOURCE_VERSION" libs/libmythbase/version.h | cut -d' ' -f 3 | tr -d '"'`
 		echo "*** copy apk to $BASE/mythfrontend-$TARGETVERSION.apk ***"
-		cp $TARGETAPK $BASE/mythfrontend-$TARGETVERSION.apk
+		for apk in $TARGETAPKPREFIX*.apk; do
+			cp $apk $BASE/mythfrontend-$TARGETVERSION.apk
+		done
 	fi
 }
 
@@ -186,8 +188,8 @@ export PKG_CONFIG_SYSROOT_DIR=$INSTALLROOT
 
 export ANDROID_EXTRA_LIBS="$INSTALLROOT"
 
-# ant TARGETAPK=$INSTALLROOT/bin/QtApp-debug.apk
-TARGETAPK=$INSTALLROOT/build/outputs/apk/mythfrontend-debug.apk
+# ant TARGETAPKPREFIX=$INSTALLROOT/bin/QtApp
+TARGETAPKPREFIX=$INSTALLROOT/build/outputs/apk/myth
 
 IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
 
@@ -196,8 +198,6 @@ case "$1" in
 	release)
 		BUNDLESIGN="--sign $KEYSTORE $KEYALIAS --storepass $KEYSTOREPASSWORD"
 		RELEASE=1
-		# ant TARGETAPK=$INSTALLROOT/bin/QtApp-release-signed.apk
-		TARGETAPK=$INSTALLROOT/build/outputs/apk/mythfrontend-release-signed.apk
 		CONFIGUREBUILDTYPE=release
 		DEPLOYTYPE=
 		shift
