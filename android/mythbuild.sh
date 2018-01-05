@@ -22,6 +22,7 @@ export ANDROID_NDK_PLATFORM=android-$ANDROID_NDK_API
 export ANDROID_TARGET_ARCH=armeabi-v7a
 export ANDROID_NDK_TOOLS_PREFIX=arm-linux-androideabi
 export ANDROID_NDK_TOOLCHAIN_VERSION=4.9
+export ANDROID_BUILD_TOOLS_REVISION=27.0.3
 
 #CFLAGS='-march=armv7-a -mfloat-abi=softfp'
 #CFLAGS='-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
@@ -45,16 +46,16 @@ function deploy-extra-libs() {
 	popd
 	[ -d "$INSTALLROOT/jni" ] || mkdir $INSTALLROOT/jni
 	pushd "$INSTALLROOT/jni"
-	echo << END > Android.mk
-LOCAL_PATH := \$(call my-dir)
-include \$(CLEAR_VARS)
-LOCAL_MODULE    := mythfrontend
-END
-	echo << END > Application.mk
-APP_PLATFORM := android-$ANDROID_NDK_API
-APP_OPTIM = debug
-APP_ABI := $ANDROID_TARGET_ARCH
-END
+	echo <<-END > Android.mk
+	LOCAL_PATH := \$(call my-dir)
+	include \$(CLEAR_VARS)
+	LOCAL_MODULE    := mythfrontend
+	END
+	echo <<-END > Application.mk
+	APP_PLATFORM := android-$ANDROID_NDK_API
+	APP_OPTIM = debug
+	APP_ABI := $ANDROID_TARGET_ARCH
+	END
 	popd
 }
 
@@ -79,6 +80,7 @@ function bundle_apk() {
 	mkdir -p $MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/ || true
 	cp $MYTHINSTALLROOT/lib/libmythfrontend.so $MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/
 	$QTBASE/bin/androiddeployqt \
+		--gradle \
 		--output $INSTALLROOT \
 		$DEPLOYTYPE \
 		--verbose \

@@ -1056,6 +1056,41 @@ index 1dc8f87..e796f4a 100644
 +    }
      INSTALLS *= target
  }
+diff --git a/qtbase/src/android/templates/build.gradle b/qtbase/src/android/templates/build.gradle
+index 3a3e0cd..f98eed7 100644
+--- a/qtbase/src/android/templates/build.gradle
++++ b/qtbase/src/android/templates/build.gradle
+@@ -41,9 +41,12 @@ android {
+     sourceSets {
+         main {
+             manifest.srcFile 'AndroidManifest.xml'
+-            java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
+-            aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
+-            res.srcDirs = [qt5AndroidDir + '/res', 'res']
++            //java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
++            java.srcDirs = ['src', 'java']
++            //aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
++            aidl.srcDirs = ['src', 'aidl']
++            //res.srcDirs = [qt5AndroidDir + '/res', 'res']
++            res.srcDirs = ['res']
+             resources.srcDirs = ['src']
+             renderscript.srcDirs = ['src']
+             assets.srcDirs = ['assets']
+diff --git a/qttools/src/androiddeployqt/main.cpp b/qttools/src/androiddeployqt/main.cpp
+index dd5b74b..8c94c8b 100644
+--- a/qttools/src/androiddeployqt/main.cpp
++++ b/qttools/src/androiddeployqt/main.cpp
+@@ -966,8 +966,8 @@ bool copyAndroidTemplate(const Options &options)
+     if (!copyAndroidTemplate(options, QLatin1String("/src/android/templates")))
+         return false;
+ 
+-    if (options.gradle)
+-        return true;
++    //if (options.gradle)
++    //    return true;
+ 
+     return copyAndroidTemplate(options, QLatin1String("/src/android/java"));
+ }
 END
 if [ $OS_WEBKIT == 1 ]; then
 pushd ../$QT_WEBKIT_SOURCE_DIR
