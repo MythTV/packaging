@@ -11,12 +11,12 @@ export ANDROID_SDK=$ANDROID_ROOT/android-sdk-linux
 export ANDROID_NDK=$ANDROID_ROOT/android-ndk
 export ANDROID_SDK_ROOT=$ANDROID_SDK
 export ANDROID_NDK_ROOT=$ANDROID_NDK
-export JAVA_HOME=/usr/lib/jvm/jdk-7-oracle-x64
-export JDK_PATH=/usr/lib/jvm/jdk-7-oracle-x64/bin
+export JAVA_HOME=/usr/lib/jvm/jdk-8-oracle-x64
+export JDK_PATH=/usr/lib/jvm/jdk-8-oracle-x64/bin
 export ANDROID_KEYSTORE=$ANDROID_ROOT/digivation.keystore
 
-export KEYSTORE=~/android/digivation-release.keystore
-export KEYALIAS=digivatn
+export KEYSTORE=~/android/sample-release.keystore
+export KEYALIAS=sample
 export KEYSTOREPASSWORD="password"
 
 export PATH
@@ -27,7 +27,7 @@ if [ -d "$1" ] && [[ ! $PATH =~ (^|:)$1(:|$) ]]; then
 fi
 }
 
-export QTBASE=$ANDROID_ROOT/Qt/5.4/android_armv7
+export QTBASE=$ANDROID_ROOT/Qt/5.9.1/android_armv7
 
 privatepathadd $ANDROID_SDK/tools
 privatepathadd $ANDROID_SDK/platform-tools
