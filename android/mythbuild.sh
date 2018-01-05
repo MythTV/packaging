@@ -186,7 +186,8 @@ export PKG_CONFIG_SYSROOT_DIR=$INSTALLROOT
 
 export ANDROID_EXTRA_LIBS="$INSTALLROOT"
 
-TARGETAPK=$INSTALLROOT/bin/QtApp-debug.apk
+# ant TARGETAPK=$INSTALLROOT/bin/QtApp-debug.apk
+TARGETAPK=$INSTALLROOT/build/outputs/apk/mythfrontend-debug.apk
 
 IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
 
@@ -195,7 +196,8 @@ case "$1" in
 	release)
 		BUNDLESIGN="--sign $KEYSTORE $KEYALIAS --storepass $KEYSTOREPASSWORD"
 		RELEASE=1
-		TARGETAPK=$INSTALLROOT/bin/QtApp-release-signed.apk
+		# ant TARGETAPK=$INSTALLROOT/bin/QtApp-release-signed.apk
+		TARGETAPK=$INSTALLROOT/build/outputs/apk/mythfrontend-release-signed.apk
 		CONFIGUREBUILDTYPE=release
 		DEPLOYTYPE=
 		shift
