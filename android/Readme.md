@@ -11,7 +11,7 @@ NOTE: The build platform is linux
    git clone git@github.com/mythtv.git
 
 1. Get Android sdk, ndk and Qt using the online installer
-   * It currently uses Qt 5.9.0
+   * It currently uses Qt 5.9.1
     * File will be something like qt-opensource-linux-x64-1.6.0-8-online.run
     * not required as part of android anymore, this is fetched and built but makelibs.sh
    * You need the sdk version you are compiling to. I used 17 for 4.2.2 as minimum
@@ -40,16 +40,23 @@ NOTE: The build platform is linux
 	setenv.sh
 ```
 
-2. Get a sufficiently suitable version of java. I used oracle-java7-jdk_7u76_amd64.deb
-  * Install it and make it the active one. Note that you cant use java8.
-  * I'm not sure but 8 might not work so YMMV
+2. Get a sufficiently suitable version of java. I used oracle-java8-jdk_7u76_amd64.deb
+  * Install it and make it the active one. Modify setenv.sh to change the targeted java version.
+  * I'm not sure but 9 might not work so YMMV.
 
-3. fetch and build all the libraries
+3. Other dependencies
+  * bison
+  * flex
+  * ant
+  * gradle
+    * this is downloaded on demand so is self fulfilling.
+
+4. fetch and build all the libraries
 ```
    ./makelibs.sh
 ```
 
-4. build it (debug by default)
+5. build it (debug by default)
 ```
    ./mythbuild.sh
 ```
