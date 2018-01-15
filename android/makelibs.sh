@@ -912,8 +912,8 @@ popd
 
 build_icu() {
 rm -rf build
-echo -e "\n**** icu 59.1 ****"
-setup_lib http://download.icu-project.org/files/icu4c/59.1/icu4c-59_1-src.tgz icu
+echo -e "\n**** icu 60.2 ****"
+setup_lib http://download.icu-project.org/files/icu4c/60.2/icu4c-60_2-src.tgz icu
 pushd icu
 OPATH=$PATH
 ICUPATH=$PWD
