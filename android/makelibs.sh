@@ -918,10 +918,12 @@ pushd icu
 OPATH=$PATH
 ICUPATH=$PWD
 ICU_FLAGS="-I$ICU_PATH/source/common/ -I$ICU_PATH/source/tools/tzcode/"
-{ patch -p0 -Nt || true; } <<'END'
---- source/configure.orig	2016-10-20 08:02:58.824272701 +1100
-+++ source/configure	2016-10-19 16:13:07.299569906 +1100
-@@ -4173,7 +4173,7 @@
+{ patch -p1 -Nt || true; } <<'END'
+diff --git a/source/configure b/source/configure
+index 36c06f9..aff20fe 100755
+--- a/source/configure
++++ b/source/configure
+@@ -4183,7 +4183,7 @@ fi
  #AC_CHECK_PROG(STRIP, strip, strip, true)
  
  # Check for the platform make
@@ -930,6 +932,19 @@ ICU_FLAGS="-I$ICU_PATH/source/common/ -I$ICU_PATH/source/tools/tzcode/"
  do
    # Extract the first word of "\$ac_prog", so it can be a program name with args.
  set dummy \$ac_prog; ac_word=\$2
+diff --git a/source/i18n/number_decimalquantity.cpp b/source/i18n/number_decimalquantity.cpp
+index 7246357..15cd0cc 100644
+--- a/source/i18n/number_decimalquantity.cpp
++++ b/source/i18n/number_decimalquantity.cpp
+@@ -384,7 +384,7 @@ void DecimalQuantity::_setToDoubleFast(double n) {
+         for (; i <= -22; i += 22) n /= 1e22;
+         n /= DOUBLE_MULTIPLIERS[-i];
+     }
+-    auto result = static_cast<int64_t>(std::round(n));
++    auto result = static_cast<int64_t>(round(n));
+     if (result != 0) {
+         _setToLong(result);
+         scale -= fracLength;
 END
 
 unset CPPFLAGS
