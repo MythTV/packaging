@@ -1,3 +1,0 @@
-target extended-remote 192.168.1.191:3333
-set solib-search-path so
-file so/app_process
