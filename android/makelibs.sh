@@ -172,6 +172,7 @@ if [ $ARM64 == 1 ]; then
 	INSTALLROOT=$BASE/mythinstall64
 	QTINSTALLROOT=$BASE/mythinstall64/qt
 	QTBUILDROOT=build64
+	LIBSDIR=libs64
 else
 	SYSROOT=$ANDROID_NDK/my-android-toolchain/sysroot
 	MY_ANDROID_NDK_TOOLS_PREFIX=arm-linux-androideabi
@@ -184,9 +185,10 @@ else
 	INSTALLROOT=$BASE/mythinstall
 	QTINSTALLROOT=$BASE/mythinstall/qt
 	QTBUILDROOT=build
+	LIBSDIR=libs
 fi
 CPUOPT="-march=$CPU_ARCH"
-CMAKE_TOOLCHAIN_FILE=$BASE/libs/android-cmake/android.toolchain.cmake
+CMAKE_TOOLCHAIN_FILE=$BASE/$LIBSDIR/android-cmake/android.toolchain.cmake
 CMAKE_TOOLCHAIN_FILE2=$ANDROID_NDK/build/cmake/android.toolchain.cmake
 
 # https://github.com/taka-no-me/android-cmake
@@ -1538,8 +1540,8 @@ build_mysqlplugin() {
 	popd
 }
 
-[ -d libs ] || mkdir libs
-pushd libs
+[ -d $LIBSDIR ] || mkdir $LIBSDIR
+pushd $LIBSDIR
 
 get_android_cmake
 [ -n "$BUILD_MISSING_HEADERS" ] && copy_missing_sys_headers
