@@ -977,7 +977,6 @@ touch config/icucross.inc
 	CXXFLAGS="-mtune=$CPU -march=$CPU_ARCH --std=c++0x" \
 	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
 	--with-cross-build=$ICUPATH/buildA \
-	--with-cross-buildroot=$SYSROOT \
 	--with-data-packaging=static \
 	--prefix=$INSTALLROOT \
 	--disable-extras \
