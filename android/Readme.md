@@ -5,12 +5,12 @@ Currently there is no automated way to get all dependencies and build an apk in 
 NOTE: The build platform is linux
 
 1. Clone and configure the repos.
-   mkdir workdir
-   cd workdir
-   git clone git@github.com/packaging.git
-   git clone git@github.com/mythtv.git
-   cd packaging/android
-   If building for arm64, run "echo ARM64=1 >make.inc".
+   * mkdir workdir
+   * cd workdir
+   * git clone git@github.com/packaging.git
+   * git clone git@github.com/mythtv.git
+   * cd packaging/android
+   * If building for arm64, run "echo ARM64=1 >make.inc".
 
 2. Get Android Studio, SDK and NDK.
    * Get Android Studio from https://developer.android.com/studio/index.html
@@ -20,12 +20,12 @@ NOTE: The build platform is linux
      * INstall the desired SDK versions.  Lollipop, Marshmallow and Nougat are
        the likely choices right now.
      * Install the desired SDK Tools.  CMake and the NDK are the main ones.
-       * For the NDK
-   * Get android-ndk-r15c-linux-x86_64.bin and install it in ~/android too.
-     Symlink it as android-ndk -> android-ndk-r15c.
+   * For the NDK
+     * Get android-ndk-r15c-linux-x86_64.bin and install it in ~/android too.
+     * Symlink it as android-ndk -> android-ndk-r15c.
    * if you want to build a release apk, you need to create a key.
    * Copy android-utilities/* to ~/android
-       cp android-utilities/setenv.sh ~/android
+      * cp android-utilities/setenv.sh ~/android
    * Create a toolchain for the correct version.  See maketoolchain.sh for this.
      SDK 21 is the default
 
@@ -67,9 +67,9 @@ Debugging
 
 * Enable debugging on your target device.  Depending on the device, this might
   require enabling Developer Options first, then USB Debugging and finally
-  Netowrk Debugging.
-* install apk with 'adb install -r mythfrontend*.apk'
-ndk-gdb --start --delay=0
+* Network Debugging.
+  * install apk with 'adb install -r mythfrontend*.apk'
+  * ndk-gdb --start --delay=0
 
 
 Setting up the Options
