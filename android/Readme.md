@@ -23,6 +23,7 @@ NOTE: The build platform is linux
    * For the NDK
      * Get android-ndk-r15c-linux-x86_64.bin and install it in ~/android too.
      * Symlink it as android-ndk -> android-ndk-r15c.
+     * android-ndk-16b currently does not work due to missing headers.
    * if you want to build a release apk, you need to create a key.
    * Copy android-utilities/* to ~/android
       * cp android-utilities/setenv.sh ~/android
@@ -69,14 +70,16 @@ Debugging
   require enabling Developer Options first, then USB Debugging and finally
 * Network Debugging.
   * install apk with 'adb install -r mythfrontend*.apk'
-  * ndk-gdb --start --delay=0
-
+  * ndk-gdb --launch --delay=0 -p mythinstall
+  * or use supplied gdb.sh script
 
 Setting up the Options
 ----------------------
 
 1. In Setup
   * In Appearance, set render to Qt
+    * video will not work with this mode enabled
+    * try opengl2 but YMMV
   * In Wizard, Audio, test speakers
 
 
