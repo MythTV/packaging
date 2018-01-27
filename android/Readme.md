@@ -4,32 +4,34 @@ Android Mythfrontend Build Procedure
 Currently there is no automated way to get all dependencies and build an apk in one step.
 NOTE: The build platform is linux
 
-1. clone the repos
+1. Clone and configure the repos.
+   mkdir workdir
    cd workdir
    git clone git@github.com/packaging.git
-   cd packaging/android
    git clone git@github.com/mythtv.git
+   cd packaging/android
+   If building for arm64, run "echo ARM64=1 >make.inc".
 
-1. Get Android sdk, ndk and Qt using the online installer
-   * It currently uses Qt 5.9.1
-    * File will be something like qt-opensource-linux-x64-1.6.0-8-online.run
-    * not required as part of android anymore, this is fetched and built but makelibs.sh
-   * You need the sdk version you are compiling to. I used 17 for 4.2.2 as minimum
-     compatability level.
-   * install in ~/android as the build scripts assume its there
-   * also get android-ndk-r15c-linux-x86_64.bin and install it in ~/android too.
-   * also get android-cmake-master.zip and install that too in ~/android
-    * no longer required, its part of android
+2. Get Android Studio, SDK and NDK.
+   * Get Android Studio from https://developer.android.com/studio/index.html
+     and install it into ~/android/android-studio.
+   * After Android Studio is installed, use it to install the Android SDK and NDK.
+     * In Android Studio, choose Configure / SDK Manager.
+     * INstall the desired SDK versions.  Lollipop, Marshmallow and Nougat are
+       the likely choices right now.
+     * Install the desired SDK Tools.  CMake and the NDK are the main ones.
+       * For the NDK
+   * Get android-ndk-r15c-linux-x86_64.bin and install it in ~/android too.
+     Symlink it as android-ndk -> android-ndk-r15c.
    * if you want to build a release apk, you need to create a key.
-   * modify and copy android-utilities/* to ~/android
+   * Copy android-utilities/* to ~/android
        cp android-utilities/setenv.sh ~/android
-   * create a toolchain for the correct version. see maketoolchain.sh for this. sdk 17 is the default
+   * Create a toolchain for the correct version.  See maketoolchain.sh for this.
+     SDK 21 is the default
 
    You should have a dir structure like this after you are done:
 ```
    ~/android
-	Qt
-	android-cmake
 	android-ndk -> android-ndk-r15c
 	android-ndk-r15c
 	android-sdk-linux
@@ -40,23 +42,20 @@ NOTE: The build platform is linux
 	setenv.sh
 ```
 
-2. Get a sufficiently suitable version of java. I used oracle-java8-jdk_7u76_amd64.deb
-  * Install it and make it the active one. Modify setenv.sh to change the targeted java version.
-  * I'm not sure but 9 might not work so YMMV.
-
 3. Other dependencies
   * bison
   * flex
-  * ant
   * gradle
     * this is downloaded on demand so is self fulfilling.
 
-4. fetch and build all the libraries
+4. Fetch and build all the libraries
+   In workdir/packaging/android, run
 ```
    ./makelibs.sh
 ```
 
-5. build it (debug by default)
+5. Build MythTV (debug by default)
+   In workdir/packaging/android, run
 ```
    ./mythbuild.sh
 ```
@@ -66,7 +65,9 @@ Cross your fingers and hope I didnt miss a step.
 Debugging
 ---------
 
-* install Wifi ADB on your target device
+* Enable debugging on your target device.  Depending on the device, this might
+  require enabling Developer Options first, then USB Debugging and finally
+  Netowrk Debugging.
 * install apk with 'adb install -r mythfrontend*.apk'
 ndk-gdb --start --delay=0
 
