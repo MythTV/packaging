@@ -40,8 +40,8 @@ Index: mythtv/mythplugins/configure
  try:
      import $lib
  except:
-@@ -536,7 +540,11 @@ is_qmake4(){
- }
+@@ -528,7 +532,11 @@ EOF
+ fi
  
  # bring in mythtv config
 -if [ -e $prefix/include/mythtv/mythconfig.mak ] ; then
@@ -53,7 +53,7 @@ Index: mythtv/mythplugins/configure
      rm mythconfig.mak 2> /dev/null
      ${ln_s} $prefix/include/mythtv/mythconfig.mak mythconfig.mak
  else
-@@ -620,7 +628,7 @@ if enabled netvision; then
+@@ -627,7 +635,7 @@ if enabled netvision; then
          disable netvision
      }
  
