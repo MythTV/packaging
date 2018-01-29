@@ -52,7 +52,7 @@ NOTE: The build platform is linux
 4. Fetch and build all the libraries
    In workdir/packaging/android, run
 ```
-   ./makelibs.sh
+   ./makelibs.sh all
 ```
 
 5. Build MythTV (debug by default)
