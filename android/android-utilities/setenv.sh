@@ -11,7 +11,7 @@ export ANDROID_SDK=$ANDROID_ROOT/android-sdk-linux
 export ANDROID_NDK=$ANDROID_ROOT/android-ndk
 export ANDROID_SDK_ROOT=$ANDROID_SDK
 export ANDROID_NDK_ROOT=$ANDROID_NDK
-export JAVA_HOME=/home/david/android/android-studio/jre/jre
+export JAVA_HOME=${HOME}/android/android-studio/jre/jre
 export JDK_PATH=${JAVA_HOME}/bin
 export ANDROID_KEYSTORE=$ANDROID_ROOT/digivation.keystore
 
