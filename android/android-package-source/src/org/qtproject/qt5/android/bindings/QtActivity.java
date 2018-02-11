@@ -258,6 +258,15 @@ public class QtActivity extends Activity
     }
     //---------------------------------------------------------------------------
 
+    protected void onCreateHook(Bundle savedInstanceState) {
+        m_loader.APPLICATION_PARAMETERS = APPLICATION_PARAMETERS;
+        m_loader.ENVIRONMENT_VARIABLES = ENVIRONMENT_VARIABLES;
+        m_loader.QT_ANDROID_THEMES = QT_ANDROID_THEMES;
+        m_loader.QT_ANDROID_DEFAULT_THEME = QT_ANDROID_DEFAULT_THEME;
+        m_loader.onCreate(savedInstanceState);
+    }
+    //---------------------------------------------------------------------------
+
     /*
     public static void addLegacyOverflowButton(Window window) {
         if (window.peekDecorView() == null) {
@@ -281,11 +290,7 @@ public class QtActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        m_loader.APPLICATION_PARAMETERS = APPLICATION_PARAMETERS;
-        m_loader.ENVIRONMENT_VARIABLES = ENVIRONMENT_VARIABLES;
-        m_loader.QT_ANDROID_THEMES = QT_ANDROID_THEMES;
-        m_loader.QT_ANDROID_DEFAULT_THEME = QT_ANDROID_DEFAULT_THEME;
-        m_loader.onCreate(savedInstanceState);
+        onCreateHook(savedInstanceState);
     }
     //---------------------------------------------------------------------------
 
@@ -551,6 +556,7 @@ public class QtActivity extends Activity
     @Override
     protected void onPause()
     {
+        /*
         //View view = getWindow().getCurrentFocus();
         View view = getWindow().peekDecorView();
         if (view != null) {
@@ -559,6 +565,7 @@ public class QtActivity extends Activity
         if (view != null) {
             view.setVisibility(View.GONE);
         }
+        */
         super.onPause();
         QtApplication.invokeDelegate();
     }
@@ -790,6 +797,7 @@ public class QtActivity extends Activity
     {
         if (!QtApplication.invokeDelegate(hasFocus).invoked)
             super.onWindowFocusChanged(hasFocus);
+        /*
         //View view = View.getRootView();
         View view = getWindow().peekDecorView();
         if (view != null) {
@@ -798,10 +806,12 @@ public class QtActivity extends Activity
         if (hasFocus && view != null && view.getVisibility() == View.GONE) {
             view.setVisibility(View.VISIBLE);
         }
+        */
     }
     public void super_onWindowFocusChanged(boolean hasFocus)
     {
         super.onWindowFocusChanged(hasFocus);
+        /*
         View view = getWindow().peekDecorView();
         if (view != null) {
             view = view.getRootView();
@@ -809,6 +819,7 @@ public class QtActivity extends Activity
         if (hasFocus && view != null && view.getVisibility() == View.GONE) {
             view.setVisibility(View.VISIBLE);
         }
+        */
     }
     //---------------------------------------------------------------------------
 
@@ -1022,6 +1033,14 @@ public class QtActivity extends Activity
     }
     //---------------------------------------------------------------------------
 //@ANDROID-12
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        if (QtApplication.m_delegateObject != null && QtApplication.onRequestPermissionsResult != null) {
+            QtApplication.invokeDelegateMethod(QtApplication.onRequestPermissionsResult, requestCode , permissions, grantResults);
+            return;
+        }
+    }
 
     // added for suspending sleep
     public void setSuspendSleep()
