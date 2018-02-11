@@ -1,0 +1,9 @@
+make.inc
+tarballs
+libs
+libs64
+build
+build64
+mythinstall
+mythinstall64
+*.apk
