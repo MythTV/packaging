@@ -7,6 +7,7 @@ source ~/android/setenv.sh
 CLEAN=1
 PRISTINE=0
 ARM64=0
+USE_CRYSTAX=0
 export NCPUS=$(nproc)
 
 [ -e make.inc ] && source make.inc
@@ -150,11 +151,13 @@ while : ; do
 	esac
 done
 
-QTMAJORVERSION=5.9
-QTVERSION=$QTMAJORVERSION.1
+QTMAJORVERSION=5.10
+QTVERSION=$QTMAJORVERSION.0
 export ANDROID_SDK_PLATFORM=android-21
 export ANDROID_NDK_PLATFORM=android-21
 export ANDROID_BUILD_TOOLS_REVISION=27.0.3
+export ANDROID_NDK_TOOLCHAIN_VERSION=4.9
+#export ANDROID_NDK_TOOLCHAIN_VERSION=5
 # for cmake projects
 export ANDROID_NATIVE_API_LEVEL=21
 export ANDROID_API_DEF="-D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL"
@@ -163,6 +166,7 @@ SYSROOTEXTRA=$ANDROID_NDK/platforms/android-19/arch-arm
 if [ $ARM64 == 1 ]; then
 	SYSROOT=$ANDROID_NDK/my-android-toolchain64/sysroot
 	MY_ANDROID_NDK_TOOLS_PREFIX=aarch64-linux-android
+	ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/my-android-toolchain64
 	CROSSPATH=$ANDROID_NDK/my-android-toolchain64/bin
 	CROSSPATH2=$ANDROID_NDK/my-android-toolchain64/bin/$MY_ANDROID_NDK_TOOLS_PREFIX-
 	ARMEABI="arm64-v8a"
@@ -176,6 +180,7 @@ if [ $ARM64 == 1 ]; then
 else
 	SYSROOT=$ANDROID_NDK/my-android-toolchain/sysroot
 	MY_ANDROID_NDK_TOOLS_PREFIX=arm-linux-androideabi
+	ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/my-android-toolchain
 	CROSSPATH=$ANDROID_NDK/my-android-toolchain/bin
 	CROSSPATH2=$ANDROID_NDK/my-android-toolchain/bin/$MY_ANDROID_NDK_TOOLS_PREFIX-
 	ARMEABI="armeabi-v7a"
@@ -190,6 +195,12 @@ fi
 CPUOPT="-march=$CPU_ARCH"
 CMAKE_TOOLCHAIN_FILE=$BASE/$LIBSDIR/android-cmake/android.toolchain.cmake
 CMAKE_TOOLCHAIN_FILE2=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+
+if [ "$USE_CRYSTAX" == 1 ]; then
+	QT_LIB_CRYSTAX="-lcrystax"
+else
+	QT_LIB_CRYSTAX=
+fi
 
 # https://github.com/taka-no-me/android-cmake
 #armeabi - ARMv5TE based CPU with software floating point operations;
@@ -219,6 +230,68 @@ copy_missing_sys_headers() {
 		echo "copying $SYSROOTEXTRA/usr/include/sys/$header"
 		cp $SYSROOTEXTRA/usr/include/sys/$header $INSTALLROOT/include/sys
 	done
+	mkdir -p $INSTALLROOT/include/linux || true
+	cat <<-END > $INSTALLROOT/include/linux/sockio.h
+	#include_next <linux/sockio.h>
+	#undef SIOCGIFHWADDR
+	END
+	mkdir -p $INSTALLROOT/include/bits || true
+	cat <<-END > $INSTALLROOT/include/bits/posix_limits.h
+	#include_next <bits/posix_limits.h>
+	#undef _POSIX_THREAD_PRIORITY_SCHEDULING
+	END
+	if [ $USE_CRYSTAX == 1 ]; then
+		cat <<-END > $INSTALLROOT/include/sys/limits.h
+		#include_next <sys/limits.h>
+		#ifdef __LIBCRYSTAX
+		#undef _POSIX_THREAD_PRIORITY_SCHEDULING
+		#undef _POSIX_VERSION
+		#define _POSIX_VERSION 200112L
+		#endif
+		END
+		cat <<-END > $INSTALLROOT/include/alloca.h
+		#include_next <alloca.h>
+		#ifndef alloca
+		#define alloca(sz) __builtin_alloca(sz)
+		#endif
+		END
+		cat <<-END > $INSTALLROOT/include/sys/types.h
+		#include_next <sys/types.h>
+		#ifdef __LIBCRYSTAX
+		typedef unsigned int        uint_t;
+		typedef unsigned int        uint;
+		#endif
+		END
+		cat <<-END > $INSTALLROOT/include/sys/endian.h
+		#include_next <sys/endian.h>
+		#ifdef __LIBCRYSTAX
+		#define htons __htons
+		#define htonl __htonl
+		#define ntohs __ntohs
+		#define ntohl __ntohl
+		#endif
+		END
+		if [ "$ARM64" != 1 ]; then
+			# required due to this symbol being mangled c++
+			# a rebuild of arm libcrystax would fix this
+			cat <<-END > $INSTALLROOT/include/grp.h
+			#include_next <grp.h>
+			#ifdef __LIBCRYSTAX
+			#define getgrgid_r(gid,b,c,d,gr) ((*(gr) = getgrgid((gid)), (*(gr)) != NULL) ? 0 : EINVAL)
+			#endif
+			END
+		fi
+	fi
+
+}
+
+fetch_file() {
+	[ -d ../tarballs ] || mkdir -p ../tarballs
+	if [ ! -e "../tarballs/$1" ]; then
+		pushd ../tarballs
+		wget --no-check-certificate "$2"
+		popd
+	fi
 }
 
 setup_lib() {
@@ -282,7 +355,8 @@ popd
 pushd build
 cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLROOT  \
-      -DANDROID_NDK=$ANDROID_NDK                \
+      -DANDROID_NDK=$ANDROID_NDK		\
+      -DANDROID_STANDALONE_TOOLCHAIN=$ANDROID_NDK_TOOLCHAIN_PATH \
       -DANDROID_TOOLCHAIN="gcc"	\
       -DCMAKE_BUILD_TYPE=Release                \
       -DBUILD_SHARED_LIBS=ON                    \
@@ -293,9 +367,11 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       .. && \
       cmake --build . && \
       cmake --build . --target install
+      ERR=$?
 
 popd
 popd
+return $ERR
 }
 
 build_freetype() {
@@ -352,13 +428,14 @@ END
 if [ $CLEAN == 1 ]; then
 	make distclean || true
 fi
-./Configure --prefix=$INSTALLROOT --cross-compile-prefix=${CROSSPATH2} $ANDROID_API_DEF $OPENSSL_FLAVOUR
-#ANDROID_DEV=$SYSROOT make -j$NCPUS
-make -j$NCPUS CROSS_SYSROOT=$SYSROOT build_libs
+./Configure --prefix=$INSTALLROOT --cross-compile-prefix=${CROSSPATH2} $ANDROID_API_DEF $OPENSSL_FLAVOUR && \
+make -j$NCPUS CROSS_SYSROOT=$SYSROOT build_libs && \
 make install
+ERR=$?
 PATH=$OPATH
 unset OPATH
 popd
+return $ERR
 }
 
 build_iconv() {
@@ -391,17 +468,23 @@ STRIP=${CROSSPATH2}strip \
 	CPPFLAGS=$CFLAGS \
 	./configure --build=x86_64 --host=$BUILD_HOST --prefix=$INSTALLROOT --with-sysroot=$SYSROOT --enable-shared=no --enable-static=yes &&
 	make $MAKEDEFS install-lib
+	ERR=$?
 PATH=$OPATH
 unset OPATH
 popd
+return $ERR
 }
 
 build_mariadb() {
 MARIADB_CONNECTOR_C_VERSION=2.1.0
 MARIADB_CONNECTOR_C=mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src
+MARIADB_CONNECTOR_C_TARBALL="../tarballs/mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src.tar.gz"
 echo -e "\n**** $MARIADB_CONNECTOR_C ****"
-#setup_lib https://downloads.mariadb.org/interstitial/connector-c-$MARIADB_CONNECTOR_C_VERSION/source-tgz/mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src.tar.gz/from/http%3A//ftp.hosteurope.de/mirror/archive.mariadb.org/ $MARIADB_CONNECTOR_C
 setup_lib https://downloads.mariadb.org/interstitial/connector-c-$MARIADB_CONNECTOR_C_VERSION/source-tgz/mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src.tar.gz $MARIADB_CONNECTOR_C
+if [ ! -e "$MARIADB_CONNECTOR_C_TARBALL" ]; then
+	setup_lib https://downloads.mariadb.org/interstitial/connector-c-$MARIADB_CONNECTOR_C_VERSION/source-tgz/mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src.tar.gz/from/http%3A//ftp.hosteurope.de/mirror/archive.mariadb.org/ $MARIADB_CONNECTOR_C
+	mv "$MARIADB_CONNECTOR_C_TARBALL*" "$MARIADB_CONNECTOR_C_TARBALL"
+fi
 pushd $MARIADB_CONNECTOR_C
 pushd libmariadb
 { patch -p0 -Nt || true; } <<'END'
@@ -467,7 +550,8 @@ if [ $CLEAN == 1 ]; then
 fi
 cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLROOT  \
-      -DANDROID_NDK=$ANDROID_NDK                \
+      -DANDROID_NDK=$ANDROID_NDK		\
+      -DANDROID_STANDALONE_TOOLCHAIN=$ANDROID_NDK_TOOLCHAIN_PATH \
       -DCMAKE_BUILD_TYPE=Release                \
       -DANDROID_ABI="$ARMEABI"                  \
       -DWITH_EXTERNAL_ZLIB:BOOL=ON              \
@@ -479,9 +563,11 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       .. && \
       make VERBOSE=1 && \
       cmake --build . --target install
+      ERR=$?
 
 popd
 popd
+return $ERR
 }
 
 build_lame() {
@@ -546,9 +632,11 @@ fi
 	--disable-frontend &&
 make -j$NCPUS &&
 make install
+ERR=$?
 PATH=$OPATH
 unset OPATH
 popd
+return $ERR
 }
 
 build_exiv2() {
@@ -624,9 +712,11 @@ fi
 	--enable-static &&
 	make -j$NCPUS &&
 	make install
+	ERR=$?
 PATH=$OPATH
 unset OPATH
 popd
+return $ERR
 }
 
 build_libxml2() {
@@ -664,10 +754,12 @@ fi
 	--enable-static &&
 	make -j$NCPUS &&
 	make install
+	ERR=$?
 
 PATH=$OPATH
 unset OPATH
 popd
+return $ERR
 }
 
 build_glib() {
@@ -714,6 +806,7 @@ CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
 	--enable-static &&
 	make -j$NCPUS &&
 	make install
+	ERR=$?
 
 #CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
 #CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
@@ -728,6 +821,7 @@ CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
 PATH=$OPATH
 unset OPATH
 popd
+return $ERR
 }
 
 build_ffi() {
@@ -769,10 +863,12 @@ autoreconf --force --install --verbose &&
 	--enable-static &&
 	make -j$NCPUS &&
 	make install includesdir=$INSTALLDIR/include
+	ERR=$?
 
 PATH=$OPATH
 unset OPATH
 popd
+return $ERR
 }
 
 build_gettext() {
@@ -823,10 +919,12 @@ CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
 	&&
 	make -j$NCPUS &&
 	make install
+	ERR=$?
 
 PATH=$OPATH
 unset OPATH
 popd
+return $ERR
 }
 
 build_libxslt() {
@@ -866,10 +964,12 @@ fi
 	--enable-static &&
 	make -j$NCPUS &&
 	make install
+	ERR=$?
 
 PATH=$OPATH
 unset OPATH
 popd
+return $ERR
 }
 
 build_android_external_liblzo() {
@@ -902,14 +1002,16 @@ END
 	--prefix=$INSTALLROOT \
 	--disable-xmp \
 	--enable-shared \
-	--enable-static
-make clean
-make -j$NCPUS
-make install
+	--enable-static && \
+make clean && \
+make -j$NCPUS && \
+make install && \
 cp minilzo/minilzo.h $INSTALLROOT/include
+ERR=$?
 PATH=$OPATH
 unset OPATH
 popd
+return $ERR
 }
 
 build_icu() {
@@ -961,11 +1063,14 @@ mkdir buildA || true
 mkdir buildB || true
 pushd buildA
 echo "**** Build ICU A ****"
-../source/configure 
-make clean && 
+../source/configure && \
+make clean && \
 make -j$NCPUS
+ERR=$?
 
 popd
+
+[ "$ERR" == 0 ] || return $ERR
 
 PATH=$CROSSPATH:$PATH
 pushd buildB
@@ -975,8 +1080,8 @@ touch config/icucross.mk
 touch config/icucross.inc
 #../source/configure --help
 ../source/configure \
-	CFLAGS="-mtune=$CPU -march=$CPU_ARCH" \
-	CXXFLAGS="-mtune=$CPU -march=$CPU_ARCH --std=c++0x" \
+	CFLAGS="-mtune=$CPU -march=$CPU_ARCH -isysroot $SYSROOT" \
+	CXXFLAGS="-mtune=$CPU -march=$CPU_ARCH --std=c++11 -isysroot $SYSROOT" \
 	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
 	--with-cross-build=$ICUPATH/buildA \
 	--with-data-packaging=static \
@@ -987,6 +1092,7 @@ touch config/icucross.inc
 	--disable-samples \
 	--disable-shared \
 	--enable-static
+ERR=$?
 
 	#CFLAGS="-isysroot $SYSROOT -march=armv7-a" \
 	#CXXFLAGS="-isysroot $SYSROOT -march=armv7-a --std=c++0x" \
@@ -996,18 +1102,22 @@ touch config/icucross.inc
 #	--host=armv6-google-linux --enable-static --disable-shared -with-cross-build=$ICU_PATH/hostbuild
 #	CPPFLAGS="--sysroot=$SDK_ROOT -D__STDC_INT64__ $ICU_FLAGS -I$SDK_ROOT/usr/include/ -I$NDK_ROOT/sources/cxx-stl/gnu-libstdc++/include/ -I$NDK_ROOT/sources/cxx-stl/gnu-libstdc++/libs/armeabi/include/" \
 #	LDFLAGS="--sysroot=$SDK_ROOT -L$NDK_ROOT/sources/cxx-stl/gnu-libstdc++/libs/armeabi/" \
+	#--with-cross-buildroot=$SYSROOT \
 
 #cd build
-make clean && 
-make -j$NCPUS &&
-make install &&
+[ "$ERR" == 0 ] && \
+make clean && \
+make -j$NCPUS &&\
+make install && \
 true
+ERR=$?
 popd
 
 echo "*** Build ICU Done ***"
 PATH=$OPATH
 unset OPATH
 popd
+return $ERR
 }
 
 if [ $BUILD_NEWQTWEBKITONLY ]; then
@@ -1018,10 +1128,22 @@ else
 fi
 
 QT_SOURCE_DIR=qt-everywhere-opensource-src-$QTVERSION
+if [ ${QTMAJORVERSION%.*} -ge 6 -o ${QTMAJORVERSION#*.} -gt 9 ]; then
+	QT_SOURCE_DIR=qt-everywhere-src-$QTVERSION
+fi
 QT_URL=https://download.qt.io/archive/qt/$QTMAJORVERSION/$QTVERSION/single/$QT_SOURCE_DIR.tar.xz
 if [ $OS_WEBKIT == 1 ]; then
-	QT_WEBKIT_SOURCE_DIR=qtwebkit-opensource-src-$QTVERSION
-	QT_WEBKIT_URL=https://download.qt.io/archive/qt/$QTMAJORVERSION/$QTVERSION/submodules/$QT_WEBKIT_SOURCE_DIR.tar.xz
+	if [ $QTVERSION != "5.9.1" ]; then
+		QTVERSION_WK=5.9.1
+		QTMAJORVERSION_WK=5.9
+		QT_WEBKIT_SOURCE_DIR=qtwebkit-opensource-src-$QTVERSION_WK
+		QT_WEBKIT_URL=https://download.qt.io/archive/qt/$QTMAJORVERSION_WK/$QTVERSION_WK/submodules/$QT_WEBKIT_SOURCE_DIR.tar.xz
+	else
+		QTVERSION_WK=$QTVERSION
+		QTMAJORVERSION_WK=$QTMAJORVERSION
+		QT_WEBKIT_SOURCE_DIR=qtwebkit-opensource-src-$QTVERSION
+		QT_WEBKIT_URL=https://download.qt.io/archive/qt/$QTMAJORVERSION/$QTVERSION/submodules/$QT_WEBKIT_SOURCE_DIR.tar.xz
+	fi
 else
 	QT_WEBKIT_SOURCE_DIR=qtwebkit-5.212.0-alpha2
 	QT_WEBKIT_URL=https://github.com/annulen/webkit/releases/download/qtwebkit-5.212.0-alpha2/qtwebkit-5.212.0-alpha2.tar.xz
@@ -1035,15 +1157,199 @@ patch_qt5() {
 setup_lib $QT_URL $QT_SOURCE_DIR
 setup_lib $QT_WEBKIT_URL $QT_WEBKIT_SOURCE_DIR
 
+###################################################################
+# Differences between qtwebkits
+#
+# qtwebkit-opensource-src-5.9.1/include/QtWebKit/qtwebkitversion.h
+#
+# @@ -2,8 +2,8 @@
+#  #ifndef QT_QTWEBKIT_VERSION_H
+#  #define QT_QTWEBKIT_VERSION_H
+#   
+# -#define QTWEBKIT_VERSION_STR "5.7.0"
+# +#define QTWEBKIT_VERSION_STR "5.9.1"
+#   
+# -#define QTWEBKIT_VERSION 0x050700
+# +#define QTWEBKIT_VERSION 0x050901
+#   
+#  #endif // QT_QTWEBKIT_VERSION_H
+#
+# +++ qtwebkit-opensource-src-5.9.1/include/QtWebKitWidgets/qtwebkitwidgetsversion.h      2017-06-29 09:41:51.000000000 +1000
+# @@ -2,8 +2,8 @@
+#  #ifndef QT_QTWEBKITWIDGETS_VERSION_H
+#  #define QT_QTWEBKITWIDGETS_VERSION_H
+#   
+# -#define QTWEBKITWIDGETS_VERSION_STR "5.7.0"
+# +#define QTWEBKITWIDGETS_VERSION_STR "5.9.1"
+#   
+# -#define QTWEBKITWIDGETS_VERSION 0x050700
+# +#define QTWEBKITWIDGETS_VERSION 0x050901
+#   
+#  #endif // QT_QTWEBKITWIDGETS_VERSION_H
+#
+# +++ qtwebkit-opensource-src-5.9.1/.qmake.conf   2017-06-16 22:46:36.000000000 +1000
+# @@ -3,4 +3,4 @@
+#  QMAKEPATH += $$PWD/Tools/qmake $$MODULE_QMAKE_OUTDIR
+#   load(qt_build_config)
+#    
+#  -MODULE_VERSION = 5.7.0
+#  +MODULE_VERSION = 5.9.1
+#
+###################################################################
+
 pushd $QT_SOURCE_DIR
+
 if [ $OS_WEBKIT == 1 ]; then
 	ln -snf ../$QT_WEBKIT_SOURCE_DIR qtwebkit
 else
 	rm qtwebkit || true
 fi
 
+if [ ${QTMAJORVERSION%.*} -ge 6 -o ${QTMAJORVERSION#*.} -gt 9 ]; then
+# 5.10 patch is different enough to warrant its own section
+{ patch -p1 -Nt --no-backup-if-mismatch -r - || true; } <<'END'
+diff --git a/qtbase/mkspecs/common/android-base-head.conf b/qtbase/mkspecs/common/android-base-head.conf
+index 9be6111..ebd3982 100644
+--- a/qtbase/mkspecs/common/android-base-head.conf
++++ b/qtbase/mkspecs/common/android-base-head.conf
+@@ -49,8 +49,9 @@ else: ANDROID_ARCHITECTURE = arm
+ 
+ !equals(NDK_TOOLCHAIN_VERSION, 4.4.3): ANDROID_CXXSTL_SUFFIX = -$$NDK_TOOLCHAIN_VERSION
+ 
++NDK_TOOLCHAIN_PATH = $$(ANDROID_NDK_TOOLCHAIN_PATH)
+ NDK_TOOLCHAIN = $$NDK_TOOLCHAIN_PREFIX-$$NDK_TOOLCHAIN_VERSION
+-NDK_TOOLCHAIN_PATH = $$NDK_ROOT/toolchains/$$NDK_TOOLCHAIN/prebuilt/$$NDK_HOST
++isEmpty(NDK_TOOLCHAIN_PATH): NDK_TOOLCHAIN_PATH = $$NDK_ROOT/toolchains/$$NDK_TOOLCHAIN/prebuilt/$$NDK_HOST
+ 
+ 
+ ANDROID_SDK_ROOT = $$(ANDROID_SDK_ROOT)
+@@ -68,7 +69,8 @@ isEmpty(ANDROID_SDK_BUILD_TOOLS_REVISION) {
+ CONFIG += $$ANDROID_PLATFORM
+ QMAKE_CFLAGS = -D__ANDROID_API__=$$replace(ANDROID_PLATFORM, "android-", "")
+ 
+-ANDROID_PLATFORM_ROOT_PATH  = $$NDK_ROOT/platforms/$$ANDROID_PLATFORM/arch-$$ANDROID_ARCHITECTURE/
++ANDROID_PLATFORM_ROOT_PATH = $$(ANDROID_NDK_PLATFORM_ROOT_PATH)
++isEmpty(ANDROID_PLATFORM_ROOT_PATH): ANDROID_PLATFORM_ROOT_PATH  = $$NDK_ROOT/platforms/$$ANDROID_PLATFORM/arch-$$ANDROID_ARCHITECTURE/
+ ANDROID_PLATFORM_PATH  = $$ANDROID_PLATFORM_ROOT_PATH/usr
+ 
+ equals(ANDROID_TARGET_ARCH, x86_64)|equals(ANDROID_TARGET_ARCH, mips64): \
+diff --git a/qtbase/mkspecs/features/android/android.prf b/qtbase/mkspecs/features/android/android.prf
+index 1dc8f87..e796f4a 100644
+--- a/qtbase/mkspecs/features/android/android.prf
++++ b/qtbase/mkspecs/features/android/android.prf
+@@ -4,11 +4,21 @@ contains(TEMPLATE, ".*app") {
+         QMAKE_LFLAGS += -Wl,-soname,$$shell_quote($$TARGET)
+ 
+         android_install {
+-            target.path=/libs/$$ANDROID_TARGET_ARCH/
++            ANDROID_INSTALL_LIBS = $$(ANDROID_INSTALL_LIBS)
++            isEmpty(ANDROID_INSTALL_LIBS) {
++                target.path=/libs/$$ANDROID_TARGET_ARCH/
++            } else {
++                target.path=$$ANDROID_INSTALL_LIBS/
++            }
+             INSTALLS *= target
+         }
+     }
+ } else: contains(TEMPLATE, "lib"):!static:!QTDIR_build:android_install {
+-    target.path = /libs/$$ANDROID_TARGET_ARCH/
++    ANDROID_INSTALL_LIBS = $$(ANDROID_INSTALL_LIBS)
++    isEmpty(ANDROID_INSTALL_LIBS) {
++        target.path=/libs/$$ANDROID_TARGET_ARCH/
++    } else {
++        target.path=$$ANDROID_INSTALL_LIBS/
++    }
+     INSTALLS *= target
+ }
+diff --git a/qtbase/src/android/templates/build.gradle b/qtbase/src/android/templates/build.gradle
+index 3a3e0cd..f98eed7 100644
+--- a/qtbase/src/android/templates/build.gradle
++++ b/qtbase/src/android/templates/build.gradle
+@@ -41,9 +41,12 @@ android {
+     sourceSets {
+         main {
+             manifest.srcFile 'AndroidManifest.xml'
+-            java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
+-            aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
+-            res.srcDirs = [qt5AndroidDir + '/res', 'res']
++            //java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
++            java.srcDirs = ['src', 'java']
++            //aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
++            aidl.srcDirs = ['src', 'aidl']
++            //res.srcDirs = [qt5AndroidDir + '/res', 'res']
++            res.srcDirs = ['res']
+             resources.srcDirs = ['src']
+             renderscript.srcDirs = ['src']
+             assets.srcDirs = ['assets']
+diff --git a/qttools/src/androiddeployqt/main.cpp b/qttools/src/androiddeployqt/main.cpp
+index 918bc0f..d6bbf8a 100644
+--- a/qttools/src/androiddeployqt/main.cpp
++++ b/qttools/src/androiddeployqt/main.cpp
+@@ -984,8 +984,8 @@ bool copyAndroidTemplate(const Options &options)
+     if (!copyAndroidTemplate(options, QLatin1String("/src/android/templates")))
+         return false;
+ 
+-    if (options.gradle)
+-        return true;
++    //if (options.gradle)
++    //    return true;
+ 
+     return copyAndroidTemplate(options, QLatin1String("/src/android/java"));
+ }
+END
+else
 # note: no !static: in 5.7.0
 { patch -p1 -Nt --no-backup-if-mismatch -r - || true; } <<'END'
+diff --git a/qtbase/mkspecs/common/android-base-head.conf b/qtbase/mkspecs/common/android-base-head.conf
+index ae4933c..a0a505b 100644
+--- a/qtbase/mkspecs/common/android-base-head.conf
++++ b/qtbase/mkspecs/common/android-base-head.conf
+@@ -49,8 +49,9 @@ else: ANDROID_ARCHITECTURE = arm
+ 
+ !equals(NDK_TOOLCHAIN_VERSION, 4.4.3): ANDROID_CXXSTL_SUFFIX = -$$NDK_TOOLCHAIN_VERSION
+ 
++NDK_TOOLCHAIN_PATH = $$(ANDROID_NDK_TOOLCHAIN_PATH)
+ NDK_TOOLCHAIN = $$NDK_TOOLCHAIN_PREFIX-$$NDK_TOOLCHAIN_VERSION
+-NDK_TOOLCHAIN_PATH = $$NDK_ROOT/toolchains/$$NDK_TOOLCHAIN/prebuilt/$$NDK_HOST
++isEmpty(NDK_TOOLCHAIN_PATH): NDK_TOOLCHAIN_PATH = $$NDK_ROOT/toolchains/$$NDK_TOOLCHAIN/prebuilt/$$NDK_HOST
+ 
+ 
+ ANDROID_SDK_ROOT = $$(ANDROID_SDK_ROOT)
+@@ -66,7 +67,8 @@ isEmpty(ANDROID_SDK_BUILD_TOOLS_REVISION) {
+ }
+ 
+ CONFIG += $$ANDROID_PLATFORM
+-ANDROID_PLATFORM_ROOT_PATH  = $$NDK_ROOT/platforms/$$ANDROID_PLATFORM/arch-$$ANDROID_ARCHITECTURE/
++ANDROID_PLATFORM_ROOT_PATH = $$(ANDROID_NDK_PLATFORM_ROOT_PATH)
++isEmpty(ANDROID_PLATFORM_ROOT_PATH): ANDROID_PLATFORM_ROOT_PATH  = $$NDK_ROOT/platforms/$$ANDROID_PLATFORM/arch-$$ANDROID_ARCHITECTURE/
+ ANDROID_PLATFORM_PATH  = $$ANDROID_PLATFORM_ROOT_PATH/usr
+ 
+ # used to compile platform plugins for android-4 and android-5
+diff --git a/qtbase/mkspecs/common/android-base-tail.conf b/qtbase/mkspecs/common/android-base-tail.conf
+index 2610918..464cfed 100644
+--- a/qtbase/mkspecs/common/android-base-tail.conf
++++ b/qtbase/mkspecs/common/android-base-tail.conf
+@@ -91,7 +91,7 @@ QMAKE_LFLAGS_NOUNDEF    = -Wl,--no-undefined
+ QMAKE_LFLAGS_RPATH      = -Wl,-rpath=
+ QMAKE_LFLAGS_RPATHLINK  = -Wl,-rpath-link=
+ 
+-QMAKE_LIBS_PRIVATE      = -lgnustl_shared -llog -lz -lm -ldl -lc -lgcc
++QMAKE_LIBS_PRIVATE      = -lgnustl_shared -fexceptions -frtti -llog -lz -lm -ldl -lc -lgcc
+ QMAKE_LIBS_X11          =
+ QMAKE_LIBS_THREAD       =
+ QMAKE_LIBS_EGL          = -lEGL
+diff -uNr src_orig/qtbase/src/corelib/io/qfilesystemengine.cpp src_new/qtbase/src/corelib/io/qfilesystemengine.cpp
+--- src_orig/qtbase/src/corelib/io/qfilesystemengine.cpp	2017-04-21 08:48:40.801105796 +0300
++++ src_new/qtbase/src/corelib/io/qfilesystemengine.cpp	2017-04-18 17:39:13.000000000 +0300
+@@ -291,7 +291,7 @@
+ #endif
+ 
+     // Times
+-#if _POSIX_VERSION >= 200809L
++#if !defined(Q_OS_ANDROID) && _POSIX_VERSION >= 200809L
+     modificationTime_ = timespecToMSecs(statBuffer.st_mtim);
+     creationTime_ = timespecToMSecs(statBuffer.st_ctim);
+     if (!creationTime_)
 diff --git a/qtbase/mkspecs/features/android/android.prf b/qtbase/mkspecs/features/android/android.prf
 index 1dc8f87..e796f4a 100644
 --- a/qtbase/mkspecs/features/android/android.prf
@@ -1108,6 +1414,8 @@ index dd5b74b..8c94c8b 100644
      return copyAndroidTemplate(options, QLatin1String("/src/android/java"));
  }
 END
+fi
+
 if [ $OS_WEBKIT == 1 ]; then
 pushd ../$QT_WEBKIT_SOURCE_DIR
 { patch -p1 -Nt --no-backup-if-mismatch -r - || true; } <<'END'
@@ -1172,6 +1480,22 @@ index 77375c6..56604ca 100644
  
  creating_module {
 END
+
+# this may not be needed
+if [ $QTVERSION_WK != $QTVERSION ]; then
+	QTWK_V1=${QTVERSION/.*}
+	QTWK_V2=${QTMAJORVERSION#*.}
+	QTWK_V3=${QTVERSION/*.}
+	QTWK_MACHVER=$(printf "%02x%02x%02x" $QTWK_V1 $QTWK_V2 $QTWK_V3)
+	echo "$QTWK_V1 $QTWK_V2 $QTWK_V3 0x$QTWK_MACHVER"
+	echo "include/QtWebKit/qtwebkitversion.h"
+	sed -i 's/\(#define QTWEBKIT_VERSION_STR "\)[^"]*\("\)/\1'"$QTVERSION\2/; s/\(#define QTWEBKIT_VERSION 0x\).*$/\1$QTWK_MACHVER/;" include/QtWebKit/qtwebkitversion.h
+	echo "include/QtWebKitWidgets/qtwebkitwidgetsversion.h"
+	sed -i 's/\(#define QTWEBKITWIDGETS_VERSION_STR "\)[^"]*\("\)/\1'"$QTVERSION\2/; s/\(#define QTWEBKITWIDGETS_VERSION 0x\).*$/\1$QTWK_MACHVER/;" include/QtWebKitWidgets/qtwebkitwidgetsversion.h
+	echo ".qmake.conf"
+	sed -i 's/\(#define MODULE_VERSION "\).*$/\1'"$QTVERSION/;" .qmake.conf
+fi
+
 popd
 fi
 popd
@@ -1191,7 +1515,8 @@ configure_qt5() {
 
 	export ANDROID_TARGET_ARCH=$ARMEABI
 	export ANDROID_NDK_TOOLS_PREFIX=$MY_ANDROID_NDK_TOOLS_PREFIX
-	export ANDROID_NDK_TOOLCHAIN_VERSION=4.9
+	#export ANDROID_NDK_TOOLCHAIN_PATH
+	#export ANDROID_NDK_PLATFORM_ROOT_PATH="$SYSROOT"
 	export ANDROID_INSTALL_LIBS="/lib"
 	export SQLITE3SRCDIR="`readlink -f qtbase/src/3rdparty/sqlite`/"
 	#export QMAKE_CXXFLAGS="-DENABLE_JIT=0 -DENABLE_LLINT=0"
@@ -1204,28 +1529,41 @@ configure_qt5() {
 		true
 	fi
 
+	MAKEFLAGS="-j$NCPUS" \
 	../configure -xplatform android-g++ \
 		-opensource -confirm-license \
 		-prefix $QTINSTALLROOT \
 		-extprefix $QTINSTALLROOT \
 		-hostprefix $QTINSTALLROOT \
-		-sysroot $SYSROOT \
 		-nomake tests -nomake examples \
 		-android-arch $ARMEABI \
-		-android-toolchain-version 4.9 \
+		-android-toolchain-version $ANDROID_NDK_TOOLCHAIN_VERSION \
 		-continue \
 		--disable-rpath \
 		-plugin-sql-mysql \
 		-qt-sqlite \
+		-c++std c++11 \
 		-skip qttranslations \
 		-skip qtserialport \
 		-no-warnings-are-errors \
+		-openssl-linked \
 		-I $QT_SOURCE_DIR/include \
 		-I $INSTALLROOT/include \
 		-L $INSTALLROOT/lib \
 		-I $INSTALLROOT/include/mariadb \
 		-L $INSTALLROOT/lib/mariadb \
+		-sysroot $SYSROOT \
+		"QMAKE_CXXFLAGS+=-g -isystem $INSTALLROOT/include -I $INSTALLROOT/include/mariadb" \
+		"QMAKE_LFLAGS+=$QT_LIB_CRYSTAX -L $INSTALLROOT/lib -L $INSTALLROOT/lib/mariadb" \
 
+		#-debug \
+
+		#&&
+	#true
+	ERR=$?
+
+		#-sysroot $SYSROOT \
+		#-gcc-sysroot \
 		#-device-option CROSS_COMPILE=$CROSSPATH2 \
 		#-no-pch \
 		#-qt-sql-mysql \
@@ -1247,6 +1585,7 @@ configure_qt5() {
 	PATH=$OPATH
 	unset OPATH
 	popd
+	return $ERR
 }
 
 build_sqlite() {
@@ -1255,7 +1594,6 @@ build_sqlite() {
 
 	export ANDROID_TARGET_ARCH=$ARMEABI
 	export ANDROID_NDK_TOOLS_PREFIX=$MY_ANDROID_NDK_TOOLS_PREFIX
-	export ANDROID_NDK_TOOLCHAIN_VERSION=4.9
 	export CPPFLAGS="--sysroot=\"$SYSROOT\" -isysroot \"$SYSROOT\""
 	export LDFLAGS="--sysroot=\"$SYSROOT\" -isysroot \"$SYSROOT\""
 	export CXXPPFLAGS="--sysroot=\"$SYSROOT\""
@@ -1288,8 +1626,9 @@ build_sqlite() {
 	popd
 }
 
-build_webkit_59() {
+build_qt5() {
 	echo "PWD $PWD"
+	ERR=0
 	pushd $QT_SOURCE_DIR
 	#QTSRCDIR="$PWD/qt-everywhere-opensource-src-$QTVERSION"
 	#pushd qtwebkit-opensource-src-$QTVERSION
@@ -1300,7 +1639,6 @@ build_webkit_59() {
 
 	export ANDROID_TARGET_ARCH=$ARMEABI
 	export ANDROID_NDK_TOOLS_PREFIX=$MY_ANDROID_NDK_TOOLS_PREFIX
-	export ANDROID_NDK_TOOLCHAIN_VERSION=4.9
 	export ROOT_WEBKIT_DIR="`pwd`"
 	export ANDROID_INSTALL_LIBS="/lib"
 	export SQLITE3SRCDIR="`readlink -f qtbase/src/3rdparty/sqlite`/"
@@ -1312,20 +1650,15 @@ build_webkit_59() {
 	mkdir $QTBUILDROOT || true
 	pushd $QTBUILDROOT
 	#NCPUS=1
-	if [ $OS_WEBKIT == 1 ]; then
-		make -j$NCPUS module-qtwebkit
-	fi
-	make -j$NCPUS module-qtscript
-	make -j$NCPUS module-qtandroidextras
-	#make -j$NCPUS module-qtlocation
-	#make -j$NCPUS module-qtwebengine
-	if [ $OS_WEBKIT == 1 ]; then
-		make -C qtwebkit/Source -f Makefile.api install
-		make -C qtwebkit/Source -f Makefile.widgetsapi install
-	fi
+	THINGS_TO_MAKE="module-qtbase module-qtscript module-qtandroidextras"
+	#THINGS_TO_MAKE="$THINGS_TO_MAKE module-qtlocation"
+	#THINGS_TO_MAKE="$THINGS_TO_MAKE module-qtwebengine"
+	make -j$NCPUS $THINGS_TO_MAKE || ERR=$?
 	#make -j$NCPUS module-qtscript-install_subtargets
 	#make -j$NCPUS module-qtandroidextras-install_subtargets
-	make -j$NCPUS install
+	[ $ERR == 0 ] && \
+	make -j$NCPUS install \
+	|| ERR=$?
 	#make -j$NCPUS module-qtwebengine-install_subtargets
 	true
 	#make -C qtwebkit/Source -f Makefile.api INSTALL_ROOT="$INSTALLROOT" install &&
@@ -1343,6 +1676,74 @@ build_webkit_59() {
 	PATH=$OPATH
 	unset OPATH
 	popd
+	return $ERR
+}
+
+build_webkit_59() {
+	echo "PWD $PWD"
+	ERR=0
+	pushd $QT_SOURCE_DIR
+	#QTSRCDIR="$PWD/qt-everywhere-opensource-src-$QTVERSION"
+	#pushd qtwebkit-opensource-src-$QTVERSION
+	OPATH=$PATH
+	#export QTDIR=$QTINSTALLROOT
+	export QTDIR=$QTSRCDIR/qtbase
+	#PATH="$QTDIR/bin:$PATH"
+
+	export ANDROID_TARGET_ARCH=$ARMEABI
+	export ANDROID_NDK_TOOLS_PREFIX=$MY_ANDROID_NDK_TOOLS_PREFIX
+	export ROOT_WEBKIT_DIR="`pwd`"
+	export ANDROID_INSTALL_LIBS="/lib"
+	export SQLITE3SRCDIR="`readlink -f qtbase/src/3rdparty/sqlite`/"
+
+	unset CPPFLAGS
+	unset LDFLAGS
+	unset CXXFLAGS
+
+	mkdir $QTBUILDROOT || true
+	pushd $QTBUILDROOT
+	#NCPUS=1
+	export PKG_CONFIG_DIR=
+	export PKG_CONFIG_LIBDIR=$INSTALLROOT/lib/pkgconfig:$INSTALLROOT/share/pkgconfig:$QTBASE/lib/pkgconfig
+	export PKG_CONFIG_SYSROOT_DIR=$INSTALLROOT
+	cat Makefile $INSTALLROOT/../qtwebkitmakebits > Makefile.withqtwebkit
+	set -x
+	make -j$NCPUS -f Makefile.withqtwebkit module-qtwebkit && \
+	make -j$NCPUS -f Makefile.withqtwebkit module-qtlocation-install_subtargets && \
+	make -j$NCPUS -C qtwebkit/Source -f Makefile.api install && \
+	make -j$NCPUS -C qtwebkit/Source -f Makefile.widgetsapi install \
+		|| ERR=$?
+	set +x
+
+	if [ $OS_WEBKIT == 2 ]; then
+		QMAKE=$QTBASE/bin/qmake \
+		QINSTALL="$QTDIR/bin/qmake -install qinstall" \
+		QINSTALL_PROGRAM="$QTDIR/bin/qmake -install qinstall -exe" \
+		PKG_CONFIG_SYSROOT_DIR=$INSTALLROOT \
+		$QTBASE/bin/qmake ../WebKit.pro &&
+		make -C Source -f Makefile.api install && \
+		make -C Source -f Makefile.widgetsapi install \
+		|| ERR=$?
+	fi
+
+	#make -j$NCPUS module-qtwebengine-install_subtargets
+	true
+	#make -C qtwebkit/Source -f Makefile.api INSTALL_ROOT="$INSTALLROOT" install &&
+	#make -C qtwebkit/Source -f Makefile.widgetsapi INSTALL_ROOT="$INSTALLROOT" install &&
+	#echo rsync -av --remove-source-files $INSTALLROOT$INSTALLROOT/ $INSTALLROOT/
+	#make -C qtwebkit INSTALL_ROOT="$INSTALLROOT" install
+	#make -C qtscript install &&
+	#true
+	popd
+
+	unset CPPFLAGS
+	unset LDFLAGS
+	unset CXXPPFLAGS
+	unset SQLITE3SRCDIR
+	PATH=$OPATH
+	unset OPATH
+	popd
+	return $ERR
 }
 
 build_webkit_59a() {
@@ -1372,7 +1773,6 @@ END
 
 	export ANDROID_TARGET_ARCH=$ARMEABI
 	export ANDROID_NDK_TOOLS_PREFIX=$MY_ANDROID_NDK_TOOLS_PREFIX
-	export ANDROID_NDK_TOOLCHAIN_VERSION=4.9
 	export ROOT_WEBKIT_DIR="`pwd`"
 	export ANDROID_INSTALL_LIBS="/lib"
 	export SQLITE3SRCDIR="$QTSRCDIR/qtbase/src/3rdparty/sqlite/"
@@ -1400,7 +1800,8 @@ END
 	      -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
 	      -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLROOT  \
 	      -DCMAKE_ANDROID_NDK=$ANDROID_NDK                \
-	      -DANDROID_NDK=$ANDROID_NDK                \
+	      -DANDROID_NDK1=$ANDROID_NDK                \
+	      -DANDROID_STANDALONE_TOOLCHAIN=$ANDROID_NDK_TOOLCHAIN_PATH \
 	      -DCMAKE_BUILD_TYPE=Release                \
 	      -DANDROID_TOOLCHAIN="gcc"	\
 	      -DANDROID_ABI="$ARMEABI"                  \
@@ -1517,7 +1918,6 @@ build_mysqlplugin() {
 
 	export ANDROID_TARGET_ARCH=$ARMEABI
 	export ANDROID_NDK_TOOLS_PREFIX=$MY_ANDROID_NDK_TOOLS_PREFIX
-	export ANDROID_NDK_TOOLCHAIN_VERSION=4.9
 	export CPPFLAGS="--sysroot=\"$SYSROOT\" -isysroot \"$SYSROOT\" -I$INSTALLROOT/include/mariadb"
 	export LDFLAGS="--sysroot=\"$SYSROOT\" -isysroot \"$SYSROOT\" -L$INSTALLROOT/lib/mariadb"
 	export CXXPPFLAGS="--sysroot=\"$SYSROOT\" -I$INSTALLROOT/include"
@@ -1566,6 +1966,8 @@ if [ -n "$BUILD_QT5EXTRAS" ]; then
 	configure_qt5
 	#echo -e "\n**** SQLITE ***"
 	#build_sqlite
+	echo -e "\n**** build qt5 ***"
+	build_qt5
 	echo -e "\n**** WEBKIT ***"
 	build_webkit_59
 	#build_qtwebengine
