@@ -387,12 +387,14 @@ PATH=$CROSSPATH:$PATH
 	--prefix=$INSTALLROOT \
 	--with-sysroot=$SYSROOT \
 	--with-png=no \
-	--with-harfbuzz=no
-make -j$NCPUS
+	--with-harfbuzz=no && \
+make -j$NCPUS && \
 make install
+ERR=$?
 PATH=$OPATH
 unset OPATH
 popd
+return $ERR
 }
 
 build_openssl() {
@@ -1497,6 +1499,23 @@ if [ $QTVERSION_WK != $QTVERSION ]; then
 fi
 
 popd
+# back to qt src dir
+# this is so qt can find qtwebkit again after being removed
+if ! grep "submodule qtwebkit" .gitmodules >/dev/null 2>/dev/null ; then
+	echo "qtwebkit missing from modules, add it"
+	cat <<'END' >> .gitmodules
+
+[submodule "qtwebkit"]
+	depends = qtbase
+	recommends = qtdeclarative qtlocation qtmultimedia qtsensors qtwebchannel qtxmlpatterns
+	path = qtwebkit
+	url = ../qtwebkit.git
+	branch = 5.9.1
+	status = obsolete
+	project = WebKit.pro
+	priority = 20
+END
+fi
 fi
 popd
 }
@@ -1651,6 +1670,9 @@ build_qt5() {
 	pushd $QTBUILDROOT
 	#NCPUS=1
 	THINGS_TO_MAKE="module-qtbase module-qtscript module-qtandroidextras"
+	if [ $OS_WEBKIT == 1 ]; then
+		THINGS_TO_MAKE="$THINGS_TO_MAKE module-qtwebkit"
+	fi
 	#THINGS_TO_MAKE="$THINGS_TO_MAKE module-qtlocation"
 	#THINGS_TO_MAKE="$THINGS_TO_MAKE module-qtwebengine"
 	make -j$NCPUS $THINGS_TO_MAKE || ERR=$?
@@ -1706,25 +1728,14 @@ build_webkit_59() {
 	export PKG_CONFIG_DIR=
 	export PKG_CONFIG_LIBDIR=$INSTALLROOT/lib/pkgconfig:$INSTALLROOT/share/pkgconfig:$QTBASE/lib/pkgconfig
 	export PKG_CONFIG_SYSROOT_DIR=$INSTALLROOT
-	cat Makefile $INSTALLROOT/../qtwebkitmakebits > Makefile.withqtwebkit
+	#cat Makefile $INSTALLROOT/../qtwebkitmakebits > Makefile.withqtwebkit
 	set -x
-	make -j$NCPUS -f Makefile.withqtwebkit module-qtwebkit && \
-	make -j$NCPUS -f Makefile.withqtwebkit module-qtlocation-install_subtargets && \
+	#make -j$NCPUS -f Makefile.withqtwebkit module-qtwebkit && \
+	#make -j$NCPUS -f Makefile.withqtwebkit module-qtlocation-install_subtargets && \
 	make -j$NCPUS -C qtwebkit/Source -f Makefile.api install && \
 	make -j$NCPUS -C qtwebkit/Source -f Makefile.widgetsapi install \
 		|| ERR=$?
 	set +x
-
-	if [ $OS_WEBKIT == 2 ]; then
-		QMAKE=$QTBASE/bin/qmake \
-		QINSTALL="$QTDIR/bin/qmake -install qinstall" \
-		QINSTALL_PROGRAM="$QTDIR/bin/qmake -install qinstall -exe" \
-		PKG_CONFIG_SYSROOT_DIR=$INSTALLROOT \
-		$QTBASE/bin/qmake ../WebKit.pro &&
-		make -C Source -f Makefile.api install && \
-		make -C Source -f Makefile.widgetsapi install \
-		|| ERR=$?
-	fi
 
 	#make -j$NCPUS module-qtwebengine-install_subtargets
 	true
