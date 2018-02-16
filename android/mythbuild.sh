@@ -103,7 +103,6 @@ if [ $ARM64 == 1 ]; then
 	CPU=cortex-a53
 	BUNDLE_NAME=arm64
 	LIB_ANDROID_PATH="$ANDROID_NDK_TOOLCHAIN_PATH/$ANDROID_NDK_TOOLS_PREFIX/lib"
-	LIB_CRYSTAX="$LIB_ANDROID_PATH/libcrystax.so"
 else
 	MYMYTHBUILDBASEPATH=build
 	INSTALLROOT=$BASE/mythinstall
@@ -118,7 +117,6 @@ else
 	CPU=armv7-a
 	BUNDLE_NAME=arm
 	LIB_ANDROID_PATH="$ANDROID_NDK_TOOLCHAIN_PATH/$ANDROID_NDK_TOOLS_PREFIX/lib/$ARCH"
-	LIB_CRYSTAX="$LIB_ANDROID_PATH/libcrystax.so"
 fi
 EXTRA_ANDROID_LIBS="libcrystax.so libpng.so libjpeg.so"
 
@@ -149,6 +147,7 @@ MYMYTHBUILDPATH=$MYMYTHBUILDBASEPATH/mythtv
 export PKG_CONFIG_DIR=
 export PKG_CONFIG_LIBDIR=$INSTALLROOT/lib/pkgconfig:$INSTALLROOT/share/pkgconfig:$QTBASE/lib/pkgconfig
 export PKG_CONFIG_SYSROOT_DIR=$INSTALLROOT
+export PKG_CONFIG_SYSROOT_DIR=
 
 export ANDROID_EXTRA_LIBS="$INSTALLROOT"
 
@@ -318,6 +317,7 @@ $MYTHTVSRC/configure \
 	--arch=$ARCH $CPU \
 	--target-os=android \
 	--compile-type=$CONFIGUREBUILDTYPE \
+	--pkg-config=$(which pkg-config) \
 	--prefix=/ \
 	--runprefix=/ \
 	--libdir-name=lib \
