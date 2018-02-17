@@ -282,7 +282,7 @@ Depends: mythtv-common,
          python3,
          libgles2-mesa-dev [armhf],
          libegl1-mesa-dev [armhf],
-Recommends: libmythtv-perl, python3-imaging | python3-pil, udisks2 | udisks
+Recommends: libmythtv-perl, python3-pil, udisks2 | udisks
 Suggests: mythtv-backend, mythmusic, mythweather, mythgame, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0), mythflix (<< 0.23.0)
 Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0), mythvideo
@@ -501,7 +501,7 @@ Depends: mythtv-transcode-utils(>= ${binary:Version}),
          genisoimage,
          dvd+rw-tools,
          python3,
-         python3-imaging | python3-pil,
+         python3-pil,
          python3-mysqldb,
          pmount,
          ${shlibs:Depends},
