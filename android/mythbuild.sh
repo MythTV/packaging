@@ -248,6 +248,10 @@ function bundle_apk() {
 			cp "$MYTHINSTALLROOT/lib/$lib" "$MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/"
 		done
 	fi
+	# filters are not automatically installed so copy them
+	for i in $MYTHINSTALLROOT/lib/libmythfilter*.so ; do
+		cp "$i" "$MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/"
+	done
 	$QTBASE/bin/androiddeployqt \
 		--gradle \
 		--output $INSTALLROOT \
