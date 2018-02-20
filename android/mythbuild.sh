@@ -18,8 +18,7 @@ export NCPUS=$(nproc)
 
 [ -e make.inc ] && source make.inc
 
-export ANDROID_NDK_API=21
-export ANDROID_NDK_PLATFORM=android-$ANDROID_NDK_API
+export ANDROID_NATIVE_API_LEVEL=21
 export ANDROID_TARGET_ARCH=armeabi-v7a
 export ANDROID_NDK_TOOLS_PREFIX=arm-linux-androideabi
 if [ "$USE_CRYSTAX" == 1 ]; then
@@ -71,6 +70,11 @@ case "$1" in
 		shift
 		ARM64=0
 		;;
+	--oldarm)
+		shift
+		ARM64=0
+		ANDROID_NATIVE_API_LEVEL=19
+		;;
 	--arm64)
 		shift
 		ARM64=1
@@ -88,36 +92,40 @@ case "$1" in
 esac
 done
 
+export ANDROID_NDK_PLATFORM=android-$ANDROID_NATIVE_API_LEVEL
+
 if [ $ARM64 == 1 ]; then
-	MYMYTHBUILDBASEPATH=build64
-	INSTALLROOT=$BASE/mythinstall64
-	export MYTHINSTALLROOT=$INSTALLROOT
-	export ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/my-android-toolchain64
-	SYSROOT=$ANDROID_NDK/my-android-toolchain64/sysroot
-	SYSINC=$ANDROID_NDK/my-android-toolchain64
-	CROSSPREFIX=$ANDROID_NDK/my-android-toolchain64/bin/aarch64-linux-android-
+	TOOLCHAIN_SUFFIX=64
 	export ANDROID_TARGET_ARCH=arm64-v8a
 	export ANDROID_NDK_TOOLS_PREFIX=aarch64-linux-android
 	ARCH=armv8-a
 	ARCH=aarch64
 	CPU=cortex-a53
 	BUNDLE_NAME=arm64
-	LIB_ANDROID_PATH="$ANDROID_NDK_TOOLCHAIN_PATH/$ANDROID_NDK_TOOLS_PREFIX/lib"
+	LIB_ANDROID_REL_PATH="lib"
 else
-	MYMYTHBUILDBASEPATH=build
-	INSTALLROOT=$BASE/mythinstall
-	export MYTHINSTALLROOT=$INSTALLROOT
-	export ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/my-android-toolchain
-	SYSROOT=$ANDROID_NDK/my-android-toolchain/sysroot
-	SYSINC=$ANDROID_NDK/my-android-toolchain
-	CROSSPREFIX=$ANDROID_NDK/my-android-toolchain/bin/arm-linux-androideabi-
+	if [ $ANDROID_NATIVE_API_LEVEL -gt 19 ]; then
+		TOOLCHAIN_SUFFIX=
+	else
+		TOOLCHAIN_SUFFIX=old
+	fi
 	export ANDROID_TARGET_ARCH=armeabi-v7a
 	export ANDROID_NDK_TOOLS_PREFIX=arm-linux-androideabi
 	ARCH=armv7-a
 	CPU=armv7-a
-	BUNDLE_NAME=arm
-	LIB_ANDROID_PATH="$ANDROID_NDK_TOOLCHAIN_PATH/$ANDROID_NDK_TOOLS_PREFIX/lib/$ARCH"
+	BUNDLE_NAME=arm$TOOLCHAIN_SUFFIX
+	LIB_ANDROID_REL_PATH="lib/$ARCH"
 fi
+
+MYMYTHBUILDBASEPATH=build$TOOLCHAIN_SUFFIX
+INSTALLROOT=$BASE/mythinstall$TOOLCHAIN_SUFFIX
+export MYTHINSTALLROOT=$INSTALLROOT
+export ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/my-android-toolchain$TOOLCHAIN_SUFFIX
+SYSROOT=$ANDROID_NDK/my-android-toolchain$TOOLCHAIN_SUFFIX/sysroot
+SYSINC=$ANDROID_NDK/my-android-toolchain$TOOLCHAIN_SUFFIX
+CROSSPREFIX=$ANDROID_NDK_TOOLCHAIN_PATH/bin/${ANDROID_NDK_TOOLS_PREFIX}-
+LIB_ANDROID_PATH="$ANDROID_NDK_TOOLCHAIN_PATH/$ANDROID_NDK_TOOLS_PREFIX/$LIB_ANDROID_REL_PATH"
+
 EXTRA_ANDROID_LIBS="libcrystax.so libpng.so libjpeg.so"
 
 if [ -z "$MYTHLIBVERSION" ]; then
@@ -225,7 +233,7 @@ function deploy-extra-libs() {
 	LOCAL_MODULE    := mythfrontend
 	END
 	echo <<-END > Application.mk
-	APP_PLATFORM := android-$ANDROID_NDK_API
+	APP_PLATFORM := android-$ANDROID_NATIVE_API_LEVEL
 	APP_OPTIM = debug
 	APP_ABI := $ANDROID_TARGET_ARCH
 	END
@@ -328,8 +336,8 @@ $MYTHTVSRC/configure \
 	--enable-backend \
 	--enable-cross-compile \
 	--sysroot=$SYSROOT \
-	--extra-cflags="$CRYSTAX_CFLAGS -D__ANDROID_API__=$ANDROID_NDK_API -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
-	--extra-cxxflags=" -D__ANDROID_API__=$ANDROID_NDK_API -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
+	--extra-cflags="$CRYSTAX_CFLAGS -D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
+	--extra-cxxflags=" -D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
 	--extra-ldflags="$CRYSTAX_LIBS" \
 	--qmake=$QTBASE/bin/qmake \
 	--qmakespecs="android-g++ $EXTRASPECS" \

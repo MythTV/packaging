@@ -122,6 +122,11 @@ while : ; do
 			shift
 			ARM64=0
 			;;
+		--oldarm)
+			shift
+			ARM64=0
+			ANDROID_NATIVE_API_LEVEL=17
+			;;
 		--arm64)
 			shift
 			ARM64=1
@@ -153,45 +158,46 @@ done
 
 QTMAJORVERSION=5.10
 QTVERSION=$QTMAJORVERSION.0
-export ANDROID_SDK_PLATFORM=android-21
-export ANDROID_NDK_PLATFORM=android-21
+export ANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL:-21}
+export ANDROID_SDK_PLATFORM=android-$ANDROID_NATIVE_API_LEVEL
+export ANDROID_NDK_PLATFORM=android-$ANDROID_NATIVE_API_LEVEL
 export ANDROID_BUILD_TOOLS_REVISION=27.0.3
 export ANDROID_NDK_TOOLCHAIN_VERSION=4.9
 #export ANDROID_NDK_TOOLCHAIN_VERSION=5
 # for cmake projects
-export ANDROID_NATIVE_API_LEVEL=21
 export ANDROID_API_DEF="-D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL"
 
 SYSROOTEXTRA=$ANDROID_NDK/platforms/android-19/arch-arm
 if [ $ARM64 == 1 ]; then
-	SYSROOT=$ANDROID_NDK/my-android-toolchain64/sysroot
+	TOOLCHAIN_SUFFIX=64
 	MY_ANDROID_NDK_TOOLS_PREFIX=aarch64-linux-android
-	ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/my-android-toolchain64
-	CROSSPATH=$ANDROID_NDK/my-android-toolchain64/bin
-	CROSSPATH2=$ANDROID_NDK/my-android-toolchain64/bin/$MY_ANDROID_NDK_TOOLS_PREFIX-
 	ARMEABI="arm64-v8a"
 	CPU="cortex-a53"
 	CPU_TUNE="cortex-a53"
 	CPU_ARCH="armv8-a"
-	INSTALLROOT=$BASE/mythinstall64
-	QTINSTALLROOT=$BASE/mythinstall64/qt
-	QTBUILDROOT=build64
-	LIBSDIR=libs64
 else
-	SYSROOT=$ANDROID_NDK/my-android-toolchain/sysroot
+	if [ $ANDROID_NATIVE_API_LEVEL -gt 19 ]; then
+		TOOLCHAIN_SUFFIX=
+	else
+		TOOLCHAIN_SUFFIX=old
+		EXTRA_QT_CONFIGURE_ARGS=-no-feature-futimens
+	fi
 	MY_ANDROID_NDK_TOOLS_PREFIX=arm-linux-androideabi
-	ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/my-android-toolchain
-	CROSSPATH=$ANDROID_NDK/my-android-toolchain/bin
-	CROSSPATH2=$ANDROID_NDK/my-android-toolchain/bin/$MY_ANDROID_NDK_TOOLS_PREFIX-
 	ARMEABI="armeabi-v7a"
 	CPU="armv7-a"
 	CPU_TUNE="armv7-a"
 	CPU_ARCH="armv7-a"
-	INSTALLROOT=$BASE/mythinstall
-	QTINSTALLROOT=$BASE/mythinstall/qt
-	QTBUILDROOT=build
-	LIBSDIR=libs
 fi
+
+ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/my-android-toolchain$TOOLCHAIN_SUFFIX
+SYSROOT=$ANDROID_NDK_TOOLCHAIN_PATH/sysroot
+CROSSPATH=$ANDROID_NDK_TOOLCHAIN_PATH/bin
+CROSSPATH2=$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-
+INSTALLROOT=$BASE/mythinstall$TOOLCHAIN_SUFFIX
+QTINSTALLROOT=$BASE/mythinstall$TOOLCHAIN_SUFFIX/qt
+QTBUILDROOT=build$TOOLCHAIN_SUFFIX
+LIBSDIR=libs$TOOLCHAIN_SUFFIX
+
 CPUOPT="-march=$CPU_ARCH"
 CMAKE_TOOLCHAIN_FILE=$BASE/$LIBSDIR/android-cmake/android.toolchain.cmake
 CMAKE_TOOLCHAIN_FILE2=$ANDROID_NDK/build/cmake/android.toolchain.cmake
@@ -225,21 +231,23 @@ MISSINGHEADERS="
 		"
 
 copy_missing_sys_headers() {
-	mkdir -p $INSTALLROOT/include/sys || true
-	for header in $MISSINGHEADERS ; do
-		echo "copying $SYSROOTEXTRA/usr/include/sys/$header"
-		cp $SYSROOTEXTRA/usr/include/sys/$header $INSTALLROOT/include/sys
-	done
-	mkdir -p $INSTALLROOT/include/linux || true
-	cat <<-END > $INSTALLROOT/include/linux/sockio.h
-	#include_next <linux/sockio.h>
-	#undef SIOCGIFHWADDR
-	END
-	mkdir -p $INSTALLROOT/include/bits || true
-	cat <<-END > $INSTALLROOT/include/bits/posix_limits.h
-	#include_next <bits/posix_limits.h>
-	#undef _POSIX_THREAD_PRIORITY_SCHEDULING
-	END
+	if [ "$TOOLCHAIN_SUFFIX" != "old" ]; then
+		mkdir -p $INSTALLROOT/include/sys || true
+		for header in $MISSINGHEADERS ; do
+			echo "copying $SYSROOTEXTRA/usr/include/sys/$header"
+			cp $SYSROOTEXTRA/usr/include/sys/$header $INSTALLROOT/include/sys
+		done
+		mkdir -p $INSTALLROOT/include/linux || true
+		cat <<-END > $INSTALLROOT/include/linux/sockio.h
+		#include_next <linux/sockio.h>
+		#undef SIOCGIFHWADDR
+		END
+		mkdir -p $INSTALLROOT/include/bits || true
+		cat <<-END > $INSTALLROOT/include/bits/posix_limits.h
+		#include_next <bits/posix_limits.h>
+		#undef _POSIX_THREAD_PRIORITY_SCHEDULING
+		END
+	fi
 	if [ $USE_CRYSTAX == 1 ]; then
 		cat <<-END > $INSTALLROOT/include/sys/limits.h
 		#include_next <sys/limits.h>
@@ -379,8 +387,11 @@ FREETYPE=freetype-2.5.5
 #FREETYPE=freetype-2.8
 echo -e "\n**** $FREETYPE ****"
 setup_lib http://download.savannah.gnu.org/releases/freetype/$FREETYPE.tar.bz2 $FREETYPE
-rm -rf build
 pushd $FREETYPE
+if [ $CLEAN == 1 ]; then
+	rm -rf objs
+	make distclean || true
+fi
 OPATH=$PATH
 PATH=$CROSSPATH:$PATH
 ./configure --host=$MY_ANDROID_NDK_TOOLS_PREFIX \
@@ -1298,6 +1309,23 @@ index 918bc0f..d6bbf8a 100644
  
      return copyAndroidTemplate(options, QLatin1String("/src/android/java"));
  }
+diff --git a/qtbase/src/3rdparty/forkfd/forkfd.c b/qtbase/src/3rdparty/forkfd/forkfd.c
+index 7f02ee9..74de1a7 100644
+--- a/qtbase/src/3rdparty/forkfd/forkfd.c
++++ b/qtbase/src/3rdparty/forkfd/forkfd.c
+@@ -45,8 +45,10 @@
+ #include <time.h>
+ #include <unistd.h>
+ 
+-#ifdef __linux__
+-#  define HAVE_WAIT4    1
++#if defined(__linux__)
++#  if __ANDROID_API__ > 19
++#    define HAVE_WAIT4    1
++#  endif
+ #  if defined(__BIONIC__) || (defined(__GLIBC__) && (__GLIBC__ << 8) + __GLIBC_MINOR__ >= 0x208 && \
+        (!defined(__UCLIBC__) || ((__UCLIBC_MAJOR__ << 16) + (__UCLIBC_MINOR__ << 8) + __UCLIBC_SUBLEVEL__ > 0x90201)))
+ #    include <sys/eventfd.h>
 END
 else
 # note: no !static: in 5.7.0
@@ -1501,7 +1529,7 @@ fi
 popd
 # back to qt src dir
 # this is so qt can find qtwebkit again after being removed
-if ! grep "submodule qtwebkit" .gitmodules >/dev/null 2>/dev/null ; then
+if ! grep 'submodule "qtwebkit"' .gitmodules >/dev/null 2>/dev/null ; then
 	echo "qtwebkit missing from modules, add it"
 	cat <<'END' >> .gitmodules
 
@@ -1574,6 +1602,7 @@ configure_qt5() {
 		-sysroot $SYSROOT \
 		"QMAKE_CXXFLAGS+=-g -isystem $INSTALLROOT/include -I $INSTALLROOT/include/mariadb" \
 		"QMAKE_LFLAGS+=$QT_LIB_CRYSTAX -L $INSTALLROOT/lib -L $INSTALLROOT/lib/mariadb" \
+		$EXTRA_QT_CONFIGURE_ARGS \
 
 		#-debug \
 

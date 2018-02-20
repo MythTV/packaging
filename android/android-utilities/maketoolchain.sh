@@ -28,6 +28,11 @@ while : ; do
 			SDKVERSION=$1
 			shift
 			;;
+		--oldsdkver)
+			shift
+			OLDSDKVERSION=$1
+			shift
+			;;
 		--gccver)
 			shift
 			GCCVERSION=$1
@@ -48,17 +53,24 @@ while : ; do
 	esac
 done
 
-[ -z "$SDKVERSION" ] && SDKVERSION=21
-[ -z "$STL" ] && STL=gnustl
-[ -z "$GCCVERSION" ] && GCCVERSION=4.9
+: ${SDKVERSION:=21}
+: ${OLDSDKVERSION:=17}
+: ${STL:=gnustl}
+: ${GCCVERSION:=4.9}
+
+make_toolchain() {
+	./build/tools/make-standalone-toolchain.sh \
+		--platform=android-$2 \
+		--verbose \
+		--install-dir=`pwd`/my-android-toolchain$1 \
+		--stl=$STL \
+		--arch=arm$4 \
+		--toolchain=$3 $FORCE
+}
 
 cd android-ndk
-for i in "" 64; do
-	./build/tools/make-standalone-toolchain.sh \
-		--platform=android-$SDKVERSION \
-		--verbose \
-		--install-dir=`pwd`/my-android-toolchain$i \
-		--stl=$STL \
-		--arch=arm$i \
-		--toolchain=arm-linux-androideabi-$GCCVERSION $FORCE
-done
+
+make_toolchain "" $SDKVERSION arm-linux-androideabi-$GCCVERSION ""
+make_toolchain 64 $SDKVERSION aarch64-linux-android-$GCCVERSION 64
+make_toolchain old $OLDSDKVERSION arm-linux-androideabi-$GCCVERSION ""
+
