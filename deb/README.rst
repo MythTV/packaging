@@ -2,7 +2,7 @@
 Debian & Ubuntu Packaging (.deb)
 =====
 
-The deb packaging directory contains two scripts "build-debs.sh" and 
+The deb packaging directory contains two scripts "build-debs.sh" and
 "build-dsc.sh".
 
  - Invoking "build-debs.sh" will install all prerequisites and build
@@ -36,23 +36,22 @@ Examples:
 	This would checkout the fixes/0.27 branch, local packaging, apply the patch called
 	'patch' located at /full/path/to/ to the build and then produce debs
  - DEBUILD_FLAGS='-sa' ./build-dsc.sh fixes/0.27 /tmp /full/path/to/patch
-	This would build source packages (that could be later built somewhere such as 
+	This would build source packages (that could be later built somewhere such as
 	launchpad PPA's) from the 0.27 fixes branch, in the tmp directory, while
 	apply the patch /full/path/to/patch
  - DEBIAN_SUFFIX='0ubuntu4' DEBUILD_FLAGS='-sa' ./build-dsc.sh fixes/0.27 /tmp /full/path/to/patch
-	This would build source packages (that could be later built somewhere such as 
+	This would build source packages (that could be later built somewhere such as
 	launchpad PPA's) from the 0.27 fixes branch, in the tmp directory, while
 	apply the patch /full/path/to/patch. It would also force the debian suffix
         '0ubuntu4' in the version rather than default to '0ubuntu1'
  - UBUNTU_RELEASE='wily' DEBIAN_SUFFIX='0ubuntu3' DEBUILD_FLAGS='-sa' ./build-dsc.sh fixes/0.27 /tmp /full/path/to/patch
-	This would build source packages (that could be later built somewhere such as 
+	This would build source packages (that could be later built somewhere such as
 	launchpad PPA's) from the 0.27 fixes branch, in the tmp directory, while
-	apply the patch /full/path/to/patch for Ubuntu Wily. It would also force the 
+	apply the patch /full/path/to/patch for Ubuntu Wily. It would also force the
         debian suffix '0ubuntu3' (in case of multiple builds in a single day)
- - UBUNTU_RELEASE='bionic' DEBIAN_SUFFIX='0ubuntu1' ./build-dsc.sh fixes/29 /tmp
-	This would build source packages (that could be later built somewhere such as 
+ - DEBFULLNAME='NAME HERE' DEBEMAIL='user@example.com' UBUNTU_RELEASE='bionic' DEBIAN_SUFFIX='0ubuntu2' ./build-dsc.sh fixes/29 /tmp
+	This would build source packages (that could be later built somewhere such as
 	launchpad PPA's) from the fixes/29 branch, in the tmp directory. It would
-    also force the debian suffix '0ubuntu1'. However, it will not sign the source
-    packages, so they will need to be signed later (using 'debsign -k') prior to
-    uploading them to the Ubuntu repository.
-    
+        also force the debian suffix '0ubuntu1'. However, it will not sign the source
+        ackages, so they will need to be signed later (using 'debsign' for
+        ser@example.com) prior to uploading them to the Ubuntu repository.
