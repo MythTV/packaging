@@ -389,7 +389,6 @@ echo -e "\n**** $FREETYPE ****"
 setup_lib http://download.savannah.gnu.org/releases/freetype/$FREETYPE.tar.bz2 $FREETYPE
 pushd $FREETYPE
 if [ $CLEAN == 1 ]; then
-	rm -rf objs
 	make distclean || true
 fi
 OPATH=$PATH
