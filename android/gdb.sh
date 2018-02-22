@@ -196,4 +196,4 @@ fi
 cat so/gdb.setup
 echo wait
 echo launch
-$GDBCLIENT -x so/gdb.setup
+$GDBCLIENT -n -x so/gdb.setup
