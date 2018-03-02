@@ -287,6 +287,13 @@ if [ $SHADOW_BUILD = 1 ]; then
 else
 	# cheap mans shadow build
 	MYTHTVSRC=.
+	SOURCE_VERSION=$(git -C $MYMYTHPATH describe --dirty || git -C $MYMYTHPATH describe || echo Unknown)
+	BRANCH=$(git -C $MYMYTHPATH branch --no-color | sed -e '/^[^\*]/d' -e 's/^\* //' -e 's/(no branch)/exported/')
+	pushd $MYMYTHBUILDPATH
+	echo "Format" > EXPORTED_VERSION
+	echo "SOURCE_VERSION=\"$SOURCE_VERSION\"" > VERSION
+	echo "BRANCH=\"$BRANCH\"" >> VERSION
+	popd
 	if [ ! -e $MYMYTHBUILDBASEPATH/mythtv/stamp_shadow_android ] ; then
 		rm -r $MYMYTHBUILDBASEPATH
 		cp -as `readlink -f $MYMYTHPATH` $MYMYTHBUILDBASEPATH
@@ -294,28 +301,12 @@ else
 		pushd $MYMYTHBUILDBASEPATH
 		git -C $MYMYTHPATH ls-files -o | grep -vE "kdev4|user|src" | xargs -n1 rm
 		popd
-		SOURCE_VERSION=$(git -C $MYMYTHPATH describe --dirty || git -C $MYMYTHPATH describe || echo Unknown)
-		BRANCH=$(git -C $MYMYTHPATH branch --no-color | sed -e '/^[^\*]/d' -e 's/^\* //' -e 's/(no branch)/exported/')
-		pushd $MYMYTHBUILDPATH
-		rm EXPORTED_VERSION || true
-		rm VERSION || true
-		popd
 		touch $MYMYTHBUILDBASEPATH/mythtv/stamp_shadow_android
 	fi
 	pwd
-	if [ ! -e $MYMYTHBUILDBASEPATH/mythtv/stamp_configure_android ] ; then
-		cd $MYMYTHBUILDPATH
-		echo "Format" > EXPORTED_VERSION
-		echo "SOURCE_VERSION=\"$SOURCE_VERSION\"" > VERSION
-		echo "BRANCH=\"$BRANCH\"" >> VERSION
-		export MYTHLIBVERSION=${SOURCE_VERSION%%-*}
-		export MYTHLIBVERSION=${MYTHLIBVERSION#v}
-	else
-		cd $MYMYTHBUILDPATH
-		source VERSION
-		export MYTHLIBVERSION=${SOURCE_VERSION%%-*}
-		export MYTHLIBVERSION=${MYTHLIBVERSION#v}
-	fi
+	cd $MYMYTHBUILDPATH
+	export MYTHLIBVERSION=${SOURCE_VERSION%%-*}
+	export MYTHLIBVERSION=${MYTHLIBVERSION#v}
 	export GIT_CEILING_DIRECTORIES="`readlink -f ..`"
 fi
 
