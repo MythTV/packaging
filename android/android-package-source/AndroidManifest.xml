@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <manifest package="org.mythtv.mythfrontend" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0" android:versionCode="1" android:installLocation="auto">
-    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="mythfrontend" android:icon="@drawable/ic_launcher" android:banner="@drawable/banner" android:debuggable="true" android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="mythfrontend" android:icon="@drawable/ic_launcher" android:banner="@drawable/banner" android:debuggable="true" android:theme="@style/AppTheme" >
         <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="org.qtproject.qt5.android.bindings.QtActivity" android:label="mythfrontend" android:screenOrientation="landscape" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -35,10 +35,8 @@
             <!--  Messages maps -->
 
             <!-- Splash screen -->
-	    <!--
             <meta-data android:name="android.app.splash_screen_drawable" android:resource="@drawable/splash"/>
             <meta-data android:name="android.app.splash_screen_sticky" android:value="false"/>
--->
             <!-- Splash screen -->
 
             <!-- Background running -->
