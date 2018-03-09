@@ -33,9 +33,9 @@ fi
 #	popd
 #fi
 #cp `find $BUILDDIR/mythtv -name "*.so"` so/
-cp -a $PROJDIR/lib/* so/
-cp -a $PROJDIR/qt/lib/* so/
-find $PROJDIR/qt/plugins -name "*.so" -exec cp {} so/ \;
+cp -auv $PROJDIR/lib/* so/
+cp -auv $PROJDIR/qt/lib/* so/
+find $PROJDIR/qt/plugins -name "*.so" -exec cp -auv {} so/ \;
 
 if [ ! -e "qt5printers" ]; then
 	git clone https://github.com/Lekensteyn/qt5printers.git
