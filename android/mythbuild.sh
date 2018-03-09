@@ -289,11 +289,6 @@ else
 	MYTHTVSRC=.
 	SOURCE_VERSION=$(git -C $MYMYTHPATH describe --dirty || git -C $MYMYTHPATH describe || echo Unknown)
 	BRANCH=$(git -C $MYMYTHPATH branch --no-color | sed -e '/^[^\*]/d' -e 's/^\* //' -e 's/(no branch)/exported/')
-	pushd $MYMYTHBUILDPATH
-	echo "Format" > EXPORTED_VERSION
-	echo "SOURCE_VERSION=\"$SOURCE_VERSION\"" > VERSION
-	echo "BRANCH=\"$BRANCH\"" >> VERSION
-	popd
 	if [ ! -e $MYMYTHBUILDBASEPATH/mythtv/stamp_shadow_android ] ; then
 		rm -r $MYMYTHBUILDBASEPATH
 		cp -as `readlink -f $MYMYTHPATH` $MYMYTHBUILDBASEPATH
@@ -303,6 +298,12 @@ else
 		popd
 		touch $MYMYTHBUILDBASEPATH/mythtv/stamp_shadow_android
 	fi
+	pushd $MYMYTHBUILDPATH
+	rm EXPORTED_VERSION
+	echo "Format" > EXPORTED_VERSION
+	echo "SOURCE_VERSION=\"$SOURCE_VERSION\"" > VERSION
+	echo "BRANCH=\"$BRANCH\"" >> VERSION
+	popd
 	pwd
 	cd $MYMYTHBUILDPATH
 	export MYTHLIBVERSION=${SOURCE_VERSION%%-*}
