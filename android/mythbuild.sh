@@ -260,6 +260,16 @@ function bundle_apk() {
 	for i in $MYTHINSTALLROOT/lib/libmythfilter*.so ; do
 		cp "$i" "$MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/"
 	done
+	VERSIONNAME=$(date +"%F" | tr -d '-')-$BUNDLE_NAME-$(grep "define MYTH_SOURCE_VERSION" libs/libmythbase/version.h | cut -d' ' -f 3 | tr -d '"')
+        # TODO: Eventually do something reasonable with versionCode.
+	VERSIONCODE=1
+
+	# Setup the real Android versionName and versionCode..
+	sed -e "s/\(android:versionName\)=\"1.0\"/\1=\"$VERSIONNAME\"/" \
+	    -e "s/\(android:versionCode\)=\"1\"/\1=\"$VERSIONCODE\"/" \
+	    ../../AndroidManifest.xml.in \
+	    >../../android-package-source/AndroidManifest.xml
+
 	$QTBASE/bin/androiddeployqt \
 		--gradle \
 		--output $INSTALLROOT \
@@ -271,10 +281,9 @@ function bundle_apk() {
 	if [ $? -ne 0 ]; then
 		echo "Error androiddeployqt result is $?"
 	else
-		TARGETVERSION=`date +"%F" | tr -d '-'`-$BUNDLE_NAME-`grep "define MYTH_SOURCE_VERSION" libs/libmythbase/version.h | cut -d' ' -f 3 | tr -d '"'`
-		echo "*** copy apk to $BASE/mythfrontend-$TARGETVERSION.apk ***"
+		echo "*** copy apk to $BASE/mythfrontend-$VERSIONNAME.apk ***"
 		for apk in $TARGETAPKPREFIX*.apk; do
-			cp $apk $BASE/mythfrontend-$TARGETVERSION.apk
+			cp $apk $BASE/mythfrontend-$VERSIONNAME.apk
 		done
 	fi
 }
@@ -299,7 +308,7 @@ else
 		touch $MYMYTHBUILDBASEPATH/mythtv/stamp_shadow_android
 	fi
 	pushd $MYMYTHBUILDPATH
-	rm EXPORTED_VERSION
+	rm EXPORTED_VERSION VERSION
 	echo "Format" > EXPORTED_VERSION
 	echo "SOURCE_VERSION=\"$SOURCE_VERSION\"" > VERSION
 	echo "BRANCH=\"$BRANCH\"" >> VERSION
