@@ -32,7 +32,6 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=$(MYTHTV_COMPILE_TYPE) \
 				--prefix=/usr \
 				--runprefix=/usr \
                                 --disable-mythlogserver \
-				--enable-crystalhd \
 				--enable-lirc \
 				--enable-audio-alsa \
 				--enable-audio-oss \
@@ -50,10 +49,10 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=$(MYTHTV_COMPILE_TYPE) \
 				--enable-libx264 \
 				--enable-vdpau
 
-ifeq "$(DEB_BUILD_ARCH)" "armhf"
+ifneq (,$(filter $(DEB_BUILD_ARCH), "armhf" "arm64"))
 	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl --disable-vaapi
 else
-	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video --enable-vaapi
+	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video --enable-vaapi --enable-crystalhd
 endif
 #                                    #
 # Architecture dependent build flags #
