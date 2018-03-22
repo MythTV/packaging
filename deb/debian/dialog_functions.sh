@@ -29,19 +29,19 @@ find_dialog()
 
 find_session()
 {
-    if [ x"$KDE_FULL_SESSION" = x"true" ]; then 
+    if [ x"$KDE_FULL_SESSION" = x"true" ]; then
 	DE=kde;
 	DIALOG=`which kdialog`;
 	DIALOG_TYPE=kdialog;
         SU=`which kdesudo`
 	SU_TYPE=kdesudo
-    elif [ x"$GNOME_DESKTOP_SESSION_ID" != x"" ]; then 
+    elif [ x"$GNOME_DESKTOP_SESSION_ID" != x"" ]; then
 	DE=gnome;
 	DIALOG=`which zenity`;
 	DIALOG_TYPE=zenity;
         SU=`which gksu`
 	SU_TYPE=gksu
-    elif xprop -root _DT_SAVE_MODE | grep ' = \"xfce4\"$' >/dev/null 2>&1; then 
+    elif xprop -root _DT_SAVE_MODE | grep ' = \"xfce4\"$' >/dev/null 2>&1; then
 	DE=xfce;
 	DIALOG=`which zenity`;
 	DIALOG_TYPE=zenity;
@@ -76,6 +76,13 @@ find_su()
                 fi
         fi
 
+        if [ -z "$SU" ]; then
+                SU=`which sudo`
+
+                if [ -z "$SU_TYPE" ]; then
+                        SU_TYPE=sudo
+                fi
+        fi
 
         if [ -z "$SU_TYPE" ]; then
                 failure "You need gksu or kdesu installed to run mythfrontend"
@@ -134,7 +141,7 @@ then
 	if [ -e ~/.mythtv/ignoregroup ]
 	then
 		IGNORE_NOT=0
-	else	
+	else
 		dialog_question "Incorrect Group Membership" "You must be a member of the \"mythtv\" group before starting any mythtv applications.\nWould you like to automatically be added to the group?\n(Note: sudo access required)"
 		ADD_NOT=$?
 		# 0 means that they do want in
@@ -170,8 +177,8 @@ then
 				fi
 				#exit in case they hit cancel here
 				exit 2
-			else		
-				exit 3			
+			else
+				exit 3
 			fi
 		fi
 	fi
@@ -181,4 +188,3 @@ fi
 }
 
 ###################################################################
-
