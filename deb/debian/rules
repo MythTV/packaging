@@ -49,17 +49,17 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=$(MYTHTV_COMPILE_TYPE) \
 				--enable-libx264 \
 				--enable-vdpau
 
+#                                    #
+# Architecture dependent build flags #
+#                                    #
+DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifneq (,$(filter $(DEB_BUILD_ARCH), "armhf" "arm64"))
 	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl --disable-vaapi
 else
 	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video --enable-vaapi --enable-crystalhd
 endif
-#                                    #
-# Architecture dependent build flags #
-#                                    #
-DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq "$(DEB_BUILD_ARCH)" "i386"
-	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx  
+	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx
 endif
 ifeq "$(DEB_BUILD_ARCH)" "powerpc"
 	MYTHTV_CONFIGURE_OPTS += --enable-altivec --extra-cxxflags="-maltivec"
@@ -70,7 +70,7 @@ endif
 
 #Mythplugins configure opts
 MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \
-                              --zm-version=1.22.3 \ 
+                              --zm-version=1.22.3 \
                               --qmake=/usr/bin/qmake \
 
 ifeq "$(DEB_BUILD_ARCH)" "armhf"
