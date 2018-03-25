@@ -53,7 +53,7 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=$(MYTHTV_COMPILE_TYPE) \
 # Architecture dependent build flags #
 #                                    #
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
-ifneq (,$(filter $(DEB_BUILD_ARCH), "armhf" "arm64"))
+ifneq (,$(filter $(DEB_BUILD_ARCH), "armhf arm64"))
 	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl --disable-vaapi
 else
 	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video --enable-vaapi --enable-crystalhd
