@@ -6,6 +6,7 @@ source ~/android/setenv.sh
 SHADOW_BUILD=0
 ARM64=0
 USE_CRYSTAX=0
+BUILD_PLUGINS=0
 
 SYSROOT=$ANDROID_NDK/my-android-toolchain/sysroot
 SYSINC=$ANDROID_NDK/my-android-toolchain
@@ -78,6 +79,10 @@ case "$1" in
 	--arm64)
 		shift
 		ARM64=1
+		;;
+	--plugins)
+		shift
+		BUILD_PLUGINS=1
 		;;
 	"")
 		break
@@ -194,6 +199,12 @@ case "$1" in
 		;;
 	"fresh" )
 		[ -n "$MYMYTHBUILDBASEPATH" ] && rm -r $MYMYTHBUILDBASEPATH
+		if [ -d "$INSTALLROOT" ]; then
+			rm -rf "$INSTALLROOT/include/mythtv"
+			rm -rf "$INSTALLROOT/lib/libmyth*"
+			rm -rf "$INSTALLROOT/libs/*/libmyth*"
+			rm -rf "$INSTALLROOT/build"
+		fi
 		exit 0
 		;;
 	"bundle")
@@ -259,6 +270,15 @@ function bundle_apk() {
 	# filters are not automatically installed so copy them
 	for i in $MYTHINSTALLROOT/lib/libmythfilter*.so ; do
 		cp "$i" "$MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/"
+	done
+	# plugins are not automatically installed so copy them
+	for i in $MYTHINSTALLROOT/lib/libmythpluginmyth{archive,netvision,news,browser,game,music}.so \
+		$MYTHINSTALLROOT/lib/libmyth{archivehelper,fillnetvision}.so \
+		$MYTHINSTALLROOT/lib/lib{ogg,vorbis,vorbisfile,vorbisenc,FLAC}.so \
+		; do
+		if [ -e "$i" ]; then
+			cp "$i" "$MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/"
+		fi
 	done
 	VERSIONNAME=$(date +"%F" | tr -d '-')-$BUNDLE_NAME-$(grep "define MYTH_SOURCE_VERSION" libs/libmythbase/version.h | cut -d' ' -f 3 | tr -d '"')
         # TODO: Eventually do something reasonable with versionCode.
@@ -374,12 +394,43 @@ $MYTHTVSRC/configure \
 
 fi
 
+make_plugins() {
+	pushd ../mythplugins
+	if [ ! -e stamp_configure_android ] ; then
+		./configure \
+			--compile-type=debug \
+			--pkg-config=$(which pkg-config) \
+			--prefix=/ \
+			--runprefix=/ \
+			--libdir-name=lib \
+			--sysroot=$SYSROOT \
+			--mythroot=$INSTALLROOT \
+			--extra-cflags="$CRYSTAX_CFLAGS -D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
+			--extra-cxxflags=" -D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
+			--extra-ldflags="-Wl,-rpath-link,$INSTALLROOT/lib" \
+			--qmake=$QTBASE/bin/qmake \
+			--qmakespecs="android-g++ $EXTRASPECS" \
+			&& touch stamp_configure_android
+
+	fi
+
+	make -j$NCPUS
+
+	make install INSTALL_ROOT=$INSTALLROOT
+
+	popd
+}
+
 if [ -e stamp_configure_android ] ; then
 	set -e
 	echo "*** make ***"
 	make -j$NCPUS
 	echo "*** make install ***"
 	make install INSTALL_ROOT=$INSTALLROOT
+	if [ $BUILD_PLUGINS == 1 ]; then
+		echo "*** make plugins ***"
+		make_plugins
+	fi
 	echo "*** deploy-extra-libs ***"
 	deploy-extra-libs
 	echo "*** androiddeployqt ***"

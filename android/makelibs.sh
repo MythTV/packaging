@@ -49,6 +49,18 @@ while : ; do
 			shift
 			BUILD_EXIV2=1
 			;;
+		flac)
+			shift
+			BUILD_FLAC=1
+			;;
+		ogg)
+			shift
+			BUILD_OGG=1
+			;;
+		vorbis)
+			shift
+			BUILD_VORBIS=1
+			;;
 		libxml2)
 			shift
 			BUILD_LIBXML2=1
@@ -100,6 +112,9 @@ while : ; do
 			BUILD_LAME=1
 			BUILD_EXIV2=1
 			BUILD_ICU=1
+			BUILD_FLAC=1
+			BUILD_VORBIS=1
+			BUILD_OGG=1
 			#BUILD_LIBXML2=1
 			#BUILD_LIBXSLT=1
 			#BUILD_GLIB=1
@@ -142,6 +157,9 @@ while : ; do
 			echo "   iconv"
 			echo "   mariadb"
 			echo "   lame"
+			echo "   ogg"
+			echo "   vorbis"
+			echo "   flac"
 			echo "   exiv2"
 			echo "   icu"
 			echo "   qtwebkit"
@@ -157,7 +175,7 @@ while : ; do
 done
 
 QTMAJORVERSION=5.10
-QTVERSION=$QTMAJORVERSION.0
+QTVERSION=$QTMAJORVERSION.1
 export ANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL:-21}
 export ANDROID_SDK_PLATFORM=android-$ANDROID_NATIVE_API_LEVEL
 export ANDROID_NDK_PLATFORM=android-$ANDROID_NATIVE_API_LEVEL
@@ -731,6 +749,140 @@ popd
 return $ERR
 }
 
+build_flac() {
+rm -rf build
+FLAC=flac-1.3.2
+echo -e "\n**** $FLAC ****"
+setup_lib https://ftp.osuosl.org/pub/xiph/releases/flac/$FLAC.tar.xz $FLAC
+pushd $FLAC
+OPATH=$PATH
+
+if [ $CLEAN == 1 ]; then
+	make distclean || true
+fi
+
+local CPUOPT=
+if [ $ARM64 == 1 ]; then
+	CPUOPT="-march=$CPU_ARCH"
+else
+	CPUOPT="-march=$CPU_ARCH"
+fi
+
+./configure --help
+./configure \
+	CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	RANLIB=${CROSSPATH2}ranlib \
+	OBJDUMP=${CROSSPATH2}objdump \
+	AR=${CROSSPATH2}ar \
+	CC="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-gcc" \
+	CXX="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-g++" \
+	CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+	PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
+	--with-sysroot=$INSTALLROOT \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
+	--prefix=$INSTALLROOT \
+	--enable-shared \
+	--enable-static &&
+	make -C src/libFLAC -j$NCPUS &&
+	make -C include install
+	make -C src/libFLAC install
+	ERR=$?
+
+	# --with-ogg-libraries=$INSTALLROOT/lib \
+
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
+build_ogg() {
+rm -rf build
+LIBOGG=libogg-1.3.3
+echo -e "\n**** $LIBOGG ****"
+setup_lib https://ftp.osuosl.org/pub/xiph/releases/ogg/$LIBOGG.tar.xz $OGG
+pushd $LIBOGG
+OPATH=$PATH
+
+if [ $CLEAN == 1 ]; then
+	make distclean || true
+fi
+
+local CPUOPT=
+if [ $ARM64 == 1 ]; then
+	CPUOPT="-march=$CPU_ARCH"
+else
+	CPUOPT="-march=$CPU_ARCH"
+fi
+
+./configure \
+	CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	RANLIB=${CROSSPATH2}ranlib \
+	OBJDUMP=${CROSSPATH2}objdump \
+	AR=${CROSSPATH2}ar \
+	CC="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-gcc" \
+	CXX="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-g++" \
+	CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+	PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
+	--prefix=$INSTALLROOT \
+	--enable-shared \
+	--enable-static &&
+	make -j$NCPUS &&
+	make install
+	ERR=$?
+
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
+build_vorbis() {
+rm -rf build
+LIBVORBIS=libvorbis-1.3.6
+echo -e "\n**** $LIBVORBIS ****"
+setup_lib https://ftp.osuosl.org/pub/xiph/releases/vorbis/$LIBVORBIS.tar.xz $LIBVORBIS
+pushd $LIBVORBIS
+OPATH=$PATH
+
+if [ $CLEAN == 1 ]; then
+	make distclean || true
+fi
+
+local CPUOPT=
+if [ $ARM64 == 1 ]; then
+	CPUOPT="-march=$CPU_ARCH"
+else
+	CPUOPT="-march=$CPU_ARCH"
+fi
+
+./configure \
+	CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	RANLIB=${CROSSPATH2}ranlib \
+	OBJDUMP=${CROSSPATH2}objdump \
+	AR=${CROSSPATH2}ar \
+	CC="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-gcc" \
+	CXX="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-g++" \
+	CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+	PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
+	--prefix=$INSTALLROOT \
+	--enable-shared \
+	--enable-static &&
+	make -j$NCPUS &&
+	make install
+	ERR=$?
+
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
 build_libxml2() {
 rm -rf build
 LIBXML2=libxml2-2.9.5
@@ -758,6 +910,7 @@ fi
 	CC="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-gcc" \
 	CXX="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-g++" \
 	CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+	PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
 	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
 	--prefix=$INSTALLROOT \
 	--disable-xmp \
@@ -1993,6 +2146,9 @@ get_android_cmake
 [ -n "$BUILD_MARIADB" ] && build_mariadb
 [ -n "$BUILD_LAME" ] && build_lame
 [ -n "$BUILD_EXIV2" ] && build_exiv2
+[ -n "$BUILD_OGG" ] && build_ogg
+[ -n "$BUILD_VORBIS" ] && build_vorbis
+[ -n "$BUILD_FLAC" ] && build_flac
 [ -n "$BUILD_LIBXML2" ] && build_libxml2
 [ -n "$BUILD_LIBXSLT" ] && build_libxslt
 [ -n "$BUILD_FFI" ] && build_ffi
