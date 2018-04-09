@@ -1,0 +1,29 @@
+# sourced from scripts to get the long name and the dest dir
+# from the short name
+# input - shortname
+# output - longname, destdir
+
+. $HOME/.buildrc
+
+if [[ "$BUILDDEST" == "" ]] ; then
+    echo "ERROR - .buildrc is not set up"
+    exit 2
+fi
+
+rc=0
+longname=
+grep "shortname=$shortname " $HOME/.buildnames > /tmp/buildnames$$.txt || rc=$?
+
+if [[ "$rc" != 0 ]] ; then
+    echo "shortname $shortname not found in .buildnames"
+    cat $HOME/.buildnames
+    exit 2
+fi
+
+. /tmp/buildnames$$.txt
+
+destdir=
+if [[ "$longname" != "" ]] ; then
+    destdir=$BUILDDEST/$longname
+fi
+rm -f /tmp/buildnames$$.txt

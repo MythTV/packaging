@@ -1,0 +1,63 @@
+# Sourced to get the destination directory
+# input - current path and git branch
+# output - destdir, projname
+
+if [[ -f $HOME/.buildrc ]] ; then
+    . $HOME/.buildrc
+fi
+
+if [[ "$BUILDDEST" == "" ]] ; then
+    echo "Please supply destination for builds (default is $HOME/proj/build"
+    read -e BUILDDEST
+    if [[ "$BUILDDEST" == "" ]] ; then
+        BUILDDEST=$HOME/proj/build
+    fi
+    echo "BUILDDEST=$BUILDDEST" >> $HOME/.buildrc
+fi
+
+projname=`basename $PWD`
+arch=`dpkg-architecture -q DEB_TARGET_ARCH`
+codename=`lsb_release -c|cut -f 2`
+if [[ "$SCHROOT_CHROOT_NAME" == "" ]] ; then
+    chprefix=
+else
+    chprefix="chroot-${SCHROOT_CHROOT_NAME}-"
+fi
+branch=`git branch | grep '*'| cut -f2 -d' ' | sed 's!/!-!g'`
+if [[ "$branch" == '(HEAD' ]] ; then
+    branch=`git branch | grep '*'| cut -f3 -d' '`
+fi
+
+dirty=`git status --porcelain|grep -v "^??"|wc -l`
+
+if [[ "$dirty" == 0 ]] ; then
+    dirty=
+else
+    dirty="-tst"
+fi
+
+longname="$chprefix$codename-$arch/$projname/$branch$dirty"
+destdir="$BUILDDEST/$longname"
+
+# Check short name
+if [[ ! -f $HOME/.buildnames ]] ; then
+    touch $HOME/.buildnames
+fi
+rc=0
+shortname=
+grep -w "longname=$longname$" $HOME/.buildnames > /tmp/buildnames$$.txt || rc=$?
+
+if [[ "$rc" == 0 ]] ; then
+    . /tmp/buildnames$$.txt
+fi
+
+if [[ "$shortname" == "" ]] ; then
+    shortname=${chprefix:7:1}${chprefix: -1}${codename:0:1}
+    shortname=$shortname${arch:0:1}${arch: -1}${projname:0:1}${projname: -2}
+    shortname=$shortname${branch:0:1}${branch: -1}${dirty:1:1}
+    echo "shortname=$shortname longname=$longname" >> $HOME/.buildnames
+fi
+echo "Build shortname=$shortname longname=$longname"
+rm -f /tmp/buildnames$$.txt
+
+

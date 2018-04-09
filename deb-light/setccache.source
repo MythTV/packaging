@@ -1,0 +1,17 @@
+# sourced from scripts to setup ccache
+# also returns arch and codename to caller
+
+if [[ "$target_arch" == "" ]] ; then
+    arch=`dpkg-architecture -q DEB_TARGET_ARCH`
+else
+    arch="$target_arch"
+fi
+codename=`lsb_release -c|cut -f 2`
+if [[ "$SCHROOT_CHROOT_NAME" == "" ]] ; then
+    chprefix=
+else
+    chprefix="chroot-${SCHROOT_CHROOT_NAME}-"
+fi
+#export CCACHE_DIR=$HOME/.ccache-$chprefix$codename-$arch
+
+ccache -M 10G -F 0
