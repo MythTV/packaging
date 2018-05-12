@@ -7,11 +7,11 @@ Description: Don't throw errors when starting the backend
 Author: Mario Limonciello <superm1@ubuntu.com>
 Bug: http://code.mythtv.org/trac/ticket/9626
 
-Index: mythtv-master/mythtv/programs/mythbackend/scheduler.cpp
+Index: mythtv/mythtv/programs/mythbackend/scheduler.cpp
 ===================================================================
---- mythtv-master.orig/mythtv/programs/mythbackend/scheduler.cpp	2013-07-22 20:50:58.871371003 +1000
-+++ mythtv-master/mythtv/programs/mythbackend/scheduler.cpp	2013-07-22 20:55:00.071904699 +1000
-@@ -178,8 +178,7 @@
+--- mythtv.orig/mythtv/programs/mythbackend/scheduler.cpp
++++ mythtv/mythtv/programs/mythbackend/scheduler.cpp
+@@ -185,8 +185,7 @@ bool Scheduler::VerifyCards(void)
          LOG(VB_GENERAL, LOG_ERR, LOC +
                  "No capture cards are defined in the database.\n\t\t\t"
                  "Perhaps you should re-read the installation instructions?");

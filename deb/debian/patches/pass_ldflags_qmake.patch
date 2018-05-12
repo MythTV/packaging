@@ -9,7 +9,7 @@ Index: mythtv/mythtv/configure
 ===================================================================
 --- mythtv.orig/mythtv/configure
 +++ mythtv/mythtv/configure
-@@ -8498,10 +8498,7 @@ EOF
+@@ -8756,10 +8756,7 @@ EOF
  
  #echo "endif # FFMPEG_CONFIG_MAK" >> $TMPMAK
  
