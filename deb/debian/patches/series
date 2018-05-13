@@ -7,6 +7,6 @@ allow_no_tuners.patch
 default_theme.patch
 
 ##mythplugins##
-configure_mythplugins_without_mythtv_installed.patch
+#configure_mythplugins_without_mythtv_installed.patch
 pass_ldflags_qmake.patch
 mysql_57_support.patch
