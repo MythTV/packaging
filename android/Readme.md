@@ -7,10 +7,15 @@ NOTE: The build platform is linux
 1. Clone and configure the repos.
    * mkdir workdir
    * cd workdir
-   * git clone git@github.com/packaging.git
-   * git clone git@github.com/mythtv.git
+   * git clone git@github.com:MythTV/packaging.git
+   * git clone git@github.com:MythTV/mythtv.git
    * cd packaging/android
-   * If building for arm64, run "echo ARM64=1 >make.inc".
+   * If building for arm64, create a file called make.inc with this:
+
+```
+target_arch=arm64
+ARM64=1
+```
 
 2. Get Android Studio, SDK and NDK.
    * Get Android Studio from https://developer.android.com/studio/index.html
@@ -31,6 +36,7 @@ NOTE: The build platform is linux
      SDK 21 is the default
 
    You should have a dir structure like this after you are done:
+
 ```
    ~/android
 	android-ndk -> android-ndk-r15c
@@ -44,19 +50,38 @@ NOTE: The build platform is linux
 ```
 
 3. Other dependencies
-  * bison
-  * flex
-  * gradle
-    * this is downloaded on demand so is self fulfilling.
+    * bison
+    * flex
+    * gradle
+        * gradle is downloaded on demand so is self fulfilling.
+    * gperf
+    * ruby
 
-4. Fetch and build all the libraries
+4. Fetch and build all the libraries.
+
+   The script downloads source to build, but fails on mariadb. To avoid this problem
+   create directory workdir/packaging/android/tarballs and dowload mariadb-connector-c-2.1.0-src.tar.gz
+   from https://downloads.mariadb.org/connector-c/2.1.0/ into that directory.
+
+   Change your path for the build by running this (substitute the correct version number for cmake)
+
+```
+PATH=$HOME/android/android-studio/jre/bin:\
+$HOME/android/android-sdk-linux/cmake/3.6.4111459/bin:$PATH
+```
+
    In workdir/packaging/android, run
+
 ```
-   ./makelibs.sh all
+    ./makelibs.sh all
 ```
+    
+   This creates some 3 GB of data in a directory called workdir/packaging/android/mythinstall64 (for 64bit). I suggest making a copy of that, because that directory gets MythTV compile results added to it by mythbuild, and there is no "clean" process that cleans it up in case you want to be sure of running a pristine build in future.
 
 5. Build MythTV (debug by default)
+
    In workdir/packaging/android, run
+
 ```
    ./mythbuild.sh
 ```
