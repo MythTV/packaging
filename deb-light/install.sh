@@ -23,7 +23,7 @@ case $projname in
         ;;
     mythplugins)
         ;;
-    jampal)
+    *)
         rm -rf $destdir
         mkdir -p $destdir
         export DESTDIR=$destdir
