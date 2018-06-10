@@ -323,7 +323,7 @@ else
 		cp -as `readlink -f $MYMYTHPATH` $MYMYTHBUILDBASEPATH
 		#rm -r $MYMYTHBUILDBASEPATH/.git
 		pushd $MYMYTHBUILDBASEPATH
-		git -C $MYMYTHPATH ls-files -o | grep -vE "kdev4|user|src" | xargs -n1 rm
+		git -C $MYMYTHPATH status --ignored --porcelain | grep '!!' | sed 's/!!//' | xargs -n1 rm -fr
 		popd
 		touch $MYMYTHBUILDBASEPATH/mythtv/stamp_shadow_android
 	fi
