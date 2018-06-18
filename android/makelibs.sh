@@ -349,7 +349,7 @@ setup_lib() {
 
 get_android_cmake() {
 	if [ ! -d android-cmake ]; then
-		git clone https://github.com/taka-no-me/android-cmake.git
+		git clone https://github.com/bingmann/android-cmake.git
 	fi
 }
 
@@ -387,6 +387,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DCMAKE_BUILD_TYPE=Release                \
       -DBUILD_SHARED_LIBS=ON                    \
       -DANDROID_ABI="$ARMEABI"                  \
+      -DCMAKE_MAKE_PROGRAM=make \
       -DCMAKE_PREFIX_PATH="$INSTALLROOT" \
       -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=1 \
       -DSOVERSION="" \
@@ -589,6 +590,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DCMAKE_CXX_FLAGS="-Dushort=uint16_t" \
       -DCMAKE_C_FLAGS="-Dushort=uint16_t" \
       -DCMAKE_PREFIX_PATH="$INSTALLROOT" \
+      -DCMAKE_MAKE_PROGRAM=make \
       -DICONV_LIBRARY=$INSTALLROOT/lib/libiconv.a \
       .. && \
       make VERBOSE=1 && \
