@@ -111,7 +111,7 @@ override_dh_auto_install:
 	$(MAKE) -C mythtv install INSTALL_ROOT=$(CURDIR)/debian/tmp
 
 	#mythplugins
-	cd mythplugins && ./configure $(MYTHPLUGINS_CONFIGURE_OPTS) --mythroot=$(CURDIR)/debian/tmp
+	cd mythplugins && ./configure $(MYTHPLUGINS_CONFIGURE_OPTS) --mythroot=$(CURDIR)/debian/tmp:$(CURDIR)/debian/libmyth-python
 	$(MAKE) -j$(PROCESSORS) -C mythplugins
 	for plugin in mytharchive \
 	mythgallery mythgame mythmusic mythmovies mythnews \
