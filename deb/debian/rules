@@ -136,7 +136,6 @@ override_dh_install:
 	cp debian/20-mythweb.ini   ${buildroot}/etc/php/7.0/apache2/conf.d; \
 	dh_install -Xusr/share/mythtv/fonts/Free \
                    -Xusr/share/mythtv/fonts/Purisa \
-                   -Xusr/share/mythtv/fonts/Droid \
                    -Xusr/share/mythtv/fonts/texgyrechorus \
                    -Xusr/lib/libmythzmq.la \
                    -Xusr/share/mythtv/fonts/tiresias_gpl3.txt \
