@@ -1,6 +1,17 @@
 #!/bin/bash
 
+# Environment variables that can be changed in setenv.sh
+# or via export before running gdb.sh
+# Use su - USE_SU=1
+# Use IP - USE_IP=1
+# If neither is set will use adb port forwarding
+# Android push directory - TMPDIR=/data/local/tmp
+
 . ~/android/setenv.sh
+
+if [ -z "$USE_SU" ] ; then USE_SU=0 ; fi
+if [ -z "$USE_IP" ] ; then USE_IP=0 ; fi
+if [ -z "$TMPDIR" ] ; then TMPDIR=/data/local/tmp ; fi
 
 source make.inc
 
@@ -65,13 +76,11 @@ START_WAIT=-D
 DATA_DIR=$(adb shell run-as $PACKAGE_NAME pwd)
 DEVICE_GDBSERVER=$DATA_DIR/gdbserver
 DEBUG_SOCKET=$DATA_DIR/debug-socket
-USE_SU=0
-USE_IP=1
 
 if ! adb shell test -e $DEVICE_GDBSERVER ; then
 	#adb shell mkdir -p $(dirname $DEVICE_GDBSERVER)
-	adb push ${ANDROID_NDK_ROOT}/prebuilt/android-${TARGET_ARCH}/gdbserver/gdbserver /sdcard/Download
-	adb shell run-as $PACKAGE_NAME cp /sdcard/Download/gdbserver $DEVICE_GDBSERVER
+	adb push ${ANDROID_NDK_ROOT}/prebuilt/android-${TARGET_ARCH}/gdbserver/gdbserver $TMPDIR
+	adb shell run-as $PACKAGE_NAME cp $TMPDIR/gdbserver $DEVICE_GDBSERVER
 	adb shell run-as $PACKAGE_NAME chmod a+x $DEVICE_GDBSERVER
 fi
 
@@ -185,7 +194,7 @@ else
 		adb shell su -c "chown $PUSER:$PUSER $DATA_DIR/$DEBUG_SOCKET"
 		adb shell su -c "chmod a+rwx $DATA_DIR/$DEBUG_SOCKET"
 	fi
-	adb forward tcp:$DEBUG_PORT localfilesystem:$DATA_DIR/$DEBUG_SOCKET
+	adb forward tcp:$DEBUG_PORT localfilesystem:$DEBUG_SOCKET
 fi
 if [ $? != 0 ] ; then
 	echo "ERROR: Could not setup network redirection to gdbserver?"
