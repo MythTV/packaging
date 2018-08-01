@@ -27,7 +27,6 @@ if [ "$USE_CRYSTAX" == 1 ]; then
 else
 	export ANDROID_NDK_TOOLCHAIN_VERSION=4.9
 fi
-export ANDROID_BUILD_TOOLS_REVISION=27.0.3
 
 #CFLAGS='-march=armv7-a -mfloat-abi=softfp'
 #CFLAGS='-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
