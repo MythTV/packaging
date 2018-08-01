@@ -18,7 +18,7 @@ else
     export ANDROID_BUILD_TOOLS_REVISION=27.0.3
     echo "Using hardcoded tools version $ANDROID_BUILD_TOOLS_REVISION"
 fi
-export JAVA_HOME=${HOME}/android/android-studio/jre/jre
+export JAVA_HOME=${HOME}/android/android-studio/jre
 export JDK_PATH=${JAVA_HOME}/bin
 export ANDROID_KEYSTORE=$ANDROID_ROOT/digivation.keystore
 
