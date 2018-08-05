@@ -85,6 +85,18 @@ while : ; do
 			shift
 			BUILD_ICU=1
 			;;
+		liblzo)
+			shift
+			BUILD_LZO=1
+			;;
+		libsamplerate)
+			shift
+			BUILD_LIBSAMPLERATE=1
+			;;
+		libbluray)
+			shift
+			BUILD_LIBBLURAY=1
+			;;
 		qt5extras)
 			shift
 			BUILD_QT5EXTRAS=1
@@ -112,10 +124,13 @@ while : ; do
 			BUILD_LAME=1
 			BUILD_EXIV2=1
 			BUILD_ICU=1
+			BUILD_LZO=1
+			BUILD_LIBSAMPLERATE=1
+			BUILD_LIBBLURAY=1
 			BUILD_FLAC=1
 			BUILD_VORBIS=1
 			BUILD_OGG=1
-			#BUILD_LIBXML2=1
+			BUILD_LIBXML2=1
 			#BUILD_LIBXSLT=1
 			#BUILD_GLIB=1
 			BUILD_QT5EXTRAS=1
@@ -1139,25 +1154,26 @@ return $ERR
 }
 
 build_android_external_liblzo() {
-	# unused
+LIBLZO=lzo-2.10
 echo -e "\n**** $LIBLZO ****"
 rm -rf build
-pushd android-external-liblzo
+setup_lib http://www.oberhumer.com/opensource/lzo/download/lzo-2.10.tar.gz $LIBLZO
+pushd $LIBLZO
 OPATH=$PATH
-{ patch -p0 -Nt || true; } <<'END'
---- autoconf/config.sub.orig	2015-02-15 16:07:07.005411976 +1100
-+++ autoconf/config.sub	2015-02-15 16:07:35.378208159 +1100
-@@ -1399,6 +1399,9 @@
- 	-dicos*)
- 		os=-dicos
- 		;;
-+	-android*)
-+		os=-android
-+		;;
- 	-none)
- 		;;
- 	*)
-END
+#{ patch -p0 -Nt || true; } <<'END'
+#--- autoconf/config.sub.orig	2015-02-15 16:07:07.005411976 +1100
+#+++ autoconf/config.sub	2015-02-15 16:07:35.378208159 +1100
+#@@ -1399,6 +1399,9 @@
+# 	-dicos*)
+# 		os=-dicos
+# 		;;
+#+	-android*)
+#+		os=-android
+#+		;;
+# 	-none)
+# 		;;
+# 	*)
+#END
 ./configure \
 	CFLAGS="-isysroot $SYSROOT -mcpu=$CPU" \
 	CXXFLAGS="-isysroot $SYSROOT -mcpu=$CPU" \
@@ -1166,13 +1182,11 @@ END
 	CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
 	--host=arm-linux-androideabi \
 	--prefix=$INSTALLROOT \
-	--disable-xmp \
 	--enable-shared \
 	--enable-static && \
 make clean && \
-make -j$NCPUS && \
-make install && \
-cp minilzo/minilzo.h $INSTALLROOT/include
+make -j$NCPUS src/liblzo2.la && \
+make install-libLTLIBRARIES install-data-am
 ERR=$?
 PATH=$OPATH
 unset OPATH
@@ -1280,6 +1294,124 @@ ERR=$?
 popd
 
 echo "*** Build ICU Done ***"
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
+build_libsamplerate() {
+rm -rf build
+LIBSAMPLERATE=libsamplerate-0.1.9
+echo -e "\n**** $LIBSAMPLRATE ****"
+setup_lib http://www.mega-nerd.com/SRC/$LIBSAMPLERATE.tar.gz $LIBSAMPLERATE
+pushd $LIBSAMPLERATE
+OPATH=$PATH
+{ patch -p0 -Nt -r - || true; } <<'END'
+--- Cfg/config.sub~	2010-03-16 10:26:14.000000000 -0400
++++ Cfg/config.sub	2018-06-23 13:48:22.051866123 -0400
+@@ -242,7 +242,7 @@
+ 	| alpha | alphaev[4-8] | alphaev56 | alphaev6[78] | alphapca5[67] \
+ 	| alpha64 | alpha64ev[4-8] | alpha64ev56 | alpha64ev6[78] | alpha64pca5[67] \
+ 	| am33_2.0 \
+-	| arc | arm | arm[bl]e | arme[lb] | armv[2345] | armv[345][lb] | avr | avr32 \
++	| arc | aarch | aarch64 | arm | arm[bl]e | arme[lb] | armv[2345] | armv[345][lb] | avr | avr32 \
+ 	| bfin \
+ 	| c4x | clipper \
+ 	| d10v | d30v | dlx | dsp16xx \
+@@ -322,7 +322,7 @@
+ 	| alpha-* | alphaev[4-8]-* | alphaev56-* | alphaev6[78]-* \
+ 	| alpha64-* | alpha64ev[4-8]-* | alpha64ev56-* | alpha64ev6[78]-* \
+ 	| alphapca5[67]-* | alpha64pca5[67]-* | arc-* \
+-	| arm-*  | armbe-* | armle-* | armeb-* | armv*-* \
++	| arm-*  | armbe-* | armle-* | armeb-* | armv*-* | aarch64-* \
+ 	| avr-* | avr32-* \
+ 	| bfin-* | bs2000-* \
+ 	| c[123]* | c30-* | [cjt]90-* | c4x-* | c54x-* | c55x-* | c6x-* \
+@@ -1407,6 +1407,9 @@
+ 	-aros*)
+ 		os=-aros
+ 		;;
++	-android*)
++		os=-android
++		;;
+ 	-kaos*)
+ 		os=-kaos
+ 		;;
+END
+if [ $CLEAN == 1 ]; then
+	make distclean || true
+fi
+
+local CPUOPT=
+#if [ $ARM64 == 1 ]; then
+#	CPUOPT="-march=$CPU_ARCH"
+#else
+#	CPUOPT="-march=$CPU_ARCH"
+#fi
+./configure \
+	CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	RANLIB=${CROSSPATH2}ranlib \
+	OBJDUMP=${CROSSPATH2}objdump \
+	AR=${CROSSPATH2}ar \
+	CC="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-gcc" \
+	CXX="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-g++" \
+	CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
+	--prefix=$INSTALLROOT \
+	--enable-shared \
+	--enable-static &&
+	make -j$NCPUS &&
+	make install
+	ERR=$?
+
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
+build_libbluray() {
+rm -rf build
+LIBBLURAYVER=1.0.2
+LIBBLURAY=libbluray-$LIBBLURAYVER
+echo -e "\n**** $LIBBLURAY ****"
+setup_lib ftp://ftp.videolan.org/pub/videolan/libbluray/$LIBBLURAYVER/$LIBBLURAY.tar.bz2 $LIBBLURAY
+pushd $LIBBLURAY
+OPATH=$PATH
+if [ $CLEAN == 1 ]; then
+	make distclean || true
+fi
+
+local CPUOPT=
+#if [ $ARM64 == 1 ]; then
+#	CPUOPT="-march=$CPU_ARCH"
+#else
+#	CPUOPT="-march=$CPU_ARCH"
+#fi
+./configure \
+	CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	RANLIB=${CROSSPATH2}ranlib \
+	OBJDUMP=${CROSSPATH2}objdump \
+	AR=${CROSSPATH2}ar \
+	CC="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-gcc" \
+	CXX="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-g++" \
+	CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+	PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
+	--prefix=$INSTALLROOT \
+        --without-fontconfig \
+        --disable-silent-rules \
+        --disable-examples \
+	--enable-shared \
+	--enable-static &&
+	make -j$NCPUS &&
+	make install
+	ERR=$?
+
+exit
 PATH=$OPATH
 unset OPATH
 popd
@@ -2155,6 +2287,9 @@ get_android_cmake
 [ -n "$BUILD_FFI" ] && build_ffi
 [ -n "$BUILD_GLIB" ] && build_glib
 [ -n "$BUILD_ICU" ] && build_icu
+[ -n "$BUILD_LZO" ] && build_android_external_liblzo
+[ -n "$BUILD_LIBSAMPLERATE" ] && build_libsamplerate
+[ -n "$BUILD_LIBBLURAY" ] && build_libbluray
 if [ -n "$BUILD_QT5EXTRAS" ]; then
 	echo -e "\n**** patch qt5 ***"
 	patch_qt5
