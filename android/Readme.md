@@ -26,8 +26,8 @@ ARM64=1
        the likely choices right now.
      * Install the desired SDK Tools.  CMake and the NDK are the main ones.
    * For the NDK
-     * Get android-ndk-r15c-linux-x86_64.bin and install it in ~/android too.
-     * Symlink it as android-ndk -> android-ndk-r15c.
+     * Get android-ndk-r13b-linux-x86_64.bin and install it in ~/android too.
+     * Symlink it as android-ndk -> android-ndk-r13b.
      * android-ndk-16b currently does not work due to missing headers.
    * if you want to build a release apk, you need to create a key.
    * Copy android-utilities/* to ~/android
@@ -39,8 +39,8 @@ ARM64=1
 
 ```
    ~/android
-	android-ndk -> android-ndk-r15c
-	android-ndk-r15c
+	android-ndk -> android-ndk-r13b
+	android-ndk-r13b
 	android-sdk-linux
 	android-studio
 	xxxxx-release.keystore
@@ -52,8 +52,6 @@ ARM64=1
 3. Other dependencies
     * bison
     * flex
-    * gradle
-        * gradle is downloaded on demand so is self fulfilling.
     * gperf
     * ruby
 
@@ -62,13 +60,6 @@ ARM64=1
    The script downloads source to build, but fails on mariadb. To avoid this problem
    create directory workdir/packaging/android/tarballs and dowload mariadb-connector-c-2.1.0-src.tar.gz
    from https://downloads.mariadb.org/connector-c/2.1.0/ into that directory.
-
-   Change your path for the build by running this (substitute the correct version number for cmake)
-
-```
-PATH=$HOME/android/android-studio/jre/bin:\
-$HOME/android/android-sdk-linux/cmake/3.6.4111459/bin:$PATH
-```
 
    In workdir/packaging/android, run
 
