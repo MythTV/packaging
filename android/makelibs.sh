@@ -1411,7 +1411,6 @@ local CPUOPT=
 	make install
 	ERR=$?
 
-exit
 PATH=$OPATH
 unset OPATH
 popd
