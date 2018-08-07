@@ -10,7 +10,7 @@ NOTE: The build platform is linux
    * git clone git@github.com:MythTV/packaging.git
    * git clone git@github.com:MythTV/mythtv.git
    * cd packaging/android
-   * If building for arm64, create a file called make.inc with this:
+   * If building for arm64 (eg. NVidia Shield), create a file called make.inc with this:
 
 ```
 target_arch=arm64
@@ -20,11 +20,11 @@ ARM64=1
 2. Get Android Studio, SDK and NDK.
    * Get Android Studio from https://developer.android.com/studio/index.html
      and install it into ~/android/android-studio.
-   * After Android Studio is installed, use it to install the Android SDK and NDK.
+   * After Android Studio is installed, use it to install the Android SDK.
      * In Android Studio, choose Configure / SDK Manager.
-     * INstall the desired SDK versions.  Lollipop, Marshmallow and Nougat are
+     * Install the desired SDK versions.  Lollipop, Marshmallow, Nougat and Oreo are
        the likely choices right now.
-     * Install the desired SDK Tools.  CMake and the NDK are the main ones.
+     * Install the desired SDK Tools.  CMake is the main one.
    * For the NDK
      * Get android-ndk-r13b-linux-x86_64.bin and install it in ~/android too.
      * Symlink it as android-ndk -> android-ndk-r13b.
@@ -34,6 +34,7 @@ ARM64=1
       * cp android-utilities/setenv.sh ~/android
    * Create a toolchain for the correct version.  See maketoolchain.sh for this.
      SDK 21 is the default
+        * Run `maketoolchain.sh` in ~/android
 
    You should have a dir structure like this after you are done:
 
@@ -54,6 +55,7 @@ ARM64=1
     * flex
     * gperf
     * ruby
+    * ant (for libbluray)
 
 4. Fetch and build all the libraries.
 
