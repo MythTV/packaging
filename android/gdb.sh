@@ -25,6 +25,7 @@ if [ $ARM64 == 1 ]; then
 	TARGET_ARCH=arm64
 	TOOLCHAIN_PREFIX=$ANDROID_NDK_ROOT/my-android-toolchain64/bin/aarch64-linux-android-
 	TOOLCHAIN_PREFIX2=$ANDROID_NDK_ROOT/my-android-toolchain64/bin/
+    sodir=so64
 else
 	MYGDB="$ANDROID_NDK/my-android-toolchain/bin/ndk-gdb"
 	BUILDDIR=build
@@ -35,27 +36,28 @@ else
 	TARGET_ARCH=arm
 	TOOLCHAIN_PREFIX=$ANDROID_NDK_ROOT/my-android-toolchain/bin/arm-linux-androideabi-
 	TOOLCHAIN_PREFIX2=$ANDROID_NDK_ROOT/my-android-toolchain/bin/
+    sodir=so32
 fi
 
-[ ! -d so ] && mkdir so
-#if [ ! -f so/app_process ]; then
-#	pushd so
+[ ! -d $sodir ] && mkdir $sodir
+#if [ ! -f $sodir/app_process ]; then
+#	pushd $sodir
 #	adb pull /system/bin/app_process
 #	popd
 #fi
-#cp `find $BUILDDIR/mythtv -name "*.so"` so/
-cp -auv $PROJDIR/lib/* so/
-cp -auv $PROJDIR/qt/lib/* so/
-find $PROJDIR/qt/plugins -name "*.so" -exec cp -auv {} so/ \;
+#cp `find $BUILDDIR/mythtv -name "*.so"` $sodir/
+cp -auv $PROJDIR/lib/* $sodir/
+cp -auv $PROJDIR/qt/lib/* $sodir/
+find $PROJDIR/qt/plugins -name "*.so" -exec cp -auv {} $sodir/ \;
 
 if [ ! -e "qt5printers" ]; then
 	git clone https://github.com/Lekensteyn/qt5printers.git
 fi
 
-#$ANDROID_NDK/my-android-toolchain/bin/arm-linux-androideabi-gdb -ix gdbinit so/app_process "$@"
-#exec $ANDROID_NDK/my-android-toolchain/bin/arm-linux-androideabi-gdb so/app_process -x gdbinitandroid "$@"
-#exec $ANDROID_NDK/my-android-toolchain/bin/gdb so/app_process -x gdbinitandroid "$@"
-#$ANDROID_NDK/ndk-gdb --start --delay=0 --port=tcp:192.168.1.191:3333 so/app_process "$@"
+#$ANDROID_NDK/my-android-toolchain/bin/arm-linux-androideabi-gdb -ix gdbinit $sodir/app_process "$@"
+#exec $ANDROID_NDK/my-android-toolchain/bin/arm-linux-androideabi-gdb $sodir/app_process -x gdbinitandroid "$@"
+#exec $ANDROID_NDK/my-android-toolchain/bin/gdb $sodir/app_process -x gdbinitandroid "$@"
+#$ANDROID_NDK/ndk-gdb --start --delay=0 --port=tcp:192.168.1.191:3333 $sodir/app_process "$@"
 #cd mythinstall
 #$ANDROID_NDK/my-android-toolchain/bin/ndk-gdb --delay=0 "$@"
 #if [ -z "$1" ]; then
@@ -87,17 +89,17 @@ fi
 if ! adb shell test -e /system/bin/$APP_PROCESS_NAME ; then
 	APP_PROCESS_NAME=app_process
 fi
-adb pull /system/bin/$APP_PROCESS_NAME so/$APP_PROCESS_NAME
+adb pull /system/bin/$APP_PROCESS_NAME $sodir/$APP_PROCESS_NAME
 echo "Pulled $APP_PROCESS_NAME from device/emulator."
 
-adb pull /system/bin/$LINKER_NAME so/$LINKER_NAME
+adb pull /system/bin/$LINKER_NAME $sodir/$LINKER_NAME
 echo "Pulled $LINKER_NAME from device/emulator."
 
-adb pull /system/$LIBDIR_NAME/libc.so so/libc.so
+adb pull /system/$LIBDIR_NAME/libc.so $sodir/libc.so
 echo "Pulled /system/$LIBDIR_NAME/libc.so from device/emulator."
 
 # also source and directory
-cat <<-END > so/gdb.setup
+cat <<-END > $sodir/gdb.setup
 	python
 	import sys, os.path
 	sys.path.insert(0, os.path.expanduser('.'))
@@ -105,17 +107,17 @@ cat <<-END > so/gdb.setup
 	qt5printers.register_printers(gdb.current_objfile())
 	end
 	set breakpoint pending on
-	file so/$APP_PROCESS_NAME
+	file $sodir/$APP_PROCESS_NAME
 	END
 if [ $USE_IP == 1 ]; then
 	IPADDR=$(adb shell ifconfig | awk -F '[ \t:]+' '/inet addr:127/ { next;}; /inet addr:/ { print $4; }')
-	echo "target remote $IPADDR:$DEBUG_PORT" >> so/gdb.setup
+	echo "target remote $IPADDR:$DEBUG_PORT" >> $sodir/gdb.setup
 else
-	echo "target remote :$DEBUG_PORT" >> so/gdb.setup
+	echo "target remote :$DEBUG_PORT" >> $sodir/gdb.setup
 fi
-cat <<-END >> so/gdb.setup
-	set solib-absolute-prefix so
-	set solib-search-path so
+cat <<-END >> $sodir/gdb.setup
+	set solib-absolute-prefix $sodir
+	set solib-search-path $sodir
 	END
 
 adb forward --remove-all
@@ -202,7 +204,7 @@ if [ $? != 0 ] ; then
 	exit 1
 fi
 
-cat so/gdb.setup
+cat $sodir/gdb.setup
 echo wait
 echo launch
-$GDBCLIENT -n -x so/gdb.setup
+$GDBCLIENT -n -x $sodir/gdb.setup
