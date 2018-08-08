@@ -10,7 +10,7 @@
 
             <!-- Application arguments -->
             <!-- meta-data android:name="android.app.arguments" android:value="arg1 arg2 arg3"/ -->
-            <meta-data android:name="android.app.arguments" android:value="-v general,gui,playback --loglevel debug"/>
+            <meta-data android:name="android.app.arguments" android:value="-v general"/>
             <!-- Application arguments -->
 
             <meta-data android:name="android.app.lib_name" android:value="mythfrontend"/>
@@ -66,7 +66,7 @@
     </application>
 
     <uses-sdk android:minSdkVersion="17" android:targetSdkVersion="21"/>
-    <supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true"/>
+    <supports-screens android:xlargeScreens="true" android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true" />
 
     <!-- The following comment will be replaced upon deployment with default permissions based on the dependencies of the application.
          Remove the comment if you do not require these default permissions. -->
