@@ -177,6 +177,9 @@ while : ; do
 			echo "   flac"
 			echo "   exiv2"
 			echo "   icu"
+			echo "   liblzo"
+			echo "   libsamplerate"
+			echo "   libblueray"
 			echo "   qtwebkit"
 			echo "   qt5extras"
 			echo "   --no-clean"
@@ -1174,17 +1177,15 @@ OPATH=$PATH
 # 		;;
 # 	*)
 #END
+export PATH="$PATH:$CROSSPATH"
 ./configure \
-	CFLAGS="-isysroot $SYSROOT -mcpu=$CPU" \
-	CXXFLAGS="-isysroot $SYSROOT -mcpu=$CPU" \
-	CC="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-gcc" \
-	CXX="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-g++" \
-	CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
-	--host=arm-linux-androideabi \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
 	--prefix=$INSTALLROOT \
 	--enable-shared \
 	--enable-static && \
 make clean && \
+CFLAGS="-isysroot $SYSROOT -mcpu=$CPU" \
+CXXFLAGS="-isysroot $SYSROOT -mcpu=$CPU" \
 make -j$NCPUS src/liblzo2.la && \
 make install-libLTLIBRARIES install-data-am
 ERR=$?
