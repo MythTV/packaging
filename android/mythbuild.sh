@@ -283,11 +283,16 @@ function bundle_apk() {
         # TODO: Eventually do something reasonable with versionCode.
 	VERSIONCODE=1
 
+	extraedit=
+	if [ $ANDROID_NATIVE_API_LEVEL -le 19 ] ; then
+		extraedit='s~android:banner="@drawable/banner"~~'
+	fi
 	# Setup the real Android versionName and versionCode..
-	sed -e "s/\(android:versionName\)=\"1.0\"/\1=\"$VERSIONNAME\"/" \
-	    -e "s/\(android:versionCode\)=\"1\"/\1=\"$VERSIONCODE\"/" \
-	    ../../AndroidManifest.xml.in \
-	    >../../android-package-source/AndroidManifest.xml
+	sed "s/\(android:versionName\)=\"1.0\"/\1=\"$VERSIONNAME\"/
+		 s/\(android:versionCode\)=\"1\"/\1=\"$VERSIONCODE\"/
+		$extraedit" \
+		../../AndroidManifest.xml.in \
+		>../../android-package-source/AndroidManifest.xml
 
 	$QTBASE/bin/androiddeployqt \
 		--gradle \
