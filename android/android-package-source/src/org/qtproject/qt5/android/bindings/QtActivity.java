@@ -614,6 +614,13 @@ public class QtActivity extends Activity
             view.setVisibility(View.GONE);
         }
         */
+
+        // Finish, i.e. close, whenever we lose focus.  This is a
+        // hopefully temporary behavior until we can figure out why
+        // resumes from the background can sometimes take several
+        // minutes.
+        finish();
+
         super.onPause();
         QtApplication.invokeDelegate();
     }
