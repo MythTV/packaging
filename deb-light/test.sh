@@ -9,6 +9,10 @@ shift
 shift
 set -e
 
+if [[ -f $HOME/.testrc ]] ; then
+    . $HOME/.testrc
+fi
+
 . "$scriptpath/getlongname.source"
 
 if [[ "$longname" == "" ]] ; then
