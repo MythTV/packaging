@@ -173,7 +173,7 @@ case "$1" in
 	release)
 		BUNDLESIGN="--sign $KEYSTORE $KEYALIAS --storepass $KEYSTOREPASSWORD"
 		RELEASE=1
-		CONFIGUREBUILDTYPE=release
+		CONFIGUREBUILDTYPE=profile
 		DEPLOYTYPE=
 		shift
 		;;
