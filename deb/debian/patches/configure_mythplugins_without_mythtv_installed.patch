@@ -6,33 +6,7 @@ Index: mythtv/mythplugins/configure
 ===================================================================
 --- mythtv.orig/mythplugins/configure
 +++ mythtv/mythplugins/configure
-@@ -307,6 +307,7 @@ disable $DEPRECATED_PLUGIN_LIST
- prefix="/usr/local"
- libdir_name="lib"
- sysroot=""
-+mythroot=""
- ln_s="ln -sf"
- 
- logfile="config.ep"
-@@ -326,7 +327,8 @@ NB:      all --enable-* options can be r
- 
- Generic options:
-   --prefix=PREFIX          MythTV install location PREFIX [$prefix]
--  --sysroot=SYSROOT        MythTV sysroot location SYSROOT [$sysroot]
-+  --sysroot=SYSROOT        General sysroot location SYSROOT [$sysroot]
-+  --mythroot=SYSROOT       MythTV specific sysroot location [$mythroot]
-   --qmake=QMAKE            use specified qmake [$qmake]
-   --python=PATH            Force a specific python executable to use [$python]
-   --libdir-name=LIBNAME    install/look for libs in PREFIX/LIBNAME [$libdir_name]
-@@ -399,6 +401,7 @@ CMDLINE_SET="
-     qmake
-     python
-     sysroot
-+    mythroot
- "
- 
- CONFIGURATION_OPTS=""
-@@ -469,6 +472,7 @@ check_py_lib(){
+@@ -478,6 +478,7 @@ check_py_lib(){
  from distutils.sysconfig import get_python_lib
  import sys
  sys.path.append(get_python_lib(prefix='${prefix}'))
@@ -40,20 +14,7 @@ Index: mythtv/mythplugins/configure
  try:
      import $lib
  except:
-@@ -528,7 +532,11 @@ EOF
- fi
- 
- # bring in mythtv config
--if [ -e $prefix/include/mythtv/mythconfig.mak ] ; then
-+if [ -e $mythroot$prefix/include/mythtv/mythconfig.mak ] ; then
-+    rm mythconfig.mak 2> /dev/null
-+    cp $mythroot$prefix/include/mythtv/mythconfig.mak mythconfig.mak
-+    sed -i -e "s,^SYSROOT\=.*,SYSROOT=$mythroot,g" mythconfig.mak
-+elif [ -e $prefix/include/mythtv/mythconfig.mak ] ; then
-     rm mythconfig.mak 2> /dev/null
-     ${ln_s} $prefix/include/mythtv/mythconfig.mak mythconfig.mak
- else
-@@ -627,7 +635,7 @@ if enabled netvision; then
+@@ -643,7 +644,7 @@ if enabled netvision; then
          disable netvision
      }
  
@@ -62,32 +23,6 @@ Index: mythtv/mythplugins/configure
      check_py_lib pycurl  || disable_netvision "Python pycurl library (pycurl)"
      check_py_lib lxml    || disable_netvision "Python lxml library (lxml)"
      check_py_lib xml     || disable_netvision "Python XML library (xml)"
-Index: mythtv/mythplugins/programs-libs.pro
-===================================================================
---- mythtv.orig/mythplugins/programs-libs.pro
-+++ mythtv/mythplugins/programs-libs.pro
-@@ -5,7 +5,7 @@ INCLUDEPATH += $${SYSROOT}$${PREFIX}/inc
- INCLUDEPATH += $${SYSROOT}$${PREFIX}/include/mythtv/libmythservicecontracts
- DEPENDPATH *= $${INCLUDEPATH}
- 
--LIBS += -L$${LIBDIR} $$EXTRA_LIBS -lmythbase-$$LIBVERSION
-+LIBS += -L$${SYSROOT}$${LIBDIR} $$EXTRA_LIBS -lmythbase-$$LIBVERSION
- LIBS += -lmyth-$$LIBVERSION -lmythui-$$LIBVERSION -lmythupnp-$$LIBVERSION
- LIBS += -lmythservicecontracts-$$LIBVERSION
- LIBS += -lmythavcodec
-Index: mythtv/mythplugins/targetdep.pro
-===================================================================
---- mythtv.orig/mythplugins/targetdep.pro
-+++ mythtv/mythplugins/targetdep.pro
-@@ -10,7 +10,7 @@ MYTH_SHLIB_EXT=$${LIBVERSION}.$${QMAKE_E
- MYTH_LIB_EXT  =$${LIBVERSION}.$${QMAKE_EXTENSION_LIB}
- 
- 
--DEPLIBS = $${LIBDIR}
-+DEPLIBS = $${SYSROOT}$${LIBDIR}
- 
- # On Windows, dlls were installed with exes:
- mingw : DEPLIBS = $${PREFIX}/bin
 Index: mythtv/mythplugins/mytharchive/mytharchive/mytharchive.pro
 ===================================================================
 --- mythtv.orig/mythplugins/mytharchive/mytharchive/mytharchive.pro

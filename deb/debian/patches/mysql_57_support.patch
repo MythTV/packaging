@@ -5,7 +5,7 @@ Index: mythtv/mythplugins/configure
 ===================================================================
 --- mythtv.orig/mythplugins/configure
 +++ mythtv/mythplugins/configure
-@@ -713,7 +713,7 @@ if enabled music ; then
+@@ -722,7 +722,7 @@ if enabled music ; then
  fi
  
  if enabled zoneminder ; then
