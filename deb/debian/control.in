@@ -96,6 +96,7 @@ Build-Depends:  debhelper (>= 9),
                 libraspberrypi-dev [armhf] | hello,
                 libbluray-dev,
                 libxnvctrl-dev,
+                liblzo2-dev,
 
 Package: mythtv
 Architecture: all
