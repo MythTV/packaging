@@ -14,8 +14,7 @@ if [ -z "$USE_IP" ] ; then USE_IP=0 ; fi
 if [ -z "$TMPDIR" ] ; then TMPDIR=/data/local/tmp ; fi
 
 source make.inc
-
-if [ $ARM64 == 1 ]; then
+if [ "$ARM64" == 1 ]; then
 	MYGDB="$ANDROID_NDK/my-android-toolchain64/bin/ndk-gdb"
 	BUILDDIR=build64
 	PROJDIR=mythinstall64
@@ -75,18 +74,22 @@ fi
 PACKAGE_NAME=org.mythtv.mythfrontend
 LAUNCH_ACTIVITY=org.qtproject.qt5.android.bindings.QtActivity
 START_WAIT=-D
-DATA_DIR=$(adb shell run-as $PACKAGE_NAME pwd)
+DATA_DIR=$(adb shell run-as $PACKAGE_NAME sh -c pwd)
+# remove carriage return at end
+DATA_DIR=$(echo "$DATA_DIR" | sed 's/\r$//')
 DEVICE_GDBSERVER=$DATA_DIR/gdbserver
 DEBUG_SOCKET=$DATA_DIR/debug-socket
 
-if ! adb shell test -e $DEVICE_GDBSERVER ; then
+rc=$(adb shell sh -c "test -e $DEVICE_GDBSERVER ; echo $?")
+if [[ "$rc" != 0 ]] ; then
 	#adb shell mkdir -p $(dirname $DEVICE_GDBSERVER)
 	adb push ${ANDROID_NDK_ROOT}/prebuilt/android-${TARGET_ARCH}/gdbserver/gdbserver $TMPDIR
 	adb shell run-as $PACKAGE_NAME cp $TMPDIR/gdbserver $DEVICE_GDBSERVER
 	adb shell run-as $PACKAGE_NAME chmod a+x $DEVICE_GDBSERVER
 fi
 
-if ! adb shell test -e /system/bin/$APP_PROCESS_NAME ; then
+rc=$(adb shell sh -c "test -e /system/bin/$APP_PROCESS_NAME ; echo $?")
+if [[ $rc != 0 ]] ; then
 	APP_PROCESS_NAME=app_process
 fi
 adb pull /system/bin/$APP_PROCESS_NAME $sodir/$APP_PROCESS_NAME
