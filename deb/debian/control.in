@@ -156,6 +156,7 @@ Depends: adduser,
          python3-lxml,
          python3-future,
          ${shlibs:Depends},
+         ${perl:Depends},
          ${misc:Depends}
 Suggests: mythtv-doc
 Recommends: mythtv-dbg
@@ -420,9 +421,9 @@ Package: mythgame
 Architecture: any
 Depends: mythtv-frontend (>= ${binary:Version}),
          python3,
+         minizip,
          ${shlibs:Depends},
-         ${misc:Depends},
-         minizip
+         ${misc:Depends}
 Description: Emulator & PC Game frontend module for MythTV
  MythGame can be used as a frontend to start any emulator that your host OS
  runs.
@@ -450,6 +451,7 @@ Package: mythweather
 Architecture: any
 Depends: mythtv-frontend (>= ${binary:Version}),
          ${shlibs:Depends},
+         ${perl:Depends},
          ${misc:Depends},
          perl,
          libimage-size-perl,
@@ -481,6 +483,7 @@ Depends: mythtv-common (>= ${binary:Version}),
          libhttp-date-perl,
          libjs-prototype,
          libjs-scriptaculous,
+         ${perl:Depends},
          ${misc:Depends}
 Recommends: libmath-round-perl
 Description: Web interface add-on module for MythTV
