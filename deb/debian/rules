@@ -136,12 +136,8 @@ override_dh_install:
                    -Xjquery.min.js \
                    --fail-missing
 
-override_dh_installinit:
-	dh_installinit
-
 	#(MythTV) Remove license files
-	find debian/tmp -name "COPYING" -delete
-	find debian/tmp -name "README.license" -delete
+	find debian/tmp \( -name "COPYING" -o -name "README.license" \) -delete
 
 override_dh_strip:
 	dh_strip --dbg-package=mythtv-dbg
