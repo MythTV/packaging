@@ -93,7 +93,7 @@ export HOME=$(CURDIR)/debian/home_$(DEB_BUILD_ARCH)
 
 #Rather than have a configure/build/install phase, combine them all so we can do each part in order
 override_dh_auto_install:
-	if [ -f mythtv/EXPORTED_VERSION ] && [ -f debian/DESCRIBE ]; then \
+	if [ ! -f mythtv/EXPORTED_VERSION.old ] && [ -f debian/DESCRIBE ]; then \
 		mv mythtv/EXPORTED_VERSION mythtv/EXPORTED_VERSION.old ;\
 		cp debian/DESCRIBE mythtv/EXPORTED_VERSION ;\
 	fi
