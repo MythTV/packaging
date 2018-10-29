@@ -119,9 +119,6 @@ override_dh_auto_install:
 	mv debian/tmp/usr/bin/mythfrontend debian/tmp/usr/bin/mythfrontend.real
 	mv debian/tmp/usr/bin/mythtv-setup debian/tmp/usr/bin/mythtv-setup.real
 
-	#(All) Make sure python/perl scripts are executable
-	find debian/tmp/usr/share -type f \( -iname "*.p[y|l]" ! -iname "oauth_api.py" \) -size +1b -exec chmod 755 {} \;
-
 override_dh_install:
 	install -m0755 -d ${buildroot}/etc/php5/apache2/conf.d
 	install -m0644 debian/20-mythweb.ini   ${buildroot}/etc/php5/apache2/conf.d
@@ -146,10 +143,6 @@ override_dh_installinit:
 	find debian/tmp -name "COPYING" -delete
 	find debian/tmp -name "README.license" -delete
 
-	#(MythTV) Set correct permissions for png and html files
-	find debian/tmp -regex '.*\.png$$' -print0 | xargs -0 -r chmod 644
-	find debian/tmp -regex '.*\.html$$' -print0 | xargs -0 -r chmod 644
-
 override_dh_strip:
 	dh_strip --dbg-package=mythtv-dbg
 
@@ -158,10 +151,11 @@ override_dh_compress:
 
 override_dh_fixperms:
 	dh_fixperms -X.pl -X.py
-	#themes shouldn't be like this
-	for type in png html txt jpg xml ; do \
-		find debian -name "*.$$type" -type f -exec chmod -x {} \; ;\
-	done
+
+	#(All) Make sure python/perl scripts are executable
+	find debian/tmp/usr/share -type f \( -iname "*.p[yl]" ! -iname "oauth_api.py" \) -size +1b -exec chmod 755 {} \;
+	#(All) Remove execute permission from data files
+	find debian/tmp \( -name '*.png' -o -name '*.html' -o -name '*.txt' -o -name '*.jpg' -o -name '*.xml' \) -exec chmod 644 {} +
 
 override_dh_auto_clean:
 	[ -f mythtv/config.mak ] && $(MAKE) -C mythtv distclean || true
