@@ -99,7 +99,7 @@ override_dh_auto_install:
 	fi
 	cd mythtv && sh version.sh `pwd`
 
-	mkdir $(CURDIR)/debian/home
+	install -m0755 -d $(CURDIR)/debian/home
 
 	#mythtv
 	cd mythtv && ./configure $(MYTHTV_CONFIGURE_OPTS)
