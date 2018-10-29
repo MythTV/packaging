@@ -123,10 +123,10 @@ override_dh_auto_install:
 	find debian/tmp/usr/share -type f \( -iname "*.p[y|l]" ! -iname "oauth_api.py" \) -size +1b -exec chmod 755 {} \;
 
 override_dh_install:
-	mkdir -p ${buildroot}/etc/php5/apache2/conf.d; \
-	cp debian/20-mythweb.ini   ${buildroot}/etc/php5/apache2/conf.d; \
-	mkdir -p ${buildroot}/etc/php/7.0/apache2/conf.d; \
-	cp debian/20-mythweb.ini   ${buildroot}/etc/php/7.0/apache2/conf.d; \
+	install -m0755 -d ${buildroot}/etc/php5/apache2/conf.d
+	install -m0644 debian/20-mythweb.ini   ${buildroot}/etc/php5/apache2/conf.d
+	install -m0755 -d ${buildroot}/etc/php/7.0/apache2/conf.d
+	install -m0644 debian/20-mythweb.ini   ${buildroot}/etc/php/7.0/apache2/conf.d
 	dh_install -Xusr/share/mythtv/fonts/Free \
                    -Xusr/share/mythtv/fonts/Purisa \
                    -Xusr/share/mythtv/fonts/texgyrechorus \
