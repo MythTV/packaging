@@ -30,10 +30,14 @@ fi
 
 dirty=`git status --porcelain|grep -v "^??"|wc -l`
 
+if [[ "$BUILD_DIRTY" == "" ]] ; then
+    BUILD_DIRTY=tst
+fi
+
 if [[ "$dirty" == 0 ]] ; then
     dirty=
 else
-    dirty="-tst"
+    dirty="-$BUILD_DIRTY"
 fi
 
 longname="$chprefix$codename-$arch/$projname/$branch$dirty"

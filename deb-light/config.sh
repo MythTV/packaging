@@ -35,7 +35,7 @@ case $projname in
             fi
             config_opt="$omx_option --disable-vdpau \
               --disable-opengl-video --enable-opengl --disable-opengl-themepainter \
-              --disable-vaapi"
+              --disable-vaapi --disable-vaapi2 $MYTHTV_CONFIG_OPT_EXTRA"
         fi
         set -x
         ./configure --prefix=/usr $config_opt "$@" |& tee -a $gitbasedir/../config_${projname}.out
@@ -69,7 +69,7 @@ case $projname in
             fi
             config_opt="$omx_option --disable-vdpau \
               --disable-opengl-video --enable-opengl --disable-opengl-themepainter \
-              --disable-vaapi"
+              --disable-vaapi --disable-vaapi2 $MYTHTV_CONFIG_OPT_EXTRA"
         fi
         set -x
         ./configure --prefix=$destdir/usr \
@@ -83,12 +83,12 @@ case $projname in
         basedir=$destdir/usr
         export PYTHONPATH=$basedir/local/lib/python2.7/dist-packages
         config_opt=
-        config_opt="--enable-mythgallery"
+        config_opt="--enable-mythgallery $MYTHTV_CONFIG_OPT_EXTRA"
         if [[ `arch` == arm* ]] ; then
             config_opt="--disable-mythgallery"
         fi
         ./configure --prefix=$destdir/usr \
-         $config_opt |& tee -a  $gitbasedir/../config_${projname}.out
+         $config_opt "$@" |& tee -a  $gitbasedir/../config_${projname}.out
          set -
         ;;
     *)

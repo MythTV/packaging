@@ -36,6 +36,13 @@ Set up your system this way.
 - Make sure you have the build dependencies installed. You can use the
   ansible repository to install them. See github MythTV/ansible.
 
+Options
+.......
+If you want to override configuration options, you can either supply them 
+on the command line of config.sh or add a MYTHTV_CONFIG_OPT_EXTRA line to
+$HOME/.buildrc, for example::
+
+  MYTHTV_CONFIG_OPT_EXTRA="--enable-opengl-video --enable-opengl"
 
 Building the packages
 ---------------------
@@ -106,6 +113,13 @@ For mythtv it creates a directory called mythtv with subdirectories for
 each branch. For plugins it creates a directory called mythplugins with
 subdirectories. The mythplugins subdirectories contain both the mythtv and
 the plugins so that you can test mythtv with the plugins.
+
+Versions that have git differences (dirty), are put in a directory with "-tst"
+appended tio the name. If you want a different extension applied, for example
+if you are working on multiple builds, add a "BUILD_DIRTY" line
+to $HOME/.buildrc, for example::
+
+  BUILD_DIRTY=ogl
 
 package.sh
 ----------
