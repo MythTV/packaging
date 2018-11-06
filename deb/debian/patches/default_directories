@@ -4,28 +4,6 @@ Description: Default directories for all plugins
 Author: Mario Limonciello <superm1@ubuntu.com>
 Forwarded: not-needed
 
-Index: mythtv/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
-===================================================================
---- mythtv.orig/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
-+++ mythtv/mythplugins/mythgallery/mythgallery/gallerysettings.cpp
-@@ -45,7 +45,7 @@ static HostFileBrowserSetting *MythGalle
- #ifdef Q_OS_MAC
-     gc->setValue(QDir::homePath() + "/Pictures");
- #else
--    gc->setValue("/var/lib/pictures");
-+    gc->setValue("/var/lib/mythtv/pictures");
- #endif
-     gc->setHelpText(GallerySettings::tr("This directory must exist and "
-                                         "MythGallery needs to have read "
-@@ -107,7 +107,7 @@ static HostTextEditSetting *MythGalleryI
- {
-     HostTextEditSetting *gc = new HostTextEditSetting("GalleryImportDirs");
-     gc->setLabel(GallerySettings::tr("Paths to import images from"));
--    gc->setValue("/mnt/cdrom:/mnt/camera");
-+    gc->setValue("/media/cdrom:/media/usbdisk");
-     gc->setHelpText(GallerySettings::tr("This is a colon separated list of "
-                     "paths. If the path in the list is a directory, its "
-                     "contents will be copied. If it is an executable, "
 Index: mythtv/mythplugins/mytharchive/mytharchive/archivesettings.cpp
 ===================================================================
 --- mythtv.orig/mythplugins/mytharchive/mytharchive/archivesettings.cpp

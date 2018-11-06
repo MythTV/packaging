@@ -49,10 +49,7 @@ mythplugins/config.mak
 mythplugins/config.h
 mythplugins/config.ep
 mythplugins/mythconfig.mak
-mythplugins/mythgallery/mythgallery/config.h
 mythplugins/mythmusic/mythmusic/config.h
-mythplugins/mythgallery/mythgallery/config.pro
-mythplugins/mythgallery/config.pro
 mythplugins/mythmusic/mythmusic/config.pro
 mythplugins/mytharchive/mytharchive/config.h
 mythplugins/mytharchive/mytharchive/config.pro

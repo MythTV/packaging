@@ -31,7 +31,6 @@ generate "MythTV metadata lookup" debian/tmp/usr/bin/mythmetadatalookup
 generate "MythTV Screen Wizard" debian/tmp/usr/bin/mythscreenwizard
 generate "MythTV Setup (real)" debian/tmp/usr/bin/mythtv-setup.real
 generate "MythTV Archive helper" debian/mytharchive/usr/bin/mytharchivehelper
-generate "MythTV Netvision helper" debian/mythnetvision/usr/bin/mythfillnetvision
 generate "MythTV Zoneminder server" debian/mythzoneminder/usr/bin/mythzmserver
 #these don't have a --help right now
 #export PYTHONPATH=debian/libmyth-python/usr/share/pyshared:$PYTHONPATH

@@ -114,8 +114,8 @@ override_dh_auto_install:
 	cd mythplugins && ./configure $(MYTHPLUGINS_CONFIGURE_OPTS) --mythroot=$(CURDIR)/debian/tmp:$(CURDIR)/debian/libmyth-python
 	$(MAKE) -j$(PROCESSORS) -C mythplugins
 	for plugin in mytharchive \
-	mythgallery mythgame mythmusic mythmovies mythnews \
-	mythweather mythzoneminder mythbrowser mythnetvision ; do \
+	mythgame mythmusic mythmovies mythnews \
+	mythweather mythzoneminder mythbrowser ; do \
 		$(MAKE) -C mythplugins/$$plugin install INSTALL_ROOT=$(CURDIR)/debian/$$plugin; \
 	done
 

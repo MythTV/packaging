@@ -277,7 +277,7 @@ Depends: mythtv-common,
          libgles2-mesa-dev [armhf],
          libegl1-mesa-dev [armhf],
 Recommends: libmythtv-perl, python-imaging | python-pil, udisks2 | udisks
-Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythgame, ntp | time-daemon | ntp-simple
+Suggests: mythtv-backend, mythmusic, mythweather, mythgame, ntp | time-daemon | ntp-simple
 Conflicts: mythtv (<< 0.8-1), mythappearance (<< 0.21.0), mythstream (<< 0.21.0), mythflix (<< 0.23.0)
 Replaces: mythtv (<< 0.8-1),  mythappearance (<< 0.21.0), mythvideo
 Breaks: mythvideo
@@ -392,27 +392,15 @@ Section: metapackages
 Conflicts: mythflix, mythmovies
 Replaces: mythmovies
 Depends: ${misc:Depends},
-         mythgallery,
          mythgame,
          mythmusic,
          mythnews,
          mythweather,
          mythweb,
          mytharchive,
-         mythbrowser,
-         mythnetvision
+         mythbrowser
 Description: Metapackage package for MythTV plugins
  This Metapackage will install all available MythTV plugins.
-
-Package: mythgallery
-Architecture: any
-Depends: mythtv-frontend (>= ${binary:Version}),
-         ${shlibs:Depends},
-         ${misc:Depends}
-Description: Image gallery/slideshow add-on module for MythTV
- MythGallery allows you to visually browse a directory tree containing image
- files. It can display any image file format supported by Qt, and supports
- image rotation and simple slideshows.
 
 Package: mythgame
 Architecture: any
@@ -534,24 +522,6 @@ Depends: mythtv-frontend (>= ${binary:Version}),
 Description: Web browser plugin for MythTV
  Mythbrowser is a standards compliant web browser plugin for MythTV built
  on top of Webkit.
-
-Package: mythnetvision
-Architecture: any
-Depends: mythtv-frontend (>= ${binary:Version}),
-         mythbrowser (>= ${binary:Version}),
-         python-feedparser,
-         python-pycurl,
-         ${shlibs:Depends},
-         ${misc:Depends}
-Recommends: flashplugin-installer | adobe-flashplugin,
-            libxml-treebuilder-perl,
-Description: Internet Video Player plugin for MythTV
- MythNetvision is a plugin designed to make adding Internet video sources to
- MythTV fun and easy. MythNetvision consists of two components:
- - a search screen
- - a site/RSS browser screen.
- When installed, MythNetvision appears on the Media Library screen as the
- options "Search Internet Video" and "Browse Internet Video."
 
 Package: mythtv-theme-mythbuntu
 Architecture: all
