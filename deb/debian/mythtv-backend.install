@@ -3,7 +3,6 @@ usr/bin/mythbackend
 usr/bin/mythcommflag
 usr/bin/mythfilerecorder
 usr/bin/mythfilldatabase
-usr/bin/mythhdhomerun_config
 usr/bin/mythjobqueue
 usr/bin/mythtv-setup.real
 usr/bin/mythpreviewgen

@@ -97,7 +97,6 @@ Build-Depends:  debhelper (>= 9),
                 libbluray-dev,
                 libxnvctrl-dev,
                 liblzo2-dev,
-                libhdhomerun-dev,
 
 Package: mythtv
 Architecture: all
@@ -233,7 +232,7 @@ Architecture: any
 Depends: mythtv-common, mythtv-transcode-utils, ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, xterm, python, libjs-jquery, libxml-simple-perl, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
-Recommends: ntp | time-daemon | ntp-simple, logrotate, libmyth-python, libmythtv-perl
+Recommends: ntp | time-daemon | ntp-simple, logrotate, libmyth-python, libmythtv-perl, hdhomerun-config
 Suggests: mythtv-frontend, mythweb, mythtv-database, xmltv-util
 Description: Personal video recorder application (server)
  MythTV provides a unified graphical interface for recording and viewing
