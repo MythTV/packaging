@@ -271,7 +271,7 @@ function bundle_apk() {
 		cp "$i" "$MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/"
 	done
 	# plugins are not automatically installed so copy them
-	for i in $MYTHINSTALLROOT/lib/libmythpluginmyth{archive,netvision,news,browser,game,music}.so \
+	for i in $MYTHINSTALLROOT/lib/libmythpluginmyth{archive,netvision,news,browser,game,music,zoneminder}.so \
 		$MYTHINSTALLROOT/lib/libmyth{archivehelper,fillnetvision}.so \
 		$MYTHINSTALLROOT/lib/lib{ogg,vorbis,vorbisfile,vorbisenc,FLAC}.so \
 		; do
