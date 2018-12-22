@@ -10,7 +10,7 @@ if [[ -f $HOME/.buildrc ]] ; then
     . $HOME/.buildrc
 fi
 
-if which $BUILD_PREPARE ; then
+if [[ "$BUILD_PREPARE" != "" ]] ; then
     $BUILD_PREPARE
 fi
 
@@ -57,7 +57,12 @@ echo Log File:
 echo "$gitbasedir/../build_${projname}.out"
 
 if [[ "$rc" == 0 ]] ; then
+    if [[ "$BUILD_DONE" != "" ]] ; then
+        $BUILD_DONE
+    fi
     echo $'\n'"Build complete - Successful" on `date`
 else
     echo $'\n'"ERROR ERROR Build Failed rc = $rc" on `date`
 fi
+
+exit $rc
