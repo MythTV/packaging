@@ -31,7 +31,6 @@ export QT_SELECT = 5
 MYTHTV_CONFIGURE_OPTS +=    --compile-type=$(MYTHTV_COMPILE_TYPE) \
 				--prefix=/usr \
 				--runprefix=/usr \
-                                --disable-mythlogserver \
 				--enable-lirc \
 				--enable-audio-alsa \
 				--enable-audio-oss \
