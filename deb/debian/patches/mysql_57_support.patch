@@ -1,23 +1,20 @@
-Filed upstream here:
-https://code.mythtv.org/trac/ticket/12696
-
-Index: mythtv-0.28.0+fixes.20160325.2520617/mythplugins/configure
-===================================================================
---- mythtv-0.28.0+fixes.20160325.2520617.orig/mythplugins/configure
-+++ mythtv-0.28.0+fixes.20160325.2520617/mythplugins/configure
-@@ -706,7 +706,7 @@ if enabled music ; then
+diff --git a/mythplugins/configure b/mythplugins/configure
+index 38fe1d71e5..07d6d1c75a 100755
+--- a/mythplugins/configure
++++ b/mythplugins/configure
+@@ -738,7 +738,7 @@ if enabled music ; then
  fi
  
  if enabled zoneminder ; then
 -    if ! check_header mysql/mysql.h ; then
 +    if ! check_header mysql/mysql.h -I/usr/include/mysql; then
-         echo "Disabling MythZoneMinder. Requires mysql/mysql.h header"
-         disable zoneminder
+         echo "Disabling MythZMServer. Requires mysql/mysql.h header"
+         disable zmserver
      fi
-Index: mythtv-0.28.0+fixes.20160325.2520617/mythplugins/mythzoneminder/mythzmserver/mythzmserver.pro
-===================================================================
---- mythtv-0.28.0+fixes.20160325.2520617.orig/mythplugins/mythzoneminder/mythzmserver/mythzmserver.pro
-+++ mythtv-0.28.0+fixes.20160325.2520617/mythplugins/mythzoneminder/mythzmserver/mythzmserver.pro
+diff --git a/mythplugins/mythzoneminder/mythzmserver/mythzmserver.pro b/mythplugins/mythzoneminder/mythzmserver/mythzmserver.pro
+index a4576a40c4..83b1158d23 100644
+--- a/mythplugins/mythzoneminder/mythzmserver/mythzmserver.pro
++++ b/mythplugins/mythzoneminder/mythzmserver/mythzmserver.pro
 @@ -10,6 +10,8 @@ target.path = $${PREFIX}/bin
  
  INSTALLS = target
@@ -27,11 +24,11 @@ Index: mythtv-0.28.0+fixes.20160325.2520617/mythplugins/mythzoneminder/mythzmser
  macx {
      CONFIG += qt
      QT += sql
-Index: mythtv-0.28.0+fixes.20160325.2520617/mythplugins/mythzoneminder/mythzoneminder/mythzoneminder.pro
-===================================================================
---- mythtv-0.28.0+fixes.20160325.2520617.orig/mythplugins/mythzoneminder/mythzoneminder/mythzoneminder.pro
-+++ mythtv-0.28.0+fixes.20160325.2520617/mythplugins/mythzoneminder/mythzoneminder/mythzoneminder.pro
-@@ -14,6 +14,7 @@ target.path = $${LIBDIR}/mythtv/plugins
+diff --git a/mythplugins/mythzoneminder/mythzoneminder/mythzoneminder.pro b/mythplugins/mythzoneminder/mythzoneminder/mythzoneminder.pro
+index f39e1648f0..2c204a72c6 100644
+--- a/mythplugins/mythzoneminder/mythzoneminder/mythzoneminder.pro
++++ b/mythplugins/mythzoneminder/mythzoneminder/mythzoneminder.pro
+@@ -11,6 +11,7 @@ target.path = $${LIBDIR}/mythtv/plugins
  INSTALLS += target
  
  INCLUDEPATH += $${PREFIX}/include/mythtv/libmythui
