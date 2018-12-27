@@ -9,4 +9,4 @@ default_theme.patch
 ##mythplugins##
 #configure_mythplugins_without_mythtv_installed.patch
 pass_ldflags_qmake.patch
-mysql_57_support.patch
+#mysql_57_support.patch
