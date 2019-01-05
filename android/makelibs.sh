@@ -49,6 +49,20 @@ while : ; do
 			shift
 			BUILD_EXIV2=1
 			;;
+		fribidi)
+			shift
+			BUILD_FRIBIDI=1
+			;;
+		fontconfig)
+			shift
+			BUILD_FONTCONFIG=1
+			;;
+		ass)
+			shift
+			#BUILD_FONTCONFIG=1
+			BUILD_FRIBIDI=1
+			BUILD_ASS=1
+			;;
 		flac)
 			shift
 			BUILD_FLAC=1
@@ -130,6 +144,9 @@ while : ; do
 			BUILD_FLAC=1
 			BUILD_VORBIS=1
 			BUILD_OGG=1
+			BUILD_FRIBIDI=1
+			#BUILD_FONTCONFIG=1
+			BUILD_ASS=1
 			BUILD_LIBXML2=1
 			#BUILD_LIBXSLT=1
 			#BUILD_GLIB=1
@@ -177,6 +194,9 @@ while : ; do
 			echo "   flac"
 			echo "   exiv2"
 			echo "   icu"
+			echo "   fribidi"
+			echo "   fontconfig"
+			echo "   ass"
 			echo "   liblzo"
 			echo "   libsamplerate"
 			echo "   libblueray"
@@ -1145,6 +1165,159 @@ fi
 	--without-python \
 	--without-crypto \
 	--enable-shared \
+	--enable-static &&
+	make -j$NCPUS &&
+	make install
+	ERR=$?
+
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
+build_fontconfig() {
+rm -rf build
+# note later versions require freetype2 update
+FONTCONFIG_VERSION=2.11.95
+FONTCONFIG=fontconfig-$FONTCONFIG_VERSION
+echo -e "\n**** $FONTCONFIG ****"
+setup_lib https://github.com/freedesktop/fontconfig/archive/$FONTCONFIG_VERSION.tar.gz $FONTCONFIG
+pushd $FONTCONFIG
+OPATH=$PATH
+
+if [ $CLEAN == 1 ]; then
+	make distclean || true
+fi
+
+#local CPUOPT=
+#if [ $ARM64 == 1 ]; then
+#	CPUOPT="-march=$CPU_ARCH"
+#else
+#	CPUOPT="-march=$CPU_ARCH"
+#fi
+#./autogen.sh &&
+PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
+CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+LDFLAGS="-L$INSTALLROOT/lib" \
+RANLIB=${CROSSPATH2}ranlib \
+OBJDUMP=${CROSSPATH2}objdump \
+AR=${CROSSPATH2}ar \
+LD=$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-ld \
+CC="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-gcc" \
+CXX="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-g++" \
+CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+./autogen.sh \
+	--build=x86_64-linux-gnu \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
+	--prefix=$INSTALLROOT \
+	--with-sysroot=$SYSROOT \
+	--disable-dependency-tracking \
+	--enable-libxml2 \
+	--disable-shared \
+	--enable-static &&
+	make -j$NCPUS &&
+	make install
+	ERR=$?
+
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
+build_fribidi() {
+rm -rf build
+FRIBIDI_VERSION=1.0.5
+FRIBIDI=fribidi-$FRIBIDI_VERSION
+echo -e "\n**** $FRIBIDI ****"
+setup_lib https://github.com/fribidi/fribidi/releases/download/v$FRIBIDI_VERSION/$FRIBIDI.tar.bz2 $FRIBIDI
+pushd $FRIBIDI
+OPATH=$PATH
+
+if [ $CLEAN == 1 ]; then
+	make distclean || true
+fi
+
+#local CPUOPT=
+#if [ $ARM64 == 1 ]; then
+#	CPUOPT="-march=$CPU_ARCH"
+#else
+#	CPUOPT="-march=$CPU_ARCH"
+#fi
+#./autogen.sh &&
+PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
+CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+LDFLAGS="-L$INSTALLROOT/lib" \
+RANLIB=${CROSSPATH2}ranlib \
+OBJDUMP=${CROSSPATH2}objdump \
+AR=${CROSSPATH2}ar \
+LD=$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-ld \
+CC="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-gcc" \
+CXX="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-g++" \
+CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+./configure \
+	--build=x86_64-linux-gnu \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
+	--prefix=$INSTALLROOT \
+	--with-sysroot=$SYSROOT \
+	--disable-dependency-tracking \
+	--without-crypto \
+	--disable-libmount \
+	--with-pcre=no \
+	--disable-shared \
+	--enable-static &&
+	make -j$NCPUS &&
+	make install
+	ERR=$?
+
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
+build_ass() {
+rm -rf build
+LIBASS_VERSION=0.14.0
+LIBASS=libass-$LIBASS_VERSION
+echo -e "\n**** $LIBASS ****"
+setup_lib https://github.com/libass/libass/releases/download/$LIBASS_VERSION/$LIBASS.tar.xz $LIBASS
+pushd $LIBASS
+OPATH=$PATH
+
+if [ $CLEAN == 1 ]; then
+	make distclean || true
+fi
+
+#local CPUOPT=
+#if [ $ARM64 == 1 ]; then
+#	CPUOPT="-march=$CPU_ARCH"
+#else
+#	CPUOPT="-march=$CPU_ARCH"
+#fi
+#./autogen.sh &&
+PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
+CFLAGS="-isysroot $SYSROOT -isystem $INSTALLROOT/include $CPUOPT $ANDROID_API_DEF" \
+CXXFLAGS="-isysroot $SYSROOT -isystem $INSTALLROOT/include $CPUOPT $ANDROID_API_DEF" \
+LDFLAGS="-L$INSTALLROOT/lib" \
+RANLIB=${CROSSPATH2}ranlib \
+OBJDUMP=${CROSSPATH2}objdump \
+AR=${CROSSPATH2}ar \
+LD=$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-ld \
+CC="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-gcc" \
+CXX="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-g++" \
+CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+./configure \
+	--build=x86_64-linux-gnu \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
+	--prefix=$INSTALLROOT \
+	--with-sysroot=$SYSROOT \
+	--disable-dependency-tracking \
+	--disable-require-system-font-provider \
+	--disable-shared \
 	--enable-static &&
 	make -j$NCPUS &&
 	make install
@@ -2288,6 +2461,9 @@ get_android_cmake
 [ -n "$BUILD_GLIB" ] && build_glib
 [ -n "$BUILD_ICU" ] && build_icu
 [ -n "$BUILD_LZO" ] && build_android_external_liblzo
+[ -n "$BUILD_FONTCONFIG" ] && build_fontconfig
+[ -n "$BUILD_FRIBIDI" ] && build_fribidi
+[ -n "$BUILD_ASS" ] && build_ass
 [ -n "$BUILD_LIBSAMPLERATE" ] && build_libsamplerate
 [ -n "$BUILD_LIBBLURAY" ] && build_libbluray
 if [ -n "$BUILD_QT5EXTRAS" ]; then

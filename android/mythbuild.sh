@@ -380,7 +380,6 @@ $MYTHTVSRC/configure \
 	--disable-libxml2 \
 	--disable-libdns-sd \
 	--disable-libcrypto \
-	--disable-libass \
 	--disable-mheg \
 	--disable-vdpau \
 	--disable-crystalhd \
