@@ -273,7 +273,8 @@ function bundle_apk() {
 	# plugins are not automatically installed so copy them
 	for i in $MYTHINSTALLROOT/lib/libmythpluginmyth{archive,netvision,news,browser,game,music,zoneminder}.so \
 		$MYTHINSTALLROOT/lib/libmyth{archivehelper,fillnetvision}.so \
-		$MYTHINSTALLROOT/lib/lib{ogg,vorbis,vorbisfile,vorbisenc,FLAC}.so \
+		$MYTHINSTALLROOT/lib/lib{ogg,vorbis,vorbisfile,vorbisenc,FLAC,fontconfig,icui18n60,icuuc60,icudata60,icudata60,iconv,ass,fribidi}.so \
+		$QTBASE/lib/libQt5{OpenGL,WebKitWidgets,WebKit,Sensors,Positioning,MultimediaWidgets,Multimedia,PrintSupport,Quick,Qml,WebChannel}.so \
 		; do
 		if [ -e "$i" ]; then
 			cp "$i" "$MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/"
@@ -364,7 +365,7 @@ $MYTHTVSRC/configure \
 	--sysroot=$SYSROOT \
 	--extra-cflags="$CRYSTAX_CFLAGS -D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
 	--extra-cxxflags=" -D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
-	--extra-ldflags="$CRYSTAX_LIBS" \
+	--extra-ldflags="$CRYSTAX_LIBS -Wl,-rpath-link=$INSTALLROOT/lib -Wl,-rpath-link=$SYSROOT/usr/lib" \
 	--qmake=$QTBASE/bin/qmake \
 	--qmakespecs="android-g++ $EXTRASPECS" \
 	--disable-qtdbus \
@@ -391,10 +392,6 @@ $MYTHTVSRC/configure \
 	--disable-openmax \
 	--without-bindings=perl,python,php \
 	&& touch stamp_configure_android
-
-	#--disable-opengl-themepainter \
-	#--disable-qtwebkit \
-	#--arch=arm7a --cpu=$CPU \
 
 fi
 
