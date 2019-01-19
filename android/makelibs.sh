@@ -1236,7 +1236,6 @@ CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
 	--build=x86_64-linux-gnu \
 	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
 	--prefix=$INSTALLROOT \
-	--with-sysroot=$SYSROOT \
 	--with-gnu-ld=yes \
 	--disable-docs \
 	--disable-dependency-tracking \
