@@ -31,7 +31,7 @@ fi
 packagever=`env LD_LIBRARY_PATH=$sourcedir/usr/lib $sourcedir/usr/bin/mythutil --version |grep "MythTV Version"|cut -d ' ' -f 4|cut -c2-`
 packagebranch=`env LD_LIBRARY_PATH=$sourcedir/usr/lib $sourcedir/usr/bin/mythutil --version |grep "MythTV Branch"|cut -d ' ' -f 4`
 echo Package branch: $packagebranch, git branch: $gitbranch
-if [[ "$packagever" != "$gitver" ]] ; then
+if [[ "$packagever" != "$gitver" && "$packagever" != "$gitver"-dirty ]] ; then
     echo ERROR Package version $packagever does not match git version $gitver
     exit 2
 fi
