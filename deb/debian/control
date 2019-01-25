@@ -93,6 +93,7 @@ Build-Depends:  debhelper (>= 9),
                 libsystemd-dev,
                 dh-systemd,
                 libraspberrypi-dev [armhf] | hello,
+                libhdhomerun-dev
 
 Package: mythtv
 Architecture: all
