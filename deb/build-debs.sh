@@ -166,7 +166,7 @@ cd $DIRECTORY/mythtv
 #these can be filled in potentially from external sources
 [ -z "$GIT_MAJOR_RELEASE" ] && GIT_MAJOR_RELEASE=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/~.*//; s/+.*//' | awk -F. '{print $1 }')
 [ -z "$GIT_MINOR_RELEASE_FIXES" ] && GIT_MINOR_RELEASE=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/~.*//; s/+.*//' | awk -F. '{print $2 }')
-[ -z "$DEBIAN_SUFFIX" ] && DEBIAN_SUFFIX=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*-//;')
+[ -z "$DEBIAN_SUFFIX" ] && DEBIAN_SUFFIX='0ubuntu0'
 [ -z "$DEBEMAIL" ] && export DEBEMAIL=$(whoami)@$(hostname)
 [ -z "$DEBFULLNAME" ] && export DEBFULLNAME=$(whoami)
 #these should always be parsed from the old changelog
