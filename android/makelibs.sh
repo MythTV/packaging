@@ -1187,6 +1187,19 @@ pushd $FONTCONFIG
 OPATH=$PATH
 
 { patch -p1 -Nt || true; } <<'END'
+diff --git a/src/fcatomic.c b/src/fcatomic.c
+index 2ce419f..d12d324 100644
+--- a/src/fcatomic.c
++++ b/src/fcatomic.c
+@@ -131,7 +131,7 @@ FcAtomicLock (FcAtomic *atomic)
+ 	return FcFalse;
+     }
+     ret = link ((char *) atomic->tmp, (char *) atomic->lck);
+-    if (ret < 0 && (errno == EPERM || errno == ENOTSUP))
++    if (ret < 0 && (errno == EPERM || errno == ENOTSUP || errno == EACCES))
+     {
+ 	/* the filesystem where atomic->lck points to may not supports
+ 	 * the hard link. so better try to fallback
 diff --git a/src/fcobjs.c b/src/fcobjs.c
 index 16ff31c..d8bf79d 100644
 --- a/src/fcobjs.c
@@ -1204,6 +1217,25 @@ index 16ff31c..d8bf79d 100644
  
  #include "fcobjshash.h"
  
+diff --git a/src/fcstr.c b/src/fcstr.c
+index b65492d..600e42e 100644
+--- a/src/fcstr.c
++++ b/src/fcstr.c
+@@ -908,11 +908,13 @@ FcStrBuildFilename (const FcChar8 *path,
+     p = ret;
+     while ((s = FcStrListNext (list)))
+     {
+-	if (p != ret)
++	if (p != ret && p[-1] != FC_DIR_SEPARATOR)
+ 	{
+ 	    p[0] = FC_DIR_SEPARATOR;
+ 	    p++;
+ 	}
++	if (p != ret && p[-1] == FC_DIR_SEPARATOR && s[0] == FC_DIR_SEPARATOR)
++	    s++;
+ 	len = strlen ((const char *)s);
+ 	memcpy (p, s, len);
+ 	p += len;
 END
 if [ $CLEAN == 1 ]; then
 	# move generated fcblanks.h aside before clean
@@ -1222,9 +1254,9 @@ fi
 #fi
 #./autogen.sh &&
 PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
-CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
-CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
-LDFLAGS="-L$INSTALLROOT/lib -Wl,-rpath-link=$SYSROOT/usr/lib -Wl,-rpath-link=$INSTALLROOT/lib" \
+CFLAGS="-isysroot $SYSROOT $CPUOPT -fPIE $ANDROID_API_DEF -DFONTCONFIG_FILE=\\\"~/fonts.conf\\\"" \
+CXXFLAGS="-isysroot $SYSROOT $CPUOPT -fPIE $ANDROID_API_DEF -DFONTCONFIG_FILE=\\\"~/fonts.conf\\\"" \
+LDFLAGS="-L$INSTALLROOT/lib -fPIE -pie -Wl,-rpath-link=$SYSROOT/usr/lib -Wl,-rpath-link=$INSTALLROOT/lib -llog" \
 RANLIB=${CROSSPATH2}ranlib \
 OBJDUMP=${CROSSPATH2}objdump \
 AR=${CROSSPATH2}ar \
@@ -1249,6 +1281,11 @@ CPP="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
 PATH=$OPATH
 unset OPATH
 popd
+
+# install our fonts.conf
+mkdir -p $INSTALLROOT/assets/mythtv
+cp $INSTALLROOT/../android-package-source/fonts.conf $INSTALLROOT/assets/mythtv
+
 return $ERR
 }
 
