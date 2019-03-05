@@ -384,7 +384,6 @@ $MYTHTVSRC/configure \
 	--disable-libcrypto \
 	--disable-mheg \
 	--disable-vdpau \
-	--disable-crystalhd \
 	--disable-vaapi \
 	--disable-dxva2 \
 	--enable-opengl-video \
