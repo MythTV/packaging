@@ -7,6 +7,7 @@ set -e -u
 
 DBNAME="mythconverg"
 DEBIAN="--defaults-extra-file=/etc/mysql/debian.cnf"
+USER="mythtv"
 
 /usr/bin/mysqlcheck $DEBIAN -s $DBNAME
 
@@ -17,7 +18,7 @@ fi
 if [ "$USER" = "" ]; then
    CMDPREFIX=""
 else
-   CMDPREFIX="sudo -u $USER"
+   CMDPREFIX="sudo -H -u $USER"
 fi
 
 $CMDPREFIX /usr/share/mythtv/mythconverg_backup.pl
