@@ -41,6 +41,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources.Theme;
 import android.graphics.Bitmap;
@@ -48,6 +49,7 @@ import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
 import android.view.ContextMenu;
@@ -59,6 +61,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.view.accessibility.AccessibilityEvent;
+import org.qtproject.qt5.android.bindings.MD5;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.File;
 
 
 public class QtActivity extends Activity
@@ -294,7 +302,7 @@ public class QtActivity extends Activity
         }
         */
         View decorView = getWindow().getDecorView();
-        int uiOptions = 
+        int uiOptions =
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
@@ -335,6 +343,8 @@ public class QtActivity extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        copyFontConfig();
+
         super.onCreate(savedInstanceState);
         onCreateHook(savedInstanceState);
         hideSystemUI();
@@ -1116,4 +1126,86 @@ public class QtActivity extends Activity
             }
         } );
     }
+
+    private static String TAG1 = "mfeCP";
+    private void copyFontConfig() {
+        Log.e(TAG1, "copyFontConfig");
+        String toPath = "/data/data/" + getPackageName();  // The application path
+        Log.e(TAG1, "basepath " + toPath);
+        AssetManager assetManager = getAssets();
+        copyAssetIfDifferent(assetManager, "mythtv/fonts.conf", toPath + "/files/fonts.conf");
+        copyAssetFolder(assetManager, "mythtv/fonts", toPath + "/files/fonts");
+    }
+
+    private static boolean copyAssetFolder(AssetManager assetManager,
+            String fromAssetPath, String toPath) {
+        try {
+            String[] files = assetManager.list(fromAssetPath);
+            new File(toPath).mkdirs();
+            boolean res = true;
+            for (String file : files) {
+                Log.e(TAG1, "do file " + file);
+                if (file.contains("."))
+                    res &= copyAssetIfDifferent(assetManager,
+                            fromAssetPath + "/" + file,
+                            toPath + "/" + file);
+                else
+                    res &= copyAssetFolder(assetManager,
+                            fromAssetPath + "/" + file,
+                            toPath + "/" + file);
+            }
+            return res;
+        } catch (Exception e) {
+            Log.e(TAG1, "Exception in copyAssetFolder", e);
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static boolean copyAssetIfDifferent(AssetManager assetManager, String fromAssetPath, String toFilePath) {
+        boolean same = false;
+        try {
+            Log.e(TAG1, "caif " + fromAssetPath + " " + toFilePath);
+            InputStream assetStream = assetManager.open(fromAssetPath);
+            same = MD5.compareMD5(assetStream, new File(toFilePath));
+        } catch (IOException e) {
+            Log.e(TAG1, "Exception in copyAssetIfDifferent", e);
+        }
+        if (!same) {
+            return copyAsset(assetManager, fromAssetPath, toFilePath);
+        }
+        return true;
+    }
+
+    private static boolean copyAsset(AssetManager assetManager,
+            String fromAssetPath, String toPath) {
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            Log.e(TAG1, "ca " + fromAssetPath + " " + toPath);
+            in = assetManager.open(fromAssetPath);
+            new File(toPath).createNewFile();
+            out = new FileOutputStream(toPath);
+            copyFile(in, out);
+            in.close();
+            in = null;
+            out.flush();
+            out.close();
+            out = null;
+            return true;
+        } catch(Exception e) {
+            Log.e(TAG1, "Exception in copyAsset", e);
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while((read = in.read(buffer)) != -1){
+            out.write(buffer, 0, read);
+        }
+    }
+
 }
