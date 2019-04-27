@@ -97,6 +97,7 @@ Build-Depends:  debhelper (>= 9),
                 libbluray-dev,
                 libxnvctrl-dev,
                 liblzo2-dev,
+                libhdhomerun-dev
 
 Package: mythtv
 Architecture: all
