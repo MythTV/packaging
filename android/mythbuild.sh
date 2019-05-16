@@ -330,6 +330,7 @@ else
 		pushd $MYMYTHBUILDBASEPATH
 		git -C $MYMYTHPATH status --ignored --porcelain | grep '!!' | sed 's/!!//' | xargs -n1 rm -fr
 		popd
+        cp -asn $MYMYTHPATH/mythtv/android-package-source/* $PWD/android-package-source/
 		touch $MYMYTHBUILDBASEPATH/mythtv/stamp_shadow_android
 	fi
 	pushd $MYMYTHBUILDPATH

@@ -7,3 +7,4 @@ build64
 mythinstall
 mythinstall64
 *.apk
+android-package-source/src/org/mythtv
