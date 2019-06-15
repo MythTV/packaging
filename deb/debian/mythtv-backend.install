@@ -8,6 +8,7 @@ usr/bin/mythtv-setup.real
 usr/bin/mythpreviewgen
 usr/bin/mythexternrecorder
 usr/share/mythtv/backend-config
+usr/share/mythtv/externrecorder
 
 #Copied in from debian/
 debian/mythtv-setup.desktop 			usr/share/applications
