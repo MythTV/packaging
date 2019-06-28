@@ -183,7 +183,7 @@ Architecture: $arch
 Essential: no
 Installed-Size: `du -B1024 -d0 $installdir/$packagename | cut  -f1`
 Maintainer: Peter Bennett <pbennett@mythtv.org>
-Depends: mythtv-light, python, perl, libimage-size-perl, perlmagick, libxml-parser-perl, libxml-sax-perl, libcarp-clan-perl, libsoap-lite-perl, libdate-manip-perl, libdate-calc-perl, libwww-perl, libxml-simple-perl, libdatetime-format-iso8601-perl, libjson-perl, libxml-xpath-perl, mjpegtools, dvdauthor, genisoimage, dvd+rw-tools, python, python-imaging, python-mysqldb, pmount, python-feedparser, python-pycurl
+Depends: mythtv-light, python, perl, libimage-size-perl, perlmagick, libxml-parser-perl, libxml-sax-perl, libcarp-clan-perl, libsoap-lite-perl, libdate-manip-perl, libdate-calc-perl, libwww-perl, libxml-simple-perl, libdatetime-format-iso8601-perl, libjson-perl, libxml-xpath-perl, mjpegtools, dvdauthor, genisoimage, dvd+rw-tools, python, python-imaging | python-pil, python-mysqldb, pmount, python-feedparser, python-pycurl
 Conflicts: mythtv-common, mythtv-frontend, mythtv-backend
 Homepage: http://www.mythtv.org
 Description: MythTV Plugins Light
