@@ -3,6 +3,26 @@ scriptname=`readlink -e "$0"`
 scriptpath=`dirname "$scriptname"`
 set -e
 
+#options
+
+strip=
+while (( "$#" >= 1 )) ; do
+    case $1 in
+        --nostrip)
+            strip="_nostrip"
+            ;;
+        --strip)
+            strip=
+            ;;
+        *)
+            echo "Error invalid option $1"
+            echo valid options: --strip --nostrip
+            exit 2
+            ;;
+    esac
+    shift||rc=$?
+done
+
 gitbasedir=`git rev-parse --show-toplevel`
 
 # This will get projname and destdir
@@ -61,7 +81,7 @@ if [[ "$packagebranch" != master && "$packagebranch" != fixes* ]] ; then
 fi
 case $projname in
     mythtv)
-        packagename=mythtv-light_${source}${packagerel}_${arch}_$codename
+        packagename=mythtv-light_${source}${packagerel}_${arch}_$codename$strip
         echo Package $packagename
         if [[ -f $installdir/$packagename.deb || -d $installdir/$packagename ]] ; then
             echo $installdir/$packagename already exists - incrementing SUBRELEASE number
@@ -82,8 +102,10 @@ case $projname in
             fi
         fi
         mkdir -p $installdir/$packagename/DEBIAN
-        strip -g `find $installdir/$packagename/usr/bin/ -type f -executable`
-        strip -g `find $installdir/$packagename/usr/lib/ -type f -executable -name '*.so*'`
+        if [[ "$strip" != "_nostrip" ]] ; then
+            strip -g `find $installdir/$packagename/usr/bin/ -type f -executable`
+            strip -g `find $installdir/$packagename/usr/lib/ -type f -executable -name '*.so*'`
+        fi
         deps="libtag1v5, libexiv2-14, python-future, python-requests, python-requests-cache, "
         if [[ "$codename" == jessie ]] ; then
             deps="libtag1c2a, libexiv2-13, "
@@ -148,8 +170,8 @@ FINISH
         ls -ld ${packagename}*
         ;;
     mythplugins)
-        mythtvpackagename=mythtv-light_${source}${packagerel}_${arch}_$codename
-        packagename=mythplugins-light_${source}${packagerel}_${arch}_$codename
+        mythtvpackagename=mythtv-light_${source}${packagerel}_${arch}_$codename$strip
+        packagename=mythplugins-light_${source}${packagerel}_${arch}_$codename$strip
         echo Package $packagename
         if [[ -f $installdir/$packagename.deb ]] ; then
             echo $installdir/$packagename already exists - incrementing SUBRELEASE number
@@ -172,8 +194,10 @@ FINISH
             find . -type d -empty -print0 | xargs -0 rmdir -v || rc=$?
         done
         mkdir -p $installdir/$packagename/DEBIAN
-        strip -g -v `find $installdir/$packagename/usr/bin/ -type f -executable`
-        strip -g -v `find $installdir/$packagename/usr/lib/ -type f -executable`
+        if [[ "$strip" != "_nostrip" ]] ; then
+            strip -g -v `find $installdir/$packagename/usr/bin/ -type f -executable`
+            strip -g -v `find $installdir/$packagename/usr/lib/ -type f -executable`
+        fi
         cat >$installdir/$packagename/DEBIAN/control <<FINISH
 Package: mythplugins-light
 Version: $packagerel
