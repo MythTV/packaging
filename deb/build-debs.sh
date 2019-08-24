@@ -41,12 +41,12 @@ have () {
 check_install_package()
 {
 	command=$1
-	package=$2
-	flags=$3
-	[ -z "$package" ] && package=$1
+	shift
+	package=${1:-$command}
+	shift || :
 	if ! have "$command"; then
 		echo "Missing $command, marking $package for installation"
-		$root apt-get install $package -y $flags || die "Error installing $package"
+		$root apt-get install "$package" -y "$@" || die "Error installing $package"
 	fi
 }
 
@@ -82,7 +82,7 @@ elif [ "$GIT_BRANCH" != "$RUNNING_BRANCH" ]; then
 	echo "Requested to build $GIT_BRANCH but running on $RUNNING_BRANCH."
 	if git branch -a | grep -Fqs "$GIT_BRANCH"; then
 		echo "Repeating checkout process."
-		git checkout $GIT_BRANCH
+		git checkout "$GIT_BRANCH"
 		"./$BASE" "$@"
 		exit 0
 	fi
@@ -120,7 +120,7 @@ else
     TYPE="binary"
 fi
 
-if [ `id -ru` -ne 0 ]; then
+if [ "$(id -ru)" -ne 0 ]; then
 	if have sudo; then
 		root=sudo
 	else
@@ -147,23 +147,23 @@ check_install_package fakeroot
 check_install_package dh debhelper
 
 #clone in our packaging branch
-mkdir -p $DIRECTORY/mythtv
-rm -rf $DIRECTORY/mythtv/debian
+mkdir -p "$DIRECTORY/mythtv"
+rm -rf "$DIRECTORY/mythtv/debian"
 cp -R "$DEBDIR/debian" "$DIRECTORY/mythtv"
-cp $DIRECTORY/mythtv/debian/changelog.in $DIRECTORY/mythtv/debian/changelog
+cp "$DIRECTORY/mythtv/debian/changelog.in" "$DIRECTORY/mythtv/debian/changelog"
 
 #build packaging changelog
-DATE=$(dpkg-parsechangelog -l$DIRECTORY/mythtv/debian/changelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $2}')
+DATE=$(dpkg-parsechangelog -l"$DIRECTORY/mythtv/debian/changelog" | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $2}')
 TODAY=$(date +%Y%m%d)
 pushd "$DEBDIR" >/dev/null
 PACKAGING_HASH=$(git rev-parse --short HEAD)
 if [ "$DATE" != "$TODAY" ]; then \
-	echo "Packaging changes between $DATE and $TODAY:" > $DIRECTORY/mythtv/.gitout
-	GIT_DATE=`echo $DATE | sed 's/^\(.\{4\}\)/\1./; s/^\(.\{7\}\)/\1./'`
-	git log --grep="^deb: " --oneline --since="$GIT_DATE" | sed 's/^/[/; s/ deb:/]/' >> $DIRECTORY/mythtv/.gitout
+	echo "Packaging changes between $DATE and $TODAY:" > "$DIRECTORY/mythtv/.gitout"
+	GIT_DATE=$(echo "$DATE" | sed 's/^\(.\{4\}\)/\1./; s/^\(.\{7\}\)/\1./')
+	git log --grep="^deb: " --oneline --since="$GIT_DATE" | sed 's/^/[/; s/ deb:/]/' >> "$DIRECTORY/mythtv/.gitout"
 fi
 popd >/dev/null
-cd $DIRECTORY/mythtv
+cd "$DIRECTORY/mythtv"
 
 
 ##set changelog entry
@@ -176,8 +176,8 @@ cd $DIRECTORY/mythtv
 #these should always be parsed from the old changelog
 EPOCH=$(dpkg-parsechangelog | sed '/^Version/!d; s/.* //; s/:.*//;')
 #actually bump the changelog up. don't include a git hash here right now.
-dch -b -v $EPOCH:$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TODAY.-$DEBIAN_SUFFIX "Scripted Build from $GIT_TYPE git packaging [$PACKAGING_HASH]"
-if [ -f $DIRECTORY/mythtv/.gitout ]; then
+dch -b -v "$EPOCH:$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TODAY.-$DEBIAN_SUFFIX" "Scripted Build from $GIT_TYPE git packaging [$PACKAGING_HASH]"
+if [ -f "$DIRECTORY/mythtv/.gitout" ]; then
 	while read line
 	do
 		dch -a "$line"
@@ -197,7 +197,7 @@ if [ -n "$DELTA" ]; then
 fi
 
 #check out/update checkout
-debian/rules get-git-source LAST_GIT_HASH='' GIT_BRANCH=$GIT_BRANCH GIT_BRANCH_FALLBACK=$GIT_BRANCH_FALLBACK
+debian/rules get-git-source LAST_GIT_HASH='' GIT_BRANCH="$GIT_BRANCH" GIT_BRANCH_FALLBACK="$GIT_BRANCH_FALLBACK"
 
 #new upstream version
 UPSTREAM_VERSION=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/-.*//')
@@ -208,7 +208,7 @@ UPSTREAM_VERSION=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/-.*/
 #    existed in the primary archive
 #    A) if so, this replaces it so that we have consistent md5sums
 #    B) if it didn't this will do nothing.
-if [ ! -f ../mythtv_$UPSTREAM_VERSION.orig.tar.gz ]; then
+if [ ! -f "../mythtv_$UPSTREAM_VERSION.orig.tar.gz" ]; then
 	debian/rules build-tarball
 	case "$DEBIAN_SUFFIX" in
 	*mythbuntu*) debian/rules get-orig-source ;;
@@ -239,13 +239,13 @@ fi
 
 #mark the ubuntu target in the changelog
 : "${UBUNTU_RELEASE:=$(lsb_release -s -c)}"
-dch -b --force-distribution -D $UBUNTU_RELEASE ""
+dch -b --force-distribution -D "$UBUNTU_RELEASE" ""
 
 #if we have patch arguments, apply them
 if [ -n "$PATCHES" ]; then
 	for PATCH in $PATCHES; do
-		cp $PATCH debian/patches
-		echo $(basename $PATCH) >> debian/patches/series
+		cp "$PATCH" debian/patches
+		basename "$PATCH" >> debian/patches/series
 		dch -a "Applied $PATCH to build"
 	done
 fi
