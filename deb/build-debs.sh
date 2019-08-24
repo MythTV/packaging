@@ -20,7 +20,7 @@ help()
 	echo ""
 	echo "Example:"
 	echo " $0"
-	echo "  This would check out the branch matching packaging branch name and build debs in `pwd`"
+	echo "  This would check out the branch matching packaging branch name and build debs in $PWD"
 	echo ""
 	echo " $0 fixes/0.27 /tmp"
 	echo "  This would checkout out the fixes/0.27 branch, local packaging and build debs in /tmp"
@@ -85,7 +85,7 @@ elif [ "$GIT_BRANCH" != "$RUNNING_BRANCH" ]; then
 	echo "Building $GIT_BRANCH using packaging $RUNNING_BRANCH"
 fi
 if [ -z "$DIRECTORY" ]; then
-	DIRECTORY=`pwd`
+	DIRECTORY=$PWD
 fi
 if echo "$GIT_BRANCH" | grep fixes 2>&1 1>/dev/null; then
 	GIT_TYPE="fixes"
@@ -162,8 +162,8 @@ cd $DIRECTORY/mythtv
 [ -z "$GIT_MAJOR_RELEASE" ] && GIT_MAJOR_RELEASE=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/~.*//; s/+.*//' | awk -F. '{print $1 }')
 [ -z "$GIT_MINOR_RELEASE_FIXES" ] && GIT_MINOR_RELEASE=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/~.*//; s/+.*//' | awk -F. '{print $2 }')
 [ -z "$DEBIAN_SUFFIX" ] && DEBIAN_SUFFIX='0ubuntu0'
-[ -z "$DEBEMAIL" ] && export DEBEMAIL=$(whoami)@$(hostname)
-[ -z "$DEBFULLNAME" ] && export DEBFULLNAME=$(whoami)
+[ -z "$DEBEMAIL" ] && export DEBEMAIL=$USER@$HOSTNAME
+[ -z "$DEBFULLNAME" ] && export DEBFULLNAME=$USER
 #these should always be parsed from the old changelog
 EPOCH=$(dpkg-parsechangelog | sed '/^Version/!d; s/.* //; s/:.*//;')
 #actually bump the changelog up. don't include a git hash here right now.
