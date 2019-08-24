@@ -73,7 +73,7 @@ for arg in "$@"; do
 done
 
 #identify running branch
-RUNNING_BRANCH="$(cd "$DEBDIR" && git rev-parse --abbrev-ref HEAD)"
+RUNNING_BRANCH="$(git -C "$DEBDIR" rev-parse --abbrev-ref HEAD)"
 
 if [ -z "$GIT_BRANCH" ]; then
 	GIT_BRANCH=$RUNNING_BRANCH
@@ -155,14 +155,11 @@ cp "$DIRECTORY/mythtv/debian/changelog.in" "$DIRECTORY/mythtv/debian/changelog"
 #build packaging changelog
 DATE=$(dpkg-parsechangelog -l"$DIRECTORY/mythtv/debian/changelog" -SVersion | sed 's/.*[~+]//; s/-.*//')
 TODAY=$(date +%Y%m%d)
-pushd "$DEBDIR" >/dev/null
-PACKAGING_HASH=$(git rev-parse --short HEAD)
-if [ "$DATE" != "$TODAY" ]; then \
-	echo "Packaging changes between $DATE and $TODAY:" > "$DIRECTORY/mythtv/.gitout"
+if [ "$DATE" != "$TODAY" ]; then
+	echo "Packaging changes between $DATE and $TODAY:"
 	GIT_DATE=$(echo "$DATE" | sed 's/^\(.\{4\}\)/\1./; s/^\(.\{7\}\)/\1./')
-	git log --grep="^deb: " --oneline --since="$GIT_DATE" | sed 's/^/[/; s/ deb:/]/' >> "$DIRECTORY/mythtv/.gitout"
+	git -C "$DEBDIR" log --grep="^deb: " --oneline --since="$GIT_DATE" | sed 's/^/[/; s/ deb:/]/' > "$DIRECTORY/mythtv/.gitout"
 fi
-popd >/dev/null
 cd "$DIRECTORY/mythtv"
 
 
@@ -176,9 +173,10 @@ cd "$DIRECTORY/mythtv"
 #these should always be parsed from the old changelog
 EPOCH=$(dpkg-parsechangelog -SVersion | sed 's/:.*//;')
 #actually bump the changelog up. don't include a git hash here right now.
+PACKAGING_HASH=$(git rev-parse --short HEAD)
 dch -b -v "$EPOCH:$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TODAY.-$DEBIAN_SUFFIX" "Scripted Build from $GIT_TYPE git packaging [$PACKAGING_HASH]"
-if [ -f "$DIRECTORY/mythtv/.gitout" ]; then
-	while read line
+if [ -f .gitout ]; then
+	while read -r line
 	do
 		dch -a "$line"
 	done < .gitout

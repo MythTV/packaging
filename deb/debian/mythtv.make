@@ -130,7 +130,7 @@ get-git-source:
 		dch -a ">>Upstream changes since last upload ($$LAST_GIT_HASH):" ;\
 		if [ -d .git ]; then \
 			git log --oneline $$LAST_GIT_HASH..$$GIT_HASH | sed 's,^,[,; s, ,] ,; s,Version,version,' > .gitout ;\
-			while read line; do \
+			while read -r line; do \
 				dch -a "$$line"; \
 			done < .gitout ;\
 			rm -f .gitout ;\
