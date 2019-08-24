@@ -112,12 +112,6 @@ case "$GIT_BRANCH" in
 	;;
 esac
 
-if [ "$BASE" = "build-dsc.sh" ]; then
-    TYPE="source"
-else
-    TYPE="binary"
-fi
-
 if [ "$(id -ru)" -ne 0 ]; then
 	if have sudo; then
 		root=sudo
@@ -231,15 +225,18 @@ fi
 #update changelog and control files
 debian/rules update-control-files
 
-if [ "$TYPE" = "binary" ]; then
+case "$BASE" in
+build-dsc.sh)
+    DEBUILD_FLAGS="-S --no-check-builddeps $DEBUILD_FLAGS"
+	;;
+build-deb.sh|*)
     #test and install deps as necessary
     if ! dpkg-checkbuilddeps 1>/dev/null 2>&1; then
 		echo "Missing build dependencies for mythtv, will install them now:"
 		$root apt-get build-dep . || die "error installing dependencies"
     fi
-elif [ "$TYPE" = "source" ]; then
-    DEBUILD_FLAGS="-S $DEBUILD_FLAGS"
-fi
+	;;
+esac
 
 #mark the ubuntu target in the changelog
 : "${UBUNTU_RELEASE:=$(lsb_release -s -c)}"
