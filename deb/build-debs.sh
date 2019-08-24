@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/bin/bash
+set -e -u
 
 die()
 {
@@ -43,10 +44,7 @@ check_install_package()
 }
 
 export QUILT_PATCHES="debian/patches"
-[ -n "$GIT_BRANCH" ] && GIT_BRANCH=""
-[ -n "$DIRECTORY" ] && DIRECTORY=""
-[ -n "$PATCHES" ] && PATCHES=""
-[ -z "$DEBUILD_FLAGS" ] && DEBUILD_FLAGS="-us -uc -i -I.git"
+: "${GIT_BRANCH:=}" "${DIRECTORY:=}" "${PATCHES:=}" "${DEBUILD_FLAGS:=-us -uc -i -I.git}"
 
 if [ ! -d `dirname $0`/debian ]; then
 	die "WARNING: This script will not work without a full checkout from git://github.com/MythTV/packaging.git"
@@ -234,7 +232,7 @@ elif [ "$TYPE" = "source" ]; then
 fi
 
 #mark the ubuntu target in the changelog
-[ -z "$UBUNTU_RELEASE" ] && UBUNTU_RELEASE=$(lsb_release -s -c)
+: "${UBUNTU_RELEASE:=$(lsb_release -s -c)}"
 dch -b --force-distribution -D $UBUNTU_RELEASE ""
 
 #if we have patch arguments, apply them
