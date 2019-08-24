@@ -150,7 +150,6 @@ TODAY=$(date +%F)
 PACKAGING_HASH=$(git -C "$DEBDIR" rev-parse --short HEAD)
 if [ "$DATE" != "$TODAY" ]; then
 	echo "Packaging changes between $DATE and $TODAY:"
-	GIT_DATE=$(echo "$DATE" | sed 's/^\(.\{4\}\)/\1./; s/^\(.\{7\}\)/\1./')
 	git -C "$DEBDIR" log --grep="^deb: " --oneline --since="$DATE" | sed 's/^/[/; s/ deb:/]/' > "$DIRECTORY/mythtv/.gitout"
 fi
 
