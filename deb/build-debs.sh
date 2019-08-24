@@ -51,20 +51,17 @@ if [ ! -d `dirname $0`/debian ]; then
 fi
 
 for arg in "$@"; do
-	if [ "$1" = "help" ] || [ "$1" = "--help" ] || [ "$1" = "/?" ]; then
-		help
-	fi
+	case "$arg" in
+	help|--help|-h|/\?) help ;;
+	esac
 	if [ -z "$DIRECTORY" ] && [ -d "$arg" ]; then
 		DIRECTORY=$arg
-		continue
-	fi
-	if [ -f "$arg" ]; then
+	elif [ -f "$arg" ]; then
 		PATCHES="$PATCHES $arg"
-		continue
-	fi
-	if [ -z "$GIT_BRANCH" ]; then
+	elif [ -z "$GIT_BRANCH" ]; then
 		GIT_BRANCH=$arg
-		continue
+	else
+		die "Invalid argument: '$arg'"
 	fi
 done
 
