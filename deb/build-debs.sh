@@ -159,6 +159,15 @@ if [ "$DATE" != "$TODAY" ]; then
 	git -C "$DEBDIR" log --grep="^deb: " --oneline --since="$DATE" | sed 's/^/[/; s/ deb:/]/' > "$DIRECTORY/mythtv/.gitout"
 fi
 
+#if we have patch arguments, apply them
+if [ -n "$PATCHES" ]; then
+	for PATCH in $PATCHES; do
+		cp "$PATCH" "$DIRECTORY/mythtv/debian/patches"
+		basename "$PATCH" >> "$DIRECTORY/mythtv/debian/patches/series"
+		echo "Applied $PATCH to build"
+	done > "$DIRECTORY/mythtv/.gitout"
+fi
+
 # Change to the build directory
 cd "$DIRECTORY/mythtv"
 
@@ -235,15 +244,6 @@ fi
 #mark the ubuntu target in the changelog
 : "${UBUNTU_RELEASE:=$(lsb_release -s -c)}"
 dch -b --force-distribution -D "$UBUNTU_RELEASE" ""
-
-#if we have patch arguments, apply them
-if [ -n "$PATCHES" ]; then
-	for PATCH in $PATCHES; do
-		cp "$PATCH" debian/patches
-		basename "$PATCH" >> debian/patches/series
-		dch -a "Applied $PATCH to build"
-	done
-fi
 
 echo "Testing all patches before building the packages"
 quilt push -aq || (quilt pop -aqf && exit 1)
