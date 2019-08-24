@@ -87,23 +87,27 @@ fi
 if [ -z "$DIRECTORY" ]; then
 	DIRECTORY=$PWD
 fi
-if echo "$GIT_BRANCH" | grep fixes 2>&1 1>/dev/null; then
+case "$GIT_BRANCH" in
+*fixes*)
 	GIT_TYPE="fixes"
 	GIT_MAJOR_RELEASE=$(echo $GIT_BRANCH |sed 's,.*/,,')
 	DELIMITTER="+"
 	GIT_BRANCH_FALLBACK="master"
 	echo "Building for fixes, v0.$GIT_MAJOR_RELEASE in $DIRECTORY"
-elif echo "$GIT_BRANCH" | grep master 2>&1 1>/dev/null; then
+	;;
+*master*)
 	GIT_TYPE="master"
 	DELIMITTER="~"
 	GIT_BRANCH_FALLBACK="master"
 	echo "Building for master in $DIRECTORY"
-else
+	;;
+*)
 	GIT_TYPE="arbitrary"
 	DELIMITTER="~"
 	GIT_BRANCH_FALLBACK="$RUNNING_BRANCH"
 	echo "Building for arbitrary (likely development) branch $GIT_BRANCH using packaging from $RUNNING_BRANCH."
-fi
+	;;
+esac
 
 if [ "`basename $0`" = "build-dsc.sh" ]; then
     TYPE="source"
