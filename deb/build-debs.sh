@@ -147,6 +147,7 @@ cp "$DIRECTORY/mythtv/debian/changelog.in" "$DIRECTORY/mythtv/debian/changelog"
 #build packaging changelog
 DATE=$(date +%F -d "$(dpkg-parsechangelog -l"$DIRECTORY/mythtv/debian/changelog" -SDate)")
 TODAY=$(date +%F)
+PACKAGING_HASH=$(git -C "$DEBDIR" rev-parse --short HEAD)
 if [ "$DATE" != "$TODAY" ]; then
 	echo "Packaging changes between $DATE and $TODAY:"
 	GIT_DATE=$(echo "$DATE" | sed 's/^\(.\{4\}\)/\1./; s/^\(.\{7\}\)/\1./')
@@ -185,7 +186,6 @@ parse_debver "$(dpkg-parsechangelog -SVersion)"
 
 ##set changelog entry
 #actually bump the changelog up. don't include a git hash here right now.
-PACKAGING_HASH=$(git rev-parse --short HEAD)
 dch -b -v "$DEB_VERSION" "Scripted Build from $GIT_TYPE git packaging [$PACKAGING_HASH]"
 if [ -f .gitout ]; then
 	while read -r line
