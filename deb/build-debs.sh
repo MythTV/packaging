@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e -u
 
+DEBDIR="$(dirname "$0")"
+BASE="$(basename "$0")"
+
 die()
 {
     echo "$*" >&2
@@ -50,7 +53,7 @@ check_install_package()
 export QUILT_PATCHES="debian/patches"
 : "${GIT_BRANCH:=}" "${DIRECTORY:=}" "${PATCHES:=}" "${DEBUILD_FLAGS:=-us -uc -i -I.git}"
 
-if [ ! -d `dirname $0`/debian ]; then
+if [ ! -d "$DEBDIR/debian" ]; then
 	die "WARNING: This script will not work without a full checkout from git://github.com/MythTV/packaging.git"
 fi
 
@@ -70,17 +73,17 @@ for arg in "$@"; do
 done
 
 #identify running branch
-RUNNING_BRANCH="$(cd "$(dirname "$0")" && git rev-parse --abbrev-ref HEAD)"
+RUNNING_BRANCH="$(cd "$DEBDIR" && git rev-parse --abbrev-ref HEAD)"
 
 if [ -z "$GIT_BRANCH" ]; then
 	GIT_BRANCH=$RUNNING_BRANCH
 elif [ "$GIT_BRANCH" != "$RUNNING_BRANCH" ]; then
-	pushd `dirname $0` > /dev/null
+	pushd "$DEBDIR" > /dev/null
 	echo "Requested to build $GIT_BRANCH but running on $RUNNING_BRANCH."
 	if git branch -a | grep -Fqs "$GIT_BRANCH"; then
 		echo "Repeating checkout process."
 		git checkout $GIT_BRANCH
-		./`basename $0` $@
+		"./$BASE" "$@"
 		exit 0
 	fi
 	echo "$GIT_BRANCH not found.  Assuming development branch"
@@ -111,7 +114,7 @@ case "$GIT_BRANCH" in
 	;;
 esac
 
-if [ "`basename $0`" = "build-dsc.sh" ]; then
+if [ "$BASE" = "build-dsc.sh" ]; then
     TYPE="source"
 else
     TYPE="binary"
@@ -146,13 +149,13 @@ check_install_package dh debhelper
 #clone in our packaging branch
 mkdir -p $DIRECTORY/mythtv
 rm -rf $DIRECTORY/mythtv/debian
-cp -R `dirname $0`/debian $DIRECTORY/mythtv
+cp -R "$DEBDIR/debian" "$DIRECTORY/mythtv"
 cp $DIRECTORY/mythtv/debian/changelog.in $DIRECTORY/mythtv/debian/changelog
 
 #build packaging changelog
 DATE=$(dpkg-parsechangelog -l$DIRECTORY/mythtv/debian/changelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $2}')
 TODAY=$(date +%Y%m%d)
-pushd `dirname $0` >/dev/null
+pushd "$DEBDIR" >/dev/null
 PACKAGING_HASH=$(git rev-parse --short HEAD)
 if [ "$DATE" != "$TODAY" ]; then \
 	echo "Packaging changes between $DATE and $TODAY:" > $DIRECTORY/mythtv/.gitout
