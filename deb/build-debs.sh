@@ -78,13 +78,11 @@ RUNNING_BRANCH="$(git -C "$DEBDIR" rev-parse --abbrev-ref HEAD)"
 if [ -z "$GIT_BRANCH" ]; then
 	GIT_BRANCH=$RUNNING_BRANCH
 elif [ "$GIT_BRANCH" != "$RUNNING_BRANCH" ]; then
-	pushd "$DEBDIR" > /dev/null
 	echo "Requested to build $GIT_BRANCH but running on $RUNNING_BRANCH."
-	if git branch -a | grep -Fqs "$GIT_BRANCH"; then
+	if git -C "$DEBDIR" branch -a | grep -Fqs "$GIT_BRANCH"; then
 		echo "Repeating checkout process."
-		git checkout "$GIT_BRANCH"
-		"./$BASE" "$@"
-		exit 0
+		git -C "$DEBDIR" checkout "$GIT_BRANCH"
+		exec "$0" "$@"
 	fi
 	echo "$GIT_BRANCH not found.  Assuming development branch"
 	echo "Building $GIT_BRANCH using packaging $RUNNING_BRANCH"
@@ -160,6 +158,8 @@ if [ "$DATE" != "$TODAY" ]; then
 	GIT_DATE=$(echo "$DATE" | sed 's/^\(.\{4\}\)/\1./; s/^\(.\{7\}\)/\1./')
 	git -C "$DEBDIR" log --grep="^deb: " --oneline --since="$DATE" | sed 's/^/[/; s/ deb:/]/' > "$DIRECTORY/mythtv/.gitout"
 fi
+
+# Change to the build directory
 cd "$DIRECTORY/mythtv"
 
 parse_debver () { #parse debian/changelog: [ $EPOCH ':' ] [ '0.' ] $MAJOR '.' $MINOR ( '+fixes' | '~master' ) [ '.' $YEAR $MONTH $DAY '.' $hash '-0ubuntu' $COUNTER ]
