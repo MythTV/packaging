@@ -141,7 +141,7 @@ get-orig-source:
 	python debian/LP-get-orig-source.py $(GIT_RELEASE)$(DELIMITTER)$(SUFFIX) $(CURDIR)/../$(TARFILE)
 
 info:
-	echo    "--Upstream Project--\n" \
+	@echo    "--Upstream Project--\n" \
 		"ABI: $(ABI)\n" \
 		"--From CURRENT changelog entry in debian--\n" \
 		"Epoch: $(EPOCH)\n" \
@@ -150,15 +150,15 @@ info:
 		"Minor Release: $(GIT_MINOR_RELEASE)\n" \
 		"Total Release: $(GIT_RELEASE)\n" \
 		"Hash: $(GIT_HASH)\n" \
-                "Date: $(DATE)\n" \
+		"Date: $(DATE)\n" \
 		"--Calculated Data--\n" \
 		"Branch: $(GIT_BRANCH)\n" \
 		"Suffix: $(SUFFIX)\n" \
 		"Tarfile: $(TARFILE)\n" \
 		"--Other info--\n" \
-                "OLD Hash: $(LAST_GIT_HASH)\n" \
-                "Current branch hash: $(CURRENT_GIT_HASH)\n" \
-                "Current date: $(TODAY)\n" \
+		"OLD Hash: $(LAST_GIT_HASH)\n" \
+		"Current branch hash: $(CURRENT_GIT_HASH)\n" \
+		"Current date: $(TODAY)\n" \
 
 update-control-files:
 	rm -f debian/control
