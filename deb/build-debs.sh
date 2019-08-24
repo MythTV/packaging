@@ -90,7 +90,7 @@ fi
 case "$GIT_BRANCH" in
 *fixes*)
 	GIT_TYPE="fixes"
-	GIT_MAJOR_RELEASE=$(echo $GIT_BRANCH |sed 's,.*/,,')
+	GIT_MAJOR_RELEASE="${GIT_BRANCH##*/}"
 	DELIMITTER="+"
 	GIT_BRANCH_FALLBACK="master"
 	echo "Building for fixes, v0.$GIT_MAJOR_RELEASE in $DIRECTORY"
