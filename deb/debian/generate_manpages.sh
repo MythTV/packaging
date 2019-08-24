@@ -1,7 +1,7 @@
 #!/bin/sh
 export LD_LIBRARY_PATH=debian/tmp/usr/lib
 export LD_PRELOAD=''
-VERSION=`dpkg-parsechangelog | sed '/^Version/!d; s/.* //; s/.*://;'`
+VERSION=$(dpkg-parsechangelog -SVersion| sed 's/.*://;')
 generate()
 {
 	help2man --no-info -n "$1" --version-string="$VERSION" --no-discard-stderr "$2" > debian/man/`basename $2`.1

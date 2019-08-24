@@ -4,21 +4,22 @@
 #To make sense of these sed rules that are used:
 #  Sample version string:
 #                  Version: 1:0.25.0+master.20101129.a8acde8-0ubuntu1
-#  /^Version/!d  -> only version line from dpkg-parsechangelog
+#                           ^ ^^^^^^ ^^^^^^ ^^^^^^^^ ^^^^^^^ ^^^^^^^^
 #  s/.*1:0.//   -> kill the epoch and Version bit and 0. leading the version
 #  s/-.*//      -> kill everything after and including the -
-#  s/+.*//      -> kill everything after and including the +
+#  s/[~+].*//   -> kill everything after and including the ~ or +
 #  s/.*+//      -> kill everything before and including the +
 
-GIT_MAJOR_RELEASE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/~.*//; s/+.*//' | awk -F. '{print $$1 }')
-GIT_MINOR_RELEASE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/~.*//; s/+.*//' | awk -F. '{print $$2 }')
-GIT_TYPE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$1}')
-DATE:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$2}')
-GIT_HASH:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$3}')
-LAST_GIT_HASH:=$(shell dpkg-parsechangelog --offset 1 --count 1 | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $$3}')
-DEBIAN_SUFFIX:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.*-//;')
-AUTOBUILD=$(shell dpkg-parsechangelog | sed '/^Version/!d' | grep mythbuntu)
-EPOCH:=$(shell dpkg-parsechangelog | sed '/^Version/!d; s/.* //; s/:.*//;')
+include /usr/share/dpkg/pkg-info.mk
+GIT_MAJOR_RELEASE:=$(shell echo $(DEB_VERSION_UPSTREAM) | sed 's/[~+].*//' | awk -F. '{print $$1}')
+GIT_MINOR_RELEASE:=$(shell echo $(DEB_VERSION_UPSTREAM) | sed 's/[~+].*//' | awk -F. '{print $$2}')
+GIT_TYPE:=$(shell echo $(DEB_VERSION_UPSTREAM) | sed 's/.*[~+]//' | awk -F. '{print $$1}')
+DATE:=$(shell echo $(DEB_VERSION_UPSTREAM) | sed 's/.*[~+]//' | awk -F. '{print $$2}')
+GIT_HASH:=$(shell echo $(DEB_VERSION_UPSTREAM) | sed 's/.*[~+]//' | awk -F. '{print $$3}')
+LAST_GIT_HASH:=$(shell dpkg-parsechangelog --offset 1 --count 1 -SVersion | sed 's/.*[~+]//; s/-.*//' | awk -F. '{print $$3}')
+DEBIAN_SUFFIX:=$(shell echo $(DEB_VERSION) | sed 's/.*-//')
+AUTOBUILD=$(shell echo $(DEB_VERSION) | grep mythbuntu)
+EPOCH:=$(shell echo $(DEB_VERSION) | sed 's/:.*//')
 
 TODAY=$(shell date +%Y%m%d)
 
