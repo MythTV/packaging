@@ -75,7 +75,7 @@ if [ -z "$GIT_BRANCH" ]; then
 elif [ "$GIT_BRANCH" != "$RUNNING_BRANCH" ]; then
 	pushd `dirname $0` > /dev/null
 	echo "Requested to build $GIT_BRANCH but running on $RUNNING_BRANCH."
-	if git branch -a | grep $GIT_BRANCH 2>/dev/null >/dev/null; then
+	if git branch -a | grep -Fqs "$GIT_BRANCH"; then
 		echo "Repeating checkout process."
 		git checkout $GIT_BRANCH
 		./`basename $0` $@
@@ -205,9 +205,9 @@ UPSTREAM_VERSION=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/-.*/
 #    B) if it didn't this will do nothing.
 if [ ! -f ../mythtv_$UPSTREAM_VERSION.orig.tar.gz ]; then
 	debian/rules build-tarball
-	if echo $DEBIAN_SUFFIX | grep 'mythbuntu' 2>&1 1>/dev/null; then
-		debian/rules get-orig-source
-	fi
+	case "$DEBIAN_SUFFIX" in
+	*mythbuntu*) debian/rules get-orig-source ;;
+	esac
 fi
 
 #update changelog and control files
