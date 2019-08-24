@@ -153,7 +153,7 @@ cp -R "$DEBDIR/debian" "$DIRECTORY/mythtv"
 cp "$DIRECTORY/mythtv/debian/changelog.in" "$DIRECTORY/mythtv/debian/changelog"
 
 #build packaging changelog
-DATE=$(dpkg-parsechangelog -l"$DIRECTORY/mythtv/debian/changelog" | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $2}')
+DATE=$(dpkg-parsechangelog -l"$DIRECTORY/mythtv/debian/changelog" -SVersion | sed 's/.*[~+]//; s/-.*//')
 TODAY=$(date +%Y%m%d)
 pushd "$DEBDIR" >/dev/null
 PACKAGING_HASH=$(git rev-parse --short HEAD)
@@ -174,7 +174,7 @@ cd "$DIRECTORY/mythtv"
 [ -z "$DEBEMAIL" ] && export DEBEMAIL=$USER@$HOSTNAME
 [ -z "$DEBFULLNAME" ] && export DEBFULLNAME=$USER
 #these should always be parsed from the old changelog
-EPOCH=$(dpkg-parsechangelog | sed '/^Version/!d; s/.* //; s/:.*//;')
+EPOCH=$(dpkg-parsechangelog -SVersion | sed 's/:.*//;')
 #actually bump the changelog up. don't include a git hash here right now.
 dch -b -v "$EPOCH:$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TODAY.-$DEBIAN_SUFFIX" "Scripted Build from $GIT_TYPE git packaging [$PACKAGING_HASH]"
 if [ -f "$DIRECTORY/mythtv/.gitout" ]; then
