@@ -70,9 +70,7 @@ for arg in "$@"; do
 done
 
 #identify running branch
-pushd `dirname $0` >/dev/null
-RUNNING_BRANCH=`git branch| sed '/*/!d; s,^* ,,'`
-popd > /dev/null
+RUNNING_BRANCH="$(cd "$(dirname "$0")" && git rev-parse --abbrev-ref HEAD)"
 
 if [ -z "$GIT_BRANCH" ]; then
 	GIT_BRANCH=$RUNNING_BRANCH
@@ -155,7 +153,7 @@ cp $DIRECTORY/mythtv/debian/changelog.in $DIRECTORY/mythtv/debian/changelog
 DATE=$(dpkg-parsechangelog -l$DIRECTORY/mythtv/debian/changelog | sed '/^Version/!d; s/.*~//; s/.*+//; s/-.*//;' | awk -F. '{print $2}')
 TODAY=$(date +%Y%m%d)
 pushd `dirname $0` >/dev/null
-PACKAGING_HASH=$(git log -1 --oneline | awk '{ print $1 }')
+PACKAGING_HASH=$(git rev-parse --short HEAD)
 if [ "$DATE" != "$TODAY" ]; then \
 	echo "Packaging changes between $DATE and $TODAY:" > $DIRECTORY/mythtv/.gitout
 	GIT_DATE=`echo $DATE | sed 's/^\(.\{4\}\)/\1./; s/^\(.\{7\}\)/\1./'`

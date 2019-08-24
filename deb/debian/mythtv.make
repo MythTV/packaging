@@ -110,7 +110,7 @@ get-git-source:
 	#   ->If so,  then query the PPA for a revision number
 	#3) Check for an empty last git hash, and fill if empty
 
-	CURRENT_GIT_HASH=`git log -1 --oneline | awk '{ print $$1 }'` ;\
+	CURRENT_GIT_HASH=`git rev-parse --short HEAD` ;\
 	echo "Current hash: $$CURRENT_GIT_HASH" ;\
 	if [ "$(GIT_HASH)" != "$$CURRENT_GIT_HASH" ]; then \
 		GIT_HASH=$$CURRENT_GIT_HASH ;\
