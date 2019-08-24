@@ -21,7 +21,8 @@ DEBIAN_SUFFIX:=$(shell echo $(DEB_VERSION) | sed 's/.*-//')
 AUTOBUILD=$(shell echo $(DEB_VERSION) | grep mythbuntu)
 EPOCH:=$(shell echo $(DEB_VERSION) | sed 's/:.*//')
 
-TODAY=$(shell date +%Y%m%d)
+TODAY:=$(shell date +%Y%m%d)
+CURRENT_GIT_HASH:=$(shell git rev-parse --short HEAD)
 
 MAIN_GIT_URL=git://github.com/MythTV/mythtv.git
 MYTHWEB_GIT_URL=git://github.com/MythTV/mythweb.git
@@ -111,10 +112,9 @@ get-git-source:
 	#   ->If so,  then query the PPA for a revision number
 	#3) Check for an empty last git hash, and fill if empty
 
-	CURRENT_GIT_HASH=`git rev-parse --short HEAD` ;\
-	echo "Current hash: $$CURRENT_GIT_HASH" ;\
-	if [ "$(GIT_HASH)" != "$$CURRENT_GIT_HASH" ]; then \
-		GIT_HASH=$$CURRENT_GIT_HASH ;\
+	echo "Current hash: $(CURRENT_GIT_HASH)" ;\
+	if [ "$(GIT_HASH)" != "$(CURRENT_GIT_HASH)" ]; then \
+		GIT_HASH=$(CURRENT_GIT_HASH) ;\
 		LAST_GIT_HASH=$(GIT_HASH) ;\
 		if [ -n "$(AUTOBUILD)" ]; then \
 			LAST_GIT_HASH=`python debian/PPA-published-git-checker.py $(GIT_MAJOR_RELEASE)` ;\
