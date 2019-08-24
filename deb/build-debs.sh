@@ -219,19 +219,10 @@ fi
 debian/rules update-control-files
 
 if [ "$TYPE" = "binary" ]; then
-    #Make sure we have the package for dpkg-checkbuilddeps
-    check_install_package dpkg-checkbuilddeps dpkg-dev --no-install-recommmends
-
-    #mk-build-deps is used
-    check_install_package mk-build-deps devscripts --no-install-recommends
-
-    #equivs needed for mk-build-deps
-    check_install_package equivs-build equivs --no-install-recommends
-
     #test and install deps as necessary
     if ! dpkg-checkbuilddeps 1>/dev/null 2>&1; then
-	echo "Missing build dependencies for mythtv, will install them now:"
-        $root mk-build-deps -ir || die "error installing dependencies"
+		echo "Missing build dependencies for mythtv, will install them now:"
+		$root apt-get build-dep . || die "error installing dependencies"
     fi
 elif [ "$TYPE" = "source" ]; then
     DEBUILD_FLAGS="-S $DEBUILD_FLAGS"
