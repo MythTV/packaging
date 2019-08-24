@@ -162,19 +162,28 @@ if [ "$DATE" != "$TODAY" ]; then
 fi
 cd "$DIRECTORY/mythtv"
 
+parse_debver () { #parse debian/changelog: [ $EPOCH ':' ] [ '0.' ] $MAJOR '.' $MINOR ( '+fixes' | '~master' ) [ '.' $YEAR $MONTH $DAY '.' $hash '-0ubuntu' $COUNTER ]
+	#these should always be parsed from the old changelog
+	EPOCH=${1%%:*}
+
+	local IFS='.~+-'
+	set -- ${1#*:}
+
+	#these can be filled in potentially from external sources
+	: "${GIT_MAJOR_RELEASE:=$1}" "${GIT_MINOR_RELEASE:=$2}" "${DEBIAN_SUFFIX:=0ubuntu0}" "${DEBEMAIL:=$USER@$HOSTNAME}" "${DEBFULLNAME=$USER}"
+	export DEBEMAIL DEBFULLNAME
+
+	# /usr/share/dpkg/pkg-info.mk
+	DEB_VERSION_UPSTREAM="${GIT_MAJOR_RELEASE}.${GIT_MINOR_RELEASE}${DELIMITTER}${GIT_TYPE}.${TODAY//-/}"
+	DEB_VERSION_UPSTREAM_REVISION="${DEB_VERSION_UPSTREAM}-${DEBIAN_SUFFIX}"
+	DEB_VERSION="${EPOCH}:${DEB_VERSION_UPSTREAM_REVISION}"
+}
+parse_debver "$(dpkg-parsechangelog -SVersion)"
 
 ##set changelog entry
-#these can be filled in potentially from external sources
-[ -z "$GIT_MAJOR_RELEASE" ] && GIT_MAJOR_RELEASE=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/~.*//; s/+.*//' | awk -F. '{print $1 }')
-[ -z "$GIT_MINOR_RELEASE_FIXES" ] && GIT_MINOR_RELEASE=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/~.*//; s/+.*//' | awk -F. '{print $2 }')
-[ -z "$DEBIAN_SUFFIX" ] && DEBIAN_SUFFIX='0ubuntu0'
-[ -z "$DEBEMAIL" ] && export DEBEMAIL=$USER@$HOSTNAME
-[ -z "$DEBFULLNAME" ] && export DEBFULLNAME=$USER
-#these should always be parsed from the old changelog
-EPOCH=$(dpkg-parsechangelog -SVersion | sed 's/:.*//;')
 #actually bump the changelog up. don't include a git hash here right now.
 PACKAGING_HASH=$(git rev-parse --short HEAD)
-dch -b -v "$EPOCH:$GIT_MAJOR_RELEASE.$GIT_MINOR_RELEASE$DELIMITTER$GIT_TYPE.$TODAY.-$DEBIAN_SUFFIX" "Scripted Build from $GIT_TYPE git packaging [$PACKAGING_HASH]"
+dch -b -v "$DEB_VERSION" "Scripted Build from $GIT_TYPE git packaging [$PACKAGING_HASH]"
 if [ -f .gitout ]; then
 	while read -r line
 	do
@@ -197,16 +206,13 @@ fi
 #check out/update checkout
 debian/rules get-git-source LAST_GIT_HASH='' GIT_BRANCH="$GIT_BRANCH" GIT_BRANCH_FALLBACK="$GIT_BRANCH_FALLBACK"
 
-#new upstream version
-UPSTREAM_VERSION=$(dpkg-parsechangelog | sed '/^Version/!d; s/.*[0-9]://; s/-.*//')
-
 # 0) Check for a orig tarball file.  If no file then:
 # 1) build a tarball
 # 2) is this an autobuild?  if so, double check whether the tarball already
 #    existed in the primary archive
 #    A) if so, this replaces it so that we have consistent md5sums
 #    B) if it didn't this will do nothing.
-if [ ! -f "../mythtv_$UPSTREAM_VERSION.orig.tar.gz" ]; then
+if [ ! -f "../mythtv_${DEB_VERSION_UPSTREAM}.orig.tar.gz" ]; then
 	debian/rules build-tarball
 	case "$DEBIAN_SUFFIX" in
 	*mythbuntu*) debian/rules get-orig-source ;;
