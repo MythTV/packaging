@@ -31,13 +31,17 @@ help()
 	exit 0
 }
 
+have () {
+	command -v "$1" >/dev/null 2>&1
+}
+
 check_install_package()
 {
 	command=$1
 	package=$2
 	flags=$3
 	[ -z "$package" ] && package=$1
-	if ! which $1 1>/dev/null; then
+	if ! have "$command"; then
 		echo "Missing $command, marking $package for installation"
 		$root apt-get install $package -y $flags || die "Error installing $package"
 	fi
@@ -116,7 +120,7 @@ else
 fi
 
 if [ `id -ru` -ne 0 ]; then
-	if which sudo 1>/dev/null; then
+	if have sudo; then
 		root=sudo
 	else
 		die "Need to be root or have sudo installed"
