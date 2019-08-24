@@ -55,11 +55,12 @@ build-tarball:
 
 
 get-git-source:
-	#checkout mythtv/mythplugins
+	#checkout mythtv
 	if [ -d .git ]; then \
 		git fetch ;\
 		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 		git pull --rebase; \
+		git clean -f -d -X -e Mythbuntu/ -e mythplugins/mythweb/;\
 	else \
 		git clone $(MAIN_GIT_URL) tmp ;\
 		mv tmp/.[!.]* tmp/* . ;\
@@ -73,6 +74,7 @@ get-git-source:
 		git fetch ;\
 		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 		git pull --rebase ;\
+		git clean -f -d -X;\
 	else \
 		mkdir -p mythplugins/mythweb ;\
 		git clone $(MYTHWEB_GIT_URL) tmp ;\
@@ -88,6 +90,7 @@ get-git-source:
 		git fetch ;\
 		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 		git pull --rebase ;\
+		git clean -f -d -X;\
 	else \
 		mkdir -p Mythbuntu ;\
 		git clone $(MYTHBUNTU_THEME_GIT_URL) tmp ;\

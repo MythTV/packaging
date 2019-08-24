@@ -1,1 +1,5 @@
 libmyth-0.*-0.install
+files
+*.debhelper.log
+*.subst
+!patches/
