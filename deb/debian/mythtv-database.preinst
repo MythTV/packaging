@@ -1,4 +1,7 @@
 #!/bin/sh -e
+
+#DEBHELPER#
+
 MYSQLCONFIG="/etc/mysql/conf.d/mythtv.cnf"
 MYSQLCONFIGUPDATEHINT="/etc/mysql/conf.d/mythtv.cnf.ipv6update-with-public_bind.tmp"
 
