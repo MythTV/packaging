@@ -8,7 +8,7 @@ Homepage: http://www.mythtv.org
 Standards-Version: 3.9.4
 Vcs-Git: git://github.com/MythTV/packaging.git
 Build-Conflicts: libqt3-mt-dev
-Build-Depends:  debhelper (>= 9),
+Build-Depends:  debhelper (>= 9.20160709),
                 quilt,
                 ccache,
                 nasm,
@@ -92,7 +92,6 @@ Build-Depends:  debhelper (>= 9),
                 libxml-xpath-perl,
                 git,
                 libsystemd-dev,
-                dh-systemd,
                 libraspberrypi-dev [armhf] | hello,
                 libbluray-dev,
                 libxnvctrl-dev,
