@@ -162,7 +162,6 @@ Depends: adduser,
          ${perl:Depends},
          ${misc:Depends}
 Suggests: mythtv-doc
-Recommends: mythtv-dbg
 Conflicts: mythtv (<< 0.8-1),
            mythmusic (<< 0.20.99+trunk14393),
            mythweather (<< 0.20.99+trunk14393),
@@ -390,18 +389,6 @@ Description: Metapackage to setup and configure a "Master Backend" profile of My
  (and possibly only) backend for the network.  Typically, this package will be
  installed on a server rather then a desktop. It makes no sense to install it
  on anything but the first backend machine on the network.
-
-Package: mythtv-dbg
-Architecture: amd64 arm64
-Section: debug
-Priority: extra
-Recommends: libc6-dbg
-Conflicts: mythplugins-dbg
-Replaces: mythplugins-dbg
-Depends: ${misc:Depends}, mythtv-backend (=${binary:Version}) | mythtv-frontend (=${binary:Version})
-Description: Debug symbols for mythtv packages
- This package provides all debug symbols for mythtv packages since ddebs
- don't appear to always do the right thing.
 
 Package: mythplugins
 Architecture: all
