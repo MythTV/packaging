@@ -1,14 +1,14 @@
 #!/bin/sh
 # Mario Limonciello, March 2007
 # partially merged with startmythtv.sh by Michael Haas, October 2007
+# Mike Bibbings July 2019 remove find_session (obsolete due to removal of gksu,kdesu etc)
 
 pidof mythfrontend.real 2>&1 >/dev/null && wmctrl -a "MythTV Frontend" 2>/dev/null && exit 0
 
 #source our dialog functions
 . /usr/share/mythtv/dialog_functions.sh
 
-#find the session, dialog, and su manager we will be using for display
-find_session
+#find the dialog, and su manager we will be using for display
 find_dialog
 find_su
 
@@ -48,5 +48,4 @@ elif [ "$1" != "--service" ]; then
         exec $environ /usr/bin/mythfrontend.real --syslog local7 "$@"
     fi
 fi
- 
- 
+

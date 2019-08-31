@@ -2,136 +2,55 @@
 # The following set of functions are borrowed from UCK and xdg-utils
 # with minor modifications as well as a few written myself
 #- Mario Limonciello, March 2007
+#- Mike Bibbings July 2019 modifed due to removal of gksu,kdesudo,kdesu etc.
 ###################################################################
 
 find_dialog()
 {
-        if [ -z "$DIALOG" ] ; then
-                DIALOG=`which zenity`
+DIALOG=`which zenity`
 
-                if [ ! -z "$DIALOG" ]; then
-                        DIALOG_TYPE=zenity
-                fi
-        fi
-
-        if [ -z "$DIALOG" ]; then
-                DIALOG=`which kdialog`
-
-                if [ ! -z "$DIALOG" ]; then
-                        DIALOG_TYPE=kdialog
-                fi
-        fi
-
-        if [ -z $DIALOG ]; then
-                failure "You need zenity or kdialog installed to run mythfrontend"
-        fi
-}
-
-find_session()
-{
-    if [ x"$KDE_FULL_SESSION" = x"true" ]; then
-	DE=kde;
-	DIALOG=`which kdialog`;
-	DIALOG_TYPE=kdialog;
-        SU=`which kdesudo`
-	SU_TYPE=kdesudo
-    elif [ x"$GNOME_DESKTOP_SESSION_ID" != x"" ]; then
-	DE=gnome;
-	DIALOG=`which zenity`;
-	DIALOG_TYPE=zenity;
-        SU=`which gksu`
-	SU_TYPE=gksu
-    elif xprop -root _DT_SAVE_MODE | grep ' = \"xfce4\"$' >/dev/null 2>&1; then
-	DE=xfce;
-	DIALOG=`which zenity`;
-	DIALOG_TYPE=zenity;
-        SU=`which gksu`
-	SU_TYPE=gksu
+    if [ -z $DIALOG ]; then
+        failure "You need zenity for first run of mythfrontend or mythtv-setup.\n Install with 'sudo apt install zenity'"
     fi
 }
 
 find_su()
 {
-        if [ -z "$SU" ] ; then
-                SU=`which gksu`
 
-                if [ -z "$SU_TYPE" ]; then
-                        SU_TYPE=gksu
-                fi
-        fi
+SU=`which sudo`
 
-        if [ -z "$SU" ]; then
-                SU=`which kdesu`
-
-                if [ -z "$SU_TYPE" ]; then
-                        SU_TYPE=kdesu
-                fi
-        fi
-
-        if [ -z "$SU" ]; then
-                SU=`which kdesudo`
-
-                if [ -z "$SU_TYPE" ]; then
-                        SU_TYPE=kdesudo
-                fi
-        fi
-
-        if [ -z "$SU" ]; then
-                SU=`which sudo`
-
-                if [ -z "$SU_TYPE" ]; then
-                        SU_TYPE=sudo
-                fi
-        fi
-
-        if [ -z "$SU_TYPE" ]; then
-                failure "You need gksu or kdesu installed to run mythfrontend"
-        fi
+    if [ -z "$SU" ]; then
+        failure "You need sudo installed for first run of mythfrontend or mythtv-setup"
+    fi
 }
 
 dialog_choose_file()
 {
-        TITLE="$1"
+TITLE="$1"
 
-        if [ "$DIALOG_TYPE" = "zenity" ] ; then
-                $DIALOG --title "$TITLE" --file-selection "`pwd`/"
-        else
-                if [ "$DIALOG_TYPE" = "kdialog" ] ; then
-                        $DIALOG --title "$TITLE" --getopenfilename "`pwd`/"
-                else
-                        $DIALOG --stdout --title "$TITLE" --fselect "`pwd`/" 20 80
-                fi
-        fi
+$DIALOG --title "$TITLE" --file-selection "`pwd`/"
 }
 
 dialog_msgbox()
 {
-        TITLE="$1"
-        TEXT="$2"
+TITLE="$1"
+TEXT="$2"
+echo -n "$TEXT" | $DIALOG --title "$TITLE" --text-info --width=500 --height=400 2> /dev/null
 
-        if [ "$DIALOG_TYPE" = "zenity" ]; then
-                echo -n "$TEXT" | $DIALOG --title "$TITLE" --text-info --width=500 --height=400
-        else
-                $DIALOG --title "$TITLE" --msgbox "$TEXT" 20 80
-        fi
 }
 
 dialog_question()
 {
-        TITLE="$1"
-        TEXT="$2"
+TITLE="$1"
+TEXT="$2"
+$DIALOG --title "$TITLE" --question --text "$TEXT" 2> /dev/null
 
-        if [ "$DIALOG_TYPE" = "zenity" ]; then
-                $DIALOG --title "$TITLE" --question --text "$TEXT"
-        else
-                $DIALOG --title "$TITLE" --yesno "$TEXT" 20 80
-        fi
 }
 
 failure()
 {
-	echo "$@"
-	exit 1
+echo "$@"
+exit 1
 }
 
 check_groups()
@@ -154,32 +73,13 @@ then
 				touch ~/.mythtv/ignoregroup
 			fi
 		else
-			if [ "$DE" = "kde" ]; then
-				$SU_TYPE adduser `whoami` mythtv
-			else
-				$SU_TYPE adduser `whoami` mythtv --message "Please enter your current login password to add `whoami` to the mythtv group."
-			fi
-			dialog_question "Log out/in" "For the changes to take effect, your current login session will have to be restarted.  Save all work and then press OK to restart your session."
-			LOGOUT_NOT=$?
-			if [ "$LOGOUT_NOT" = "0" ]; then
-				if [ "$DE" = "gnome" ]; then
-					if which gnome-session-save; then
-						gnome-session-save --kill
-					else
-						gnome-session-quit --logout
-					fi
-				elif [ "$DE" = "kde" ]; then
-					dcop ksmserver ksmserver logout 0 0 0
-				elif [ "$DE" = "xfce" ]; then
-					xfce4-session-logout
-				else
-					dialog_msgbox "No running KDM/Gnome/Xfce" "Please manually log out of your session for the changes to take effect."
-				fi
-				#exit in case they hit cancel here
-				exit 2
-			else
-				exit 3
-			fi
+			run_sudo_command "adduser `whoami` mythtv"
+
+            # add link from /etc/mythtv/config.xml to ~/.mythtv/config.xml if config.xml does not exist.
+            link_configxml
+
+			dialog_msgbox "MythTV" "For the changes to take effect, your current login session has to be restarted.\nPlease logout manually."
+
 		fi
 	fi
 else
@@ -187,4 +87,64 @@ else
 fi
 }
 
+# replacement for obsolete gksu,kdesu etc.
+# first parameter is command to run
+# second parameter, if present, is used to force systemctl daemon-reload, before running the command
+run_sudo_command()
+{
+# limit attempts to 3 for password
+CNT=1
+while [ $CNT -le 3 ]
+do
+if PASS=$($DIALOG --password --title "MythTV" 2> /dev/null); then
+    if ! [ -z $PASS ]; then
+        # check if password is valid
+        echo "$PASS" | sudo -S -i -k pwd > /dev/null 2> /dev/null
+
+        if ! [ $? -eq 0 ]; then
+            # password is not valid: show warning
+            CNT=$(( $CNT + 1 ))
+            $DIALOG --warning --no-wrap --text "The password supplied was invalid!" --title "MythTV" 2> /dev/null
+
+        else
+            # password is valid: execute command
+            # check if we need to force systemctl daemon-reload due to failed status, otherwise start mythtv-backend will fail
+            if [ -n $2 ]; then
+				echo "$PASS" | sudo -S -i -k systemctl daemon-reload 2> /dev/null
+ 	           # eval exit code of command
+                if ! [ $? -eq 0 ]; then
+                    $DIALOG --warning --no-wrap --text "The command systemctl daemon-reload  could not be executed!\n" --title "MythTV" 2> /dev/null
+                	return
+                fi
+			fi
+            #
+            echo "$PASS" | sudo -S -i -k $1 2> /dev/null
+            # eval exit code of command
+            if ! [ $? -eq 0 ]; then
+                $DIALOG --warning --no-wrap --text "The command $1  could not be executed!\n" --title "MythTV" 2> /dev/null
+            fi
+            return
+        fi
+    else
+        # empty password: show warning
+        CNT=$(( $CNT + 1 ))
+        $DIALOG --warning --no-wrap --text "An empty password was supplied!" --title "MythTV" 2> /dev/null
+    fi
+else
+# if password entry cancelled assume user cancelled whole operation
+    return
+fi
+done
+}
+
+# checks and links /etc/mythtv/config.xml to ~/.mythtv/ if ~/.mythtv/config.xml does not exist
+link_configxml()
+{
+        if ! [ -f ~/.mythtv/config.xml ]; then
+            mkdir -p ~/.mythtv
+            ln -s -f /etc/mythtv/config.xml ~/.mythtv/config.xml
+        fi
+}
+
 ###################################################################
+
