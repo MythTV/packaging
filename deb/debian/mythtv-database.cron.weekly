@@ -15,7 +15,7 @@ if [ -e "/etc/default/mythtv-backend" ]; then
    . /etc/default/mythtv-backend
 fi
 
-if [ "X$USER" = "X" ]; then
+if [ -z "${USER:-}" ]; then
    CMDPREFIX=""
 else
    CMDPREFIX="sudo -H -u $USER"
