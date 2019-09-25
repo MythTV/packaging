@@ -83,10 +83,7 @@ case $projname in
         basedir=$destdir/usr
         export PYTHONPATH=$basedir/local/lib/python2.7/dist-packages
         config_opt=
-        config_opt="--enable-mythgallery $MYTHTV_CONFIG_OPT_EXTRA"
-        if [[ `arch` == arm* ]] ; then
-            config_opt="--disable-mythgallery"
-        fi
+        config_opt=" $MYTHTV_CONFIG_OPT_EXTRA"
         ./configure --prefix=$destdir/usr \
          $config_opt "$@" |& tee -a  $gitbasedir/../config_${projname}.out
          set -
