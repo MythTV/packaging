@@ -636,6 +636,7 @@ Group:          Development/Languages
 #BuildArch:      noarch
 
 Requires:       MySQL-python
+Requires:       (python-fuzzywuzzy or python2-fuzzywuzzy or python3-fuzzywuzzy)
 
 %description -n python-MythTV
 Provides a python-based interface to interacting with MythTV.
