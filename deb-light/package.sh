@@ -106,7 +106,7 @@ case $projname in
             strip -g `find $installdir/$packagename/usr/bin/ -type f -executable`
             strip -g `find $installdir/$packagename/usr/lib/ -type f -executable -name '*.so*'`
         fi
-        deps="libtag1v5, libexiv2-14, python-future, python-requests, python-requests-cache, "
+        deps="libtag1v5, libexiv2-14, python-future, python-requests, python-requests-cache, python-fuzzywuzzy | python3-fuzzywuzzy"
         if [[ "$codename" == jessie ]] ; then
             deps="libtag1c2a, libexiv2-13, "
         fi
