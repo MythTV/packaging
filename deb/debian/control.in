@@ -150,7 +150,6 @@ Depends: adduser,
          python-future,
          python-requests,
          python-requests-cache,
-         python-fuzzywuzzy | python3-fuzzywuzzy,
          ${shlibs:Depends},
          ${misc:Depends}
 Suggests: mythtv-doc
