@@ -166,7 +166,7 @@ export ANDROID_EXTRA_LIBS="$INSTALLROOT"
 # ant TARGETAPKPREFIX=$INSTALLROOT/bin/QtApp
 TARGETAPKPREFIX=$INSTALLROOT/build/outputs/apk/myth
 
-IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
+IGNOREDEFINES=
 
 # process command
 case "$1" in
@@ -385,12 +385,9 @@ $MYTHTVSRC/configure \
 	--disable-libcrypto \
 	--disable-mheg \
 	--disable-vdpau \
-	--disable-crystalhd \
 	--disable-vaapi \
 	--disable-dxva2 \
-	--enable-opengl-video \
 	--enable-opengl \
-	--disable-openmax \
 	--without-bindings=perl,python,php \
 	&& touch stamp_configure_android
 
