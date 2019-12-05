@@ -53,15 +53,15 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=$(MYTHTV_COMPILE_TYPE) \
 #                                    #
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq "$(DEB_BUILD_ARCH)" "armhf"
-	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl --disable-vaapi
+	MYTHTV_CONFIGURE_OPTS += --disable-opengl --disable-vaapi
 else ifeq "$(DEB_BUILD_ARCH)" "arm64"
-	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl --disable-vaapi
+	MYTHTV_CONFIGURE_OPTS += --disable-opengl --disable-vaapi
 else ifeq "$(DEB_BUILD_ARCH)" "s390x"
-	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl --disable-vaapi
+	MYTHTV_CONFIGURE_OPTS += --disable-opengl --disable-vaapi
 else ifeq "$(DEB_BUILD_ARCH)" "ppc64el"
-	MYTHTV_CONFIGURE_OPTS += --disable-opengl-video --disable-opengl --disable-vaapi
+	MYTHTV_CONFIGURE_OPTS += --disable-opengl --disable-vaapi
 else
-	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video --enable-vaapi --enable-crystalhd
+	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video --enable-vaapi
 endif
 ifeq "$(DEB_BUILD_ARCH)" "i386"
 	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx
