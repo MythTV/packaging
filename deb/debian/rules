@@ -164,9 +164,6 @@ override_dh_installinit:
 override_dh_strip:
 	dh_strip --dbg-package=mythtv-dbg
 
-override_dh_makeshlibs:
-	dh_makeshlibs -V -Xusr/lib/mythtv/filters
-
 override_dh_compress:
 	dh_compress -X.pl -X.py
 
