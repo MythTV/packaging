@@ -61,7 +61,7 @@ else ifeq "$(DEB_BUILD_ARCH)" "s390x"
 else ifeq "$(DEB_BUILD_ARCH)" "ppc64el"
 	MYTHTV_CONFIGURE_OPTS += --disable-opengl --disable-vaapi
 else
-	MYTHTV_CONFIGURE_OPTS += --enable-opengl-video --enable-vaapi
+	MYTHTV_CONFIGURE_OPTS += --enable-vaapi
 endif
 ifeq "$(DEB_BUILD_ARCH)" "i386"
 	MYTHTV_CONFIGURE_OPTS +=  --cpu=i686 --enable-mmx
