@@ -51,9 +51,12 @@ Build-Depends:  debhelper (>= 9),
                 libwww-perl,
                 dh-python | python-central,
                 python,
-                python-oauth,
-                python-lxml,
-                python-mysqldb,
+                python3-oauth,
+                python3-lxml,
+                python3-mysqldb,
+                python3-requests,
+                python3-simplejson,
+                python3-future,
                 python-pycurl,
                 python-urlgrabber,
                 libgl1-mesa-dev | xlibmesa-gl-dev | xlibmesa-dev | libgl-dev,
@@ -148,7 +151,7 @@ Depends: adduser,
          pciutils,
          usbutils,
          python-future,
-         python-requests,
+         python3-requests,
          python-requests-cache,
          python-uritools,
          python3-uritools,
@@ -356,7 +359,7 @@ Description: Perl library to access some MythTV features
 Package: libmyth-python
 Architecture: all
 Section: libs
-Depends: ${python:Depends}, python, python-mysqldb, python-lxml, python-urlgrabber, ${misc:Depends}
+Depends: ${python:Depends}, python, python3-mysqldb, python3-lxml, python-urlgrabber, ${misc:Depends}
 Replaces: mythtv-common (<< 0.20.98 )
 Conflicts: mythtv-common (<< 0.20.98 )
 Description: Python library to access some MythTV features
@@ -493,7 +496,7 @@ Depends: mythtv-transcode-utils(>= ${binary:Version}),
          dvd+rw-tools,
          python,
          python-imaging | python-pil,
-         python-mysqldb,
+         python3-mysqldb,
          pmount,
          ${shlibs:Depends},
          ${misc:Depends}
