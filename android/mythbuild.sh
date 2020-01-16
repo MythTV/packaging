@@ -266,10 +266,6 @@ function bundle_apk() {
 			cp "$MYTHINSTALLROOT/lib/$lib" "$MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/"
 		done
 	fi
-	# filters are not automatically installed so copy them
-	for i in $MYTHINSTALLROOT/lib/libmythfilter*.so ; do
-		cp "$i" "$MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/"
-	done
 	# plugins are not automatically installed so copy them
 	for i in $MYTHINSTALLROOT/lib/libmythpluginmyth{archive,netvision,news,browser,game,music,zoneminder}.so \
 		$MYTHINSTALLROOT/lib/libmyth{archivehelper,fillnetvision}.so \
