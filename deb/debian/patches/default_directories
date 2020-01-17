@@ -8,8 +8,8 @@ Index: mythtv/mythplugins/mytharchive/mytharchive/archivesettings.cpp
 ===================================================================
 --- mythtv.orig/mythplugins/mytharchive/mytharchive/archivesettings.cpp
 +++ mythtv/mythplugins/mytharchive/mytharchive/archivesettings.cpp
-@@ -18,7 +18,7 @@ static HostFileBrowserSetting *MythArchi
-     HostFileBrowserSetting *gc = new HostFileBrowserSetting("MythArchiveTempDir");
+@@ -18,7 +18,7 @@ static HostFileBrowserSetting *MythArchiveTempDir()
+     auto *gc = new HostFileBrowserSetting("MythArchiveTempDir");
  
      gc->setLabel(ArchiveSettings::tr("MythArchive Temp Directory"));
 -    gc->setValue("");
@@ -17,6 +17,7 @@ Index: mythtv/mythplugins/mytharchive/mytharchive/archivesettings.cpp
  
      gc->setHelpText(ArchiveSettings::tr("Location where MythArchive should "
                                          "create its temporary work files. "
+
 Index: mythtv/mythtv/libs/libmythmetadata/globals.cpp
 ===================================================================
 --- mythtv.orig/mythtv/libs/libmythmetadata/globals.cpp
