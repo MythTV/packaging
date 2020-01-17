@@ -123,6 +123,8 @@ s/^.*\(setenv\sdb_password\s\+\"\).*\"/\t\1$mythtv_password\"/g;
             " > $NEW
 	if [ "$INPUT" != "$MYTHWEBCONF" ]; then
 		sed "s,/var/www/html,$SYMLINK,;" -i $NEW
+        sed '/php_value display_errors/a \
+            php_value max_input_vars                10000' -i $NEW
 	fi
         mv -f $NEW $MYTHWEBCONF
 
