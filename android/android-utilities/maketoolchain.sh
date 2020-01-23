@@ -1,13 +1,18 @@
 #!/bin/bash
 
+: ${SDKVERSION:=23}
+: ${OLDSDKVERSION:=17}
+: ${STL:=libc++}
+: ${GCCVERSION:=4.9}
+
 usage() {
 	cat <<END
 $1 [options]
 Options:
 	--force		force overwrite of existing toolchains
-	--sdkver	set sdk version, default 21
-	--gccversion	set gcc version, default 4.9, no others exist
-	--stl		set c++ stl to use: gnustl (default), libc++, stlport
+	--sdkver	set sdk version, default ${SDKVERSION}
+	--gccversion	set gcc version, default ${GCCVERSION}, no others exist
+	--stl		set c++ stl to use: gnustl, libc++, stlport, default=$STL
 	--help		this help
 END
 }
@@ -52,11 +57,6 @@ while : ; do
 			;;
 	esac
 done
-
-: ${SDKVERSION:=21}
-: ${OLDSDKVERSION:=17}
-: ${STL:=gnustl}
-: ${GCCVERSION:=4.9}
 
 make_toolchain() {
 	./build/tools/make-standalone-toolchain.sh \

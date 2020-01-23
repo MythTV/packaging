@@ -23,12 +23,11 @@ ARM64=1
    * After Android Studio is installed, use it to install the Android SDK.
      * In Android Studio, choose Configure / SDK Manager.
      * Install the desired SDK versions.  Lollipop, Marshmallow, Nougat and Oreo are
-       the likely choices right now.
-     * Install the desired SDK Tools.  CMake is the main one.
+       the likely choices right now. Install SDK 28 and 29.
+     * Install the desired SDK Tools. CMake, build tools 28 is the main one.
    * For the NDK
-     * Get android-ndk-r13b-linux-x86_64.bin and install it in ~/android too.
-     * Symlink it as android-ndk -> android-ndk-r13b.
-     * android-ndk-16b currently does not work due to missing headers.
+     * Get android-ndk-r20b-linux-x86_64.bin and install it in ~/android too.
+     * Symlink it as android-ndk -> android-ndk-r20b.
    * if you want to build a release apk, you need to create a key.
    * Copy android-utilities/* to ~/android
       * cp android-utilities/setenv.sh ~/android
@@ -40,13 +39,12 @@ ARM64=1
 
 ```
    ~/android
-	android-ndk -> android-ndk-r13b
-	android-ndk-r13b
+	android-ndk -> android-ndk-r20b
+	android-ndk-r20b
 	android-sdk-linux
 	android-studio
 	xxxxx-release.keystore
 	xxxxx.keystore
-	maketoolchain.sh
 	setenv.sh
 ```
 
@@ -68,6 +66,11 @@ ARM64=1
 ```
     ./makelibs.sh all
 ```
+   or with logging
+
+```
+    ./makelibs.sh all 2>&1 | tee build_lib64.log
+```
     
    This creates some 3 GB of data in a directory called workdir/packaging/android/mythinstall64 (for 64bit). I suggest making a copy of that, because that directory gets MythTV compile results added to it by mythbuild, and there is no "clean" process that cleans it up in case you want to be sure of running a pristine build in future.
 
@@ -79,7 +82,6 @@ ARM64=1
    ./mythbuild.sh
 ```
 
-Cross your fingers and hope I didnt miss a step.
 
 Debugging
 ---------

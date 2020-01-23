@@ -5,13 +5,8 @@ source ~/android/setenv.sh
 
 SHADOW_BUILD=0
 ARM64=0
-USE_CRYSTAX=0
 BUILD_PLUGINS=0
 
-SYSROOT=$ANDROID_NDK/my-android-toolchain/sysroot
-SYSINC=$ANDROID_NDK/my-android-toolchain
-CROSSPREFIX=$ANDROID_NDK/my-android-toolchain/bin/arm-linux-androideabi-
-#CROSSPREFIX=$ANDROID_NDK/my-android-toolchain/arm-linux-androideabi/bin/
 export ANDROID_NDK_ROOT=$ANDROID_NDK
 
 MYMYTHPATH="`readlink -f ../../mythtv`"
@@ -19,14 +14,9 @@ export NCPUS=$(nproc)
 
 [ -e make.inc ] && source make.inc
 
-export ANDROID_NATIVE_API_LEVEL=21
+export ANDROID_NATIVE_API_LEVEL=28
 export ANDROID_TARGET_ARCH=armeabi-v7a
 export ANDROID_NDK_TOOLS_PREFIX=arm-linux-androideabi
-if [ "$USE_CRYSTAX" == 1 ]; then
-	export ANDROID_NDK_TOOLCHAIN_VERSION=5
-else
-	export ANDROID_NDK_TOOLCHAIN_VERSION=4.9
-fi
 
 #CFLAGS='-march=armv7-a -mfloat-abi=softfp'
 #CFLAGS='-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
@@ -41,10 +31,9 @@ CONFIGUREBUILDTYPE="debug --enable-small"
 NEONFLAGS=
 #NEONFLAGS="-mfpu=neon"
 ARCH=armv7-a
-CPU=armv7-a
+#CPU=armv7-a
 #CPU=cortex-a53
 DEPLOYTYPE="--debug"
-EXTRASPECS="-after QMAKE_CFLAGS-=-mfpu=vfp QMAKE_CXXFLAGS-=-mfpu=vfp"
 
 while : ; do
 case "$1" in
@@ -102,6 +91,7 @@ if [ $ARM64 == 1 ]; then
 	TOOLCHAIN_SUFFIX=64
 	export ANDROID_TARGET_ARCH=arm64-v8a
 	export ANDROID_NDK_TOOLS_PREFIX=aarch64-linux-android
+	export SYSROOTARCH=$ANDROID_NDK/platforms/$ANDROID_NDK_PLATFORM/arch-arm64
 	ARCH=armv8-a
 	ARCH=aarch64
 	CPU=cortex-a53
@@ -115,6 +105,7 @@ else
 	fi
 	export ANDROID_TARGET_ARCH=armeabi-v7a
 	export ANDROID_NDK_TOOLS_PREFIX=arm-linux-androideabi
+	export SYSROOTARCH=$ANDROID_NDK/platforms/$ANDROID_NDK_PLATFORM/arch-arm
 	ARCH=armv7-a
 	CPU=armv7-a
 	BUNDLE_NAME=arm$TOOLCHAIN_SUFFIX
@@ -124,12 +115,17 @@ fi
 MYMYTHBUILDBASEPATH=build$TOOLCHAIN_SUFFIX
 INSTALLROOT=$BASE/mythinstall$TOOLCHAIN_SUFFIX
 export MYTHINSTALLROOT=$INSTALLROOT
-export ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/my-android-toolchain$TOOLCHAIN_SUFFIX
-SYSROOT=$ANDROID_NDK/my-android-toolchain$TOOLCHAIN_SUFFIX/sysroot
-SYSINC=$ANDROID_NDK/my-android-toolchain$TOOLCHAIN_SUFFIX
-CROSSPREFIX=$ANDROID_NDK_TOOLCHAIN_PATH/bin/${ANDROID_NDK_TOOLS_PREFIX}-
+export ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64
+SYSROOT_BASE=$ANDROID_NDK/sysroot
+SUPPORT_INC=$ANDROID_NDK/sources/android/support/include
+SYSROOT=$ANDROID_NDK_TOOLCHAIN_PATH/sysroot
+CROSSPATH=$ANDROID_NDK_TOOLCHAIN_PATH/bin
+CROSSPATH2=$CROSSPATH/$ANDROID_NDK_TOOLS_PREFIX-
+CROSSPATH3=$CROSSPATH/$ANDROID_NDK_TOOLS_PREFIX${ANDROID_NATIVE_API_LEVEL}-
+CROSSCC=$ANDROID_NDK_TOOLS_PREFIX${ANDROID_NATIVE_API_LEVEL}-clang
 LIB_ANDROID_PATH="$ANDROID_NDK_TOOLCHAIN_PATH/$ANDROID_NDK_TOOLS_PREFIX/$LIB_ANDROID_REL_PATH"
 
+EXTRASPECS="CONFIG+=single_arch ANDROID_ABIS=$ANDROID_TARGET_ARCH -after QMAKE_CFLAGS-=-mfpu=vfp QMAKE_CXXFLAGS-=-mfpu=vfp"
 EXTRA_ANDROID_LIBS="libcrystax.so libpng.so libjpeg.so"
 
 if [ -z "$MYTHLIBVERSION" ]; then
@@ -137,20 +133,9 @@ if [ -z "$MYTHLIBVERSION" ]; then
 fi
 export MYTHINSTALLLIBCOMMON=$MYTHINSTALLROOT/lib/
 export MYTHINSTALLLIB=$MYTHINSTALLROOT/lib/
-#export MYTHINSTALLLIB=$MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/
-#export MYTHINSTALLLIBCOMMON=lib/
-#export MYTHINSTALLLIB=lib/
 export MYTHPACKAGEBASE=$BASE
 export QTBASE=$INSTALLROOT/qt
 export ANDROID_INSTALL_LIBS="/lib"
-
-if [ "$USE_CRYSTAX" == 1 ]; then
-	CRYSTAX_LIBS="-lcrystax"
-	CRYSTAX_CFLAGS="-D_LSEEK_DECLARED"
-else
-	CRYSTAX_LIBS=
-	CRYSTAX_CFLAGS=
-fi
 
 PATH="$INSTALLROOT/bin:$PATH"
 
@@ -163,10 +148,10 @@ export PKG_CONFIG_SYSROOT_DIR=
 
 export ANDROID_EXTRA_LIBS="$INSTALLROOT"
 
-# ant TARGETAPKPREFIX=$INSTALLROOT/bin/QtApp
 TARGETAPKPREFIX=$INSTALLROOT/build/outputs/apk/myth
 
-IGNOREDEFINES=
+#IGNOREDEFINES=
+IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
 
 # process command
 case "$1" in
@@ -192,7 +177,6 @@ case "$1" in
 		rm stamp_configure_android
 		make distclean
 		cd $MYMYTHBUILDBASEPATH
-		#git -C $MYMYTHPATH ls-files -o | grep -vE "kdev4|user|src" | xargs -n1 rm
 		git -C $MYMYTHPATH ls-files -o | xargs -n1 rm
 		exit 0
 		;;
@@ -219,17 +203,6 @@ case "$1" in
 esac
 
 function deploy-extra-libs() {
-	#pushd $INSTALLROOT/libs/$ANDROID_TARGET_ARCH
-	#for i in ../../lib/*; do
-	#	ln -snf $i
-	#done
-	#popd
-	local lib
-	if [ -e "$LIB_ANDROID_PATH/libcrystax.so" ]; then
-		for lib in $EXTRA_ANDROID_LIBS ; do
-			cp "$LIB_ANDROID_PATH/$lib" "$INSTALLROOT/lib"
-		done
-	fi
 	[ -d "$INSTALLROOT/assets" ] || mkdir $INSTALLROOT/assets
 	pushd $INSTALLROOT/assets
 	cp -aL ../share/mythtv .
@@ -259,13 +232,9 @@ function makeapk() {
 
 function bundle_apk() {
 	mkdir -p $MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/ || true
-	cp $MYTHINSTALLROOT/lib/libmythfrontend.so $MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/
-	local lib
-	if [ -e "$LIB_ANDROID_PATH/libcrystax.so" ]; then
-		for lib in $EXTRA_ANDROID_LIBS ; do
-			cp "$MYTHINSTALLROOT/lib/$lib" "$MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/"
-		done
-	fi
+	for i in mythfrontend ; do
+		cp $MYTHINSTALLROOT/bin/$i $MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/lib${i}_$ANDROID_TARGET_ARCH.so
+	done
 	# plugins are not automatically installed so copy them
 	for i in $MYTHINSTALLROOT/lib/libmythpluginmyth{archive,netvision,news,browser,game,music,zoneminder}.so \
 		$MYTHINSTALLROOT/lib/libmyth{archivehelper,fillnetvision}.so \
@@ -291,21 +260,24 @@ function bundle_apk() {
 		../../AndroidManifest.xml.in \
 		>../../android-package-source/AndroidManifest.xml
 
+	cat programs/mythfrontend/android-mythfrontend-deployment-settings.json
 	$QTBASE/bin/androiddeployqt \
-		--gradle \
 		--output $INSTALLROOT \
 		$DEPLOYTYPE \
 		--verbose \
 		--android-platform $ANDROID_NDK_PLATFORM \
-		--input programs/mythfrontend/android-libmythfrontend.so-deployment-settings.json \
+		--input programs/mythfrontend/android-mythfrontend-deployment-settings.json \
+		--apk $BASE/mythfrontend-$VERSIONNAME.apk \
+		--debug \
 		--jdk $JDK_PATH $BUNDLESIGN
+
 	if [ $? -ne 0 ]; then
 		echo "Error androiddeployqt result is $?"
 	else
 		echo "*** copy apk to $BASE/mythfrontend-$VERSIONNAME.apk ***"
-		for apk in $TARGETAPKPREFIX*.apk; do
-			cp $apk $BASE/mythfrontend-$VERSIONNAME.apk
-		done
+		#for apk in $TARGETAPKPREFIX*.apk; do
+		#	cp $apk $BASE/mythfrontend-$VERSIONNAME.apk
+		#done
 	fi
 }
 
@@ -315,18 +287,17 @@ if [ $SHADOW_BUILD = 1 ]; then
 	cd $MYMYTHBUILDBASEPATH
 	MYTHTVSRC=../../../mythtv/mythtv
 else
-	# cheap mans shadow build
+	# poor man's shadow build
 	MYTHTVSRC=.
 	SOURCE_VERSION=$(git -C $MYMYTHPATH describe --dirty || git -C $MYMYTHPATH describe || echo Unknown)
 	BRANCH=$(git -C $MYMYTHPATH branch --no-color | sed -e '/^[^\*]/d' -e 's/^\* //' -e 's/(no branch)/exported/')
 	if [ ! -e $MYMYTHBUILDBASEPATH/mythtv/stamp_shadow_android ] ; then
 		rm -r $MYMYTHBUILDBASEPATH
 		cp -as `readlink -f $MYMYTHPATH` $MYMYTHBUILDBASEPATH
-		#rm -r $MYMYTHBUILDBASEPATH/.git
 		pushd $MYMYTHBUILDBASEPATH
 		git -C $MYMYTHPATH status --ignored --porcelain | grep '!!' | sed 's/!!//' | xargs -n1 rm -fr
 		popd
-        cp -asn $MYMYTHPATH/mythtv/android-package-source/* $PWD/android-package-source/
+ 		cp -asn $MYMYTHPATH/mythtv/android-package-source/* $PWD/android-package-source/
 		touch $MYMYTHBUILDBASEPATH/mythtv/stamp_shadow_android
 	fi
 	pushd $MYMYTHBUILDPATH
@@ -346,12 +317,17 @@ fi
 pwd
 $MYTHTVSRC/configure --help
 if [ ! -e stamp_configure_android ] ; then
-	[ -n "$CPU" ] && CPU="--cpu=$CPU"
+	#[ -n "$CPU" ] && CPU="--cpu=$CPU"
+	[ -n "$CPU" ] && CPU=
 $MYTHTVSRC/configure \
 	--disable-ccache \
-	--cross-prefix=$CROSSPREFIX \
+	--cross-prefix="$CROSSPATH2" \
+	--cross-prefix-cc="$CROSSPATH3" \
 	--arch=$ARCH $CPU \
 	--target-os=android \
+	--cc="clang" \
+	--cxx="clang++" \
+	--enable-set-cc-default \
 	--compile-type=$CONFIGUREBUILDTYPE \
 	--pkg-config=$(which pkg-config) \
 	--prefix=/ \
@@ -360,12 +336,14 @@ $MYTHTVSRC/configure \
 	--enable-backend \
 	--enable-cross-compile \
 	--sysroot=$SYSROOT \
-	--extra-cflags="$CRYSTAX_CFLAGS -D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
-	--extra-cxxflags=" -D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
-	--extra-ldflags="$CRYSTAX_LIBS -Wl,-rpath-link=$INSTALLROOT/lib -Wl,-rpath-link=$SYSROOT/usr/lib" \
+	--sysinclude="no-special-cec-inc-path" \
+	--extra-cflags="-D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$SYSROOT/usr/include -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
+	--extra-cxxflags="-D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -I$SYSROOT/usr/include -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
+	--extra-ldflags="-Wl,-rpath-link=$INSTALLROOT/lib -Wl,-rpath-link=$SYSROOTARCH/usr/lib -Wl,-rpath-link=$SYSROOT/usr/lib" \
 	--qmake=$QTBASE/bin/qmake \
-	--qmakespecs="android-g++ $EXTRASPECS" \
+	--qmakespecs="android-clang $EXTRASPECS" \
 	--disable-qtdbus \
+	--disable-qtwebkit \
 	--disable-dvb \
 	--disable-hdhomerun \
 	--disable-v4l2 \
@@ -400,7 +378,7 @@ make_plugins() {
 			--libdir-name=lib \
 			--sysroot=$SYSROOT \
 			--mythroot=$INSTALLROOT \
-			--extra-cflags="$CRYSTAX_CFLAGS -D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
+			--extra-cflags="-D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
 			--extra-cxxflags=" -D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
 			--extra-ldflags="-Wl,-rpath-link,$INSTALLROOT/lib" \
 			--qmake=$QTBASE/bin/qmake \

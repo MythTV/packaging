@@ -20,9 +20,9 @@ else
 fi
 export JAVA_HOME=${HOME}/android/android-studio/jre
 export JDK_PATH=${JAVA_HOME}/bin
-export ANDROID_KEYSTORE=$ANDROID_ROOT/digivation.keystore
 
-export KEYSTORE=~/android/sample-release.keystore
+export ANDROID_KEYSTORE=$ANDROID_ROOT/sample-release.keystore
+export KEYSTORE=$ANDROID_ROOT/sample-release.keystore
 export KEYALIAS=sample
 export KEYSTOREPASSWORD="password"
 
