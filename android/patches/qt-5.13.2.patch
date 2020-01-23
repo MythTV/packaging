@@ -1,0 +1,84 @@
+diff --git a/qtbase/mkspecs/android-clang/qmake.conf b/qtbase/mkspecs/android-clang/qmake.conf
+index 05b797914..812b52e74 100644
+--- a/qtbase/mkspecs/android-clang/qmake.conf
++++ b/qtbase/mkspecs/android-clang/qmake.conf
+@@ -15,11 +15,11 @@ QMAKE_CC      = $$NDK_LLVM_PATH/bin/clang
+ QMAKE_CXX     = $$NDK_LLVM_PATH/bin/clang++
+ 
+ equals(ANDROID_TARGET_ARCH, armeabi-v7a): \
+-    QMAKE_CFLAGS += -target armv7-none-linux-androideabi
++    QMAKE_CFLAGS += -target armv7a-linux-androideabi$$replace(ANDROID_PLATFORM, "android-", "")
+ else: equals(ANDROID_TARGET_ARCH, armeabi): \
+-    QMAKE_CFLAGS += -target armv5te-none-linux-androideabi
++    QMAKE_CFLAGS += -target armv5te-none-linux-androideabi$$replace(ANDROID_PLATFORM, "android-", "")
+ else: equals(ANDROID_TARGET_ARCH, arm64-v8a): \
+-    QMAKE_CFLAGS += -target aarch64-none-linux-android
++    QMAKE_CFLAGS += -target aarch64-linux-android$$replace(ANDROID_PLATFORM, "android-", "")
+ else: equals(ANDROID_TARGET_ARCH, x86): \
+     QMAKE_CFLAGS += -target i686-none-linux-android -mstackrealign
+ else: equals(ANDROID_TARGET_ARCH, x86_64): \
+diff --git a/qtbase/mkspecs/features/android/android.prf b/qtbase/mkspecs/features/android/android.prf
+index 1dc8f8731..6a817e3f7 100644
+--- a/qtbase/mkspecs/features/android/android.prf
++++ b/qtbase/mkspecs/features/android/android.prf
+@@ -4,11 +4,21 @@ contains(TEMPLATE, ".*app") {
+         QMAKE_LFLAGS += -Wl,-soname,$$shell_quote($$TARGET)
+ 
+         android_install {
+-            target.path=/libs/$$ANDROID_TARGET_ARCH/
++            ANDROID_INSTALL_LIBS = $$(ANDROID_INSTALL_LIBS)
++            isEmpty(ANDROID_INSTALL_LIBS) {
++                target.path=/libs/$$ANDROID_TARGET_ARCH/
++            } else {
++                target.path=$$ANDROID_INSTALL_LIBS/
++            }     
+             INSTALLS *= target
+         }
+     }
+ } else: contains(TEMPLATE, "lib"):!static:!QTDIR_build:android_install {
+-    target.path = /libs/$$ANDROID_TARGET_ARCH/
++    ANDROID_INSTALL_LIBS = $$(ANDROID_INSTALL_LIBS)
++    isEmpty(ANDROID_INSTALL_LIBS) {
++        target.path=/libs/$$ANDROID_TARGET_ARCH/
++    } else {
++        target.path=$$ANDROID_INSTALL_LIBS/
++    }
+     INSTALLS *= target
+ }
+diff --git a/qtbase/src/3rdparty/forkfd/forkfd.c b/qtbase/src/3rdparty/forkfd/forkfd.c
+index bef109e40..3d7f01b8e 100644
+--- a/qtbase/src/3rdparty/forkfd/forkfd.c
++++ b/qtbase/src/3rdparty/forkfd/forkfd.c
+@@ -45,8 +45,10 @@
+ #include <time.h>
+ #include <unistd.h>
+ 
+-#ifdef __linux__
+-#  define HAVE_WAIT4    1
++#if defined(__linux__)
++#  if __ANDROID_API__ > 19
++#    define HAVE_WAIT4    1
++#  endif
+ #  if defined(__BIONIC__) || (defined(__GLIBC__) && (__GLIBC__ << 8) + __GLIBC_MINOR__ >= 0x208 && \
+        (!defined(__UCLIBC__) || ((__UCLIBC_MAJOR__ << 16) + (__UCLIBC_MINOR__ << 8) + __UCLIBC_SUBLEVEL__ > 0x90201)))
+ #    include <sys/eventfd.h>
+diff --git a/qtbase/src/android/templates/build.gradle b/qtbase/src/android/templates/build.gradle
+index ed704c495..7b2dd014f 100644
+--- a/qtbase/src/android/templates/build.gradle
++++ b/qtbase/src/android/templates/build.gradle
+@@ -41,9 +41,12 @@ android {
+     sourceSets {
+         main {
+             manifest.srcFile 'AndroidManifest.xml'
+-            java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
+-            aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
+-            res.srcDirs = [qt5AndroidDir + '/res', 'res']
++            //java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
++            java.srcDirs = ['src', 'java']
++            //aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
++            aidl.srcDirs = ['src', 'aidl']
++            //res.srcDirs = [qt5AndroidDir + '/res', 'res']
++            res.srcDirs = ['res']
+             resources.srcDirs = ['src']
+             renderscript.srcDirs = ['src']
+             assets.srcDirs = ['assets']

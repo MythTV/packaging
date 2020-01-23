@@ -212,9 +212,9 @@ while : ; do
 done
 
 QTMAJORVERSION=5.14
-BUILD_WEBKIT=0
 QTVERSION=$QTMAJORVERSION.0
-export ANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL:-28}
+BUILD_WEBKIT=0
+export ANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL:-29}
 export ANDROID_SDK_PLATFORM=android-$ANDROID_NATIVE_API_LEVEL
 export ANDROID_NDK_PLATFORM=android-$ANDROID_NATIVE_API_LEVEL
 # for cmake projects
@@ -223,6 +223,7 @@ export ANDROID_API_DEF="-D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL"
 if [ $ARM64 == 1 ]; then
 	TOOLCHAIN_SUFFIX=64
 	MY_ANDROID_NDK_TOOLS_PREFIX=aarch64-linux-android
+	MY_ANDROID_NDK_TOOLS_CC_PREFIX=$MY_ANDROID_NDK_TOOLS_PREFIX
 	SYSROOTARCH=$ANDROID_NDK/platforms/$ANDROID_NDK_PLATFORM/arch-arm64
 	ARMEABI="arm64-v8a"
 	CPU="cortex-a53"
@@ -236,6 +237,7 @@ else
 		EXTRA_QT_CONFIGURE_ARGS=-no-feature-futimens
 	fi
 	MY_ANDROID_NDK_TOOLS_PREFIX=arm-linux-androideabi
+	MY_ANDROID_NDK_TOOLS_CC_PREFIX=armv7a-linux-androideabi
 	SYSROOTARCH=$ANDROID_NDK/platforms/$ANDROID_NDK_PLATFORM/arch-arm
 	ARMEABI="armeabi-v7a"
 	CPU="armv7-a"
@@ -247,8 +249,8 @@ ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64
 SYSROOT=$ANDROID_NDK_TOOLCHAIN_PATH/sysroot
 CROSSPATH=$ANDROID_NDK_TOOLCHAIN_PATH/bin
 CROSSPATH2=$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-
-CROSSPATH3=$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX${ANDROID_NATIVE_API_LEVEL}-
-CROSSCC=$MY_ANDROID_NDK_TOOLS_PREFIX${ANDROID_NATIVE_API_LEVEL}-clang
+CROSSPATH3=$CROSSPATH/$MY_ANDROID_NDK_TOOLS_CC_PREFIX${ANDROID_NATIVE_API_LEVEL}-
+CROSSCC=$MY_ANDROID_NDK_TOOLS_CC_PREFIX${ANDROID_NATIVE_API_LEVEL}-clang
 INSTALLROOT=$BASE/mythinstall$TOOLCHAIN_SUFFIX
 QTINSTALLROOT=$BASE/mythinstall$TOOLCHAIN_SUFFIX/qt
 QTBUILDROOT=build$TOOLCHAIN_SUFFIX
@@ -449,7 +451,7 @@ index 494e0b3..5283852 100755
 -"android64-aarch64","gcc:-mandroid -fPIC -I\$(ANDROID_DEV)/include -B\$(ANDROID_DEV)/lib -O3 -Wall::-D_REENTRANT::-pie%-ldl:SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${aarch64_asm}:linux64:dlfcn:linux-shared:::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
 +"android","gcc:-I\$(ANDROID_DEV)/include -B\$(ANDROID_DEV)/lib -O3 -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
 +"android-x86","gcc:-I\$(ANDROID_DEV)/include -B\$(ANDROID_DEV)/lib -O3 -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG ${x86_gcc_des} ${x86_gcc_opts}:".eval{my $asm=${x86_elf_asm};$asm=~s/:elf/:android/;$asm}.":dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
-+"android-armv7","gcc:-march=armv7-a -I\$(ANDROID_DEV)/include -B\$(ANDROID_DEV)/lib -O3 -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${armv4_asm}:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
++"android-armv7","gcc:-march=armv7 -I\$(ANDROID_DEV)/include -B\$(ANDROID_DEV)/lib -O3 -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${armv4_asm}:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
 +"android-mips","gcc:-I\$(ANDROID_DEV)/include -B\$(ANDROID_DEV)/lib -O3 -Wall::-D_REENTRANT::-ldl:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${mips32_asm}:o32:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
 +"android64-aarch64","gcc:-fPIC -I\$(ANDROID_DEV)/include -B\$(ANDROID_DEV)/lib -O3 -Wall::-D_REENTRANT::-pie%-ldl:SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${aarch64_asm}:linux64:dlfcn:linux-shared:::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
  
@@ -516,7 +518,7 @@ fi
 # Make sure that configure file time is past
 sleep 5
 CC=clang \
-./Configure --prefix=$INSTALLROOT --cross-compile-prefix=${CROSSPATH2} --cross-compile-prefix-cc=${CROSSPATH3} $ANDROID_API_DEF $OPENSSL_FLAVOUR && \
+./Configure --prefix=$INSTALLROOT --cross-compile-prefix=${CROSSPATH2} --cross-compile-prefix-cc=${CROSSPATH3} $ANDROID_API_DEF $OPENSSL_FLAVOUR os:Android os.api_level:$ANDROID_API_DEF && \
 make -j$NCPUS CROSS_SYSROOT=$SYSROOT build_libs && \
 make install
 ERR=$?
@@ -564,7 +566,10 @@ return $ERR
 }
 
 build_mariadb() {
-MARIADB_CONNECTOR_C_VERSION=3.1.6
+#MARIADB_CONNECTOR_C_VERSION=3.1.6
+#MARIADB_CONNECTOR_C_VERSION=2.3.7
+#MARIADB_CONNECTOR_C_VERSION=2.2.3
+MARIADB_CONNECTOR_C_VERSION=2.1.0
 MARIADB_CONNECTOR_C=mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src
 MARIADB_CONNECTOR_C_TARBALL="../tarballs/mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src.tar.gz"
 echo -e "\n**** $MARIADB_CONNECTOR_C ****"
@@ -574,7 +579,64 @@ if [ ! -e "$MARIADB_CONNECTOR_C_TARBALL" ]; then
 	mv "$MARIADB_CONNECTOR_C_TARBALL*" "$MARIADB_CONNECTOR_C_TARBALL"
 fi
 pushd $MARIADB_CONNECTOR_C
-if [ 1 == 1 ]; then
+if [ $MARIADB_CONNECTOR_C_VERSION == 2.1.0 ]; then
+pushd libmariadb
+{ patch -p0 -Nt || true; } <<'END'
+--- CMakeLists.txt.first	2015-02-21 14:48:19.730589947 +1100
++++ CMakeLists.txt	2015-02-22 08:27:33.029951254 +1100
+@@ -362,12 +362,16 @@
+ SET(LIBMARIADB_SOURCES ${LIBMARIADB_SOURCES} ${ZLIB_SOURCES})
+   INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/zlib)
+ ENDIF()
++INCLUDE_DIRECTORIES(${ICONV_INCLUDE_DIR})
++LINK_LIBRARIES(${ICONV_LIBRARY})
+ 
+ # CREATE OBJECT LIBRARY 
+ ADD_LIBRARY(mariadb_obj OBJECT ${LIBMARIADB_SOURCES})
+ IF(UNIX)
+   SET_TARGET_PROPERTIES(mariadb_obj PROPERTIES COMPILE_FLAGS "${CMAKE_SHARED_LIBRARY_C_FLAGS}")
+ ENDIF()
++INCLUDE_DIRECTORIES()
++LINK_LIBRARIES()
+ 
+ ADD_LIBRARY(mariadbclient STATIC $<TARGET_OBJECTS:mariadb_obj> ${EXPORT_LINK})
+ TARGET_LINK_LIBRARIES(mariadbclient ${SYSTEM_LIBS})
+@@ -377,6 +381,8 @@
+ IF(UNIX)
+   SET_TARGET_PROPERTIES(libmariadb PROPERTIES COMPILE_FLAGS "${CMAKE_SHARED_LIBRARY_C_FLAGS}")
+ ENDIF()
++INCLUDE_DIRECTORIES()
++LINK_LIBRARIES()
+ 
+ IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
+   TARGET_LINK_LIBRARIES (libmariadb "-Wl,--no-undefined")
+@@ -387,9 +393,9 @@
+ 
+ SET_TARGET_PROPERTIES(libmariadb PROPERTIES PREFIX "")
+ 
+-SET_TARGET_PROPERTIES(libmariadb PROPERTIES VERSION 
++SET_TARGET_PROPERTIES(libmariadb PROPERTIES VVERSION 
+    ${CPACK_PACKAGE_VERSION_MAJOR}
+-   SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR})
++   SSOVERSION ${CPACK_PACKAGE_VERSION_MAJOR})
+ 
+ #
+ # Installation
+index 68be4aa..cef0af8 100644
+--- mf_pack.c
++++ mf_pack.c
+@@ -314,7 +314,7 @@ static my_string NEAR_F expand_tilde(my_string *path)
+ {
+   if (path[0][0] == FN_LIBCHAR)
+     return home_dir;			/* ~/ expanded to home */
+-#ifdef HAVE_GETPWNAM
++#if defined(HAVE_GETPWNAM) && defined(HAVE_GETPWENT)
+   {
+     char *str,save;
+     struct passwd *user_entry;
+END
+popd
+elif [ 1 == 1 ]; then
 { patch -p1 -Nt || true; } <<'END'
 diff --git a/cmake/CheckIncludeFiles.cmake b/cmake/CheckIncludeFiles.cmake
 index ffb0e01..11b24af 100644
@@ -618,11 +680,13 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DICONV_EXTERNAL:BOOL=ON \
       -DICONV_LIBRARIES:PATH=$INSTALLROOT/lib/libiconv.a \
       -DICONV_INCLUDE_DIR:PATH=$INSTALLROOT/include \
+      -DWITH_OPENSSL:BOOL=OFF                   \
+      -DICONV_LIBRARY=$INSTALLROOT/lib/libiconv.a \
       .. && \
       make VERBOSE=1 libmariadb && \
       cmake --build ./libmariadb --target install && \
       cmake --build ./include --target install && \
-      cp "$INSTALLROOT"/lib/mariadb/lib{mariadb,mysql}client.a
+      #cp "$INSTALLROOT"/lib/mariadb/lib{mariadb,mysql}client.a
       ERR=$?
 
 popd
@@ -1768,77 +1832,8 @@ if [ $BUILD_WEBKIT == 1 ]; then
 	fi
 fi
 
-if [ ${QTVERSION} == "5.14.0" ]; then
-echo  5.14.0 patch is different enough to warrant its own section
-{ patch -p1 -Nt --no-backup-if-mismatch -r - || true; } <<'END'
-diff --git a/qtbase/mkspecs/features/android/android.prf b/qtbase/mkspecs/features/android/android.prf
-index 26374cabc..5c07a5167 100644
---- a/qtbase/mkspecs/features/android/android.prf
-+++ b/qtbase/mkspecs/features/android/android.prf
-@@ -31,13 +31,23 @@ build_pass {
-             QMAKE_LFLAGS += -Wl,-soname,$$shell_quote($$TARGET)
- 
-             android_install {
--                target.path=/libs/$$ANDROID_TARGET_ARCH/
-+                ANDROID_INSTALL_LIBS = $$(ANDROID_INSTALL_LIBS)
-+                isEmpty(ANDROID_INSTALL_LIBS) {
-+                    target.path=/libs/$$ANDROID_TARGET_ARCH/
-+                } else {
-+                    target.path=$$ANDROID_INSTALL_LIBS/
-+                }
-                 INSTALLS *= target
-             }
-         }
-     } else: contains(TEMPLATE, "lib"):!static:!QTDIR_build:android_install {
-         !contains(TARGET, "_$${QT_ARCH}"): TARGET = $${TARGET}_$${QT_ARCH}
--        target.path = /libs/$$ANDROID_TARGET_ARCH/
-+        ANDROID_INSTALL_LIBS = $$(ANDROID_INSTALL_LIBS)
-+        isEmpty(ANDROID_INSTALL_LIBS) {
-+            target.path=/libs/$$ANDROID_TARGET_ARCH/
-+        } else {
-+            target.path=$$ANDROID_INSTALL_LIBS/
-+        }
-         INSTALLS *= target
-     }
- } else {
-diff --git a/qtbase/src/3rdparty/forkfd/forkfd.c b/qtbase/src/3rdparty/forkfd/forkfd.c
-index e4f3bd85d..f48705376 100644
---- a/qtbase/src/3rdparty/forkfd/forkfd.c
-+++ b/qtbase/src/3rdparty/forkfd/forkfd.c
-@@ -45,8 +45,10 @@
- #include <time.h>
- #include <unistd.h>
- 
--#ifdef __linux__
--#  define HAVE_WAIT4    1
-+#if defined(__linux__)
-+#  if __ANDROID_API__ > 19
-+#    define HAVE_WAIT4    1
-+#  endif
- #  if defined(__BIONIC__) || (defined(__GLIBC__) && (__GLIBC__ << 8) + __GLIBC_MINOR__ >= 0x208 && \
-        (!defined(__UCLIBC__) || ((__UCLIBC_MAJOR__ << 16) + (__UCLIBC_MINOR__ << 8) + __UCLIBC_SUBLEVEL__ > 0x90201)))
- #    include <sys/eventfd.h>
-diff --git a/qtbase/src/android/templates/build.gradle b/qtbase/src/android/templates/build.gradle
-index 3087d08c8..1f015de36 100644
---- a/qtbase/src/android/templates/build.gradle
-+++ b/qtbase/src/android/templates/build.gradle
-@@ -41,9 +41,12 @@ android {
-     sourceSets {
-         main {
-             manifest.srcFile 'AndroidManifest.xml'
--            java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
--            aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
--            res.srcDirs = [qt5AndroidDir + '/res', 'res']
-+            //java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
-+            java.srcDirs = ['src', 'java']
-+            //aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
-+            aidl.srcDirs = ['src', 'aidl']
-+            //res.srcDirs = [qt5AndroidDir + '/res', 'res']
-+            res.srcDirs = ['res']
-             resources.srcDirs = ['resources']
-             renderscript.srcDirs = ['src']
-             assets.srcDirs = ['assets']
-END
+if [ -e "$BASE"/patches/qt-${QTVERSION}.patch ]; then
+	patch -p1 -Nt --no-backup-if-mismatch -r - < "$BASE"/patches/qt-${QTVERSION}.patch || true
 if [ $BUILD_WEBKIT == 1 ]; then
 { patch -p1 -Nt --no-backup-if-mismatch -r - || true; } <<'END'
 diff --git a/.gitmodules b/.gitmodules

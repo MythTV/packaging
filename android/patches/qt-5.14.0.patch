@@ -1,0 +1,68 @@
+diff --git a/qtbase/mkspecs/features/android/android.prf b/qtbase/mkspecs/features/android/android.prf
+index 26374cabc..5c07a5167 100644
+--- a/qtbase/mkspecs/features/android/android.prf
++++ b/qtbase/mkspecs/features/android/android.prf
+@@ -31,13 +31,23 @@ build_pass {
+             QMAKE_LFLAGS += -Wl,-soname,$$shell_quote($$TARGET)
+ 
+             android_install {
+-                target.path=/libs/$$ANDROID_TARGET_ARCH/
++                ANDROID_INSTALL_LIBS = $$(ANDROID_INSTALL_LIBS)
++                isEmpty(ANDROID_INSTALL_LIBS) {
++                    target.path=/libs/$$ANDROID_TARGET_ARCH/
++                } else {
++                    target.path=$$ANDROID_INSTALL_LIBS/
++                }
+                 INSTALLS *= target
+             }
+         }
+     } else: contains(TEMPLATE, "lib"):!static:!QTDIR_build:android_install {
+         !contains(TARGET, "_$${QT_ARCH}"): TARGET = $${TARGET}_$${QT_ARCH}
+-        target.path = /libs/$$ANDROID_TARGET_ARCH/
++        ANDROID_INSTALL_LIBS = $$(ANDROID_INSTALL_LIBS)
++        isEmpty(ANDROID_INSTALL_LIBS) {
++            target.path=/libs/$$ANDROID_TARGET_ARCH/
++        } else {
++            target.path=$$ANDROID_INSTALL_LIBS/
++        }
+         INSTALLS *= target
+     }
+ } else {
+diff --git a/qtbase/src/3rdparty/forkfd/forkfd.c b/qtbase/src/3rdparty/forkfd/forkfd.c
+index e4f3bd85d..f48705376 100644
+--- a/qtbase/src/3rdparty/forkfd/forkfd.c
++++ b/qtbase/src/3rdparty/forkfd/forkfd.c
+@@ -45,8 +45,10 @@
+ #include <time.h>
+ #include <unistd.h>
+ 
+-#ifdef __linux__
+-#  define HAVE_WAIT4    1
++#if defined(__linux__)
++#  if __ANDROID_API__ > 19
++#    define HAVE_WAIT4    1
++#  endif
+ #  if defined(__BIONIC__) || (defined(__GLIBC__) && (__GLIBC__ << 8) + __GLIBC_MINOR__ >= 0x208 && \
+        (!defined(__UCLIBC__) || ((__UCLIBC_MAJOR__ << 16) + (__UCLIBC_MINOR__ << 8) + __UCLIBC_SUBLEVEL__ > 0x90201)))
+ #    include <sys/eventfd.h>
+diff --git a/qtbase/src/android/templates/build.gradle b/qtbase/src/android/templates/build.gradle
+index 3087d08c8..1f015de36 100644
+--- a/qtbase/src/android/templates/build.gradle
++++ b/qtbase/src/android/templates/build.gradle
+@@ -41,9 +41,12 @@ android {
+     sourceSets {
+         main {
+             manifest.srcFile 'AndroidManifest.xml'
+-            java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
+-            aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
+-            res.srcDirs = [qt5AndroidDir + '/res', 'res']
++            //java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
++            java.srcDirs = ['src', 'java']
++            //aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
++            aidl.srcDirs = ['src', 'aidl']
++            //res.srcDirs = [qt5AndroidDir + '/res', 'res']
++            res.srcDirs = ['res']
+             resources.srcDirs = ['resources']
+             renderscript.srcDirs = ['src']
+             assets.srcDirs = ['assets']
+

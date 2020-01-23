@@ -14,27 +14,28 @@ if [ -z "$USE_IP" ] ; then USE_IP=0 ; fi
 if [ -z "$TMPDIR" ] ; then TMPDIR=/data/local/tmp ; fi
 
 source make.inc
+TOOLCHAIN_PATH=$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64
 if [ "$ARM64" == 1 ]; then
-	MYGDB="$ANDROID_NDK/my-android-toolchain64/bin/ndk-gdb"
+	MYGDB="$ANDROID_NDK/prebuilt/linux-x86_64/bin/ndk-gdb"
 	BUILDDIR=build64
 	PROJDIR=mythinstall64
 	APP_PROCESS_NAME=app_process64
 	LIBDIR_NAME=lib64
 	LINKER_NAME=linker64
 	TARGET_ARCH=arm64
-	TOOLCHAIN_PREFIX=$ANDROID_NDK_ROOT/my-android-toolchain64/bin/aarch64-linux-android-
-	TOOLCHAIN_PREFIX2=$ANDROID_NDK_ROOT/my-android-toolchain64/bin/
+	TOOLCHAIN_PREFIX=$TOOLCHAIN_PATH/bin/aarch64-linux-android-
+	TOOLCHAIN_PREFIX2=$TOOLCHAIN_PATH/bin/
     sodir=so64
 else
-	MYGDB="$ANDROID_NDK/my-android-toolchain/bin/ndk-gdb"
+	MYGDB="$ANDROID_NDK/prebuilt/linux-x86_64/bin/ndk-gdb"
 	BUILDDIR=build
 	PROJDIR=mythinstall
 	APP_PROCESS_NAME=app_process32
 	LIBDIR_NAME=lib
 	LINKER_NAME=linker
 	TARGET_ARCH=arm
-	TOOLCHAIN_PREFIX=$ANDROID_NDK_ROOT/my-android-toolchain/bin/arm-linux-androideabi-
-	TOOLCHAIN_PREFIX2=$ANDROID_NDK_ROOT/my-android-toolchain/bin/
+	TOOLCHAIN_PREFIX=$TOOLCHAIN_PATH/bin/arm-linux-androideabi-
+	TOOLCHAIN_PREFIX2=$TOOLCHAIN_PATH/bin/
     sodir=so32
 fi
 
@@ -52,18 +53,6 @@ find $PROJDIR/qt/plugins -name "*.so" -exec cp -auv {} $sodir/ \;
 if [ ! -e "qt5printers" ]; then
 	git clone https://github.com/Lekensteyn/qt5printers.git
 fi
-
-#$ANDROID_NDK/my-android-toolchain/bin/arm-linux-androideabi-gdb -ix gdbinit $sodir/app_process "$@"
-#exec $ANDROID_NDK/my-android-toolchain/bin/arm-linux-androideabi-gdb $sodir/app_process -x gdbinitandroid "$@"
-#exec $ANDROID_NDK/my-android-toolchain/bin/gdb $sodir/app_process -x gdbinitandroid "$@"
-#$ANDROID_NDK/ndk-gdb --start --delay=0 --port=tcp:192.168.1.191:3333 $sodir/app_process "$@"
-#cd mythinstall
-#$ANDROID_NDK/my-android-toolchain/bin/ndk-gdb --delay=0 "$@"
-#if [ -z "$1" ]; then
-#	ARGS="--start --delay=1.0 --project=$PROJDIR mythfrontend"
-#fi
-#IPADDR=192.168.1.188 \
-#$MYGDB $ARGS "$@"
 
 DEBUG_PORT=5039
 JDB_PORT=65534
