@@ -513,6 +513,8 @@ END
 if [ $CLEAN == 1 ]; then
 	make distclean || true
 fi
+# Make sure that configure file time is past
+sleep 5
 CC=clang \
 ./Configure --prefix=$INSTALLROOT --cross-compile-prefix=${CROSSPATH2} --cross-compile-prefix-cc=${CROSSPATH3} $ANDROID_API_DEF $OPENSSL_FLAVOUR && \
 make -j$NCPUS CROSS_SYSROOT=$SYSROOT build_libs && \
