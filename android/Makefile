@@ -19,13 +19,15 @@ apk: mythbuild.sh
 	./mythbuild.sh
 
 clean:
-	./mythbuild distclean
+	rm -rf mythinstall$(SUFFIX)
 	rm -rf build$(SUFFIX)
 
 distclean:
-	rm -rf libs$(SUFFIX) mythinstall$(SUFFIX) build$(SUFFIX)
+	rm -rf libs$(SUFFIX) mythinstall$(SUFFIX) libsinstall$(SUFFIX) build$(SUFFIX)
 
-.PHONY: qt
+.PHONY: qt mariadb
 qt:
 	./makelibs.sh qt5extras
+mariadb:
+	./makelibs.sh mariadb
 

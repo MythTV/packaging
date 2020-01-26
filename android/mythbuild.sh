@@ -127,7 +127,7 @@ CROSSPATH3=$CROSSPATH/$ANDROID_NDK_TOOLS_CC_PREFIX${ANDROID_NATIVE_API_LEVEL}-
 CROSSCC=$ANDROID_NDK_TOOLS_CC_PREFIX${ANDROID_NATIVE_API_LEVEL}-clang
 LIB_ANDROID_PATH="$ANDROID_NDK_TOOLCHAIN_PATH/$ANDROID_NDK_TOOLS_PREFIX/$LIB_ANDROID_REL_PATH"
 
-EXTRASPECS="CONFIG+=single_arch ANDROID_ABIS=$ANDROID_TARGET_ARCH -after QMAKE_CFLAGS-=-mfpu=vfp QMAKE_CXXFLAGS-=-mfpu=vfp"
+EXTRASPECS="CONFIG+=single_arch CONFIG+=rtti CONFIG+=exceptions ANDROID_ABIS=$ANDROID_TARGET_ARCH -after QMAKE_CFLAGS-=-mfpu=vfp QMAKE_CXXFLAGS-=-mfpu=vfp QMAKE_LFLAGS*=-rdynamic QMAKE_LFLAGS*=-frtti" # QMAKE_CXXFLAGS+=-frtti QMAKE_CXXFLAGS+=-fexceptions QMAKE_LFLAGS+=-frtti"
 EXTRA_ANDROID_LIBS="libcrystax.so libpng.so libjpeg.so"
 
 if [ -z "$MYTHLIBVERSION" ]; then
@@ -342,9 +342,9 @@ $MYTHTVSRC/configure \
 	--enable-cross-compile \
 	--sysroot=$SYSROOT \
 	--sysinclude="no-special-cec-inc-path" \
-	--extra-cflags="-D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$SYSROOT/usr/include -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
-	--extra-cxxflags="-D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -I$SYSROOT/usr/include -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS " \
-	--extra-ldflags="-Wl,-rpath-link=$INSTALLROOT/lib -Wl,-rpath-link=$SYSROOTARCH/usr/lib -Wl,-rpath-link=$SYSROOT/usr/lib" \
+	--extra-cflags="-D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -DANDROID -I$SYSROOT/usr1/include -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS -rdynamic " \
+	--extra-cxxflags="-D__ANDROID_API__=$ANDROID_NATIVE_API_LEVEL -I$SYSROOT/usr1/include/c++/v1 -I$SYSROOT/usr1/include -DANDROID -I$INSTALLROOT/include -I$QTBASE/include $IGNOREDEFINES $NEONFLAGS -rdynamic " \
+	--extra-ldflags="-rdynamic -Wl,-rpath-link=$INSTALLROOT/lib -Wl,-rpath-link=$SYSROOTARCH/usr/lib -Wl,-rpath-link=$SYSROOT/usr/lib" \
 	--qmake=$QTBASE/bin/qmake \
 	--qmakespecs="android-clang $EXTRASPECS" \
 	--disable-qtdbus \

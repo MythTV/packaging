@@ -249,13 +249,14 @@ ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64
 SYSROOT=$ANDROID_NDK_TOOLCHAIN_PATH/sysroot
 CROSSPATH=$ANDROID_NDK_TOOLCHAIN_PATH/bin
 CROSSPATH2=$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-
-CROSSPATH3=$CROSSPATH/$MY_ANDROID_NDK_TOOLS_CC_PREFIX${ANDROID_NATIVE_API_LEVEL}-
-CROSSCC=$MY_ANDROID_NDK_TOOLS_CC_PREFIX${ANDROID_NATIVE_API_LEVEL}-clang
+CROSSPATH3=$CROSSPATH/${MY_ANDROID_NDK_TOOLS_CC_PREFIX}${ANDROID_NATIVE_API_LEVEL}-
+CROSSCC=${MY_ANDROID_NDK_TOOLS_CC_PREFIX}${ANDROID_NATIVE_API_LEVEL}-clang
 INSTALLROOT=$BASE/libsinstall$TOOLCHAIN_SUFFIX
 QTINSTALLROOT=$BASE/libsinstall$TOOLCHAIN_SUFFIX/qt
 QTBUILDROOT=build$TOOLCHAIN_SUFFIX
 LIBSDIR=libs$TOOLCHAIN_SUFFIX
 
+#EXTRA_QT_CONFIGURE_ARGS="$EXTRA_QT_CONFIGURE_ARGS -after 'QMAKE_LFLAGS_SHLIB*=-rdynamic -frtti' -after 'QMAKE_LFLAGS_APP*=-rdynamic -frtti'"
 CPUOPT="-march=$CPU_ARCH"
 CMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
 
@@ -567,9 +568,9 @@ return $ERR
 
 build_mariadb() {
 #MARIADB_CONNECTOR_C_VERSION=3.1.6
-#MARIADB_CONNECTOR_C_VERSION=2.3.7
+MARIADB_CONNECTOR_C_VERSION=2.3.7
 #MARIADB_CONNECTOR_C_VERSION=2.2.3
-MARIADB_CONNECTOR_C_VERSION=2.1.0
+#MARIADB_CONNECTOR_C_VERSION=2.1.0
 MARIADB_CONNECTOR_C=mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src
 MARIADB_CONNECTOR_C_TARBALL="../tarballs/mariadb-connector-c-$MARIADB_CONNECTOR_C_VERSION-src.tar.gz"
 echo -e "\n**** $MARIADB_CONNECTOR_C ****"
@@ -579,7 +580,9 @@ if [ ! -e "$MARIADB_CONNECTOR_C_TARBALL" ]; then
 	mv "$MARIADB_CONNECTOR_C_TARBALL*" "$MARIADB_CONNECTOR_C_TARBALL"
 fi
 pushd $MARIADB_CONNECTOR_C
-if [ $MARIADB_CONNECTOR_C_VERSION == 2.1.0 ]; then
+if [ -e "$BASE"/patches/mariadb-${MARIADB_CONNECTOR_C_VERSION}.patch ]; then
+	patch -p1 -Nt --no-backup-if-mismatch -r - < "$BASE"/patches/mariadb-${MARIADB_CONNECTOR_C_VERSION}.patch || true
+elif [ $MARIADB_CONNECTOR_C_VERSION == 2.1.0 ]; then
 pushd libmariadb
 { patch -p0 -Nt || true; } <<'END'
 --- CMakeLists.txt.first	2015-02-21 14:48:19.730589947 +1100
@@ -2469,20 +2472,20 @@ configure_qt5() {
 		-android-arch $ARMEABI \
 		-continue \
 		--disable-rpath \
+		-I "$QT_SOURCE_DIR/include" \
+		-I "$INSTALLROOT/include" \
+		-I "$INSTALLROOT/include/mariadb" \
+		-L "$INSTALLROOT/lib" \
+		-L "$INSTALLROOT/lib/mariadb" \
 		-plugin-sql-mysql \
 		-qt-sqlite \
 		-skip qttranslations \
 		-skip qtserialport \
+		-feature-rtti \
+		-feature-exceptions \
 		-no-warnings-are-errors \
 		-openssl-linked \
-		-I $QT_SOURCE_DIR/include \
-		-I $INSTALLROOT/include \
-		-L $INSTALLROOT/lib \
-		-I $INSTALLROOT/include/mariadb \
-		-L $INSTALLROOT/lib/mariadb \
 		-sysroot $SYSROOT \
-		"QMAKE_CXXFLAGS+=-g -isystem $INSTALLROOT/include -isystem $INSTALLROOT/include/mariadb" \
-		"QMAKE_LFLAGS+=-L $INSTALLROOT/lib -L $INSTALLROOT/lib/mariadb" \
 		$EXTRA_QT_CONFIGURE_ARGS \
 
 	ERR=$?
@@ -2552,7 +2555,7 @@ build_qt5() {
 	mkdir $QTBUILDROOT || true
 	pushd $QTBUILDROOT
 	#NCPUS=1
-	THINGS_TO_MAKE="module-qtbase module-qtscript module-qtandroidextras"
+	#THINGS_TO_MAKE="module-qtbase module-qtscript module-qtandroidextras"
 	if [ $BUILD_WEBKIT == 1 ]; then
 		if [ $OS_WEBKIT == 1 ]; then
 			THINGS_TO_MAKE="$THINGS_TO_MAKE module-qtwebkit"

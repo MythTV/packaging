@@ -1,3 +1,26 @@
+diff --git a/qtbase/mkspecs/android-clang/qmake.conf b/qtbase/mkspecs/android-clang/qmake.conf
+index 31ee5d263..c27f021fd 100644
+--- a/qtbase/mkspecs/android-clang/qmake.conf
++++ b/qtbase/mkspecs/android-clang/qmake.conf
+@@ -42,6 +42,7 @@ isEmpty(ALL_ANDROID_ABIS): ALL_ANDROID_ABIS = $$DEFAULT_ANDROID_ABIS
+ isEmpty(ALL_ANDROID_ABIS): ALL_ANDROID_ABIS = arm64-v8a armeabi-v7a x86_64 x86
+ 
+ CONFIG += $$ANDROID_PLATFORM
++CONFIG += rtti exceptions
+ 
+ NDK_LLVM_PATH    = $$NDK_ROOT/toolchains/llvm/prebuilt/$$NDK_HOST
+ QMAKE_CC         = $$NDK_LLVM_PATH/bin/clang
+@@ -63,8 +64,8 @@ QMAKE_CFLAGS_THREAD     = -D_REENTRANT
+ QMAKE_CFLAGS_HIDESYMS   = -fvisibility=hidden
+ QMAKE_CFLAGS_NEON       = -mfpu=neon
+ 
+-QMAKE_LFLAGS_APP        = -Wl,--build-id=sha1 -Wl,--no-undefined -Wl,-z,noexecstack -shared
+-QMAKE_LFLAGS_SHLIB      = -Wl,--build-id=sha1 -Wl,--no-undefined -Wl,-z,noexecstack -shared
++QMAKE_LFLAGS_APP        = -Wl,--build-id=sha1 -Wl,--no-undefined -Wl,-z,noexecstack -shared -frtti -rdynamic
++QMAKE_LFLAGS_SHLIB      = -Wl,--build-id=sha1 -Wl,--no-undefined -Wl,-z,noexecstack -shared -frtti -rdynamic
+ QMAKE_LFLAGS_PLUGIN     = $$QMAKE_LFLAGS_SHLIB
+ QMAKE_LFLAGS_NOUNDEF    = -Wl,--no-undefined
+ QMAKE_LFLAGS_RPATH      = -Wl,-rpath=
 diff --git a/qtbase/mkspecs/features/android/android.prf b/qtbase/mkspecs/features/android/android.prf
 index 26374cabc..5c07a5167 100644
 --- a/qtbase/mkspecs/features/android/android.prf
@@ -28,6 +51,37 @@ index 26374cabc..5c07a5167 100644
          INSTALLS *= target
      }
  } else {
+diff --git a/qtbase/mkspecs/features/exceptions_off.prf b/qtbase/mkspecs/features/exceptions_off.prf
+index 9c8a4043e..338b14c4b 100644
+--- a/qtbase/mkspecs/features/exceptions_off.prf
++++ b/qtbase/mkspecs/features/exceptions_off.prf
+@@ -1,5 +1,6 @@
+-CONFIG -= exceptions
+-QMAKE_CFLAGS += $$QMAKE_CFLAGS_EXCEPTIONS_OFF
+-QMAKE_CXXFLAGS += $$QMAKE_CXXFLAGS_EXCEPTIONS_OFF
+-QMAKE_LFLAGS += $$QMAKE_LFLAGS_EXCEPTIONS_OFF
+-DEFINES += QT_NO_EXCEPTIONS
++#CONFIG -= exceptions
++#QMAKE_CFLAGS += $$QMAKE_CFLAGS_EXCEPTIONS_OFF
++#QMAKE_CXXFLAGS += $$QMAKE_CXXFLAGS_EXCEPTIONS_OFF
++#QMAKE_LFLAGS += $$QMAKE_LFLAGS_EXCEPTIONS_OFF
++#DEFINES += QT_NO_EXCEPTIONS
++include(exceptions.prf)
+diff --git a/qtbase/mkspecs/features/rtti_off.prf b/qtbase/mkspecs/features/rtti_off.prf
+index b520bfa8b..69e72fe24 100644
+--- a/qtbase/mkspecs/features/rtti_off.prf
++++ b/qtbase/mkspecs/features/rtti_off.prf
+@@ -1,4 +1,5 @@
+-CONFIG -= rtti
+-QMAKE_CFLAGS += $$QMAKE_CFLAGS_RTTI_OFF
+-QMAKE_CXXFLAGS += $$QMAKE_CXXFLAGS_RTTI_OFF
+-DEFINES += QT_NO_DYNAMIC_CAST
+\ No newline at end of file
++#CONFIG -= rtti
++#QMAKE_CFLAGS += $$QMAKE_CFLAGS_RTTI_OFF
++#QMAKE_CXXFLAGS += $$QMAKE_CXXFLAGS_RTTI_OFF
++#DEFINES += QT_NO_DYNAMIC_CAST
++include(rtti.prf)
 diff --git a/qtbase/src/3rdparty/forkfd/forkfd.c b/qtbase/src/3rdparty/forkfd/forkfd.c
 index e4f3bd85d..f48705376 100644
 --- a/qtbase/src/3rdparty/forkfd/forkfd.c
@@ -65,4 +119,3 @@ index 3087d08c8..1f015de36 100644
              resources.srcDirs = ['resources']
              renderscript.srcDirs = ['src']
              assets.srcDirs = ['assets']
-
