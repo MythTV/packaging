@@ -14,7 +14,7 @@ if [ -z "$USE_IP" ] ; then USE_IP=0 ; fi
 if [ -z "$TMPDIR" ] ; then TMPDIR=/data/local/tmp ; fi
 
 source make.inc
-TOOLCHAIN_PATH=$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64
+TOOLCHAIN_PATH=$ANDROID_NDK_ROOT/prebuilt/linux-x86_64
 if [ "$ARM64" == 1 ]; then
 	MYGDB="$ANDROID_NDK/prebuilt/linux-x86_64/bin/ndk-gdb"
 	BUILDDIR=build64
