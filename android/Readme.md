@@ -79,7 +79,13 @@ setenv.sh
     ./makelibs.sh all 2>&1 | tee build_lib64.log
 ```
     
-   This creates some 3 GB of data in a directory called workdir/packaging/android/mythinstall64 (for 64bit). I suggest making a copy of that, because that directory gets MythTV compile results added to it by mythbuild, and there is no "clean" process that cleans it up in case you want to be sure of running a pristine build in future.
+   This creates some 350 MB of data in a directory called
+   workdir/packaging/android/mythinstall64 (for 64bit).  I suggest
+   making a copy of that, because that directory gets MythTV compile
+   results added to it by mythbuild, and there is no "clean" process
+   that cleans it up in case you want to be sure of running a pristine
+   build in future.  It will grow to about 2.5 GB after MythTV is
+   built.
 
 5. Build MythTV (debug by default)
 
