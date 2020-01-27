@@ -185,10 +185,7 @@ case "$1" in
 	"fresh" )
 		[ -n "$MYMYTHBUILDBASEPATH" ] && rm -r $MYMYTHBUILDBASEPATH
 		if [ -d "$INSTALLROOT" ]; then
-			rm -rf "$INSTALLROOT/include/mythtv"
-			rm -rf "$INSTALLROOT/lib/libmyth*"
-			rm -rf "$INSTALLROOT/libs/*/libmyth*"
-			rm -rf "$INSTALLROOT/build"
+			rm -rf "$INSTALLROOT"
 		fi
 		exit 0
 		;;
@@ -282,6 +279,12 @@ function bundle_apk() {
 		#done
 	fi
 }
+
+if [ ! -d ${INSTALLROOT} ]; then
+    rm -rf ${INSTALLROOT} ${INSTALLROOT}.tmp
+    cp -al ${INSTALLROOT/mythinstall/libsinstall} ${INSTALLROOT}.tmp
+    mv ${INSTALLROOT}.tmp ${INSTALLROOT}
+fi
 
 if [ $SHADOW_BUILD = 1 ]; then
 	rm -r $MYMYTHBUILDBASEPATH
