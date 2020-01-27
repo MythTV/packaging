@@ -512,11 +512,11 @@ index 494e0b3..5283852 100755
  		s/^NM=\s*/NM= \$\(CROSS_COMPILE\)/;
  		s/^RANLIB=\s*/RANLIB= \$\(CROSS_COMPILE\)/;
 END
+rm Makefile
 if [ $CLEAN == 1 ]; then
 	make distclean || true
 fi
 # Make sure that configure file time is past
-sleep 5
 CC=clang \
 ./Configure --prefix=$INSTALLROOT --cross-compile-prefix=${CROSSPATH2} --cross-compile-prefix-cc=${CROSSPATH3} $ANDROID_API_DEF $OPENSSL_FLAVOUR os:Android os.api_level:$ANDROID_API_DEF && \
 make -j$NCPUS CROSS_SYSROOT=$SYSROOT build_libs && \
