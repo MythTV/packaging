@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Environment variables that can be changed in setenv.sh
+# Environment variables that can be changed in buildrc
 # or via export before running gdb.sh
 # Use su - USE_SU=1
 # Use IP - USE_IP=1
 # If neither is set will use adb port forwarding
 # Android push directory - TMPDIR=/data/local/tmp
 
-. ~/android/setenv.sh
+. android-utilities/setenv.sh
 
 if [ -z "$USE_SU" ] ; then USE_SU=0 ; fi
 if [ -z "$USE_IP" ] ; then USE_IP=0 ; fi

@@ -36,15 +36,32 @@ cd $HOME/android
 ln -s Sdk android-sdk-linux
 ln -s Sdk/ndk/21.0.6113669 android-ndk
 ```
-   * Copy android-utilities/setenv.sh to ~/android
-      * cp android-utilities/setenv.sh ~/android
+   * We no longer need to copy setenv.sh to ~/android
    * We no longer need to create a toolchain.
-   * If you want to build a release apk, you need to create a key. After creating the key, add these to the end of setenv.sh:
+   * Create a file buildrc in the packaging/android directory for any desired overrides
+   * If you want to build a release apk, you need to create a key. After creating the key, add these to the end of buildrc:
 
 ```
 export KEYSTORE=$HOME/.android/android-release-key.jks
 export KEYALIAS=<key alias>
 export KEYSTOREPASSWORD=<key password>
+```
+   * Instead of creating make.inc as specified above, I recommend adding this to your
+   buildrc. That way you have one easy place to change build setups:
+
+```
+cat <<EOF >make.inc
+# comment these for 32 bit build
+target_arch=arm64
+ARM64=1
+EOF
+
+```
+   * If you want to override schema mismatch processing (at your own risk)
+   add this to buildrc. You can also put configure overrides in here.
+
+```
+IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
 ```
    You should have a dir structure like this after you are done:
 

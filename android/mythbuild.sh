@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BASE=`pwd`
-source ~/android/setenv.sh
+source android-utilities/setenv.sh
 
 SHADOW_BUILD=0
 ARM64=0
@@ -152,8 +152,8 @@ export ANDROID_EXTRA_LIBS="$INSTALLROOT"
 
 TARGETAPKPREFIX=$INSTALLROOT/build/outputs/apk/myth
 
-#IGNOREDEFINES=
-IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
+# if you want to ignore mismatch please add this to your buildrc file
+#IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
 
 # process command
 case "$1" in

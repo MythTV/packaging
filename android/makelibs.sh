@@ -3,7 +3,7 @@
 set -e
 
 BASE=`pwd`
-source ~/android/setenv.sh
+source android-utilities/setenv.sh
 CLEAN=1
 PRISTINE=0
 ARM64=0
