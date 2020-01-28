@@ -61,7 +61,7 @@ EOF
    add this to buildrc. You can also put configure overrides in here.
 
 ```
-IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
+export IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
 ```
    You should have a dir structure like this after you are done:
 
