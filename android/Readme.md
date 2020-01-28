@@ -71,7 +71,6 @@ android-ndk -> Sdk/ndk/21.0.6113669
 android-sdk-linux -> Sdk
 android-studio
 Sdk
-setenv.sh
 ```
     Android studio by default installs a debug keystore in $HOME/.android/
 
