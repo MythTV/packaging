@@ -3,10 +3,10 @@
 set -e
 
 BASE=`pwd`
+ARM64=0
 source android-utilities/setenv.sh
 CLEAN=1
 PRISTINE=0
-ARM64=0
 export NCPUS=$(nproc)
 
 [ -e make.inc ] && source make.inc
