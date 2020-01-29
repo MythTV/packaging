@@ -126,6 +126,10 @@ while : ; do
 			shift
 			BUILD_QTMYSQLPLUGIN=1
 			;;
+		fftw)
+			shift
+			BUILD_FFTW=1
+			;;
 		all)
 			shift
 			#BUILD_MISSING_HEADERS=1
@@ -150,6 +154,7 @@ while : ; do
 			#BUILD_LIBXSLT=1
 			#BUILD_GLIB=1
 			BUILD_QT5EXTRAS=1
+			BUILD_FFTW=1
 			;;
 		--no-clean)
 			shift
@@ -1745,6 +1750,45 @@ popd
 return $ERR
 }
 
+build_fftw() {
+rm -rf build
+FFTWVER=3.3.8
+FFTW=fftw-$FFTWVER
+echo -e "\n**** $FFTW ****"
+setup_lib http://www.fftw.org/$FFTW.tar.gz $FFTW
+pushd $FFTW
+OPATH=$PATH
+if [ $CLEAN == 1 ]; then
+	make distclean || true
+fi
+
+./configure \
+	CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	RANLIB=${CROSSPATH2}ranlib \
+	OBJDUMP=${CROSSPATH2}objdump \
+	AR=${CROSSPATH2}ar \
+	CC="${CROSSPATH3}clang" \
+	CXX="${CROSSPATH3}clang++" \
+	CPP1="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+	PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
+	--prefix=$INSTALLROOT \
+        --without-fontconfig \
+        --disable-silent-rules \
+        --disable-examples \
+	--enable-shared \
+	--enable-static &&
+	make -j$NCPUS &&
+	make install
+	ERR=$?
+
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
 if [ $BUILD_NEWQTWEBKITONLY ]; then
 	OS_WEBKIT=0
 else
@@ -2862,6 +2906,7 @@ pushd $LIBSDIR
 [ -n "$BUILD_ASS" ] && build_ass
 [ -n "$BUILD_LIBSAMPLERATE" ] && build_libsamplerate
 [ -n "$BUILD_LIBBLURAY" ] && build_libbluray
+[ -n "$BUILD_FFTW" ] && build_fftw
 if [ -n "$BUILD_QT5EXTRAS" ]; then
 	echo -e "\n**** patch qt5 ***"
 	patch_qt5
