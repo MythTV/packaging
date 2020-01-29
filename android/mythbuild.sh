@@ -1,10 +1,10 @@
 #!/bin/bash
 
 BASE=`pwd`
+ARM64=0
 source android-utilities/setenv.sh
 
 SHADOW_BUILD=0
-ARM64=0
 BUILD_PLUGINS=0
 
 export ANDROID_NDK_ROOT=$ANDROID_NDK
