@@ -1,0 +1,177 @@
+diff --git a/qtbase/mkspecs/android-clang/qmake.conf b/qtbase/mkspecs/android-clang/qmake.conf
+index 31ee5d263..2170ea945 100644
+--- a/qtbase/mkspecs/android-clang/qmake.conf
++++ b/qtbase/mkspecs/android-clang/qmake.conf
+@@ -42,6 +42,7 @@ isEmpty(ALL_ANDROID_ABIS): ALL_ANDROID_ABIS = $$DEFAULT_ANDROID_ABIS
+ isEmpty(ALL_ANDROID_ABIS): ALL_ANDROID_ABIS = arm64-v8a armeabi-v7a x86_64 x86
+ 
+ CONFIG += $$ANDROID_PLATFORM
++CONFIG += rtti exceptions
+ 
+ NDK_LLVM_PATH    = $$NDK_ROOT/toolchains/llvm/prebuilt/$$NDK_HOST
+ QMAKE_CC         = $$NDK_LLVM_PATH/bin/clang
+@@ -61,10 +62,11 @@ QMAKE_CFLAGS_SHLIB      = -fPIC
+ QMAKE_CFLAGS_YACC       = -Wno-unused -Wno-parentheses
+ QMAKE_CFLAGS_THREAD     = -D_REENTRANT
+ QMAKE_CFLAGS_HIDESYMS   = -fvisibility=hidden
+-QMAKE_CFLAGS_NEON       = -mfpu=neon
++QMAKE_CFLAGS_NEON       = -mfpu=neon-fp16
++QMAKE_CFLAGS_SHLIB      += $$QMAKE_CFLAGS_NEON
+ 
+-QMAKE_LFLAGS_APP        = -Wl,--build-id=sha1 -Wl,--no-undefined -Wl,-z,noexecstack -shared
+-QMAKE_LFLAGS_SHLIB      = -Wl,--build-id=sha1 -Wl,--no-undefined -Wl,-z,noexecstack -shared
++QMAKE_LFLAGS_APP        = -Wl,--build-id=sha1 -Wl,--no-undefined -Wl,-z,noexecstack -shared -frtti -rdynamic
++QMAKE_LFLAGS_SHLIB      = -Wl,--build-id=sha1 -Wl,--no-undefined -Wl,-z,noexecstack -shared -frtti -rdynamic
+ QMAKE_LFLAGS_PLUGIN     = $$QMAKE_LFLAGS_SHLIB
+ QMAKE_LFLAGS_NOUNDEF    = -Wl,--no-undefined
+ QMAKE_LFLAGS_RPATH      = -Wl,-rpath=
+diff --git a/qtbase/mkspecs/common/gcc-base.conf b/qtbase/mkspecs/common/gcc-base.conf
+index 4d82321cb..733d82d0b 100644
+--- a/qtbase/mkspecs/common/gcc-base.conf
++++ b/qtbase/mkspecs/common/gcc-base.conf
+@@ -106,7 +106,7 @@ QMAKE_CFLAGS_AVX512IFMA += -mavx512ifma
+ QMAKE_CFLAGS_AVX512VBMI += -mavx512vbmi
+ QMAKE_CFLAGS_AESNI     += -maes
+ QMAKE_CFLAGS_SHANI     += -msha
+-QMAKE_CFLAGS_NEON      += -mfpu=neon
++QMAKE_CFLAGS_NEON      += -mfpu=neon-fp16
+ QMAKE_CFLAGS_MIPS_DSP  += -mdsp
+ QMAKE_CFLAGS_MIPS_DSPR2 += -mdspr2
+ 
+diff --git a/qtbase/mkspecs/features/android/android.prf b/qtbase/mkspecs/features/android/android.prf
+index 699041753..30b65e4ec 100644
+--- a/qtbase/mkspecs/features/android/android.prf
++++ b/qtbase/mkspecs/features/android/android.prf
+@@ -38,7 +38,12 @@ build_pass {
+     } else: contains(TEMPLATE, "lib"):!static:!QTDIR_build:android_install {
+         tmpvar = $$str_member($$TARGET, -$$str_size($${QT_ARCH}), -1)
+         !equals(tmpvar, $${QT_ARCH}): TARGET = $${TARGET}_$${QT_ARCH}
+-        target.path = /libs/$$ANDROID_TARGET_ARCH/
++        ANDROID_INSTALL_LIBS = $$(ANDROID_INSTALL_LIBS)
++        isEmpty(ANDROID_INSTALL_LIBS) {
++            target.path=/libs/$$ANDROID_TARGET_ARCH/
++        } else {
++            target.path=$$ANDROID_INSTALL_LIBS/
++        }
+         INSTALLS *= target
+     }
+ } else {
+diff --git a/qtbase/mkspecs/features/android/default_pre.prf b/qtbase/mkspecs/features/android/default_pre.prf
+index a73cd4b39..3dd38db84 100644
+--- a/qtbase/mkspecs/features/android/default_pre.prf
++++ b/qtbase/mkspecs/features/android/default_pre.prf
+@@ -17,6 +17,7 @@ DEFAULT_ANDROID_TARGET_ARCH=$${QT_ARCH}
+ 
+ ANDROID_TARGET_ARCH = $$(ANDROID_TARGET_ARCH)
+ isEmpty(ANDROID_TARGET_ARCH): ANDROID_TARGET_ARCH = $$DEFAULT_ANDROID_TARGET_ARCH
++else: QT_ARCH = $${ANDROID_TARGET_ARCH}
+ 
+ # Follow https://android.googlesource.com/platform/ndk/+/ndk-release-r20/docs/BuildSystemMaintainers.md
+ 
+diff --git a/qtbase/mkspecs/features/exceptions_off.prf b/qtbase/mkspecs/features/exceptions_off.prf
+index 9c8a4043e..338b14c4b 100644
+--- a/qtbase/mkspecs/features/exceptions_off.prf
++++ b/qtbase/mkspecs/features/exceptions_off.prf
+@@ -1,5 +1,6 @@
+-CONFIG -= exceptions
+-QMAKE_CFLAGS += $$QMAKE_CFLAGS_EXCEPTIONS_OFF
+-QMAKE_CXXFLAGS += $$QMAKE_CXXFLAGS_EXCEPTIONS_OFF
+-QMAKE_LFLAGS += $$QMAKE_LFLAGS_EXCEPTIONS_OFF
+-DEFINES += QT_NO_EXCEPTIONS
++#CONFIG -= exceptions
++#QMAKE_CFLAGS += $$QMAKE_CFLAGS_EXCEPTIONS_OFF
++#QMAKE_CXXFLAGS += $$QMAKE_CXXFLAGS_EXCEPTIONS_OFF
++#QMAKE_LFLAGS += $$QMAKE_LFLAGS_EXCEPTIONS_OFF
++#DEFINES += QT_NO_EXCEPTIONS
++include(exceptions.prf)
+diff --git a/qtbase/mkspecs/features/rtti_off.prf b/qtbase/mkspecs/features/rtti_off.prf
+index b520bfa8b..69e72fe24 100644
+--- a/qtbase/mkspecs/features/rtti_off.prf
++++ b/qtbase/mkspecs/features/rtti_off.prf
+@@ -1,4 +1,5 @@
+-CONFIG -= rtti
+-QMAKE_CFLAGS += $$QMAKE_CFLAGS_RTTI_OFF
+-QMAKE_CXXFLAGS += $$QMAKE_CXXFLAGS_RTTI_OFF
+-DEFINES += QT_NO_DYNAMIC_CAST
+\ No newline at end of file
++#CONFIG -= rtti
++#QMAKE_CFLAGS += $$QMAKE_CFLAGS_RTTI_OFF
++#QMAKE_CXXFLAGS += $$QMAKE_CXXFLAGS_RTTI_OFF
++#DEFINES += QT_NO_DYNAMIC_CAST
++include(rtti.prf)
+diff --git a/qtbase/src/3rdparty/forkfd/forkfd.c b/qtbase/src/3rdparty/forkfd/forkfd.c
+index e4f3bd85d..f48705376 100644
+--- a/qtbase/src/3rdparty/forkfd/forkfd.c
++++ b/qtbase/src/3rdparty/forkfd/forkfd.c
+@@ -45,8 +45,10 @@
+ #include <time.h>
+ #include <unistd.h>
+ 
+-#ifdef __linux__
+-#  define HAVE_WAIT4    1
++#if defined(__linux__)
++#  if __ANDROID_API__ > 19
++#    define HAVE_WAIT4    1
++#  endif
+ #  if defined(__BIONIC__) || (defined(__GLIBC__) && (__GLIBC__ << 8) + __GLIBC_MINOR__ >= 0x208 && \
+        (!defined(__UCLIBC__) || ((__UCLIBC_MAJOR__ << 16) + (__UCLIBC_MINOR__ << 8) + __UCLIBC_SUBLEVEL__ > 0x90201)))
+ #    include <sys/eventfd.h>
+diff --git a/qtbase/src/android/templates/build.gradle b/qtbase/src/android/templates/build.gradle
+index 3087d08c8..1f015de36 100644
+--- a/qtbase/src/android/templates/build.gradle
++++ b/qtbase/src/android/templates/build.gradle
+@@ -41,9 +41,12 @@ android {
+     sourceSets {
+         main {
+             manifest.srcFile 'AndroidManifest.xml'
+-            java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
+-            aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
+-            res.srcDirs = [qt5AndroidDir + '/res', 'res']
++            //java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
++            java.srcDirs = ['src', 'java']
++            //aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
++            aidl.srcDirs = ['src', 'aidl']
++            //res.srcDirs = [qt5AndroidDir + '/res', 'res']
++            res.srcDirs = ['res']
+             resources.srcDirs = ['resources']
+             renderscript.srcDirs = ['src']
+             assets.srcDirs = ['assets']
+diff --git a/qtbase/src/gui/image/image.pri b/qtbase/src/gui/image/image.pri
+index 1f42f28d1..85bc39b10 100644
+--- a/qtbase/src/gui/image/image.pri
++++ b/qtbase/src/gui/image/image.pri
+@@ -100,6 +100,9 @@ qtConfig(png) {
+     arm64-v8a {
+         SOURCES += image/qimage_neon.cpp
+     }
++    armeabi-v7a {
++        SOURCES += image/qimage_neon.cpp
++    }
+     x86 | x86_64 {
+         DEFINES += QT_COMPILER_SUPPORTS_SSE2 QT_COMPILER_SUPPORTS_SSE3 QT_COMPILER_SUPPORTS_SSSE3
+         SOURCES += image/qimage_ssse3.cpp
+diff --git a/qtbase/src/gui/painting/painting.pri b/qtbase/src/gui/painting/painting.pri
+index fcf6488ed..c68e8d6e9 100644
+--- a/qtbase/src/gui/painting/painting.pri
++++ b/qtbase/src/gui/painting/painting.pri
+@@ -166,7 +166,7 @@ gcc:equals(QT_GCC_MAJOR_VERSION, 5) {
+         DEFINES += QT_COMPILER_SUPPORTS_SSE4_1 QT_COMPILER_SUPPORTS_SSE4_2
+         SOURCES += painting/qdrawhelper_sse4.cpp painting/qimagescale_sse4.cpp
+     }
+-    arm64-v8a {
++    arm64-v8a | armeabi-v7a {
+         SOURCES += painting/qdrawhelper_neon.cpp painting/qimagescale_neon.cpp
+         HEADERS += painting/qdrawhelper_neon_p.h
+     }
+diff --git a/qtimageformats/src/3rdparty/libwebp.pri b/qtimageformats/src/3rdparty/libwebp.pri
+index 6f49549b6..912b05abb 100644
+--- a/qtimageformats/src/3rdparty/libwebp.pri
++++ b/qtimageformats/src/3rdparty/libwebp.pri
+@@ -137,6 +137,7 @@ SOURCES_FOR_NEON += \
+ 
+ android {
+     arm64-v8a|equals(QT_ARCH, arm64): SOURCES += $$SOURCES_FOR_NEON
++    armeabi-v7a|equals(QT_ARCH, arm64): SOURCES += $$SOURCES_FOR_NEON
+ } else: equals(QT_ARCH, arm)|equals(QT_ARCH, arm64) {
+     contains(QT_CPU_FEATURES.$$QT_ARCH, neon) {
+         # Default compiler settings include this feature, so just add to SOURCES
