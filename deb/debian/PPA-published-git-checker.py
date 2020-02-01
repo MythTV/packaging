@@ -33,4 +33,4 @@ try:
 except IndexError:
     hash = ''
 
-print hash
+print(hash)

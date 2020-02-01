@@ -130,7 +130,7 @@ override_dh_auto_install:
 	find debian/tmp/usr/share -type f \( -iname "*.p[y|l]" ! -iname "oauth_api.py" \) -size +1b -exec chmod 755 {} \;
 
 	#Set up python package properly
-	dh_python2 -plibmyth-python
+	dh_python3 -plibmyth-python
 
 override_dh_install:
 	mkdir -p ${buildroot}/etc/php5/apache2/conf.d; \

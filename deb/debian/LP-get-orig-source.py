@@ -5,7 +5,10 @@
 import sys
 import os
 from launchpadlib.launchpad import Launchpad
-import urllib
+try:
+    from urllib.request import urlretrieve
+except:
+    from urllib import urlretrieve
 
 cachedir = os.path.join(os.environ['HOME'], '.launchpadlib', 'cache')
 launchpad = Launchpad.login_anonymously('mythtv daily builder', 'production', cachedir)
@@ -23,5 +26,5 @@ if len(sys.argv) > 1 and sys.argv[1] == upstream_version:
                 destination = sys.argv[2]
             else:
                 destination = os.path.basename(url)                            
-            print "Fetching %s to %s" % (url, destination)
-            urllib.urlretrieve(url, destination)
+            print("Fetching %s to %s" % (url, destination))
+            urlretrieve(url, destination)
