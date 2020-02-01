@@ -1,10 +1,3 @@
-usr/share/fonts/truetype/droid/DroidSans.ttf usr/share/mythtv/fonts/DroidSans.ttf
-usr/share/fonts/truetype/droid/DroidSerif-Bold.ttf usr/share/mythtv/fonts/DroidSerif-Bold.ttf
-usr/share/fonts/truetype/droid/DroidSerif-Regular.ttf usr/share/mythtv/fonts/DroidSerif-Regular.ttf
-usr/share/fonts/truetype/droid/DroidSans-Bold.ttf usr/share/mythtv/fonts/DroidSans-Bold.ttf
-usr/share/fonts/truetype/droid/DroidSansMono.ttf usr/share/mythtv/fonts/DroidSansMono.ttf
-usr/share/fonts/truetype/droid/DroidSerif-Italic.ttf usr/share/mythtv/fonts/DroidSerif-Italic.ttf
-usr/share/fonts/truetype/droid/DroidSerif-BoldItalic.ttf usr/share/mythtv/fonts/DroidSerif-BoldItalic.ttf
 usr/share/fonts/truetype/freefont/FreeSans.ttf usr/share/mythtv/fonts/FreeSans.ttf
 usr/share/fonts/truetype/freefont/FreeMono.ttf usr/share/mythtv/fonts/FreeMono.ttf
 usr/share/fonts/truetype/freefont/FreeSansBold.ttf usr/share/mythtv/fonts/FreeSansBold.ttf
