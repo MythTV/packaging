@@ -11,7 +11,7 @@ Build-Conflicts: libqt3-mt-dev
 Build-Depends:  debhelper (>= 9),
                 quilt,
                 ccache,
-                yasm,
+                nasm,
                 help2man,
                 qtdeclarative5-dev,
                 libqt5webkit5-dev,
