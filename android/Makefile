@@ -25,11 +25,14 @@ clean:
 distclean:
 	rm -rf libs$(SUFFIX) mythinstall$(SUFFIX) libsinstall$(SUFFIX) build$(SUFFIX)
 
-.PHONY: qt mariadb fftw
+.PHONY: qt mariadb fftw libxml2
 qt:
 	./makelibs.sh qt5extras
 mariadb:
 	./makelibs.sh mariadb
 fftw:
 	./makelibs.sh fftw
+libxml2:
+	./makelibs.sh libxml2
+
 

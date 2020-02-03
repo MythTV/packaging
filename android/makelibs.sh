@@ -1002,7 +1002,7 @@ else
 	CPUOPT="-march=$CPU_ARCH"
 fi
 ./configure \
-	CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	CFLAGS="-isysroot $SYSROOT -isystem $INSTALLROOT/include $CPUOPT $ANDROID_API_DEF" \
 	CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
 	RANLIB=${CROSSPATH2}ranlib \
 	OBJDUMP=${CROSSPATH2}objdump \
@@ -1010,10 +1010,13 @@ fi
 	CC="${CROSSPATH3}clang" \
 	CXX="${CROSSPATH3}clang++" \
 	CPP1="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+	LDFLAGS="-L$INSTALLROOT/lib" \
 	PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
 	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
 	--prefix=$INSTALLROOT \
 	--disable-xmp \
+	--with-iconv \
+	--with-icu \
 	--without-python \
 	--enable-shared \
 	--enable-static &&
@@ -2948,11 +2951,11 @@ pushd $LIBSDIR
 [ -n "$BUILD_OGG" ] && build_ogg
 [ -n "$BUILD_VORBIS" ] && build_vorbis
 [ -n "$BUILD_FLAC" ] && build_flac
+[ -n "$BUILD_ICU" ] && build_icu
 [ -n "$BUILD_LIBXML2" ] && build_libxml2
 [ -n "$BUILD_LIBXSLT" ] && build_libxslt
 [ -n "$BUILD_FFI" ] && build_ffi
 [ -n "$BUILD_GLIB" ] && build_glib
-[ -n "$BUILD_ICU" ] && build_icu
 [ -n "$BUILD_LZO" ] && build_android_external_liblzo
 [ -n "$BUILD_FONTCONFIG" ] && build_fontconfig
 [ -n "$BUILD_FRIBIDI" ] && build_fribidi
