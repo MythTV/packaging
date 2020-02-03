@@ -4,6 +4,8 @@ libs
 libs64
 build
 build64
+libsinstall
+libsinstall64
 mythinstall
 mythinstall64
 *.apk
