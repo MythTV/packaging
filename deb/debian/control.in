@@ -278,7 +278,6 @@ Depends: mythtv-common,
          libwww-perl,
          libmyth-python,
          python3,
-         python3-imdbpy,
          libgles2-mesa-dev [armhf],
          libegl1-mesa-dev [armhf],
 Recommends: libmythtv-perl, python3-imaging | python3-pil, udisks2 | udisks
