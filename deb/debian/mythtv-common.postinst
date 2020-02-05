@@ -43,12 +43,12 @@ case "$1" in
     NEW=$(mktemp -t config.xml-XXXXXX)
     if [ -s /etc/mythtv/config.xml ]; then
         INPUT=/etc/mythtv/config.xml
-        chown --reference="$INPUT" "$NEW"
-        chmod --reference="$INPUT" "$NEW"
+        CXMLOWN=$(stat -c %U:%G "$INPUT")
+        CXMLMOD=$(stat -c %a "$INPUT")
     else
         INPUT=/usr/share/mythtv/config.xml
-        chown mythtv:mythtv "$NEW"
-        chmod 660 "$NEW"
+        CXMLOWN="mythtv:mythtv"
+        CXMLMOD="660"
     fi
 
     cat $INPUT > $NEW
@@ -60,6 +60,10 @@ case "$1" in
     perl -pi -e 's/^\s+<LocalHostName>.*?<\/LocalHostName>\n//m;' $NEW
 
     mv $NEW /etc/mythtv/config.xml
+
+    # change mode and permissions on the final file only
+    chmod $CXMLMOD /etc/mythtv/config.xml
+    chown $CXMLOWN /etc/mythtv/config.xml
 
     mkdir -p /root/.mythtv || true
     mkdir -p $HOMEDIR/.mythtv || true
