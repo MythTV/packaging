@@ -1001,26 +1001,27 @@ if [ $ARM64 == 1 ]; then
 else
 	CPUOPT="-march=$CPU_ARCH"
 fi
+echo $INSTALLROOT
 ./configure \
 	CFLAGS="-isysroot $SYSROOT -isystem $INSTALLROOT/include $CPUOPT $ANDROID_API_DEF" \
-	CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	CXXFLAGS="-isysroot $SYSROOT -isystem $INSTALLROOT/include $CPUOPT $ANDROID_API_DEF" \
+	LDFLAGS="-L$INSTALLROOT/lib $OPTS -pie -Wl,-rpath-link=$SYSROOT/usr/lib -Wl,-rpath-link=$SYSROOTARCH/usr/lib -Wl,-rpath-link=$INSTALLROOT/lib" \
 	RANLIB=${CROSSPATH2}ranlib \
 	OBJDUMP=${CROSSPATH2}objdump \
 	AR=${CROSSPATH2}ar \
 	CC="${CROSSPATH3}clang" \
 	CXX="${CROSSPATH3}clang++" \
 	CPP1="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
-	LDFLAGS="-L$INSTALLROOT/lib" \
 	PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
 	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
 	--prefix=$INSTALLROOT \
 	--disable-xmp \
-	--with-iconv \
-	--with-icu \
+	--without-iconv \
+	--without-icu \
 	--without-python \
 	--enable-shared \
 	--enable-static &&
-	make -j$NCPUS &&
+	make -j$NCPUS VERBOSE=1 &&
 	make install
 	ERR=$?
 
@@ -1730,7 +1731,7 @@ local CPUOPT=
 #	CPUOPT="-march=$CPU_ARCH"
 #fi
 ./configure \
-	CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	CFLAGS="-isysroot $SYSROOT -isystem $INSTALLROOT/include $CPUOPT $ANDROID_API_DEF" \
 	CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
 	RANLIB=${CROSSPATH2}ranlib \
 	OBJDUMP=${CROSSPATH2}objdump \
@@ -1738,6 +1739,7 @@ local CPUOPT=
 	CC="${CROSSPATH3}clang" \
 	CXX="${CROSSPATH3}clang++" \
 	CPP1="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+	LDFLAGS="-L$INSTALLROOT/lib" \
 	PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
 	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
 	--prefix=$INSTALLROOT \
