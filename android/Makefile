@@ -14,16 +14,22 @@ else
 	MODE_OPT := --arm
 endif
 
+ifneq ($(SDK),)
+	SDK_OPT := --sdk $(SDK)
+endif
+
+OPTS := $(MODE_OPT) $(SDK_OPT)
+
 .PHONY: all everything libs apk distclean clean
 all: apk
 
 everything: libs apk
 
 libs: makelibs.sh
-	./makelibs.sh $(MODE_OPT) all
+	./makelibs.sh $(OPTS) all
 
 apk: mythbuild.sh
-	./mythbuild.sh $(MODE_OPT)
+	./mythbuild.sh $(OPTS)
 
 clean:
 	rm -rf mythinstall$(SUFFIX)
@@ -34,13 +40,13 @@ distclean:
 
 .PHONY: qt mariadb fftw libxml2 libbluray
 qt:
-	./makelibs.sh $(MODE_OPT) qt5extras
+	./makelibs.sh $(OPTS) qt5extras
 mariadb:
-	./makelibs.sh $(MODE_OPT) mariadb
+	./makelibs.sh $(OPTS) mariadb
 fftw:
-	./makelibs.sh $(MODE_OPT) fftw
+	./makelibs.sh $(OPTS) fftw
 libxml2:
-	./makelibs.sh $(MODE_OPT) libxml2
+	./makelibs.sh $(OPTS) libxml2
 libbluray:
-	./makelibs.sh $(MODE_OPT) libbluray
+	./makelibs.sh $(OPTS) libbluray
 
