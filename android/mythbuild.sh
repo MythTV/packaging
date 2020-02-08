@@ -68,6 +68,11 @@ case "$1" in
 		shift
 		ARM64=1
 		;;
+	--sdk)
+		shift
+		export ANDROID_NATIVE_API_LEVEL=$1
+		shift
+		;;
 	--plugins)
 		shift
 		BUILD_PLUGINS=1

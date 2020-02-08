@@ -182,6 +182,11 @@ while : ; do
 			shift
 			ARM64=1
 			;;
+		--sdk)
+			shift
+			export ANDROID_NATIVE_API_LEVEL=$1
+			shift
+			;;
 		*)
 			echo "$0 lib [lib...]"
 			echo " where lib is one or more of"
@@ -211,6 +216,7 @@ while : ; do
 			echo "   --cpus"
 			echo "   --arm"
 			echo "   --arm64"
+			echo "   --sdk <level>"
 			exit 1
 			;;
 	esac
@@ -393,7 +399,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DCMAKE_PREFIX_PATH="$INSTALLROOT" \
       -DSOVERSION="" \
       .. && \
-      cmake --build . && \
+      cmake --build . -j $NCPUS && \
       cmake --build . --target install
       ERR=$?
 
@@ -566,7 +572,7 @@ STRIP=${CROSSPATH2}strip \
 	CPP1=${CROSSPATH2}cpp \
 	CPPFLAGS=$CFLAGS \
 	./configure --build=x86_64 --host=$BUILD_HOST --prefix=$INSTALLROOT --with-sysroot=$SYSROOT --enable-shared=yes --enable-static=yes &&
-	make $MAKEDEFS install-lib
+	make -j$NCPUS $MAKEDEFS install-lib
 	ERR=$?
 PATH=$OPATH
 unset OPATH
@@ -695,10 +701,11 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DICONV_LIBRARY=$INSTALLROOT/lib/libiconv.a \
       .. && \
       make VERBOSE=1 libmariadb && \
-      cmake --build ./libmariadb --target install && \
-      cmake --build ./include --target install && \
-      #cp "$INSTALLROOT"/lib/mariadb/lib{mariadb,mysql}client.a
+      cmake --build ./libmariadb -j $NCPUS --target install && \
+      cmake --build ./include -j $NCPUS --target install && \
       ERR=$?
+
+      #cp "$INSTALLROOT"/lib/mariadb/lib{mariadb,mysql}client.a
 
 popd
 popd
@@ -2946,6 +2953,7 @@ pushd $LIBSDIR
 [ -n "$BUILD_GETTEXT" ] && build_gettext
 [ -n "$BUILD_OPENSSL" ] && build_openssl
 [ -n "$BUILD_ICONV" ] && build_iconv
+[ -n "$BUILD_ICU" ] && build_icu
 [ -n "$BUILD_XML2" ] && build_xml2
 [ -n "$BUILD_MARIADB" ] && build_mariadb
 [ -n "$BUILD_LAME" ] && build_lame
@@ -2953,7 +2961,6 @@ pushd $LIBSDIR
 [ -n "$BUILD_OGG" ] && build_ogg
 [ -n "$BUILD_VORBIS" ] && build_vorbis
 [ -n "$BUILD_FLAC" ] && build_flac
-[ -n "$BUILD_ICU" ] && build_icu
 [ -n "$BUILD_LIBXML2" ] && build_libxml2
 [ -n "$BUILD_LIBXSLT" ] && build_libxslt
 [ -n "$BUILD_FFI" ] && build_ffi
