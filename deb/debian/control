@@ -418,7 +418,7 @@ Description: Metapackage package for MythTV plugins
 Package: mythgame
 Architecture: any
 Depends: mythtv-frontend (>= ${binary:Version}),
-         python,
+         python3,
          ${shlibs:Depends},
          ${misc:Depends}
 Description: Emulator & PC Game frontend module for MythTV
