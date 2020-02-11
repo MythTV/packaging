@@ -1,7 +1,7 @@
 
 sinclude make.inc
 
-ifeq ($(MODE),--arm64)
+ifeq ($(MODE),arm64)
 	ARM64 = 1
 else ifeq ($(MODE),arm)
 	ARM64 = 0
