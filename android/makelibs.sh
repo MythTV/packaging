@@ -399,7 +399,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DCMAKE_PREFIX_PATH="$INSTALLROOT" \
       -DSOVERSION="" \
       .. && \
-      cmake --build . -j $NCPUS && \
+      cmake --build . && \
       cmake --build . --target install
       ERR=$?
 
@@ -701,8 +701,8 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DICONV_LIBRARY=$INSTALLROOT/lib/libiconv.a \
       .. && \
       make VERBOSE=1 libmariadb && \
-      cmake --build ./libmariadb -j $NCPUS --target install && \
-      cmake --build ./include -j $NCPUS --target install && \
+      cmake --build ./libmariadb  --target install && \
+      cmake --build ./include  --target install && \
       ERR=$?
 
       #cp "$INSTALLROOT"/lib/mariadb/lib{mariadb,mysql}client.a

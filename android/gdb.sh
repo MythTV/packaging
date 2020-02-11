@@ -13,7 +13,7 @@ if [ -z "$USE_SU" ] ; then USE_SU=0 ; fi
 if [ -z "$USE_IP" ] ; then USE_IP=0 ; fi
 if [ -z "$TMPDIR" ] ; then TMPDIR=/data/local/tmp ; fi
 
-source make.inc
+[ -e make.inc ] && source make.inc
 TOOLCHAIN_PATH=$ANDROID_NDK_ROOT/prebuilt/linux-x86_64
 if [ "$ARM64" == 1 ]; then
 	MYGDB="$ANDROID_NDK/prebuilt/linux-x86_64/bin/ndk-gdb"
@@ -21,6 +21,7 @@ if [ "$ARM64" == 1 ]; then
 	PROJDIR=mythinstall64
 	APP_PROCESS_NAME=app_process64
 	LIBDIR_NAME=lib64
+    PROJ_LIBDIR_NAME=libs/arm64-v8a
 	LINKER_NAME=linker64
 	TARGET_ARCH=arm64
 	TOOLCHAIN_PREFIX=$TOOLCHAIN_PATH/bin/aarch64-linux-android-
@@ -32,6 +33,7 @@ else
 	PROJDIR=mythinstall
 	APP_PROCESS_NAME=app_process32
 	LIBDIR_NAME=lib
+    PROJ_LIBDIR_NAME=libs/armeabi-v7a
 	LINKER_NAME=linker
 	TARGET_ARCH=arm
 	TOOLCHAIN_PREFIX=$TOOLCHAIN_PATH/bin/arm-linux-androideabi-
@@ -46,7 +48,7 @@ fi
 #	popd
 #fi
 #cp `find $BUILDDIR/mythtv -name "*.so"` $sodir/
-cp -auv $PROJDIR/lib/* $sodir/
+cp -auv $PROJDIR/$PROJ_LIBDIR_NAME/* $sodir/
 cp -auv $PROJDIR/qt/lib/* $sodir/
 find $PROJDIR/qt/plugins -name "*.so" -exec cp -auv {} $sodir/ \;
 
@@ -100,17 +102,22 @@ cat <<-END > $sodir/gdb.setup
 	end
 	set breakpoint pending on
 	file $sodir/$APP_PROCESS_NAME
-	END
-if [ $USE_IP == 1 ]; then
-	IPADDR=$(adb shell ifconfig | awk -F '[ \t:]+' '/inet addr:127/ { next;}; /inet addr:/ { print $4; }')
-	echo "target remote $IPADDR:$DEBUG_PORT" >> $sodir/gdb.setup
-else
-	echo "target remote :$DEBUG_PORT" >> $sodir/gdb.setup
-fi
-cat <<-END >> $sodir/gdb.setup
 	set solib-absolute-prefix $sodir
 	set solib-search-path $sodir
 	END
+if [ $USE_IP == 1 ]; then
+	IPADDR=$(adb shell ifconfig | awk -F '[ \t:]+' '/inet addr:127/ { next;}; /inet addr:/ { print $4; }')
+    echo "echo ***IF THERE IS AN ERROR REPORTED, RUN THIS COMMAND***:\ntarget remote $IPADDR:$DEBUG_PORT\n" >> $sodir/gdb.setup
+    echo "target remote $IPADDR:$DEBUG_PORT" >> $sodir/gdb.setup
+else
+    echo "echo ***IF THERE IS AN ERROR REPORTED, RUN THIS COMMAND***:\ntarget remote :$DEBUG_PORT\n" >> $sodir/gdb.setup
+    echo "target remote :$DEBUG_PORT" >> $sodir/gdb.setup
+fi
+
+#cat <<-END >> $sodir/gdb.setup
+#	set solib-absolute-prefix $sodir
+#	set solib-search-path $sodir
+#	END
 
 adb forward --remove-all
 
