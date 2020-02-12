@@ -14,7 +14,6 @@ export NCPUS=$(nproc)
 
 [ -e make.inc ] && source make.inc
 
-export ANDROID_NATIVE_API_LEVEL=29
 export ANDROID_TARGET_ARCH=armeabi-v7a
 export ANDROID_NDK_TOOLS_PREFIX=arm-linux-androideabi
 
@@ -90,6 +89,13 @@ case "$1" in
 esac
 done
 
+# This is here instead of defaulted at the beginning because
+# I want to be able to export it ahead of time instead of
+# passing in sdk parameter.
+if [[ "$ANDROID_NATIVE_API_LEVEL" == "" ]] ; then
+    export ANDROID_NATIVE_API_LEVEL=29
+fi    
+
 export ANDROID_NDK_PLATFORM=android-$ANDROID_NATIVE_API_LEVEL
 
 if [ $ARM64 == 1 ]; then
@@ -162,6 +168,13 @@ TARGETAPKPREFIX=$INSTALLROOT/build/outputs/apk/myth
 # if you want to ignore mismatch please add this to your buildrc file
 #IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
 BUNDLESIGN="--sign $KEYSTORE $KEYALIAS --storepass $KEYSTOREPASSWORD"
+
+build_log=build_summary.log
+date | tee -a $build_log
+echo mythbuild.sh | tee -a $build_log
+echo ANDROID_NATIVE_API_LEVEL [SDK]: $ANDROID_NATIVE_API_LEVEL | tee -a $build_log
+echo ARM64: $ARM64 | tee -a $build_log
+echo sign $KEYSTORE $KEYALIAS | tee -a $build_log
 
 # process command
 case "$1" in
