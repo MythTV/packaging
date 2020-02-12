@@ -10,12 +10,7 @@ NOTE: The build platform is linux
    * git clone git@github.com:MythTV/packaging.git
    * git clone git@github.com:MythTV/mythtv.git
    * cd packaging/android
-   * If building for arm64 (eg. NVidia Shield), create a file called make.inc with this:
-
-```
-target_arch=arm64
-ARM64=1
-```
+   * make.inc is no longer needed
 
 2. Get Android Studio, SDK and NDK.
    * Get Android Studio from https://developer.android.com/studio/index.html
@@ -24,18 +19,20 @@ ARM64=1
 ```
 cd
 ln -s Android android
-```     
+```  
+   
    * After Android Studio is installed, use it to install the Android SDK.
      * In Android Studio, choose Configure / SDK Manager.
      * Install the desired SDK versions.  Install SDK 28 and 29.
      * Install the desired SDK Tools. Select CMake, build tools and NDK (Side by Side). By clicking "Show package details" you can select a specific version. Currently we are using the latest versions, NDK 21, build-tools 29, SDK tools 26.
    * Set up links as follows, using the version of ndk that was installed.
-   
+
 ```
 cd $HOME/android
 ln -s Sdk android-sdk-linux
 ln -s Sdk/ndk/21.0.6113669 android-ndk
 ```
+
    * We no longer need to copy setenv.sh to ~/android
    * We no longer need to create a toolchain.
    * Create a file buildrc in the packaging/android directory for any desired overrides
@@ -46,23 +43,21 @@ export KEYSTORE=$HOME/.android/android-release-key.jks
 export KEYALIAS=<key alias>
 export KEYSTOREPASSWORD=<key password>
 ```
-   * Instead of creating make.inc as specified above, I recommend adding this to your
-   buildrc. That way you have one easy place to change build setups:
+
+   * Optionally add these lines to buildrc. The ARM64 value can be set to 0 or 1 to build 32-bit or 64-bit packages.
 
 ```
-cat <<EOF >make.inc
-# comment these for 32 bit build
-target_arch=arm64
-ARM64=1
-EOF
-
+export ARM64=0
+export ANDROID_NATIVE_API_LEVEL=24
 ```
+
    * If you want to override schema mismatch processing (at your own risk)
-   add this to buildrc. You can also put configure overrides in here.
+   add this to buildrc. You can also put other configure overrides in IGNOREDEFINES.
 
 ```
 export IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
 ```
+
    You should have a dir structure like this after you are done:
 
 ```
@@ -72,6 +67,7 @@ android-sdk-linux -> Sdk
 android-studio
 Sdk
 ```
+
     Android studio by default installs a debug keystore in $HOME/.android/
 
 3. Other dependencies
@@ -82,19 +78,19 @@ Sdk
     * ant (for libbluray)
 
 4. Fetch and build all the libraries.
-
    The script downloads source to build and builds it.
-   In workdir/packaging/android, run
+   In workdir/packaging/android, run this. Set "arm" or "arm64" for the mode. If you set the sdk version and ARM64 variable in buildrc you need not set them here.
 
 ```
-    ./makelibs.sh all
+    make SDK=24 MODE=arm64 libs
 ```
+
    or with logging
 
 ```
-    ./makelibs.sh all 2>&1 | tee build_lib64.log
+    make SDK=24 MODE=arm64 libs |& tee build_lib64.log
 ```
-    
+
    This creates some 350 MB of data in a directory called
    workdir/packaging/android/libsinstall64 (for 64bit).  Its contents
    will be copied to a directory called
@@ -102,13 +98,13 @@ Sdk
    when MythTV is built.
 
 5. Build MythTV (debug by default)
-
-   In workdir/packaging/android, run
+   In workdir/packaging/android, run this. As for the libs, set "arm" or "arm64" for the mode. If you set the sdk version and ARM64 variable in buildrc you need not set them here.
 
 ```
-   ./mythbuild.sh
+   make SDK=24 MODE=arm64 apk
 ```
 
+6. Other targets for make are "clean" to clean the application, "distclean" to clean the libs and application, "everything" for libs and apk.
 
 Debugging
 ---------

@@ -280,6 +280,12 @@ CMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
 #armeabi-v7a with VFPV3 - same as armeabi-v7a, but sets VFPv3_D32 as floating-point unit;
 export PKG_CONFIG_LIBDIR=$INSTALLROOT/lib
 
+build_log=build_summary.log
+date | tee -a $build_log
+echo makelibs.sh | tee -a $build_log
+echo ANDROID_NATIVE_API_LEVEL [SDK]: $ANDROID_NATIVE_API_LEVEL | tee -a $build_log
+echo ARM64: $ARM64 | tee -a $build_log
+
 # some headers are missing in post 19 ndks so copy them from 19 into
 # our output tree
 MISSINGHEADERS="
