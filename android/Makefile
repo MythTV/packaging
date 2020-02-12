@@ -1,4 +1,5 @@
 
+sinclude buildrc
 sinclude make.inc
 
 ifeq ($(MODE),arm64)
