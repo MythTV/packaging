@@ -26,6 +26,19 @@ index 8eff9ac..ca71df4 100644
  ENDIF()
  CHECK_INCLUDE_FILES (unistd.h HAVE_UNISTD_H)
  CHECK_INCLUDE_FILES (utime.h HAVE_UTIME_H)
+diff --git a/libmariadb/libmariadb.c b/libmariadb/libmariadb.c
+index 2f0953f..c0e57bf 100644
+--- a/libmariadb/libmariadb.c
++++ b/libmariadb/libmariadb.c
+@@ -1483,7 +1483,7 @@ uchar *ma_send_connect_attr(MYSQL *mysql, uchar *buffer)
+         memcpy(buffer, p, len);
+         buffer+= len;
+         p+= len;
+-        len= *(size_t *)p;
++        memcpy(&len, p, sizeof(len));
+         buffer= mysql_net_store_length(buffer, len);
+         p+= sizeof(size_t);
+         memcpy(buffer, p, len);
 diff --git a/libmariadb/mf_pack.c b/libmariadb/mf_pack.c
 index d97e93b..f01ecbd 100644
 --- a/libmariadb/mf_pack.c

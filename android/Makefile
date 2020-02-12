@@ -5,6 +5,9 @@ ifeq ($(MODE),arm64)
 	ARM64 = 1
 else ifeq ($(MODE),arm)
 	ARM64 = 0
+else ifeq ($(MODE),)
+else
+$(error MODE=$(MODE) is invalid, please use arm or arm64)
 endif
 ifeq ($(ARM64),1)
 	SUFFIX := 64
