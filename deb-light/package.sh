@@ -126,9 +126,10 @@ Description: MythTV Light
  Lightweight package that installs MythTV in one package, front end
  and backend. Does not install database or services.
 FINISH
-        mkdir -p $installdir/$packagename/usr/share/applications/
-        cat >$installdir/$packagename/usr/share/applications/mythtv.desktop \
-        <<FINISH
+        if [[ "$arch" != armhf ]] ; then
+            mkdir -p $installdir/$packagename/usr/share/applications/
+            cat >$installdir/$packagename/usr/share/applications/mythtv.desktop \
+            <<FINISH
 [Desktop Entry]
 Name=MythTV Frontend
 Comment=A frontend for all content on a mythtv-backend
@@ -139,8 +140,8 @@ Encoding=UTF-8
 Icon=/usr/share/pixmaps/mythtv.png
 Categories=GNOME;Application;AudioVideo;Audio;Video
 FINISH
-        cat >$installdir/$packagename/usr/share/applications/mythtv-setup.desktop \
-        <<FINISH
+            cat >$installdir/$packagename/usr/share/applications/mythtv-setup.desktop \
+            <<FINISH
 [Desktop Entry]
 Name=MythTV Backend Setup
 Comment=Used to configure a backend
@@ -152,16 +153,16 @@ Icon=/usr/share/pixmaps/mythtv.png
 Categories=GTK;System;Settings
 X-AppInstall-Package=mythtv
 FINISH
-        mkdir -p $installdir/$packagename/usr/share/pixmaps/
-        cp -f $scriptpath/mythtv.png $installdir/$packagename/usr/share/pixmaps/
+            mkdir -p $installdir/$packagename/usr/share/pixmaps/
+            cp -f $scriptpath/mythtv.png $installdir/$packagename/usr/share/pixmaps/
 
-        mkdir -p $installdir/$packagename/usr/share/menu/
-        cat >$installdir/$packagename/usr/share/menu/mythtv-frontend \
-        <<FINISH
+            mkdir -p $installdir/$packagename/usr/share/menu/
+            cat >$installdir/$packagename/usr/share/menu/mythtv-frontend \
+            <<FINISH
 ?package(mythtv-frontend):needs="X11" section="Applications/Graphics" \
   title="MythTV" command="/usr/bin/mythfrontend"
 FINISH
-
+        fi
         cd $installdir
         chmod -R  g-w,o-w $packagename
         fakeroot dpkg-deb --build $packagename
