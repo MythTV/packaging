@@ -3,7 +3,6 @@ MYSQL="/usr/share/mythtv/sql/mythtv*.sql"
 MYSQLCONFIG="/etc/mysql/conf.d/mythtv.cnf"
 MYSQLCONFIGUPDATEHINT="/etc/mysql/conf.d/mythtv.cnf.ipv6update-with-public_bind.tmp"
 FSTAB="/etc/fstab"
-NEWIP="127.0.0.1"
 LOCALHOSTNAME=`cat /etc/hostname`
 NEWMYSQLCONFDIR="/etc/mysql/mysql.conf.d/"
 
@@ -113,7 +112,6 @@ case "$1" in
     if [ -f "${MYSQLCONFIG}" ]; then
         db_get mythtv/public_bind
         if [ -n "$RET" ] && [ $RET = true ]; then
-            NEWIP=`ifconfig | grep "inet addr:" | grep --invert-match 127.0.0.1 | sed ' s/inet addr://g; s/^[ \t]*//;s/[ \t]*$//; q;' | awk '{print $1}'`
             sed -i -e 's/^#bind/bind/' ${MYSQLCONFIG}
         else
             sed -i -e 's/^bind/#bind/' ${MYSQLCONFIG}
