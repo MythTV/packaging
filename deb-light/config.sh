@@ -76,7 +76,7 @@ case $projname in
         cd ../mythplugins
         git clean -Xfd
         basedir=$destdir/usr
-        export PYTHONPATH=$basedir/local/lib/python2.7/dist-packages
+        export PYTHONPATH=$basedir/local/lib/python2.7/dist-packages:$basedir/local/lib/python3.6/dist-packages
         config_opt=
         config_opt=" $MYTHTV_CONFIG_OPT_EXTRA"
         ./configure --prefix=$destdir/usr \
