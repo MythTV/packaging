@@ -24,7 +24,4 @@ _Description: Will other computers run MythTV?
  .
  Note that this is a security risk, as both the MythTV and MySQL services
  will be exposed. Be sure to place this machine behind a firewall.
- .
- If multiple interfaces are used, the first one listed in 'ifconfig' will be
- used.
 
