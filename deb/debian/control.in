@@ -97,7 +97,8 @@ Build-Depends:  debhelper (>= 9),
                 libbluray-dev,
                 libxnvctrl-dev,
                 liblzo2-dev,
-                libhdhomerun-dev
+                libhdhomerun-dev,
+                libminizip-dev
 
 Package: mythtv
 Architecture: all
@@ -408,7 +409,8 @@ Architecture: any
 Depends: mythtv-frontend (>= ${binary:Version}),
          python,
          ${shlibs:Depends},
-         ${misc:Depends}
+         ${misc:Depends},
+         minizip
 Description: Emulator & PC Game frontend module for MythTV
  MythGame can be used as a frontend to start any emulator that your host OS
  runs.
