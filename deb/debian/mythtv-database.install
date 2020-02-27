@@ -3,3 +3,4 @@ mythtv/database/*.sql usr/share/mythtv/sql
 
 #Come from debian/
 debian/mythtv.cnf etc/mysql/conf.d
+debian/mythconverg.cnf etc/mysql/conf.d
