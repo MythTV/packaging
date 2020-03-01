@@ -1,4 +1,4 @@
 # Disable Binary logging for the mythconverg database. Binary logging
 # for all databases was off by default prior to MySQL V8.
-
+[mysqld]
 binlog-ignore-db=mythconverg
