@@ -28,7 +28,6 @@ case "$1" in
            [ -d /etc/php/${CURRENT_PHP_VERSION}/apache2/conf.d ]; then
                 mv_conffile /etc/php5/apache2/conf.d/20-mythweb.ini /etc/php/${CURRENT_PHP_VERSION}/apache2/conf.d/20-mythweb.ini 2:0.28.0+fixes.20160325.2520617-0ubuntu3~
         fi
-        ;;
 
         REL=$(lsb_release -c -s)
         if [ "$REL" \> "raring" ]; then
