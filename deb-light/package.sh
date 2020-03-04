@@ -91,16 +91,6 @@ case $projname in
         fi
         rm -rf $installdir/$packagename $installdir/$packagename.deb
         cp -a "$sourcedir/" "$installdir/$packagename/"
-        if [[ ! -d $installdir/$packagename/usr/share/doc/mythtv-backend/contrib ]] ; then
-            if [[ -d $gitbasedir/mythtv/contrib ]] ; then
-                mkdir -p $installdir/$packagename/usr/share/doc/mythtv-backend/contrib
-                cp -a $gitbasedir/mythtv/contrib/*  \
-                    $installdir/$packagename/usr/share/doc/mythtv-backend/contrib/
-            else
-                echo ERROR Running from wrong directory, $gitbasedir/mythtv/contrib not found
-                exit 2
-            fi
-        fi
         mkdir -p $installdir/$packagename/DEBIAN
         if [[ "$strip" != "_nostrip" ]] ; then
             strip -g `find $installdir/$packagename/usr/bin/ -type f -executable`

@@ -30,4 +30,18 @@ case $projname in
         ;;
 esac
 make install |& tee -a $gitbasedir/../install_${projname}.out
+
+if [[ "$projname" == mythtv ]] ; then
+    if [[ ! -d $destdir/usr/share/doc/mythtv-backend/contrib ]] ; then
+        if [[ -d $gitbasedir/mythtv/contrib ]] ; then
+            mkdir -p $destdir/usr/share/doc/mythtv-backend/contrib
+            cp -a $gitbasedir/mythtv/contrib/*  \
+                $destdir/usr/share/doc/mythtv-backend/contrib/
+        else
+            echo ERROR Running from wrong directory, $gitbasedir/mythtv/contrib not found
+            exit 2
+        fi
+    fi
+fi
+
 echo Install Complete on `date`
