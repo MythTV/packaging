@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Turn this script off because php7.2-cli is installed, however no
+# entry is in /etc/alternatives to point php to it. If this works,
+# then simply remove this file.
+
+exit 0
+
 set -e
 
 if [ "$1" = install ] || [ "$1" = upgrade ]; then
