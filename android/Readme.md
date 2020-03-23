@@ -76,6 +76,7 @@ Sdk
     * gperf
     * ruby
     * ant (for libbluray)
+    * gettext development libraries
 
 4. Fetch and build all the libraries.
    The script downloads source to build and builds it.
