@@ -866,6 +866,66 @@ popd
 return $ERR
 }
 
+build_exiv2_git() {
+rm -rf build
+EXIV2=exiv2-git
+echo -e "\n**** $EXIV2 ****"
+if [[ ! -d "$EXIV2" ]] ; then
+    git clone git@github.com:Exiv2/exiv2.git exiv2-git
+    pushd $EXIV2
+    git reset --hard 449821cd5d
+    popd
+fi
+pushd $EXIV2
+OPATH=$PATH
+{ patch -p1 -Nt -r - || true; } <<'END'
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index efabea7e..4ad7034a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -125,8 +125,8 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+ endif()
+ 
+ set_target_properties( exiv2lib PROPERTIES
+-    VERSION       ${PROJECT_VERSION}
+-    SOVERSION     ${PROJECT_VERSION_MINOR}
++    VVERSION      14.0
++    SSOVERSION    14
+     OUTPUT_NAME   exiv2
+     PDB_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+     COMPILE_FLAGS ${EXTRA_COMPILE_FLAGS}
+END
+if [ $CLEAN == 1 ]; then
+	rm -rf build
+	mkdir build
+fi
+cd build
+cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+      -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLROOT  \
+      -DANDROID_NDK=$ANDROID_NDK \
+      -DANDROID_TOOLCHAIN="clang" \
+      -DANDROID_ABI="$ARMEABI" \
+      -DANDROID_NATIVE_API_LEVEL="$ANDROID_NATIVE_API_LEVEL"  \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_MAKE_PROGRAM=make \
+      -DCMAKE_PREFIX_PATH="$INSTALLROOT" \
+      -DBUILD_SHARED_LIBS=ON \
+      -DEXIV2_ENABLE_XMP=OFF \
+      -DEXIV2_BUILD_SAMPLES=OFF \
+      -DEXIV2_BUILD_EXIV2_COMMAND=OFF \
+      .. && \
+      sed -i.bak -e 's/-static-libstdc++//' src/CMakeFiles/exiv2lib.dir/link.txt && \
+      cmake --build . && \
+      cmake --build . --target install
+      ERR=$?
+mv -f ${INSTALLROOT}/lib/libexiv2.so ${INSTALLROOT}/lib/libexiv2.14.so
+(cd ${INSTALLROOT}/lib; ln -sf libexiv2.14.so libexiv2.so)
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
 build_flac() {
 rm -rf build
 FLAC=flac-1.3.3
@@ -2963,7 +3023,7 @@ pushd $LIBSDIR
 [ -n "$BUILD_XML2" ] && build_xml2
 [ -n "$BUILD_MARIADB" ] && build_mariadb
 [ -n "$BUILD_LAME" ] && build_lame
-[ -n "$BUILD_EXIV2" ] && build_exiv2
+[ -n "$BUILD_EXIV2" ] && build_exiv2_git
 [ -n "$BUILD_OGG" ] && build_ogg
 [ -n "$BUILD_VORBIS" ] && build_vorbis
 [ -n "$BUILD_FLAC" ] && build_flac
