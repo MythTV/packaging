@@ -56,15 +56,11 @@ case $projname in
         git clean -Xfd
         config_opt="--enable-libmp3lame"
         config_opt="$config_opt $MYTHTV_CONFIG_OPT_EXTRA"
+        omx_option=
         if [[ `arch` == arm* ]] ; then
-            if echo "$branch" | grep "0.28" ; then
-                omx_option="--enable-openmax"
-            else
-                omx_option="--enable-omx-rpi"
-            fi
             config_opt="$omx_option --disable-vdpau \
-              --disable-opengl-video --enable-opengl --disable-opengl-themepainter \
-              --disable-vaapi --disable-vaapi2 $MYTHTV_CONFIG_OPT_EXTRA"
+              --enable-opengl \
+              --disable-vaapi $MYTHTV_CONFIG_OPT_EXTRA"
         fi
         set -x
         ./configure --prefix=$destdir/usr \
