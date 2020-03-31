@@ -8,7 +8,7 @@ NEWMYSQLCONFDIR="/etc/mysql/mysql.conf.d/"
 
 #Used to fail at some point but not abort postinst
 fail_database() {
-    echo "Failed to create or modify database (incorrect admin username/password?)" >&2
+    echo "$1 failed, (incorrect admin username/password or syntax?)" >&2
     echo "Try:" >&2
     echo "sudo dpkg-reconfigure mythtv-database" >&2
 
@@ -34,18 +34,30 @@ ask_root_pw() {
     SECURITY_INFO="--host=$hostname --user=$admin_username $admin_password"
 }
 
+# MySQL: 5.7.29-0ubuntu0.18.04.1
+# MySQL: 8.0.19-0ubuntu4 (on 20.04)
+# MariaDB: 10.0.36-MariaDB-0ubuntu0.16.04 (Same on 18.04. Doesn't support CREATE with IF NOT EXISTS)
+# MariaDB: 10.3.22-MariaDB-0ubuntu0.19.10.1
+
 update_database() {
     #Set up privs for mythtv@network
-    if ! echo "CREATE USER IF NOT EXISTS '$mythtv_username'@'%' IDENTIFIED WITH mysql_native_password; \
-               ALTER USER '$mythtv_username'@'%' IDENTIFIED BY '$mythtv_password'; \
-               GRANT ALL ON $database.* TO '$mythtv_username'@'%';" | \
-        mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
-        fail_database
+    if mysql $SECURITY_INFO --batch --execute "SELECT @@version;" >/dev/null 2>&1 | \
+        grep --extended-regexp --ignore --silent "10\.[01]\..*mariadb|mariadb.*10\.[01]\."; then
+        QUERY="GRANT ALL PRIVILEGES ON $database.* TO '$mythtv_username'@'%' IDENTIFIED BY '$mythtv_password'; \
+            GRANT ALL ON $database.* TO '$mythtv_username'@'%';"
+    else
+        QUERY="CREATE USER IF NOT EXISTS '$mythtv_username'@'%' IDENTIFIED WITH mysql_native_password; \
+            ALTER USER '$mythtv_username'@'%' IDENTIFIED BY '$mythtv_password'; \
+            GRANT ALL ON $database.* TO '$mythtv_username'@'%';"
+    fi
+
+    if ! mysql $SECURITY_INFO --execute "$QUERY" "$database" >/dev/null 2>&1; then
+        fail_database "mysql 'hidden SECURITY_INFO' --execute=$QUERY $database"
     fi
 
     # load timezone data
     if ! mysql_tzinfo_to_sql /usr/share/zoneinfo/ 2>/dev/null | mysql $SECURITY_INFO mysql >/dev/null 2>&1; then
-        fail_database
+        fail_database "mysql_tzinfo_to_sql /usr/share/zoneinfo/ ..."
     fi
 }
 
@@ -125,7 +137,7 @@ case "$1" in
         while ! echo "CREATE DATABASE $database;" | mysql $SECURITY_INFO ; do
 #>/dev/null 2>&1; do
             if [ $i -ge 5 ]; then
-                fail_database
+                fail_database "CREATE DATABASE $database"
             fi
             ask_root_pw
             i=$(($i+1))
