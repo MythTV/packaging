@@ -39,23 +39,24 @@ ln -s Sdk/ndk/21.0.6113669 android-ndk
    * If you want to build a release apk, you need to create a key. After creating the key, add these to the end of buildrc:
 
 ```
-export KEYSTORE=$HOME/.android/android-release-key.jks
-export KEYALIAS=<key alias>
-export KEYSTOREPASSWORD=<key password>
+KEYSTORE=$HOME/.android/android-release-key.jks
+KEYALIAS=<key alias>
+KEYSTOREPASSWORD=<key password>
+BUNDLESIGN="--sign $KEYSTORE $KEYALIAS --storepass $KEYSTOREPASSWORD"
 ```
 
    * Optionally add these lines to buildrc. The ARM64 value can be set to 0 or 1 to build 32-bit or 64-bit packages.
 
 ```
-export ARM64=0
-export ANDROID_NATIVE_API_LEVEL=24
+ARM64=0
+ANDROID_NATIVE_API_LEVEL=24
 ```
 
    * If you want to override schema mismatch processing (at your own risk)
    add this to buildrc. You can also put other configure overrides in IGNOREDEFINES.
 
 ```
-export IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
+IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
 ```
 
    You should have a dir structure like this after you are done:

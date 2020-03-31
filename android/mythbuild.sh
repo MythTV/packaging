@@ -167,7 +167,9 @@ TARGETAPKPREFIX=$INSTALLROOT/build/outputs/apk/myth
 
 # if you want to ignore mismatch please add this to your buildrc file
 #IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
-BUNDLESIGN="--sign $KEYSTORE $KEYALIAS --storepass $KEYSTOREPASSWORD"
+#if [[ -f $KEYSTORE ]] ; then
+#    BUNDLESIGN="--sign $KEYSTORE $KEYALIAS --storepass $KEYSTOREPASSWORD"
+#fi
 
 build_log=build_summary.log
 date | tee -a $build_log
