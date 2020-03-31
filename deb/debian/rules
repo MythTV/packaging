@@ -75,7 +75,6 @@ endif
 
 #Mythplugins configure opts
 MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \
-                              --zm-version=1.22.3 \
                               --qmake=/usr/bin/qmake \
 
 ifeq "$(DEB_BUILD_ARCH)" "armhf"
@@ -117,7 +116,7 @@ override_dh_auto_install:
 	cd mythplugins && ./configure $(MYTHPLUGINS_CONFIGURE_OPTS) --mythroot=$(CURDIR)/debian/tmp:$(CURDIR)/debian/libmyth-python
 	$(MAKE) -j$(PROCESSORS) -C mythplugins
 	for plugin in mytharchive \
-	mythgame mythmusic mythmovies mythnews \
+	mythgame mythmusic mythnews \
 	mythweather mythzoneminder mythbrowser ; do \
 		$(MAKE) -C mythplugins/$$plugin install INSTALL_ROOT=$(CURDIR)/debian/$$plugin; \
 	done
