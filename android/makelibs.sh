@@ -914,7 +914,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DEXIV2_BUILD_SAMPLES=OFF \
       -DEXIV2_BUILD_EXIV2_COMMAND=OFF \
       .. && \
-      sed -i.bak -e 's/-static-libstdc++//' src/CMakeFiles/exiv2lib.dir/link.txt && \
+      sed -i.bak -e 's/-static-libstdc++//;s/ [^ ]*libc\.a//' src/CMakeFiles/exiv2lib.dir/link.txt && \
       cmake --build . && \
       cmake --build . --target install
       ERR=$?
