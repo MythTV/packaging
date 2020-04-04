@@ -162,6 +162,8 @@ if [ -n "$PATCHES" ]; then
 	done > "$DIRECTORY/mythtv/.gitout"
 fi
 
+PACKAGING_HASH=$(git rev-parse --short HEAD)
+
 # Change to the build directory
 cd "$DIRECTORY/mythtv"
 
@@ -185,7 +187,6 @@ parse_debver "$(dpkg-parsechangelog -SVersion)"
 
 ##set changelog entry
 #actually bump the changelog up. don't include a git hash here right now.
-PACKAGING_HASH=$(git rev-parse --short HEAD)
 dch -b -v "$DEB_VERSION" "Scripted Build from $GIT_TYPE git packaging [$PACKAGING_HASH]"
 if [ -f .gitout ]; then
 	while read -r line
