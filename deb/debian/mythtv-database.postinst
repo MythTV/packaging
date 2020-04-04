@@ -41,7 +41,7 @@ ask_root_pw() {
 
 update_database() {
     #Set up privs for mythtv@network
-    if mysql $SECURITY_INFO --batch --execute "SELECT @@version;" >/dev/null 2>&1 | \
+    if mysql $SECURITY_INFO --batch --execute "SELECT @@version;" 2>/dev/null | \
         grep --extended-regexp --ignore --silent "10\.[01]\..*mariadb|mariadb.*10\.[01]\."; then
         QUERY="GRANT ALL PRIVILEGES ON $database.* TO '$mythtv_username'@'%' IDENTIFIED BY '$mythtv_password'; \
             GRANT ALL ON $database.* TO '$mythtv_username'@'%';"
