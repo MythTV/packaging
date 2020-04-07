@@ -81,6 +81,12 @@ ifeq "$(DEB_BUILD_ARCH)" "armhf"
 	MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
 endif
 
+#Use moar CPUs for jya
+PROCESSORS       ?= $(shell grep -ic ^processor /proc/cpuinfo)
+ifeq (0,$(PROCESSORS))
+PROCESSORS := 1
+endif
+
 #link problem with binutils 2.21 in precise
 #and ffmpeg sync from 0.26, libswscale
 LDFLAGS:=$(shell DEB_LDFLAGS_MAINT_STRIP="-Wl,-Bsymbolic-functions" dpkg-buildflags --get LDFLAGS)
@@ -103,12 +109,12 @@ override_dh_auto_install:
 
 	#mythtv
 	cd mythtv && ./configure $(MYTHTV_CONFIGURE_OPTS)
-	$(MAKE) -C mythtv
+	$(MAKE) -j$(PROCESSORS) -C mythtv
 	$(MAKE) -C mythtv install INSTALL_ROOT=$(CURDIR)/debian/tmp
 
 	#mythplugins
 	cd mythplugins && ./configure $(MYTHPLUGINS_CONFIGURE_OPTS) --mythroot=$(CURDIR)/debian/tmp:$(CURDIR)/debian/libmyth-python
-	$(MAKE) -C mythplugins
+	$(MAKE) -j$(PROCESSORS) -C mythplugins
 	for plugin in mytharchive \
 	mythgame mythmusic mythnews \
 	mythweather mythzoneminder mythbrowser ; do \
