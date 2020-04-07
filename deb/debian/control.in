@@ -98,7 +98,8 @@ Build-Depends:  debhelper (>= 10),
                 liblzo2-dev,
                 libxcb-shm0-dev,
                 libhdhomerun-dev,
-                libminizip-dev
+                libminizip-dev,
+                libgnutls28-dev
 
 Package: mythtv
 Architecture: all
@@ -145,6 +146,7 @@ Depends: adduser,
          fonts-tlwg-purisa,
          fonts-texgyre | tex-gyre,
          libxml-xpath-perl,
+         libgnutls30,
          pciutils,
          usbutils,
          python3,
