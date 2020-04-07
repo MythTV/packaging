@@ -162,8 +162,6 @@ if [ -n "$PATCHES" ]; then
 	done > "$DIRECTORY/mythtv/.gitout"
 fi
 
-PACKAGING_HASH=$(git rev-parse --short HEAD)
-
 # Change to the build directory
 cd "$DIRECTORY/mythtv"
 
