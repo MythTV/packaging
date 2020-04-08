@@ -28,9 +28,12 @@ case $projname in
         config_opt="--enable-libmp3lame"
         config_opt="$config_opt $MYTHTV_CONFIG_OPT_EXTRA"
         if [[ `arch` == arm* ]] ; then
-            config_opt="$omx_option --disable-vdpau \
+            config_opt="--enable-libmp3lame --disable-vdpau \
               --enable-opengl  \
-              --disable-vaapi $MYTHTV_CONFIG_OPT_EXTRA"
+              --disable-vaapi \
+              --cpu=cortex-a7 --arch=armv7 --extra-cflags=-mfpu=neon \
+              --extra-cxxflags=-mfpu=neon \
+              $MYTHTV_CONFIG_OPT_EXTRA"
         fi
         set -x
         ./configure --prefix=/usr $config_opt "$@" |& tee -a $gitbasedir/../config_${projname}.out
@@ -56,11 +59,13 @@ case $projname in
         git clean -Xfd
         config_opt="--enable-libmp3lame"
         config_opt="$config_opt $MYTHTV_CONFIG_OPT_EXTRA"
-        omx_option=
         if [[ `arch` == arm* ]] ; then
-            config_opt="$omx_option --disable-vdpau \
-              --enable-opengl \
-              --disable-vaapi $MYTHTV_CONFIG_OPT_EXTRA"
+            config_opt="--enable-libmp3lame --disable-vdpau \
+              --enable-opengl  \
+              --disable-vaapi \
+              --cpu=cortex-a7 --arch=armv7 --extra-cflags=-mfpu=neon \
+              --extra-cxxflags=-mfpu=neon \
+              $MYTHTV_CONFIG_OPT_EXTRA"
         fi
         set -x
         ./configure --prefix=$destdir/usr \
