@@ -100,10 +100,13 @@ export HOME=$(CURDIR)/debian/home_$(DEB_BUILD_ARCH)
 
 #Rather than have a configure/build/install phase, combine them all so we can do each part in order
 override_dh_auto_install:
-	if [ -f mythtv/EXPORTED_VERSION ] && [ -f debian/DESCRIBE ]; then \
-		mv mythtv/EXPORTED_VERSION mythtv/EXPORTED_VERSION.old ;\
-		cp debian/DESCRIBE mythtv/EXPORTED_VERSION ;\
-	fi
+	# create the DESCRIBE file that Myth's version.sh will use to get the version
+	DEB_VERSION="$(shell dpkg-parsechangelog -S version)" ;\
+	GIT_VERSION="$(shell echo $(DEB_VERSION) | sed 's/[0-9]:/v/')" ;\
+	GIT_BRANCH="$(shell echo $(DEB_VERSION) | sed -e 's/~ubuntu.*//' -e 's/.*[~+]//' -e 's/\..*//')" ;\
+	echo "BRANCH=\"$$GIT_BRANCH\"" > mythtv/DESCRIBE ;\
+	echo "SOURCE_VERSION=\"$$GIT_VERSION\"" >> mythtv/DESCRIBE ;\
+
 	cd mythtv && sh version.sh `pwd`
 
 	mkdir $(CURDIR)/debian/home
