@@ -102,8 +102,13 @@ override_dh_auto_install:
 	# create the DESCRIBE file that Myth's version.sh will use to get the version
 	DEB_VERSION="$(shell dpkg-parsechangelog -S version)" ;\
 	GIT_VERSION="$(shell echo $(DEB_VERSION) | sed 's/[0-9]:/v/')" ;\
+	GIT_MAJOR="$(shell echo $(DEB_VERSION) | sed -e 's/~ubuntu.*//' -e 's/.*://' -e 's/\..*//')" ;\
 	GIT_BRANCH="$(shell echo $(DEB_VERSION) | sed -e 's/~ubuntu.*//' -e 's/.*[~+]//' -e 's/\..*//')" ;\
-	echo "BRANCH=\"$$GIT_BRANCH\"" > mythtv/DESCRIBE ;\
+	if [ "$(GIT_BRANCH)" = "fixes" ]; then \
+		echo "BRANCH=\"$$GIT_BRANCH/$$GIT_MAJOR\"" > mythtv/DESCRIBE ;\
+	else \
+		echo "BRANCH=\"$$GIT_BRANCH\"" > mythtv/DESCRIBE ;\
+	fi ;\
 	echo "SOURCE_VERSION=\"$$GIT_VERSION\"" >> mythtv/DESCRIBE ;\
 
 	cd mythtv && sh version.sh `pwd`
