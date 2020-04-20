@@ -871,7 +871,7 @@ rm -rf build
 EXIV2=exiv2-git
 echo -e "\n**** $EXIV2 ****"
 if [[ ! -d "$EXIV2" ]] ; then
-    git clone git@github.com:Exiv2/exiv2.git exiv2-git
+    git clone https://github.com:Exiv2/exiv2.git exiv2-git
     pushd $EXIV2
     git reset --hard 449821cd5d
     popd
