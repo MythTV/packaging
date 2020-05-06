@@ -163,7 +163,7 @@ s/^.*\(setenv\sdb_password\s\+\"\).*\"/\t\1$mythtv_password\"/g;
 
         #We're using apache
         if [ -e /etc/apache2/apache2.conf ]; then
-
+            CURRENT_PHP_VERSION=$(php -r 'echo PHP_MAJOR_VERSION, ".", PHP_MINOR_VERSION;')
             # handle password protection/ authentication setup
             # get our values from the DB
             DIGESTFILE=/etc/mythtv/mythweb-digest
@@ -186,6 +186,8 @@ s/^.*\(setenv\sdb_password\s\+\"\).*\"/\t\1$mythtv_password\"/g;
             a2enmod rewrite >/dev/null || true
             a2enmod cgi >/dev/null || true
             a2ensite mythweb.conf >/dev/null || true
+            # Enable current PHP mod
+            a2enmod php${CURRENT_PHP_VERSION} >/dev/null || true
 
             # Usability feature to make / redirect to /mythweb in apache
             BASE=/etc/apache2
@@ -214,7 +216,6 @@ s/^.*\(setenv\sdb_password\s\+\"\).*\"/\t\1$mythtv_password\"/g;
             reload_apache
 
             #migrate to php7 if need be
-            CURRENT_PHP_VERSION=$(php -r 'echo PHP_MAJOR_VERSION, ".", PHP_MINOR_VERSION;')
             if [ -f /etc/php5/apache2/conf.d/20-mythweb.conf ] && \
                [ -d /etc/php/${CURRENT_PHP_VERSION}/apache2/conf.d ]; then
                     mv_conffile /etc/php5/apache2/conf.d/20-mythweb.ini /etc/php/${CURRENT_PHP_VERSION}/apache2/conf.d/20-mythweb.ini 2:0.28.0+fixes.20160325.2520617-0ubuntu3~
