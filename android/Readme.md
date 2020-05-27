@@ -23,8 +23,8 @@ ln -s Android android
    
    * After Android Studio is installed, use it to install the Android SDK.
      * In Android Studio, choose Configure / SDK Manager.
-     * Install the desired SDK versions.  Install SDK 28 and 29.
-     * Install the desired SDK Tools. Select CMake, build tools and NDK (Side by Side). By clicking "Show package details" you can select a specific version. Currently we are using the latest versions, NDK 21, build-tools 29, SDK tools 26.
+     * Install the desired SDK versions.  Install SDK 29.
+     * Install the desired SDK Tools. Select CMake, build tools and NDK (Side by Side). By clicking "Show package details" you can select a specific version. Currently we are using the latest versions, NDK 21, build-tools 29, SDK tools 26. Note that setenv.sh is hardcoded for build tools 29.0.2. Make sure you install that. When that is unavailable we will have to update setenv.sh.
    * Set up links as follows, using the version of ndk that was installed.
 
 ```
@@ -78,6 +78,8 @@ Sdk
     * ruby
     * ant (for libbluray)
     * gettext development libraries
+    * cmake
+    * fontconfig
 
 4. Fetch and build all the libraries.
    The script downloads source to build and builds it.
