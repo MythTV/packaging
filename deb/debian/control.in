@@ -142,7 +142,7 @@ Depends: adduser,
          default-mysql-client | virtual-mysql-client | mysql-client-5.7 | mysql-client-5.6 | mariadb-client,
          fonts-liberation | ttf-liberation,
          fonts-droid-fallback | fonts-droid | ttf-droid,
-         ttf-dejavu,
+         fonts-dejavu,
          fonts-tlwg-purisa,
          fonts-texgyre | tex-gyre,
          libxml-xpath-perl,
@@ -544,7 +544,7 @@ Description: Web browser plugin for MythTV
 
 Package: mythtv-theme-mythbuntu
 Architecture: all
-Depends: mythtv-common, ttf-dejavu, ${misc:Depends}
+Depends: mythtv-common, fonts-dejavu, ${misc:Depends}
 Replaces: mythtv-common (<< 1:0.22.0~zrc1-0ubuntu1)
 Description: MythTV Theme used in the Mythbuntu distribution
  This theme is the default theme that MythTV is using when installed
