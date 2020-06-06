@@ -1,6 +1,6 @@
 Package: mythtv-theme-#THEME#
 Architecture: all
-Depends: mythtv-common, ttf-dejavu, ${misc:Depends}
+Depends: mythtv-common, fonts-dejavu, ${misc:Depends}
 Replaces: mythtv-common (<< 1:0.22.0~zrc1-0ubuntu1)
 Description: The #THEME# MythTV Theme
  This package provides the #THEME# theme for MythTV.
