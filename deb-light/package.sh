@@ -96,10 +96,6 @@ case $projname in
             strip -g `find $installdir/$packagename/usr/bin/ -type f -executable`
             strip -g `find $installdir/$packagename/usr/lib/ -type f -executable -name '*.so*'`
         fi
-        deps="libtag1v5, libexiv2-14, python-future, python-requests, python-requests-cache, "
-        if [[ "$codename" == jessie ]] ; then
-            deps="libtag1c2a, libexiv2-13, "
-        fi
         cat >$installdir/$packagename/DEBIAN/control <<FINISH
 Package: mythtv-light
 Version: $packagerel
@@ -109,7 +105,7 @@ Architecture: $arch
 Essential: no
 Installed-Size: `du -B1024 -d0 $installdir/$packagename | cut  -f1`
 Maintainer: Peter Bennett <pbennett@mythtv.org>
-Depends: $deps libavahi-compat-libdnssd1, libqt5widgets5, libqt5script5, libqt5sql5-mysql, libqt5xml5, libqt5network5, libqt5webkit5, pciutils, libva-x11-1 | libva-x11-2, libva-glx1 | libva-glx2, libqt5opengl5, libdbi-perl,  libdbd-mysql-perl, libnet-upnp-perl, python-lxml, python-mysqldb, python-urlgrabber, libcec3 | libcec4, libfftw3-double3, libfftw3-single3, libass5 | libass9, libfftw3-3, libraw1394-11, libiec61883-0, libavc1394-0, fonts-liberation, libva-drm1 | libva-drm2, libmp3lame0, libxv1, libpulse0, libhdhomerun3 | libhdhomerun4, libxnvctrl0, libsamplerate0, libbluray1 | libbluray2, liblzo2-2, libio-socket-inet6-perl, libxml-simple-perl, python3-lxml, python3-mysqldb, python3-future
+Depends: libtag1v5, libexiv2-27, libavahi-compat-libdnssd1, libqt5widgets5, libqt5script5, libqt5sql5-mysql, libqt5xml5, libqt5network5, libqt5webkit5, pciutils, libva-x11-1 | libva-x11-2, libva-glx1 | libva-glx2, libqt5opengl5, libdbi-perl,  libdbd-mysql-perl, libnet-upnp-perl, libcec3 | libcec4, libfftw3-double3, libfftw3-single3, libass5 | libass9, libfftw3-3, libraw1394-11, libiec61883-0, libavc1394-0, fonts-liberation, libva-drm1 | libva-drm2, libmp3lame0, libxv1, libpulse0, libhdhomerun3 | libhdhomerun4, libxnvctrl0, libsamplerate0, libbluray1 | libbluray2, liblzo2-2, libio-socket-inet6-perl, libxml-simple-perl, python3-lxml, python3-mysqldb, python3-future , python3-requests, python3-requests-cache
 Conflicts: mythtv-common, mythtv-frontend, mythtv-backend
 Homepage: http://www.mythtv.org
 Description: MythTV Light
