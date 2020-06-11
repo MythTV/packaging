@@ -81,7 +81,7 @@ Sdk
 4. Fetch and build all the libraries.
    The script downloads source to build and builds it.
    In workdir/packaging/android, run this. Set "arm" or "arm64" for the mode. If you set the sdk version and ARM64 variable in buildrc you need not set them here.
-
+   
 ```
     make SDK=24 MODE=arm64 libs
 ```
@@ -91,6 +91,8 @@ Sdk
 ```
     make SDK=24 MODE=arm64 libs |& tee build_lib64.log
 ```
+
+   Note that branches fixes/31 and master download different library versions. If you have built libraries for one branch and then need to build another, you will have to completely clear out the prior ones. Since building the libraries takes a long time, it may be preferable to keep two copies of the packaging directory, one for each branch. (Building fixes/31 libraries without first clearing master libraries causes error "AutoPtr is not defined" when subsequently building MythTV).
 
    This creates some 350 MB of data in a directory called
    workdir/packaging/android/libsinstall64 (for 64bit).  Its contents
