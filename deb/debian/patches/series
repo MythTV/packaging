@@ -4,6 +4,3 @@ default_directories
 ##mythtv##
 bindings_install_paths.patch
 default_theme.patch
-
-##mythplugins##
-pass_ldflags_qmake.patch
