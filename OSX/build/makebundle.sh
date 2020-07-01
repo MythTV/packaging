@@ -70,8 +70,6 @@ echo "Installing language translations"
 make -C ../../i18n		INSTALL_ROOT=`pwd`	install >/dev/null
 echo "Installing standard (basic) themes"
 make -C ../../themes		INSTALL_ROOT=`pwd`	install >/dev/null
-echo "Installing filters"
-make -C ../../filters		INSTALL_ROOT=`pwd`	install >/dev/null
 #echo "Installing extra themes"
 #make -C ../../../myththemes	INSTALL_ROOT=`pwd`	install >/dev/null
 
