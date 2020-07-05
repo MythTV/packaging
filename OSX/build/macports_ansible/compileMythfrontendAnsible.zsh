@@ -259,7 +259,7 @@ if [ $? != 0 ]; then
   exit 1
 fi
 echo "------------ Installing Mythtv ------------"
-# need to do a make install or macdeployqt will not copy everything in and makebundle.sh will fail.
+# need to do a make install or macdeployqt will not copy everything in.
 make install
 
 if $BUILD_PLUGINS; then
@@ -312,17 +312,14 @@ fi
 
 echo "------------ Deploying QT to Mythfrontend Executable ------------"
 # Package up the executable
-# change directory to the mythfrontend app directory for makebundle.sh will work
 cd $APP_DIR
 # run macdeployqt
 /opt/local/libexec/qt5/bin/macdeployqt $APP_DIR/mythfrontend.app
 
 echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
-# run makebundle to copy all of the libraries into the bundle as Frameworks
+# run osx-bundler.pl to copy all of the libraries into the bundle as Frameworks
 # we will need to run this utility multiple more time for any plugins and helper apps installed
-#$OSX_PKGING_DIR/makebundle.sh $APP_DIR/mythfrontend.app
-$OSX_PKGING_DIR/osx-bundler.pl  $APP_DIR/mythfrontend.app/Contents/MacOS/mythfrontend $INSTALL_DIR/libs/*
-
+$OSX_PKGING_DIR/osx-bundler.pl  $APP_DIR/mythfrontend.app/Contents/MacOS/mythfrontend $SRC_DIR/libs/* $INSTALL_DIR/lib/ /opt/local/lib
 
 echo "------------ Installing libcec into Mythfrontend.app ------------"
 # copy in libcec (missing for some reason...)
@@ -360,7 +357,7 @@ if $BUILD_PLUGINS; then
   #done
 
   # Now we need to make the plugin dylibs use the dylibs copied into the app's Framework
-  # to do this, we're going to copy them into the app's PlugIns dir and the use makebundle to point them to the
+  # to do this, we're going to copy them into the app's PlugIns dir and the use osx-bundler.pl to point them to the
   # app frameworks' versions
   for plugFilePath in $INSTALL_DIR/lib/mythtv/plugins/*.dylib
   do

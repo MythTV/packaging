@@ -30,5 +30,5 @@ compileMythtvAnsible.zsh - A script that creates a MythFrontend.app and .dmg fil
             appropriate ansible/mythtv/packaging git repos from github, compiles mythtv
             and optionally mythplugins, bundles the necessary Support libraries and
             files into the application, and finally generates a .dmg file for distribution.
-            This script uses both makebundle.sh and osx-bundler.pl.
+            This script uses osx-bundler.pl.
 ```
