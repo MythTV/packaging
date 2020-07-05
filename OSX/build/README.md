@@ -1,7 +1,8 @@
 ### Packaging for MacOS
 These files are used to help create and package Application for Macports.
 
-Utilities in current directory
+
+### Utilities in current directory
 ```
 makebundle.sh - Script to produce an application bundle with language translations, themes,
             etc.  The script uses "osx-bundler.pl" to do most of the heavy lifting
@@ -9,15 +10,15 @@ makebundle.sh - Script to produce an application bundle with language translatio
 osx-bundler.pl - Perl driven general purpose application bundling utility.  This Application
             Copies the library dependencies into the target application as frameworks linking
             the library paths internal to the application
-
-osx-packager
+```
+### osx-packager
 ```
 This is directory contains the legacy packager and for OSX and its README.txt instructions.
 
 osx-packager.pl - A legacy script to compile and package Mythtv and Mythfrontend up to v0.27
             and possibly later versions.  This script is currently not working for v31.
-
-macports_ansible
+```
+### macports_ansible
 ```
 This is directory contains the a packaging script for MythFrontend for MacOS and its README.txt
 instructions. The use of this script is documented on the mythtv wiki here:
@@ -30,3 +31,4 @@ compileMythtvAnsible.zsh - A script that creates a MythFrontend.app and .dmg fil
             and optionally mythplugins, bundles the necessary Support libraries and
             files into the application, and finally generates a .dmg file for distribution.
             This script uses both makebundle.sh and osx-bundler.pl.
+```
