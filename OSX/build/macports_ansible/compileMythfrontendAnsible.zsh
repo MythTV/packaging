@@ -92,11 +92,24 @@ do
 done
 
 # Specify mythtv version to pull from git
-VERS=${MYTHTV_VERS: -2}
+# if we're building on master - get release number from the git tags
+# otherwise extract it from the MYTHTV_VERS
+case $MYTHTV_VERS in 
+    master*)
+       VERS=$(git ls-remote --tags  git://github.com/MythTV/mythtv.git|tail -n 1)
+       VERS=${VERS##*/v}
+       VERS=$(echo $VERS|tr -dc '0-9')
+    ;;
+    *)
+      VERS=${MYTHTV_VERS: -2}
+    ;;
+esac
 REPO_DIR=~/mythtv-$VERS
 INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
 ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
+
+
 
 # setup some paths to make the following commands easier to understand
 SRC_DIR=$REPO_DIR/mythtv/mythtv
@@ -401,7 +414,7 @@ echo "------------ Updating application plist  ------------"
 # Update the plist
 gsed -i "8c\	<string>application.icns</string>" $APP_DIR/mythfrontend.app/Contents/Info.plist
 gsed -i "10c\	<string>org.osx-bundler.mythfrontend</string>\n	<key>CFBundleInfoDictionaryVersion</key>\n	<string>6.0</string>" $APP_DIR/mythfrontend.app/Contents/Info.plist
-gsed -i "14a\	<key>CFBundleShortVersionString</key>\n	<string>31</string>" $APP_DIR/mythfrontend.app/Contents/Info.plist
+gsed -i "14a\	<key>CFBundleShortVersionString</key>\n	<string>$VERS</string>" $APP_DIR/mythfrontend.app/Contents/Info.plist
 gsed -i "18c\	<string>osx-bundler</string>\n	<key>NSAppleScriptEnabled</key>\n	<string>NO</string>\n	<key>CFBundleGetInfoString</key>\n	<string></string>\n	<key>CFBundleVersion</key>\n	<string>1.0</string>\n	<key>NSHumanReadableCopyright</key>\n	<string>MythTV Team</string>" $APP_DIR/mythfrontend.app/Contents/Info.plist
 
 echo "------------ Generating .dmg file  ------------"
