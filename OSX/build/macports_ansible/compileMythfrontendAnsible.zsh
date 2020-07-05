@@ -109,8 +109,6 @@ INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
 ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
 
-
-
 # setup some paths to make the following commands easier to understand
 SRC_DIR=$REPO_DIR/mythtv/mythtv
 APP_DIR=$SRC_DIR/programs/mythfrontend
@@ -244,6 +242,7 @@ echo "------------ Configuring Mythtv ------------"
 # configure mythfrontend
 cd $SRC_DIR
 GIT_VERS=$(git rev-parse --short HEAD)
+export PYTHONPATH="$INSTALL_DIR/lib/$PYTHON/site-packages"
 ./configure --prefix=$INSTALL_DIR \
 			--runprefix=../Resources \
 			--enable-mac-bundle \
@@ -386,6 +385,17 @@ echo "------------ Copying mythtv share directory into executable  ------------"
 # copy in i18n, fonts, themes, plugin resources, etc from the install directory (share)
 mkdir -p $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv
 cp -r $INSTALL_DIR/share/mythtv/* $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/
+
+echo "------------ Copying mythtv lib/python* and lib/perl directory into executable  ------------"
+mkdir -p $APP_DIR/mythfrontend.app/Contents/Resources/lib
+cp -r $INSTALL_DIR/lib/python* $APP_DIR/mythfrontend.app/Contents/Resources/lib/
+cp -r $INSTALL_DIR/lib/perl* $APP_DIR/mythfrontend.app/Contents/Resources/lib/
+if [ ! -f $APP_DIR/mythfrontend.app/Contents/Resources/lib/python ]; then
+   cd $APP_DIR/mythfrontend.app/Contents/Resources/lib
+   ln -s python$PYTHON_DOT_VERS python
+   ln -s python$PYTHON_DOT_VERS python2.6
+   cd $APP_DIR
+fi
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
