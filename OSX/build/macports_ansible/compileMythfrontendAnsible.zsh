@@ -107,7 +107,6 @@ esac
 REPO_DIR=~/mythtv-$VERS
 INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
-PYTHON_INSTALL_LOC=/opt/local/Library/Frameworks/Python.framework/Versions/$PYTHON_DOT_VERS/lib/python$PYTHON_DOT_VERS/site-packages
 ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
 
 # setup some paths to make the following commands easier to understand
@@ -180,6 +179,11 @@ else
   export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
   $ANSIBLE_PLAYBOOK qt5.yml --ask-become-pass
 fi
+# get the version of python installed by MacPorts
+PYTHON_BIN=$(which python$PYTHON_DOT_VERS)
+# also get the location of the framework - /opt/local because this is where MacPorts stores its packages
+PYTHON_INSTALL_LOC=/opt/local/Library/Frameworks/Python.framework/Versions/$PYTHON_DOT_VERS/lib/python$PYTHON_DOT_VERS/site-packages
+
 
 echo "------------ Cloning / Updating Mythtv Git Repository ------------"
 # setup mythtv source from git
@@ -243,7 +247,6 @@ echo "------------ Configuring Mythtv ------------"
 # configure mythfrontend
 cd $SRC_DIR
 GIT_VERS=$(git rev-parse --short HEAD)
-export PYTHONPATH="$INSTALL_DIR/lib/$PYTHON/site-packages"
 ./configure --prefix=$INSTALL_DIR \
 			--runprefix=../Resources \
 			--enable-mac-bundle \
@@ -261,7 +264,7 @@ export PYTHONPATH="$INSTALL_DIR/lib/$PYTHON/site-packages"
 			--enable-libx265 \
 			--enable-libvpx \
 			--enable-bdjava \
-	 		--python=/opt/local/bin/python3.8
+	 		--python=$PYTHON_BIN
 
 echo "------------ Compiling Mythtv ------------"
 #compile mythfrontend
@@ -306,7 +309,7 @@ if $BUILD_PLUGINS; then
   			--disable-mythnetvision \
   			--disable-mythzoneminder \
   			--disable-mythzmserver \
-  	 		--python=/opt/local/bin/python3.8
+  	 		--python=PYTHON_BIN
 
   echo "------------ Compiling Mythplugins ------------"
   #compile mythfrontend
