@@ -94,7 +94,7 @@ done
 # Specify mythtv version to pull from git
 # if we're building on master - get release number from the git tags
 # otherwise extract it from the MYTHTV_VERS
-case $MYTHTV_VERS in 
+case $MYTHTV_VERS in
     master*)
        VERS=$(git ls-remote --tags  git://github.com/MythTV/mythtv.git|tail -n 1)
        VERS=${VERS##*/v}
@@ -107,6 +107,7 @@ esac
 REPO_DIR=~/mythtv-$VERS
 INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
+PYTHON_INSTALL_LOC=/opt/local/Library/Frameworks/Python.framework/Versions/$PYTHON_DOT_VERS/lib/python$PYTHON_DOT_VERS/site-packages
 ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
 
 # setup some paths to make the following commands easier to understand
@@ -386,7 +387,7 @@ echo "------------ Copying mythtv share directory into executable  ------------"
 mkdir -p $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv
 cp -r $INSTALL_DIR/share/mythtv/* $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/
 
-echo "------------ Copying mythtv lib/python* and lib/perl directory into executable  ------------"
+echo "------------ Copying mythtv lib/python* and lib/perl directory into application  ------------"
 mkdir -p $APP_DIR/mythfrontend.app/Contents/Resources/lib
 cp -r $INSTALL_DIR/lib/python* $APP_DIR/mythfrontend.app/Contents/Resources/lib/
 cp -r $INSTALL_DIR/lib/perl* $APP_DIR/mythfrontend.app/Contents/Resources/lib/
@@ -396,6 +397,17 @@ if [ ! -f $APP_DIR/mythfrontend.app/Contents/Resources/lib/python ]; then
    ln -s python$PYTHON_DOT_VERS python2.6
    cd $APP_DIR
 fi
+echo "------------ Copying additional python modules into application  ------------"
+PYTHON_APP_LOC="$APP_DIR/mythfrontend.app/Contents/Resources/lib/python$PYTHON_DOT_VERS/site-packages/"
+cp -r $PYTHON_INSTALL_LOC/future* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/requests* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/lxml* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/oauthlib* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/curl* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/simplejson* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/wheel* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/PyMySQL* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/pymysql* $PYTHON_APP_LOC
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
