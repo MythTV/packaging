@@ -397,7 +397,6 @@ cp -r $INSTALL_DIR/lib/perl* $APP_DIR/mythfrontend.app/Contents/Resources/lib/
 if [ ! -f $APP_DIR/mythfrontend.app/Contents/Resources/lib/python ]; then
    cd $APP_DIR/mythfrontend.app/Contents/Resources/lib
    ln -s python$PYTHON_DOT_VERS python
-   ln -s python$PYTHON_DOT_VERS python2.6
    cd $APP_DIR
 fi
 echo "------------ Copying additional python modules into application  ------------"
