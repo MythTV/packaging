@@ -8,7 +8,7 @@ makebundle.sh - Script to produce an application bundle with language translatio
             etc.  The script uses "osx-bundler.pl" to do most of the heavy lifting
 
 osx-bundler.pl - Perl driven general purpose application bundling utility.  This Application
-            Copies the library dependencies into the target application as frameworks linking
+            copies the library dependencies into the target application as frameworks linking
             the library paths internal to the application
 ```
 ### osx-packager
@@ -24,7 +24,7 @@ This is directory contains the a packaging script for MythFrontend for MacOS and
 instructions. The use of this script is documented on the mythtv wiki here:
 https://www.mythtv.org/wiki/Building_MythFrontend_on_Mac_OS_X
 
-compileMythtvAnsible.zsh - A script that creates a MythFrontend.app and .dmg files.
+compileMythfrontendAnsible.zsh - A script that creates a MythFrontend.app and .dmg files.
             The script downloads and installs any mythtv/mythplugins dependencies
             as specified in the mythtv ansible repo via MacPorts.  It also clones the
             appropriate ansible/mythtv/packaging git repos from github, compiles mythtv
