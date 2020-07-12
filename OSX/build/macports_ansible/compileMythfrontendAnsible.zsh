@@ -401,6 +401,7 @@ if [ ! -f $APP_DIR/mythfrontend.app/Contents/Resources/lib/python ]; then
 fi
 echo "------------ Copying additional python modules into application  ------------"
 PYTHON_APP_LOC="$APP_DIR/mythfrontend.app/Contents/Resources/lib/python$PYTHON_DOT_VERS/site-packages/"
+# These libraries were all "dependencies" in MacPorts for the ansible required python-libs
 cp -r $PYTHON_INSTALL_LOC/future* $PYTHON_APP_LOC
 cp -r $PYTHON_INSTALL_LOC/requests* $PYTHON_APP_LOC
 cp -r $PYTHON_INSTALL_LOC/lxml* $PYTHON_APP_LOC
@@ -410,6 +411,18 @@ cp -r $PYTHON_INSTALL_LOC/simplejson* $PYTHON_APP_LOC
 cp -r $PYTHON_INSTALL_LOC/wheel* $PYTHON_APP_LOC
 cp -r $PYTHON_INSTALL_LOC/PyMySQL* $PYTHON_APP_LOC
 cp -r $PYTHON_INSTALL_LOC/pymysql* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/chardet* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/idna* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/urllib3* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/certifi* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/blinker* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/cryptography* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/jwt* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/asn1crypto* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/six* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/cffi* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/pycparser* $PYTHON_APP_LOC
+cp -r $PYTHON_INSTALL_LOC/pycurl* $PYTHON_APP_LOC
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
