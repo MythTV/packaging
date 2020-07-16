@@ -389,6 +389,8 @@ echo "------------ Copying mythtv share directory into executable  ------------"
 # copy in i18n, fonts, themes, plugin resources, etc from the install directory (share)
 mkdir -p $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv
 cp -r $INSTALL_DIR/share/mythtv/* $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/
+# make the copied in metadata grabbers executable
+find $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/metadata/ -type f -iname "*.py" -exec chmod +x {} \;
 
 echo "------------ Copying mythtv lib/python* and lib/perl directory into application  ------------"
 mkdir -p $APP_DIR/mythfrontend.app/Contents/Resources/lib
