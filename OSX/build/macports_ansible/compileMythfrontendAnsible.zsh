@@ -423,6 +423,7 @@ cp -rp $PYTHON_INSTALL_LOC/six* $PYTHON_APP_LOC
 cp -rp $PYTHON_INSTALL_LOC/cffi* $PYTHON_APP_LOC
 cp -rp $PYTHON_INSTALL_LOC/pycparser* $PYTHON_APP_LOC
 cp -rp $PYTHON_INSTALL_LOC/pycurl* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/mysqlclient* $PYTHON_APP_LOC
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
