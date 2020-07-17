@@ -357,7 +357,7 @@ do
       helperBinFile=${helperBinFile%.app}
       echo "installing $helperBinFile into app"
       # copy into the app
-      cp -r $helperBinPath/Contents/MacOS/$helperBinFile $APP_DIR/mythfrontend.app/Contents/MacOS
+      cp -rp $helperBinPath/Contents/MacOS/$helperBinFile $APP_DIR/mythfrontend.app/Contents/MacOS
       # run osx-bundler.pl to setup and copy support libraries into app framework
       $OSX_PKGING_DIR/osx-bundler.pl  $APP_DIR/mythfrontend.app/Contents/MacOS/$helperBinFile
     ;;
@@ -388,14 +388,12 @@ fi
 echo "------------ Copying mythtv share directory into executable  ------------"
 # copy in i18n, fonts, themes, plugin resources, etc from the install directory (share)
 mkdir -p $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv
-cp -r $INSTALL_DIR/share/mythtv/* $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/
-# make the copied in metadata grabbers executable
-find $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/metadata/ -type f -iname "*.py" -exec chmod +x {} \;
+cp -rp $INSTALL_DIR/share/mythtv/* $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/
 
 echo "------------ Copying mythtv lib/python* and lib/perl directory into application  ------------"
 mkdir -p $APP_DIR/mythfrontend.app/Contents/Resources/lib
-cp -r $INSTALL_DIR/lib/python* $APP_DIR/mythfrontend.app/Contents/Resources/lib/
-cp -r $INSTALL_DIR/lib/perl* $APP_DIR/mythfrontend.app/Contents/Resources/lib/
+cp -rp $INSTALL_DIR/lib/python* $APP_DIR/mythfrontend.app/Contents/Resources/lib/
+cp -rp $INSTALL_DIR/lib/perl* $APP_DIR/mythfrontend.app/Contents/Resources/lib/
 if [ ! -f $APP_DIR/mythfrontend.app/Contents/Resources/lib/python ]; then
    cd $APP_DIR/mythfrontend.app/Contents/Resources/lib
    ln -s python$PYTHON_DOT_VERS python
@@ -404,27 +402,27 @@ fi
 echo "------------ Copying additional python modules into application  ------------"
 PYTHON_APP_LOC="$APP_DIR/mythfrontend.app/Contents/Resources/lib/python$PYTHON_DOT_VERS/site-packages/"
 # These libraries were all "dependencies" in MacPorts for the ansible required python-libs
-cp -r $PYTHON_INSTALL_LOC/future* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/requests* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/lxml* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/oauthlib* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/curl* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/simplejson* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/wheel* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/PyMySQL* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/pymysql* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/chardet* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/idna* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/urllib3* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/certifi* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/blinker* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/cryptography* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/jwt* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/asn1crypto* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/six* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/cffi* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/pycparser* $PYTHON_APP_LOC
-cp -r $PYTHON_INSTALL_LOC/pycurl* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/future* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/requests* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/lxml* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/oauthlib* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/curl* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/simplejson* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/wheel* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/PyMySQL* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/pymysql* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/chardet* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/idna* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/urllib3* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/certifi* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/blinker* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/cryptography* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/jwt* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/asn1crypto* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/six* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/cffi* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/pycparser* $PYTHON_APP_LOC
+cp -rp $PYTHON_INSTALL_LOC/pycurl* $PYTHON_APP_LOC
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts

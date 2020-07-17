@@ -1,4 +1,4 @@
-## Compiling Mythfrontend via Ansible and MacPorts
+# Compiling Mythfrontend via Ansible and MacPorts
 This is directory contains the a packaging script for MythFrontend for MacOS and its README.txt
 instructions. The use of this script is documented on the mythtv wiki here:
 https://www.mythtv.org/wiki/Building_MythFrontend_on_Mac_OS_X
@@ -14,13 +14,13 @@ compileMythtvAnsible.zsh - A script that creates a MythFrontend.app and .dmg fil
 Before running the script, the user must have Xcode, Xcode Command Line Tools, and MacPorts
 working on their system.
 
-### Step One: Install Xcode, Xcode Command Line Tools, and MacPorts
+## Step One: Install Xcode, Xcode Command Line Tools, and MacPorts
 Follow MacPorts' directions here: https://www.macports.org/install.php
 These instructions will walk you through installing Xcode, the Xcode Command Line Tools, and MacPorts.
 
 * Remember to run "sudo port -v selfupdate" after installing MacPorts to update the MacPorts repositories
 
-### Step Two: Run the compileMythFrontendAnsible.zsh Script
+## Step Two: Run the compileMythFrontendAnsible.zsh Script
 Run "compileMythFrontendAnsible.zsh".
 
 The script automatically performs the following steps:
@@ -35,3 +35,15 @@ The script automatically performs the following steps:
 1. Deploys QT to the compiled mythfrontend.app
 1. Copies the required dylibs, support data, and fonts into the app linking
 1. Packages mythfrontend.app into a .dmg file
+
+## Known Issues
+### Python Bindings:
+The internal python bindings for metadata downloads and other python pieces should work for anyone building on their own using this compile script.  If you distribute the application, those running the distributed application will not have a working set of metadata grabbers unless they  install (or symlink) a compatible version of python to the same path as the builder.  In the current default case, this means Python should be installed or symlinked to /opt/local/bin/python3.8
+
+To install the MacPorts version of Python 3.8, follow these instructions:
+
+1. [Install MacPorts](https://www.macports.org/install.php)
+1. Update MacPorts `sudo port selfupdate`
+1. Install Python 3.8  `sudo port install python38`
+
+Alternative, symlinking your preferred other python3 binary to /opt/local/bin/python3.8 may also work.
