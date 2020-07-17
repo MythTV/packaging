@@ -423,7 +423,15 @@ cp -rp $PYTHON_INSTALL_LOC/six* $PYTHON_APP_LOC
 cp -rp $PYTHON_INSTALL_LOC/cffi* $PYTHON_APP_LOC
 cp -rp $PYTHON_INSTALL_LOC/pycparser* $PYTHON_APP_LOC
 cp -rp $PYTHON_INSTALL_LOC/pycurl* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/mysqlclient* $PYTHON_APP_LOC
+# need to copy py-mysqlclient over to the app, but theres a chance that is may have been installed by either
+# MacPorts or Pip - if it exists, copy the MacPorts version over otherwise the pip version.
+if [ -f $PYTHON_INSTALL_LOC/mysqlclient* ]; then
+    cp -rp $PYTHON_INSTALL_LOC/mysqlclient* $PYTHON_APP_LOC
+    cp -rp $PYTHON_INSTALL_LOC/MySQLdb* $PYTHON_APP_LOC
+else
+    ~/Library/Python/$PYTHON_DOT_VERS/lib/python/site-packages/MySQLdb* $PYTHON_APP_LOC
+    ~/Library/Python/$PYTHON_DOT_VERS/lib/python/site-packages/mysqlclient* $PYTHON_APP_LOC
+fi
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
