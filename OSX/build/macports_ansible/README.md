@@ -49,7 +49,7 @@ To install the MacPorts version of Python 3.8, follow these instructions:
 Alternative, symlinking your preferred other python3 binary to /opt/local/bin/python3.8 may also work.
 
 # Why Build With MacPorts
-Currently, for MythTV builds, MacPorts has all of the necessary dependencies for compiling MythTV in it's repository. For this reason alone, it significantly simplifies getting all of the dependencies installed and working without the need to maintain countless download links and specific to macOS patched.
+Currently, for MythTV builds, MacPorts has all of the necessary dependencies for compiling MythTV in it's repository. For this reason alone, it significantly simplifies getting all of the dependencies installed and working without the need to maintain countless download links and specific to macOS patches.
 
 In the past I tried to build MythTV using both manual downloads and Homebrew. The manual install process was cumbersome and filled with too many macOS related patches that it was nearly impossible to keep under control.
 
