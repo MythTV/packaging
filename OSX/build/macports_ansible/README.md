@@ -27,7 +27,7 @@ The script automatically performs the following steps:
 1. Sets up the build directory structure (tries to mirror the mythtv dev team's structure)
 1. Installs ansible-playbook via MacPorts
 1. Clones the MythTV ansible git repository
-1. Installs MythTV compile requirements and their dependencies via ansible/macports
+1. Installs MythTV compile requirements and their dependencies va ansible/macports
 1. Clones the MythTV git repository, applying any user specified patches to mythtv or plugins
 1. Clones the MythTV Packaging git repository, applying any user specified patches
 1. Configures, builds, and installs MythTV to a temp directory
@@ -47,3 +47,14 @@ To install the MacPorts version of Python 3.8, follow these instructions:
 1. Install Python 3.8  `sudo port install python38`
 
 Alternative, symlinking your preferred other python3 binary to /opt/local/bin/python3.8 may also work.
+
+# Why Build With MacPorts
+Currently, for MythTV builds, MacPorts has all of the necessary dependencies for compiling MythTV in it's repository. For this reason alone, it significantly simplifies getting all of the dependencies installed and working without the need to maintain countless download links and specific to macOS patched.
+
+In the past I tried to build MythTV using both manual downloads and Homebrew. The manual install process was cumbersome and filled with too many macOS related patches that it was nearly impossible to keep under control.
+
+This lead me to use a macOS package manager. First I tried Homebew. Unfortunately, Homebrew's default QT install was missing Webkit (requiring a customer QT compile and install) and had mixed compatibility with some of the python mysql pieces.
+
+After much sunk time spent trying to get MythTV to compile on Homebrew, I switched over to MacPorts and got the dependencies installed in very short order. Seriously - they just worked.  
+
+If anyone is interested in trying the Homebrew route please do so. If you are successful - please make suggestions on how to update the compile script and ansible. The best way to do this is to use the mythtv [users mailing list](http://lists.mythtv.org/mailman/listinfo/mythtv-users) or [forums](https://forum.mythtv.org/).
