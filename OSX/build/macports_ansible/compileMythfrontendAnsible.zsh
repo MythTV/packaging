@@ -114,8 +114,8 @@ SRC_DIR=$REPO_DIR/mythtv/mythtv
 APP_DIR=$SRC_DIR/programs/mythfrontend
 PLUGINS_DIR=$REPO_DIR/mythtv/mythplugins
 THEME_DIR=$REPO_DIR/mythtv/myththemes
-PKGING_DIR=$REPO_DIR/mythtv/packaging/
-OSX_PKGING_DIR=$PKGING_DIR/OSX/build/
+PKGING_DIR=$REPO_DIR/mythtv/packaging
+OSX_PKGING_DIR=$PKGING_DIR/OSX/build
 PKG_CONFIG_SYSTEM_INCLUDE_PATH=/opt/local/include
 export PATH=/opt/local/lib/mysql57/bin:$PATH
 OS_VERS=$(/usr/bin/sw_vers -productVersion)
@@ -400,7 +400,7 @@ if [ ! -f $APP_DIR/mythfrontend.app/Contents/Resources/lib/python ]; then
    cd $APP_DIR
 fi
 echo "------------ Copying additional python modules into application  ------------"
-PYTHON_APP_LOC="$APP_DIR/mythfrontend.app/Contents/Resources/lib/python$PYTHON_DOT_VERS/site-packages/"
+PYTHON_APP_LOC="$APP_DIR/mythfrontend.app/Contents/Resources/lib/python$PYTHON_DOT_VERS/site-packages"
 # These libraries were all "dependencies" in MacPorts for the ansible required python-libs
 cp -rp $PYTHON_INSTALL_LOC/future* $PYTHON_APP_LOC
 cp -rp $PYTHON_INSTALL_LOC/requests* $PYTHON_APP_LOC
@@ -432,6 +432,12 @@ else
     ~/Library/Python/$PYTHON_DOT_VERS/lib/python/site-packages/MySQLdb* $PYTHON_APP_LOC
     ~/Library/Python/$PYTHON_DOT_VERS/lib/python/site-packages/mysqlclient* $PYTHON_APP_LOC
 fi
+# Now we need to make sure any python .so dependencies get copied into as a framework and linked
+for file in $(find $PYTHON_APP_LOC -name "*.so")
+  do
+    echo "installing $(basename $file) support libraries into app"
+    $OSX_PKGING_DIR/osx-bundler.pl $file $INSTALL_DIR/libs /opt/local/lib
+done
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
