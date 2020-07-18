@@ -116,8 +116,9 @@ PLUGINS_DIR=$REPO_DIR/mythtv/mythplugins
 THEME_DIR=$REPO_DIR/mythtv/myththemes
 PKGING_DIR=$REPO_DIR/mythtv/packaging
 OSX_PKGING_DIR=$PKGING_DIR/OSX/build
-PKG_CONFIG_SYSTEM_INCLUDE_PATH=/opt/local/include
-export PATH=/opt/local/lib/mysql57/bin:$PATH
+PKGMGR_INST_PATH=/opt/local
+PKG_CONFIG_SYSTEM_INCLUDE_PATH=$PKGMGR_INST_PATH/include
+export PATH=$PKGMGR_INST_PATH/lib/mysql57/bin:$PATH
 OS_VERS=$(/usr/bin/sw_vers -productVersion)
 
 echo "------------ Setting Up Directory Structure ------------"
@@ -181,8 +182,8 @@ else
 fi
 # get the version of python installed by MacPorts
 PYTHON_BIN=$(which python$PYTHON_DOT_VERS)
-# also get the location of the framework - /opt/local because this is where MacPorts stores its packages
-PYTHON_INSTALL_LOC=/opt/local/Library/Frameworks/Python.framework/Versions/$PYTHON_DOT_VERS/lib/python$PYTHON_DOT_VERS/site-packages
+# also get the location of the framework - $PKGMGR_INST_PATH because this is where MacPorts stores its packages
+PYTHON_INSTALL_LOC=$PKGMGR_INST_PATH/Library/Frameworks/Python.framework/Versions/$PYTHON_DOT_VERS/lib/python$PYTHON_DOT_VERS/site-packages
 
 
 echo "------------ Cloning / Updating Mythtv Git Repository ------------"
@@ -250,11 +251,11 @@ GIT_VERS=$(git rev-parse --short HEAD)
 ./configure --prefix=$INSTALL_DIR \
 			--runprefix=../Resources \
 			--enable-mac-bundle \
-			--qmake=/opt/local/libexec/qt5/bin/qmake \
+			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
 			--cc=clang \
 			--cxx=clang++ \
-			--extra-cxxflags='-I $SRC_DIR/external -I /opt/local/include' \
-			--extra-ldflags='-L $SRC_DIR/external -L /opt/local/lib' \
+			--extra-cxxflags='-I $SRC_DIR/external -I $PKGMGR_INST_PATH/include' \
+			--extra-ldflags='-L $SRC_DIR/external -L $PKGMGR_INST_PATH/lib' \
 			--disable-backend \
 			--disable-distcc \
 			--disable-firewire \
@@ -296,7 +297,7 @@ if $BUILD_PLUGINS; then
   cd $PLUGINS_DIR
   ./configure --prefix=$INSTALL_DIR \
   			--runprefix=../Resources \
-  			--qmake=/opt/local/libexec/qt5/bin/qmake \
+  			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
   			--cc=clang \
   			--cxx=clang++ \
   			--enable-mythgame \
@@ -313,7 +314,7 @@ if $BUILD_PLUGINS; then
 
   echo "------------ Compiling Mythplugins ------------"
   #compile mythfrontend
-  /opt/local/libexec/qt5/bin/qmake  mythplugins.pro
+  $PKGMGR_INST_PATH/libexec/qt5/bin/qmake  mythplugins.pro
   make
   # error out if make failed
   if [ $? != 0 ]; then
@@ -330,20 +331,20 @@ echo "------------ Deploying QT to Mythfrontend Executable ------------"
 # Package up the executable
 cd $APP_DIR
 # run macdeployqt
-/opt/local/libexec/qt5/bin/macdeployqt $APP_DIR/mythfrontend.app
+$PKGMGR_INST_PATH/libexec/qt5/bin/macdeployqt $APP_DIR/mythfrontend.app
 
 echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 # run osx-bundler.pl to copy all of the libraries into the bundle as Frameworks
 # we will need to run this utility multiple more time for any plugins and helper apps installed
-$OSX_PKGING_DIR/osx-bundler.pl  $APP_DIR/mythfrontend.app/Contents/MacOS/mythfrontend $SRC_DIR/libs/* $INSTALL_DIR/lib/ /opt/local/lib
+$OSX_PKGING_DIR/osx-bundler.pl  $APP_DIR/mythfrontend.app/Contents/MacOS/mythfrontend $SRC_DIR/libs/* $INSTALL_DIR/lib/ $PKGMGR_INST_PATH/lib
 
 echo "------------ Installing libcec into Mythfrontend.app ------------"
 # copy in libcec (missing for some reason...)
-cp /opt/local/lib/libcec.4.*.dylib $APP_DIR/mythfrontend.app/Contents/Frameworks/
+cp $PKGMGR_INST_PATH/lib/libcec.4.*.dylib $APP_DIR/mythfrontend.app/Contents/Frameworks/
 install_name_tool -add_rpath "@executable_path/../Frameworks/libcec.4.0.5.dylib" $APP_DIR/mythfrontend.app/Contents/MacOS/mythfrontend
-cp /opt/local/lib/libcec.4.dylib $APP_DIR/mythfrontend.app/Contents/Frameworks/
+cp $PKGMGR_INST_PATH/lib/libcec.4.dylib $APP_DIR/mythfrontend.app/Contents/Frameworks/
 install_name_tool -add_rpath "@executable_path/../Frameworks/libcec.4.dylib" $APP_DIR/mythfrontend.app/Contents/MacOS/mythfrontend
-cp /opt/local/lib/libcec.dylib $APP_DIR/mythfrontend.app/Contents/Frameworks/
+cp $PKGMGR_INST_PATH/lib/libcec.dylib $APP_DIR/mythfrontend.app/Contents/Frameworks/
 install_name_tool -add_rpath "@executable_path/../Resources/libcec.dylib" $APP_DIR/mythfrontend.app/Contents/MacOS/mythfrontend
 
 echo "------------ Installing additional mythtv utility executables into Mythfrontend.app  ------------"
@@ -436,13 +437,13 @@ fi
 for file in $(find $PYTHON_APP_LOC -name "*.so")
   do
     echo "installing $(basename $file) support libraries into app"
-    $OSX_PKGING_DIR/osx-bundler.pl $file $INSTALL_DIR/libs /opt/local/lib
+    $OSX_PKGING_DIR/osx-bundler.pl $file $INSTALL_DIR/libs $PKGMGR_INST_PATH/lib
 done
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
-cp /opt/local/share/fonts/dejavu-fonts/*.ttf $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/fonts/
-cp /opt/local/share/fonts/liberation-fonts/*.ttf $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/fonts/
+cp $PKGMGR_INST_PATH/share/fonts/dejavu-fonts/*.ttf $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/fonts/
+cp $PKGMGR_INST_PATH/share/fonts/liberation-fonts/*.ttf $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/fonts/
 
 echo "------------ Copying in Mythfrontend.app icon  ------------"
 # copy in the icon
