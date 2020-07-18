@@ -434,11 +434,11 @@ else
     ~/Library/Python/$PYTHON_DOT_VERS/lib/python/site-packages/mysqlclient* $PYTHON_APP_LOC
 fi
 # Now we need to make sure any python .so dependencies get copied into as a framework and linked
-for file in $(find $PYTHON_APP_LOC -name "*.so")
-  do
-    echo "installing $(basename $file) support libraries into app"
-    $OSX_PKGING_DIR/osx-bundler.pl $file $INSTALL_DIR/libs $PKGMGR_INST_PATH/lib
-done
+#for file in $(find $PYTHON_APP_LOC -name "*.so")
+#  do
+#    echo "installing $(basename $file) support libraries into app"
+#    $OSX_PKGING_DIR/osx-bundler.pl $file $INSTALL_DIR/libs $PKGMGR_INST_PATH/lib
+#done
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
