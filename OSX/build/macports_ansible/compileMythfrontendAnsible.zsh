@@ -18,6 +18,7 @@ Standard options:
   --version=MYTHTV_VERS                  Requested mythtv git repo (fixes/31)
 Build Options
   --update-git=UPDATE_GIT                Update git repositories to latest (true)
+  --skip-build=SKIP_BUILD                Skip configure and make - used when you just want to repackage (false)
 Patch Options
   --apply-patches=APPLY_PATCHES          Apply patches specified in additional arguments (false)
   --mythtv-patch-dir=MYTHTV_PATCH_DIR    Directory containing patch files to be applied to Mythtv
@@ -38,6 +39,7 @@ PYTHON_VERS="38"
 UPDATE_PORTS=false
 MYTHTV_VERS="fixes/31"
 UPDATE_GIT=true
+SKIP_BUILD=false
 SKIP_ANSIBLE=false
 APPLY_PATCHES=false
 MYTHTV_PATCH_DIR=""
@@ -60,6 +62,9 @@ do
       ;;
       --update-ports=*)
         UPDATE_PORTS="${i#*=}"
+      ;;
+      --skip-build=*)
+        SKIP_BUILD="${i#*=}"
       ;;
       --skip-ansible=*)
         SKIP_ANSIBLE="${i#*=}"
@@ -189,10 +194,16 @@ else
 fi
 # get the version of python installed by MacPorts
 PYTHON_BIN=$(which python$PYTHON_DOT_VERS)
+PYTHON_RUNTIME_BIN="./python$PYTHON_DOT_VERS"
 # also get the location of the framework - /opt/local because this is where MacPorts stores its packages
-PYTHON_INSTALL_LOC=$PKGMGR_INST_PATH/Library/Frameworks/Python.framework/Versions/$PYTHON_DOT_VERS/lib/python$PYTHON_DOT_VERS/site-packages
-# and the destination for where the python bits get copied into the application
-PYTHON_APP_LOC="$APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages"
+# and its site packages (JGH - delete me if the new hack works...)
+PYTHON_MACOS_FWRK=$PKGMGR_INST_PATH/Library/Frameworks/Python.framework
+PYTHON_MACOS_SP_LOC=$PYTHON_MACOS_FWRK/Versions/$PYTHON_DOT_VERS/lib/python$PYTHON_DOT_VERS/site-packages
+
+# and the destination for where the python bits get copied into the application framework and site_packages
+PYTHON_APP_FWRK=$APP_FMWK_DIR/Python.framework
+PYTHON_APP_SP_LOC="$APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages"
+
 
 echo "------------ Cloning / Updating Mythtv Git Repository ------------"
 # setup mythtv source from git
@@ -256,32 +267,35 @@ echo "------------ Configuring Mythtv ------------"
 # configure mythfrontend
 cd $SRC_DIR
 GIT_VERS=$(git rev-parse --short HEAD)
-./configure --prefix=$INSTALL_DIR \
-			--runprefix=../Resources \
-			--enable-mac-bundle \
-			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
-			--cc=clang \
-			--cxx=clang++ \
-			--extra-cxxflags="-I $SRC_DIR/external -I $PKGMGR_INST_PATH/include" \
-			--extra-ldflags="-L $SRC_DIR/external -L $PKGMGR_INST_PATH/lib" \
-			--disable-backend \
-			--disable-distcc \
-			--disable-firewire \
-			--enable-libmp3lame \
-			--enable-libxvid \
-			--enable-libx264 \
-			--enable-libx265 \
-			--enable-libvpx \
-			--enable-bdjava \
-	 		--python=$PYTHON_BIN
-
-echo "------------ Compiling Mythtv ------------"
-#compile mythfrontend
-make
-# error out if make failed
-if [ $? != 0 ]; then
-  echo "Compiling Mythtv failed" >&2
-  exit 1
+if $SKIP_BUILD; then
+  echo "Skipping mythtv ./configure and make"
+else
+    ./configure --prefix=$INSTALL_DIR \
+    			--runprefix=../Resources \
+    			--enable-mac-bundle \
+    			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
+    			--cc=clang \
+    			--cxx=clang++ \
+    			--extra-cxxflags="-I $SRC_DIR/external -I $PKGMGR_INST_PATH/include" \
+    			--extra-ldflags="-L $SRC_DIR/external -L $PKGMGR_INST_PATH/lib" \
+    			--disable-backend \
+    			--disable-distcc \
+    			--disable-firewire \
+    			--enable-libmp3lame \
+    			--enable-libxvid \
+    			--enable-libx264 \
+    			--enable-libx265 \
+    			--enable-libvpx \
+    			--enable-bdjava \
+    	 		--python=$PYTHON_BIN
+    echo "------------ Compiling Mythtv ------------"
+    #compile mythfrontend
+    make
+    # error out if make failed
+    if [ $? != 0 ]; then
+      echo "Compiling Mythtv failed" >&2
+      exit 1
+    fi
 fi
 echo "------------ Installing Mythtv ------------"
 # need to do a make install or macdeployqt will not copy everything in.
@@ -303,31 +317,35 @@ if $BUILD_PLUGINS; then
 
   # configure plugins
   cd $PLUGINS_DIR
-  ./configure --prefix=$INSTALL_DIR \
-  			--runprefix=../Resources \
-  			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
-  			--cc=clang \
-  			--cxx=clang++ \
-  			--enable-mythgame \
-  			--enable-mythmusic \
-   			--enable-fftw \
-  			--enable-cdio \
-  			--enable-mythnews \
-  			--enable-mythweather \
-  			--disable-mytharchive \
-  			--disable-mythnetvision \
-  			--disable-mythzoneminder \
-  			--disable-mythzmserver \
-  	 		--python=PYTHON_BIN
+  if $SKIP_BUILD; then
+    echo "Skipping mythplugins compile and make"
 
-  echo "------------ Compiling Mythplugins ------------"
-  #compile mythfrontend
-  $PKGMGR_INST_PATH/libexec/qt5/bin/qmake  mythplugins.pro
-  make
-  # error out if make failed
-  if [ $? != 0 ]; then
-    echo "Plugins compile failed" >&2
-    exit 1
+  else
+    ./configure --prefix=$INSTALL_DIR \
+      			--runprefix=../Resources \
+      			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
+      			--cc=clang \
+      			--cxx=clang++ \
+      			--enable-mythgame \
+      			--enable-mythmusic \
+       			--enable-fftw \
+      			--enable-cdio \
+      			--enable-mythnews \
+      			--enable-mythweather \
+      			--disable-mytharchive \
+      			--disable-mythnetvision \
+      			--disable-mythzoneminder \
+      			--disable-mythzmserver \
+      	 		--python=$PYTHON_BIN
+    echo "------------ Compiling Mythplugins ------------"
+    #compile mythfrontend
+    $PKGMGR_INST_PATH/libexec/qt5/bin/qmake  mythplugins.pro
+    make
+    # error out if make failed
+    if [ $? != 0 ]; then
+      echo "Plugins compile failed" >&2
+      exit 1
+    fi
   fi
   echo "------------ Installing Mythplugins ------------"
   make install
@@ -344,7 +362,7 @@ $PKGMGR_INST_PATH/libexec/qt5/bin/macdeployqt $APP_DIR/mythfrontend.app
 echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 # run osx-bundler.pl to copy all of the libraries into the bundle as Frameworks
 # we will need to run this utility multiple more time for any plugins and helper apps installed
-$OSX_PKGING_DIR/osx-bundler.pl  $APP_EXE_DIR/mythfrontend $SRC_DIR/libs/* $INSTALL_DIR/lib/ $PKGMGR_INST_PATH/lib
+$OSX_PKGING_DIR/osx-bundler.pl $APP_EXE_DIR/mythfrontend $SRC_DIR/libs/* $INSTALL_DIR/lib/ $PKGMGR_INST_PATH/lib
 
 echo "------------ Installing libcec into Mythfrontend.app ------------"
 # copy in libcec (missing for some reason...)
@@ -408,44 +426,38 @@ if [ ! -f $APP_RSRC_DIR/lib/python ]; then
    ln -s python$PYTHON_DOT_VERS python
    cd $APP_DIR
 fi
-echo "------------ Copying additional python modules into application  ------------"
+
+#echo "------------ Deploying python into application  ------------"
+# Copy in all site-packages from the python install.  This is a bit bruteforce.
+# A smarter way would be to track down all of the dependencies...
 # These libraries were all "dependencies" in MacPorts for the ansible required python-libs
-cp -rp $PYTHON_INSTALL_LOC/future* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/requests* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/lxml* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/oauthlib* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/curl* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/simplejson* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/wheel* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/PyMySQL* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/pymysql* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/chardet* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/idna* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/urllib3* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/certifi* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/blinker* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/cryptography* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/jwt* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/asn1crypto* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/six* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/cffi* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/pycparser* $PYTHON_APP_LOC
-cp -rp $PYTHON_INSTALL_LOC/pycurl* $PYTHON_APP_LOC
-# need to copy py-mysqlclient over to the app, but theres a chance that is may have been installed by either
-# MacPorts or Pip - if it exists, copy the MacPorts version over otherwise the pip version.
-if [ -d $PYTHON_INSTALL_LOC/MySQLdb ]; then
-    cp -rp $PYTHON_INSTALL_LOC/mysqlclient* $PYTHON_APP_LOC
-    cp -rp $PYTHON_INSTALL_LOC/MySQLdb* $PYTHON_APP_LOC
-else
-    ~/Library/Python/$PYTHON_DOT_VERS/lib/python/site-packages/MySQLdb* $PYTHON_APP_LOC
-    ~/Library/Python/$PYTHON_DOT_VERS/lib/python/site-packages/mysqlclient* $PYTHON_APP_LOC
-fi
+#for pythonPack in $PYTHON_MACOS_SP_LOC/*
+#do
+#  case $pythonPack in
+#    *ansible*|*pip*)
+#      # skip these files since we don't need everything...
+#      continue
+#    ;;
+#    *)
+#      cp -rp $pythonPack $PYTHON_APP_SP_LOC
+#    ;;
+#  esac
+#done
+#
 # Now we need to make sure any python .so dependencies get copied into as a framework and linked
-#for file in $(find $PYTHON_APP_LOC -name "*.so")
+#for file in $(find $PYTHON_APP_SP_LOC -name "*.so")
 #  do
 #    echo "installing $(basename $file) support libraries into app"
 #    $OSX_PKGING_DIR/osx-bundler.pl $file $INSTALL_DIR/libs /opt/local/lib
+#    install_name_tool -add_rpath "@executable_path/../${file##*Contents}Resources/lib/python3.8/site-packages/" $APP_EXE_DIR/mythfrontend
+#    install_name_tool -add_rpath "@executable_path/../${file##*Contents}Resources/lib/python3.8/site-packages/" $APP_EXE_DIR/mythmetadatalookup
 #done
+#
+# need to copy py-mysqlclient over to the app,if installed by Pip.
+#if [ ! -d $PYTHON_APP_SP_LOC/MySQLdb ]; then
+#    ~/Library/Python/$PYTHON_DOT_VERS/lib/python/site-packages/MySQLdb* $
+#    ~/Library/Python/$PYTHON_DOT_VERS/lib/python/site-packages/mysqlclient* $
+#fi
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
