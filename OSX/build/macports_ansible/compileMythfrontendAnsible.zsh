@@ -108,18 +108,24 @@ REPO_DIR=~/mythtv-$VERS
 INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
 ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
+PKGMGR_INST_PATH=/opt/local
+PKG_CONFIG_SYSTEM_INCLUDE_PATH=/opt/local/include
 
 # setup some paths to make the following commands easier to understand
 SRC_DIR=$REPO_DIR/mythtv/mythtv
-APP_DIR=$SRC_DIR/programs/mythfrontend
 PLUGINS_DIR=$REPO_DIR/mythtv/mythplugins
 THEME_DIR=$REPO_DIR/mythtv/myththemes
 PKGING_DIR=$REPO_DIR/mythtv/packaging
 OSX_PKGING_DIR=$PKGING_DIR/OSX/build
-#PKGMGR_INST_PATH=/opt/local
-PKG_CONFIG_SYSTEM_INCLUDE_PATH=/opt/local/include
-export PATH=/opt/local/lib/mysql57/bin:$PATH
+export PATH=$PKGMGR_INST_PATH/lib/mysql57/bin:$PATH
 OS_VERS=$(/usr/bin/sw_vers -productVersion)
+
+# macOS internal appliction patchesAPP_DIR=$SRC_DIR/programs/mythfrontend
+APP_RSRC_DIR=$APP_DIR/mythfrontend.app/Contents/Resources
+APP_FMWK_DIR=$APP_DIR/mythfrontend.app/Contents/Frameworks
+APP_EXE_DIR=$APP_DIR/mythfrontend.app/Contents/MacOS
+APP_PLUGINS_DIR=$APP_DIR/mythfrontend.app/Contents/PlugIns/
+APP_INFO_FILE=$APP_DIR/mythfrontend.app/Contents/Info.plist
 
 echo "------------ Setting Up Directory Structure ------------"
 # setup the working directory structure
@@ -183,8 +189,9 @@ fi
 # get the version of python installed by MacPorts
 PYTHON_BIN=$(which python$PYTHON_DOT_VERS)
 # also get the location of the framework - /opt/local because this is where MacPorts stores its packages
-PYTHON_INSTALL_LOC=/opt/local/Library/Frameworks/Python.framework/Versions/$PYTHON_DOT_VERS/lib/python$PYTHON_DOT_VERS/site-packages
-
+PYTHON_INSTALL_LOC=$PKGMGR_INST_PATH/Library/Frameworks/Python.framework/Versions/$PYTHON_DOT_VERS/lib/python$PYTHON_DOT_VERS/site-packages
+# and the destination for where the python bits get copied into the application
+PYTHON_APP_LOC="$APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages"
 
 echo "------------ Cloning / Updating Mythtv Git Repository ------------"
 # setup mythtv source from git
@@ -251,11 +258,11 @@ GIT_VERS=$(git rev-parse --short HEAD)
 ./configure --prefix=$INSTALL_DIR \
 			--runprefix=../Resources \
 			--enable-mac-bundle \
-			--qmake=/opt/local/libexec/qt5/bin/qmake \
+			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
 			--cc=clang \
 			--cxx=clang++ \
-			--extra-cxxflags='-I $SRC_DIR/external -I /opt/local/include' \
-			--extra-ldflags='-L $SRC_DIR/external -L /opt/local/lib' \
+			--extra-cxxflags="-I $SRC_DIR/external -I $PKGMGR_INST_PATH/include" \
+			--extra-ldflags="-L $SRC_DIR/external -L $PKGMGR_INST_PATH/lib" \
 			--disable-backend \
 			--disable-distcc \
 			--disable-firewire \
@@ -297,7 +304,7 @@ if $BUILD_PLUGINS; then
   cd $PLUGINS_DIR
   ./configure --prefix=$INSTALL_DIR \
   			--runprefix=../Resources \
-  			--qmake=/opt/local/libexec/qt5/bin/qmake \
+  			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
   			--cc=clang \
   			--cxx=clang++ \
   			--enable-mythgame \
@@ -314,7 +321,7 @@ if $BUILD_PLUGINS; then
 
   echo "------------ Compiling Mythplugins ------------"
   #compile mythfrontend
-  /opt/local/libexec/qt5/bin/qmake  mythplugins.pro
+  $PKGMGR_INST_PATH/libexec/qt5/bin/qmake  mythplugins.pro
   make
   # error out if make failed
   if [ $? != 0 ]; then
@@ -331,21 +338,21 @@ echo "------------ Deploying QT to Mythfrontend Executable ------------"
 # Package up the executable
 cd $APP_DIR
 # run macdeployqt
-/opt/local/libexec/qt5/bin/macdeployqt $APP_DIR/mythfrontend.app
+$PKGMGR_INST_PATH/libexec/qt5/bin/macdeployqt $APP_DIR/mythfrontend.app
 
 echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 # run osx-bundler.pl to copy all of the libraries into the bundle as Frameworks
 # we will need to run this utility multiple more time for any plugins and helper apps installed
-$OSX_PKGING_DIR/osx-bundler.pl  $APP_DIR/mythfrontend.app/Contents/MacOS/mythfrontend $SRC_DIR/libs/* $INSTALL_DIR/lib/ /opt/local/lib
+$OSX_PKGING_DIR/osx-bundler.pl  $APP_EXE_DIR/mythfrontend $SRC_DIR/libs/* $INSTALL_DIR/lib/ $PKGMGR_INST_PATH/lib
 
 echo "------------ Installing libcec into Mythfrontend.app ------------"
 # copy in libcec (missing for some reason...)
-cp /opt/local/lib/libcec.4.*.dylib $APP_DIR/mythfrontend.app/Contents/Frameworks/
-install_name_tool -add_rpath "@executable_path/../Frameworks/libcec.4.0.5.dylib" $APP_DIR/mythfrontend.app/Contents/MacOS/mythfrontend
-cp /opt/local/lib/libcec.4.dylib $APP_DIR/mythfrontend.app/Contents/Frameworks/
-install_name_tool -add_rpath "@executable_path/../Frameworks/libcec.4.dylib" $APP_DIR/mythfrontend.app/Contents/MacOS/mythfrontend
-cp /opt/local/lib/libcec.dylib $APP_DIR/mythfrontend.app/Contents/Frameworks/
-install_name_tool -add_rpath "@executable_path/../Resources/libcec.dylib" $APP_DIR/mythfrontend.app/Contents/MacOS/mythfrontend
+cp $PKGMGR_INST_PATH/lib/libcec.4.*.dylib $APP_FMWK_DIR
+install_name_tool -add_rpath "@executable_path/../Frameworks/libcec.4.0.5.dylib" $APP_EXE_DIR/mythfrontend
+cp $PKGMGR_INST_PATH/lib/libcec.4.dylib $APP_FMWK_DIR
+install_name_tool -add_rpath "@executable_path/../Frameworks/libcec.4.dylib" $APP_EXE_DIR/mythfrontend
+cp $PKGMGR_INST_PATH/lib/libcec.dylib $APP_FMWK_DIR
+install_name_tool -add_rpath "@executable_path/../Resources/libcec.dylib" $APP_EXE_DIR/mythfrontend
 
 echo "------------ Installing additional mythtv utility executables into Mythfrontend.app  ------------"
 # loop over the compiler apps copying in the desired ones for mythfrontend
@@ -358,9 +365,9 @@ do
       helperBinFile=${helperBinFile%.app}
       echo "installing $helperBinFile into app"
       # copy into the app
-      cp -rp $helperBinPath/Contents/MacOS/$helperBinFile $APP_DIR/mythfrontend.app/Contents/MacOS
+      cp -rp $helperBinPath/Contents/MacOS/$helperBinFile $APP_EXE_DIR
       # run osx-bundler.pl to setup and copy support libraries into app framework
-      $OSX_PKGING_DIR/osx-bundler.pl  $APP_DIR/mythfrontend.app/Contents/MacOS/$helperBinFile
+      $OSX_PKGING_DIR/osx-bundler.pl  $APP_EXE_DIR/$helperBinFile
     ;;
     *)
       continue
@@ -380,28 +387,27 @@ if $BUILD_PLUGINS; then
   do
       plugFileName=$(basename $plugFilePath)
       echo "installing $plugFileName into app"
-      cp $plugFilePath $APP_DIR/mythfrontend.app/Contents/PlugIns/
+      cp $plugFilePath $APP_PLUGINS_DIR
       # run osx-bundler.pl to setup and copy support libraries into app framework
-      $OSX_PKGING_DIR/osx-bundler.pl  $APP_DIR/mythfrontend.app/Contents/PlugIns/$plugFileName $INSTALL_DIR/libs
+      $OSX_PKGING_DIR/osx-bundler.pl  $APP_PLUGINS_DIR/$plugFileName $INSTALL_DIR/libs
   done
 fi
 
 echo "------------ Copying mythtv share directory into executable  ------------"
 # copy in i18n, fonts, themes, plugin resources, etc from the install directory (share)
-mkdir -p $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv
-cp -rp $INSTALL_DIR/share/mythtv/* $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/
+mkdir -p $APP_RSRC_DIR/share/mythtv
+cp -rp $INSTALL_DIR/share/mythtv/* $APP_RSRC_DIR/share/mythtv/
 
 echo "------------ Copying mythtv lib/python* and lib/perl directory into application  ------------"
-mkdir -p $APP_DIR/mythfrontend.app/Contents/Resources/lib
-cp -rp $INSTALL_DIR/lib/python* $APP_DIR/mythfrontend.app/Contents/Resources/lib/
-cp -rp $INSTALL_DIR/lib/perl* $APP_DIR/mythfrontend.app/Contents/Resources/lib/
-if [ ! -f $APP_DIR/mythfrontend.app/Contents/Resources/lib/python ]; then
-   cd $APP_DIR/mythfrontend.app/Contents/Resources/lib
+mkdir -p $APP_RSRC_DIR/lib
+cp -rp $INSTALL_DIR/lib/python* $APP_RSRC_DIR/lib/
+cp -rp $INSTALL_DIR/lib/perl* $APP_RSRC_DIR/lib/
+if [ ! -f $APP_RSRC_DIR/lib/python ]; then
+   cd $APP_RSRC_DIR/lib
    ln -s python$PYTHON_DOT_VERS python
    cd $APP_DIR
 fi
 echo "------------ Copying additional python modules into application  ------------"
-PYTHON_APP_LOC="$APP_DIR/mythfrontend.app/Contents/Resources/lib/python$PYTHON_DOT_VERS/site-packages"
 # These libraries were all "dependencies" in MacPorts for the ansible required python-libs
 cp -rp $PYTHON_INSTALL_LOC/future* $PYTHON_APP_LOC
 cp -rp $PYTHON_INSTALL_LOC/requests* $PYTHON_APP_LOC
@@ -442,33 +448,33 @@ fi
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
-cp /opt/local/share/fonts/dejavu-fonts/*.ttf $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/fonts/
-cp /opt/local/share/fonts/liberation-fonts/*.ttf $APP_DIR/mythfrontend.app/Contents/Resources/share/mythtv/fonts/
+cp $PKGMGR_INST_PATH/share/fonts/dejavu-fonts/*.ttf $APP_RSRC_DIR/share/mythtv/fonts/
+cp $PKGMGR_INST_PATH/share/fonts/liberation-fonts/*.ttf $APP_RSRC_DIR/share/mythtv/fonts/
 
 echo "------------ Copying in Mythfrontend.app icon  ------------"
 # copy in the icon
-cp mythfrontend.icns $APP_DIR/mythfrontend.app/Contents/Resources/application.icns
+cp mythfrontend.icns $APP_RSRC_DIR/application.icns
 
 echo "------------ Add symbolic link structure for copied in files  ------------"
 # make some symbolic links to match past working copies
-cd $APP_DIR/mythfrontend.app/Contents/MacOS
+cd $APP_EXE_DIR
 if $BUILD_PLUGINS; then
   ln -s ../PlugIns/sqldrivers .
 fi
-cd $APP_DIR/mythfrontend.app/Contents/Resources
+cd $APP_RSRC_DIR
 ln -s ../MacOS bin
 if $BUILD_PLUGINS; then
-  mkdir -p $APP_DIR/mythfrontend.app/Contents/Resources/lib/mythtv
-  cd $APP_DIR/mythfrontend.app/Contents/Resources/lib/mythtv
+  mkdir -p $APP_RSRC_DIR/lib/mythtv
+  cd $APP_RSRC_DIR/lib/mythtv
   ln -s ../../../PlugIns plugins
 fi
 
 echo "------------ Updating application plist  ------------"
 # Update the plist
-gsed -i "8c\	<string>application.icns</string>" $APP_DIR/mythfrontend.app/Contents/Info.plist
-gsed -i "10c\	<string>org.osx-bundler.mythfrontend</string>\n	<key>CFBundleInfoDictionaryVersion</key>\n	<string>6.0</string>" $APP_DIR/mythfrontend.app/Contents/Info.plist
-gsed -i "14a\	<key>CFBundleShortVersionString</key>\n	<string>$VERS</string>" $APP_DIR/mythfrontend.app/Contents/Info.plist
-gsed -i "18c\	<string>osx-bundler</string>\n	<key>NSAppleScriptEnabled</key>\n	<string>NO</string>\n	<key>CFBundleGetInfoString</key>\n	<string></string>\n	<key>CFBundleVersion</key>\n	<string>1.0</string>\n	<key>NSHumanReadableCopyright</key>\n	<string>MythTV Team</string>" $APP_DIR/mythfrontend.app/Contents/Info.plist
+gsed -i "8c\	<string>application.icns</string>" $APP_INFO_FILE
+gsed -i "10c\	<string>org.osx-bundler.mythfrontend</string>\n	<key>CFBundleInfoDictionaryVersion</key>\n	<string>6.0</string>" $APP_INFO_FILE
+gsed -i "14a\	<key>CFBundleShortVersionString</key>\n	<string>$VERS</string>" $APP_INFO_FILE
+gsed -i "18c\	<string>osx-bundler</string>\n	<key>NSAppleScriptEnabled</key>\n	<string>NO</string>\n	<key>CFBundleGetInfoString</key>\n	<string></string>\n	<key>CFBundleVersion</key>\n	<string>1.0</string>\n	<key>NSHumanReadableCopyright</key>\n	<string>MythTV Team</string>" $APP_INFO_FILE
 
 echo "------------ Generating .dmg file  ------------"
 # Package up the build
