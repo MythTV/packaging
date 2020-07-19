@@ -120,7 +120,8 @@ OSX_PKGING_DIR=$PKGING_DIR/OSX/build
 export PATH=$PKGMGR_INST_PATH/lib/mysql57/bin:$PATH
 OS_VERS=$(/usr/bin/sw_vers -productVersion)
 
-# macOS internal appliction patchesAPP_DIR=$SRC_DIR/programs/mythfrontend
+# macOS internal appliction patches
+APP_DIR=$SRC_DIR/programs/mythfrontend
 APP_RSRC_DIR=$APP_DIR/mythfrontend.app/Contents/Resources
 APP_FMWK_DIR=$APP_DIR/mythfrontend.app/Contents/Frameworks
 APP_EXE_DIR=$APP_DIR/mythfrontend.app/Contents/MacOS
