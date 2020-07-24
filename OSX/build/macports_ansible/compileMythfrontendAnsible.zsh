@@ -404,12 +404,26 @@ $OSX_PKGING_DIR/osx-bundler.pl $APP_EXE_DIR/mythfrontend $SRC_DIR/libs/* $INSTAL
 
 echo "------------ Installing libcec into Mythfrontend.app ------------"
 # copy in libcec (missing for some reason...)
-cp $PKGMGR_INST_PATH/lib/libcec.4.*.dylib $APP_FMWK_DIR
-install_name_tool -add_rpath "@executable_path/../Frameworks/libcec.4.0.5.dylib" $APP_EXE_DIR/mythfrontend
-cp $PKGMGR_INST_PATH/lib/libcec.4.dylib $APP_FMWK_DIR
-install_name_tool -add_rpath "@executable_path/../Frameworks/libcec.4.dylib" $APP_EXE_DIR/mythfrontend
-cp $PKGMGR_INST_PATH/lib/libcec.dylib $APP_FMWK_DIR
-install_name_tool -add_rpath "@executable_path/../Resources/libcec.dylib" $APP_EXE_DIR/mythfrontend
+cd $APP_FMWK_DIR
+# loop over the installed versions of libcec and copy them in
+for libcecFile in $PKGMGR_INST_PATH/lib/*libcec*.dylib; do
+  # make sure its a file and not a symlink
+  if [ -f $libcecFile ] && [ ! -h $libcecFile ]; then
+    libcecNewFile=$APP_FMWK_DIR/$(basename $libcecFile)
+    # extract out major version number
+    LIBCECVERS=${$(basename $libcecFile)#"libcec."}
+    LIBCECVERS=${LIBCECVERS%%.*}
+    # copy and link the library
+    cp -p $libcecFile $libcecNewFile
+    ln -s $libcecNewFile libcec.dylib
+    ln -s $libcecNewFile libcec.$LIBCECVERS.dylib
+    # update the library to link to the app the installed dylibs
+    $OSX_PKGING_DIR/osx-bundler.pl $libcecNewFile $PKGMGR_INST_PATH/lib
+    # make the application aware of libcec
+    install_name_tool -add_rpath "@executable_path/../Frameworks/$(basename $libcecNewFile)" $APP_EXE_DIR/mythfrontend
+  fi
+done
+cd $APP_DIR
 
 echo "------------ Installing additional mythtv utility executables into Mythfrontend.app  ------------"
 # loop over the compiler apps copying in the desired ones for mythfrontend
