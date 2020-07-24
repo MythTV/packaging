@@ -277,6 +277,23 @@ GIT_VERS=$(git rev-parse --short HEAD)
 if $SKIP_BUILD; then
   echo "    Skipping mythtv ./configure and make"
 else
+    # At runtime we need the mythtv apps to point to the interal python installe
+    # This hack tells the application to look internally running that version of python
+    PYTHON_APP_BIN=Mythfrontend.app/Contents/MacOS/python
+    if [ ! -L $PYTHON_APP_BIN ]; then
+      # Declare an array of string with type
+      declare -a pythonFakePaths=("$SRC_DIR" \
+                              "$SRC_DIR/bindings/python"\
+                              "$SRC_DIR/programs/scripts")
+
+      # Iterate the string array using for loop
+      for val in ${pythonFakePaths[@]}; do
+        cd $val
+        mkdir -p "./Mythfrontend.app/Contents/MacOS"
+        ln -s $PYTHON_BIN $PYTHON_APP_BIN
+      done
+      cd $SRC_DIR
+    fi
     ./configure --prefix=$INSTALL_DIR \
     			--runprefix=../Resources \
     			--enable-mac-bundle \
@@ -294,7 +311,7 @@ else
     			--enable-libx265 \
     			--enable-libvpx \
     			--enable-bdjava \
-    	 		--python=$PYTHON_BIN
+    	 		--python=$PYTHON_APP_BIN
     echo "------------ Compiling Mythtv ------------"
     #compile mythfrontend
     make
@@ -327,6 +344,21 @@ if $BUILD_PLUGINS; then
     echo "    Skipping mythplugins compile and make"
 
   else
+    # At runtime we need the mythtv apps to point to the interal python installe
+    # This hack tells the application to look internally running that version of python
+    PYTHON_APP_BIN=Mythfrontend.app/Contents/MacOS/python
+    if [ ! -L $PYTHON_APP_BIN ]; then
+      # Declare an array of string with type
+      declare -a pythonFakePaths=("$PLUGINS_DIR")
+
+      # Iterate the string array using for loop
+      for val in ${pythonFakePaths[@]}; do
+        cd $val
+        mkdir -p "./Mythfrontend.app/Contents/MacOS"
+        ln -s $PYTHON_BIN $PYTHON_APP_BIN
+      done
+      cd $PLUGINS_DIR
+    fi
     ./configure --prefix=$INSTALL_DIR \
       			--runprefix=../Resources \
       			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
@@ -342,7 +374,7 @@ if $BUILD_PLUGINS; then
       			--disable-mythnetvision \
       			--disable-mythzoneminder \
       			--disable-mythzmserver \
-      	 		--python=$PYTHON_BIN
+      	 		--python=$PYTHON_APP_BIN
     echo "------------ Compiling Mythplugins ------------"
     #compile mythfrontend
     $PKGMGR_INST_PATH/libexec/qt5/bin/qmake  mythplugins.pro
@@ -431,37 +463,44 @@ if [ ! -f $APP_RSRC_DIR/lib/python ]; then
    cd $APP_DIR
 fi
 
-#echo "------------ Deploying python into application  ------------"
-# Copy in all site-packages from the python install.  This is a bit bruteforce.
-# A smarter way would be to track down all of the dependencies...
-# These libraries were all "dependencies" in MacPorts for the ansible required python-libs
-#for pythonPack in $PYTHON_MACOS_SP_LOC/*
-#do
-#  case $pythonPack in
-#    *ansible*|*pip*)
-#      # skip these files since we don't need everything...
-#      continue
-#    ;;
-#    *)
-#      cp -rp $pythonPack $PYTHON_APP_SP_LOC
-#    ;;
-#  esac
-#done
-#
-# Now we need to make sure any python .so dependencies get copied into as a framework and linked
-#for file in $(find $PYTHON_APP_SP_LOC -name "*.so")
-#  do
-#    echo "installing $(basename $file) support libraries into app"
-#    $OSX_PKGING_DIR/osx-bundler.pl $file $INSTALL_DIR/libs /opt/local/lib
-#    install_name_tool -add_rpath "@executable_path/../${file##*Contents}Resources/lib/python3.8/site-packages/" $APP_EXE_DIR/mythfrontend
-#    install_name_tool -add_rpath "@executable_path/../${file##*Contents}Resources/lib/python3.8/site-packages/" $APP_EXE_DIR/mythmetadatalookup
-#done
-#
-# need to copy py-mysqlclient over to the app,if installed by Pip.
-#if [ ! -d $PYTHON_APP_SP_LOC/MySQLdb ]; then
-#    ~/Library/Python/$PYTHON_DOT_VERS/lib/python/site-packages/MySQLdb* $
-#    ~/Library/Python/$PYTHON_DOT_VERS/lib/python/site-packages/mysqlclient* $
-#fi
+echo "------------ Deploying python packages into application  ------------"
+# make an application from tmdb3 to package up python and the correct support libraries
+mkdir -p $APP_DIR/PYTHON_APP
+export PYTHONPATH=$INSTALL_DIR/lib/python$PYTHON_DOT_VERS/site-packages
+cd $APP_DIR/PYTHON_APP
+if [ -f setup.py ]; then
+  rm setup.py
+fi
+echo "    Creating a temporary application from tmdb3.py"
+# in order to get python embedded in the application we're going to make a temporyary application
+# from one of the python scripts (tmdb3) which will copy in all the required libraries for
+# running and will make a standalong python executable not tied to the system
+$PY2APPLET_BIN -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-setup $INSTALL_DIR/share/mythtv/metadata/Movie/tmdb3.py
+$PYTHON_BIN setup.py -q py2app 2>&1 > /dev/null
+# now we need to copy over the pythong app's pieces into the mythfrontend.app to get it working
+echo "    Copying in Python Framework libraries"
+cd $APP_DIR/PYTHON_APP/dist/tmdb3.app
+cp -rnp Contents/Frameworks/* $APP_DIR/mythfrontend.app/Contents/Frameworks/
+echo "    Copying in Python Binary"
+cp -p Contents/MacOS/python $APP_DIR/mythfrontend.app/Contents/MacOS/
+echo "    Copying in Python Resources"
+cp -rnp Contents/Resources/* $APP_DIR/mythfrontend.app/Contents/Resources/
+rm -Rf
+cd $APP_DIR
+# clean up temp application
+rm -Rf PYTHON_APP
+
+echo "------------ Replace application perl/python paths to relative paths inside the application   ------------"
+# mythtv "fixes" the sheband in all python scripts to an absolute path on the compiling system.  We need to
+# change this to a relative path pointint internal to the application.
+# Note - when MacOS apps run, their starting path is the path as the directory the .app is stored in
+cd $APP_RSRC_DIR/share/mythtv/metadata
+# edit the items that point to INSTALL_DIR
+sedSTR=s#$INSTALL_DIR#Mythfrontend.app/Contents/Resources#g
+grep -rlI $INSTALL_DIR $APP_RSRC_DIR | xargs gsed -i $sedSTR
+# edit those that point to $SRC_DIR/programs/scripts/
+sedSTR=s#$SRC_DIR/programs/scripts/##g
+grep -rlI $SRC_DIR/programs/scripts $APP_RSRC_DIR | xargs gsed -i $sedSTR
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
