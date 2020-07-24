@@ -279,7 +279,8 @@ if $SKIP_BUILD; then
 else
     # At runtime we need the mythtv apps to point to the interal python installe
     # This hack tells the application to look internally running that version of python
-    PYTHON_APP_BIN=Mythfrontend.app/Contents/MacOS/python
+    #PYTHON_APP_BIN=Mythfrontend.app/Contents/MacOS/python
+    PYTHON_APP_BIN="./python"
     if [ ! -L $PYTHON_APP_BIN ]; then
       # Declare an array of string with type
       declare -a pythonFakePaths=("$SRC_DIR" \
@@ -289,7 +290,7 @@ else
       # Iterate the string array using for loop
       for val in ${pythonFakePaths[@]}; do
         cd $val
-        mkdir -p "./Mythfrontend.app/Contents/MacOS"
+        #mkdir -p "./Mythfrontend.app/Contents/MacOS"
         ln -s $PYTHON_BIN $PYTHON_APP_BIN
       done
       cd $SRC_DIR
@@ -346,7 +347,8 @@ if $BUILD_PLUGINS; then
   else
     # At runtime we need the mythtv apps to point to the interal python installe
     # This hack tells the application to look internally running that version of python
-    PYTHON_APP_BIN=Mythfrontend.app/Contents/MacOS/python
+    #PYTHON_APP_BIN=Mythfrontend.app/Contents/MacOS/python
+    PYTHON_APP_BIN="./python"
     if [ ! -L $PYTHON_APP_BIN ]; then
       # Declare an array of string with type
       declare -a pythonFakePaths=("$PLUGINS_DIR")
@@ -354,7 +356,7 @@ if $BUILD_PLUGINS; then
       # Iterate the string array using for loop
       for val in ${pythonFakePaths[@]}; do
         cd $val
-        mkdir -p "./Mythfrontend.app/Contents/MacOS"
+        #mkdir -p "./Mythfrontend.app/Contents/MacOS"
         ln -s $PYTHON_BIN $PYTHON_APP_BIN
       done
       cd $PLUGINS_DIR
@@ -508,11 +510,17 @@ echo "------------ Replace application perl/python paths to relative paths insid
 # mythtv "fixes" the sheband in all python scripts to an absolute path on the compiling system.  We need to
 # change this to a relative path pointint internal to the application.
 # Note - when MacOS apps run, their starting path is the path as the directory the .app is stored in
+
 cd $APP_RSRC_DIR/share/mythtv/metadata
 # edit the items that point to INSTALL_DIR
-sedSTR=s#$INSTALL_DIR#Mythfrontend.app/Contents/Resources#g
+####sedSTR=s#$INSTALL_DIR#Mythfrontend.app/Contents/Resources#g
+###grep -rlI $INSTALL_DIR $APP_RSRC_DIR | xargs gsed -i $sedSTR
+sedSTR=s#$INSTALL_DIR#../Resources#g
 grep -rlI $INSTALL_DIR $APP_RSRC_DIR | xargs gsed -i $sedSTR
+
 # edit those that point to $SRC_DIR/programs/scripts/
+####sedSTR=s#$SRC_DIR/programs/scripts/##g
+####grep -rlI $SRC_DIR/programs/scripts $APP_RSRC_DIR | xargs gsed -i $sedSTR
 sedSTR=s#$SRC_DIR/programs/scripts/##g
 grep -rlI $SRC_DIR/programs/scripts $APP_RSRC_DIR | xargs gsed -i $sedSTR
 
@@ -520,11 +528,6 @@ echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app 
 # copy in missing fonts
 cp $PKGMGR_INST_PATH/share/fonts/dejavu-fonts/*.ttf $APP_RSRC_DIR/share/mythtv/fonts/
 cp $PKGMGR_INST_PATH/share/fonts/liberation-fonts/*.ttf $APP_RSRC_DIR/share/mythtv/fonts/
-
-echo "------------ Copying in Mythfrontend.app icon  ------------"
-cd $APP_DIR
-# copy in the icon
-cp $APP_DIR/mythfrontend.icns $APP_RSRC_DIR/application.icns
 
 echo "------------ Add symbolic link structure for copied in files  ------------"
 # make some symbolic links to match past working copies
@@ -539,6 +542,20 @@ if $BUILD_PLUGINS; then
   cd $APP_RSRC_DIR/lib/mythtv
   ln -s ../../../PlugIns plugins
 fi
+
+echo "------------ Generating mythfrontend startup script ------------"
+# since we now have python installed internally, we need to make sure that the mythfrontend
+# executable launched from the curret directory so that the python relative paths point int
+# to the internal python
+cd $APP_EXE_DIR
+mv mythfrontend mythfrontend.real
+echo "#!/bin/sh\n\nBASEDIR=\$(dirname "\$0")\ncd \$BASEDIR\n./mythfrontend.real" >> mythfrontend
+chmod +x mythfrontend
+
+echo "------------ Copying in Mythfrontend.app icon  ------------"
+cd $APP_DIR
+# copy in the icon
+cp $APP_DIR/mythfrontend.icns $APP_RSRC_DIR/application.icns
 
 echo "------------ Updating application plist  ------------"
 # Update the plist
