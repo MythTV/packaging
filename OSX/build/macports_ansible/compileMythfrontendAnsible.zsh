@@ -47,8 +47,7 @@ PACK_PATCH_DIR=""
 PLUGINS_PATCH_DIR=""
 
 # parse user inputs into variables
-for i in "$@"
-do
+for i in "$@"; do
   case $i in
       -h|--help)
         show_help
@@ -114,7 +113,7 @@ INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
 ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
 PKGMGR_INST_PATH=/opt/local
-PKG_CONFIG_SYSTEM_INCLUDE_PATH=/opt/local/include
+PKG_CONFIG_SYSTEM_INCLUDE_PATH=$PKGMGR_INST_PATH/include
 
 # setup some paths to make the following commands easier to understand
 SRC_DIR=$REPO_DIR/mythtv/mythtv
@@ -122,7 +121,7 @@ PLUGINS_DIR=$REPO_DIR/mythtv/mythplugins
 THEME_DIR=$REPO_DIR/mythtv/myththemes
 PKGING_DIR=$REPO_DIR/mythtv/packaging
 OSX_PKGING_DIR=$PKGING_DIR/OSX/build
-export PATH=$PKGMGR_INST_PATH/lib/mysql57/bin:$PATH
+export PATH=$PKGMGR_INST_PATH/lib/mariadb/bin:$PATH
 OS_VERS=$(/usr/bin/sw_vers -productVersion)
 
 # macOS internal appliction patches
@@ -152,40 +151,40 @@ if $UPDATE_PORTS; then
 fi
 # check if ansible_playbook is installed, if not install it
 if ! [ -x "$(command -v $ANSIBLE_PLAYBOOK)" ]; then
-  echo Installing python and ansilble
+  echo "    Installing python and ansilble"
   sudo port -N install py$PYTHON_VERS-ansible
   sudo port select --set python python$PYTHON_VERS
   sudo port select --set python3 python$PYTHON_VERS
   sudo port select --set ansible py$PYTHON_VERS-ansible
 else
-  echo "skipping ansible install - it is already installed"
+  echo "    Skipping ansible install - it is already installed"
 fi
 
 # check is gsed is installed (for patching the .plist file)
 if ! [ -x "$(command -v gsed)" ]; then
   sudo port -N install gsed
 else
-    echo "skipping gsed install - it is already installed"
+    echo "    Skipping gsed install - it is already installed"
 fi
 
 echo "------------ Running Ansible ------------"
-if $SKIP_ANSIBLE; then
-  echo "Skipping port installation via ansible"
+if $SKIP_ANSIBLE || $SKIP_BUILD; then
+  echo "    Skipping port installation via ansible"
 else
   # get mythtv's ansible playbooks, and install required ports
   # if the repo exists, update (assume the flag is set)
   if [ -d "$REPO_DIR/ansible" ]; then
-    echo "updating mythtv-anisble git repo"
+    echo "    Updating mythtv-anisble git repo"
     cd $REPO_DIR/ansible
     if $UPDATE_GIT; then
-      echo "Updating ansible git repo"
+      echo "    Updating ansible git repo"
       git pull
     else
-      echo "Skipping ansible git repo update"
+      echo "    Skipping ansible git repo update"
     fi
   # pull down a fresh repo if none exist
   else
-    echo "cloning mythtv-anisble git repo"
+    echo "    Cloning mythtv-anisble git repo"
     git clone https://github.com/MythTV/ansible.git
   fi
   cd $REPO_DIR/ansible
@@ -195,15 +194,25 @@ fi
 # get the version of python installed by MacPorts
 PYTHON_BIN=$(which python$PYTHON_DOT_VERS)
 PYTHON_RUNTIME_BIN="./python$PYTHON_DOT_VERS"
+PY2APPLET_BIN=$(dirname $PYTHON_BIN)/py2applet-$PYTHON_DOT_VERS
+
 # also get the location of the framework - /opt/local because this is where MacPorts stores its packages
-# and its site packages (JGH - delete me if the new hack works...)
+# and its site packages
 PYTHON_MACOS_FWRK=$PKGMGR_INST_PATH/Library/Frameworks/Python.framework
 PYTHON_MACOS_SP_LOC=$PYTHON_MACOS_FWRK/Versions/$PYTHON_DOT_VERS/lib/python$PYTHON_DOT_VERS/site-packages
 
 # and the destination for where the python bits get copied into the application framework and site_packages
 PYTHON_APP_FWRK=$APP_FMWK_DIR/Python.framework
 PYTHON_APP_SP_LOC="$APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages"
+# list of packages necessary to run python bindings / scripts
+PYTHON_RUNTIME_PKGS="MySQLdb,lxml,urllib3,simplejson,pycurl,future,httplib2"
 
+# install py2app if not already installed - we'll use this go get a portable version of python for the application
+if ! [ -x "$(command -v $PY2APPLET_BIN)" ]; then
+  sudo port -N install py$PYTHON_VERS-py2app
+else
+    echo "    Skipping py2app install - it is already installed"
+fi
 
 echo "------------ Cloning / Updating Mythtv Git Repository ------------"
 # setup mythtv source from git
@@ -211,24 +220,23 @@ cd $REPO_DIR
 # if the repo exists, update it (assuming the flag is set)
 if [ -d "$REPO_DIR/mythtv" ]; then
   cd $REPO_DIR/mythtv
-  if $UPDATE_GIT; then
-    echo "Updateing mythtv/mythplugins git repo"
+  if $UPDATE_GIT && ! $SKIP_BUILD ; then
+    echo "    Updateing mythtv/mythplugins git repo"
     git pull
   else
-      echo "Skipping mythtv/mythplugins git repo update"
+      echo "    Skipping mythtv/mythplugins git repo update"
   fi
 # else pull down a fresh copy of the repo from github
 else
-  echo "cloning mythtv git repo"
+  echo "    Cloning mythtv git repo"
   git clone -b $MYTHTV_VERS git://github.com/MythTV/mythtv.git
 fi
 # apply specified patches
 if [ $APPLY_PATCHES ] && [ ! -z $MYTHTV_PATCH_DIR ]; then
   cd $REPO_DIR/mythtv
-  for file in $MYTHTV_PATCH_DIR/*
-    do
+  for file in $MYTHTV_PATCH_DIR/*; do
     if [ -f "$file" ]; then
-      echo "Applying Mythtv patch: $file"
+      echo "    Applying Mythtv patch: $file"
       patch -p1 < $file
     fi
   done
@@ -239,25 +247,24 @@ cd $REPO_DIR/mythtv
 # check if the repo exists and update (if the flag is set)
 if [ -d $PKGING_DIR ]; then
   cd $PKGING_DIR
-  if $UPDATE_GIT; then
-    echo "Update packaging git repo"
+  if $UPDATE_GIT  && ! $SKIP_BUILD; then
+    echo "    Update packaging git repo"
     git pull
   else
-    echo "Skipping packaging git repo update"
+    echo "    Skipping packaging git repo update"
   fi
 # else pull down a fresh copy of the repo from github
 else
-  echo "cloning mythtv-packaging git repo"
+  echo "    Cloning mythtv-packaging git repo"
   git clone -b $MYTHTV_VERS https://github.com/MythTV/packaging.git
 fi
 
 # apply any user specified patches if the flag is set
 if [ $APPLY_PATCHES ] && [ ! -z $PACK_PATCH_DIR ]; then
   cd $PKGING_DIR
-  for file in $PACK_PATCH_DIR/*
-    do
+  for file in $PACK_PATCH_DIR/*; do
     if [ -f "$file" ]; then
-      echo "Applying Packaging patch: $file"
+      echo "    Applying Packaging patch: $file"
       patch -p1 < $file
     fi
   done
@@ -268,7 +275,7 @@ echo "------------ Configuring Mythtv ------------"
 cd $SRC_DIR
 GIT_VERS=$(git rev-parse --short HEAD)
 if $SKIP_BUILD; then
-  echo "Skipping mythtv ./configure and make"
+  echo "    Skipping mythtv ./configure and make"
 else
     ./configure --prefix=$INSTALL_DIR \
     			--runprefix=../Resources \
@@ -293,7 +300,7 @@ else
     make
     # error out if make failed
     if [ $? != 0 ]; then
-      echo "Compiling Mythtv failed" >&2
+      echo "    Compiling Mythtv failed" >&2
       exit 1
     fi
 fi
@@ -306,10 +313,9 @@ if $BUILD_PLUGINS; then
   # apply specified patches if flag is set
   if [ $APPLY_PATCHES ] && [ ! -z $PLUGINS_PATCH_DIR ]; then
     cd $PLUGINS_DIR
-    for file in $PLUGINS_PATCH_DIR/*
-      do
+    for file in $PLUGINS_PATCH_DIR/*; do
       if [ -f "$file" ]; then
-        echo "Applying Plugins patch: $file"
+        echo "    Applying Plugins patch: $file"
         patch -p1 < $file
       fi
     done
@@ -318,7 +324,7 @@ if $BUILD_PLUGINS; then
   # configure plugins
   cd $PLUGINS_DIR
   if $SKIP_BUILD; then
-    echo "Skipping mythplugins compile and make"
+    echo "    Skipping mythplugins compile and make"
 
   else
     ./configure --prefix=$INSTALL_DIR \
@@ -343,7 +349,7 @@ if $BUILD_PLUGINS; then
     make
     # error out if make failed
     if [ $? != 0 ]; then
-      echo "Plugins compile failed" >&2
+      echo "    Plugins compile failed" >&2
       exit 1
     fi
   fi
@@ -375,14 +381,13 @@ install_name_tool -add_rpath "@executable_path/../Resources/libcec.dylib" $APP_E
 
 echo "------------ Installing additional mythtv utility executables into Mythfrontend.app  ------------"
 # loop over the compiler apps copying in the desired ones for mythfrontend
-for helperBinPath in $INSTALL_DIR/bin/*.app
-do
+for helperBinPath in $INSTALL_DIR/bin/*.app; do
   case $helperBinPath in
-    *mythmetadatalookup*|*mythreplex*|*mythutil*|*mythpreviewgen*|*mythavtest*)
+    *mythreplex*|*mythutil*|*mythpreviewgen*|*mythavtest*)
       # extract the filename from the path
       helperBinFile=$(basename $helperBinPath)
       helperBinFile=${helperBinFile%.app}
-      echo "installing $helperBinFile into app"
+      echo "    Installing $helperBinFile into app"
       # copy into the app
       cp -rp $helperBinPath/Contents/MacOS/$helperBinFile $APP_EXE_DIR
       # run osx-bundler.pl to setup and copy support libraries into app framework
@@ -402,13 +407,12 @@ if $BUILD_PLUGINS; then
   # Now we need to make the plugin dylibs use the dylibs copied into the app's Framework
   # to do this, we're going to copy them into the app's PlugIns dir and the use osx-bundler.pl to point them to the
   # app frameworks' versions
-  for plugFilePath in $INSTALL_DIR/lib/mythtv/plugins/*.dylib
-  do
+  for plugFilePath in $INSTALL_DIR/lib/mythtv/plugins/*.dylib; do
       plugFileName=$(basename $plugFilePath)
-      echo "installing $plugFileName into app"
+      echo "    Installing $plugFileName into app"
       cp $plugFilePath $APP_PLUGINS_DIR
       # run osx-bundler.pl to setup and copy support libraries into app framework
-      $OSX_PKGING_DIR/osx-bundler.pl  $APP_PLUGINS_DIR/$plugFileName $INSTALL_DIR/libs
+      $OSX_PKGING_DIR/osx-bundler.pl  $APP_PLUGINS_DIR/$plugFileName $PKGMGR_INST_PATH/lib
   done
 fi
 
@@ -465,8 +469,9 @@ cp $PKGMGR_INST_PATH/share/fonts/dejavu-fonts/*.ttf $APP_RSRC_DIR/share/mythtv/f
 cp $PKGMGR_INST_PATH/share/fonts/liberation-fonts/*.ttf $APP_RSRC_DIR/share/mythtv/fonts/
 
 echo "------------ Copying in Mythfrontend.app icon  ------------"
+cd $APP_DIR
 # copy in the icon
-cp mythfrontend.icns $APP_RSRC_DIR/application.icns
+cp $APP_DIR/mythfrontend.icns $APP_RSRC_DIR/application.icns
 
 echo "------------ Add symbolic link structure for copied in files  ------------"
 # make some symbolic links to match past working copies
