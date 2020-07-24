@@ -480,22 +480,24 @@ if [ ! -f $APP_RSRC_DIR/lib/python ]; then
 fi
 
 echo "------------ Deploying python packages into application  ------------"
-# make an application from tmdb3 to package up python and the correct support libraries
+# make an application from  to package up python and the correct support libraries
 mkdir -p $APP_DIR/PYTHON_APP
 export PYTHONPATH=$INSTALL_DIR/lib/python$PYTHON_DOT_VERS/site-packages
 cd $APP_DIR/PYTHON_APP
 if [ -f setup.py ]; then
   rm setup.py
 fi
-echo "    Creating a temporary application from tmdb3.py"
+echo "    Creating a temporary application from ttvdb.py"
 # in order to get python embedded in the application we're going to make a temporyary application
-# from one of the python scripts (tmdb3) which will copy in all the required libraries for
+# from one of the python scripts (ttvdb) which will copy in all the required libraries for
 # running and will make a standalong python executable not tied to the system
-$PY2APPLET_BIN -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-setup $INSTALL_DIR/share/mythtv/metadata/Movie/tmdb3.py
+# ttvdb seems to be more particulat than tmdb3...
+$PY2APPLET_BIN -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/ttvdb.py
 $PYTHON_BIN setup.py -q py2app 2>&1 > /dev/null
 # now we need to copy over the pythong app's pieces into the mythfrontend.app to get it working
 echo "    Copying in Python Framework libraries"
-cd $APP_DIR/PYTHON_APP/dist/tmdb3.app
+cd $APP_DIR/PYTHON_APP/dist/ttvdb.app
+
 cp -rnp Contents/Frameworks/* $APP_DIR/mythfrontend.app/Contents/Frameworks/
 echo "    Copying in Python Binary"
 cp -p Contents/MacOS/python $APP_DIR/mythfrontend.app/Contents/MacOS/
@@ -549,7 +551,18 @@ echo "------------ Generating mythfrontend startup script ------------"
 # to the internal python
 cd $APP_EXE_DIR
 mv mythfrontend mythfrontend.real
-echo "#!/bin/sh\n\nBASEDIR=\$(dirname "\$0")\ncd \$BASEDIR\n./mythfrontend.real" >> mythfrontend
+echo "#!/bin/sh\n
+BASEDIR=\$(dirname "\$0")
+if [ \${BASEDIR:0:1}==\"./\" ] ;then
+  BASEDIR=\$(pwd)/\${BASEDIR:2}
+fi
+cd \$BASEDIR/../..
+APP_DIR=\$(pwd)
+export PYTHONHOME=\$APP_DIR/Contents/Resources
+export PYTHONPATH=\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/sites-enabled
+cd \$BASEDIR
+./mythfrontend.real" >> mythfrontend
+
 chmod +x mythfrontend
 
 echo "------------ Copying in Mythfrontend.app icon  ------------"
