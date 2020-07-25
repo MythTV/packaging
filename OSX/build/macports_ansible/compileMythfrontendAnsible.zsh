@@ -1,4 +1,4 @@
-!/bin/zsh
+#!/bin/zsh
 
 ### Note - macports must be installed on your system for this script to work!!!!!
 if ! [ -x "$(command -v port)" ]; then
