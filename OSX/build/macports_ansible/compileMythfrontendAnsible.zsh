@@ -226,6 +226,11 @@ if [ -d "$REPO_DIR/mythtv" ]; then
   else
       echo "    Skipping mythtv/mythplugins git repo update"
   fi
+
+  if [ -f $APP_DIR/mythfrontend.app ]; then
+    echo "    Cleaning up past Mythfrontend application"
+    rm -Rf $APP_DIR/mythfrontend.app
+  fi
 # else pull down a fresh copy of the repo from github
 else
   echo "    Cloning mythtv git repo"
