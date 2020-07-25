@@ -1,4 +1,4 @@
-#!/bin/zsh
+!/bin/zsh
 
 ### Note - macports must be installed on your system for this script to work!!!!!
 if ! [ -x "$(command -v port)" ]; then
@@ -275,26 +275,8 @@ echo "------------ Configuring Mythtv ------------"
 cd $SRC_DIR
 GIT_VERS=$(git rev-parse --short HEAD)
 if $SKIP_BUILD; then
-  echo "    Skipping mythtv ./configure and make"
+  echo "    Skipping mythtv configure and make"
 else
-    # At runtime we need the mythtv apps to point to the interal python installe
-    # This hack tells the application to look internally running that version of python
-    #PYTHON_APP_BIN=Mythfrontend.app/Contents/MacOS/python
-    PYTHON_APP_BIN="./python"
-    if [ ! -L $PYTHON_APP_BIN ]; then
-      # Declare an array of string with type
-      declare -a pythonFakePaths=("$SRC_DIR" \
-                              "$SRC_DIR/bindings/python"\
-                              "$SRC_DIR/programs/scripts")
-
-      # Iterate the string array using for loop
-      for val in ${pythonFakePaths[@]}; do
-        cd $val
-        #mkdir -p "./Mythfrontend.app/Contents/MacOS"
-        ln -s $PYTHON_BIN $PYTHON_APP_BIN
-      done
-      cd $SRC_DIR
-    fi
     ./configure --prefix=$INSTALL_DIR \
     			--runprefix=../Resources \
     			--enable-mac-bundle \
@@ -312,7 +294,7 @@ else
     			--enable-libx265 \
     			--enable-libvpx \
     			--enable-bdjava \
-    	 		--python=$PYTHON_APP_BIN
+    	 		--python=$PYTHON_BIN
     echo "------------ Compiling Mythtv ------------"
     #compile mythfrontend
     make
@@ -342,25 +324,9 @@ if $BUILD_PLUGINS; then
   # configure plugins
   cd $PLUGINS_DIR
   if $SKIP_BUILD; then
-    echo "    Skipping mythplugins compile and make"
+    echo "    Skipping mythplugins configure and make"
 
   else
-    # At runtime we need the mythtv apps to point to the interal python installe
-    # This hack tells the application to look internally running that version of python
-    #PYTHON_APP_BIN=Mythfrontend.app/Contents/MacOS/python
-    PYTHON_APP_BIN="./python"
-    if [ ! -L $PYTHON_APP_BIN ]; then
-      # Declare an array of string with type
-      declare -a pythonFakePaths=("$PLUGINS_DIR")
-
-      # Iterate the string array using for loop
-      for val in ${pythonFakePaths[@]}; do
-        cd $val
-        #mkdir -p "./Mythfrontend.app/Contents/MacOS"
-        ln -s $PYTHON_BIN $PYTHON_APP_BIN
-      done
-      cd $PLUGINS_DIR
-    fi
     ./configure --prefix=$INSTALL_DIR \
       			--runprefix=../Resources \
       			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
@@ -376,7 +342,7 @@ if $BUILD_PLUGINS; then
       			--disable-mythnetvision \
       			--disable-mythzoneminder \
       			--disable-mythzmserver \
-      	 		--python=$PYTHON_APP_BIN
+      	 		--python=$PYTHON_BIN
     echo "------------ Compiling Mythplugins ------------"
     #compile mythfrontend
     $PKGMGR_INST_PATH/libexec/qt5/bin/qmake  mythplugins.pro
@@ -519,8 +485,8 @@ sedSTR=s#$INSTALL_DIR#../Resources#g
 grep -rlI $INSTALL_DIR $APP_RSRC_DIR | xargs gsed -i $sedSTR
 
 # edit those that point to $SRC_DIR/programs/scripts/
-sedSTR=s#$SRC_DIR/programs/scripts/##g
-grep -rlI $SRC_DIR/programs/scripts $APP_RSRC_DIR | xargs gsed -i $sedSTR
+sedSTR=s#$PYTHON_BIN#python#g
+grep -rlI $PYTHON_BIN $APP_RSRC_DIR | xargs gsed -i $sedSTR
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
@@ -547,16 +513,19 @@ echo "------------ Generating mythfrontend startup script ------------"
 # to the internal python
 cd $APP_EXE_DIR
 mv mythfrontend mythfrontend.real
-echo "#!/bin/sh\n
+echo "#!/bin/sh
+
 BASEDIR=\$(dirname "\$0")
 if [ \${BASEDIR:0:1} = \"./\" ] ;then
   BASEDIR=\$(pwd)/\${BASEDIR:2}
 fi
+
 cd \$BASEDIR
 cd ../..
 APP_DIR=\$(pwd)
 export PYTHONHOME=\$APP_DIR/Contents/Resources
 export PYTHONPATH=\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/sites-enabled
+
 cd \$BASEDIR
 ./mythfrontend.real" >> mythfrontend
 
