@@ -520,7 +520,7 @@ mv mythfrontend mythfrontend.real
 echo "#!/bin/sh
 
 BASEDIR=\$(dirname "\$0")
-if [ \${BASEDIR:0:1} = \"./\" ] ;then
+if [ \${BASEDIR:0:1} = \".\" ] ;then
   BASEDIR=\$(pwd)/\${BASEDIR:2}
 fi
 
