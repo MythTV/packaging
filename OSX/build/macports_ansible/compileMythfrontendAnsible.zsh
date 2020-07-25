@@ -515,14 +515,10 @@ echo "------------ Replace application perl/python paths to relative paths insid
 
 cd $APP_RSRC_DIR/share/mythtv/metadata
 # edit the items that point to INSTALL_DIR
-####sedSTR=s#$INSTALL_DIR#Mythfrontend.app/Contents/Resources#g
-###grep -rlI $INSTALL_DIR $APP_RSRC_DIR | xargs gsed -i $sedSTR
 sedSTR=s#$INSTALL_DIR#../Resources#g
 grep -rlI $INSTALL_DIR $APP_RSRC_DIR | xargs gsed -i $sedSTR
 
 # edit those that point to $SRC_DIR/programs/scripts/
-####sedSTR=s#$SRC_DIR/programs/scripts/##g
-####grep -rlI $SRC_DIR/programs/scripts $APP_RSRC_DIR | xargs gsed -i $sedSTR
 sedSTR=s#$SRC_DIR/programs/scripts/##g
 grep -rlI $SRC_DIR/programs/scripts $APP_RSRC_DIR | xargs gsed -i $sedSTR
 
@@ -553,10 +549,11 @@ cd $APP_EXE_DIR
 mv mythfrontend mythfrontend.real
 echo "#!/bin/sh\n
 BASEDIR=\$(dirname "\$0")
-if [ \${BASEDIR:0:1}==\"./\" ] ;then
+if [ \${BASEDIR:0:1} = \"./\" ] ;then
   BASEDIR=\$(pwd)/\${BASEDIR:2}
 fi
-cd \$BASEDIR/../..
+cd \$BASEDIR
+cd ../..
 APP_DIR=\$(pwd)
 export PYTHONHOME=\$APP_DIR/Contents/Resources
 export PYTHONPATH=\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/sites-enabled
