@@ -226,11 +226,6 @@ if [ -d "$REPO_DIR/mythtv" ]; then
   else
       echo "    Skipping mythtv/mythplugins git repo update"
   fi
-
-  if [ -f $APP_DIR/mythfrontend.app ]; then
-    echo "    Cleaning up past Mythfrontend application"
-    rm -Rf $APP_DIR/mythfrontend.app
-  fi
 # else pull down a fresh copy of the repo from github
 else
   echo "    Cloning mythtv git repo"
@@ -278,6 +273,10 @@ fi
 echo "------------ Configuring Mythtv ------------"
 # configure mythfrontend
 cd $SRC_DIR
+if [ -d $APP_DIR/mythfrontend.app ]; then
+  echo "    Cleaning up past Mythfrontend application"
+  rm -Rf $APP_DIR/mythfrontend.app
+fi
 GIT_VERS=$(git rev-parse --short HEAD)
 if $SKIP_BUILD; then
   echo "    Skipping mythtv configure and make"
