@@ -531,7 +531,7 @@ export PYTHONHOME=\$APP_DIR/Contents/Resources
 export PYTHONPATH=\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/sites-enabled
 
 cd \$BASEDIR
-./mythfrontend.real" >> mythfrontend
+./mythfrontend.real \$@" >> mythfrontend
 
 chmod +x mythfrontend
 
