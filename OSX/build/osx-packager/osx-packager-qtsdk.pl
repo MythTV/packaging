@@ -978,7 +978,7 @@ EOF
     'qt'
     =>
     {
-        'url' => "http://download.qt.io/official_releases/qt/5.5/5.5.1/single/qt-everywhere-opensource-src-5.5.1.tar.gz",
+        'url' => "https://download.qt.io/archive/qt/5.5/5.5.1/single/qt-everywhere-opensource-src-5.5.1.tar.gz",
         'pre-conf'
         => "cd qtbase/src/plugins/sqldrivers/mysql; cp mysql.pro mysql2.pro ; " .
             "echo \"target.path=$PREFIX/qtplugins-$QTVERSION\" >> mysql2.pro; " .
@@ -1025,14 +1025,14 @@ EOF
 
     'liberation-sans' =>
     {
-        'url'      => 'https://fedorahosted.org/releases/l/i/liberation-fonts/liberation-fonts-ttf-1.07.1.tar.gz',
+        'url'      => 'https://releases.pagure.org/liberation-fonts/liberation-fonts-ttf-1.07.4.tar.gz',
         'conf-cmd' => 'echo "all:" > Makefile',
         'make'     => [ ],  # override the default 'make all install' targets
     },
 
     'firewiresdk' =>
     {
-        'url'      => 'http://www.avenard.org/files/mac/AVCVideoServices.framework.tar.gz',
+        'url'      => 'https://www.avenard.org/files/mac/AVCVideoServices.framework.tar.gz',
         'conf-cmd' => 'cd',
         'make-cmd' => "rm -rf $PREFIX/lib/AVCVideoServices.framework ; cp -R . $PREFIX/lib/AVCVideoServices.framework ; install_name_tool -id $PREFIX/lib/AVCVideoServices.framework/Versions/Current/AVCVideoServices $PREFIX/lib/AVCVideoServices.framework/Versions/Current/AVCVideoServices",
         'make'     => [ ],
