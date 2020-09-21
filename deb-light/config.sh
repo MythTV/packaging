@@ -34,6 +34,8 @@ case $projname in
               --cpu=cortex-a7 --arch=armv7 --extra-cflags=-mfpu=neon \
               --extra-cxxflags=-mfpu=neon \
               $MYTHTV_CONFIG_OPT_EXTRA"
+        else
+            config_opt="$config_opt --enable-vulkan"
         fi
         set -x
         ./configure --prefix=/usr $config_opt "$@" |& tee -a $gitbasedir/../config_${projname}.out
