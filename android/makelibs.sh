@@ -1855,9 +1855,36 @@ fi
 	PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
 	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
 	--prefix=$INSTALLROOT \
-        --without-fontconfig \
-        --disable-silent-rules \
-        --disable-examples \
+	--with-fontconfig \
+	--disable-silent-rules \
+	--disable-examples \
+	--enable-threads \
+	--disable-single \
+	--enable-neon \
+	--enable-shared \
+	--enable-static &&
+	make -j$NCPUS &&
+	make install
+	ERR=$?
+
+./configure \
+	CFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	CXXFLAGS="-isysroot $SYSROOT $CPUOPT $ANDROID_API_DEF" \
+	RANLIB=${CROSSPATH2}ranlib \
+	OBJDUMP=${CROSSPATH2}objdump \
+	AR=${CROSSPATH2}ar \
+	CC="${CROSSPATH3}clang" \
+	CXX="${CROSSPATH3}clang++" \
+	CPP1="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+	PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
+	--prefix=$INSTALLROOT \
+	--with-fontconfig \
+	--disable-silent-rules \
+	--disable-examples \
+	--enable-threads \
+	--enable-single \
+	--enable-neon \
 	--enable-shared \
 	--enable-static &&
 	make -j$NCPUS &&
