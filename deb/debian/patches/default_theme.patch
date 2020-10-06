@@ -1,9 +1,9 @@
-Index: mythtv/mythtv/libs/libmythui/mythuihelper.h
+Index: mythtv/mythtv/libs/libmythui/mythuithemehelper.h
 ===================================================================
---- mythtv.orig/mythtv/libs/libmythui/mythuihelper.h	2015-04-12 15:24:03.598909276 +0000
-+++ mythtv/mythtv/libs/libmythui/mythuihelper.h	2015-04-12 15:24:03.598909276 +0000
-@@ -9,8 +9,8 @@
- #include "mythuiexp.h"
+--- mythtv.orig/mythtv/libs/libmythui/mythuithemehelper.h	2015-04-12 15:24:03.598909276 +0000
++++ mythtv/mythtv/libs/libmythui/mythuithemehelper.h	2015-04-12 15:24:03.598909276 +0000
+@@ -4,8 +4,8 @@
+ // MythTV
  #include "themeinfo.h"
  
 -#define DEFAULT_UI_THEME "MythCenter"
@@ -11,5 +11,5 @@ Index: mythtv/mythtv/libs/libmythui/mythuihelper.h
 +#define DEFAULT_UI_THEME "Mythbuntu"
 +#define FALLBACK_UI_THEME "MythCenter-wide"
  
- class MythUIHelperPrivate;
- class MThreadPool;
+ class MUI_PUBLIC MythUIThemeHelper
+ {
