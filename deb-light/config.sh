@@ -25,8 +25,6 @@ case $projname in
         if which $BUILD_PREPARE ; then
             $BUILD_PREPARE
         fi
-        config_opt="--enable-libmp3lame"
-        config_opt="$config_opt $MYTHTV_CONFIG_OPT_EXTRA"
         if [[ `arch` == arm* ]] ; then
             config_opt="--enable-libmp3lame --disable-vdpau \
               --enable-opengl  \
@@ -35,7 +33,7 @@ case $projname in
               --extra-cxxflags=-mfpu=neon \
               $MYTHTV_CONFIG_OPT_EXTRA"
         else
-            config_opt="$config_opt --enable-vulkan"
+            config_opt="--enable-libmp3lame --enable-libx264 --enable-vulkan $MYTHTV_CONFIG_OPT_EXTRA"
         fi
         set -x
         ./configure --prefix=/usr $config_opt "$@" |& tee -a $gitbasedir/../config_${projname}.out
@@ -59,8 +57,6 @@ case $projname in
         fi
         cd ../mythtv
         git clean -Xfd
-        config_opt="--enable-libmp3lame"
-        config_opt="$config_opt $MYTHTV_CONFIG_OPT_EXTRA"
         if [[ `arch` == arm* ]] ; then
             config_opt="--enable-libmp3lame --disable-vdpau \
               --enable-opengl  \
@@ -68,6 +64,8 @@ case $projname in
               --cpu=cortex-a7 --arch=armv7 --extra-cflags=-mfpu=neon \
               --extra-cxxflags=-mfpu=neon \
               $MYTHTV_CONFIG_OPT_EXTRA"
+        else
+            config_opt="--enable-libmp3lame --enable-libx264 --enable-vulkan $MYTHTV_CONFIG_OPT_EXTRA"
         fi
         set -x
         ./configure --prefix=$destdir/usr \
