@@ -79,7 +79,6 @@ case $projname in
         basedir=$destdir/usr
         export PYTHONPATH=`ls -d $basedir/local/lib/python*/dist-packages`
         config_opt=
-        config_opt=" $MYTHTV_CONFIG_OPT_EXTRA"
         ./configure --prefix=$destdir/usr \
          $config_opt "$@" |& tee -a  $gitbasedir/../config_${projname}.out
          set -
