@@ -37,7 +37,7 @@ EOF
 BUILD_PLUGINS=false
 PYTHON_VERS="38"
 UPDATE_PORTS=false
-MYTHTV_VERS="fixes/31"
+MYTHTV_VERS="master"
 UPDATE_GIT=true
 SKIP_BUILD=false
 SKIP_ANSIBLE=false
@@ -85,7 +85,6 @@ for i in "$@"; do
       ;;
       --plugins-patch-dir=*)
         PLUGINS_PATCH_DIR="${i#*=}"
-
       ;;
       *)
         echo "Unknown option $i"
@@ -124,7 +123,7 @@ OSX_PKGING_DIR=$PKGING_DIR/OSX/build
 export PATH=$PKGMGR_INST_PATH/lib/mariadb/bin:$PATH
 OS_VERS=$(/usr/bin/sw_vers -productVersion)
 
-# macOS internal appliction patches
+# macOS internal appliction paths
 APP_DIR=$SRC_DIR/programs/mythfrontend
 APP_RSRC_DIR=$APP_DIR/mythfrontend.app/Contents/Resources
 APP_FMWK_DIR=$APP_DIR/mythfrontend.app/Contents/Frameworks
@@ -407,7 +406,7 @@ for helperBinPath in $INSTALL_DIR/bin/*.app; do
       helperBinFile=${helperBinFile%.app}
       echo "    Installing $helperBinFile into app"
       # copy into the app
-      cp -rp $helperBinPath/Contents/MacOS/$helperBinFile $APP_EXE_DIR
+      cp -Rp $helperBinPath/Contents/MacOS/$helperBinFile $APP_EXE_DIR
       # run osx-bundler.pl to setup and copy support libraries into app framework
       $OSX_PKGING_DIR/osx-bundler.pl  $APP_EXE_DIR/$helperBinFile
     ;;
@@ -437,12 +436,12 @@ fi
 echo "------------ Copying mythtv share directory into executable  ------------"
 # copy in i18n, fonts, themes, plugin resources, etc from the install directory (share)
 mkdir -p $APP_RSRC_DIR/share/mythtv
-cp -rp $INSTALL_DIR/share/mythtv/* $APP_RSRC_DIR/share/mythtv/
+cp -Rp $INSTALL_DIR/share/mythtv/* $APP_RSRC_DIR/share/mythtv/
 
 echo "------------ Copying mythtv lib/python* and lib/perl directory into application  ------------"
 mkdir -p $APP_RSRC_DIR/lib
-cp -rp $INSTALL_DIR/lib/python* $APP_RSRC_DIR/lib/
-cp -rp $INSTALL_DIR/lib/perl* $APP_RSRC_DIR/lib/
+cp -Rp $INSTALL_DIR/lib/python* $APP_RSRC_DIR/lib/
+cp -Rp $INSTALL_DIR/lib/perl* $APP_RSRC_DIR/lib/
 if [ ! -f $APP_RSRC_DIR/lib/python ]; then
    cd $APP_RSRC_DIR/lib
    ln -s python$PYTHON_DOT_VERS python
@@ -468,11 +467,11 @@ $PYTHON_BIN setup.py -q py2app 2>&1 > /dev/null
 echo "    Copying in Python Framework libraries"
 cd $APP_DIR/PYTHON_APP/dist/ttvdb.app
 
-cp -rnp Contents/Frameworks/* $APP_DIR/mythfrontend.app/Contents/Frameworks/
+cp -Rnp Contents/Frameworks/* $APP_DIR/mythfrontend.app/Contents/Frameworks/
 echo "    Copying in Python Binary"
 cp -p Contents/MacOS/python $APP_DIR/mythfrontend.app/Contents/MacOS/
 echo "    Copying in Python Resources"
-cp -rnp Contents/Resources/* $APP_DIR/mythfrontend.app/Contents/Resources/
+cp -Rnp Contents/Resources/* $APP_DIR/mythfrontend.app/Contents/Resources/
 rm -Rf
 cd $APP_DIR
 # clean up temp application
@@ -546,6 +545,7 @@ gsed -i "8c\	<string>application.icns</string>" $APP_INFO_FILE
 gsed -i "10c\	<string>org.osx-bundler.mythfrontend</string>\n	<key>CFBundleInfoDictionaryVersion</key>\n	<string>6.0</string>" $APP_INFO_FILE
 gsed -i "14a\	<key>CFBundleShortVersionString</key>\n	<string>$VERS</string>" $APP_INFO_FILE
 gsed -i "18c\	<string>osx-bundler</string>\n	<key>NSAppleScriptEnabled</key>\n	<string>NO</string>\n	<key>CFBundleGetInfoString</key>\n	<string></string>\n	<key>CFBundleVersion</key>\n	<string>1.0</string>\n	<key>NSHumanReadableCopyright</key>\n	<string>MythTV Team</string>" $APP_INFO_FILE
+gsed -i "34a\	<key>ATSApplicationFontsPath</key>\n	<string>share/mythtv/fonts</string>" $APP_DIR/mythfrontend.app/Contents/Info.plist
 
 echo "------------ Generating .dmg file  ------------"
 # Package up the build
@@ -555,7 +555,9 @@ if $BUILD_PLUGINS; then
 else
     VOL_NAME=MythFrontend-$VERS-intel-$OS_VERS-v$VERS-$GIT_VERS
 fi
+# Archive off any previous files
 if [ -f $APP_DIR/$VOL_NAME.dmg ] ; then
     mv $APP_DIR/$VOL_NAME.dmg $APP_DIR/$VOL_NAME$(date +'%d%m%Y%H%M%S').dmg
 fi
+# Generate the .dmg file
 hdiutil create $APP_DIR/$VOL_NAME.dmg -fs HFS+ -srcfolder $APP_DIR/Mythfrontend.app -volname $VOL_NAME
