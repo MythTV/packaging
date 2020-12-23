@@ -28,5 +28,5 @@ ENTRYPOINT ["/docker_init.sh"]
 ADD commandlinetools-linux.tgz /opt/android
 
 # Install required Android packages
-RUN echo "y" | /opt/android/cmdline-tools/bin/sdkmanager --sdk_root=/opt/android "build-tools;28.0.3" "ndk;21.0.6113669" "platforms;android-21" "cmake;3.10.2.4988404"
+RUN echo "y" | /opt/android/cmdline-tools/bin/sdkmanager --sdk_root=/opt/android "build-tools;28.0.3" "ndk;21.0.6113669" "platforms;android-21" "cmake;3.10.2.4988404" && /opt/android/cmdline-tools/bin/sdkmanager --sdk_root=/opt/android --uninstall "emulator"
 
