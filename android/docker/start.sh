@@ -13,7 +13,7 @@ THISDIR=$(readlinkf ${BASH_SOURCE%/*})
 BASEDIR=$(readlinkf ${BASH_SOURCE%/*}/../../..)
 
 IMAGE_NAME=mythtv_android_buildenv
-IMAGE_TAG=1.0
+IMAGE_TAG=SDK_21
 IMAGE_FULL_NAME=${IMAGE_NAME}:${IMAGE_TAG}
 
 if [ $(docker images ${IMAGE_FULL_NAME} | wc -l) -eq 1 ]; then

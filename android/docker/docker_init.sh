@@ -50,11 +50,22 @@ checkID ${GROUPID} || fail "group id '${GROUPID}' is non-numeric"
 groupadd -f -g ${GROUPID} ${USERNAME} || fail "Failed to create group"
 useradd -o -m -g ${USERNAME} -G sudo -N -u ${USERID} ${USERNAME} -p '' -s /bin/bash || fail "Failed to add user"
 
-NDKVER=`ls -1 /opt/android/ndk`
-su "${USERNAME}" -c "mkdir -p ~/android/android-studio && cd ~/android && ln -s /opt/android/ android-sdk-linux && ln -s /opt/android/ndk/$NDKVER android-ndk"
+INSTDIR=/opt/android
+NDKVER=`ls -1 ${INSTDIR}/ndk`
+SDKVER=`ls -1 ${INSTDIR}/platforms/ | sed 's/android-//'`
+BUILDTOOLSVER=`ls -1 ${INSTDIR}/build-tools`
+
+su "${USERNAME}" -c "mkdir -p ~/android/android-studio && cd ~/android && ln -s ${INSTDIR}/ android-sdk-linux && ln -s ${INSTDIR}/ndk/$NDKVER android-ndk"
 su "${USERNAME}" -c "ln -s $(dirname $(dirname $(readlink -f $(which javac)))) ~/android/android-studio/jre"
 su "${USERNAME}" -c "git config --global user.email \"none@none.com\""
 su "${USERNAME}" -c "git config --global user.name \"No-one\""
+
+echo "--------------------------------------------"
+echo "Installed Android packages:"
+echo "Build tools: ${BUILDTOOLSVER}"
+echo "NDK: ${NDKVER}"
+echo "SDK: ${SDKVER}"
+echo "--------------------------------------------"
 
 if [ -z "${COMMAND}" ]; then
     su "${USERNAME}" -
