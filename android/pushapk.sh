@@ -1,3 +1,3 @@
 #!/bin/bash
 
-~/android/android-sdk-linux/platform-tools/adb push mythfrontend.apk /sdcard/Download/
+~/Android/Sdk/platform-tools/adb push mythfrontend.apk /sdcard/Download/

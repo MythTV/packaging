@@ -1,8 +1,8 @@
 #!/bin/bash
 
-ANDROID_ROOT=$HOME/android
+ANDROID_ROOT=$HOME/Android
 ANDROID_ROOT=`readlink -f "$ANDROID_ROOT"`
-export ANDROID_SDK=$ANDROID_ROOT/android-sdk-linux
+export ANDROID_SDK=$ANDROID_ROOT/Sdk
 export ANDROID_NDK=$ANDROID_ROOT/android-ndk
 export ANDROID_SDK_ROOT=$ANDROID_SDK
 export ANDROID_NDK_ROOT=$ANDROID_NDK
@@ -13,7 +13,7 @@ else
 	export ANDROID_BUILD_TOOLS_REVISION=29.0.2
 	echo "Using hardcoded tools version $ANDROID_BUILD_TOOLS_REVISION"
 fi
-export JAVA_HOME=${HOME}/android/android-studio/jre
+export JAVA_HOME=${ANDROID_ROOT}/android-studio/jre
 export JDK_PATH=${JAVA_HOME}/bin
 
 export ANDROID_KEYSTORE=$ANDROID_ROOT/sample-release.keystore
