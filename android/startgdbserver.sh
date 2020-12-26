@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ADB=~/Android/Sdk/platform-tools/adb
+ADB=${HOME}/Android/Sdk/platform-tools/adb
 
 if [ -n "$1" ]; then
 MPID=`${ADB} shell ps | grep mythfrontend | cut -c11-16`
