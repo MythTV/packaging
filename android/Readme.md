@@ -1,7 +1,7 @@
 Android Mythfrontend Build Procedure
 ------------------------------------
 
-Currently there is no automated way to get all dependencies and build an apk in one step.
+Currently there is no automated way to get all dependencies and build an apk in one step (although if you only want a build environment, using [Docker](Docker/Readme.md) gets you started quite quickly).
 NOTE: The build platform is linux
 
 1. Clone and configure the repos.
