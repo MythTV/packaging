@@ -55,8 +55,8 @@ NDKVER=`ls -1 ${INSTDIR}/ndk`
 SDKVER=`ls -1 ${INSTDIR}/platforms/ | sed 's/android-//'`
 BUILDTOOLSVER=`ls -1 ${INSTDIR}/build-tools`
 
-su "${USERNAME}" -c "mkdir -p ~/android/android-studio && cd ~/android && ln -s ${INSTDIR}/ android-sdk-linux && ln -s ${INSTDIR}/ndk/$NDKVER android-ndk"
-su "${USERNAME}" -c "ln -s $(dirname $(dirname $(readlink -f $(which javac)))) ~/android/android-studio/jre"
+su "${USERNAME}" -c "mkdir -p ${HOME}/Android/android-studio && cd ${HOME}/Android && ln -s ${INSTDIR}/ Sdk && ln -s ${INSTDIR}/ndk/$NDKVER android-ndk"
+su "${USERNAME}" -c "ln -s $(dirname $(dirname $(readlink -f $(which javac)))) ${HOME}/Android/android-studio/jre"
 su "${USERNAME}" -c "git config --global user.email \"none@none.com\""
 su "${USERNAME}" -c "git config --global user.name \"No-one\""
 

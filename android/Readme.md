@@ -14,13 +14,8 @@ NOTE: The build platform is linux
 
 2. Get Android Studio, SDK and NDK.
    * Get Android Studio from https://developer.android.com/studio/index.html
-     and install it. The default location is $HOME/Android. Install it in $HOME/android or else create a link from the default location:
-     
-```
-cd
-ln -s Android android
-```  
-   
+     and unpack it into $HOME/Android.
+
    * After Android Studio is installed, use it to install the Android SDK.
      * In Android Studio, choose Configure / SDK Manager.
      * Install the desired SDK versions.  Install SDK 29.
@@ -28,8 +23,7 @@ ln -s Android android
    * Set up links as follows, using the version of ndk that was installed.
 
 ```
-cd $HOME/android
-ln -s Sdk android-sdk-linux
+cd $HOME/Android
 ln -s Sdk/ndk/21.0.6113669 android-ndk
 ```
 
@@ -62,9 +56,8 @@ IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
    You should have a dir structure like this after you are done:
 
 ```
-ls -1 $HOME/android/
+ls -1 $HOME/Android/
 android-ndk -> Sdk/ndk/21.0.6113669
-android-sdk-linux -> Sdk
 android-studio
 Sdk
 ```
@@ -84,7 +77,7 @@ Sdk
 4. Fetch and build all the libraries.
    The script downloads source to build and builds it.
    In workdir/packaging/android, run this. Set "arm" or "arm64" for the mode. If you set the sdk version and ARM64 variable in buildrc you need not set them here.
-   
+
 ```
     make SDK=21 MODE=arm64 libs
 ```
