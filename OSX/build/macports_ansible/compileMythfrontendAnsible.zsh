@@ -16,6 +16,7 @@ Standard options:
   --build-plugins=BUILD_PLUGINS          Build Mythtvplugins (false)
   --python-version=PYTHON_VERS           Desired Python 3 Version (38)
   --version=MYTHTV_VERS                  Requested mythtv git repo (fixes/31)
+  --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (mariadb-10.2)
 Build Options
   --update-git=UPDATE_GIT                Update git repositories to latest (true)
   --skip-build=SKIP_BUILD                Skip configure and make - used when you just want to repackage (false)
@@ -38,6 +39,7 @@ BUILD_PLUGINS=false
 PYTHON_VERS="38"
 UPDATE_PORTS=false
 MYTHTV_VERS="fixes/31"
+DATABAE_VERS=mariadb-10.2
 UPDATE_GIT=true
 SKIP_BUILD=false
 SKIP_ANSIBLE=false
@@ -70,6 +72,9 @@ for i in "$@"; do
       ;;
       --version=*)
         MYTHTV_VERS="${i#*=}"
+      ;;
+      --database-version=*)
+        DATABASE_VERS="${i#*=}"
       ;;
       --update-git*)
         UPDATE_GIT="${i#*=}"
@@ -120,7 +125,7 @@ PLUGINS_DIR=$REPO_DIR/mythtv/mythplugins
 THEME_DIR=$REPO_DIR/mythtv/myththemes
 PKGING_DIR=$REPO_DIR/mythtv/packaging
 OSX_PKGING_DIR=$PKGING_DIR/OSX/build
-export PATH=$PKGMGR_INST_PATH/lib/mariadb/bin:$PATH
+export PATH=$PKGMGR_INST_PATH/lib/$DATABSE_VERS/bin:$PATH
 OS_VERS=$(/usr/bin/sw_vers -productVersion)
 
 # macOS internal appliction paths
@@ -188,7 +193,7 @@ else
   fi
   cd $REPO_DIR/ansible
   export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
-  $ANSIBLE_PLAYBOOK qt5.yml --ask-become-pass
+  $ANSIBLE_PLAYBOOK qt5.yml --extra-vars "database_version=$DATABASE_VERS" --ask-become-pass
 fi
 # get the version of python installed by MacPorts
 PYTHON_BIN=$(which python$PYTHON_DOT_VERS)
@@ -291,6 +296,8 @@ else
     			--disable-backend \
     			--disable-distcc \
     			--disable-firewire \
+                        --disable-libcec \
+                        --disable-x11 \
     			--enable-libmp3lame \
     			--enable-libxvid \
     			--enable-libx264 \
@@ -366,7 +373,7 @@ echo "------------ Deploying QT to Mythfrontend Executable ------------"
 # Package up the executable
 cd $APP_DIR
 # run macdeployqt
-$PKGMGR_INST_PATH/libexec/qt5/bin/macdeployqt $APP_DIR/mythfrontend.app
+$PKGMGR_INST_PATH/libexec/qt5/bin/macdeployqt $APP_DIR/mythfrontend.app -appstore-compliant -libpath=$INSTALL_DIR/lib/ -libpath=$PKGMGR_INST_PATH/lib
 
 echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 # run osx-bundler.pl to copy all of the libraries into the bundle as Frameworks
@@ -459,8 +466,8 @@ fi
 echo "    Creating a temporary application from ttvdb.py"
 # in order to get python embedded in the application we're going to make a temporyary application
 # from one of the python scripts (ttvdb) which will copy in all the required libraries for
-# running and will make a standalong python executable not tied to the system
-# ttvdb seems to be more particulat than tmdb3...
+# running and will make a standalone python executable not tied to the system
+# ttvdb seems to be more particular than tmdb3...
 $PY2APPLET_BIN -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/ttvdb.py
 $PYTHON_BIN setup.py -q py2app 2>&1 > /dev/null
 # now we need to copy over the pythong app's pieces into the mythfrontend.app to get it working
@@ -527,7 +534,7 @@ cd \$BASEDIR
 cd ../..
 APP_DIR=\$(pwd)
 export PYTHONHOME=\$APP_DIR/Contents/Resources
-export PYTHONPATH=\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/sites-enabled
+export PYTHONPATH=\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/sites-packages:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/sites-enabled
 
 cd \$BASEDIR
 ./mythfrontend.real \$@" >> mythfrontend
