@@ -16,6 +16,7 @@ Standard options:
   --build-plugins=BUILD_PLUGINS          Build Mythtvplugins (false)
   --python-version=PYTHON_VERS           Desired Python 3 Version (38)
   --version=MYTHTV_VERS                  Requested mythtv git repo (fixes/31)
+  --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (mariadb-10.2)
 Build Options
   --update-git=UPDATE_GIT                Update git repositories to latest (true)
   --skip-build=SKIP_BUILD                Skip configure and make - used when you just want to repackage (false)
@@ -38,6 +39,7 @@ BUILD_PLUGINS=false
 PYTHON_VERS="38"
 UPDATE_PORTS=false
 MYTHTV_VERS="fixes/31"
+DATABASE_VERS=mariadb-10.2
 UPDATE_GIT=true
 SKIP_BUILD=false
 SKIP_ANSIBLE=false
@@ -71,6 +73,9 @@ for i in "$@"; do
       --version=*)
         MYTHTV_VERS="${i#*=}"
       ;;
+      --database-version=*)
+        DATABASE_VERS="${i#*=}"
+      ;;
       --update-git*)
         UPDATE_GIT="${i#*=}"
       ;;
@@ -85,7 +90,6 @@ for i in "$@"; do
       ;;
       --plugins-patch-dir=*)
         PLUGINS_PATCH_DIR="${i#*=}"
-
       ;;
       *)
         echo "Unknown option $i"
@@ -121,10 +125,10 @@ PLUGINS_DIR=$REPO_DIR/mythtv/mythplugins
 THEME_DIR=$REPO_DIR/mythtv/myththemes
 PKGING_DIR=$REPO_DIR/mythtv/packaging
 OSX_PKGING_DIR=$PKGING_DIR/OSX/build
-export PATH=$PKGMGR_INST_PATH/lib/mariadb/bin:$PATH
+export PATH=$PKGMGR_INST_PATH/lib/$DATABSE_VERS/bin:$PATH
 OS_VERS=$(/usr/bin/sw_vers -productVersion)
 
-# macOS internal appliction patches
+# macOS internal appliction paths
 APP_DIR=$SRC_DIR/programs/mythfrontend
 APP_RSRC_DIR=$APP_DIR/mythfrontend.app/Contents/Resources
 APP_FMWK_DIR=$APP_DIR/mythfrontend.app/Contents/Frameworks
@@ -189,7 +193,7 @@ else
   fi
   cd $REPO_DIR/ansible
   export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
-  $ANSIBLE_PLAYBOOK qt5.yml --ask-become-pass
+  $ANSIBLE_PLAYBOOK qt5.yml --extra-vars "database_version=$DATABASE_VERS" --ask-become-pass
 fi
 # get the version of python installed by MacPorts
 PYTHON_BIN=$(which python$PYTHON_DOT_VERS)
@@ -292,6 +296,8 @@ else
     			--disable-backend \
     			--disable-distcc \
     			--disable-firewire \
+                        --disable-libcec \
+                        --disable-x11 \
     			--enable-libmp3lame \
     			--enable-libxvid \
     			--enable-libx264 \
@@ -367,7 +373,7 @@ echo "------------ Deploying QT to Mythfrontend Executable ------------"
 # Package up the executable
 cd $APP_DIR
 # run macdeployqt
-$PKGMGR_INST_PATH/libexec/qt5/bin/macdeployqt $APP_DIR/mythfrontend.app
+$PKGMGR_INST_PATH/libexec/qt5/bin/macdeployqt $APP_DIR/mythfrontend.app -appstore-compliant -libpath=$INSTALL_DIR/lib/ -libpath=$PKGMGR_INST_PATH/lib
 
 echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 # run osx-bundler.pl to copy all of the libraries into the bundle as Frameworks
@@ -407,7 +413,7 @@ for helperBinPath in $INSTALL_DIR/bin/*.app; do
       helperBinFile=${helperBinFile%.app}
       echo "    Installing $helperBinFile into app"
       # copy into the app
-      cp -rp $helperBinPath/Contents/MacOS/$helperBinFile $APP_EXE_DIR
+      cp -Rp $helperBinPath/Contents/MacOS/$helperBinFile $APP_EXE_DIR
       # run osx-bundler.pl to setup and copy support libraries into app framework
       $OSX_PKGING_DIR/osx-bundler.pl  $APP_EXE_DIR/$helperBinFile
     ;;
@@ -437,12 +443,12 @@ fi
 echo "------------ Copying mythtv share directory into executable  ------------"
 # copy in i18n, fonts, themes, plugin resources, etc from the install directory (share)
 mkdir -p $APP_RSRC_DIR/share/mythtv
-cp -rp $INSTALL_DIR/share/mythtv/* $APP_RSRC_DIR/share/mythtv/
+cp -Rp $INSTALL_DIR/share/mythtv/* $APP_RSRC_DIR/share/mythtv/
 
 echo "------------ Copying mythtv lib/python* and lib/perl directory into application  ------------"
 mkdir -p $APP_RSRC_DIR/lib
-cp -rp $INSTALL_DIR/lib/python* $APP_RSRC_DIR/lib/
-cp -rp $INSTALL_DIR/lib/perl* $APP_RSRC_DIR/lib/
+cp -Rp $INSTALL_DIR/lib/python* $APP_RSRC_DIR/lib/
+cp -Rp $INSTALL_DIR/lib/perl* $APP_RSRC_DIR/lib/
 if [ ! -f $APP_RSRC_DIR/lib/python ]; then
    cd $APP_RSRC_DIR/lib
    ln -s python$PYTHON_DOT_VERS python
@@ -460,19 +466,19 @@ fi
 echo "    Creating a temporary application from ttvdb.py"
 # in order to get python embedded in the application we're going to make a temporyary application
 # from one of the python scripts (ttvdb) which will copy in all the required libraries for
-# running and will make a standalong python executable not tied to the system
-# ttvdb seems to be more particulat than tmdb3...
+# running and will make a standalone python executable not tied to the system
+# ttvdb seems to be more particular than tmdb3...
 $PY2APPLET_BIN -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/ttvdb.py
 $PYTHON_BIN setup.py -q py2app 2>&1 > /dev/null
 # now we need to copy over the pythong app's pieces into the mythfrontend.app to get it working
 echo "    Copying in Python Framework libraries"
 cd $APP_DIR/PYTHON_APP/dist/ttvdb.app
 
-cp -rnp Contents/Frameworks/* $APP_DIR/mythfrontend.app/Contents/Frameworks/
+cp -Rnp Contents/Frameworks/* $APP_DIR/mythfrontend.app/Contents/Frameworks/
 echo "    Copying in Python Binary"
 cp -p Contents/MacOS/python $APP_DIR/mythfrontend.app/Contents/MacOS/
 echo "    Copying in Python Resources"
-cp -rnp Contents/Resources/* $APP_DIR/mythfrontend.app/Contents/Resources/
+cp -Rnp Contents/Resources/* $APP_DIR/mythfrontend.app/Contents/Resources/
 rm -Rf
 cd $APP_DIR
 # clean up temp application
@@ -528,7 +534,7 @@ cd \$BASEDIR
 cd ../..
 APP_DIR=\$(pwd)
 export PYTHONHOME=\$APP_DIR/Contents/Resources
-export PYTHONPATH=\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/sites-enabled
+export PYTHONPATH=\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/site-packages:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/sites-enabled
 
 cd \$BASEDIR
 ./mythfrontend.real \$@" >> mythfrontend
@@ -546,6 +552,7 @@ gsed -i "8c\	<string>application.icns</string>" $APP_INFO_FILE
 gsed -i "10c\	<string>org.osx-bundler.mythfrontend</string>\n	<key>CFBundleInfoDictionaryVersion</key>\n	<string>6.0</string>" $APP_INFO_FILE
 gsed -i "14a\	<key>CFBundleShortVersionString</key>\n	<string>$VERS</string>" $APP_INFO_FILE
 gsed -i "18c\	<string>osx-bundler</string>\n	<key>NSAppleScriptEnabled</key>\n	<string>NO</string>\n	<key>CFBundleGetInfoString</key>\n	<string></string>\n	<key>CFBundleVersion</key>\n	<string>1.0</string>\n	<key>NSHumanReadableCopyright</key>\n	<string>MythTV Team</string>" $APP_INFO_FILE
+gsed -i "34a\	<key>ATSApplicationFontsPath</key>\n	<string>share/mythtv/fonts</string>" $APP_DIR/mythfrontend.app/Contents/Info.plist
 
 echo "------------ Generating .dmg file  ------------"
 # Package up the build
@@ -555,7 +562,9 @@ if $BUILD_PLUGINS; then
 else
     VOL_NAME=MythFrontend-$VERS-intel-$OS_VERS-v$VERS-$GIT_VERS
 fi
+# Archive off any previous files
 if [ -f $APP_DIR/$VOL_NAME.dmg ] ; then
     mv $APP_DIR/$VOL_NAME.dmg $APP_DIR/$VOL_NAME$(date +'%d%m%Y%H%M%S').dmg
 fi
+# Generate the .dmg file
 hdiutil create $APP_DIR/$VOL_NAME.dmg -fs HFS+ -srcfolder $APP_DIR/Mythfrontend.app -volname $VOL_NAME
