@@ -143,7 +143,7 @@ APP_PLUGINS_DIR=$APP_DIR/mythfrontend.app/Contents/PlugIns/
 APP_INFO_FILE=$APP_DIR/mythfrontend.app/Contents/Info.plist
 
 # Tell pkg_config to ignore the paths for the package manager and any ffmpeg installed libraries
-if ! [ -x "$(command -v $ANSIBLE_PLAYBOOK)" ]; then
+if ! [ -x "$(command -v $PKGMGR_INST_PATH/bin/ffmpeg)" ]; then
   FFMPEG_DONOT_INCLUDE=$(find $PKGMGR_INST_PATH/include -type d -name "libav*" -exec sh -c 'printf "%s:" "$@"' {} +)
   FFMPEG_DONOT_INCLUDE=${FFMPEG_DONOT_INCLUDE:0:-1}
 else
