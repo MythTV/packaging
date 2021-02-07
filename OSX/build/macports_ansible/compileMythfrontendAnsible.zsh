@@ -117,7 +117,13 @@ INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
 ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
 PKGMGR_INST_PATH=/opt/local
-PKG_CONFIG_SYSTEM_INCLUDE_PATH=$PKGMGR_INST_PATH/include
+
+# Add some flags for the compiler to find the package manager locations
+export LDFLAGS="-L$PKGMGR_INST_PATH/lib"
+export C_INCLUDE_PATH=$PKGMGR_INST_PATH/include
+export CPLUS_INCLUDE_PATH=$PKGMGR_INST_PATH/include
+export LIBRARY_PATH=$PKGMGR_INST_PATH/lib
+
 
 # setup some paths to make the following commands easier to understand
 SRC_DIR=$REPO_DIR/mythtv/mythtv
@@ -135,6 +141,15 @@ APP_FMWK_DIR=$APP_DIR/mythfrontend.app/Contents/Frameworks
 APP_EXE_DIR=$APP_DIR/mythfrontend.app/Contents/MacOS
 APP_PLUGINS_DIR=$APP_DIR/mythfrontend.app/Contents/PlugIns/
 APP_INFO_FILE=$APP_DIR/mythfrontend.app/Contents/Info.plist
+
+# Tell pkg_config to ignore the paths for the package manager and any ffmpeg installed libraries
+if ! [ -x "$(command -v $ANSIBLE_PLAYBOOK)" ]; then
+  FFMPEG_DONOT_INCLUDE=$(find $PKGMGR_INST_PATH/include -type d -name "libav*" -exec sh -c 'printf "%s:" "$@"' {} +)
+  FFMPEG_DONOT_INCLUDE=${FFMPEG_DONOT_INCLUDE:0:-1}
+else
+  FFMPEG_DONOT_INCLUDE=""
+fi
+PKG_CONFIG_SYSTEM_INCLUDE_PATH=$FFMPEG_DONOT_INCLUDE:$PKGMGR_INST_PATH/include
 
 echo "------------ Setting Up Directory Structure ------------"
 # setup the working directory structure
@@ -291,8 +306,6 @@ else
     			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
     			--cc=clang \
     			--cxx=clang++ \
-    			--extra-cxxflags="-I $SRC_DIR/external -I $PKGMGR_INST_PATH/include" \
-    			--extra-ldflags="-L $SRC_DIR/external -L $PKGMGR_INST_PATH/lib" \
     			--disable-backend \
     			--disable-distcc \
     			--disable-firewire \
