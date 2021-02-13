@@ -142,14 +142,8 @@ APP_EXE_DIR=$APP_DIR/mythfrontend.app/Contents/MacOS
 APP_PLUGINS_DIR=$APP_DIR/mythfrontend.app/Contents/PlugIns/
 APP_INFO_FILE=$APP_DIR/mythfrontend.app/Contents/Info.plist
 
-# Tell pkg_config to ignore the paths for the package manager and any ffmpeg installed libraries
-if ! [ -x "$(command -v $PKGMGR_INST_PATH/bin/ffmpeg)" ]; then
-  FFMPEG_DONOT_INCLUDE=$(find $PKGMGR_INST_PATH/include -type d -name "libav*" -exec sh -c 'printf "%s:" "$@"' {} +)
-  FFMPEG_DONOT_INCLUDE=${FFMPEG_DONOT_INCLUDE:0:-1}
-else
-  FFMPEG_DONOT_INCLUDE=""
-fi
-PKG_CONFIG_SYSTEM_INCLUDE_PATH=$FFMPEG_DONOT_INCLUDE:$PKGMGR_INST_PATH/include
+# Tell pkg_config to ignore the paths for the package manager
+PKG_CONFIG_SYSTEM_INCLUDE_PATH=$PKGMGR_INST_PATH/include
 
 echo "------------ Setting Up Directory Structure ------------"
 # setup the working directory structure
