@@ -234,8 +234,10 @@ while : ; do
 	esac
 done
 
-QTMAJORVERSION=5.14
-QTVERSION=$QTMAJORVERSION.1
+#QTMAJORVERSION=5.14
+#QTVERSION=$QTMAJORVERSION.1
+QTMAJORVERSION=5.15
+QTVERSION=$QTMAJORVERSION.3
 BUILD_WEBKIT=0
 export ANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL:-29}
 export ANDROID_SDK_PLATFORM=android-$ANDROID_NATIVE_API_LEVEL
@@ -1837,23 +1839,14 @@ return $ERR
 
 build_libsoundtouch() {
 rm -rf build
-LIBSOUNDTOUCHVER=2.3.1
-LIBSOUNDTOUCH=soundtouch-$LIBSOUNDTOUCHVER
-LIBSOUNDTOUCHSRC="https://codeberg.org/soundtouch/soundtouch/archive/$LIBSOUNDTOUCHVER.tar.gz"
-echo -e "\n**** $LIBSOUNDTOUCH ****"
-[ -d ../tarballs ] || mkdir -p ../tarballs
-if [ ! -e "../tarballs/$LIBSOUNDTOUCH.tar.gz" ]; then
-    pushd ../tarballs
-    wget --no-check-certificate -O "$LIBSOUNDTOUCH.tar.gz" "$LIBSOUNDTOUCHSRC"
-    popd
-fi
-tar xf "../tarballs/$LIBSOUNDTOUCH.tar.gz"
-rm -rf $LIBSOUNDTOUCH
-mv soundtouch $LIBSOUNDTOUCH
+#LIBSOUNDTOUCH=soundtouch-2.3.1-e1f315f5358d9db5cee35a7a2886425489fcefe8
+#LIBSOUNDTOUCH_URL https://gitlab.com/soundtouch/soundtouch/-/archive/2.3.1/$LIBSOUNDTOUCH.tar.gz $LIBSOUNDTOUCH
+LIBSOUNDTOUCH=soundtouch
+LIBSOUNDTOUCH_VERSION=2.3.1
+LIBSOUNDTOUCH_URL="https://codeberg.org/soundtouch/soundtouch/archive/$LIBSOUNDTOUCH_VERSION.tar.gz"
+echo -e "\n**** $LIBSOUNDTOUCH $LIBSOUNDTOUCH_VERSION ****"
+setup_lib $LIBSOUNDTOUCH_URL $LIBSOUNDTOUCH
 pushd $LIBSOUNDTOUCH
-git init
-git add --all
-git commit -m"initial"
 OPATH=$PATH
 { patch -p1 -Nt -r - || true; } <<'END'
 diff --git a/bootstrap b/bootstrap
@@ -2020,6 +2013,12 @@ if [ ${QTMAJORVERSION%.*} -ge 6 -o ${QTMAJORVERSION#*.} -gt 9 ]; then
 	QT_SOURCE_DIR=qt-everywhere-src-$QTVERSION
 fi
 QT_URL=https://download.qt.io/archive/qt/$QTMAJORVERSION/$QTVERSION/single/$QT_SOURCE_DIR.tar.xz
+if [ ${QTVERSION} == "5.15.3" ]; then
+	# special case, mismatch of tarball and root directory names
+	QT_DOWNLOAD_NAME=qt-everywhere-opensource-src-$QTVERSION
+	QT_SOURCE_DIR=qt-everywhere-src-$QTVERSION
+	QT_URL=https://download.qt.io/archive/qt/$QTMAJORVERSION/$QTVERSION/single/$QT_DOWNLOAD_NAME.tar.xz
+fi
 if [ $BUILD_WEBKIT == 1 ]; then
 	if [ $OS_WEBKIT == 1 ]; then
 		if [ $QTVERSION != "5.9.1" ]; then

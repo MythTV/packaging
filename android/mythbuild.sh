@@ -96,6 +96,10 @@ if [[ "$ANDROID_NATIVE_API_LEVEL" == "" ]] ; then
     export ANDROID_NATIVE_API_LEVEL=29
 fi    
 
+if [[ "$TARGET_SDK_VERSION" == "" ]] ; then
+    export TARGET_SDK_VERSION=29
+fi
+
 export ANDROID_NDK_PLATFORM=android-$ANDROID_NATIVE_API_LEVEL
 
 if [ $ARM64 == 1 ]; then
@@ -278,6 +282,7 @@ function bundle_apk() {
 	# Setup the real Android versionName and versionCode..
 	sed "s/\(android:versionName\)=\"1.0\"/\1=\"$VERSIONNAME\"/
 		 s/\(android:versionCode\)=\"1\"/\1=\"$VERSIONCODE\"/
+		 s/\(android:targetSdkVersion\)=\"\(?:\d+\)\"/\1=\"$TARGET_SDK_VERSION\"/
 		$extraedit" \
 		../../AndroidManifest.xml.in \
 		>../../android-package-source/AndroidManifest.xml
@@ -309,7 +314,7 @@ if [ ! -d ${INSTALLROOT} ]; then
     mv ${INSTALLROOT}.tmp ${INSTALLROOT}
 fi
 
-if [ $SHADOW_BUILD = 1 ]; then
+if [ $SHADOW_BUILD == 1 ]; then
 	rm -r $MYMYTHBUILDBASEPATH
 	mkdir -p $MYMYTHBUILDBASEPATH || true
 	cd $MYMYTHBUILDBASEPATH
