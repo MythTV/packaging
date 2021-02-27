@@ -202,7 +202,7 @@ else
   fi
   cd $REPO_DIR/ansible
   export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
-  $ANSIBLE_PLAYBOOK qt5.yml --extra-vars "database_version=$DATABASE_VERS" --ask-become-pass
+  $ANSIBLE_PLAYBOOK qt5.yml --extra-vars "database_version=$DATABASE_VERS install_qtwebkit=BUILD_PLUGINS" --ask-become-pass
 fi
 # get the version of python installed by MacPorts
 PYTHON_BIN=$(which python$PYTHON_DOT_VERS)
