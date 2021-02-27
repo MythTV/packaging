@@ -47,7 +47,6 @@ To install the MacPorts version of Python 3.8, follow these instructions:
 3. Install Python 3.8  `sudo port install python38`
 4. Tell macOS to use Python 3.8 for python  `sudo port select python python38`
 5. Tell macOS to use Python 3.8 for python3  `sudo port select python3 python38`
-6. Install additional python libraries `sudo port install py38-future py38-requests py38-requests-cache py38-lxml py38-oauthlib py38-curl py38-simplejson py38-wheel py38-pip py38-pymysql py38-mysqlclient`
 
 # Why Build With MacPorts
 Currently, for MythTV builds, MacPorts has all of the necessary dependencies for compiling MythTV in it's repository. For this reason alone, it significantly simplifies getting all of the dependencies installed and working without the need to maintain countless download links and specific to macOS patches.
