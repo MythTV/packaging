@@ -387,29 +387,6 @@ echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 # we will need to run this utility multiple more time for any plugins and helper apps installed
 $OSX_PKGING_DIR/osx-bundler.pl $APP_EXE_DIR/mythfrontend $SRC_DIR/libs/* $INSTALL_DIR/lib/ $PKGMGR_INST_PATH/lib
 
-echo "------------ Installing libcec into Mythfrontend.app ------------"
-# copy in libcec (missing for some reason...)
-cd $APP_FMWK_DIR
-# loop over the installed versions of libcec and copy them in
-for libcecFile in $PKGMGR_INST_PATH/lib/*libcec*.dylib; do
-  # make sure its a file and not a symlink
-  if [ -f $libcecFile ] && [ ! -h $libcecFile ]; then
-    libcecNewFile=$APP_FMWK_DIR/$(basename $libcecFile)
-    # extract out major version number
-    LIBCECVERS=${$(basename $libcecFile)#"libcec."}
-    LIBCECVERS=${LIBCECVERS%%.*}
-    # copy and link the library
-    cp -p $libcecFile $libcecNewFile
-    ln -s $libcecNewFile libcec.dylib
-    ln -s $libcecNewFile libcec.$LIBCECVERS.dylib
-    # update the library to link to the app the installed dylibs
-    $OSX_PKGING_DIR/osx-bundler.pl $libcecNewFile $PKGMGR_INST_PATH/lib
-    # make the application aware of libcec
-    install_name_tool -add_rpath "@executable_path/../Frameworks/$(basename $libcecNewFile)" $APP_EXE_DIR/mythfrontend
-  fi
-done
-cd $APP_DIR
-
 echo "------------ Installing additional mythtv utility executables into Mythfrontend.app  ------------"
 # loop over the compiler apps copying in the desired ones for mythfrontend
 for helperBinPath in $INSTALL_DIR/bin/*.app; do
