@@ -112,6 +112,7 @@ case $MYTHTV_VERS in
       VERS=${MYTHTV_VERS: -2}
     ;;
 esac
+ARCH=$(/usr/bin/arc)
 REPO_DIR=~/mythtv-$VERS
 INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
@@ -452,7 +453,15 @@ echo "    Creating a temporary application from ttvdb.py"
 # from one of the python scripts (ttvdb) which will copy in all the required libraries for
 # running and will make a standalone python executable not tied to the system
 # ttvdb seems to be more particular than tmdb3...
-$PY2APPLET_BIN -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/ttvdb.py
+
+# special handling for arm64 architecture until py2app is updated to fully support it
+if [ $(/usr/bin/arch)=="arm64" ]; then
+  PY2APP_ARCH="--arch=universal"
+else 
+  PY2APP_ARCH=""
+fi
+$PY2APPLET_BIN $PY2APP_ARCH -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/ttvdb.py
+
 $PYTHON_BIN setup.py -q py2app 2>&1 > /dev/null
 # now we need to copy over the pythong app's pieces into the mythfrontend.app to get it working
 echo "    Copying in Python Framework libraries"
@@ -542,9 +551,9 @@ echo "------------ Generating .dmg file  ------------"
 # Package up the build
 cd $APP_DIR
 if $BUILD_PLUGINS; then
-    VOL_NAME=MythFrontend-$VERS-intel-$OS_VERS-v$VERS-$GIT_VERS-with-plugins
+    VOL_NAME=MythFrontend-$VERS-$ARCH-$OS_VERS-v$VERS-$GIT_VERS-with-plugins
 else
-    VOL_NAME=MythFrontend-$VERS-intel-$OS_VERS-v$VERS-$GIT_VERS
+    VOL_NAME=MythFrontend-$VERS-$ARCH-$OS_VERS-v$VERS-$GIT_VERS
 fi
 # Archive off any previous files
 if [ -f $APP_DIR/$VOL_NAME.dmg ] ; then
