@@ -36,19 +36,6 @@ The script automatically performs the following steps:
 1. Copies the required dylibs, support data, and fonts into the app linking
 1. Packages mythfrontend.app into a .dmg file
 
-## Resolved Issues
-### Python Bindings:
-The latest release of Mythfrontend (dated 2020-07-25 and later) should fix the python bindings / scripts issues.  The latest builds now include a fully executable python3 and support packages inside the application (unfortunately, this is why the application size has grown significantly).  If after the latest round of fixes you are still having issues with the python based scripts follow these steps to install a local version of python3 which mirrors the currently suggested build environment (The current build uses MacPorts python38 with the binary resident here at /opt/local/bin/python3.8)
-
-To install the MacPorts version of Python 3.8, follow these instructions:
-
-1. [Install MacPorts](https://www.macports.org/install.php)
-2. Update MacPorts `sudo port selfupdate`
-3. Install Python 3.8  `sudo port install python38`
-4. Tell macOS to use Python 3.8 for python  `sudo port select python python38`
-5. Tell macOS to use Python 3.8 for python3  `sudo port select python3 python38`
-6. Install additional python libraries `sudo port install py38-future py38-requests py38-requests-cache py38-lxml py38-oauthlib py38-curl py38-simplejson py38-wheel py38-pip py38-pymysql py38-mysqlclient`
-
 # Why Build With MacPorts
 Currently, for MythTV builds, MacPorts has all of the necessary dependencies for compiling MythTV in it's repository. For this reason alone, it significantly simplifies getting all of the dependencies installed and working without the need to maintain countless download links and specific to macOS patches.
 
