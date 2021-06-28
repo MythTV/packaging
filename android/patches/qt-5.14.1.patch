@@ -175,3 +175,41 @@ index 6f49549b6..912b05abb 100644
  } else: equals(QT_ARCH, arm)|equals(QT_ARCH, arm64) {
      contains(QT_CPU_FEATURES.$$QT_ARCH, neon) {
          # Default compiler settings include this feature, so just add to SOURCES
+diff --git a/qtbase/src/corelib/global/qendian.h b/qtbase/src/corelib/global/qendian.h
+index 257efbbdb..a97776c76 100644
+--- a/qtbase/src/corelib/global/qendian.h
++++ b/qtbase/src/corelib/global/qendian.h
+@@ -44,6 +44,8 @@
+ #include <QtCore/qfloat16.h>
+ #include <QtCore/qglobal.h>
+ 
++#include <limits>
++
+ // include stdlib.h and hope that it defines __GLIBC__ for glibc-based systems
+ #include <stdlib.h>
+ #include <string.h>
+diff --git a/qtbase/src/corelib/global/qfloat16.h b/qtbase/src/corelib/global/qfloat16.h
+index 02fd2f03c..27a3a158d 100644
+--- a/qtbase/src/corelib/global/qfloat16.h
++++ b/qtbase/src/corelib/global/qfloat16.h
+@@ -43,6 +43,7 @@
+ 
+ #include <QtCore/qglobal.h>
+ #include <QtCore/qmetatype.h>
++#include <limits>
+ #include <string.h>
+ 
+ #if defined(QT_COMPILER_SUPPORTS_F16C) && defined(__AVX2__) && !defined(__F16C__)
+diff --git a/qtbase/src/corelib/text/qbytearraymatcher.h b/qtbase/src/corelib/text/qbytearraymatcher.h
+index 0eedfc1d2..f5f9bef7b 100644
+--- a/qtbase/src/corelib/text/qbytearraymatcher.h
++++ b/qtbase/src/corelib/text/qbytearraymatcher.h
+@@ -42,6 +42,8 @@
+ 
+ #include <QtCore/qbytearray.h>
+ 
++#include <limits>
++
+ QT_BEGIN_NAMESPACE
+ 
+ 
