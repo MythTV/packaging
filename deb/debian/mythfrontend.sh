@@ -35,7 +35,7 @@ if [ "$1" = "--service" ]; then
         else
             until $environ /usr/bin/mythfrontend.real --syslog local7 ${MYTHFRONTEND_OPTS}
                   RET=$?
-                  [ "$RET" = "0" -o "$RET" = "1" -o "$RET" = "254" ]
+                  [ "$RET" = "0" -o "$RET" = "1" -o "$RET" = "130" -o "$RET" = "254" ]
             do
                   notify-send -i info 'Restarting Frontend' "The front-end crashed unexpectedly (exit code $RET) and is restarting. Please wait..."
             done
