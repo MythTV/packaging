@@ -9,4 +9,5 @@ libsinstall64
 mythinstall
 mythinstall64
 *.apk
+*.log
 android-package-source/src/org/mythtv
