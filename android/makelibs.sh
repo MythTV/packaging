@@ -102,6 +102,10 @@ while : ; do
 			shift
 			BUILD_LZO=1
 			;;
+		libzip)
+			shift
+			BUILD_LIBZIP=1
+			;;
 		libsamplerate)
 			shift
 			BUILD_LIBSAMPLERATE=1
@@ -142,6 +146,7 @@ while : ; do
 			BUILD_EXIV2=1
 			BUILD_ICU=1
 			BUILD_LZO=1
+			BUILD_LIBZIP=1
 			BUILD_LIBSAMPLERATE=1
 			BUILD_LIBBLURAY=1
 			BUILD_FLAC=1
@@ -207,6 +212,7 @@ while : ; do
 			echo "   fontconfig"
 			echo "   ass"
 			echo "   liblzo"
+			echo "   libzip"
 			echo "   libsamplerate"
 			echo "   libblueray"
 			echo "   qtwebkit"
@@ -1569,6 +1575,41 @@ CXXFLAGS="-isysroot $SYSROOT -mcpu=$CPU" \
 make -j$NCPUS src/liblzo2.la && \
 make install-libLTLIBRARIES install-data-am
 ERR=$?
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
+build_libzip() {
+rm -rf build
+LIBZIP_VERSION=1.8.0
+LIBZIP=libzip-$LIBZIP_VERSION
+echo -e "\n**** $LIBZIP ****"
+setup_lib https://libzip.org/download/libzip-$LIBZIP_VERSION.tar.gz $LIBZIP
+pushd $LIBZIP
+OPATH=$PATH
+
+if [ $CLEAN == 1 ]; then
+	rm -rf build
+	mkdir build
+fi
+cd build
+cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+      -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLROOT  \
+      -DANDROID_NDK=$ANDROID_NDK \
+      -DANDROID_TOOLCHAIN="clang" \
+      -DANDROID_ABI="$ARMEABI" \
+      -DANDROID_NATIVE_API_LEVEL="$ANDROID_NATIVE_API_LEVEL"  \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_MAKE_PROGRAM=make \
+      -DCMAKE_PREFIX_PATH="$INSTALLROOT" \
+      -DBUILD_SHARED_LIBS=ON \
+      .. && \
+      cmake --build . && \
+      cmake --build . --target install
+      ERR=$?
+
 PATH=$OPATH
 unset OPATH
 popd
@@ -3059,6 +3100,7 @@ pushd $LIBSDIR
 [ -n "$BUILD_FFI" ] && build_ffi
 [ -n "$BUILD_GLIB" ] && build_glib
 [ -n "$BUILD_LZO" ] && build_android_external_liblzo
+[ -n "$BUILD_LIBZIP" ] && build_libzip
 [ -n "$BUILD_FONTCONFIG" ] && build_fontconfig
 [ -n "$BUILD_FRIBIDI" ] && build_fribidi
 [ -n "$BUILD_ASS" ] && build_ass
