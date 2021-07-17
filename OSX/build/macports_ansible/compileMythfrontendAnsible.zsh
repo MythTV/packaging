@@ -263,7 +263,7 @@ PYTHON_RUNTIME_PKGS="MySQLdb,lxml,urllib3,simplejson,pycurl,future,httplib2"
 if ! [ -x "$(command -v $PY2APPLET_BIN)" ]; then
   sudo port -N install py$PYTHON_VERS-py2app
 else
-    echo "    Skipping py2app install - it is already installed"
+  echo "    Skipping py2app install - it is already installed"
 fi
 
 echo "------------ Cloning / Updating Mythtv Git Repository ------------"
@@ -273,10 +273,10 @@ cd $REPO_DIR
 if [ -d "$REPO_DIR/mythtv" ]; then
   cd $REPO_DIR/mythtv
   if $UPDATE_GIT && ! $SKIP_BUILD ; then
-    echo "    Updateing mythtv/mythplugins git repo"
+    echo "    Updating mythtv/mythplugins git repo"
     git pull
   else
-      echo "    Skipping mythtv/mythplugins git repo update"
+    echo "    Skipping mythtv/mythplugins git repo update"
   fi
 # else pull down a fresh copy of the repo from github
 else
@@ -293,6 +293,7 @@ if [ $APPLY_PATCHES ] && [ ! -z $MYTHTV_PATCH_DIR ]; then
     fi
   done
 fi
+
 echo "------------ Cloning / Updating Packaging Git Repository ------------"
 # get packaging
 cd $REPO_DIR/mythtv
@@ -333,33 +334,33 @@ GIT_VERS=$(git rev-parse --short HEAD)
 if $SKIP_BUILD; then
   echo "    Skipping mythtv configure and make"
 else
-    ./configure --prefix=$INSTALL_DIR \
-    			--runprefix=../Resources \
-    			--enable-mac-bundle \
-    			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
-    			--cc=clang \
-    			--cxx=clang++ \
-    			--disable-backend \
-    			--disable-distcc \
-    			--disable-lirc \
-    			--disable-firewire \
-                        --disable-libcec \
-                        --disable-x11 \
-    			--enable-libmp3lame \
-    			--enable-libxvid \
-    			--enable-libx264 \
-    			--enable-libx265 \
-    			--enable-libvpx \
-    			--enable-bdjava \
-    	 		--python=$PYTHON_BIN
-    echo "------------ Compiling Mythtv ------------"
-    #compile mythfrontend
-    make
-    # error out if make failed
-    if [ $? != 0 ]; then
-      echo "    Compiling Mythtv failed" >&2
-      exit 1
-    fi
+  ./configure --prefix=$INSTALL_DIR \
+              --runprefix=../Resources \
+              --enable-mac-bundle \
+              --qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
+              --cc=clang \
+              --cxx=clang++ \
+              --disable-backend \
+              --disable-distcc \
+              --disable-lirc \
+              --disable-firewire \
+              --disable-libcec \
+              --disable-x11 \
+              --enable-libmp3lame \
+              --enable-libxvid \
+              --enable-libx264 \
+              --enable-libx265 \
+              --enable-libvpx \
+              --enable-bdjava \
+              --python=$PYTHON_BIN
+  echo "------------ Compiling Mythtv ------------"
+  #compile mythfrontend
+  make
+  # error out if make failed
+  if [ $? != 0 ]; then
+    echo "    Compiling Mythtv failed" >&2
+    exit 1
+  fi
 fi
 
 echo "------------ Installing Mythtv ------------"
@@ -386,21 +387,21 @@ if $BUILD_PLUGINS; then
 
   else
     ./configure --prefix=$INSTALL_DIR \
-      			--runprefix=../Resources \
-      			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
-      			--cc=clang \
-      			--cxx=clang++ \
-      			--enable-mythgame \
-      			--enable-mythmusic \
-       			--enable-fftw \
-      			--enable-cdio \
-      			--enable-mythnews \
-      			--enable-mythweather \
-      			--disable-mytharchive \
-      			--disable-mythnetvision \
-      			--disable-mythzoneminder \
-      			--disable-mythzmserver \
-      	 		--python=$PYTHON_BIN
+                --runprefix=../Resources \
+                --qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
+                --cc=clang \
+                --cxx=clang++ \
+                --enable-mythgame \
+                --enable-mythmusic \
+                --enable-fftw \
+                --enable-cdio \
+                --enable-mythnews \
+                --enable-mythweather \
+                --disable-mytharchive \
+                --disable-mythnetvision \
+                --disable-mythzoneminder \
+                --disable-mythzmserver \
+                --python=$PYTHON_BIN
     echo "------------ Compiling Mythplugins ------------"
     #compile mythfrontend
     $PKGMGR_INST_PATH/libexec/qt5/bin/qmake  mythplugins.pro
@@ -436,10 +437,10 @@ if $BUILD_PLUGINS; then
   echo "------------ Copying Mythplugins dylibs into app ------------"
   # copy the mythPluins dylibs into the application
   for plugFilePath in $INSTALL_DIR/lib/mythtv/plugins/*.dylib; do
-      libFileName=$(basename $plugFilePath)
-      echo "    Installing $libFileName into app"
-      cp $plugFilePath $APP_PLUGINS_DIR
-      installLibs $APP_PLUGINS_DIR/$libFileName
+    libFileName=$(basename $plugFilePath)
+    echo "    Installing $libFileName into app"
+    cp $plugFilePath $APP_PLUGINS_DIR
+    installLibs $APP_PLUGINS_DIR/$libFileName
   done
 fi
 
@@ -462,7 +463,7 @@ for helperBinPath in $INSTALL_DIR/bin/*.app; do
   esac
 done
 
-#echo "------------ Copying in Mythfrontend.app icon  ------------"
+echo "------------ Copying in Mythfrontend.app icon  ------------"
 cd $APP_DIR
 # copy in the icon
 cp $APP_DIR/mythfrontend.icns $APP_RSRC_DIR/application.icns
@@ -485,9 +486,9 @@ mkdir -p $APP_RSRC_DIR/lib
 cp -Rp $INSTALL_DIR/lib/python* $APP_RSRC_DIR/lib/
 cp -Rp $INSTALL_DIR/lib/perl* $APP_RSRC_DIR/lib/
 if [ ! -f $APP_RSRC_DIR/lib/python ]; then
-   cd $APP_RSRC_DIR/lib
-   ln -s python$PYTHON_DOT_VERS python
-   cd $APP_DIR
+  cd $APP_RSRC_DIR/lib
+  ln -s python$PYTHON_DOT_VERS python
+  cd $APP_DIR
 fi
 
 echo "------------ Deploying python packages into application  ------------"
