@@ -11,6 +11,9 @@ compileMythtvAnsible.zsh - A script that creates a MythFrontend.app and .dmg fil
             files into the application, and finally generates a .dmg file for distribution.
             This script uses osx-bundler.pl.
 
+codesignAndPackage.zsh - A script that code signs / notarizes the application, generates a 
+            dmg file, and code signs. / notarizes the dmg bundle.
+
 Before running the script, the user must have Xcode, Xcode Command Line Tools, and MacPorts
 working on their system.
 
