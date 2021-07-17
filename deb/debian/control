@@ -98,8 +98,8 @@ Build-Depends:  debhelper (>= 10),
                 liblzo2-dev,
                 libxcb-shm0-dev,
                 libhdhomerun-dev,
-                libminizip-dev,
-                libgnutls28-dev
+                libgnutls28-dev,
+                libzip-dev
 
 Package: mythtv
 Architecture: all
