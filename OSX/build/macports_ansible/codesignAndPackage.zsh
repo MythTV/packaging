@@ -53,7 +53,9 @@ checkNotarization(){
   # loop for about 20 minutes, then exit
   WAITIME=20
   LOOPMAX=$(expr 1200 / $WAITIME)
-  # loop for ~20 minuted
+  # loop for ~20 minutes
+  # Add initial sleep to prevent failing before the notarization task is accepted
+  sleep $WAITTIME
   for ((i=1;i<=$LOOPMAX;i++));
   do
     # get notarization status
