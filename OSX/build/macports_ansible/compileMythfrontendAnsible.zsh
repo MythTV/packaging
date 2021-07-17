@@ -17,10 +17,10 @@ Standard options:
   --python-version=PYTHON_VERS           Desired Python 3 Version (38)
   --version=MYTHTV_VERS                  Requested mythtv git repo (master)
   --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (mariadb-10.2)
+  --generate-dmg=GENERATE_DMG            Generate a DMG file for distribution (false)
 Build Options
   --update-git=UPDATE_GIT                Update git repositories to latest (true)
   --skip-build=SKIP_BUILD                Skip configure and make - used when you just want to repackage (false)
-  --codesign=IDENTITY                    Optional identiy to codesign application - needed for ARM (NULL)
 Patch Options
   --apply-patches=APPLY_PATCHES          Apply patches specified in additional arguments (false)
   --mythtv-patch-dir=MYTHTV_PATCH_DIR    Directory containing patch files to be applied to Mythtv
@@ -30,6 +30,7 @@ Support Ports Options
   --skip-ansible=SKIP_ANSIBLE            Skip downloading ports with ansible (false)
                                          NOTE: Only do this if you are sure you have installed ALL dependencies
   --update-ports=UPDATE_PORTS            Update macports (false)
+
 EOF
 
   exit 0
@@ -41,9 +42,9 @@ PYTHON_VERS="38"
 UPDATE_PORTS=false
 MYTHTV_VERS="master"
 DATABASE_VERS=mariadb-10.2
+GENERATE_DMG=false
 UPDATE_GIT=true
 SKIP_BUILD=false
-IDENTITY=""
 SKIP_ANSIBLE=false
 APPLY_PATCHES=false
 MYTHTV_PATCH_DIR=""
@@ -69,9 +70,6 @@ for i in "$@"; do
       --skip-build=*)
         SKIP_BUILD="${i#*=}"
       ;;
-      --codesign=*)
-        IDENTITY="${i#*=}"
-      ;;
       --skip-ansible=*)
         SKIP_ANSIBLE="${i#*=}"
       ;;
@@ -80,6 +78,9 @@ for i in "$@"; do
       ;;
       --database-version=*)
         DATABASE_VERS="${i#*=}"
+      ;;
+      --generate-dmg=*)
+        GENERATE_DMG="${i#*=}"
       ;;
       --update-git*)
         UPDATE_GIT="${i#*=}"
@@ -108,7 +109,7 @@ done
 # if we're building on master - get release number from the git tags
 # otherwise extract it from the MYTHTV_VERS
 case $MYTHTV_VERS in
-    master*)
+    master*|*32*)
        VERS=$(git ls-remote --tags  git://github.com/MythTV/mythtv.git|tail -n 1)
        VERS=${VERS##*/v}
        VERS=$(echo $VERS|tr -dc '0-9')
@@ -125,13 +126,6 @@ ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
 PKGMGR_INST_PATH=/opt/local
 
 # Add some flags for the compiler to find the package manager locations
-CS_APP="/Applications/Xcode.app/Contents/Developer/usr/bin/codesign_allocate"
-
-if ! [ -L ${CS_APP} ]; then
-  echo "    Creating symlink for codesign_allocate"
-  sudo ln -s /usr/bin/codesign_allocate /Applications/Xcode.app/Contents/Developer/usr/bin/codesign_allocate
-fi
-export CODESIGN_ALLOCATE=$CS_APP
 export LDFLAGS="-L$PKGMGR_INST_PATH/lib"
 export C_INCLUDE_PATH=$PKGMGR_INST_PATH/include
 export CPLUS_INCLUDE_PATH=$PKGMGR_INST_PATH/include
@@ -148,32 +142,38 @@ OS_VERS=$(/usr/bin/sw_vers -productVersion)
 
 # macOS internal appliction paths
 APP_DIR=$SRC_DIR/programs/mythfrontend
-APP_RSRC_DIR=$APP_DIR/mythfrontend.app/Contents/Resources
-APP_FMWK_DIR=$APP_DIR/mythfrontend.app/Contents/Frameworks
-APP_EXE_DIR=$APP_DIR/mythfrontend.app/Contents/MacOS
-APP_PLUGINS_DIR=$APP_DIR/mythfrontend.app/Contents/PlugIns/
-APP_INFO_FILE=$APP_DIR/mythfrontend.app/Contents/Info.plist
-
+APP=$APP_DIR/mythfrontend.app
+APP_RSRC_DIR=$APP/Contents/Resources
+APP_FMWK_DIR=$APP/Contents/Frameworks
+APP_EXE_DIR=$APP/Contents/MacOS
+APP_PLUGINS_DIR=$APP_FMWK_DIR/PlugIns/
+APP_INFO_FILE=$APP/Contents/Info.plist
 # Tell pkg_config to ignore the paths for the package manager
 PKG_CONFIG_SYSTEM_INCLUDE_PATH=$PKGMGR_INST_PATH/include
+APP_DFLT_BNDL_ID="org.mythtv.mythfrontend"
 
-# declare helper functions
 # installLibs finds all @rpath dylibs for the input binary/dylib
 # copying any missing ones in the application's FrameWork directory
 # then updates the binary/dylib's internal link to point to copy location
-installLibs () {
-    binFile=$1
-    rpathDepList=$(/usr/bin/otool -L $binFile|grep rpath)
-    rpathDepList=$(echo $rpathDepList| gsed 's/(.*//')
-    while read -r dep; do
-        lib=${dep##*/}
-        if [ ! -f "$APP_FMWK_DIR/$lib" ]; then
-            echo "    Installing $lib into app"
-            cp $INSTALL_DIR/lib/$lib $APP_FMWK_DIR/
-        fi
-        install_name_tool $binFile -change $dep @executable_path/../Frameworks/$lib
-    done <<< "$rpathDepList"
+installLibs(){
+  binFile=$1
+  rpathDepList=$(/usr/bin/otool -L $binFile|grep rpath)
+  rpathDepList=$(echo $rpathDepList| gsed 's/(.*//')
+  while read -r dep; do
+    lib=${dep##*/}
+    if [ ! -f "$APP_FMWK_DIR/$lib" ]; then
+      echo "    Installing $lib into app"
+      cp $INSTALL_DIR/lib/$lib $APP_FMWK_DIR/
+    fi
+    install_name_tool $binFile -change $dep @executable_path/../Frameworks/$lib
+  done <<< "$rpathDepList"
 }
+
+# Function used to convert version strings into integers for comparison
+version (){
+  echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }';
+}
+
 
 echo "------------ Setting Up Directory Structure ------------"
 # setup the working directory structure
@@ -263,7 +263,7 @@ PYTHON_RUNTIME_PKGS="MySQLdb,lxml,urllib3,simplejson,pycurl,future,httplib2"
 if ! [ -x "$(command -v $PY2APPLET_BIN)" ]; then
   sudo port -N install py$PYTHON_VERS-py2app
 else
-    echo "    Skipping py2app install - it is already installed"
+  echo "    Skipping py2app install - it is already installed"
 fi
 
 echo "------------ Cloning / Updating Mythtv Git Repository ------------"
@@ -273,10 +273,10 @@ cd $REPO_DIR
 if [ -d "$REPO_DIR/mythtv" ]; then
   cd $REPO_DIR/mythtv
   if $UPDATE_GIT && ! $SKIP_BUILD ; then
-    echo "    Updateing mythtv/mythplugins git repo"
+    echo "    Updating mythtv/mythplugins git repo"
     git pull
   else
-      echo "    Skipping mythtv/mythplugins git repo update"
+    echo "    Skipping mythtv/mythplugins git repo update"
   fi
 # else pull down a fresh copy of the repo from github
 else
@@ -293,6 +293,7 @@ if [ $APPLY_PATCHES ] && [ ! -z $MYTHTV_PATCH_DIR ]; then
     fi
   done
 fi
+
 echo "------------ Cloning / Updating Packaging Git Repository ------------"
 # get packaging
 cd $REPO_DIR/mythtv
@@ -325,41 +326,41 @@ fi
 echo "------------ Configuring Mythtv ------------"
 # configure mythfrontend
 cd $SRC_DIR
-if [ -d $APP_DIR/mythfrontend.app ]; then
+if [ -d $APP ]; then
   echo "    Cleaning up past Mythfrontend application"
-  rm -Rf $APP_DIR/mythfrontend.app
+  rm -Rf $APP
 fi
 GIT_VERS=$(git rev-parse --short HEAD)
 if $SKIP_BUILD; then
   echo "    Skipping mythtv configure and make"
 else
-    ./configure --prefix=$INSTALL_DIR \
-    			--runprefix=../Resources \
-    			--enable-mac-bundle \
-    			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
-    			--cc=clang \
-    			--cxx=clang++ \
-    			--disable-backend \
-    			--disable-distcc \
-    			--disable-lirc \
-    			--disable-firewire \
-                        --disable-libcec \
-                        --disable-x11 \
-    			--enable-libmp3lame \
-    			--enable-libxvid \
-    			--enable-libx264 \
-    			--enable-libx265 \
-    			--enable-libvpx \
-    			--enable-bdjava \
-    	 		--python=$PYTHON_BIN
-    echo "------------ Compiling Mythtv ------------"
-    #compile mythfrontend
-    make
-    # error out if make failed
-    if [ $? != 0 ]; then
-      echo "    Compiling Mythtv failed" >&2
-      exit 1
-    fi
+  ./configure --prefix=$INSTALL_DIR \
+              --runprefix=../Resources \
+              --enable-mac-bundle \
+              --qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
+              --cc=clang \
+              --cxx=clang++ \
+              --disable-backend \
+              --disable-distcc \
+              --disable-lirc \
+              --disable-firewire \
+              --disable-libcec \
+              --disable-x11 \
+              --enable-libmp3lame \
+              --enable-libxvid \
+              --enable-libx264 \
+              --enable-libx265 \
+              --enable-libvpx \
+              --enable-bdjava \
+              --python=$PYTHON_BIN
+  echo "------------ Compiling Mythtv ------------"
+  #compile mythfrontend
+  make
+  # error out if make failed
+  if [ $? != 0 ]; then
+    echo "    Compiling Mythtv failed" >&2
+    exit 1
+  fi
 fi
 
 echo "------------ Installing Mythtv ------------"
@@ -386,21 +387,21 @@ if $BUILD_PLUGINS; then
 
   else
     ./configure --prefix=$INSTALL_DIR \
-      			--runprefix=../Resources \
-      			--qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
-      			--cc=clang \
-      			--cxx=clang++ \
-      			--enable-mythgame \
-      			--enable-mythmusic \
-       			--enable-fftw \
-      			--enable-cdio \
-      			--enable-mythnews \
-      			--enable-mythweather \
-      			--disable-mytharchive \
-      			--disable-mythnetvision \
-      			--disable-mythzoneminder \
-      			--disable-mythzmserver \
-      	 		--python=$PYTHON_BIN
+                --runprefix=../Resources \
+                --qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
+                --cc=clang \
+                --cxx=clang++ \
+                --enable-mythgame \
+                --enable-mythmusic \
+                --enable-fftw \
+                --enable-cdio \
+                --enable-mythnews \
+                --enable-mythweather \
+                --disable-mytharchive \
+                --disable-mythnetvision \
+                --disable-mythzoneminder \
+                --disable-mythzmserver \
+                --python=$PYTHON_BIN
     echo "------------ Compiling Mythplugins ------------"
     #compile mythfrontend
     $PKGMGR_INST_PATH/libexec/qt5/bin/qmake  mythplugins.pro
@@ -417,6 +418,12 @@ else
   echo "------------ Skipping Mythplugins Compile ------------"
 fi
 
+# reactivate ffmpeg if installed
+if $FFMPEG_INSTALLED; then
+  echo "    Reactivating FFMPEG to avoid a linker issue"
+  sudo port activate ffmpeg
+fi
+
 echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 # find all mythtv dylibs linked via @rpath in mythfrontend, move them into the
 # application application Framwork dir and update the internal link to point to
@@ -424,16 +431,16 @@ echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 cd $APP_EXE_DIR
 mkdir $APP_FMWK_DIR
 installLibs $APP_EXE_DIR/mythfrontend
+mkdir $APP_PLUGINS_DIR
 
 if $BUILD_PLUGINS; then
   echo "------------ Copying Mythplugins dylibs into app ------------"
   # copy the mythPluins dylibs into the application
-  mkdir $APP_PLUGINS_DIR
   for plugFilePath in $INSTALL_DIR/lib/mythtv/plugins/*.dylib; do
-      libFileName=$(basename $plugFilePath)
-      echo "    Installing $libFileName into app"
-      cp $plugFilePath $APP_PLUGINS_DIR
-      installLibs $APP_PLUGINS_DIR/$libFileName
+    libFileName=$(basename $plugFilePath)
+    echo "    Installing $libFileName into app"
+    cp $plugFilePath $APP_PLUGINS_DIR
+    installLibs $APP_PLUGINS_DIR/$libFileName
   done
 fi
 
@@ -456,7 +463,7 @@ for helperBinPath in $INSTALL_DIR/bin/*.app; do
   esac
 done
 
-#echo "------------ Copying in Mythfrontend.app icon  ------------"
+echo "------------ Copying in Mythfrontend.app icon  ------------"
 cd $APP_DIR
 # copy in the icon
 cp $APP_DIR/mythfrontend.icns $APP_RSRC_DIR/application.icns
@@ -469,19 +476,19 @@ cp -Rp $INSTALL_DIR/share/mythtv/* $APP_RSRC_DIR/share/mythtv/
 echo "------------ Updating application plist  ------------"
 # Update the plist
 gsed -i "8c\	<string>application.icns</string>" $APP_INFO_FILE
-gsed -i "10c\	<string>org.mythtv.mythfrontend</string>\n	<key>CFBundleInfoDictionaryVersion</key>\n	<string>6.0</string>" $APP_INFO_FILE
+gsed -i "10c\	<string>$APP_BNDL_ID</string>\n	<key>CFBundleInfoDictionaryVersion</key>\n	<string>6.0</string>" $APP_INFO_FILE
 gsed -i "14a\	<key>CFBundleShortVersionString</key>\n	<string>$VERS</string>" $APP_INFO_FILE
 gsed -i "18c\	<string>mythtv</string>\n	<key>NSAppleScriptEnabled</key>\n	<string>NO</string>\n	<key>CFBundleGetInfoString</key>\n	<string></string>\n	<key>CFBundleVersion</key>\n	<string>1.0</string>\n	<key>NSHumanReadableCopyright</key>\n	<string>MythTV Team</string>" $APP_INFO_FILE
-gsed -i "34a\	<key>ATSApplicationFontsPath</key>\n	<string>share/mythtv/fonts</string>" $APP_DIR/mythfrontend.app/Contents/Info.plist
+gsed -i "34a\	<key>ATSApplicationFontsPath</key>\n	<string>share/mythtv/fonts</string>" $APP_INFO_FILE
 
 echo "------------ Copying mythtv lib/python* and lib/perl directory into application  ------------"
 mkdir -p $APP_RSRC_DIR/lib
 cp -Rp $INSTALL_DIR/lib/python* $APP_RSRC_DIR/lib/
 cp -Rp $INSTALL_DIR/lib/perl* $APP_RSRC_DIR/lib/
 if [ ! -f $APP_RSRC_DIR/lib/python ]; then
-   cd $APP_RSRC_DIR/lib
-   ln -s python$PYTHON_DOT_VERS python
-   cd $APP_DIR
+  cd $APP_RSRC_DIR/lib
+  ln -s python$PYTHON_DOT_VERS python
+  cd $APP_DIR
 fi
 
 echo "------------ Deploying python packages into application  ------------"
@@ -511,13 +518,12 @@ $PYTHON_BIN setup.py -q py2app 2>&1 > /dev/null
 # now we need to copy over the pythong app's pieces into the mythfrontend.app to get it working
 echo "    Copying in Python Framework libraries"
 cd $APP_DIR/PYTHON_APP/dist/ttvdb.app
+cp -Rnp Contents/Frameworks/* $APP_FMWK_DIR
 
-cp -Rnp Contents/Frameworks/* $APP_DIR/mythfrontend.app/Contents/Frameworks/
 echo "    Copying in Python Binary"
-cp -p Contents/MacOS/python $APP_DIR/mythfrontend.app/Contents/MacOS/
+cp -p Contents/MacOS/python $APP_EXE_DIR
 echo "    Copying in Python Resources"
-cp -Rnp Contents/Resources/* $APP_DIR/mythfrontend.app/Contents/Resources/
-rm -Rf
+cp -Rnp Contents/Resources/* $APP_RSRC_DIR
 cd $APP_DIR
 # clean up temp application
 rm -Rf PYTHON_APP
@@ -543,37 +549,31 @@ cp $PKGMGR_INST_PATH/share/fonts/liberation-fonts/*.ttf $APP_RSRC_DIR/share/myth
 
 echo "------------ Add symbolic link structure for copied in files  ------------"
 # make some symbolic links to match past working copies
-cd $APP_EXE_DIR
-if $BUILD_PLUGINS; then
-  ln -s ../PlugIns/sqldrivers .
-fi
-cd $APP_RSRC_DIR
-ln -s ../MacOS bin
 if $BUILD_PLUGINS; then
   mkdir -p $APP_RSRC_DIR/lib/mythtv
   cd $APP_RSRC_DIR/lib/mythtv
-  ln -s ../../../PlugIns plugins
+  ln -s ../../../Frameworks/PlugIns plugins
 fi
 
 echo "------------ Deploying QT to Mythfrontend Executable ------------"
-# Do this last (before generating the dmg) so that we do not invalidate the codesign
+# Do this last in case we want to codesign later
 # Package up the executable
 cd $APP_DIR
+$PKGMGR_INST_PATH/libexec/qt5/bin/macdeployqt $APP \
+                    -libpath=$INSTALL_DIR/lib/\
+                    -libpath=$PKGMGR_INST_PATH/lib
 
-if [ -z $IDENTITY ]; then
-  CODESIGN_FLAGS=""
-else
-  CODESIGN_FLAGS="-hardened-runtime -appstore-compliant -codesign=$IDENTITY"
-fi
-
-$PKGMGR_INST_PATH/libexec/qt5/bin/macdeployqt $APP_DIR/mythfrontend.app $CODESIGN_FLAGS -libpath=$INSTALL_DIR/lib/ -libpath=$PKGMGR_INST_PATH/lib
+# move the QT PlugIns into the App's framework to pass app signing
+# we'll set the QT_QPA_PLATFORM_PLUGIN_PATH to point the app to the new location
+mv $APP/Contents/PlugIns/* $APP_PLUGINS_DIR
+gsed -i "2c\Plugins = Frameworks/PlugIns" $APP_RSRC_DIR/qt.conf
 
 echo "------------ Generating mythfrontend startup script ------------"
 # since we now have python installed internally, we need to make sure that the mythfrontend
 # executable launched from the curret directory so that the python relative paths point int
 # to the internal python
+# We need to do this step after macdeployqt since the startup script breaks macdeployqt
 cd $APP_EXE_DIR
-mv mythfrontend mythfrontend.real
 echo "#!/bin/sh
 
 BASEDIR=\$(dirname "\$0")
@@ -588,28 +588,40 @@ export PYTHONHOME=\$APP_DIR/Contents/Resources
 export PYTHONPATH=\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/site-packages:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/sites-enabled
 
 cd \$BASEDIR
-./mythfrontend.real \$@" >> mythfrontend
+./mythfrontend \$@" > mythfrontend.sh
 
-chmod +x mythfrontend
+chmod +x mythfrontend.sh
 
-echo "------------ Generating .dmg file  ------------"
-# Package up the build
-cd $APP_DIR
-if $BUILD_PLUGINS; then
+# Update the plist to use the startup script
+gsed -i "6c\        <string>mythfrontend.sh</string>" $APP_INFO_FILE
+
+# only generate the DMG here if requested
+if $GENERATE_DMG; then
+  cd $APP_DIR
+  echo "------------ Generating .dmg file  ------------"
+  # Package up the build
+  if $BUILD_PLUGINS; then
     VOL_NAME=MythFrontend-$VERS-$ARCH-$OS_VERS-v$VERS-$GIT_VERS-with-plugins
-else
+  else
     VOL_NAME=MythFrontend-$VERS-$ARCH-$OS_VERS-v$VERS-$GIT_VERS
+  fi
+  # Archive off any previous files
+  if [ -f $VOL_NAME.dmg ] ; then
+      mv $VOL_NAME.dmg $VOL_NAME$(date +'%d%m%Y%H%M%S').dmg
+  fi
+  # Generate the .dmg file
+  hdiutil create $VOL_NAME.dmg -fs HFS+ -srcfolder $APP -volname $VOL_NAME
 fi
-# Archive off any previous files
-if [ -f $APP_DIR/$VOL_NAME.dmg ] ; then
-    mv $APP_DIR/$VOL_NAME.dmg $APP_DIR/$VOL_NAME$(date +'%d%m%Y%H%M%S').dmg
-fi
-# Generate the .dmg file
-hdiutil create $APP_DIR/$VOL_NAME.dmg -fs HFS+ -srcfolder $APP_DIR/Mythfrontend.app -volname $VOL_NAME
 
-
-# reactivate ffmpeg if installed
-if $FFMPEG_INSTALLED; then
-  echo "    Reactivating FFMPEG to avoid a linker issue"
-  sudo port activate ffmpeg 
+echo "------------ Build Complete ------------"
+echo "     Application is located:"
+echo "     $APP"
+if $GENERATE_DMG; then
+  echo "     DMG is located:"
+  echo "     $APP_DIR/$VOL_NAME.dmg"
 fi
+echo ""
+echo "If you intend to distribute the application, then next steps are to codesign
+and notarize the appliction using the codesignAndPackage.zsh script with the
+following command:"
+echo "    codesignAndPackage.zsh $APP"
