@@ -156,6 +156,7 @@ Depends: adduser,
          python3-mysqldb,
          python3-lxml,
          python3-future,
+         libzip5,
          ${shlibs:Depends},
          ${perl:Depends},
          ${misc:Depends}
@@ -422,7 +423,7 @@ Package: mythgame
 Architecture: any
 Depends: mythtv-frontend (>= ${binary:Version}),
          python3,
-         minizip,
+         libzip5,
          ${shlibs:Depends},
          ${misc:Depends}
 Description: Emulator & PC Game frontend module for MythTV

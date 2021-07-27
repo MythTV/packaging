@@ -156,6 +156,7 @@ Depends: adduser,
          python3-mysqldb,
          python3-lxml,
          python3-future,
+         libzip5,
          ${shlibs:Depends},
          ${misc:Depends}
 Suggests: mythtv-doc
@@ -423,7 +424,7 @@ Depends: mythtv-frontend (>= ${binary:Version}),
          python3,
          ${shlibs:Depends},
          ${misc:Depends},
-         minizip
+         libzip5
 Description: Emulator & PC Game frontend module for MythTV
  MythGame can be used as a frontend to start any emulator that your host OS
  runs.
