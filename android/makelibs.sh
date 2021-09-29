@@ -110,6 +110,10 @@ while : ; do
 			shift
 			BUILD_LIBSAMPLERATE=1
 			;;
+		libsoundtouch)
+			shift
+			BUILD_LIBSOUNDTOUCH=1
+			;;
 		libbluray)
 			shift
 			BUILD_LIBBLURAY=1
@@ -148,6 +152,7 @@ while : ; do
 			BUILD_LZO=1
 			BUILD_LIBZIP=1
 			BUILD_LIBSAMPLERATE=1
+			BUILD_LIBSOUNDTOUCH=1
 			BUILD_LIBBLURAY=1
 			BUILD_FLAC=1
 			BUILD_VORBIS=1
@@ -1826,6 +1831,55 @@ popd
 return $ERR
 }
 
+build_libsoundtouch() {
+rm -rf build
+LIBSOUNDTOUCH=soundtouch-2.3.1-e1f315f5358d9db5cee35a7a2886425489fcefe8
+echo -e "\n**** $LIBSOUNDTOUCH ****"
+setup_lib https://gitlab.com/soundtouch/soundtouch/-/archive/2.3.1/$LIBSOUNDTOUCH.tar.gz $LIBSOUNDTOUCH
+pushd $LIBSOUNDTOUCH
+OPATH=$PATH
+{ patch -p1 -Nt -r - || true; } <<'END'
+diff --git a/bootstrap b/bootstrap
+index 7534e44..813d02d 100755
+--- a/bootstrap
++++ b/bootstrap
+@@ -11,7 +11,7 @@ then
+ 	then
+ 		configure && $0 --clean
+ 	else 
+-		bootstrap && configure && $0 --clean
++		./bootstrap && configure && $0 --clean
+ 	fi
+ 
+ 	rm -rf configure libtool aclocal.m4 `find . -name Makefile.in` autom4te*.cache config/config.guess config/config.h.in config/config.sub config/depcomp config/install-sh config/ltmain.sh config/missing config/mkinstalldirs config/stamp-h config/stamp-h.in
+END
+if [ $CLEAN == 1 ]; then
+	./bootstrap --clean || true
+fi
+
+./bootstrap && ./configure \
+	CFLAGS="-isysroot $SYSROOT $ANDROID_API_DEF" \
+	CXXFLAGS="-isysroot $SYSROOT $ANDROID_API_DEF" \
+	RANLIB=${CROSSPATH2}ranlib \
+	OBJDUMP=${CROSSPATH2}objdump \
+	AR=${CROSSPATH2}ar \
+	CC="${CROSSPATH3}clang" \
+	CXX="${CROSSPATH3}clang++" \
+	CPP1="$CROSSPATH/$MY_ANDROID_NDK_TOOLS_PREFIX-cpp" \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
+	--prefix=$INSTALLROOT \
+	--enable-shared \
+	--enable-static &&
+	make -j$NCPUS &&
+	make install
+	ERR=$?
+
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
 build_libbluray() {
 rm -rf build
 LIBBLURAYVER=1.1.2
@@ -3105,6 +3159,7 @@ pushd $LIBSDIR
 [ -n "$BUILD_FRIBIDI" ] && build_fribidi
 [ -n "$BUILD_ASS" ] && build_ass
 [ -n "$BUILD_LIBSAMPLERATE" ] && build_libsamplerate
+[ -n "$BUILD_LIBSOUNDTOUCH" ] && build_libsoundtouch
 [ -n "$BUILD_LIBBLURAY" ] && build_libbluray
 [ -n "$BUILD_FFTW" ] && build_fftw
 if [ -n "$BUILD_QT5EXTRAS" ]; then
