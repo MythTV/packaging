@@ -349,6 +349,7 @@ if [ ! -e stamp_configure_android ] ; then
 	[ -n "$CPU" ] && CPU=
 $MYTHTVSRC/configure \
 	--disable-ccache \
+        $MYTHCONFIGEXTRA \
 	--cross-prefix="$CROSSPATH2" \
 	--cross-prefix-cc="$CROSSPATH3" \
 	--arch=$ARCH $CPU \
