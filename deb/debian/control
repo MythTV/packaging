@@ -99,7 +99,8 @@ Build-Depends:  debhelper (>= 10),
                 libxcb-shm0-dev,
                 libhdhomerun-dev,
                 libgnutls28-dev,
-                libzip-dev
+                libzip-dev,
+                libsoundtouch-dev
 
 Package: mythtv
 Architecture: all
