@@ -13,10 +13,10 @@ Index: mythtv-master/mythtv/bindings/python/Makefile
  ifdef INSTALL_ROOT
 -	ROOT_FLAGS = --root="$(INSTALL_ROOT)"
 +	ROOT_FLAGS = --root="$(INSTALL_ROOT)/../libmyth-python"
+ else
+ 	ROOT_FLAGS = --root="/"
  endif
- 
- REAL_PREFIX = $(PREFIX)
-@@ -10,6 +10,7 @@
+@@ -12,6 +12,7 @@
  		PREFIX_FLAGS=--prefix="$(PREFIX)"
  	endif
  endif
