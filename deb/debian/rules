@@ -35,7 +35,6 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=$(MYTHTV_COMPILE_TYPE) \
 				--enable-audio-alsa \
 				--enable-audio-oss \
 				--enable-dvb \
-				--enable-ivtv \
 				--enable-firewire \
 				--enable-joystick-menu \
 				--with-bindings=perl \
