@@ -378,8 +378,6 @@ $MYTHTVSRC/configure \
 	--disable-v4l2 \
 	--disable-firewire \
 	--disable-ceton \
-	--disable-ivtv \
-	--disable-hdpvr \
 	--disable-lirc \
 	--disable-libcec \
 	--disable-x11 \
