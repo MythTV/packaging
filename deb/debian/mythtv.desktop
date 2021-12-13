@@ -7,3 +7,4 @@ Type=Application
 Icon=mythtv
 Categories=GNOME;GTK;AudioVideo;Audio;Video;
 X-AppInstall-Package=mythtv
+StartupWMClass=mythfrontend.real
