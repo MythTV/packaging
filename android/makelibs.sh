@@ -1833,10 +1833,23 @@ return $ERR
 
 build_libsoundtouch() {
 rm -rf build
-LIBSOUNDTOUCH=soundtouch-2.3.1-e1f315f5358d9db5cee35a7a2886425489fcefe8
+LIBSOUNDTOUCHVER=2.3.1
+LIBSOUNDTOUCH=soundtouch-$LIBSOUNDTOUCHVER
+LIBSOUNDTOUCHSRC="https://codeberg.org/soundtouch/soundtouch/archive/$LIBSOUNDTOUCHVER.tar.gz"
 echo -e "\n**** $LIBSOUNDTOUCH ****"
-setup_lib https://gitlab.com/soundtouch/soundtouch/-/archive/2.3.1/$LIBSOUNDTOUCH.tar.gz $LIBSOUNDTOUCH
+[ -d ../tarballs ] || mkdir -p ../tarballs
+if [ ! -e "../tarballs/$LIBSOUNDTOUCH.tar.gz" ]; then
+    pushd ../tarballs
+    wget --no-check-certificate -O "$LIBSOUNDTOUCH.tar.gz" "$LIBSOUNDTOUCHSRC"
+    popd
+fi
+tar xf "../tarballs/$LIBSOUNDTOUCH.tar.gz"
+rm -rf $LIBSOUNDTOUCH
+mv soundtouch $LIBSOUNDTOUCH
 pushd $LIBSOUNDTOUCH
+git init
+git add --all
+git commit -m"initial"
 OPATH=$PATH
 { patch -p1 -Nt -r - || true; } <<'END'
 diff --git a/bootstrap b/bootstrap
