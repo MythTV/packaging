@@ -219,6 +219,7 @@ while : ; do
 			echo "   liblzo"
 			echo "   libzip"
 			echo "   libsamplerate"
+			echo "   libsoundtouch"
 			echo "   libblueray"
 			echo "   qtwebkit"
 			echo "   qt5extras"
@@ -346,6 +347,9 @@ fetch_file() {
 	fi
 }
 
+# param 1 = URL for fetching source
+# param 2 = directory name inside that tar file
+#           defaults to basename of URL without .tar.*
 setup_lib() {
 	# fetch and extract if necessary a lib
 	# prepare for patching
