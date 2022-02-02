@@ -1,4 +1,4 @@
-mythtv (2:32.0~master) focal; urgency=medium
+mythtv (2:32.0+fixes) jammy; urgency=medium
 
   * Dummy entry to bump version to 32
 
