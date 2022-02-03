@@ -23,7 +23,7 @@ Index: mythtv/mythtv/libs/libmythmetadata/globals.cpp
 --- mythtv.orig/mythtv/libs/libmythmetadata/globals.cpp
 +++ mythtv/mythtv/libs/libmythmetadata/globals.cpp
 @@ -44,5 +44,5 @@ const QString JUMP_GALLERY_DEFAULT = "Ga
- #ifdef Q_OS_MAC
+ #ifdef Q_OS_DARWIN
  const QString DEFAULT_VIDEOSTARTUP_DIR = QDir::homePath() + "/Movies";
  #else
 -const QString DEFAULT_VIDEOSTARTUP_DIR = "/share/Movies/dvd";
