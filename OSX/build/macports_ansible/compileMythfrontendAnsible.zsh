@@ -41,7 +41,7 @@ EOF
 BUILD_PLUGINS=false
 PYTHON_VERS="38"
 UPDATE_PORTS=false
-MYTHTV_VERS="master"
+MYTHTV_VERS="fixes/32"
 DATABASE_VERS=mariadb-10.2
 QT_VERS=qt5
 GENERATE_DMG=false
@@ -114,7 +114,7 @@ done
 # if we're building on master - get release number from the git tags
 # otherwise extract it from the MYTHTV_VERS
 case $MYTHTV_VERS in
-    master*|*32*)
+    master*|*33*)
        VERS=$(git ls-remote --tags  git://github.com/MythTV/mythtv.git|tail -n 1)
        VERS=${VERS##*/v}
        VERS=$(echo $VERS|tr -dc '0-9')
