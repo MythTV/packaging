@@ -539,11 +539,11 @@ if [ -f setup.py ]; then
   rm setup.py
 fi
 
-echo "    Creating a temporary application from ttvdb.py"
+echo "    Creating a temporary application from ttvdb4.py"
 # in order to get python embedded in the application we're going to make a temporyary application
 # from one of the python scripts (ttvdb) which will copy in all the required libraries for
 # running and will make a standalone python executable not tied to the system
-# ttvdb seems to be more particular than tmdb3...
+# ttvdb4 seems to be more particular than tmdb3...
 
 # special handling for arm64 architecture until py2app is updated to fully support it
 if [ $(/usr/bin/arch)=="arm64" ]; then
@@ -551,7 +551,7 @@ if [ $(/usr/bin/arch)=="arm64" ]; then
 else
   PY2APP_ARCH=""
 fi
-$PY2APPLET_BIN $PY2APP_ARCH -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/ttvdb.py
+$PY2APPLET_BIN $PY2APP_ARCH -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/ttvdb4.py
 
 $PYTHON_BIN setup.py -q py2app 2>&1 > /dev/null
 # now we need to copy over the pythong app's pieces into the mythfrontend.app to get it working
