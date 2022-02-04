@@ -17,6 +17,7 @@ Standard options:
   --python-version=PYTHON_VERS           Desired Python 3 Version (38)
   --version=MYTHTV_VERS                  Requested mythtv git repo (master)
   --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (mariadb-10.2)
+  --qt-version=qt5                       Select Qt version to build against (qt5)
   --generate-dmg=GENERATE_DMG            Generate a DMG file for distribution (false)
 Build Options
   --update-git=UPDATE_GIT                Update git repositories to latest (true)
@@ -42,6 +43,7 @@ PYTHON_VERS="38"
 UPDATE_PORTS=false
 MYTHTV_VERS="master"
 DATABASE_VERS=mariadb-10.2
+QT_VERS=qt5
 GENERATE_DMG=false
 UPDATE_GIT=true
 SKIP_BUILD=false
@@ -78,6 +80,9 @@ for i in "$@"; do
       ;;
       --database-version=*)
         DATABASE_VERS="${i#*=}"
+      ;;
+      --qt-version=*)
+        QT_VERS="${i#*=}"
       ;;
       --generate-dmg=*)
         GENERATE_DMG="${i#*=}"
@@ -126,10 +131,10 @@ ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
 PKGMGR_INST_PATH=/opt/local
 
 # Add some flags for the compiler to find the package manager locations
-export LDFLAGS="-L$PKGMGR_INST_PATH/lib"
-export C_INCLUDE_PATH=$PKGMGR_INST_PATH/include
-export CPLUS_INCLUDE_PATH=$PKGMGR_INST_PATH/include
-export LIBRARY_PATH=$PKGMGR_INST_PATH/lib
+export LDFLAGS="-L$PKGMGR_INST_PATH/libexec/$QT_VERS/lib -L$PKGMGR_INST_PATH/lib"
+export C_INCLUDE_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray
+export CPLUS_INCLUDE_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray
+export LIBRARY_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/lib/:$PKGMGR_INST_PATH/lib
 
 # setup some paths to make the following commands easier to understand
 SRC_DIR=$REPO_DIR/mythtv/mythtv
@@ -163,9 +168,17 @@ installLibs(){
     lib=${dep##*/}
     if [ ! -f "$APP_FMWK_DIR/$lib" ]; then
       echo "    Installing $lib into app"
-      cp $INSTALL_DIR/lib/$lib $APP_FMWK_DIR/
+      # only copy in the non-Qt items, we'll take care of the qt items with deployqt
+      case "$lib" in
+        *Qt*)
+          cp -R $QT_PATH/lib/$lib.framework/Versions/Current/$lib $APP_FMWK_DIR/
+          install_name_tool $binFile -change $dep @executable_path/../Frameworks/$lib
+        ;;
+        *)
+          cp $INSTALL_DIR/lib/$lib $APP_FMWK_DIR/
+          install_name_tool $binFile -change $dep @executable_path/../Frameworks/$lib
+      esac
     fi
-    install_name_tool $binFile -change $dep @executable_path/../Frameworks/$lib
   done <<< "$rpathDepList"
 }
 
@@ -174,6 +187,23 @@ version (){
   echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }';
 }
 
+# Select the correct QT version of tools / libraries
+case $QT_VERS in
+    qt5)
+       QT_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS
+       QMAKE_CMD=$QT_PATH/bin/qmake
+       QMAKE_SPECS=$QT_PATH/mkspecs/macx-clang
+       ANSIBLE_QT=$QT_VERS.yml
+    ;;
+    *)
+       QT_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS
+       QMAKE_CMD=$QT_PATH/bin/qmake6
+       QMAKE_SPECS=$QT_PATH/mkspecs/macx-clang
+       ANSIBLE_QT=$QT_VERS.yml
+       echo "!!!!! Building with Qt6 - disabling plugins !!!!!"
+       BUILD_PLUGINS=false
+    ;;
+esac
 
 echo "------------ Setting Up Directory Structure ------------"
 # setup the working directory structure
@@ -219,10 +249,10 @@ else
   FFMPEG_INSTALLED=false
 fi
 
-echo "------------ Running Ansible ------------"
 if $SKIP_ANSIBLE || $SKIP_BUILD; then
   echo "    Skipping port installation via ansible"
 else
+  echo "------------ Running Ansible ------------"
   # get mythtv's ansible playbooks, and install required ports
   # if the repo exists, update (assume the flag is set)
   if [ -d "$REPO_DIR/ansible" ]; then
@@ -241,8 +271,16 @@ else
   fi
   cd $REPO_DIR/ansible
   export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
-  $ANSIBLE_PLAYBOOK qt5.yml --extra-vars "database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS" --ask-become-pass
+  case $QT_VERS in
+      qt5)
+         $ANSIBLE_PLAYBOOK $ANSIBLE_QT --extra-vars "database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS" --ask-become-pass
+      ;;
+      *)
+         $ANSIBLE_PLAYBOOK $ANSIBLE_QT --extra-vars "database_version=$DATABASE_VERS" --ask-become-pass
+      ;;
+  esac
 fi
+
 # get the version of python installed by MacPorts
 PYTHON_BIN=$(which python$PYTHON_DOT_VERS)
 PYTHON_RUNTIME_BIN="./python$PYTHON_DOT_VERS"
@@ -337,7 +375,7 @@ else
   ./configure --prefix=$INSTALL_DIR \
               --runprefix=../Resources \
               --enable-mac-bundle \
-              --qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
+              --qmake=$QMAKE_CMD \
               --cc=clang \
               --cxx=clang++ \
               --disable-backend \
@@ -388,7 +426,8 @@ if $BUILD_PLUGINS; then
   else
     ./configure --prefix=$INSTALL_DIR \
                 --runprefix=../Resources \
-                --qmake=$PKGMGR_INST_PATH/libexec/qt5/bin/qmake \
+                --qmake=$QMAKE_CMD \
+                --qmakespecs=$QMAKE_SPECS \
                 --cc=clang \
                 --cxx=clang++ \
                 --enable-mythgame \
@@ -403,8 +442,8 @@ if $BUILD_PLUGINS; then
                 --disable-mythzmserver \
                 --python=$PYTHON_BIN
     echo "------------ Compiling Mythplugins ------------"
-    #compile mythfrontend
-    $PKGMGR_INST_PATH/libexec/qt5/bin/qmake  mythplugins.pro
+    #compile plugins
+    $QMAKE_CMD mythplugins.pro
     make
     # error out if make failed
     if [ $? != 0 ]; then
@@ -559,9 +598,10 @@ echo "------------ Deploying QT to Mythfrontend Executable ------------"
 # Do this last in case we want to codesign later
 # Package up the executable
 cd $APP_DIR
-$PKGMGR_INST_PATH/libexec/qt5/bin/macdeployqt $APP \
+$QT_PATH/bin/macdeployqt $APP \
                     -libpath=$INSTALL_DIR/lib/\
-                    -libpath=$PKGMGR_INST_PATH/lib
+                    -libpath=$PKGMGR_INST_PATH/lib\
+                    -libpath=$QT_PATH/lib
 
 # move the QT PlugIns into the App's framework to pass app signing
 # we'll set the QT_QPA_PLATFORM_PLUGIN_PATH to point the app to the new location
