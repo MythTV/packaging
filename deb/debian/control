@@ -154,7 +154,6 @@ Depends:
  fonts-tlwg-purisa,
  libgnutls30,
  libxml-xpath-perl,
- libzip-dev,
  pciutils,
  python3,
  python3-future,
@@ -535,7 +534,6 @@ Description: Metapackage package for MythTV plugins
 Package: mythgame
 Architecture: amd64 arm64
 Depends:
- libzip-dev,
  mythtv-frontend (>= ${binary:Version}),
  python3,
  ${misc:Depends},
