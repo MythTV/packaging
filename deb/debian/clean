@@ -7,7 +7,6 @@ debian/man/mythcommflag.1
 debian/man/mythffmpeg.1
 debian/man/mythffplay.1
 debian/man/mythffprobe.1
-debian/man/mythffserver.1
 debian/man/mythfilldatabase.1
 debian/man/mythfillnetvision.1
 debian/man/mythfrontend.real.1
