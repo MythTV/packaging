@@ -162,10 +162,3 @@ info:
 		"OLD Hash: $(LAST_GIT_HASH)\n" \
 		"Current branch hash: $(CURRENT_GIT_HASH)\n" \
 		"Current date: $(TODAY)\n" \
-
-update-control-files:
-	rm -f debian/control
-	sed "s/#TYPE#/$(GIT_TYPE)/; s/#ABI#/$(ABI)/" debian/control.in > debian/control
-	if [ "$(GIT_TYPE)" = "master" ]; then \
-		sed -i debian/control -e 's/Recommends:\ mythtv-themes.*/Recommends:\ mythtv-themes, mythtv-dbg/' ;\
-	fi

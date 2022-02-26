@@ -221,9 +221,6 @@ if [ ! -f "../mythtv_${DEB_VERSION_UPSTREAM}.orig.tar.gz" ]; then
 	esac
 fi
 
-#update changelog and control files
-debian/rules update-control-files
-
 case "$BASE" in
 build-dsc.sh)
     DEBUILD_FLAGS="-S --no-check-builddeps $DEBUILD_FLAGS"
