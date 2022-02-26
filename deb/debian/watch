@@ -1,3 +1,4 @@
-#This project can't meaningfully use a debian watch file right now.
-#It's packaged such that it pulls from several different git trees 
-#rather than just on point releases.
+#!/usr/bin/uscan
+version=4
+opts=dversionmangle=s/(\+fixes)?$//,filenamemangle=s/.+\/v?(\d\S+)\.tar\.gz/mythtv-$1\.tar\.gz/ \
+  https://github.com/MythTV/mythtv/tags .*/v([0-9.]+)\.tar\.gz
