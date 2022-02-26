@@ -17,7 +17,6 @@ generate "MythTV Shutdown helper" debian/tmp/usr/bin/mythshutdown
 generate "MythTV Utility helper" debian/tmp/usr/bin/mythutil
 generate "MythTV Backend" debian/tmp/usr/bin/mythbackend
 generate "MythTV FFMpeg helper " debian/tmp/usr/bin/mythffmpeg
-generate "MythTV FFMpeg server" debian/tmp/usr/bin/mythffserver
 generate "MythTV HDHomerun Configuration" debian/tmp/usr/bin/mythhdhomerun_config
 generate "MythTV Media Server" debian/tmp/usr/bin/mythmediaserver
 generate "MythTV replex" debian/tmp/usr/bin/mythreplex

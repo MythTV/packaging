@@ -2,7 +2,6 @@ debian/man/mythccextractor.1
 debian/man/mythffmpeg.1
 debian/man/mythffplay.1
 debian/man/mythffprobe.1
-debian/man/mythffserver.1
 debian/man/mythmetadatalookup.1
 debian/man/mythshutdown.1
 debian/man/mythutil.1
