@@ -94,7 +94,7 @@ LDFLAGS:=$(shell DEB_LDFLAGS_MAINT_STRIP="-Wl,-Bsymbolic-functions" dpkg-buildfl
 export HOME=$(CURDIR)/debian/home_$(DEB_BUILD_ARCH)
 
 %:
-	dh $@ --parallel --with systemd,python3
+	dh $@ --parallel --with python3
 
 #Rather than have a configure/build/install phase, combine them all so we can do each part in order
 override_dh_auto_install:
