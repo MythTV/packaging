@@ -137,7 +137,7 @@ Description: Personal video recorder application (client and server)
  mythtv-backend (backend needing a remote database)
 
 Package: mythtv-common
-Architecture: any
+Architecture: amd64 arm64
 Pre-Depends: pwgen,
 Depends: adduser,
          default-mysql-client | virtual-mysql-client | mysql-client-5.7 | mysql-client-5.6 | mariadb-client,
@@ -237,7 +237,7 @@ Description: Personal video recorder application (database)
  installed on the system where the MySQL server resides.
 
 Package: mythtv-backend
-Architecture: any
+Architecture: amd64 arm64
 Depends: mythtv-common, mythtv-transcode-utils, ${shlibs:Depends}, cron, wget, zenity | kdebase-bin, xterm, python3, libjs-jquery, libxml-simple-perl, ${misc:Depends}
 Conflicts: mythtv (<< 0.8-1)
 Replaces: mythtv (<< 0.8-1), mythtv-frontend (<= 0.20-0.4)
@@ -259,7 +259,7 @@ Description: Personal video recorder application (server)
  package.
 
 Package: mythtv-transcode-utils
-Architecture: any
+Architecture: amd64 arm64
 Depends: mythtv-common, ${shlibs:Depends}, ${misc:Depends}
 Conflicts: mythtv-backend (<< 0.20.2-0ubuntu1)
 Replaces: mythtv-backend (<< 0.20.2-0ubuntu1)
@@ -270,7 +270,7 @@ Description: Utilities used for transcoding MythTV tasks
  requiring an entire backend to be installed.
 
 Package: mythtv-frontend
-Architecture: any
+Architecture: amd64 arm64
 Depends: mythtv-common,
          ${shlibs:Depends},
          ${misc:Depends},
@@ -304,7 +304,7 @@ Description: Personal video recorder application (client)
  package.
 
 Package: libmyth
-Architecture: any
+Architecture: amd64 arm64
 Section: libs
 Depends: ${shlibs:Depends}, libqt5sql5-mysql, ${misc:Depends}
 Conflicts: mythtv (<< 0.7-5), libmyth-0.23-0, libmyth-0.24-0, libmyth-0.25-0, libmyth-0.26-0, libmyth-0.27-0, libmyth-0.28-0, libmyth-0.29-0, libmyth-29-0
@@ -317,7 +317,7 @@ Description: Common library code for MythTV and add-on modules (runtime)
  components in the system.
 
 Package: libmyth-dev
-Architecture: any
+Architecture: amd64 arm64
 Section: libdevel
 Depends: libmyth (= ${binary:Version}), ${misc:Depends}
 Conflicts: libmyth-0.23-0-dev, libmyth-0.24-0-dev, libmyth-0.25-0-dev, libmyth-0.26-0-dev, libmyth-0.27-0-dev, libmyth-0.28-0-dev, libmyth-0.29-0-dev, libmyth-29-0-dev
@@ -392,7 +392,7 @@ Description: Metapackage to setup and configure a "Master Backend" profile of My
  on anything but the first backend machine on the network.
 
 Package: mythtv-dbg
-Architecture: any
+Architecture: amd64 arm64
 Section: debug
 Priority: extra
 Recommends: libc6-dbg
@@ -420,7 +420,7 @@ Description: Metapackage package for MythTV plugins
  This Metapackage will install all available MythTV plugins.
 
 Package: mythgame
-Architecture: any
+Architecture: amd64 arm64
 Depends: mythtv-frontend (>= ${binary:Version}),
          python3,
          ${shlibs:Depends},
@@ -431,7 +431,7 @@ Description: Emulator & PC Game frontend module for MythTV
  runs.
 
 Package: mythmusic
-Architecture: any
+Architecture: amd64 arm64
 Depends: mythtv-frontend (>= ${binary:Version}),
          ${shlibs:Depends},
          ${misc:Depends}
@@ -442,7 +442,7 @@ Description: Music add-on module for MythTV
  drive.
 
 Package: mythnews
-Architecture: any
+Architecture: amd64 arm64
 Depends: mythtv-frontend (>= ${binary:Version}),
          ${shlibs:Depends},
          ${misc:Depends}
@@ -450,7 +450,7 @@ Description: RSS feed news reader module for MythTV
  MythNews will fetch RSS feeds for you to read.
 
 Package: mythweather
-Architecture: any
+Architecture: amd64 arm64
 Depends: mythtv-frontend (>= ${binary:Version}),
          ${shlibs:Depends},
          ${misc:Depends},
@@ -493,7 +493,7 @@ Description: Web interface add-on module for MythTV
  music streams as well.
 
 Package: mytharchive
-Architecture: any
+Architecture: amd64 arm64
 Depends: mythtv-transcode-utils(>= ${binary:Version}),
          mythtv-frontend (>= ${binary:Version}),
          mjpegtools,
@@ -522,7 +522,7 @@ Description: create and burn DVD's from MythTV - binary file
  and the mythfrontend UI plugin.
 
 Package: mythzoneminder
-Architecture: any
+Architecture: amd64 arm64
 Suggests: zoneminder
 Depends: mythtv-frontend (>= ${binary:Version}),
          ${shlibs:Depends},
@@ -533,7 +533,7 @@ Description: view status and display footage recorded with zoneminder
  recorded surveillance footage.
 
 Package: mythbrowser
-Architecture: any
+Architecture: amd64 arm64
 Depends: mythtv-frontend (>= ${binary:Version}),
          ${shlibs:Depends},
          ${misc:Depends}
