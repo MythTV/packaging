@@ -2,6 +2,7 @@
 # Mario Limonciello, March 2007
 # partially merged with startmythtv.sh by Michael Haas, October 2007
 # Mike Bibbings July 2019 remove find_session (obsolete due to removal of gksu,kdesu etc)
+# Modified to reset screensaver if mythfrontend.real crashes by StoicTheVast, March 2022
 
 pidof mythfrontend.real 2>&1 >/dev/null && wmctrl -a "MythTV Frontend" 2>/dev/null && exit 0
 
@@ -14,6 +15,15 @@ find_su
 
 #check that we are in the mythtv group
 check_groups
+
+#get and store original DPMS parameters
+DPMSENABLED=FALSE
+if xset -q |grep -qi "DPMS is Enabled" ; then
+    DPMSENABLED=TRUE
+    XSETTIMEOUTLINE=$(xset -q |egrep -i "timeout:.*cycle:")
+    DPMSTIMEOUT=$(echo $XSETTIMEOUTLINE | awk ' { print $2 } ')
+    DPMSCYCLE=$(echo $XSETTIMEOUTLINE | awk ' { print $4 } ')
+fi
 
 if [ "$1" = "--service" ]; then
     #source frontend session settings
@@ -37,6 +47,11 @@ if [ "$1" = "--service" ]; then
                   RET=$?
                   [ "$RET" = "0" -o "$RET" = "1" -o "$RET" = "130" -o "$RET" = "254" ]
             do
+                  # restore original DPMS parameters
+                  if [ "$DPMSENABLED" = "TRUE" ]; then
+                      xset +dpms
+                      xset s $DPMSTIMEOUT $DPMSCYCLE
+                  fi
                   notify-send -i info 'Restarting Frontend' "The front-end crashed unexpectedly (exit code $RET) and is restarting. Please wait..."
             done
         fi
@@ -46,6 +61,11 @@ elif [ "$1" != "--service" ]; then
     # if group membership is okay, go ahead and launch
     if [ "$IGNORE_NOT" = "0" ]; then
         exec $environ /usr/bin/mythfrontend.real --syslog local7 "$@"
+        # restore original DPMS parameters
+        if [ "$DPMSENABLED" = "TRUE" ]; then
+            xset +dpms
+            xset s $DPMSTIMEOUT $DPMSCYCLE
+        fi
     fi
 fi
 
