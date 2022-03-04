@@ -118,9 +118,11 @@ case $MYTHTV_VERS in
        VERS=$(git ls-remote --tags  git://github.com/MythTV/mythtv.git|tail -n 1)
        VERS=${VERS##*/v}
        VERS=$(echo $VERS|tr -dc '0-9')
+       EXTRA_MYTHPLUGIN_FLAG=""
     ;;
-    *)
+    *32*|*31*)
       VERS=${MYTHTV_VERS: -2}
+      EXTRA_MYTHPLUGIN_FLAG="--enable-fftw"
     ;;
 esac
 ARCH=$(/usr/bin/arch)
@@ -432,7 +434,6 @@ if $BUILD_PLUGINS; then
                 --cxx=clang++ \
                 --enable-mythgame \
                 --enable-mythmusic \
-                --enable-fftw \
                 --enable-cdio \
                 --enable-mythnews \
                 --enable-mythweather \
@@ -440,7 +441,8 @@ if $BUILD_PLUGINS; then
                 --disable-mythnetvision \
                 --disable-mythzoneminder \
                 --disable-mythzmserver \
-                --python=$PYTHON_BIN
+                --python=$PYTHON_BIN \
+                $EXTRA_MYTHPLUGIN_FLAG
     echo "------------ Compiling Mythplugins ------------"
     #compile plugins
     $QMAKE_CMD mythplugins.pro
