@@ -72,7 +72,9 @@
 
     </application>
 
+<!-- With Qt 5.15.3, this line causes error "The minSdk version should not be declared in the android manifest file."
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29"/>
+-->
     <supports-screens android:xlargeScreens="true" android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true" android:resizeable="true" />
 
     <!-- The following comment will be replaced upon deployment with default permissions based on the dependencies of the application.
