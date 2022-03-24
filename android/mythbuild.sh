@@ -277,8 +277,11 @@ function bundle_apk() {
 
 	extraedit=
 	if [ $ANDROID_NATIVE_API_LEVEL -le 19 ] ; then
-		extraedit='s~android:banner="@drawable/banner"~~'
+		extraedit+='s~android:banner="@drawable/banner"~~'
 	fi
+        if [ $ANDROID_NATIVE_API_LEVEL -le 22 ] ; then
+		extraedit+='s/android:extractNativeLibs="true"//'
+        fi
 	# Setup the real Android versionName and versionCode..
 	sed "s/\(android:versionName\)=\"1.0\"/\1=\"$VERSIONNAME\"/
 		 s/\(android:versionCode\)=\"1\"/\1=\"$VERSIONCODE\"/
