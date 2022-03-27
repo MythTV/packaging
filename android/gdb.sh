@@ -4,6 +4,7 @@
 # or via export before running gdb.sh
 # Use su - USE_SU=1
 # Use IP - USE_IP=1
+# Run a 32 bit build on a 64 bit target - ARM64_TARGET=1
 # If neither is set will use adb port forwarding
 # Android push directory - TMPDIR=/data/local/tmp
 
@@ -33,12 +34,17 @@ else
 	PROJDIR=mythinstall
 	APP_PROCESS_NAME=app_process32
 	LIBDIR_NAME=lib
-    PROJ_LIBDIR_NAME=libs/armeabi-v7a
+	PROJ_LIBDIR_NAME=libs/armeabi-v7a
 	LINKER_NAME=linker
-	TARGET_ARCH=arm
+	if [ "$ARM64_TARGET" == 1 ]; then
+		# running a 32 bit apk on a 64 bit target
+		TARGET_ARCH=arm64
+	else
+		TARGET_ARCH=arm
+	fi
 	TOOLCHAIN_PREFIX=$TOOLCHAIN_PATH/bin/arm-linux-androideabi-
 	TOOLCHAIN_PREFIX2=$TOOLCHAIN_PATH/bin/
-    sodir=so32
+	sodir=so32
 fi
 
 [ ! -d $sodir ] && mkdir $sodir

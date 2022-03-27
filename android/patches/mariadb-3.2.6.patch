@@ -1,0 +1,55 @@
+diff --git a/cmake/CheckFunctions.cmake b/cmake/CheckFunctions.cmake
+index 2af01da..b12b1c1 100644
+--- a/cmake/CheckFunctions.cmake
++++ b/cmake/CheckFunctions.cmake
+@@ -26,6 +26,7 @@ CHECK_FUNCTION_EXISTS (compress HAVE_COMPRESS)
+ CHECK_FUNCTION_EXISTS (crypt HAVE_CRYPT)
+ CHECK_FUNCTION_EXISTS (dlerror HAVE_DLERROR)
+ CHECK_FUNCTION_EXISTS (dlopen HAVE_DLOPEN)
++CHECK_FUNCTION_EXISTS (endpwent HAVE_ENDPWENT)
+ CHECK_FUNCTION_EXISTS (fchmod HAVE_FCHMOD)
+ CHECK_FUNCTION_EXISTS (fcntl HAVE_FCNTL)
+ CHECK_FUNCTION_EXISTS (fconvert HAVE_FCONVERT)
+diff --git a/cmake/CheckIncludeFiles.cmake b/cmake/CheckIncludeFiles.cmake
+index 8eff9ac..ca71df4 100644
+--- a/cmake/CheckIncludeFiles.cmake
++++ b/cmake/CheckIncludeFiles.cmake
+@@ -72,9 +72,9 @@ CHECK_INCLUDE_FILES (sys/un.h HAVE_SYS_UN_H)
+ CHECK_INCLUDE_FILES (sysent.h HAVE_SYSENT_H)
+ CHECK_INCLUDE_FILES (termio.h HAVE_TERMIO_H)
+ CHECK_INCLUDE_FILES (termios.h HAVE_TERMIOS_H)
+-CHECK_INCLUDE_FILES (ucontext.h HAVE_UCONTEXT_H)
++#CHECK_INCLUDE_FILES (ucontext.h HAVE_UCONTEXT_H)
+ IF(NOT HAVE_UCONTEXT_H)
+-  CHECK_INCLUDE_FILES (sys/ucontext.h HAVE_UCONTEXT_H)
++	#  CHECK_INCLUDE_FILES (sys/ucontext.h HAVE_UCONTEXT_H)
+ ENDIF()
+ CHECK_INCLUDE_FILES (unistd.h HAVE_UNISTD_H)
+ CHECK_INCLUDE_FILES (utime.h HAVE_UTIME_H)
+diff --git a/libmariadb/libmariadb.c b/libmariadb/libmariadb.c
+index 2f0953f..c0e57bf 100644
+--- a/libmariadb/libmariadb.c
++++ b/libmariadb/libmariadb.c
+@@ -1483,7 +1483,7 @@ uchar *ma_send_connect_attr(MYSQL *mysql, uchar *buffer)
+         memcpy(buffer, p, len);
+         buffer+= len;
+         p+= len;
+-        len= *(size_t *)p;
++        memcpy(&len, p, sizeof(len));
+         buffer= mysql_net_store_length(buffer, len);
+         p+= sizeof(size_t);
+         memcpy(buffer, p, len);
+diff --git a/libmariadb/mf_pack.c b/libmariadb/mf_pack.c
+index d97e93b..f01ecbd 100644
+--- a/libmariadb/mf_pack.c
++++ b/libmariadb/mf_pack.c
+@@ -324,7 +324,9 @@ static my_string NEAR_F expand_tilde(my_string *path)
+     save= *str; *str= '\0';
+     user_entry=getpwnam(*path);
+     *str=save;
++#ifdef HAVE_ENDPWENT
+     endpwent();
++#endif
+     if (user_entry)
+     {
+       *path=str;

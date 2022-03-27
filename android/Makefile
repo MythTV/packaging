@@ -2,6 +2,14 @@
 sinclude buildrc
 sinclude make.inc
 
+ifneq ($(CONFIG),)
+	CONFIG_OPT := --config $(CONFIG)
+	MODE_LINE = $(strip $(shell grep -E "MODE=" android-utilities/config/$(CONFIG)))
+	ifneq ($(MODE_LINE),)
+		MODE = $(lastword $(subst =, ,$(MODE_LINE)))
+	endif
+endif
+
 ifeq ($(MODE),arm64)
 	ARM64 = 1
 else ifeq ($(MODE),arm)
@@ -18,11 +26,21 @@ else
 	MODE_OPT := --arm
 endif
 
-ifneq ($(SDK),)
-	SDK_OPT := --sdk $(SDK)
+ifneq ($(CONFIG),)
+	CONFIG_OPT := --config $(CONFIG)
 endif
 
-OPTS := $(MODE_OPT) $(SDK_OPT)
+ifneq ($(SDK),)
+	SDK_OPT = --sdk $(SDK)
+endif
+ifneq ($(TARGET_SDK),)
+	SDK_OPT += --target-sdk $(TARGET_SDK)
+endif
+ifneq ($(MIN_SDK),)
+	SDK_OPT += --min-sdk $(MIN_SDK)
+endif
+
+OPTS := $(MODE_OPT) $(SDK_OPT) $(CONFIG_OPT)
 
 .PHONY: all everything libs apk distclean clean
 all: apk
@@ -35,6 +53,9 @@ libs: makelibs.sh
 apk: mythbuild.sh
 	./mythbuild.sh $(OPTS)
 
+reconfig: mythbuild.sh
+	./mythbuild.sh reconfig_only $(OPTS)
+
 clean:
 	rm -rf mythinstall$(SUFFIX)
 	rm -rf build$(SUFFIX)
@@ -42,15 +63,9 @@ clean:
 distclean:
 	rm -rf libs$(SUFFIX) mythinstall$(SUFFIX) libsinstall$(SUFFIX) build$(SUFFIX)
 
-.PHONY: qt mariadb fftw libxml2 libbluray
+LIBS_TO_BUILD = mariadb fftw libxml2 libbluray flac iconv icu ogg vorbis fontconfig libsamplerate libsoundtouch
+.PHONY: qt $(LIBS_TO_BUILD)
 qt:
 	./makelibs.sh $(OPTS) qt5extras
-mariadb:
-	./makelibs.sh $(OPTS) mariadb
-fftw:
-	./makelibs.sh $(OPTS) fftw
-libxml2:
-	./makelibs.sh $(OPTS) libxml2
-libbluray:
-	./makelibs.sh $(OPTS) libbluray
-
+$(LIBS_TO_BUILD):
+	./makelibs.sh $(OPTS) $@
