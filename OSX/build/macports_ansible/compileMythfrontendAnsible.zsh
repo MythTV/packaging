@@ -115,7 +115,7 @@ done
 # otherwise extract it from the MYTHTV_VERS
 case $MYTHTV_VERS in
     master*|*33*)
-       VERS=$(git ls-remote --tags  git://github.com/MythTV/mythtv.git|tail -n 1)
+       VERS=$(git ls-remote --tags  https://github.com/MythTV/mythtv.git|tail -n 1)
        VERS=${VERS##*/v}
        VERS=$(echo $VERS|tr -dc '0-9')
        EXTRA_MYTHPLUGIN_FLAG=""
@@ -321,7 +321,7 @@ if [ -d "$REPO_DIR/mythtv" ]; then
 # else pull down a fresh copy of the repo from github
 else
   echo "    Cloning mythtv git repo"
-  git clone -b $MYTHTV_VERS git://github.com/MythTV/mythtv.git
+  git clone -b $MYTHTV_VERS https://github.com/MythTV/mythtv.git
 fi
 # apply specified patches
 if [ $APPLY_PATCHES ] && [ ! -z $MYTHTV_PATCH_DIR ]; then
