@@ -164,24 +164,50 @@ APP_DFLT_BNDL_ID="org.mythtv.mythfrontend"
 # then updates the binary/dylib's internal link to point to copy location
 installLibs(){
   binFile=$1
-  rpathDepList=$(/usr/bin/otool -L $binFile|grep rpath)
-  rpathDepList=$(echo $rpathDepList| gsed 's/(.*//')
+  # find all externally-linked lib
+  pathDepList=$(/usr/bin/otool -L $binFile|grep -e rpath -e $PKGMGR_INST_PATH/lib -e $INSTALL_DIR)
+  pathDepList=$(echo $pathDepList| gsed 's/(.*//')
+  # loop over each lib
   while read -r dep; do
     lib=${dep##*/}
-    if [ ! -f "$APP_FMWK_DIR/$lib" ]; then
+    # we have four types of libs to work with, QT5, QT6, package managed, and mythtv
+    # setup the correct source / destination / linking schema for each
+    case "$dep" in
+      *Qt*)
+        case "$QT_VERS" in
+          *qt5*)
+            sourcePath="$QT_PATH/lib/$lib.framework"
+            destinPath=$APP_FMWK_DIR
+            newLink="@executable_path/../Frameworks/$lib.framework/Versions/5/$lib"
+          ;;
+          *)
+            sourcePath="$QT_PATH/lib/$lib.framework/Versions/Current/$lib"
+            destinPath=$APP_FMWK_DIR
+            newLink="@executable_path/../Frameworks/$lib"
+          ;;
+        esac
+      ;;
+      *libmyth*|*$INSTALL_DIR*)
+        sourcePath=$INSTALL_DIR/lib
+        destinPath=$APP_FMWK_DIR
+        newLink="@executable_path/../Frameworks/$lib"
+      ;;
+      *$PKGMGR_INST_PATH*)
+        sourcePath=$PKGMGR_INST_PATH/lib
+        destinPath=$APP_FMWK_DIR
+        newLink="@executable_path/../Frameworks/$lib"
+      ;;
+    esac
+    # check to see if the lib is already copied in, if not do so
+    if [ ! -f "$destinPath/$lib" ] && [ ! -f "$destinPath/$lib.framework" ] ; then
       echo "    Installing $lib into app"
-      # only copy in the non-Qt items, we'll take care of the qt items with deployqt
-      case "$lib" in
-        *Qt*)
-          cp -R $QT_PATH/lib/$lib.framework/Versions/Current/$lib $APP_FMWK_DIR/
-          install_name_tool $binFile -change $dep @executable_path/../Frameworks/$lib
-        ;;
-        *)
-          cp $INSTALL_DIR/lib/$lib $APP_FMWK_DIR/
-          install_name_tool $binFile -change $dep @executable_path/../Frameworks/$lib
-      esac
+      cp -RH $sourcePath/$lib $destinPath
     fi
-  done <<< "$rpathDepList"
+    # update the link in the app/executable to the new interal Framework
+    echo "    Updating $lib link to internal lib"
+    # its already been copied in, we just need to update the link
+    install_name_tool $binFile -change $dep $newLink
+  done <<< "$pathDepList"
 }
 
 # Function used to convert version strings into integers for comparison
@@ -471,7 +497,7 @@ echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 # the application
 cd $APP_EXE_DIR
 mkdir $APP_FMWK_DIR
-installLibs $APP_EXE_DIR/mythfrontend
+installLibs "$APP_EXE_DIR/mythfrontend"
 mkdir $APP_PLUGINS_DIR
 
 if $BUILD_PLUGINS; then
@@ -481,7 +507,7 @@ if $BUILD_PLUGINS; then
     libFileName=$(basename $plugFilePath)
     echo "    Installing $libFileName into app"
     cp $plugFilePath $APP_PLUGINS_DIR
-    installLibs $APP_PLUGINS_DIR/$libFileName
+    installLibs "$APP_PLUGINS_DIR/$libFileName"
   done
 fi
 
@@ -495,8 +521,8 @@ for helperBinPath in $INSTALL_DIR/bin/*.app; do
       helperBinFile=${helperBinFile%.app}
       echo "    Installing $helperBinFile into app"
       # copy into the app
-      cp -Rp $helperBinPath/Contents/MacOS/$helperBinFile $APP_EXE_DIR
-      installLibs $APP_EXE_DIR/$helperBinFile
+      cp -RHp $helperBinPath/Contents/MacOS/$helperBinFile $APP_EXE_DIR
+      installLibs "$APP_EXE_DIR/$helperBinFile"
     ;;
     *)
       continue
@@ -512,7 +538,7 @@ cp $APP_DIR/mythfrontend.icns $APP_RSRC_DIR/application.icns
 echo "------------ Copying mythtv share directory into executable  ------------"
 # copy in i18n, fonts, themes, plugin resources, etc from the install directory (share)
 mkdir -p $APP_RSRC_DIR/share/mythtv
-cp -Rp $INSTALL_DIR/share/mythtv/* $APP_RSRC_DIR/share/mythtv/
+cp -RHp $INSTALL_DIR/share/mythtv/* $APP_RSRC_DIR/share/mythtv/
 
 echo "------------ Updating application plist  ------------"
 # Update the plist
@@ -524,8 +550,8 @@ gsed -i "34a\	<key>ATSApplicationFontsPath</key>\n	<string>share/mythtv/fonts</s
 
 echo "------------ Copying mythtv lib/python* and lib/perl directory into application  ------------"
 mkdir -p $APP_RSRC_DIR/lib
-cp -Rp $INSTALL_DIR/lib/python* $APP_RSRC_DIR/lib/
-cp -Rp $INSTALL_DIR/lib/perl* $APP_RSRC_DIR/lib/
+cp -RHp $INSTALL_DIR/lib/python* $APP_RSRC_DIR/lib/
+cp -RHp $INSTALL_DIR/lib/perl* $APP_RSRC_DIR/lib/
 if [ ! -f $APP_RSRC_DIR/lib/python ]; then
   cd $APP_RSRC_DIR/lib
   ln -s python$PYTHON_DOT_VERS python
@@ -559,12 +585,12 @@ $PYTHON_BIN setup.py -q py2app 2>&1 > /dev/null
 # now we need to copy over the pythong app's pieces into the mythfrontend.app to get it working
 echo "    Copying in Python Framework libraries"
 cd $APP_DIR/PYTHON_APP/dist/ttvdb.app
-cp -Rnp Contents/Frameworks/* $APP_FMWK_DIR
+cp -RHnp Contents/Frameworks/* $APP_FMWK_DIR
 
 echo "    Copying in Python Binary"
 cp -p Contents/MacOS/python $APP_EXE_DIR
 echo "    Copying in Python Resources"
-cp -Rnp Contents/Resources/* $APP_RSRC_DIR
+cp -RHnp Contents/Resources/* $APP_RSRC_DIR
 cd $APP_DIR
 # clean up temp application
 rm -Rf PYTHON_APP
@@ -609,6 +635,15 @@ $QT_PATH/bin/macdeployqt $APP \
 # we'll set the QT_QPA_PLATFORM_PLUGIN_PATH to point the app to the new location
 mv $APP/Contents/PlugIns/* $APP_PLUGINS_DIR
 gsed -i "2c\Plugins = Frameworks/PlugIns" $APP_RSRC_DIR/qt.conf
+
+echo "------------ Searching Applicaition for missing libraries ------------"
+# Do one last sweep for missing dylibs in the Framework Directory
+for dylib in $APP_FMWK_DIR/*.dylib; do
+  pathDepList=$(/usr/bin/otool -L $dylib|grep -e $PKGMGR_INST_PATH/lib -e $INSTALL_DIR)
+  if [ ! -z "${pathDepList// }" ] ; then
+    installLibs $dylib
+  fi
+done
 
 echo "------------ Generating mythfrontend startup script ------------"
 # since we now have python installed internally, we need to make sure that the mythfrontend
