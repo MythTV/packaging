@@ -271,7 +271,7 @@ function bundle_apk() {
 			cp "$i" "$MYTHINSTALLROOT/libs/$ANDROID_TARGET_ARCH/"
 		fi
 	done
-	VERSIONNAME=$(date +"%F" | tr -d '-')-$BUNDLE_NAME-$(grep "define MYTH_SOURCE_VERSION" libs/libmythbase/version.h | cut -d' ' -f 3 | tr -d '"')
+	VERSIONNAME=$(date +"%F" | tr -d '-')-$BUNDLE_NAME-$(grep "const char\* MYTH_SOURCE_VERSION" libs/libmythbase/version.h | cut -d' ' -f 7 | tr -d '"')
         # TODO: Eventually do something reasonable with versionCode.
 	VERSIONCODE=1
 
