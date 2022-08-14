@@ -20,21 +20,23 @@ branch=`git branch | grep '*'| cut -f2 -d' '`
 if [[ "$branch" == '(HEAD' ]] ; then
     branch=`git branch | grep '*'| cut -f3 -d' '`
 fi
-date > $gitbasedir/../build_${projname}.out
+projdir=$(basename "$gitbasedir")
+echo projdir=$projdir
+date > $gitbasedir/../build_${projdir}.out
 if [[ "$SCHROOT_CHROOT_NAME" == "" ]] ; then
     chprefix=
 else
     chprefix="chroot-${SCHROOT_CHROOT_NAME}-"
 fi
-echo "chroot: $SCHROOT_CHROOT_NAME" >> $gitbasedir/../build_${projname}.out
-echo "arch: $arch codename: $codename branch: $branch" >> $gitbasedir/../build_${projname}.out
-config_branch=`cat $gitbasedir/../config_${projname}.branch` || true
+echo "chroot: $SCHROOT_CHROOT_NAME" >> $gitbasedir/../build_${projdir}.out
+echo "arch: $arch codename: $codename projdir: $projdir branch: $branch" >> $gitbasedir/../build_${projdir}.out
+config_branch=`cat $gitbasedir/../config_${projdir}.branch` || true
 if [[ "$chprefix$arch/$codename/$branch" != "$config_branch" ]] ; then
     echo "Need to run config again. Now=$chprefix$arch/$codename/$branch Config=$config_branch"
     echo "Type I to Ignore once, O to override branch setting."
     read -e resp
     if [[ "$resp" == O ]]; then
-        echo "$chprefix$arch/$codename/$branch" > $gitbasedir/../config_${projname}.branch
+        echo "$chprefix$arch/$codename/$branch" > $gitbasedir/../config_${projdir}.branch
     elif [[ "$resp" != I ]]; then
         exit 2
     fi
@@ -51,10 +53,10 @@ if [[ ! -f Makefile ]] ; then
     rc=999
 else
     set -o pipefail
-    make -j $numjobs |& tee -a $gitbasedir/../build_${projname}.out || rc=$?
+    make -j $numjobs |& tee -a $gitbasedir/../build_${projdir}.out || rc=$?
 fi
 echo Log File:
-echo "$gitbasedir/../build_${projname}.out"
+echo "$gitbasedir/../build_${projdir}.out"
 
 if [[ "$rc" == 0 ]] ; then
     if [[ "$BUILD_DONE" != "" ]] ; then

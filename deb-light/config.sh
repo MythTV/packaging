@@ -15,9 +15,10 @@ branch=`git branch | grep '*'| cut -f2 -d' '`
 if [[ "$branch" == '(HEAD' ]] ; then
     branch=`git branch | grep '*'| cut -f3 -d' '`
 fi
-echo "chroot: $SCHROOT_CHROOT_NAME" > $gitbasedir/../config_${projname}.out
-echo "arch: $arch codename: $codename branch: $branch" >> $gitbasedir/../config_${projname}.out
-echo "$chprefix$arch/$codename/$branch" > $gitbasedir/../config_${projname}.branch
+projdir=$(basename "$gitbasedir")
+echo "chroot: $SCHROOT_CHROOT_NAME" > $gitbasedir/../config_${projdir}.out
+echo "arch: $arch codename: $codename projdir: $projdir branch: $branch" >> $gitbasedir/../config_${projdir}.out
+echo "$chprefix$arch/$codename/$branch" > $gitbasedir/../config_${projdir}.branch
 
 case $projname in
     mythtv)
@@ -36,7 +37,7 @@ case $projname in
             config_opt="--enable-libmp3lame --enable-libx264 --enable-vulkan $MYTHTV_CONFIG_OPT_EXTRA"
         fi
         set -x
-        ./configure --prefix=/usr $config_opt "$@" |& tee -a $gitbasedir/../config_${projname}.out
+        ./configure --prefix=/usr $config_opt "$@" |& tee -a $gitbasedir/../config_${projdir}.out
         set -
         ;;
     mythplugins)
@@ -45,7 +46,7 @@ case $projname in
             $BUILD_PREPARE
         fi
         # Reset the mythtv config because this overwrites it
-        rm -f $gitbasedir/../config_mythtv.branch
+        rm -f $gitbasedir/../config_${projdir}.branch
         . "$scriptpath/getdestdir.source"
         mkdir -p $destdir
         sourcedir=`echo $destdir|sed s/mythplugins/mythtv/`
@@ -69,7 +70,7 @@ case $projname in
         fi
         set -x
         ./configure --prefix=$destdir/usr \
-          --runprefix=/usr $config_opt "$@" |& tee -a  $gitbasedir/../config_${projname}.out
+          --runprefix=/usr $config_opt "$@" |& tee -a  $gitbasedir/../config_${projdir}.out
         rm -rf $destdir
         cp -a $sourcedir/ $destdir/
         cp libs/libmythbase/mythconfig.h libs/libmythbase/mythconfig.mak \
@@ -80,7 +81,7 @@ case $projname in
         export PYTHONPATH=`ls -d $basedir/local/lib/python*/dist-packages`
         config_opt=
         ./configure --prefix=$destdir/usr \
-         $config_opt "$@" |& tee -a  $gitbasedir/../config_${projname}.out
+         $config_opt "$@" |& tee -a  $gitbasedir/../config_${projdir}.out
          set -
         ;;
     *)

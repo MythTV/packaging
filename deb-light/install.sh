@@ -12,9 +12,12 @@ projname=`basename $PWD`
 
 echo destination is  $destdir.
 
-echo "chroot: $SCHROOT_CHROOT_NAME" > $gitbasedir/../install_${projname}.out
-echo "branch: $branch" >> $gitbasedir/../install_${projname}.out
-echo "dest: $destdir" >> $gitbasedir/../install_${projname}.out
+projdir=$(basename "$gitbasedir")
+echo projdir=$projdir
+
+echo "chroot: $SCHROOT_CHROOT_NAME" > $gitbasedir/../install_${projdir}.out
+echo "branch: $branch" >> $gitbasedir/../install_${projdir}.out
+echo "dest: $destdir" >> $gitbasedir/../install_${projdir}.out
 case $projname in
     mythtv)
         rm -rf $destdir
@@ -29,7 +32,7 @@ case $projname in
         export DESTDIR=$destdir
         ;;
 esac
-make install |& tee -a $gitbasedir/../install_${projname}.out
+make install |& tee -a $gitbasedir/../install_${projdir}.out
 
 if [[ "$projname" == mythtv ]] ; then
     if [[ ! -d $destdir/usr/share/doc/mythtv-backend/contrib ]] ; then
@@ -38,7 +41,8 @@ if [[ "$projname" == mythtv ]] ; then
             cp -a $gitbasedir/mythtv/contrib/*  \
                 $destdir/usr/share/doc/mythtv-backend/contrib/
         else
-            echo ERROR Running from wrong directory, $gitbasedir/mythtv/contrib not found
+            echo ERROR Running from wrong directory, $gitbasedir/mythtv/contrib not found \
+                |& tee -a $gitbasedir/../install_${projdir}.out
             exit 2
         fi
     fi
