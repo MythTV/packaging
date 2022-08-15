@@ -1,14 +1,23 @@
 Android Mythfrontend Build Procedure
 ------------------------------------
 
-Currently there is no automated way to get all dependencies and build an apk in one step (although if you only want a build environment, using [Docker](Docker/Readme.md) gets you started quite quickly).
+Currently there is no automated way to get all dependencies and build an apk in one step (although if you only want a build environment, using [Docker](https://github.com/MythTV/packaging/tree/master/android/docker) gets you started quite quickly).
 NOTE: The build platform is linux
+
+Prior to this step the user should go to their github.com account and create ssh keys per the documentation at [Connecting with ssh keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
 
 1. Clone and configure the repos.
    * mkdir workdir
    * cd workdir
    * git clone git@github.com:MythTV/packaging.git
    * git clone git@github.com:MythTV/mythtv.git
+   * at this point cd into the mythtv and packaging directories and checkout fixes/32 or whatever branch is desired.
+   * prior to running the build the first time the git statements below are needed:
+
+```
+git config --global user.name "John Doe"
+git config --global user.emailjohndoe@example.com
+```
    * cd packaging/android
    * make.inc is no longer needed
 
@@ -17,20 +26,22 @@ NOTE: The build platform is linux
      and unpack it into $HOME/Android.
 
    * After Android Studio is installed, use it to install the Android SDK.
-     * In Android Studio, choose Configure / SDK Manager.
-     * Install the desired SDK versions.  Install SDK 29.
-     * Install the desired SDK Tools. Select CMake, build tools and NDK (Side by Side). By clicking "Show package details" you can select a specific version. Currently we are using the latest versions, NDK 21, build-tools 29, SDK tools 26. Note that setenv.sh is hardcoded for build tools 29.0.2. Make sure you install that. When that is unavailable we will have to update setenv.sh.
+     * In Android Studio, choose More Action / SDK Manager.
+     * Building mythfrontend with andriod can be problemmatic if you have the wrong versions of tools and SDK installed.
+     * Install the desired SDK versions.  Install SDK 29. Uncheck the other build-tools and SDKs.
+     * Select Android 8 (Oreo) API 26, Build-tools 29.0.3, NDK (Side by Side) 21.4.7075529, and CMake 3.22.1
+     * By clicking "Show package details" you can select a specific version. Currently we are using the versions, NDK 21, build-tools 29. Note that setenv.sh is hardcoded for build tools 29.0.3. Make sure you install that. When that is unavailable we will have to update setenv.sh.
    * Set up links as follows, using the version of ndk that was installed.
 
 ```
 cd $HOME/Android
-ln -s Sdk/ndk/21.0.6113669 android-ndk
+ln -s Sdk/ndk/21.4.7075529 android-ndk
 ```
 
    * We no longer need to copy setenv.sh to ~/android
    * We no longer need to create a toolchain.
    * Create a file buildrc in the packaging/android directory for any desired overrides
-   * If you want to build a release apk, you need to create a key. After creating the key, add these to the end of buildrc:
+   * If you want to build a release apk, you need to create a key. For more information on keys, see note at the bottom. After creating the key, add these to the end of buildrc:
 
 ```
 KEYSTORE=$HOME/.android/android-release-key.jks
@@ -57,7 +68,7 @@ IGNOREDEFINES="-DIGNORE_SCHEMA_VER_MISMATCH -DIGNORE_PROTO_VER_MISMATCH"
 
 ```
 ls -1 $HOME/Android/
-android-ndk -> Sdk/ndk/21.0.6113669
+android-ndk -> Sdk/ndk/21.4.7075529
 android-studio
 Sdk
 ```
@@ -73,6 +84,8 @@ Sdk
     * gettext development libraries
     * cmake
     * fontconfig
+    * libtool
+    * autopoint
 
 4. Fetch and build all the libraries.
    The script downloads source to build and builds it.
@@ -158,5 +171,16 @@ Also see the wiki page https://www.mythtv.org/wiki/MythTV_on_Android
 
 For running on Android TV see https://www.mythtv.org/wiki/Android
 
-YMMV
-Mark
+Building Keys in Android
+------------
+
+Build keys this way:
+
+```
+keytool -genkey -v -keystore android-release-key.jks -alias mythfrontend -keyalg RSA -keysize 2048 -validity 10000
+```
+"keytool" comes with java. You can use any alias name; it does not have to be "mythfrontend".
+It prompts for passwords and a bunch of other things.
+
+You need to always use the same keystore when building, otherwise you have to uninstall before installing a new version. If you do not create keys it uses debug keys that come with android studio.
+
