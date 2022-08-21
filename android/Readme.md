@@ -2,7 +2,7 @@ Android Mythfrontend Build Procedure
 ------------------------------------
 
 Currently there is no automated way to get all dependencies and build an apk in one step (although if you only want a build environment, using [Docker](https://github.com/MythTV/packaging/tree/master/android/docker) gets you started quite quickly).
-NOTE: The build platform is linux
+NOTE: The build platform is linux. At present this has been tested using a Virtual Machine running Ubuntu 20.04. Errors have been observed when using 22.04 instead.
 
 Prior to this step the user should go to their github.com account and create ssh keys per the documentation at [Connecting with ssh keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
 
@@ -16,7 +16,7 @@ Prior to this step the user should go to their github.com account and create ssh
 
 ```
 git config --global user.name "John Doe"
-git config --global user.emailjohndoe@example.com
+git config --global user.email "johndoe@example.com"
 ```
    * cd packaging/android
    * make.inc is no longer needed
