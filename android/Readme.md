@@ -16,7 +16,7 @@ Prior to this step the user should go to their github.com account and create ssh
 
 ```
 git config --global user.name "John Doe"
-git config --global user.emailjohndoe@example.com
+git config --global user.email "johndoe@example.com"
 ```
    * cd packaging/android
    * make.inc is no longer needed
@@ -29,8 +29,8 @@ git config --global user.emailjohndoe@example.com
      * In Android Studio, choose More Action / SDK Manager.
      * Building mythfrontend with andriod can be problemmatic if you have the wrong versions of tools and SDK installed.
      * Install the desired SDK versions.  Install SDK 29. Uncheck the other build-tools and SDKs.
-     * Select Android 8 (Oreo) API 26, Build-tools 29.0.3, NDK (Side by Side) 21.4.7075529, and CMake 3.22.1
-     * By clicking "Show package details" you can select a specific version. Currently we are using the versions, NDK 21, build-tools 29. Note that setenv.sh is hardcoded for build tools 29.0.3. Make sure you install that. When that is unavailable we will have to update setenv.sh.
+     * Select Android 8 (Oreo) API 26, Build-tools 29.0.2, NDK (Side by Side) 21.4.7075529, and CMake 3.22.1
+     * By clicking "Show package details" you can select a specific version. Currently we are using the versions, NDK 21, build-tools 29. Note that setenv.sh is hardcoded for build tools 29.0.2. Make sure you install that. When that is unavailable we will have to update setenv.sh.
    * Set up links as follows, using the version of ndk that was installed.
 
 ```
