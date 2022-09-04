@@ -24,9 +24,9 @@ EPOCH:=$(shell echo $(DEB_VERSION) | sed 's/:.*//')
 TODAY:=$(shell date +%Y%m%d)
 CURRENT_GIT_HASH:=$(shell git rev-parse --short HEAD)
 
-MAIN_GIT_URL=git://github.com/MythTV/mythtv.git
-MYTHWEB_GIT_URL=git://github.com/MythTV/mythweb.git
-MYTHBUNTU_THEME_GIT_URL=git://github.com/MythTV-Themes/Mythbuntu.git
+MAIN_GIT_URL=https://github.com/MythTV/mythtv.git
+MYTHWEB_GIT_URL=https://github.com/MythTV/mythweb.git
+MYTHBUNTU_THEME_GIT_URL=https://github.com/MythTV-Themes/Mythbuntu.git
 
 ifeq "$(GIT_TYPE)" "master"
 	GIT_BRANCH:=master
