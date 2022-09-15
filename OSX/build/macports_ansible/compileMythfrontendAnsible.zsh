@@ -18,6 +18,8 @@ Standard options:
   --version=MYTHTV_VERS                  Requested mythtv git repo (master)
   --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (mariadb-10.2)
   --qt-version=qt5                       Select Qt version to build against (qt5)
+  --repo-prefix=REPO_PREFIX              Directory base to install the working repository (~)
+  --generate-app=GENERATE_APP            Generate .app bundles for executables (true)
   --generate-dmg=GENERATE_DMG            Generate a DMG file for distribution (false)
 Build Options
   --update-git=UPDATE_GIT                Update git repositories to latest (true)
@@ -44,6 +46,7 @@ UPDATE_PORTS=false
 MYTHTV_VERS="master"
 DATABASE_VERS=mariadb-10.2
 QT_VERS=qt5
+GENERATE_APP=true
 GENERATE_DMG=false
 UPDATE_GIT=true
 SKIP_BUILD=false
@@ -52,6 +55,8 @@ APPLY_PATCHES=false
 MYTHTV_PATCH_DIR=""
 PACK_PATCH_DIR=""
 PLUGINS_PATCH_DIR=""
+REPO_PREFIX=~
+
 
 # parse user inputs into variables
 for i in "$@"; do
@@ -83,6 +88,12 @@ for i in "$@"; do
       ;;
       --qt-version=*)
         QT_VERS="${i#*=}"
+      ;;
+      --repo-prefix=*)
+        REPO_PREFIX="${i#*=}"
+      ;;
+      --generate-app=*)
+        GENERATE_APP="${i#*=}"
       ;;
       --generate-dmg=*)
         GENERATE_DMG="${i#*=}"
@@ -126,11 +137,20 @@ case $MYTHTV_VERS in
     ;;
 esac
 ARCH=$(/usr/bin/arch)
-REPO_DIR=~/mythtv-$VERS
-INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
+REPO_DIR=$REPO_PREFIX/mythtv-$VERS
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
 ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
 PKGMGR_INST_PATH=/opt/local
+
+if $GENERATE_APP; then
+  ENABLE_MAC_BUNDLE="--enable-mac-bundle"
+  INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
+  RUNPREFIX=../Resources
+else
+  ENABLE_MAC_BUNDLE=""
+  INSTALL_DIR=$PKGMGR_INST_PATH
+  RUNPREFIX=$INSTALL_DIR
+fi
 
 # Add some flags for the compiler to find the package manager locations
 export LDFLAGS="-L$PKGMGR_INST_PATH/libexec/$QT_VERS/lib -L$PKGMGR_INST_PATH/lib"
@@ -158,6 +178,7 @@ APP_INFO_FILE=$APP/Contents/Info.plist
 # Tell pkg_config to ignore the paths for the package manager
 PKG_CONFIG_SYSTEM_INCLUDE_PATH=$PKGMGR_INST_PATH/include
 APP_DFLT_BNDL_ID="org.mythtv.mythfrontend"
+
 
 # installLibs finds all @rpath dylibs for the input binary/dylib
 # copying any missing ones in the application's FrameWork directory
@@ -208,6 +229,18 @@ installLibs(){
     # its already been copied in, we just need to update the link
     install_name_tool $binFile -change $dep $newLink
   done <<< "$pathDepList"
+}
+
+rebaseLibs(){
+    binFile=$1
+    rpathDepList=$(/usr/bin/otool -L $binFile|grep rpath)
+    rpathDepList=$(echo $rpathDepList| gsed 's/(.*//')
+    while read -r dep; do
+        lib=${dep##*/}
+        if [ -n $lib ]; then
+            install_name_tool $binFile -change $dep $RUNPREFIX/lib/$lib
+        fi
+    done <<< "$rpathDepList"
 }
 
 # Function used to convert version strings into integers for comparison
@@ -401,8 +434,8 @@ if $SKIP_BUILD; then
   echo "    Skipping mythtv configure and make"
 else
   ./configure --prefix=$INSTALL_DIR \
-              --runprefix=../Resources \
-              --enable-mac-bundle \
+              --runprefix=$RUNPREFIX \
+              $ENABLE_MAC_BUNDLE \
               --qmake=$QMAKE_CMD \
               --cc=clang \
               --cxx=clang++ \
@@ -453,7 +486,7 @@ if $BUILD_PLUGINS; then
 
   else
     ./configure --prefix=$INSTALL_DIR \
-                --runprefix=../Resources \
+                --runprefix=$RUNPREFIX \
                 --qmake=$QMAKE_CMD \
                 --qmakespecs=$QMAKE_SPECS \
                 --cc=clang \
@@ -490,6 +523,18 @@ if $FFMPEG_INSTALLED; then
   echo "    Reactivating FFMPEG to avoid a linker issue"
   sudo port activate ffmpeg
 fi
+
+if [ -z $ENABLE_MAC_BUNDLE ]; then
+  echo "    Mac Bundle disabled - Skipping app bundling commands"
+  echo "    Rebasing @rpath to $RUNPREFIX"
+	for mythExec in $INSTALL_DIR/bin/myth*; do
+        echo "     rebasing $mythExec"
+        rebaseLibs $mythExec
+	done
+	echo "Done"
+    exit 0
+fi
+# Assume that all commands past this point only apply to app bundling
 
 echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 # find all mythtv dylibs linked via @rpath in mythfrontend, move them into the
