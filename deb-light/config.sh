@@ -26,7 +26,7 @@ case $projname in
         if which $BUILD_PREPARE ; then
             $BUILD_PREPARE
         fi
-        if [[ `arch` == arm* ]] ; then
+        if [[ $arch == arm* ]] ; then
             config_opt="--enable-libmp3lame --disable-vdpau \
               --enable-opengl  \
               --disable-vaapi \
