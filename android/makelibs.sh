@@ -1872,19 +1872,26 @@ pushd $LIBSOUNDTOUCH
 OPATH=$PATH
 { patch -p1 -Nt -r - || true; } <<'END'
 diff --git a/bootstrap b/bootstrap
-index 7534e44..72a3e4e 100755
+index 7534e44..2ee0915 100755
 --- a/bootstrap
 +++ b/bootstrap
-@@ -9,9 +9,9 @@ then
- 		make maintainer-clean
- 	elif [ -a configure ]
- 	then
--		configure && $0 --clean
-+		./configure && $0 --clean
- 	else 
--		bootstrap && configure && $0 --clean
-+		./bootstrap && ./configure && $0 --clean
- 	fi
+@@ -4,14 +4,14 @@ unset ACLOCAL
+ 
+ if [ "$1" = "--clean" ]
+ then
+-       if [ -a Makefile ]
++       if [ -f Makefile ]
+        then
+                make maintainer-clean
+-       elif [ -a configure ]
++       elif [ -f configure ]
+        then
+-               configure && $0 --clean
++               ./configure && $0 --clean
+        else 
+-               bootstrap && configure && $0 --clean
++               ./bootstrap && ./configure && $0 --clean
+        fi
  
  	rm -rf configure libtool aclocal.m4 `find . -name Makefile.in` autom4te*.cache config/config.guess config/config.h.in config/config.sub config/depcomp config/install-sh config/ltmain.sh config/missing config/mkinstalldirs config/stamp-h config/stamp-h.in
 diff --git a/configure.ac b/configure.ac
