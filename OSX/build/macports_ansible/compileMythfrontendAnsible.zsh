@@ -137,7 +137,7 @@ case $MYTHTV_VERS in
       EXTRA_MYTHPLUGIN_FLAG="--enable-fftw"
     ;;
 esac
-ARCH=$(/usr/bin/arch)
+ARCH=$(/usr/bin/uname -m)
 REPO_DIR=$REPO_PREFIX/mythtv-$VERS
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
 ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
