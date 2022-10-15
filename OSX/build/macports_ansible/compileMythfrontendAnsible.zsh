@@ -255,13 +255,13 @@ case $QT_VERS in
        QT_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS
        QMAKE_CMD=$QT_PATH/bin/qmake
        QMAKE_SPECS=$QT_PATH/mkspecs/macx-clang
-       ANSIBLE_QT=$QT_VERS.yml
+       ANSIBLE_QT=mythtv.yml
     ;;
     *)
        QT_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS
        QMAKE_CMD=$QT_PATH/bin/qmake6
        QMAKE_SPECS=$QT_PATH/mkspecs/macx-clang
-       ANSIBLE_QT=$QT_VERS.yml
+       ANSIBLE_QT=mythtv.yml
        echo "!!!!! Building with Qt6 - disabling plugins !!!!!"
        BUILD_PLUGINS=false
     ;;
@@ -335,10 +335,10 @@ else
   export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
   case $QT_VERS in
       qt5)
-         $ANSIBLE_PLAYBOOK $ANSIBLE_QT --extra-vars "database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS" --ask-become-pass
+         $ANSIBLE_PLAYBOOK $ANSIBLE_QT --limit=localhost --extra-vars "database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS" --ask-become-pass
       ;;
       *)
-         $ANSIBLE_PLAYBOOK $ANSIBLE_QT --extra-vars "database_version=$DATABASE_VERS" --ask-become-pass
+         $ANSIBLE_PLAYBOOK $ANSIBLE_QT --limit=localhost --extra-vars "database_version=$DATABASE_VERS" --ask-become-pass
       ;;
   esac
 fi
