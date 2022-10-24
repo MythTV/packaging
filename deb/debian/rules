@@ -42,7 +42,6 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=$(MYTHTV_COMPILE_TYPE) \
 				--enable-pic \
 				--perl-config-opts="INSTALLDIRS=vendor" \
 				--enable-libvpx \
-				--enable-sdl \
 				--enable-libmp3lame \
 				--enable-libx264 \
 				--enable-vdpau
