@@ -60,7 +60,6 @@ Build-Depends:
  libqt5webkit5-dev,
  libraspberrypi-dev [armhf],
  libsamplerate0-dev,
- libsdl2-dev,
  libsoap-lite-perl,
  libsoundtouch-dev,
  libssl-dev,
