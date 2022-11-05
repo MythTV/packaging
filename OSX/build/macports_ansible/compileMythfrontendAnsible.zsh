@@ -18,6 +18,8 @@ Standard options:
   --version=MYTHTV_VERS                  Requested mythtv git repo (master)
   --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (mariadb-10.2)
   --qt-version=qt5                       Select Qt version to build against (qt5)
+  --repo-prefix=REPO_PREFIX              Directory base to install the working repository (~)
+  --generate-app=GENERATE_APP            Generate .app bundles for executables (true)
   --generate-dmg=GENERATE_DMG            Generate a DMG file for distribution (false)
 Build Options
   --update-git=UPDATE_GIT                Update git repositories to latest (true)
@@ -42,8 +44,10 @@ BUILD_PLUGINS=false
 PYTHON_VERS="38"
 UPDATE_PORTS=false
 MYTHTV_VERS="fixes/32"
+MYTHTV_PYTHON_SCRIPT="ttvdb4"
 DATABASE_VERS=mariadb-10.2
 QT_VERS=qt5
+GENERATE_APP=true
 GENERATE_DMG=false
 UPDATE_GIT=true
 SKIP_BUILD=false
@@ -52,6 +56,8 @@ APPLY_PATCHES=false
 MYTHTV_PATCH_DIR=""
 PACK_PATCH_DIR=""
 PLUGINS_PATCH_DIR=""
+REPO_PREFIX=~
+
 
 # parse user inputs into variables
 for i in "$@"; do
@@ -83,6 +89,12 @@ for i in "$@"; do
       ;;
       --qt-version=*)
         QT_VERS="${i#*=}"
+      ;;
+      --repo-prefix=*)
+        REPO_PREFIX="${i#*=}"
+      ;;
+      --generate-app=*)
+        GENERATE_APP="${i#*=}"
       ;;
       --generate-dmg=*)
         GENERATE_DMG="${i#*=}"
@@ -125,12 +137,21 @@ case $MYTHTV_VERS in
       EXTRA_MYTHPLUGIN_FLAG="--enable-fftw"
     ;;
 esac
-ARCH=$(/usr/bin/arch)
-REPO_DIR=~/mythtv-$VERS
-INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
+ARCH=$(/usr/bin/uname -m)
+REPO_DIR=$REPO_PREFIX/mythtv-$VERS
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
 ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
 PKGMGR_INST_PATH=/opt/local
+
+if $GENERATE_APP; then
+  ENABLE_MAC_BUNDLE="--enable-mac-bundle"
+  INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
+  RUNPREFIX=../Resources
+else
+  ENABLE_MAC_BUNDLE=""
+  INSTALL_DIR=$PKGMGR_INST_PATH
+  RUNPREFIX=$INSTALL_DIR
+fi
 
 # Add some flags for the compiler to find the package manager locations
 export LDFLAGS="-L$PKGMGR_INST_PATH/libexec/$QT_VERS/lib -L$PKGMGR_INST_PATH/lib"
@@ -158,6 +179,7 @@ APP_INFO_FILE=$APP/Contents/Info.plist
 # Tell pkg_config to ignore the paths for the package manager
 PKG_CONFIG_SYSTEM_INCLUDE_PATH=$PKGMGR_INST_PATH/include
 APP_DFLT_BNDL_ID="org.mythtv.mythfrontend"
+
 
 # installLibs finds all @rpath dylibs for the input binary/dylib
 # copying any missing ones in the application's FrameWork directory
@@ -210,6 +232,18 @@ installLibs(){
   done <<< "$pathDepList"
 }
 
+rebaseLibs(){
+    binFile=$1
+    rpathDepList=$(/usr/bin/otool -L $binFile|grep rpath)
+    rpathDepList=$(echo $rpathDepList| gsed 's/(.*//')
+    while read -r dep; do
+        lib=${dep##*/}
+        if [ -n $lib ]; then
+            install_name_tool $binFile -change $dep $RUNPREFIX/lib/$lib
+        fi
+    done <<< "$rpathDepList"
+}
+
 # Function used to convert version strings into integers for comparison
 version (){
   echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }';
@@ -221,13 +255,13 @@ case $QT_VERS in
        QT_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS
        QMAKE_CMD=$QT_PATH/bin/qmake
        QMAKE_SPECS=$QT_PATH/mkspecs/macx-clang
-       ANSIBLE_QT=$QT_VERS.yml
+       ANSIBLE_QT=mythtv.yml
     ;;
     *)
        QT_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS
        QMAKE_CMD=$QT_PATH/bin/qmake6
        QMAKE_SPECS=$QT_PATH/mkspecs/macx-clang
-       ANSIBLE_QT=$QT_VERS.yml
+       ANSIBLE_QT=mythtv.yml
        echo "!!!!! Building with Qt6 - disabling plugins !!!!!"
        BUILD_PLUGINS=false
     ;;
@@ -301,10 +335,10 @@ else
   export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
   case $QT_VERS in
       qt5)
-         $ANSIBLE_PLAYBOOK $ANSIBLE_QT --extra-vars "database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS" --ask-become-pass
+         $ANSIBLE_PLAYBOOK $ANSIBLE_QT --limit=localhost --extra-vars "database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS" --ask-become-pass
       ;;
       *)
-         $ANSIBLE_PLAYBOOK $ANSIBLE_QT --extra-vars "database_version=$DATABASE_VERS" --ask-become-pass
+         $ANSIBLE_PLAYBOOK $ANSIBLE_QT --limit=localhost --extra-vars "database_version=$DATABASE_VERS" --ask-become-pass
       ;;
   esac
 fi
@@ -401,8 +435,8 @@ if $SKIP_BUILD; then
   echo "    Skipping mythtv configure and make"
 else
   ./configure --prefix=$INSTALL_DIR \
-              --runprefix=../Resources \
-              --enable-mac-bundle \
+              --runprefix=$RUNPREFIX \
+              $ENABLE_MAC_BUNDLE \
               --qmake=$QMAKE_CMD \
               --cc=clang \
               --cxx=clang++ \
@@ -453,7 +487,7 @@ if $BUILD_PLUGINS; then
 
   else
     ./configure --prefix=$INSTALL_DIR \
-                --runprefix=../Resources \
+                --runprefix=$RUNPREFIX \
                 --qmake=$QMAKE_CMD \
                 --qmakespecs=$QMAKE_SPECS \
                 --cc=clang \
@@ -490,6 +524,18 @@ if $FFMPEG_INSTALLED; then
   echo "    Reactivating FFMPEG to avoid a linker issue"
   sudo port activate ffmpeg
 fi
+
+if [ -z $ENABLE_MAC_BUNDLE ]; then
+  echo "    Mac Bundle disabled - Skipping app bundling commands"
+  echo "    Rebasing @rpath to $RUNPREFIX"
+	for mythExec in $INSTALL_DIR/bin/myth*; do
+        echo "     rebasing $mythExec"
+        rebaseLibs $mythExec
+	done
+	echo "Done"
+    exit 0
+fi
+# Assume that all commands past this point only apply to app bundling
 
 echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 # find all mythtv dylibs linked via @rpath in mythfrontend, move them into the
@@ -567,24 +613,18 @@ if [ -f setup.py ]; then
   rm setup.py
 fi
 
-echo "    Creating a temporary application from ttvdb4.py"
+echo "    Creating a temporary application from $MYTHTV_PYTHON_SCRIPT"
 # in order to get python embedded in the application we're going to make a temporyary application
-# from one of the python scripts (ttvdb) which will copy in all the required libraries for
-# running and will make a standalone python executable not tied to the system
-# ttvdb4 seems to be more particular than tmdb3...
+# from one of the python scripts which will copy in all the required libraries for running
+# and will make a standalone python executable not tied to the system ttvdb4 seems to be more
+# particular than others (tmdb3)...
 
-# special handling for arm64 architecture until py2app is updated to fully support it
-if [ $(/usr/bin/arch)=="arm64" ]; then
-  PY2APP_ARCH="--arch=universal"
-else
-  PY2APP_ARCH=""
-fi
-$PY2APPLET_BIN $PY2APP_ARCH -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/ttvdb4.py
+$PY2APPLET_BIN -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/$MYTHTV_PYTHON_SCRIPT.py
 
 $PYTHON_BIN setup.py -q py2app 2>&1 > /dev/null
 # now we need to copy over the pythong app's pieces into the mythfrontend.app to get it working
 echo "    Copying in Python Framework libraries"
-cd $APP_DIR/PYTHON_APP/dist/ttvdb.app
+cd $APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app
 cp -RHnp Contents/Frameworks/* $APP_FMWK_DIR
 
 echo "    Copying in Python Binary"
