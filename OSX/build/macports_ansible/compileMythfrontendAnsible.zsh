@@ -645,15 +645,13 @@ $PY2APPLET_BIN -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-s
 $PYTHON_BIN setup.py -q py2app 2>&1 > /dev/null
 # now we need to copy over the pythong app's pieces into the mythfrontend.app to get it working
 echo "    Copying in Python Framework libraries"
-cd $APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app
-cp -RHnp Contents/Frameworks/* $APP_FMWK_DIR
-
+mv -n $APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Frameworks/* $APP_FMWK_DIR
 echo "    Copying in Python Binary"
-cp -p Contents/MacOS/python $APP_EXE_DIR
+mv $APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/MacOS/python $APP_EXE_DIR
 echo "    Copying in Python Resources"
-cp -RHnp Contents/Resources/* $APP_RSRC_DIR
-cd $APP_DIR
+mv -n $APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Resources/* $APP_RSRC_DIR
 # clean up temp application
+cd $APP_DIR
 rm -Rf PYTHON_APP
 
 echo "------------ Replace application perl/python paths to relative paths inside the application   ------------"
@@ -701,7 +699,7 @@ echo "------------ Searching Applicaition for missing libraries ------------"
 # Do one last sweep for missing dylibs in the Framework Directory
 for dylib in $APP_FMWK_DIR/*.dylib; do
   pathDepList=$(/usr/bin/otool -L $dylib|grep -e $PKGMGR_INST_PATH/lib -e $INSTALL_DIR)
-  if [ ! -z "${pathDepList// }" ] ; then
+  if [ ! -z $pathDepList ] ; then
     installLibs $dylib
   fi
 done
