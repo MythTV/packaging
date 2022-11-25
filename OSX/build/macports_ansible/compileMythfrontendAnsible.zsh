@@ -24,6 +24,7 @@ Standard options:
 Build Options
   --update-git=UPDATE_GIT                Update git repositories to latest (true)
   --skip-build=SKIP_BUILD                Skip configure and make - used when you just want to repackage (false)
+  --macports-clang=MP_CLANG              Flag to specify clang version to build with (default)
 Patch Options
   --apply-patches=APPLY_PATCHES          Apply patches specified in additional arguments (false)
   --mythtv-patch-dir=MYTHTV_PATCH_DIR    Directory containing patch files to be applied to Mythtv
@@ -51,6 +52,7 @@ GENERATE_APP=true
 GENERATE_DMG=false
 UPDATE_GIT=true
 SKIP_BUILD=false
+MP_CLANG=default
 SKIP_ANSIBLE=false
 APPLY_PATCHES=false
 MYTHTV_PATCH_DIR=""
@@ -80,6 +82,9 @@ for i in "$@"; do
       ;;
       --skip-ansible=*)
         SKIP_ANSIBLE="${i#*=}"
+      ;;
+      --macports-clang=*)
+        MP_CLANG="${i#*=}"
       ;;
       --version=*)
         MYTHTV_VERS="${i#*=}"
@@ -127,10 +132,10 @@ done
 # otherwise extract it from the MYTHTV_VERS
 case $MYTHTV_VERS in
     master*|*33*)
-       VERS=$(git ls-remote --tags  https://github.com/MythTV/mythtv.git|tail -n 1)
-       VERS=${VERS##*/v}
-       VERS=$(echo $VERS|tr -dc '0-9')
-       EXTRA_MYTHPLUGIN_FLAG=""
+      VERS=$(git ls-remote --tags  https://github.com/MythTV/mythtv.git|tail -n 1)
+      VERS=${VERS##*/v}
+      VERS=$(echo $VERS|tr -dc '0-9')
+      EXTRA_MYTHPLUGIN_FLAG=""
     ;;
     *32*|*31*)
       VERS=${MYTHTV_VERS: -2}
@@ -152,6 +157,22 @@ else
   INSTALL_DIR=$PKGMGR_INST_PATH
   RUNPREFIX=$INSTALL_DIR
 fi
+
+case $MP_CLANG in
+    clang-mp*)
+      CLANG_CMD=$PKGMGR_INST_PATH/bin/$MP_CLANG
+      CLANGPP_CMD=$PKGMGR_INST_PATH/bin/${MP_CLANG//clang/clang++}
+      # check is specified compiler is installed 
+      if ! [ -x "$(command -v $CLANG_CMD)" ]; then
+        CLANG_PORT=${MP_CLANG//clang-mp/clang}
+        sudo port -N install $CLANG_PORT
+      fi
+    ;;
+    *)
+      CLANG_CMD="clang"
+      CLANGPP_CMD="clang++"
+    ;;
+esac
 
 # Add some flags for the compiler to find the package manager locations
 export LDFLAGS="-L$PKGMGR_INST_PATH/libexec/$QT_VERS/lib -L$PKGMGR_INST_PATH/lib"
@@ -438,8 +459,8 @@ else
               --runprefix=$RUNPREFIX \
               $ENABLE_MAC_BUNDLE \
               --qmake=$QMAKE_CMD \
-              --cc=clang \
-              --cxx=clang++ \
+              --cc=$CLANG_CMD \
+              --cxx=$CLANGPP_CMD \
               --disable-backend \
               --disable-distcc \
               --disable-lirc \
@@ -490,8 +511,8 @@ if $BUILD_PLUGINS; then
                 --runprefix=$RUNPREFIX \
                 --qmake=$QMAKE_CMD \
                 --qmakespecs=$QMAKE_SPECS \
-                --cc=clang \
-                --cxx=clang++ \
+                --cc=$CLANG_CMD \
+                --cxx=$CLANGPP_CMD \
                 --enable-mythgame \
                 --enable-mythmusic \
                 --enable-cdio \
