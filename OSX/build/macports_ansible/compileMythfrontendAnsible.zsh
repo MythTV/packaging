@@ -42,11 +42,11 @@ EOF
 
 # setup default variables
 BUILD_PLUGINS=false
-PYTHON_VERS="38"
+PYTHON_VERS="310"
 UPDATE_PORTS=false
 MYTHTV_VERS="master"
 MYTHTV_PYTHON_SCRIPT="ttvdb4"
-DATABASE_VERS=mariadb-10.2
+DATABASE_VERS=mysql8
 QT_VERS=qt5
 GENERATE_APP=true
 GENERATE_DMG=false
@@ -176,8 +176,8 @@ esac
 
 # Add some flags for the compiler to find the package manager locations
 export LDFLAGS="-L$PKGMGR_INST_PATH/libexec/$QT_VERS/lib -L$PKGMGR_INST_PATH/lib"
-export C_INCLUDE_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray
-export CPLUS_INCLUDE_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray
+export C_INCLUDE_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun
+export CPLUS_INCLUDE_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun
 export LIBRARY_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/lib/:$PKGMGR_INST_PATH/lib
 
 # setup some paths to make the following commands easier to understand
