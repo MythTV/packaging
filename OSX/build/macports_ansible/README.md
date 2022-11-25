@@ -3,16 +3,9 @@ This is directory contains the a packaging script for MythFrontend for MacOS and
 instructions. The use of this script is documented on the mythtv wiki here:
 https://www.mythtv.org/wiki/Building_MythFrontend_on_Mac_OS_X
 
-compileMythtvAnsible.zsh - A script that creates a MythFrontend.app and .dmg files.
-            The script downloads and installs any mythtv/mythplugins dependencies
-            as specified in the mythtv ansible repo via MacPorts.  It also clones the
-            appropriate ansible/mythtv/packaging git repos from github, compiles mythtv
-            and optionally mythplugins, bundles the necessary Support libraries and
-            files into the application, and finally generates a .dmg file for distribution.
-            This script uses osx-bundler.pl.
+* **compileMythtvAnsible.zsh** - A script that creates a MythFrontend.app and .dmg files. The script downloads and installs any mythtv/mythplugins dependencies as specified in the mythtv ansible repo via MacPorts.  It also clones the appropriate ansible/mythtv/packaging git repos from github, compiles mythtv and optionally mythplugins, bundles the necessary Support libraries and files into the application, and finally generates a .dmg file for distribution.
 
-codesignAndPackage.zsh - A script that code signs / notarizes the application, generates a 
-            dmg file, and code signs. / notarizes the dmg bundle.
+* **codesignAndPackage.zsh** - A script that code signs / notarizes the application, generates a dmg file, and code signs. / notarizes the dmg bundle.
 
 Before running the script, the user must have Xcode, Xcode Command Line Tools, and MacPorts
 working on their system.
@@ -40,12 +33,6 @@ The script automatically performs the following steps:
 1. Packages mythfrontend.app into a .dmg file
 
 # Why Build With MacPorts
-Currently, for MythTV builds, MacPorts has all of the necessary dependencies for compiling MythTV in it's repository. For this reason alone, it significantly simplifies getting all of the dependencies installed and working without the need to maintain countless download links and specific to macOS patches.
+For a fully functional MythTV with plugins, only MacPorts has all of the necessary dependencies for compiling MythTV in it's repository. For this reason alone, it significantly simplifies getting all of the dependencies installed and working without the need to maintain countless download links and specific to macOS patches.
 
-In the past I tried to build MythTV using both manual downloads and Homebrew. The manual install process was cumbersome and filled with too many macOS related patches that it was nearly impossible to keep under control.
-
-This lead me to use a macOS package manager. First I tried Homebew. Unfortunately, Homebrew's default QT install was missing Webkit (requiring a customer QT compile and install) and had mixed compatibility with some of the python mysql pieces.
-
-After much sunk time spent trying to get MythTV to compile on Homebrew, I switched over to MacPorts and got the dependencies installed in very short order. Seriously - they just worked.  
-
-If anyone is interested in trying the Homebrew route please do so. If you are successful - please make suggestions on how to update the compile script and ansible. The best way to do this is to use the mythtv [users mailing list](http://lists.mythtv.org/mailman/listinfo/mythtv-users) or [forums](https://forum.mythtv.org/).
+Mythtv does successfully build under Homebrew, but with limited capability as key libraries such as qtwebkit are not available wihout manual installation. If anyone is interested in trying the Homebrew route please do so. If you are successful - please make suggestions on how to update the compile script and ansible.
