@@ -96,6 +96,8 @@ checkNotarization(){
   echo $retval
 }
 
+/usr/bin/security unlock-keychain
+
 # make sure we have a valid path to mythfrontent.app
 APP_NAME=$(basename $APP)
 FILE_EXT=${APP_NAME##*.}
@@ -114,19 +116,15 @@ APP_RSRC_DIR=$APP/Contents/Resources
 APP_FMWK_DIR=$APP/Contents/Frameworks
 APP_EXE_DIR=$APP/Contents/MacOS
 APP_PLUGINS_DIR=$APP_FMWK_DIR/PlugIns/
-ARCH=$(/usr/bin/arch)
+ARCH=$(/usr/bin/uname -m)
 OS_VERS=$(/usr/bin/sw_vers -productVersion)
 XCODE_VERS=$(/usr/bin/xcodebuild -version|grep "Xcode"|gsed 's/^.*Xcode *//'|grep -o '^[^.]\+')
 VERS=$(/usr/libexec/PlistBuddy -c 'print ":CFBundleShortVersionString"' $APP/Contents/Info.plist)
-FULLVERS=$($APP_EXE_DIR/mythfrontend --version|grep "MythTV Version"|gsed 's/^.*Version : *//')
-# trim -dirty in case we've patched the repo / fixed the Xcode 12.5 VERSION bug
-FULLVERS=${FULLVERS%-dirty}
 # check to see if the application has PlugIns
 HAS_PLUGINS=false
-if [ -e $APP_FMWK_DIR/PlugIns/libmythweather.dylib ]; then
+if [ -e $APP_PLUGINS_DIR/libmythweather.dylib ]; then
   HAS_PLUGINS=true
 fi
-
 # setup codesign / notarization variables
 echo "------------ Setup Code Signing Variables ------------"
 if [ -z $CODESIGN_ID ]; then
@@ -242,12 +240,17 @@ else
 fi
 
 echo "------------ Generating .dmg file  ------------"
+# on M1, the application will not run until notarized.  Now we need to extract the
+# the git version from the app after app signing...
+FULLVERS=$($APP_EXE_DIR/mythfrontend --version|grep "MythTV Version"|gsed 's/^.*Version : *//')
+
 # Package up the build
 if $HAS_PLUGINS; then
   VOL_NAME=MythFrontend-$VERS-$ARCH-$OS_VERS-$FULLVERS-with-plugins
 else
   VOL_NAME=MythFrontend-$VERS-$ARCH-$OS_VERS-$FULLVERS
 fi
+echo $VOL_NAME
 DMG_FILE=$VOL_NAME.dmg
 
 # Archive off any previous files
