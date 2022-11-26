@@ -451,7 +451,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DCMAKE_PREFIX_PATH="$INSTALLROOT" \
       -DSOVERSION="" \
       .. && \
-      cmake --build . && \
+      cmake --build . -j$NCPUS && \
       cmake --build . --target install
       ERR=$?
 
@@ -754,8 +754,8 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DICONV_LIBRARY=$INSTALLROOT/lib/libiconv.a \
       .. && \
       make VERBOSE=1 libmariadb && \
-      cmake --build ./libmariadb  --target install && \
-      cmake --build ./include  --target install
+      cmake --build ./libmariadb -j$NCPUS --target install && \
+      cmake --build ./include -j$NCPUS --target install
       ERR=$?
 
       #cp "$INSTALLROOT"/lib/mariadb/lib{mariadb,mysql}client.a
@@ -960,7 +960,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DEXIV2_BUILD_EXIV2_COMMAND=OFF \
       .. && \
       sed -i.bak -e 's/-static-libstdc++//;s/ [^ ]*libc\.a//' src/CMakeFiles/exiv2lib.dir/link.txt && \
-      cmake --build . && \
+      cmake --build . -j$NCPUS && \
       cmake --build . --target install
       ERR=$?
 mv -f ${INSTALLROOT}/lib/libexiv2.so ${INSTALLROOT}/lib/libexiv2.14.so
@@ -1635,7 +1635,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
       -DCMAKE_PREFIX_PATH="$INSTALLROOT" \
       -DBUILD_SHARED_LIBS=ON \
       .. && \
-      cmake --build . && \
+      cmake --build . -j$NCPUS && \
       cmake --build . --target install
       ERR=$?
 
