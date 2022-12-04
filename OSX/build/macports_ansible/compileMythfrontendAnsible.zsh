@@ -720,7 +720,6 @@ fi
 cd \$BASEDIR
 cd ../..
 APP_DIR=\$(pwd)
-export PYTHONHOME=\$APP_DIR/Contents/Resources
 export PYTHONPATH=\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/site-packages:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/sites-enabled
 
 cd \$BASEDIR
