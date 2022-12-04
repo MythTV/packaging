@@ -246,9 +246,9 @@ FULLVERS=$($APP_EXE_DIR/mythfrontend --version|grep "MythTV Version"|gsed 's/^.*
 
 # Package up the build
 if $HAS_PLUGINS; then
-  VOL_NAME=MythFrontend-$VERS-$ARCH-$OS_VERS-$FULLVERS-with-plugins
+  VOL_NAME=MythFrontend-$ARCH-$OS_VERS-$FULLVERS-with-plugins
 else
-  VOL_NAME=MythFrontend-$VERS-$ARCH-$OS_VERS-$FULLVERS
+  VOL_NAME=MythFrontend-$ARCH-$OS_VERS-$FULLVERS
 fi
 echo $VOL_NAME
 DMG_FILE=$VOL_NAME.dmg
