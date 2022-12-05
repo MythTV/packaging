@@ -44,7 +44,7 @@ EOF
 BUILD_PLUGINS=false
 PYTHON_VERS="310"
 UPDATE_PORTS=false
-MYTHTV_VERS="fixes/32"
+MYTHTV_VERS="master"
 MYTHTV_PYTHON_SCRIPT="ttvdb4"
 DATABASE_VERS=mysql8
 QT_VERS=qt5
@@ -378,7 +378,7 @@ PYTHON_MACOS_SP_LOC=$PYTHON_MACOS_FWRK/Versions/$PYTHON_DOT_VERS/lib/python$PYTH
 PYTHON_APP_FWRK=$APP_FMWK_DIR/Python.framework
 PYTHON_APP_SP_LOC="$APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages"
 # list of packages necessary to run python bindings / scripts
-PYTHON_RUNTIME_PKGS="MySQLdb,lxml,urllib3,simplejson,pycurl,future,httplib2"
+PYTHON_RUNTIME_PKGS="MySQLdb,lxml,urllib3,simplejson,pycurl,future,httplib2,requests,requests_cache,oauthlib"
 
 # install py2app if not already installed - we'll use this go get a portable version of python for the application
 if ! [ -x "$(command -v $PY2APPLET_BIN)" ]; then
