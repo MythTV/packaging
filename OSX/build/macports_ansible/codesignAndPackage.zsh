@@ -181,6 +181,11 @@ find $APP_RSRC_DIR -name '*.so' -print0 |
   while IFS= read -r -d '' line; do
       codesign -v -s $CODESIGN_ID --timestamp --options runtime -f --entitlements entitlement.plist --continue -i "$APP_BNDL_ID" "$line"
   done
+# Also missed are any dylibs in the Resources directory,
+find $APP_RSRC_DIR -name '*.dylib' -print0 |
+  while IFS= read -r -d '' line; do
+      codesign -v -s $CODESIGN_ID --timestamp --options runtime -f --entitlements entitlement.plist --continue -i "$APP_BNDL_ID" "$line"
+  done
 codesign -v -s $CODESIGN_ID --timestamp --options runtime -f --entitlements entitlement.plist --continue -i "$APP_BNDL_ID" $APP_FMWK_DIR/Qt*
 codesign -v -s $CODESIGN_ID --timestamp --options runtime -f --entitlements entitlement.plist --continue -i "$APP_BNDL_ID" $APP_FMWK_DIR/*.framework
 codesign -v -s $CODESIGN_ID --timestamp --options runtime -f --entitlements entitlement.plist --continue -i "$APP_BNDL_ID" $APP_FMWK_DIR/*.dylib
@@ -191,6 +196,7 @@ codesign -v -s $CODESIGN_ID --timestamp --options runtime -f --entitlements enti
 codesign -v -s $CODESIGN_ID --timestamp --options runtime -f --entitlements entitlement.plist --continue -i "$APP_BNDL_ID" $APP_EXE_DIR/mythpreviewgen
 codesign -v -s $CODESIGN_ID --timestamp --options runtime -f --entitlements entitlement.plist --continue -i "$APP_BNDL_ID" $APP_EXE_DIR/mythfrontend
 codesign -v -s $CODESIGN_ID --timestamp --options runtime -f --entitlements entitlement.plist --continue -i "$APP_BNDL_ID" $APP_EXE_DIR/mythfrontend.sh
+
 # finally sign the application
 codesign -v -s $CODESIGN_ID --timestamp --options runtime -f --entitlements entitlement.plist $APP
 # verify that the codesigning took
