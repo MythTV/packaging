@@ -127,6 +127,23 @@ for i in "$@"; do
   esac
 done
 
+# Specify package manager harcodes (currently for macports...)
+PKGMGR_INST_PATH=/opt/local
+
+# Setup Initial Python variables and dependencies for port / ansible installation
+PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
+PYTHON_PKMGR_BIN="$PKGMGR_INST_PATH/bin/python$PYTHON_DOT_VERS"
+ANSIBLE_PB_EXE="$PKGMGR_INST_PATH/bin/ansible-playbook-$PYTHON_DOT_VERS"
+
+PIP_PKGS=( 'wheel' 'pycurl' 'requests-cache==0.5.2' 'urllib3' 'future' 'lxml' 'oauthlib' 'requests' 'simplejson' 'audiofile' \
+          'bs4' 'argparse' 'common' 'configparser' 'datetime' 'discid' 'et' 'features' 'HTMLParser' 'httplib2' 'musicbrainzngs' \
+          'port' 'put' 'traceback2' 'markdown' 'py2app' 'python-dateutil'  'importlib-metadata') 
+PY2APP_PKGS=$(echo $PIP_PKGS| gsed "s/ py2app//g")
+PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/ /,/g")
+PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/python-//g")
+PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/-/_/g")
+PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/=[^,+]*,/,/")
+
 # Specify mythtv version to pull from git
 # if we're building on master - get release number from the git tags
 # otherwise extract it from the MYTHTV_VERS
@@ -144,9 +161,7 @@ case $MYTHTV_VERS in
 esac
 ARCH=$(/usr/bin/uname -m)
 REPO_DIR=$REPO_PREFIX/mythtv-$VERS
-PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
-ANSIBLE_PLAYBOOK="ansible-playbook-$PYTHON_DOT_VERS"
-PKGMGR_INST_PATH=/opt/local
+
 
 if $GENERATE_APP; then
   ENABLE_MAC_BUNDLE="--enable-mac-bundle"
@@ -305,13 +320,12 @@ if $UPDATE_PORTS; then
   % upgrade all outdated ports
   sudo port upgrade
 fi
-# check if ansible_playbook is installed, if not install it
-if ! [ -x "$(command -v $ANSIBLE_PLAYBOOK)" ]; then
+# check if ANSIBLE_PB_EXE is installed, if not install it
+if ! [ -x "$(command -v $ANSIBLE_PB_EXE)" ]; then
   echo "    Installing python and ansilble"
   sudo port -N install py$PYTHON_VERS-ansible
   sudo port select --set python python$PYTHON_VERS
   sudo port select --set python3 python$PYTHON_VERS
-  sudo port select --set ansible py$PYTHON_VERS-ansible
 else
   echo "    Skipping ansible install - it is already installed"
 fi
@@ -356,36 +370,41 @@ else
   export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
   case $QT_VERS in
       qt5)
-         $ANSIBLE_PLAYBOOK $ANSIBLE_QT --limit=localhost --extra-vars "database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS" --ask-become-pass
+         $ANSIBLE_PB_EXE $ANSIBLE_QT --limit=localhost --extra-vars "database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS" --ask-become-pass
       ;;
       *)
-         $ANSIBLE_PLAYBOOK $ANSIBLE_QT --limit=localhost --extra-vars "database_version=$DATABASE_VERS" --ask-become-pass
+         $ANSIBLE_PB_EXE $ANSIBLE_QT --limit=localhost --extra-vars "database_version=$DATABASE_VERS" --ask-become-pass
       ;;
   esac
 fi
 
+echo "------------ Create Python Virtual Environment ------------"
+# check if Python virtualenv is installed, if not install it
+if ! [ -x "$(command -v $virtualenv-$PYTHON_DOT_VERS)" ]; then
+  echo "    Installing Python Virtual Environment"
+  sudo port -N install py$PYTHON_VERS-virtualenv
+  sudo port select --set virtualenv virtualenv$PYTHON_VERS
+else
+  echo "    Skipping python virtualenv install - it is already installed"
+fi
+PYTHON_VENV_PATH=$REPO_DIR/mythtv-python
+$PYTHON_PKMGR_BIN -m venv --copies --clear $PYTHON_VENV_PATH
+
+source $PYTHON_VENV_PATH/bin/activate
+pip3 install $PIP_PKGS
+
 # get the version of python installed by MacPorts
-PYTHON_BIN=$(which python$PYTHON_DOT_VERS)
+PYTHON_VENV_BIN=$PYTHON_VENV_PATH/bin/python3
 PYTHON_RUNTIME_BIN="./python$PYTHON_DOT_VERS"
-PY2APPLET_BIN=$(dirname $PYTHON_BIN)/py2applet-$PYTHON_DOT_VERS
+PY2APPLET_BIN=$PYTHON_VENV_PATH/bin/py2applet
 
 # also get the location of the framework - /opt/local because this is where MacPorts stores its packages
 # and its site packages
-PYTHON_MACOS_FWRK=$PKGMGR_INST_PATH/Library/Frameworks/Python.framework
-PYTHON_MACOS_SP_LOC=$PYTHON_MACOS_FWRK/Versions/$PYTHON_DOT_VERS/lib/python$PYTHON_DOT_VERS/site-packages
+PYTHON_MACOS_SP_LOC=$PYTHON_VENV_PATH/lib/python$PYTHON_DOT_VERS/site-packages
 
 # and the destination for where the python bits get copied into the application framework and site_packages
 PYTHON_APP_FWRK=$APP_FMWK_DIR/Python.framework
 PYTHON_APP_SP_LOC="$APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages"
-# list of packages necessary to run python bindings / scripts
-PYTHON_RUNTIME_PKGS="MySQLdb,lxml,urllib3,simplejson,pycurl,future,httplib2,requests,requests_cache,oauthlib"
-
-# install py2app if not already installed - we'll use this go get a portable version of python for the application
-if ! [ -x "$(command -v $PY2APPLET_BIN)" ]; then
-  sudo port -N install py$PYTHON_VERS-py2app
-else
-  echo "    Skipping py2app install - it is already installed"
-fi
 
 echo "------------ Cloning / Updating Mythtv Git Repository ------------"
 # setup mythtv source from git
@@ -473,7 +492,7 @@ else
               --enable-libx265 \
               --enable-libvpx \
               --enable-bdjava \
-              --python=$PYTHON_BIN
+              --python=$PYTHON_VENV_BIN
   echo "------------ Compiling Mythtv ------------"
   #compile mythfrontend
   make
@@ -522,7 +541,7 @@ if $BUILD_PLUGINS; then
                 --disable-mythnetvision \
                 --disable-mythzoneminder \
                 --disable-mythzmserver \
-                --python=$PYTHON_BIN \
+                --python=$PYTHON_VENV_BIN \
                 $EXTRA_MYTHPLUGIN_FLAG
     echo "------------ Compiling Mythplugins ------------"
     #compile plugins
@@ -640,19 +659,24 @@ echo "    Creating a temporary application from $MYTHTV_PYTHON_SCRIPT"
 # and will make a standalone python executable not tied to the system ttvdb4 seems to be more
 # particular than others (tmdb3)...
 
-$PY2APPLET_BIN -p $PYTHON_RUNTIME_PKGS --site-packages --use-pythonpath --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/$MYTHTV_PYTHON_SCRIPT.py
+$PY2APPLET_BIN -i $PY2APP_PKGS -p $PY2APP_PKGS --use-pythonpath --no-report-missing-conditional-import --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/$MYTHTV_PYTHON_SCRIPT.py
+$PYTHON_VENV_BIN setup.py -q py2app 2>&1 > /dev/null
 
-$PYTHON_BIN setup.py -q py2app 2>&1 > /dev/null
 # now we need to copy over the pythong app's pieces into the mythfrontend.app to get it working
 echo "    Copying in Python Framework libraries"
 mv -n $APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Frameworks/* $APP_FMWK_DIR
 echo "    Copying in Python Binary"
 mv $APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/MacOS/python $APP_EXE_DIR
+if [ -f "$APP_EXE_DIR/python3" ]; then
+  ln -s $APP_EXE_DIR/pyton $APP_EXE_DIR/python3
+fi
 echo "    Copying in Python Resources"
 mv -n $APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Resources/* $APP_RSRC_DIR
 # clean up temp application
 cd $APP_DIR
 rm -Rf PYTHON_APP
+echo "    Copying in Site Packages from Virtual Enironment"
+cp -RL $PYTHON_VENV_PATH/lib/python3.10/site-packages/* $APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages 
 
 echo "------------ Replace application perl/python paths to relative paths inside the application   ------------"
 # mythtv "fixes" the shebang in all python scripts to an absolute path on the compiling system.  We need to
@@ -665,8 +689,10 @@ sedSTR=s#$INSTALL_DIR#../Resources#g
 grep -rlI $INSTALL_DIR $APP_RSRC_DIR | xargs gsed -i $sedSTR
 
 # edit those that point to $SRC_DIR/programs/scripts/
-sedSTR=s#$PYTHON_BIN#python#g
-grep -rlI $PYTHON_BIN $APP_RSRC_DIR | xargs gsed -i $sedSTR
+sedSTR=s#$PYTHON_VENV_BIN#python#g
+grep -rlI $PYTHON_VENV_BIN $APP_RSRC_DIR | xargs gsed -i $sedSTR
+sedSTR=s#$PYTHON_PKMGR_BIN#python#g
+grep -rlI $PYTHON_PKMGR_BIN $APP_RSRC_DIR | xargs gsed -i $sedSTR
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
@@ -721,6 +747,7 @@ cd \$BASEDIR
 cd ../..
 APP_DIR=\$(pwd)
 export PYTHONPATH=\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/site-packages:\$APP_DIR/Contents/Resources/lib/python$PYTHON_DOT_VERS/sites-enabled
+PATH=\$(pwd):\$PATH
 
 cd \$BASEDIR
 ./mythfrontend \$@" > mythfrontend.sh
