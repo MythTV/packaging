@@ -380,7 +380,7 @@ fi
 
 echo "------------ Create Python Virtual Environment ------------"
 # check if Python virtualenv is installed, if not install it
-if ! [ -x "$(command -v $virtualenv-$PYTHON_DOT_VERS)" ]; then
+if ! [ -x "$(command -v virtualenv-$PYTHON_DOT_VERS)" ]; then
   echo "    Installing Python Virtual Environment"
   sudo port -N install py$PYTHON_VERS-virtualenv
   sudo port select --set virtualenv virtualenv$PYTHON_VERS
@@ -677,6 +677,8 @@ cd $APP_DIR
 rm -Rf PYTHON_APP
 echo "    Copying in Site Packages from Virtual Enironment"
 cp -RL $PYTHON_VENV_PATH/lib/python3.10/site-packages/* $APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages 
+# do not need/want py2app in the application
+rm -Rf $APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages/py2app
 
 echo "------------ Replace application perl/python paths to relative paths inside the application   ------------"
 # mythtv "fixes" the shebang in all python scripts to an absolute path on the compiling system.  We need to
