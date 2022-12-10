@@ -135,10 +135,10 @@ PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
 PYTHON_PKMGR_BIN="$PKGMGR_INST_PATH/bin/python$PYTHON_DOT_VERS"
 ANSIBLE_PB_EXE="$PKGMGR_INST_PATH/bin/ansible-playbook-$PYTHON_DOT_VERS"
 
-PIP_PKGS=( 'wheel' 'pycurl' 'requests-cache==0.5.2' 'urllib3' 'future' 'lxml' 'oauthlib' 'requests' 'simplejson' 'audiofile' \
+PIP_PKGS=( 'mysqlclient' 'pycurl' 'requests-cache==0.5.2' 'urllib3' 'future' 'lxml' 'oauthlib' 'requests' 'simplejson' 'audiofile' \
           'bs4' 'argparse' 'common' 'configparser' 'datetime' 'discid' 'et' 'features' 'HTMLParser' 'httplib2' 'musicbrainzngs' \
-          'port' 'put' 'traceback2' 'markdown' 'py2app' 'python-dateutil'  'importlib-metadata') 
-PY2APP_PKGS=$(echo $PIP_PKGS| gsed "s/ py2app//g")
+          'port' 'put' 'traceback2' 'markdown' 'python-dateutil'  'importlib-metadata') 
+PY2APP_PKGS=$(echo $PIP_PKGS| gsed "s/mysqlclient/MySQLdb/g")
 PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/ /,/g")
 PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/python-//g")
 PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/-/_/g")
@@ -391,6 +391,8 @@ PYTHON_VENV_PATH=$REPO_DIR/mythtv-python
 $PYTHON_PKMGR_BIN -m venv --copies --clear $PYTHON_VENV_PATH
 
 source $PYTHON_VENV_PATH/bin/activate
+
+pip3 install wheel py2app
 pip3 install $PIP_PKGS
 
 # get the version of python installed by MacPorts
