@@ -7,6 +7,8 @@ ifneq ($(CONFIG),)
 	MODE_LINE = $(strip $(shell grep -E "MODE=" android-utilities/config/$(CONFIG)))
 	ifneq ($(MODE_LINE),)
 		MODE = $(lastword $(subst =, ,$(MODE_LINE)))
+	else
+$(error Configs available are: $(shell ls -1 android-utilities/config))
 	endif
 endif
 
@@ -63,7 +65,7 @@ clean:
 distclean:
 	rm -rf libs$(SUFFIX) mythinstall$(SUFFIX) libsinstall$(SUFFIX) build$(SUFFIX)
 
-LIBS_TO_BUILD = mariadb fftw libxml2 libbluray flac iconv icu ogg vorbis fontconfig libsamplerate libsoundtouch
+LIBS_TO_BUILD = mariadb fftw libxml2 libbluray flac iconv icu ogg vorbis fontconfig libsamplerate libsoundtouch ass harfbuzz freetype
 .PHONY: qt $(LIBS_TO_BUILD)
 qt:
 	./makelibs.sh $(OPTS) qt5extras

@@ -56,6 +56,10 @@ while : ; do
 			shift
 			BUILD_FONTCONFIG=1
 			;;
+		harfbuzz)
+			shift
+			BUILD_HARFBUZZ=1
+			;;
 		ass)
 			shift
 			BUILD_FONTCONFIG=1
@@ -157,6 +161,7 @@ while : ; do
 			BUILD_FLAC=1
 			BUILD_VORBIS=1
 			BUILD_OGG=1
+			BUILD_HARFBUZZ=1
 			BUILD_FRIBIDI=1
 			BUILD_FONTCONFIG=1
 			BUILD_ASS=1
@@ -464,7 +469,7 @@ return $ERR
 }
 
 build_freetype() {
-FREETYPE=freetype-2.10.1
+FREETYPE=freetype-2.12.1
 echo -e "\n**** $FREETYPE ****"
 setup_lib http://download.savannah.gnu.org/releases/freetype/$FREETYPE.tar.xz $FREETYPE
 pushd $FREETYPE
@@ -1525,9 +1530,59 @@ popd
 return $ERR
 }
 
+build_harfbuzz() {
+rm -rf build
+HARFBUZZ_VERSION=5.3.1
+HARFBUZZ=harfbuzz-$HARFBUZZ_VERSION
+echo -e "\n**** $HARFBUZZ ****"
+setup_lib https://github.com/harfbuzz/harfbuzz/releases/download/$HARFBUZZ_VERSION/$HARFBUZZ.tar.xz $HARFBUZZ
+pushd $HARFBUZZ
+OPATH=$PATH
+
+if [ $CLEAN == 1 ]; then
+	make distclean || true
+fi
+
+#local CPUOPT=
+#if [ $ARM64 == 1 ]; then
+#	CPUOPT="-march=$CPU_ARCH"
+#else
+#	CPUOPT="-march=$CPU_ARCH"
+#fi
+#./autogen.sh &&
+PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR/pkgconfig \
+CFLAGS="-isysroot $SYSROOT -isystem $INSTALLROOT/include $CPUOPT $ANDROID_API_DEF" \
+CXXFLAGS="-isysroot $SYSROOT -isystem $INSTALLROOT/include $CPUOPT $ANDROID_API_DEF" \
+LDFLAGS="-L$INSTALLROOT/lib" \
+RANLIB=${CROSSPATH_LLVM}ranlib \
+OBJDUMP=${CROSSPATH_LLVM}objdump \
+AR=${CROSSPATH_LLVM}ar \
+LD=${CROSSPATH_LD}ld \
+CC="${CROSSPATH3}clang" \
+CXX="${CROSSPATH3}clang++" \
+./configure \
+	--build=x86_64-linux-gnu \
+	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
+	--prefix=$INSTALLROOT \
+	--with-sysroot=$SYSROOT \
+	--disable-dependency-tracking \
+	--disable-require-system-font-provider \
+	--enable-shared \
+	--enable-static &&
+	cd src &&
+	make -j$NCPUS lib &&
+	make install-libLTLIBRARIES install-pkgincludeHEADERS install-pkgconfigDATA
+	ERR=$?
+
+PATH=$OPATH
+unset OPATH
+popd
+return $ERR
+}
+
 build_ass() {
 rm -rf build
-LIBASS_VERSION=0.14.0
+LIBASS_VERSION=0.17.0
 LIBASS=libass-$LIBASS_VERSION
 echo -e "\n**** $LIBASS ****"
 setup_lib https://github.com/libass/libass/releases/download/$LIBASS_VERSION/$LIBASS.tar.xz $LIBASS
@@ -1559,7 +1614,6 @@ CXX="${CROSSPATH3}clang++" \
 	--build=x86_64-linux-gnu \
 	--host=$MY_ANDROID_NDK_TOOLS_PREFIX \
 	--prefix=$INSTALLROOT \
-	--with-sysroot=$SYSROOT \
 	--disable-dependency-tracking \
 	--disable-require-system-font-provider \
 	--enable-shared \
@@ -3239,6 +3293,7 @@ pushd $LIBSDIR
 [ -n "$BUILD_LIBZIP" ] && build_libzip
 [ -n "$BUILD_FONTCONFIG" ] && build_fontconfig
 [ -n "$BUILD_FRIBIDI" ] && build_fribidi
+[ -n "$BUILD_HARFBUZZ" ] && build_harfbuzz
 [ -n "$BUILD_ASS" ] && build_ass
 [ -n "$BUILD_LIBSAMPLERATE" ] && build_libsamplerate
 [ -n "$BUILD_LIBSOUNDTOUCH" ] && build_libsoundtouch
