@@ -14,9 +14,9 @@ Options: [defaults in brackets after descriptions]
 Standard options:
   --help                                 Print this message
   --build-plugins=BUILD_PLUGINS          Build Mythtvplugins (false)
-  --python-version=PYTHON_VERS           Desired Python 3 Version (38)
+  --python-version=PYTHON_VERS           Desired Python 3 Version (310)
   --version=MYTHTV_VERS                  Requested mythtv git repo (master)
-  --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (mariadb-10.2)
+  --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (mysql8)
   --qt-version=qt5                       Select Qt version to build against (qt5)
   --repo-prefix=REPO_PREFIX              Directory base to install the working repository (~)
   --generate-app=GENERATE_APP            Generate .app bundles for executables (true)
@@ -40,13 +40,17 @@ EOF
   exit 0
 }
 
+OS_VERS=$(/usr/bin/sw_vers -productVersion)
+OS_MAJOR=(${(@s:.:)OS_VERS})
+OS_MINOR=$OS_MAJOR[2]
+OS_MAJOR=$OS_MAJOR[1]
+
 # setup default variables
 BUILD_PLUGINS=false
 PYTHON_VERS="310"
 UPDATE_PORTS=false
 MYTHTV_VERS="master"
 MYTHTV_PYTHON_SCRIPT="ttvdb4"
-DATABASE_VERS=mysql8
 QT_VERS=qt5
 GENERATE_APP=true
 GENERATE_DMG=false
@@ -60,6 +64,12 @@ PACK_PATCH_DIR=""
 PLUGINS_PATCH_DIR=""
 REPO_PREFIX=~
 
+# maports doesn't support mysql 8 for older versions of macOS, for those installs default to mariadb (unless the user overries)
+if [ $OS_MAJOR -le 10 ] && [ $OS_MINOR -le 15 ]; then
+  DATABASE_VERS=mariadb-10.5
+else
+  DATABASE_VERS=mysql8
+fi
 
 # parse user inputs into variables
 for i in "$@"; do
@@ -134,15 +144,9 @@ PKGMGR_INST_PATH=/opt/local
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
 PYTHON_PKMGR_BIN="$PKGMGR_INST_PATH/bin/python$PYTHON_DOT_VERS"
 ANSIBLE_PB_EXE="$PKGMGR_INST_PATH/bin/ansible-playbook-$PYTHON_DOT_VERS"
-
 PIP_PKGS=( 'mysqlclient' 'pycurl' 'requests-cache==0.5.2' 'urllib3' 'future' 'lxml' 'oauthlib' 'requests' 'simplejson' 'audiofile' \
           'bs4' 'argparse' 'common' 'configparser' 'datetime' 'discid' 'et' 'features' 'HTMLParser' 'httplib2' 'musicbrainzngs' \
           'port' 'put' 'traceback2' 'markdown' 'python-dateutil'  'importlib-metadata') 
-PY2APP_PKGS=$(echo $PIP_PKGS| gsed "s/mysqlclient/MySQLdb/g")
-PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/ /,/g")
-PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/python-//g")
-PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/-/_/g")
-PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/=[^,+]*,/,/")
 
 # Specify mythtv version to pull from git
 # if we're building on master - get release number from the git tags
@@ -202,7 +206,6 @@ THEME_DIR=$REPO_DIR/mythtv/myththemes
 PKGING_DIR=$REPO_DIR/mythtv/packaging
 OSX_PKGING_DIR=$PKGING_DIR/OSX/build
 export PATH=$PKGMGR_INST_PATH/lib/$DATABSE_VERS/bin:$PATH
-OS_VERS=$(/usr/bin/sw_vers -productVersion)
 
 # macOS internal appliction paths
 APP_DIR=$SRC_DIR/programs/mythfrontend
@@ -378,6 +381,17 @@ else
   esac
 fi
 
+# get the version of python installed by MacPorts
+PYTHON_RUNTIME_BIN="./python$PYTHON_DOT_VERS"
+
+# also get the location of the framework - /opt/local because this is where MacPorts stores its packages
+# and its site packages
+PYTHON_MACOS_SP_LOC=$PYTHON_VENV_PATH/lib/python$PYTHON_DOT_VERS/site-packages
+
+# and the destination for where the python bits get copied into the application framework and site_packages
+PYTHON_APP_FWRK=$APP_FMWK_DIR/Python.framework
+PYTHON_APP_SP_LOC="$APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages"
+
 echo "------------ Create Python Virtual Environment ------------"
 # check if Python virtualenv is installed, if not install it
 if ! [ -x "$(command -v virtualenv-$PYTHON_DOT_VERS)" ]; then
@@ -389,24 +403,11 @@ else
 fi
 PYTHON_VENV_PATH=$REPO_DIR/mythtv-python
 $PYTHON_PKMGR_BIN -m venv --copies --clear $PYTHON_VENV_PATH
-
 source $PYTHON_VENV_PATH/bin/activate
-
 pip3 install wheel py2app
 pip3 install $PIP_PKGS
-
-# get the version of python installed by MacPorts
 PYTHON_VENV_BIN=$PYTHON_VENV_PATH/bin/python3
-PYTHON_RUNTIME_BIN="./python$PYTHON_DOT_VERS"
 PY2APPLET_BIN=$PYTHON_VENV_PATH/bin/py2applet
-
-# also get the location of the framework - /opt/local because this is where MacPorts stores its packages
-# and its site packages
-PYTHON_MACOS_SP_LOC=$PYTHON_VENV_PATH/lib/python$PYTHON_DOT_VERS/site-packages
-
-# and the destination for where the python bits get copied into the application framework and site_packages
-PYTHON_APP_FWRK=$APP_FMWK_DIR/Python.framework
-PYTHON_APP_SP_LOC="$APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages"
 
 echo "------------ Cloning / Updating Mythtv Git Repository ------------"
 # setup mythtv source from git
@@ -660,7 +661,11 @@ echo "    Creating a temporary application from $MYTHTV_PYTHON_SCRIPT"
 # from one of the python scripts which will copy in all the required libraries for running
 # and will make a standalone python executable not tied to the system ttvdb4 seems to be more
 # particular than others (tmdb3)...
-
+PY2APP_PKGS=$(echo $PIP_PKGS| gsed "s/mysqlclient/MySQLdb/g")
+PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/ /,/g")
+PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/python-//g")
+PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/-/_/g")
+PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/=[^,+]*,/,/")
 $PY2APPLET_BIN -i $PY2APP_PKGS -p $PY2APP_PKGS --use-pythonpath --no-report-missing-conditional-import --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/$MYTHTV_PYTHON_SCRIPT.py
 $PYTHON_VENV_BIN setup.py -q py2app 2>&1 > /dev/null
 
