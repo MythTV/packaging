@@ -1,0 +1,373 @@
+diff --git a/src/fccache.c b/src/fccache.c
+index 4a6a752..0db2f2a 100644
+--- a/src/fccache.c
++++ b/src/fccache.c
+@@ -48,6 +48,7 @@
+ #if defined(_WIN32)
+ #include <sys/locking.h>
+ #endif
++#include <android/log.h>
+ 
+ #ifndef O_BINARY
+ #define O_BINARY 0
+@@ -100,7 +101,7 @@ FcDirCacheDeleteUUID (const FcChar8  *dir,
+ #endif
+ 	if (utimes ((const char *) d, times) != 0)
+ 	{
+-	    fprintf (stderr, "Unable to revert mtime: %s\n", d);
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC", "Unable to revert mtime: %s\n", d);
+ 	}
+     }
+     FcStrFree (target);
+@@ -1147,18 +1148,18 @@ FcDirChecksum (struct stat *statb)
+ 	epoch = strtoull(source_date_epoch, &endptr, 10);
+ 
+ 	if (endptr == source_date_epoch)
+-	    fprintf (stderr,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC",
+ 		     "Fontconfig: SOURCE_DATE_EPOCH invalid\n");
+ 	else if ((errno == ERANGE && (epoch == ULLONG_MAX || epoch == 0))
+ 		|| (errno != 0 && epoch == 0))
+-	    fprintf (stderr,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC",
+ 		     "Fontconfig: SOURCE_DATE_EPOCH: strtoull: %s: %" FC_UINT64_FORMAT "\n",
+ 		     strerror(errno), epoch);
+ 	else if (*endptr != '\0')
+-	    fprintf (stderr,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC",
+ 		     "Fontconfig: SOURCE_DATE_EPOCH has trailing garbage\n");
+ 	else if (epoch > ULONG_MAX)
+-	    fprintf (stderr,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC",
+ 		     "Fontconfig: SOURCE_DATE_EPOCH must be <= %lu but saw: %" FC_UINT64_FORMAT "\n",
+ 		     ULONG_MAX, epoch);
+ 	else if (epoch < ret)
+@@ -1410,7 +1411,7 @@ FcDirCacheWrite (FcCache *cache, FcConfig *config)
+ 	}
+     }
+     if (!test_dir)
+-	fprintf (stderr, "Fontconfig error: No writable cache directories\n");
++	__android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig error: No writable cache directories\n");
+     if (d)
+ 	FcStrFree (d);
+     FcStrListDone (list);
+@@ -1523,7 +1524,7 @@ FcDirCacheClean (const FcChar8 *cache_dir, FcBool verbose)
+ 	dir = FcStrCopyFilename (cache_dir);
+     if (!dir)
+     {
+-	fprintf (stderr, "Fontconfig error: %s: out of memory\n", cache_dir);
++	__android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig error: %s: out of memory\n", cache_dir);
+ 	ret = FcFalse;
+ 	goto bail;
+     }
+@@ -1559,7 +1560,7 @@ FcDirCacheClean (const FcChar8 *cache_dir, FcBool verbose)
+ 	file_name = FcStrBuildFilename (dir, (FcChar8 *)ent->d_name, NULL);
+ 	if (!file_name)
+ 	{
+-	    fprintf (stderr, "Fontconfig error: %s: allocation failure\n", dir);
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig error: %s: allocation failure\n", dir);
+ 	    ret = FcFalse;
+ 	    break;
+ 	}
+diff --git a/src/fccfg.c b/src/fccfg.c
+index eb174a4..b795fce 100644
+--- a/src/fccfg.c
++++ b/src/fccfg.c
+@@ -38,6 +38,8 @@
+ #define S_ISFIFO(m) 0
+ #endif
+ 
++#include <android/log.h>
++
+ static FcConfig    *_fcConfig; /* MT-safe */
+ static FcMutex	   *_lock;
+ 
+@@ -284,7 +286,7 @@ FcConfigUptoDate (FcConfig *config)
+     	(config_dir_time.set && (config_dir_time.time - now) > 0) ||
+         (font_time.set && (font_time.time - now) > 0))
+ 	{
+-	    fprintf (stderr,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC",
+                     "Fontconfig warning: Directory/file mtime in the future. New fonts may not be detected.\n");
+ 	    config->rescanTime = now;
+ 	    goto bail;
+@@ -1286,7 +1288,7 @@ FcConfigEvaluate (FcPattern *p, FcPattern *p_pat, FcMatchKind kind, FcExpr *e)
+ 	}
+ 	else if (kind == FcMatchPattern && e->u.name.kind == FcMatchFont)
+ 	{
+-	    fprintf (stderr,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC",
+                     "Fontconfig warning: <name> tag has target=\"font\" in a <match target=\"pattern\">.\n");
+ 	    v.type = FcTypeVoid;
+ 	}
+@@ -1803,10 +1805,10 @@ FcConfigAdd (FcValueListPtr *head,
+     {
+ 	if (!FcObjectValidType (object, l->value.type))
+ 	{
+-	    fprintf (stderr,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC",
+ 		     "Fontconfig warning: FcPattern object %s does not accept value", FcObjectName (object));
+ 	    FcValuePrintFile (stderr, l->value);
+-	    fprintf (stderr, "\n");
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC", "\n");
+ 
+ 	    if (FcDebug () & FC_DBG_EDIT)
+ 	    {
+@@ -3042,7 +3044,7 @@ retry:
+ 	    init = FcFalse;
+ 	    if (--nretry == 0)
+ 	    {
+-		fprintf (stderr, "Fontconfig warning: Unable to initialize config and retry limit exceeded. sysroot functionality may not work as expected.\n");
++		__android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig warning: Unable to initialize config and retry limit exceeded. sysroot functionality may not work as expected.\n");
+ 		return;
+ 	    }
+ 	    goto retry;
+diff --git a/src/fcformat.c b/src/fcformat.c
+index ae8c59c..3c43230 100644
+--- a/src/fcformat.c
++++ b/src/fcformat.c
+@@ -26,6 +26,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <stdarg.h>
++#include <android/log.h>
+ 
+ 
+ /* The language is documented in doc/fcformat.fncs
+@@ -86,9 +87,9 @@ message (const char *fmt, ...)
+ {
+     va_list	args;
+     va_start (args, fmt);
+-    fprintf (stderr, "Fontconfig: Pattern format error: ");
+-    vfprintf (stderr, fmt, args);
+-    fprintf (stderr, ".\n");
++    __android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig: Pattern format error: ");
++    __android_log_vprint(ANDROID_LOG_WARN, "mfeFC", fmt, args);
++    __android_log_print(ANDROID_LOG_WARN, "mfeFC", ".\n");
+     va_end (args);
+ }
+ 
+diff --git a/src/fcinit.c b/src/fcinit.c
+index c05cdc5..f32b946 100644
+--- a/src/fcinit.c
++++ b/src/fcinit.c
+@@ -24,6 +24,7 @@
+ 
+ #include "fcint.h"
+ #include <stdlib.h>
++#include <android/log.h>
+ 
+ #if defined(FC_ATOMIC_INT_NIL)
+ #pragma message("Could not find any system to define atomic_int macros, library may NOT be thread-safe.")
+@@ -112,9 +113,9 @@ FcInitLoadOwnConfig (FcConfig *config)
+ 
+ 	if (!have_own)
+ 	{
+-	    fprintf (stderr,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC",
+ 		     "Fontconfig warning: no <cachedir> elements found. Check configuration.\n");
+-	    fprintf (stderr,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC",
+ 		     "Fontconfig warning: adding <cachedir>%s</cachedir>\n",
+ 		     FC_CACHEDIR);
+ 	}
+@@ -129,7 +130,7 @@ FcInitLoadOwnConfig (FcConfig *config)
+ 	memcpy (&prefix[plen], FC_DIR_SEPARATOR_S "fontconfig", 11);
+ 	prefix[plen + 11] = 0;
+ 	if (!have_own)
+-	    fprintf (stderr,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC",
+ 		     "Fontconfig warning: adding <cachedir prefix=\"xdg\">fontconfig</cachedir>\n");
+ 
+ 	if (!FcConfigAddCacheDir (config, (FcChar8 *) FC_CACHEDIR) ||
+@@ -140,7 +141,7 @@ FcInitLoadOwnConfig (FcConfig *config)
+ 
+ 	  bail:
+ 	    sysroot = FcConfigGetSysRoot (config);
+-	    fprintf (stderr,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC",
+ 		     "Fontconfig error: out of memory");
+ 	    if (prefix)
+ 		FcStrFree (prefix);
+diff --git a/src/fclang.c b/src/fclang.c
+index 9f3e046..5cf3720 100644
+--- a/src/fclang.c
++++ b/src/fclang.c
+@@ -24,6 +24,7 @@
+ 
+ #include "fcint.h"
+ #include "fcftint.h"
++#include <android/log.h>
+ 
+ /* Objects MT-safe for readonly access. */
+ 
+@@ -258,14 +259,14 @@ FcLangNormalize (const FcChar8 *lang)
+     llen = strlen ((const char *) s);
+     if (llen < 2 || llen > 3)
+     {
+-	fprintf (stderr, "Fontconfig warning: ignoring %s: not a valid language tag\n",
++	__android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig warning: ignoring %s: not a valid language tag\n",
+ 		 lang);
+ 	goto bail0;
+     }
+     if (territory && (tlen < 2 || tlen > 3) &&
+ 	!(territory[0] == 'z' && tlen < 5))
+     {
+-	fprintf (stderr, "Fontconfig warning: ignoring %s: not a valid region tag\n",
++	__android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig warning: ignoring %s: not a valid region tag\n",
+ 		 lang);
+ 	goto bail0;
+     }
+diff --git a/src/fcname.c b/src/fcname.c
+index 3567656..ef21011 100644
+--- a/src/fcname.c
++++ b/src/fcname.c
+@@ -27,6 +27,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <stdio.h>
++#include <android/log.h>
+ 
+ static const FcObjectType FcObjects[] = {
+ #define FC_OBJECT(NAME, Type, Cmp) { FC_##NAME, Type },
+@@ -250,7 +251,7 @@ FcNameConstantWithObjectCheck (const FcChar8 *string, const char *object, int *r
+     {
+ 	if (strcmp (c->object, object) != 0)
+ 	{
+-	    fprintf (stderr, "Fontconfig error: Unexpected constant name `%s' used for object `%s': should be `%s'\n", string, object, c->object);
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig error: Unexpected constant name `%s' used for object `%s': should be `%s'\n", string, object, c->object);
+ 	    return FcFalse;
+ 	}
+ 	*result = c->value;
+diff --git a/src/fcobjs.c b/src/fcobjs.c
+index 33bba8d..cd45740 100644
+--- a/src/fcobjs.c
++++ b/src/fcobjs.c
+@@ -23,6 +23,7 @@
+  */
+ 
+ #include "fcint.h"
++#include <android/log.h>
+ 
+ static unsigned int
+ FcObjectTypeHash (register const char *str, register FC_GPERF_SIZE_T len);
+@@ -89,7 +90,7 @@ retry:
+ 	ot->id = fc_atomic_int_add (next_id, +1);
+ 	if (ot->id < (FC_MAX_BASE_OBJECT + FC_EXT_OBJ_INDEX))
+ 	{
+-	    fprintf (stderr, "Fontconfig error: No object ID to assign\n");
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig error: No object ID to assign\n");
+ 	    abort ();
+ 	}
+ 	ot->next = ots;
+diff --git a/src/fcpat.c b/src/fcpat.c
+index 82c6bed..b9e48a2 100644
+--- a/src/fcpat.c
++++ b/src/fcpat.c
+@@ -22,6 +22,7 @@
+ 
+ #include "fcint.h"
+ #include "fcftint.h"
++#include <android/log.h>
+ 
+ /* Objects MT-safe for readonly access. */
+ 
+@@ -639,10 +640,10 @@ FcPatternObjectListAdd (FcPattern	*p,
+     {
+ 	if (!FcObjectValidType (object, l->value.type))
+ 	{
+-	    fprintf (stderr,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC",
+ 		     "Fontconfig warning: FcPattern object %s does not accept value", FcObjectName (object));
+ 	    FcValuePrintFile (stderr, l->value);
+-	    fprintf (stderr, "\n");
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC", "\n");
+ 	    goto bail0;
+ 	}
+     }
+@@ -700,11 +701,11 @@ FcPatternObjectAddWithBinding  (FcPattern	*p,
+      */
+     if (!FcObjectValidType (object, new->value.type))
+     {
+-	fprintf (stderr,
++	__android_log_print(ANDROID_LOG_WARN, "mfeFC",
+ 		 "Fontconfig warning: FcPattern object %s does not accept value",
+ 		 FcObjectName (object));
+ 	FcValuePrintFile (stderr, new->value);
+-	fprintf (stderr, "\n");
++	__android_log_print(ANDROID_LOG_WARN, "mfeFC", "\n");
+ 	goto bail1;
+     }
+ 
+diff --git a/src/fcstr.c b/src/fcstr.c
+index 3fe518f..5d79d62 100644
+--- a/src/fcstr.c
++++ b/src/fcstr.c
+@@ -26,6 +26,7 @@
+ #include <stdlib.h>
+ #include <ctype.h>
+ #include <string.h>
++#include <android/log.h>
+ 
+ 
+ /* Objects MT-safe for readonly access. */
+@@ -996,11 +997,13 @@ FcStrBuildFilename (const FcChar8 *path,
+     p = ret;
+     while ((s = FcStrListNext (list)))
+     {
+-	if (p != ret)
++	if (p != ret && p[-1] != FC_DIR_SEPARATOR)
+ 	{
+ 	    p[0] = FC_DIR_SEPARATOR;
+ 	    p++;
+ 	}
++	if (p != ret && p[-1] == FC_DIR_SEPARATOR && s[0] == FC_DIR_SEPARATOR)
++	    s++;
+ 	len = strlen ((const char *)s);
+ 	memcpy (p, s, len);
+ 	p += len;
+@@ -1105,7 +1108,7 @@ FcStrRealPath (const FcChar8 *path)
+ #else
+     if (GetFullPathNameA ((LPCSTR) path, FC_PATH_MAX, resolved_name, NULL) == 0)
+     {
+-        fprintf (stderr, "Fontconfig warning: GetFullPathNameA failed.\n");
++        __android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig warning: GetFullPathNameA failed.\n");
+         return NULL;
+     }
+     resolved_ret = resolved_name;
+diff --git a/src/fcxml.c b/src/fcxml.c
+index 82a46f2..27369a0 100644
+--- a/src/fcxml.c
++++ b/src/fcxml.c
+@@ -34,6 +34,7 @@
+ #ifdef ENABLE_LIBXML2
+ 
+ #include <libxml/parser.h>
++#include <android/log.h>
+ 
+ #define XML_Char			xmlChar
+ #define XML_Parser			xmlParserCtxtPtr
+@@ -610,18 +611,18 @@ FcConfigMessage (FcConfigParse *parse, FcConfigSeverity severe, const char *fmt,
+     if (parse)
+     {
+ 	if (parse->name)
+-	    fprintf (stderr, "Fontconfig %s: \"%s\", line %d: ", s,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig %s: \"%s\", line %d: ", s,
+ 		     parse->name, (int)XML_GetCurrentLineNumber (parse->parser));
+ 	else
+-	    fprintf (stderr, "Fontconfig %s: line %d: ", s,
++	    __android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig %s: line %d: ", s,
+ 		     (int)XML_GetCurrentLineNumber (parse->parser));
+ 	if (severe >= FcSevereError)
+ 	    parse->error = FcTrue;
+     }
+     else
+-	fprintf (stderr, "Fontconfig %s: ", s);
+-    vfprintf (stderr, fmt, args);
+-    fprintf (stderr, "\n");
++	__android_log_print(ANDROID_LOG_WARN, "mfeFC", "Fontconfig %s: ", s);
++    __android_log_vprint(ANDROID_LOG_WARN, "mfeFC", fmt, args);
++    __android_log_print(ANDROID_LOG_WARN, "mfeFC", "\n");
+     va_end (args);
+ }
+ 

@@ -281,6 +281,16 @@ case "$1" in
 		;;
 esac
 
+function deploy-fontconfig() {
+	set -x
+	[ -d "$INSTALLROOT/assets/mythtv/conf.d" ] || mkdir -p $INSTALLROOT/assets/mythtv/conf.d
+	for f in "$INSTALLROOT/etc/fonts/conf.d"/* ; do
+		fb=$(basename "$f")
+		cp "$f" "$INSTALLROOT/assets/mythtv/conf.d/$fb"
+	done
+	set +x
+}
+
 function deploy-extra-libs() {
 	[ -d "$INSTALLROOT/assets" ] || mkdir $INSTALLROOT/assets
 	pushd $INSTALLROOT/assets
@@ -515,6 +525,8 @@ if [ -e stamp_configure_android ] ; then
 		echo "*** make plugins ***"
 		make_plugins
 	fi
+	echo "*** deploy-fontconfig ***"
+	deploy-fontconfig
 	echo "*** deploy-extra-libs ***"
 	deploy-extra-libs
 	echo "*** androiddeployqt ***"

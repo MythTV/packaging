@@ -1138,6 +1138,7 @@ public class QtActivity extends Activity
         Log.e(TAG1, "basepath " + toPath);
         AssetManager assetManager = getAssets();
         copyAssetIfDifferent(assetManager, "mythtv/fonts.conf", toPath + "/files/fonts.conf");
+        copyAssetFolder(assetManager, "mythtv/conf.d", toPath + "/files/conf.d");
         copyAssetFolder(assetManager, "mythtv/fonts", toPath + "/files/fonts");
     }
 

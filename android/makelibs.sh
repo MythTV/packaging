@@ -1367,6 +1367,9 @@ setup_lib https://gitlab.freedesktop.org/fontconfig/fontconfig/-/archive/$FONTCO
 pushd $FONTCONFIG
 OPATH=$PATH
 
+if [ -e "$BASE"/patches/${FONTCONFIG}.patch ]; then
+	patch -p1 -Nt --no-backup-if-mismatch -r - < "$BASE"/patches/${FONTCONFIG}.patch || true
+else
 { patch -p1 -Nt || true; } <<'END'
 diff --git a/src/fcatomic.c b/src/fcatomic.c
 index 2ce419f..d12d324 100644
@@ -1418,6 +1421,8 @@ index b65492d..600e42e 100644
  	memcpy (p, s, len);
  	p += len;
 END
+fi
+
 if [ $CLEAN == 1 ]; then
 	# move generated fcblanks.h aside before clean
 	# so unicode.org does not have to be spammed
