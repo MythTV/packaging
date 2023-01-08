@@ -31,8 +31,6 @@ Patch Options
   --packaging-patch-dir=PACK_PATCH_DIR   Directory containing patch files to be applied to Packaging
   --plugins-patch-dir=PLUGINS_PATCH_DR   Directory containing patch files to be applied to Mythplugins
 Support Ports Options
-  --skip-ansible=SKIP_ANSIBLE            Skip downloading ports with ansible (false)
-                                         NOTE: Only do this if you are sure you have installed ALL dependencies
   --update-ports=UPDATE_PORTS            Update macports (false)
 
 EOF
@@ -57,12 +55,11 @@ GENERATE_DMG=false
 UPDATE_GIT=true
 SKIP_BUILD=false
 MP_CLANG=default
-SKIP_ANSIBLE=false
 APPLY_PATCHES=false
 MYTHTV_PATCH_DIR=""
 PACK_PATCH_DIR=""
 PLUGINS_PATCH_DIR=""
-REPO_PREFIX=~
+REPO_PREFIX=$HOME
 
 # maports doesn't support mysql 8 for older versions of macOS, for those installs default to mariadb (unless the user overries)
 if [ $OS_MAJOR -le 10 ] && [ $OS_MINOR -le 15 ]; then
@@ -89,9 +86,6 @@ for i in "$@"; do
       ;;
       --skip-build=*)
         SKIP_BUILD="${i#*=}"
-      ;;
-      --skip-ansible=*)
-        SKIP_ANSIBLE="${i#*=}"
       ;;
       --macports-clang=*)
         MP_CLANG="${i#*=}"
@@ -144,15 +138,16 @@ PKGMGR_INST_PATH=/opt/local
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
 PYTHON_PKMGR_BIN="$PKGMGR_INST_PATH/bin/python$PYTHON_DOT_VERS"
 ANSIBLE_PB_EXE="$PKGMGR_INST_PATH/bin/ansible-playbook-$PYTHON_DOT_VERS"
-PIP_PKGS=( 'mysqlclient' 'pycurl' 'requests-cache==0.5.2' 'urllib3' 'future' 'lxml' 'oauthlib' 'requests' 'simplejson' 'audiofile' \
-          'bs4' 'argparse' 'common' 'configparser' 'datetime' 'discid' 'et' 'features' 'HTMLParser' 'httplib2' 'musicbrainzngs' \
-          'port' 'put' 'traceback2' 'markdown' 'python-dateutil'  'importlib-metadata') 
+PYTHON_VENV_PATH="$HOME/.mythtv/python-virtualenv"
+PY2APP_PKGS="MySQLdb,pycurl,requests_cache,urllib3,future,lxml,oauthlib,requests,simplejson,\
+  audiofile,bs4,argparse,common,configparser,datetime,discid,et,features,HTMLParser,httplib2,\
+  musicbrainzngs,port,put,traceback2,markdown,dateutil,importlib_metadata"
 
 # Specify mythtv version to pull from git
 # if we're building on master - get release number from the git tags
 # otherwise extract it from the MYTHTV_VERS
 case $MYTHTV_VERS in
-    master*|*33*)
+    master*)
       VERS=$(git ls-remote --tags  https://github.com/MythTV/mythtv.git|tail -n 1)
       VERS=${VERS##*/v}
       VERS=$(echo $VERS|tr -dc '0-9')
@@ -162,6 +157,9 @@ case $MYTHTV_VERS in
       VERS=${MYTHTV_VERS: -2}
       EXTRA_MYTHPLUGIN_FLAG="--enable-fftw"
     ;;
+    *)
+      VERS=${MYTHTV_VERS: -2}
+      EXTRA_MYTHPLUGIN_FLAG=""
 esac
 ARCH=$(/usr/bin/uname -m)
 REPO_DIR=$REPO_PREFIX/mythtv-$VERS
@@ -330,14 +328,7 @@ if ! [ -x "$(command -v $ANSIBLE_PB_EXE)" ]; then
   sudo port select --set python python$PYTHON_VERS
   sudo port select --set python3 python$PYTHON_VERS
 else
-  echo "    Skipping ansible install - it is already installed"
-fi
-
-# check is gsed is installed (for patching the .plist file)
-if ! [ -x "$(command -v gsed)" ]; then
-  sudo port -N install gsed
-else
-  echo "    Skipping gsed install - it is already installed"
+  echo "    Ansible is correctly installed"
 fi
 
 # check is ffmpeg is installed (to avoid a linker conflict)
@@ -349,8 +340,8 @@ else
   FFMPEG_INSTALLED=false
 fi
 
-if $SKIP_ANSIBLE || $SKIP_BUILD; then
-  echo "    Skipping port installation via ansible"
+if $SKIP_BUILD; then
+  echo "    Skipping port installation via ansible (repackaging only)"
 else
   echo "------------ Running Ansible ------------"
   # get mythtv's ansible playbooks, and install required ports
@@ -371,41 +362,21 @@ else
   fi
   cd $REPO_DIR/ansible
   export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
+  ANSIBLE_FLAGS="--limit=localhost  --ask-become-pass"
+
   case $QT_VERS in
       qt5)
-         $ANSIBLE_PB_EXE $ANSIBLE_QT --limit=localhost --extra-vars "database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS" --ask-become-pass
+         ANSIBLE_EXTRA_FLAGS="--extra-vars 'ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS'"
       ;;
       *)
-         $ANSIBLE_PB_EXE $ANSIBLE_QT --limit=localhost --extra-vars "database_version=$DATABASE_VERS" --ask-become-pass
+         ANSIBLE_EXTRA_FLAGS="--extra-vars ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS" 
       ;;
   esac
+  $ANSIBLE_PB_EXE $ANSIBLE_QT $ANSIBLE_FLAGS 
 fi
 
-# get the version of python installed by MacPorts
-PYTHON_RUNTIME_BIN="./python$PYTHON_DOT_VERS"
-
-# also get the location of the framework - /opt/local because this is where MacPorts stores its packages
-# and its site packages
-PYTHON_MACOS_SP_LOC=$PYTHON_VENV_PATH/lib/python$PYTHON_DOT_VERS/site-packages
-
-# and the destination for where the python bits get copied into the application framework and site_packages
-PYTHON_APP_FWRK=$APP_FMWK_DIR/Python.framework
-PYTHON_APP_SP_LOC="$APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages"
-
-echo "------------ Create Python Virtual Environment ------------"
-# check if Python virtualenv is installed, if not install it
-if ! [ -x "$(command -v virtualenv-$PYTHON_DOT_VERS)" ]; then
-  echo "    Installing Python Virtual Environment"
-  sudo port -N install py$PYTHON_VERS-virtualenv
-  sudo port select --set virtualenv virtualenv$PYTHON_VERS
-else
-  echo "    Skipping python virtualenv install - it is already installed"
-fi
-PYTHON_VENV_PATH=$REPO_DIR/mythtv-python
-$PYTHON_PKMGR_BIN -m venv --copies --clear $PYTHON_VENV_PATH
-source $PYTHON_VENV_PATH/bin/activate
-pip3 install wheel py2app
-pip3 install $PIP_PKGS
+echo "------------ Source the Python Virtual Environment ------------"
+source "$PYTHON_VENV_PATH/bin/activate"
 PYTHON_VENV_BIN=$PYTHON_VENV_PATH/bin/python3
 PY2APPLET_BIN=$PYTHON_VENV_PATH/bin/py2applet
 
@@ -571,12 +542,12 @@ fi
 if [ -z $ENABLE_MAC_BUNDLE ]; then
   echo "    Mac Bundle disabled - Skipping app bundling commands"
   echo "    Rebasing @rpath to $RUNPREFIX"
-	for mythExec in $INSTALL_DIR/bin/myth*; do
+  for mythExec in $INSTALL_DIR/bin/myth*; do
         echo "     rebasing $mythExec"
         rebaseLibs $mythExec
-	done
-	echo "Done"
-    exit 0
+  done
+  echo "Done"
+  exit 0
 fi
 # Assume that all commands past this point only apply to app bundling
 
@@ -661,15 +632,9 @@ echo "    Creating a temporary application from $MYTHTV_PYTHON_SCRIPT"
 # from one of the python scripts which will copy in all the required libraries for running
 # and will make a standalone python executable not tied to the system ttvdb4 seems to be more
 # particular than others (tmdb3)...
-PY2APP_PKGS=$(echo $PIP_PKGS| gsed "s/mysqlclient/MySQLdb/g")
-PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/ /,/g")
-PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/python-//g")
-PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/-/_/g")
-PY2APP_PKGS=$(echo $PY2APP_PKGS| gsed "s/=[^,+]*,/,/")
 $PY2APPLET_BIN -i $PY2APP_PKGS -p $PY2APP_PKGS --use-pythonpath --no-report-missing-conditional-import --make-setup $INSTALL_DIR/share/mythtv/metadata/Television/$MYTHTV_PYTHON_SCRIPT.py
 $PYTHON_VENV_BIN setup.py -q py2app 2>&1 > /dev/null
-
-# now we need to copy over the pythong app's pieces into the mythfrontend.app to get it working
+# now we need to copy over the python app's pieces into the mythfrontend.app to get it working
 echo "    Copying in Python Framework libraries"
 mv -n $APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Frameworks/* $APP_FMWK_DIR
 echo "    Copying in Python Binary"
