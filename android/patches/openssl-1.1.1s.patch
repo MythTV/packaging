@@ -1,0 +1,12 @@
+diff --git a/include/openssl/opensslv.h b/include/openssl/opensslv.h
+index fd9400a..612484a 100644
+--- a/include/openssl/opensslv.h
++++ b/include/openssl/opensslv.h
+@@ -41,6 +41,7 @@ extern "C" {
+  */
+ # define OPENSSL_VERSION_NUMBER  0x1010113fL
+ # define OPENSSL_VERSION_TEXT    "OpenSSL 1.1.1s  1 Nov 2022"
++# define OPENSSL_VERSION_MAJOR 1
+ 
+ /*-
+  * The macros below are to be used for shared library (.so, .dll, ...)

@@ -495,18 +495,25 @@ return $ERR
 
 build_openssl() {
 rm -rf build
-OPENSSL=openssl-1.0.2u
+#OPENSSL=openssl-1.0.2u
+OPENSSL=openssl-1.1.1s
+#OPENSSL=openssl-3.0.7
 if [ $ARM64 == 1 ]; then
 	#OPENSSL_FLAVOUR=android-armv8
-	OPENSSL_FLAVOUR=android64-aarch64
+	#OPENSSL_FLAVOUR=android64-aarch64
+	OPENSSL_FLAVOUR=android-arm64
 else
-	OPENSSL_FLAVOUR=android-armv7
+	#OPENSSL_FLAVOUR=android-armv7
+	OPENSSL_FLAVOUR=android-arm
 fi
 echo -e "\n**** $OPENSSL ****"
 setup_lib https://www.openssl.org/source/$OPENSSL.tar.gz $OPENSSL
 pushd $OPENSSL
 OPATH=$PATH
 export PATH=$CROSSPATH:$PATH
+if [ -e "$BASE"/patches/${OPENSSL}.patch ]; then
+	patch -p1 -Nt --no-backup-if-mismatch -r - < "$BASE"/patches/${OPENSSL}.patch || true
+elif [ 0 -ne 0 ]; then
 { patch -p1 -Nt -r - || true; } <<'END'
 diff --git a/Configure b/Configure
 index 494e0b3..5283852 100755
@@ -584,15 +591,36 @@ index 494e0b3..5283852 100755
  		s/^NM=\s*/NM= \$\(CROSS_COMPILE\)/;
  		s/^RANLIB=\s*/RANLIB= \$\(CROSS_COMPILE\)/;
 END
-rm Makefile
-if [ $CLEAN == 1 ]; then
-	make distclean || true
-fi
+	fi
 # Make sure that configure file time is past
+SSL_EXT="SHLIB_VERSION_NUMBER= SHLIB_EXT=_1_1.so"
+OPENSSL_CONFIGS="shared"
+#if [ $CLEAN == 1 ]; then
+	make distclean || true
+#fi
+rm Makefile || true
 CC=clang \
-./Configure --prefix=$INSTALLROOT --cross-compile-prefix=${CROSSPATH2} --cross-compile-prefix-cc=${CROSSPATH3} $ANDROID_API_DEF $OPENSSL_FLAVOUR os:Android os.api_level:$ANDROID_API_DEF && \
-make -j$NCPUS CROSS_SYSROOT=$SYSROOT build_libs && \
-make install
+PATH="${CROSSPATH3}:$PATH" \
+./Configure \
+	--prefix=$INSTALLROOT \
+	$OPENSSL_CONFIGS \
+	$ANDROID_API_DEF \
+	$OPENSSL_FLAVOUR \
+	&& \
+make -j$NCPUS $SSL_EXT build_libs && \
+make $SSL_EXT install_dev && \
+make $SSL_EXT install_runtime_libs
+
+# the .la files are missing so we will create some here for easier linking
+# due to the .so name difference
+cat <<END >>$INSTALLROOT/lib/libssl.la
+dlname='libssl_1_1.so'
+END
+cat <<END >>$INSTALLROOT/lib/libcrypto.la
+dlname='libcrypto_1_1.so'
+END
+
+
 ERR=$?
 PATH=$OPATH
 unset OPATH
@@ -2912,7 +2940,6 @@ configure_qt5() {
 		-feature-rtti \
 		-feature-exceptions \
 		-no-warnings-are-errors \
-		-openssl-linked \
 		-sysroot $SYSROOT \
 		$EXTRA_QT_CONFIGURE_ARGS \
 

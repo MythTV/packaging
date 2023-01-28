@@ -188,7 +188,7 @@ index a24b689181..d19749fa43 100644
  #  if defined(BACKTRACE_SUPPORTED)
  #    include <sys/types.h>
 diff --git a/qtbase/src/plugins/sqldrivers/mysql/qsql_mysql.cpp b/qtbase/src/plugins/sqldrivers/mysql/qsql_mysql.cpp
-index 7ca055eea2..eb473bbe18 100644
+index 7ca055eea2..49a6ae5b7c 100644
 --- a/qtbase/src/plugins/sqldrivers/mysql/qsql_mysql.cpp
 +++ b/qtbase/src/plugins/sqldrivers/mysql/qsql_mysql.cpp
 @@ -223,7 +223,7 @@ public:

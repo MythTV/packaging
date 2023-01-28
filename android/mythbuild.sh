@@ -171,6 +171,8 @@ fi
 
 MYMYTHBUILDBASEPATH=build$TOOLCHAIN_SUFFIX
 INSTALLROOT=$BASE/mythinstall$TOOLCHAIN_SUFFIX
+export ANDROID_QT_DEPENDENCY_INCLUDE="$BASE/android_qt_dependencies.pri"
+export ANDROID_PACKAGE_SOURCE="$BASE/android-package-source"
 export MYTHINSTALLROOT=$INSTALLROOT
 export ANDROID_NDK_TOOLCHAIN_PATH=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64
 SYSROOT_BASE=$ANDROID_NDK/sysroot
@@ -477,7 +479,6 @@ $MYTHTVSRC/configure \
 	--disable-x11 \
 	--disable-libxml2 \
 	--disable-libdns-sd \
-	--disable-libcrypto \
 	--disable-mheg \
 	--disable-vdpau \
 	--disable-vaapi \
