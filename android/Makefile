@@ -65,7 +65,7 @@ clean:
 distclean:
 	rm -rf libs$(SUFFIX) mythinstall$(SUFFIX) libsinstall$(SUFFIX) build$(SUFFIX)
 
-LIBS_TO_BUILD = mariadb fftw libxml2 libbluray flac iconv icu ogg vorbis fontconfig libsamplerate libsoundtouch ass harfbuzz freetype
+LIBS_TO_BUILD = mariadb fftw libxml2 libbluray flac iconv icu ogg vorbis fontconfig libsamplerate libsoundtouch ass harfbuzz freetype openssl
 .PHONY: qt $(LIBS_TO_BUILD)
 qt:
 	./makelibs.sh $(OPTS) qt5extras
