@@ -14,7 +14,7 @@ Options: [defaults in brackets after descriptions]
 Standard options:
   --help                                 Print this message
   --build-plugins=BUILD_PLUGINS          Build Mythtvplugins (false)
-  --python-version=PYTHON_VERS           Desired Python 3 Version (310)
+  --python-version=PYTHON_VERS           Desired Python 3 Version (311)
   --version=MYTHTV_VERS                  Requested mythtv git repo (master)
   --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (mysql8)
   --qt-version=qt5                       Select Qt version to build against (qt5)
@@ -45,7 +45,7 @@ OS_MAJOR=$OS_MAJOR[1]
 
 # setup default variables
 BUILD_PLUGINS=false
-PYTHON_VERS="310"
+PYTHON_VERS="311"
 UPDATE_PORTS=false
 MYTHTV_VERS="master"
 MYTHTV_PYTHON_SCRIPT="ttvdb4"
