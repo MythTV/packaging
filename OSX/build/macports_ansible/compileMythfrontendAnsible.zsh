@@ -15,7 +15,7 @@ Standard options:
   --help                                 Print this message
   --build-plugins=BUILD_PLUGINS          Build Mythtvplugins (false)
   --python-version=PYTHON_VERS           Desired Python 3 Version (311)
-  --version=MYTHTV_VERS                  Requested mythtv git repo (master)
+  --version=MYTHTV_VERS                  Requested mythtv git repo (${1})
   --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (mysql8)
   --qt-version=qt5                       Select Qt version to build against (qt5)
   --repo-prefix=REPO_PREFIX              Directory base to install the working repository (~)
@@ -72,7 +72,7 @@ fi
 for i in "$@"; do
   case $i in
       -h|--help)
-        show_help
+        show_help ${MYTHTV_VERS}
         exit 0
       ;;
       --build-plugins=*)
