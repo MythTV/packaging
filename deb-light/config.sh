@@ -26,7 +26,13 @@ case $projname in
         if which $BUILD_PREPARE ; then
             $BUILD_PREPARE
         fi
-        if [[ $arch == arm* ]] ; then
+        if [ "$arch" = "aarch64" ] || [ "$arch" = "arm64" ] ; then
+            config_opt="--enable-libmp3lame --disable-vdpau \
+              --enable-opengl  \
+              --disable-vaapi \
+              --cpu=cortex-a72 --arch=aarch64  \
+              $MYTHTV_CONFIG_OPT_EXTRA"
+        elif [[ $arch == arm* ]] ; then
             config_opt="--enable-libmp3lame --disable-vdpau \
               --enable-opengl  \
               --disable-vaapi \
@@ -58,7 +64,13 @@ case $projname in
         fi
         cd ../mythtv
         git clean -Xfd
-        if [[ $arch == arm* ]] ; then
+        if [ "$arch" = "aarch64" ] || [ "$arch" = "arm64" ] ; then
+            config_opt="--enable-libmp3lame --disable-vdpau \
+              --enable-opengl  \
+              --disable-vaapi \
+              --cpu=cortex-a72 --arch=aarch64  \
+              $MYTHTV_CONFIG_OPT_EXTRA"
+        elif [[ $arch == arm* ]] ; then
             config_opt="--enable-libmp3lame --disable-vdpau \
               --enable-opengl  \
               --disable-vaapi \
