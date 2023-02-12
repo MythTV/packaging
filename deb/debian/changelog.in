@@ -1,3 +1,9 @@
+mythtv (2:33.1+fixes) lunar; urgency=medium
+
+  * Dummy entry to bump version to 33.1
+
+ -- Paul Harrison <mythtv@mythqml.net>  Sun, 12 Feb 2022 11:08:00 +0000
+
 mythtv (2:33.0+fixes) lunar; urgency=medium
 
   * Dummy entry to bump version to 33
