@@ -14,10 +14,10 @@ Options: [defaults in brackets after descriptions]
 Standard options:
   --help                                 Print this message
   --build-plugins=BUILD_PLUGINS          Build Mythtvplugins (false)
-  --python-version=PYTHON_VERS           Desired Python 3 Version (311)
+  --python-version=PYTHON_VERS           Desired Python 3 Version (${2})
   --version=MYTHTV_VERS                  Requested mythtv git repo (${1})
-  --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (mysql8)
-  --qt-version=qt5                       Select Qt version to build against (qt5)
+  --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (${3})
+  --qt-version=qt5                       Select Qt version to build against (${4})
   --repo-prefix=REPO_PREFIX              Directory base to install the working repository (~)
   --generate-app=GENERATE_APP            Generate .app bundles for executables (true)
   --generate-dmg=GENERATE_DMG            Generate a DMG file for distribution (false)
@@ -25,6 +25,7 @@ Build Options
   --update-git=UPDATE_GIT                Update git repositories to latest (true)
   --skip-build=SKIP_BUILD                Skip configure and make - used when you just want to repackage (false)
   --macports-clang=MP_CLANG              Flag to specify clang version to build with (default)
+  --extra-conf-flags=XTRA_CONF_FLAGS     Addtional configure flags for mythtv ("")
 Patch Options
   --apply-patches=APPLY_PATCHES          Apply patches specified in additional arguments (false)
   --mythtv-patch-dir=MYTHTV_PATCH_DIR    Directory containing patch files to be applied to Mythtv
@@ -55,6 +56,7 @@ GENERATE_DMG=false
 UPDATE_GIT=true
 SKIP_BUILD=false
 MP_CLANG=default
+XTRA_CONF_FLAGS=""
 APPLY_PATCHES=false
 MYTHTV_PATCH_DIR=""
 PACK_PATCH_DIR=""
@@ -62,7 +64,7 @@ PLUGINS_PATCH_DIR=""
 REPO_PREFIX=$HOME
 
 # maports doesn't support mysql 8 for older versions of macOS, for those installs default to mariadb (unless the user overries)
-if [ $OS_MAJOR -le 10 ] && [ $OS_MINOR -le 15 ]; then
+if [ $OS_MAJOR -le 11 ] && [ $OS_MINOR -le 15 ]; then
   DATABASE_VERS=mariadb-10.5
 else
   DATABASE_VERS=mysql8
@@ -72,7 +74,7 @@ fi
 for i in "$@"; do
   case $i in
       -h|--help)
-        show_help ${MYTHTV_VERS}
+        show_help ${MYTHTV_VERS} ${PYTHON_VERS} ${MYTHTV_VERS} ${QT_VERS}
         exit 0
       ;;
       --build-plugins=*)
@@ -89,6 +91,9 @@ for i in "$@"; do
       ;;
       --macports-clang=*)
         MP_CLANG="${i#*=}"
+      ;;
+      --extra-conf-flags=*)
+        XTRA_CONF_FLAGS="${i#*=}"
       ;;
       --version=*)
         MYTHTV_VERS="${i#*=}"
@@ -193,8 +198,8 @@ esac
 
 # Add some flags for the compiler to find the package manager locations
 export LDFLAGS="-L$PKGMGR_INST_PATH/libexec/$QT_VERS/lib -L$PKGMGR_INST_PATH/lib"
-export C_INCLUDE_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun
-export CPLUS_INCLUDE_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun
+export C_INCLUDE_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun:$PKGMGR_INST_PATH/include/glslang
+export CPLUS_INCLUDE_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun:$PKGMGR_INST_PATH/include/glslang
 export LIBRARY_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/lib/:$PKGMGR_INST_PATH/lib
 
 # setup some paths to make the following commands easier to understand
@@ -229,7 +234,7 @@ installLibs(){
   # loop over each lib
   while read -r dep; do
     lib=${dep##*/}
-    # we have four types of libs to work with, QT5, QT6, package managed, and mythtv
+    # we have multiple types of libs to work with, QT5, QT6, package managed, and mythtv
     # setup the correct source / destination / linking schema for each
     case "$dep" in
       *Qt*)
@@ -265,7 +270,7 @@ installLibs(){
     # update the link in the app/executable to the new interal Framework
     echo "    Updating $lib link to internal lib"
     # its already been copied in, we just need to update the link
-    install_name_tool $binFile -change $dep $newLink
+    install_name_tool -change $dep $newLink $binFile
   done <<< "$pathDepList"
 }
 
@@ -276,7 +281,7 @@ rebaseLibs(){
     while read -r dep; do
         lib=${dep##*/}
         if [ -n $lib ]; then
-            install_name_tool $binFile -change $dep $RUNPREFIX/lib/$lib
+            install_name_tool -change $dep $RUNPREFIX/lib/$lib $binFile
         fi
     done <<< "$rpathDepList"
 }
@@ -451,6 +456,7 @@ else
   ./configure --prefix=$INSTALL_DIR \
               --runprefix=$RUNPREFIX \
               $ENABLE_MAC_BUNDLE \
+              $XTRA_CONF_FLAGS \
               --qmake=$QMAKE_CMD \
               --cc=$CLANG_CMD \
               --cxx=$CLANGPP_CMD \
@@ -648,7 +654,7 @@ mv -n $APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Resources/* $A
 cd $APP_DIR
 rm -Rf PYTHON_APP
 echo "    Copying in Site Packages from Virtual Enironment"
-cp -RL $PYTHON_VENV_PATH/lib/python3.10/site-packages/* $APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages 
+cp -RL $PYTHON_VENV_PATH/lib/python$PYTHON_DOT_VERS/site-packages/* $APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages 
 # do not need/want py2app in the application
 rm -Rf $APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages/py2app
 
