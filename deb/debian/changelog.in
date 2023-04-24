@@ -1,4 +1,10 @@
-mythtv (2:33.1+fixes) lunar; urgency=medium
+mythtv (2:34.0-master) lunar; urgency=medium
+
+  * Make adduser create a /home/mythtv directory
+
+ -- Bill Meek <billmeek@mythtv.org> Mon Apr 24 05:53:05 PM CDT 2023
+
+mythtv (2:34.0~master) lunar; urgency=medium
 
   * Dummy entry to bump version to 33.1
 

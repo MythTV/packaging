@@ -6,8 +6,8 @@ case "$1" in
 
     #only create a user if they don't already exist
     if ! getent passwd mythtv 1>/dev/null; then
-        adduser --quiet --system --group --disabled-password --system \
-            --shell /bin/sh mythtv
+        adduser --quiet --home /home/mythtv --system --group \
+            --disabled-password --system --shell /bin/sh mythtv
     fi
     HOMEDIR=$(getent passwd mythtv | awk -F: '{ print $6 }')
 
