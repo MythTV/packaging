@@ -1,13 +1,13 @@
-diff --git a/mythtv/libs/libmythui/mythuithemehelper.h b/mythtv/libs/libmythui/mythuithemehelper.h
-index f222fbf1f3..c0d13a5c26 100644
---- a/mythtv/libs/libmythui/mythuithemehelper.h
-+++ b/mythtv/libs/libmythui/mythuithemehelper.h
+Index: mythtv/mythtv/libs/libmythui/mythuithemehelper.h
+===================================================================
+--- mythtv.orig/mythtv/libs/libmythui/mythuithemehelper.h
++++ mythtv/mythtv/libs/libmythui/mythuithemehelper.h
 @@ -4,8 +4,8 @@
  // MythTV
  #include "themeinfo.h"
  
--static constexpr const char* DEFAULT_UI_THEME  { "MythCenter" };
--static constexpr const char* FALLBACK_UI_THEME { "Terra"      };
+-static constexpr const char* DEFAULT_UI_THEME  { "MythCenter-wide" };
+-static constexpr const char* FALLBACK_UI_THEME { "Terra"           };
 +static constexpr const char* DEFAULT_UI_THEME  { "Mythbuntu" };
 +static constexpr const char* FALLBACK_UI_THEME { "MythCenter-wide" };
  
