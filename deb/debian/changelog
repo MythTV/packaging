@@ -2,7 +2,7 @@ mythtv (2:33.1+fixes) lunar; urgency=medium
 
   * Make adduser create a /home/mythtv directory
 
- -- Bill Meek <billmeek@mythtv.org> Wed Apr 26 01:28:24 PM CDT 2023
+ -- Bill Meek <billmeek@mythtv.org>  Thu, 27 Apr 2023 18:54:05 -0500
 
 mythtv (2:33.1+fixes) lunar; urgency=medium
 
