@@ -118,6 +118,8 @@ if [ "$(id -ru)" -ne 0 ]; then
 	else
 		die "Need to be root or have sudo installed"
 	fi
+else
+	root=
 fi
 
 #for checking out git
