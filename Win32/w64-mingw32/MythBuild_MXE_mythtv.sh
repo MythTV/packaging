@@ -86,7 +86,7 @@ cd $BUILDPATH/windows-package-source/install/lib
 mmv -d 'liblib*' 'lib#1'
 
 cd $BUILDPATH/windows-package-source/mythplugins
-./configure --prefix="$BUILDPATH/install" --disable-mytharchive 
+./configure --prefix="$BUILDPATH/install" --disable-mytharchive --disable-mythnetvision
 make -j$(nproc) install
 if test $? != 0; then
     echo "Make plugins failed."
