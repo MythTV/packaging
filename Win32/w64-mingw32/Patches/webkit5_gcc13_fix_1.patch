@@ -1,0 +1,15 @@
+diff --git a/qtwebkit.mk b/qtwebkit.mk
+index 20097c1..e09b4cd 100644
+--- a/qtwebkit.mk
++++ b/qtwebkit.mk
+@@ -25,6 +25,10 @@ define $(PKG)_BUILD_SHARED
+         -DUSE_GSTREAMER=OFF \
+         -DUSE_MEDIA_FOUNDATION=OFF \
+         -DUSE_QT_MULTIMEDIA=ON
++
++    cp '../../Patches/webkit5_gcc13_fix_2.patch' 'tmp-qtwebkit-i686-w64-mingw32.shared/$($(PKG)_SUBDIR)'
++    git apply 'tmp-qtwebkit-i686-w64-mingw32.shared/$($(PKG)_SUBDIR)/webkit5_gcc13_fix_2.patch' --directory='tmp-qtwebkit-i686-w64-mingw32.shared/$($(PKG)_SUBDIR)'
++
+     $(MAKE) -C '$(BUILD_DIR)' -j '$(JOBS)' VERBOSE=1 || $(MAKE) -C '$(BUILD_DIR)' -j '$(JOBS)' VERBOSE=1
+     $(MAKE) -C '$(BUILD_DIR)' -j 1 install
+ 

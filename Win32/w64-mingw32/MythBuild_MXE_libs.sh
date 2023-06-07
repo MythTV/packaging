@@ -1,46 +1,43 @@
 #!/bin/bash
 
-echo "Tested on ubuntu 2004. Run this file to build mythtv for Windows"
+echo "Tested on ubuntu 22.04. Run this script to build mythtv libraries for Windows"
 
 sudo apt-get --assume-yes install \
-     git gcc g++ wget python3 perl bzip2 lzip unzip libssl-dev \
-     p7zip make autoconf automake bison flex autopoint gperf \
-     libtool libtool-bin ruby intltool p7zip-full \
-     pkg-config yasm mmv
+    git gcc g++ wget python3 perl bzip2 lzip unzip libssl-dev \
+    p7zip make autoconf automake bison flex autopoint gperf \
+    libtool libtool-bin ruby intltool p7zip-full \
+    pkg-config yasm mmv python-is-python3
+    
+export BASE=$PWD
+export BUILDPATH=$BASE"/build"
+export PATH=$BUILDPATH"/mxe/usr/bin":$PATH
 
-buildRoot=$PWD
-while test ! -e "$buildRoot/.git" ; do
-    buildRoot=${buildRoot%/*}
-    if test "x$buildRoot" == "x" ; then
-        echo "Cannot find .git file or directory.  Exiting."
-        exit
-    fi
-done
-export buildRoot
-echo "Build root is $buildRoot"
+#process command
+case "$1" in
+    "clean")
+        echo "Removing build tree"
+        rm -rf $BUILDPATH
+        exit 0
+        ;;
+    "")
+        ;;
+    *)
+        echo "unknown command"
+        exit 2
+        ;;
+esac
 
-echo "Settings paths"
-export buildPath=$buildRoot"/build"
-export PATH=$buildPath"/mxe/usr/bin":$PATH
+sudo ln -s -f $BUILDPATH/mxe/usr/bin/i686-w64-mingw32.shared-windres /usr/bin/i686-w64-mingw32.shared-windres
+sudo ln -s -f $BUILDPATH/mxe/usr/bin/i686-w64-mingw32.shared-gcc /usr/bin/i686-w64-mingw32.shared-gcc
 
-if test "x$1" == "xclean" ; then
-    echo "Removing build tree"
-    rm -rf $buildPath
-fi
+mkdir -p $BUILDPATH/install/bin/plugins
+mkdir -p $BUILDPATH/themes
 
-if test -e "$buildPath" ; then
-    echo "Build tree already exists"
-else
-    echo "Creating build tree"
-    mkdir -p $buildPath/install/bin/plugins
-    mkdir -p $buildPath/themes
-fi
-
-if test -e "$buildPath/themes/Mythbuntu-classic" ; then
+if test -e "$BUILDPATH/themes/Mythbuntu-classic"; then
     echo "MythTV themes already exist"
 else
     echo "Cloning MythTV themes"
-    cd $buildPath/themes
+    cd $BUILDPATH/themes
     git clone https://github.com/paul-h/MythCenterXMAS-wide.git
     git clone https://github.com/wesnewell/Functionality
     git clone https://github.com/MythTV-Themes/TintedGlass
@@ -55,130 +52,142 @@ else
     git clone https://github.com/MythTV-Themes/Mythbuntu-classic
 fi
 
-cd $buildPath
-if test -d "mxe" ; then
+cd $BUILDPATH
+if test -d "mxe"; then
     echo "MXE already exists"
 else
     echo "Cloning MXE"
     git clone https://github.com/mxe/mxe.git
 
     echo "Add SQL to QT"
-    sed -i 's/-no-sql-mysql /\//g' $buildPath/mxe/src/qt.mk
+    sed -i 's/-no-sql-mysql /\//g' $BUILDPATH/mxe/src/qt.mk
 
+    #apply qtwebkit gcc13 patch
     cd mxe
-    make cc MXE_PLUGIN_DIRS=plugins/gcc8 MXE_TARGETS='i686-w64-mingw32.shared' vulkan-loader vulkan-headers qt5 nasm yasm libsamplerate taglib zlib gnutls mman-win32 pthreads libxml2 libdvdcss x264 x265 lame libass qtwebkit xvidcore libvpx vorbis flac
-    if test $? != 0 ; then
-	echo "Failed to build mxe."
-	exit
-    fi
-    cd ..
+    make cc MXE_PLUGIN_DIRS=plugins/gcc13 MXE_TARGETS='i686-w64-mingw32.shared'
+    cp ../../Patches/webkit5_gcc13_fix_1.patch src
+    cd src
+    patch < webkit5_gcc13_fix_1.patch
+    cd ../../
+fi
+cd mxe
+make cc MXE_PLUGIN_DIRS=plugins/gcc13 MXE_TARGETS='i686-w64-mingw32.shared' vulkan-loader vulkan-headers qt5 nasm yasm libsamplerate taglib zlib gnutls \
+    mman-win32 pthreads libxml2 libdvdcss x264 lame libass qtwebkit qtwebsockets xvidcore libvpx vorbis flac
 
-    find . -name \*.dll -exec cp {} \install/bin \;
-
-    chmod -R 755 $buildPath/mxe
-
-    echo -e "#define RTLD_LAZY 0 \n#define HAVE_DVDCSS_DVDCSS_H" | tee $buildPath/mxe/usr/i686-w64-mingw32.shared/include/dlfcn.h
-
-    sed -i -e 's/#define GetUserName __MINGW_NAME_AW(GetUserName)//g' \
-	-e 's/#define CopyFile __MINGW_NAME_AW(CopyFile)//g'       \
-	-e 's/#define MoveFile __MINGW_NAME_AW(MoveFile)//g'       \
-	$buildPath/mxe/usr/i686-w64-mingw32.shared/include/winbase.h
-
-    #sudo apt-get --assume-yes remove yasm
-
-    cp $buildPath/mxe/usr/x86_64-pc-linux-gnu/bin/yasm $buildPath/mxe/usr/bin/yasm
-    cp $buildPath/mxe/usr/bin/i686-w64-mingw32.shared-pkg-config $buildPath/mxe/usr/bin/pkg-config
-    cp -R $buildPath/mxe/usr/lib/gcc/i686-w64-mingw32.shared/8.4.0/include/c++ $buildPath/mxe/usr/lib/gcc/i686-w64-mingw32.shared/8.4.0/include
+if test $? != 0; then
+    echo "Failed to build mxe."
+    exit
 fi
 
+#fix paths
+cd $BUILDPATH
+find . -name \*.dll -exec cp {} \install/bin \;
 
-cd $buildPath
-if test -d "libudfread" ; then
-    echo "Directory libudfread already exists"
+cp $BUILDPATH/mxe/usr/x86_64-pc-linux-gnu/bin/yasm $BUILDPATH/mxe/usr/bin/yasm
+cp $BUILDPATH/mxe/usr/bin/i686-w64-mingw32.shared-pkg-config $BUILDPATH/mxe/usr/bin/pkg-config
+
+echo -e "#define RTLD_LAZY 0 \n#define HAVE_DVDCSS_DVDCSS_H" | tee $BUILDPATH/mxe/usr/i686-w64-mingw32.shared/include/dlfcn.h
+
+cd $BUILDPATH/windows-package-source
+if test -e libudfread/.libudfread_installed; then
+    echo "libudfread already installed"
 else
     echo "Compiling libudfread"
     git clone https://code.videolan.org/videolan/libudfread.git
     cd libudfread
     ./bootstrap
-    ./configure --prefix=$buildPath/mxe/usr/i686-w64-mingw32.shared --host=i686-w64-mingw32.shared
+    ./configure --prefix=$BUILDPATH/mxe/usr/i686-w64-mingw32.shared --host=i686-w64-mingw32.shared
     # libtool won't build this as a shared library without this flag.
     sed -i 's/LDFLAGS = /LDFLAGS = -no-undefined/' Makefile
     make -j$(nproc)
-    if test $? != 0 ; then
-	echo "Failed to build libudfread."
-	exit
+    if test $? != 0; then
+        echo "Failed to build libudfread."
+        exit
     fi
     make install
+    touch .libudfread_installed
 fi
 
-
-cd $buildPath
-if test -d "libbluray" ; then
-    echo "Directory libbluray already exists"
+cd $BUILDPATH
+if test -e libbluray/.libbluray_installed; then
+    echo "libbluray already installed"
 else
     git clone https://code.videolan.org/videolan/libbluray.git
-    chmod -R 755 libbluray
     cd libbluray
     git submodule update --init
 
     echo "Compiling libbluray"
     ./bootstrap
-    ./configure --prefix=$buildPath/mxe/usr/i686-w64-mingw32.shared --disable-examples --with-freetype --with-libxml2 --disable-bdjava-jar --host=i686-w64-mingw32.shared
+    ./configure --prefix=$BUILDPATH/mxe/usr/i686-w64-mingw32.shared --disable-examples --with-freetype --with-libxml2 --disable-bdjava-jar --host=i686-w64-mingw32.shared
     make -j$(nproc)
-    if test $? != 0 ; then
-	echo "Failed to build libbluray."
-	exit
+    if test $? != 0; then
+        echo "Failed to build libbluray."
+        exit
     fi
     make install
+    touch .libbluray_installed
 fi
 
-
-cd $buildPath
-if test -d "libzip" ; then
-    echo "Directory libzip already exists"
+cd $BUILDPATH
+if test -e libzip/.libzip_installed; then
+    echo "libzip already installed"
 else
     echo "Compiling libzip"
     git clone https://github.com/nih-at/libzip.git
-    chmod -R 755 libzip
     cd libzip
-    $buildPath/mxe/usr/bin/i686-w64-mingw32.shared-cmake $buildPath/libzip
+    $BUILDPATH/mxe/usr/bin/i686-w64-mingw32.shared-cmake $BUILDPATH/libzip
     make -j$(nproc)
-    if test $? != 0 ; then
-	echo "Failed to build libzip."
-	exit
+    if test $? != 0; then
+        echo "Failed to build libzip."
+        exit
     fi
     make install
+    touch .libzip_installed
 fi
 
-
-cd $buildPath
-if test -d "soundtouch" ; then
-    echo "Directory soundtouch already exists"
+cd $BUILDPATH
+if test -e soundtouch/.soundtouch_installed; then
+    echo "soundtouch already installed"
 else
     echo "Compiling SoundTouch"
     git clone https://codeberg.org/soundtouch/soundtouch.git
-    chmod -R 755 soundtouch
     cd soundtouch
     ./bootstrap
-    ./configure --prefix=$buildPath/mxe/usr/i686-w64-mingw32.shared --host=i686-w64-mingw32.shared
-    sed -i 's/LDFLAGS = /LDFLAGS = -no-undefined/' $buildPath/soundtouch/source/SoundTouch/Makefile
-    make -j$(nproc)
-    if test $? != 0 ; then
-	echo "Failed to build soundtouch."
-	exit
+    ./configure --prefix=$BUILDPATH/mxe/usr/i686-w64-mingw32.shared --host=i686-w64-mingw32.shared
+    make -j$(nproc) LDFLAGS=-no-undefined
+    if test $? != 0; then
+        echo "Failed to build soundtouch."
+        exit
     fi
     make install
+    touch .soundtouch_installed
 fi
 
-
-cd $buildPath
-if test -f "$buildPath/mxe/usr/i686-w64-mingw32.shared/include/endian.h" ; then
+cd $BUILDPATH
+if test -f "$BUILDPATH/mxe/usr/i686-w64-mingw32.shared/include/endian.h"; then
     echo "Endian.h already exists"
 else
     echo "Install endian.h"
     git clone https://gist.github.com/PkmX/63dd23f28ba885be53a5 portable_endian
-    cp $buildPath/portable_endian/portable_endian.h $buildPath/mxe/usr/i686-w64-mingw32.shared/include/endian.h
+    cp $BUILDPATH/portable_endian/portable_endian.h $BUILDPATH/mxe/usr/i686-w64-mingw32.shared/include/endian.h
 fi
 
+cd $BUILDPATH
+if test -e x265/.x265_installed; then
+    echo "x265 already installed"
+else
+    echo "Compiling x265"
+    git clone https://github.com/videolan/x265.git
+    cd x265
+    $BUILDPATH/mxe/usr/bin/i686-w64-mingw32.shared-cmake source
 
-echo "Done"
+    make -j$(nproc)
+    if test $? != 0; then
+        echo "Failed to build x265."
+        exit
+    fi
+    make install
+    touch .x265_installed
+fi
+
+echo "Done compiling libs"
