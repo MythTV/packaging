@@ -1,6 +1,7 @@
 #!/bin/bash
 scriptname=`readlink -e "$0"`
 scriptpath=`dirname "$scriptname"`
+scriptargs=("$@")
 set -e
 
 #options
@@ -87,7 +88,7 @@ case $projname in
             echo $installdir/$packagename already exists - incrementing SUBRELEASE number
             let SUBRELEASE=SUBRELEASE+1
             export SUBRELEASE
-            exec "$scriptname"
+            exec "$scriptname" "${scriptargs[@]}"
         fi
         rm -rf $installdir/$packagename $installdir/$packagename.deb
         cp -a "$sourcedir/" "$installdir/$packagename/"
@@ -170,7 +171,7 @@ FINISH
             echo $installdir/$packagename already exists - incrementing SUBRELEASE number
             let SUBRELEASE=SUBRELEASE+1
             export SUBRELEASE
-            exec "$scriptname"
+            exec "$scriptname" "${scriptargs[@]}"
         fi
         if [[ ! -d $installdir/$mythtvpackagename ]] ; then
             echo $installdir/$mythtvpackagename does not exist.
