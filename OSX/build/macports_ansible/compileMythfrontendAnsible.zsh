@@ -280,7 +280,7 @@ rebaseLibs(){
     rpathDepList=$(echo $rpathDepList| gsed 's/(.*//')
     while read -r dep; do
         lib=${dep##*/}
-        if [ -n $lib ]; then
+        if [ -n "$lib" ]; then
             install_name_tool -change $dep $RUNPREFIX/lib/$lib $binFile
         fi
     done <<< "$rpathDepList"
@@ -367,17 +367,19 @@ else
   fi
   cd $REPO_DIR/ansible
   export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
-  ANSIBLE_FLAGS="--limit=localhost  --ask-become-pass"
+  ANSIBLE_FLAGS="--limit=localhost"
 
   case $QT_VERS in
       qt5)
-         ANSIBLE_EXTRA_FLAGS="--extra-vars 'ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS'"
+         ANSIBLE_EXTRA_FLAGS="--extra-vars \"ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS\""
       ;;
       *)
-         ANSIBLE_EXTRA_FLAGS="--extra-vars ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS" 
+         ANSIBLE_EXTRA_FLAGS="--extra-vars \"ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS\""
       ;;
   esac
-  $ANSIBLE_PB_EXE $ANSIBLE_QT $ANSIBLE_FLAGS 
+  ANSIBLE_FULL_CMD="$ANSIBLE_PB_EXE $ANSIBLE_FLAGS $ANSIBLE_EXTRA_FLAGS $ANSIBLE_QT"
+  # Need to use eval as zsh does not split multiple-word variables (https://zsh.sourceforge.io/FAQ/zshfaq03.html)
+  eval ${ANSIBLE_FULL_CMD}
 fi
 
 echo "------------ Source the Python Virtual Environment ------------"
