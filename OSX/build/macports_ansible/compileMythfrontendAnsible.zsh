@@ -237,8 +237,8 @@ esac
 # Add some flags for the compiler to find the package manager locations
 export LDFLAGS="-L$QT_PATH/lib -L$QT_PATH/plugins -L$PKGMGR_INST_PATH/lib"
 export C_INCLUDE_PATH=$QT_PATH/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun:$PKGMGR_INST_PATH/include/glslang
-export CPLUS_INCLUDE_PATH=$PQT_PATH/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun:$PKGMGR_INST_PATH/include/glslang
-export LIBRARY_PATH=$PQT_PATH/lib:$PQT_PATH/plugins:$PKGMGR_INST_PATH/lib
+export CPLUS_INCLUDE_PATH=$QT_PATH/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun:$PKGMGR_INST_PATH/include/glslang
+export LIBRARY_PATH=$QT_PATH/lib:$QT_PATH/plugins:$PKGMGR_INST_PATH/lib
 
 # setup some paths to make the following commands easier to understand
 SRC_DIR=$REPO_DIR/mythtv/mythtv
