@@ -392,7 +392,6 @@ else
     git clone https://github.com/MythTV/ansible.git
   fi
   cd $REPO_DIR/ansible
-  export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
   ANSIBLE_FLAGS="--limit=localhost"
 
   case $QT_VERS in
