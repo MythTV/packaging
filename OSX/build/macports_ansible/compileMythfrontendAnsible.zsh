@@ -214,11 +214,31 @@ case $MP_CLANG in
     ;;
 esac
 
+# Select the correct QT version of tools / libraries
+case $QT_VERS in
+    qt5)
+       QT_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS
+       QMAKE_CMD=$QT_PATH/bin/qmake
+       QMAKE_SPECS=$QT_PATH/mkspecs/macx-clang
+       ANSIBLE_QT=mythtv.yml
+       MACDEPLOYQT_CMD=$QT_PATH/bin/macdeployqt
+    ;;
+    *)
+       QT_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS
+       QMAKE_CMD=$QT_PATH/bin/qmake6
+       QMAKE_SPECS=$QT_PATH/mkspecs/macx-clang
+       ANSIBLE_QT=mythtv.yml
+       MACDEPLOYQT_CMD=$QT_PATH/bin/macdeployqt6
+       echo "!!!!! Building with Qt6 - disabling plugins !!!!!"
+       BUILD_PLUGINS=false
+    ;;
+esac
+
 # Add some flags for the compiler to find the package manager locations
-export LDFLAGS="-L$PKGMGR_INST_PATH/libexec/$QT_VERS/lib -L$PKGMGR_INST_PATH/lib"
-export C_INCLUDE_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun:$PKGMGR_INST_PATH/include/glslang
-export CPLUS_INCLUDE_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun:$PKGMGR_INST_PATH/include/glslang
-export LIBRARY_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS/lib/:$PKGMGR_INST_PATH/lib
+export LDFLAGS="-L$QT_PATH/lib -L$QT_PATH/plugins -L$PKGMGR_INST_PATH/lib"
+export C_INCLUDE_PATH=$QT_PATH/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun:$PKGMGR_INST_PATH/include/glslang
+export CPLUS_INCLUDE_PATH=$PQT_PATH/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$PKGMGR_INST_PATH/include/libhdhomerun:$PKGMGR_INST_PATH/include/glslang
+export LIBRARY_PATH=$PQT_PATH/lib:$PQT_PATH/plugins:$PKGMGR_INST_PATH/lib
 
 # setup some paths to make the following commands easier to understand
 SRC_DIR=$REPO_DIR/mythtv/mythtv
@@ -255,38 +275,45 @@ installLibs(){
   # loop over each lib
   while read -r dep; do
     lib=${dep##*/}
-    # we have multiple types of libs to work with, QT5, QT6, package managed, and mythtv
+
+    #check if it is already installed in the framewrk, if so
+    #update the link
+    needsCopy=false
+    FMWK_LIB=$(find $APP_FMWK_DIR -name $lib -print -quit)
+    if [ ! -f "$FMWK_LIB" ]; then
+      needsCopy=true
+    fi
+
+    # we have multiple types of libs to work with, QT, Qt Plugins, package managed, and mythtv
     # setup the correct source / destination / linking schema for each
+    islib=false
     case "$dep" in
       *Qt*)
-        case "$QT_VERS" in
-          *qt5*)
-            sourcePath="$QT_PATH/lib/$lib.framework"
-            destinPath=$APP_FMWK_DIR
-            newLink="@executable_path/../Frameworks/$lib.framework/Versions/5/$lib"
-          ;;
-          *)
-            sourcePath="$QT_PATH/lib/$lib.framework/Versions/Current/$lib"
-            destinPath=$APP_FMWK_DIR
-            newLink="@executable_path/../Frameworks/$lib"
-          ;;
-        esac
+        libPath=${FMWK_LIB##$APP_FMWK_DIR/}
+        # Installed by macdeployqt and should always be in the Framwork/Plugins directory
+        newLink="@executable_path/../Frameworks/$libPath"
       ;;
-      *libmyth*|*$INSTALL_DIR*)
-        sourcePath=$INSTALL_DIR/lib
-        destinPath=$APP_FMWK_DIR
+      *$PKGMGR_INST_PATH*|*libmyth*|*$INSTALL_DIR*)
         newLink="@executable_path/../Frameworks/$lib"
+        islib=true
       ;;
-      *$PKGMGR_INST_PATH*)
-        sourcePath=$PKGMGR_INST_PATH/lib
-        destinPath=$APP_FMWK_DIR
-        newLink="@executable_path/../Frameworks/$lib"
+      *libq*)
+        # Installed by macdeployqt and should always be in the Framwork/Plugins directory
+        pluginPath=${FMWK_LIB##$APP_FMWK_DIR/PlugIns/}
+        newLink="@executable_path/../Frameworks/PlugIns/$pluginPath"
+      ;;
+      *)
+         echo $lib
+         echo FMLFMLFML
+         exit
       ;;
     esac
-    # check to see if the lib is already copied in, if not do so
-    if [ ! -f "$destinPath/$lib" ] && [ ! -f "$destinPath/$lib.framework" ] ; then
-      echo "    Installing $lib into app"
-      cp -RH $sourcePath/$lib $destinPath
+    # Copy in any missing files
+    if $needsCopy && $islib; then
+      echo "    +++installLibs: Installing $lib into app"
+      sourcePath=$(find $INSTALL_DIR $PKGMGR_INST_PATH/libexec $PKGMGR_INST_PATH/lib -name $lib -print -quit)
+      destinPath="$APP_FMWK_DIR/"
+      cp -RHL $sourcePath $destinPath
     fi
     # update the link in the app/executable to the new interal Framework
     echo "    ---installLibs: Updating $lib link to internal lib"
@@ -313,24 +340,6 @@ rebaseLibs(){
 version (){
   echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }';
 }
-
-# Select the correct QT version of tools / libraries
-case $QT_VERS in
-    qt5)
-       QT_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS
-       QMAKE_CMD=$QT_PATH/bin/qmake
-       QMAKE_SPECS=$QT_PATH/mkspecs/macx-clang
-       ANSIBLE_QT=mythtv.yml
-    ;;
-    *)
-       QT_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS
-       QMAKE_CMD=$QT_PATH/bin/qmake6
-       QMAKE_SPECS=$QT_PATH/mkspecs/macx-clang
-       ANSIBLE_QT=mythtv.yml
-       echo "!!!!! Building with Qt6 - disabling plugins !!!!!"
-       BUILD_PLUGINS=false
-    ;;
-esac
 
 ###########################################################################################
 ### Main Function #########################################################################
@@ -588,14 +597,49 @@ if [ -z $ENABLE_MAC_BUNDLE ]; then
 fi
 # Assume that all commands past this point only apply to app bundling
 
+echo "------------ Copying in Mythfrontend.app icon  ------------"
+cd $APP_DIR
+# copy in the icon
+cp $APP_DIR/mythfrontend.icns $APP_RSRC_DIR/application.icns
+
+echo "------------ Copying mythtv share directory into executable  ------------"
+# copy in i18n, fonts, themes, plugin resources, etc from the install directory (share)
+mkdir -p $APP_RSRC_DIR/share/mythtv
+cp -RHp $INSTALL_DIR/share/mythtv/* $APP_RSRC_DIR/share/mythtv/
+
+echo "------------ Deploying QT to Mythfrontend Executable ------------"
+# Do this last in case we want to codesign later
+# Package up the executable
+cd $APP_DIR
+$MACDEPLOYQT_CMD $APP \
+                    -verbose=1                           \
+                    -libpath=$INSTALL_DIR/lib/           \
+                    -libpath=$PKGMGR_INST_PATH/lib       \
+                    -libpath=$QT_PATH/lib                \
+                    -libpath=$QT_PATH/plugins            \
+                    -libpath=$QT_PATH/plugins/sqldrivers \
+                    -qmlimport=$QT_PATH/qml
+
+# move the QT PlugIns into the App's framework to pass app signing
+# we'll set the QT_QPA_PLATFORM_PLUGIN_PATH to point the app to the new location
+mkdir -p $APP_PLUGINS_DIR
+mv $APP/Contents/PlugIns/* $APP_PLUGINS_DIR
+gsed -i "2c\Plugins = Frameworks/PlugIns" $APP_RSRC_DIR/qt.conf
+
+echo "------------ Updating application plist  ------------"
+# Update the plist.  Must be done after macdeployqt else macdeployqt gets pointed to the wrong bundle
+gsed -i "8c\  <string>application.icns</string>" $APP_INFO_FILE
+gsed -i "10c\ <string>$APP_BNDL_ID</string>\n <key>CFBundleInfoDictionaryVersion</key>\n  <string>6.0</string>" $APP_INFO_FILE
+gsed -i "14a\ <key>CFBundleShortVersionString</key>\n <string>$VERS</string>" $APP_INFO_FILE
+gsed -i "18c\ <string>mythtv</string>\n <key>NSAppleScriptEnabled</key>\n <string>NO</string>\n <key>CFBundleGetInfoString</key>\n  <string></string>\n <key>CFBundleVersion</key>\n  <string>1.0</string>\n  <key>NSHumanReadableCopyright</key>\n <string>MythTV Team</string>" $APP_INFO_FILE
+gsed -i "34a\ <key>ATSApplicationFontsPath</key>\n  <string>share/mythtv/fonts</string>" $APP_INFO_FILE
+
 echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 # find all mythtv dylibs linked via @rpath in mythfrontend, move them into the
 # application application Framwork dir and update the internal link to point to
 # the application
 cd $APP_EXE_DIR
-mkdir $APP_FMWK_DIR
 installLibs "$APP_EXE_DIR/mythfrontend"
-mkdir $APP_PLUGINS_DIR
 
 if $BUILD_PLUGINS; then
   echo "------------ Copying Mythplugins dylibs into app ------------"
@@ -612,38 +656,21 @@ echo "------------ Installing additional mythtv utility executables into Mythfro
 # loop over the compiler apps copying in the desired ones for mythfrontend
 for helperBinPath in $INSTALL_DIR/bin/*; do
   case $helperBinPath in
-    *mythutil*|*mythpreviewgen*|*mythmetadatalookup*|*mythutil*)
+    *mythutil*|*mythpreviewgen*|*mythutil*)
       # extract the filename from the path
       helperBinFile=$(basename $helperBinPath)
       helperBinFile=${helperBinFile%.app}
-      echo "    Installing $helperBinFile into app"
-      # copy into the app
-      cp -RHp $helperBinPath/Contents/MacOS/$helperBinFile $APP_EXE_DIR
-      installLibs "$APP_EXE_DIR/$helperBinFile"
+      helperBinPath=$helperBinPath/Contents/MacOS/$helperBinFile
     ;;
     *)
       continue
     ;;
   esac
+  echo "    Installing $helperBinFile into app"
+  # copy into the app
+  cp -RHp $helperBinPath $APP_EXE_DIR
+  installLibs "$APP_EXE_DIR/$helperBinFile"
 done
-
-echo "------------ Copying in Mythfrontend.app icon  ------------"
-cd $APP_DIR
-# copy in the icon
-cp $APP_DIR/mythfrontend.icns $APP_RSRC_DIR/application.icns
-
-echo "------------ Copying mythtv share directory into executable  ------------"
-# copy in i18n, fonts, themes, plugin resources, etc from the install directory (share)
-mkdir -p $APP_RSRC_DIR/share/mythtv
-cp -RHp $INSTALL_DIR/share/mythtv/* $APP_RSRC_DIR/share/mythtv/
-
-echo "------------ Updating application plist  ------------"
-# Update the plist
-gsed -i "8c\	<string>application.icns</string>" $APP_INFO_FILE
-gsed -i "10c\	<string>$APP_BNDL_ID</string>\n	<key>CFBundleInfoDictionaryVersion</key>\n	<string>6.0</string>" $APP_INFO_FILE
-gsed -i "14a\	<key>CFBundleShortVersionString</key>\n	<string>$VERS</string>" $APP_INFO_FILE
-gsed -i "18c\	<string>mythtv</string>\n	<key>NSAppleScriptEnabled</key>\n	<string>NO</string>\n	<key>CFBundleGetInfoString</key>\n	<string></string>\n	<key>CFBundleVersion</key>\n	<string>1.0</string>\n	<key>NSHumanReadableCopyright</key>\n	<string>MythTV Team</string>" $APP_INFO_FILE
-gsed -i "34a\	<key>ATSApplicationFontsPath</key>\n	<string>share/mythtv/fonts</string>" $APP_INFO_FILE
 
 echo "------------ Copying mythtv lib/python* and lib/perl directory into application  ------------"
 mkdir -p $APP_RSRC_DIR/lib
@@ -718,20 +745,6 @@ if $BUILD_PLUGINS; then
   ln -s ../../../Frameworks/PlugIns plugins
 fi
 
-echo "------------ Deploying QT to Mythfrontend Executable ------------"
-# Do this last in case we want to codesign later
-# Package up the executable
-cd $APP_DIR
-$QT_PATH/bin/macdeployqt $APP \
-                    -libpath=$INSTALL_DIR/lib/\
-                    -libpath=$PKGMGR_INST_PATH/lib\
-                    -libpath=$QT_PATH/lib
-
-# move the QT PlugIns into the App's framework to pass app signing
-# we'll set the QT_QPA_PLATFORM_PLUGIN_PATH to point the app to the new location
-mv $APP/Contents/PlugIns/* $APP_PLUGINS_DIR
-gsed -i "2c\Plugins = Frameworks/PlugIns" $APP_RSRC_DIR/qt.conf
-
 echo "------------ Searching Applicaition for missing libraries ------------"
 # Do one last sweep for missing dylibs in the Framework Directory
 for dylib in $APP_FMWK_DIR/*.dylib; do
@@ -797,4 +810,4 @@ echo ""
 echo "If you intend to distribute the application, then next steps are to codesign
 and notarize the appliction using the codesignAndPackage.zsh script with the
 following command:"
-echo "    codesignAndPackage.zsh $APP"
+echo "    ./codesignAndPackage.zsh $APP"
