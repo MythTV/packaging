@@ -25,7 +25,7 @@ Build Options
   --update-git=UPDATE_GIT                Update git repositories to latest (true)
   --skip-build=SKIP_BUILD                Skip configure and make - used when you just want to repackage (false)
   --macports-clang=MP_CLANG              Flag to specify clang version to build with (default)
-  --extra-conf-flags=XTRA_CONF_FLAGS     Addtional configure flags for mythtv ("")
+  --extra-conf-flags=EXTRA_CONF_FLAGS    Addtional configure flags for mythtv ("")
 Patch Options
   --apply-patches=APPLY_PATCHES          Apply patches specified in additional arguments (false)
   --mythtv-patch-dir=MYTHTV_PATCH_DIR    Directory containing patch files to be applied to Mythtv
@@ -39,11 +39,21 @@ EOF
   exit 0
 }
 
+
+###########################################################################################
+### OS Specific Variable ##################################################################
+###########################################################################################
+# setup OS / Architecture specific variables
+ARCH=$(/usr/bin/uname -m)
 OS_VERS=$(/usr/bin/sw_vers -productVersion)
 OS_MAJOR=(${(@s:.:)OS_VERS})
 OS_MINOR=$OS_MAJOR[2]
 OS_MAJOR=$OS_MAJOR[1]
 
+
+###########################################################################################
+### Input Parsing #########################################################################
+###########################################################################################
 # setup default variables
 BUILD_PLUGINS=false
 PYTHON_VERS="311"
@@ -56,7 +66,7 @@ GENERATE_DMG=false
 UPDATE_GIT=true
 SKIP_BUILD=false
 MP_CLANG=default
-XTRA_CONF_FLAGS=""
+EXTRA_CONF_FLAGS=""
 APPLY_PATCHES=false
 MYTHTV_PATCH_DIR=""
 PACK_PATCH_DIR=""
@@ -93,7 +103,7 @@ for i in "$@"; do
         MP_CLANG="${i#*=}"
       ;;
       --extra-conf-flags=*)
-        XTRA_CONF_FLAGS="${i#*=}"
+        EXTRA_CONF_FLAGS="${i#*=}"
       ;;
       --version=*)
         MYTHTV_VERS="${i#*=}"
@@ -129,13 +139,17 @@ for i in "$@"; do
         PLUGINS_PATCH_DIR="${i#*=}"
       ;;
       *)
-        echo "Unknown option $i"
+        echo "Unknown or incomplete option $i"
               # unknown option
         exit 1
       ;;
   esac
 done
 
+
+###########################################################################################
+### Build Variable and Pathing ############################################################
+###########################################################################################
 # Specify package manager harcodes (currently for macports...)
 PKGMGR_INST_PATH=/opt/local
 
@@ -148,28 +162,30 @@ PY2APP_PKGS="MySQLdb,pycurl,requests_cache,urllib3,future,lxml,oauthlib,requests
   audiofile,bs4,argparse,common,configparser,datetime,discid,et,features,HTMLParser,httplib2,\
   musicbrainzngs,port,put,traceback2,markdown,dateutil,importlib_metadata"
 
-# Specify mythtv version to pull from git
-# if we're building on master - get release number from the git tags
-# otherwise extract it from the MYTHTV_VERS
+# Handle any version specific parsing and flags
+EXTRA_MYTHPLUGIN_FLAGS=""
 case $MYTHTV_VERS in
+    # this condition covers the current master
     master*)
+      # if we're building on master - get release number from the git tags
       VERS=$(git ls-remote --tags  https://github.com/MythTV/mythtv.git|tail -n 1)
       VERS=${VERS##*/v}
       VERS=$(echo $VERS|tr -dc '0-9')
-      EXTRA_MYTHPLUGIN_FLAG=""
     ;;
+    # this condition covers supported versions prior to v33 where the fftw was removed
     *32*|*31*)
       VERS=${MYTHTV_VERS: -2}
-      EXTRA_MYTHPLUGIN_FLAG="--enable-fftw"
+      EXTRA_MYTHPLUGIN_FLAGS="--enable-fftw"
     ;;
+    # this condition covers v33 and later
     *)
       VERS=${MYTHTV_VERS: -2}
-      EXTRA_MYTHPLUGIN_FLAG=""
 esac
-ARCH=$(/usr/bin/uname -m)
+
+# Setup version specific working path
 REPO_DIR=$REPO_PREFIX/mythtv-$VERS
 
-
+# Setup app build outputs and lib linking
 if $GENERATE_APP; then
   ENABLE_MAC_BUNDLE="--enable-mac-bundle"
   INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
@@ -180,13 +196,15 @@ else
   RUNPREFIX=$INSTALL_DIR
 fi
 
+# Check if the user specifed a compiler
 case $MP_CLANG in
     clang-mp*)
       CLANG_CMD=$PKGMGR_INST_PATH/bin/$MP_CLANG
       CLANGPP_CMD=$PKGMGR_INST_PATH/bin/${MP_CLANG//clang/clang++}
-      # check is specified compiler is installed 
+      # check is specified compiler is installed
       if ! [ -x "$(command -v $CLANG_CMD)" ]; then
         CLANG_PORT=${MP_CLANG//clang-mp/clang}
+        echo "    Installing the requested compiler"
         sudo port -N install $CLANG_PORT
       fi
     ;;
@@ -218,11 +236,14 @@ APP_FMWK_DIR=$APP/Contents/Frameworks
 APP_EXE_DIR=$APP/Contents/MacOS
 APP_PLUGINS_DIR=$APP_FMWK_DIR/PlugIns/
 APP_INFO_FILE=$APP/Contents/Info.plist
+
 # Tell pkg_config to ignore the paths for the package manager
 PKG_CONFIG_SYSTEM_INCLUDE_PATH=$PKGMGR_INST_PATH/include
 APP_DFLT_BNDL_ID="org.mythtv.mythfrontend"
 
-
+###########################################################################################
+### Utiltity Functions ####################################################################
+###########################################################################################
 # installLibs finds all @rpath dylibs for the input binary/dylib
 # copying any missing ones in the application's FrameWork directory
 # then updates the binary/dylib's internal link to point to copy location
@@ -268,12 +289,14 @@ installLibs(){
       cp -RH $sourcePath/$lib $destinPath
     fi
     # update the link in the app/executable to the new interal Framework
-    echo "    Updating $lib link to internal lib"
+    echo "    ---installLibs: Updating $lib link to internal lib"
     # its already been copied in, we just need to update the link
     install_name_tool -change $dep $newLink $binFile
   done <<< "$pathDepList"
 }
 
+# rebaseLibs finds all @rpath dylibs for the input binary/dylib
+# changing the rpath to a direct path on the system
 rebaseLibs(){
     binFile=$1
     rpathDepList=$(/usr/bin/otool -L $binFile|grep rpath)
@@ -309,6 +332,9 @@ case $QT_VERS in
     ;;
 esac
 
+###########################################################################################
+### Main Function #########################################################################
+###########################################################################################
 echo "------------ Setting Up Directory Structure ------------"
 # setup the working directory structure
 mkdir -p $REPO_DIR
@@ -374,7 +400,7 @@ else
          ANSIBLE_EXTRA_FLAGS="--extra-vars \"ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS install_qtwebkit=$BUILD_PLUGINS\""
       ;;
       *)
-         ANSIBLE_EXTRA_FLAGS="--extra-vars \"ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS\""
+         ANSIBLE_EXTRA_FLAGS="--extra-vars \"qt6=true ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS\""
       ;;
   esac
   ANSIBLE_FULL_CMD="$ANSIBLE_PB_EXE $ANSIBLE_FLAGS $ANSIBLE_EXTRA_FLAGS $ANSIBLE_QT"
@@ -458,7 +484,7 @@ else
   ./configure --prefix=$INSTALL_DIR \
               --runprefix=$RUNPREFIX \
               $ENABLE_MAC_BUNDLE \
-              $XTRA_CONF_FLAGS \
+              $EXTRA_CONF_FLAGS \
               --qmake=$QMAKE_CMD \
               --cc=$CLANG_CMD \
               --cxx=$CLANGPP_CMD \
@@ -474,6 +500,8 @@ else
               --enable-libx265 \
               --enable-libvpx \
               --enable-bdjava \
+              --disable-qtwebkit \
+              --disable-qtscript \
               --python=$PYTHON_VENV_BIN
   echo "------------ Compiling Mythtv ------------"
   #compile mythfrontend
@@ -486,7 +514,9 @@ else
 fi
 
 echo "------------ Installing Mythtv ------------"
-# need to do a make install or macdeployqt will not copy everything in.
+# This is necessary for both standalone and application builds.
+# The latter because macdeployqt is told to search for the
+# installed binaries at the install prefix
 make install
 
 if $BUILD_PLUGINS; then
@@ -524,7 +554,7 @@ if $BUILD_PLUGINS; then
                 --disable-mythzoneminder \
                 --disable-mythzmserver \
                 --python=$PYTHON_VENV_BIN \
-                $EXTRA_MYTHPLUGIN_FLAG
+                $EXTRA_MYTHPLUGIN_FLAGS
     echo "------------ Compiling Mythplugins ------------"
     #compile plugins
     $QMAKE_CMD mythplugins.pro
@@ -581,9 +611,9 @@ fi
 
 echo "------------ Installing additional mythtv utility executables into Mythfrontend.app  ------------"
 # loop over the compiler apps copying in the desired ones for mythfrontend
-for helperBinPath in $INSTALL_DIR/bin/*.app; do
+for helperBinPath in $INSTALL_DIR/bin/*; do
   case $helperBinPath in
-    *mythutil*|*mythpreviewgen*)
+    *mythutil*|*mythpreviewgen*|*mythmetadatalookup*|*mythutil*)
       # extract the filename from the path
       helperBinFile=$(basename $helperBinPath)
       helperBinFile=${helperBinFile%.app}
@@ -656,7 +686,7 @@ mv -n $APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Resources/* $A
 cd $APP_DIR
 rm -Rf PYTHON_APP
 echo "    Copying in Site Packages from Virtual Enironment"
-cp -RL $PYTHON_VENV_PATH/lib/python$PYTHON_DOT_VERS/site-packages/* $APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages 
+cp -RL $PYTHON_VENV_PATH/lib/python$PYTHON_DOT_VERS/site-packages/* $APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages
 # do not need/want py2app in the application
 rm -Rf $APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages/py2app
 
