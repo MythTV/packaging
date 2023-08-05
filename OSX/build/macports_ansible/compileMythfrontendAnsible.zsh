@@ -508,8 +508,6 @@ else
               --enable-libx265 \
               --enable-libvpx \
               --enable-bdjava \
-              --disable-qtwebkit \
-              --disable-qtscript \
               --python=$PYTHON_VENV_BIN
   echo "------------ Compiling Mythtv ------------"
   #compile mythfrontend
