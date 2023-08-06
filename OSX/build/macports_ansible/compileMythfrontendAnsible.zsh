@@ -326,7 +326,7 @@ installLibs(){
       NAME_TOOL_CMD="install_name_tool -change $dep $newLink $binFile"
       eval "${NAME_TOOL_CMD}"
       # If a new lib was copied in, recursively check it
-      if  $needsCopy && $recurse ; then 
+      if  $needsCopy && $recurse ; then
         echo "      ^^^installLibs: Recursively install $lib"
         installLibs "$destinPath/$lib"
       fi
