@@ -251,7 +251,7 @@ APP=$APP_DIR/mythfrontend.app
 APP_RSRC_DIR=$APP/Contents/Resources
 APP_FMWK_DIR=$APP/Contents/Frameworks
 APP_EXE_DIR=$APP/Contents/MacOS
-APP_PLUGINS_DIR=$APP_FMWK_DIR/PlugIns/
+APP_PLUGINS_DIR=$APP_FMWK_DIR/PlugIns
 APP_INFO_FILE=$APP/Contents/Info.plist
 
 ###########################################################################################
@@ -262,15 +262,16 @@ APP_INFO_FILE=$APP/Contents/Info.plist
 # then updates the binary/dylib's internal link to point to copy location
 installLibs(){
   binFile=$1
+  echo "    installLibs: Parsing $binFile for linked libraries"
   # find all externally-linked lib
-  pathDepList=$(/usr/bin/otool -L "$binFile"|grep -e rpath -e $PKGMGR_INST_PATH/lib -e "$INSTALL_DIR")
+  pathDepList=$(/usr/bin/otool -L "$binFile"|grep -e rpath -e $PKGMGR_INST_PATH -e "$INSTALL_DIR")
   pathDepList=$(echo "$pathDepList"| gsed 's/(.*//')
   # loop over each lib
   while read -r dep; do
     lib=${dep##*/}
 
-    # if we do not have a "null" lib continue the loop
-    if [ -n "lib" ]; then
+    # Parse the lib if it isn't null
+    if [ -n "$lib" ]; then
       #check if it is already installed in the framewrk, if so
       #update the link
       needsCopy=false
@@ -278,7 +279,7 @@ installLibs(){
       if [ ! -f "$FMWK_LIB" ]; then
         needsCopy=true
       fi
-  
+
       # we have multiple types of libs to work with, QT, Qt Plugins, package managed, and mythtv
       # setup the correct source / destination / linking schema for each
       islib=false
@@ -289,7 +290,7 @@ installLibs(){
           newLink="@executable_path/../Frameworks/$libPath"
         ;;
         # Package manager or mythtv created libs
-        *$PKGMGR_INST_PATH*|*libmyth*|*$INSTALL_DIR*)
+        *"$PKGMGR_INST_PATH"*|*libmyth*|*"$INSTALL_DIR"*)
           newLink="@executable_path/../Frameworks/$lib"
           islib=true
         ;;
@@ -307,11 +308,14 @@ installLibs(){
       if $needsCopy && $islib; then
         echo "    +++installLibs: Installing $lib into app"
         sourcePath=$(find "$INSTALL_DIR" "$PKGMGR_INST_PATH/libexec" "$PKGMGR_INST_PATH/lib" -name "$lib" -print -quit)
-        destinPath="$APP_FMWK_DIR/"
-        cp -RHL "$sourcePath" "$destinPath"
+        destinPath="$APP_FMWK_DIR"
+        cp -RHLn "$sourcePath" "$destinPath/"
+        # we'll need to do this recursively
+        echo "    %%%installLibs: Recursively install $lib"
+        installLibs "$destinPath/$lib"
       fi
       # update the link in the app/executable to the new interal Framework
-      echo "    ---installLibs: Updating $lib link to internal lib"
+      echo "    ~~~installLibs: Updating $lib link to internal lib"
       # its already been copied in, we just need to update the link
       install_name_tool -change "$dep" "$newLink" "$binFile"
     fi
@@ -437,7 +441,7 @@ fi
 # apply specified patches
 if [ "$APPLY_PATCHES" ] && [ -n "$MYTHTV_PATCH_DIR" ]; then
   cd "$REPO_DIR/mythtv" || exit 1
-  for file in "$MYTHTV_PATCH_DIR/"*; do
+  for file in "$MYTHTV_PATCH_DIR"/*; do
     if [ -f "$file" ]; then
       echo "    Applying Mythtv patch: $file"
       patch -p1 < "$file"
@@ -466,7 +470,7 @@ fi
 # apply any user specified patches if the flag is set
 if [ "$APPLY_PATCHES" ] && [ -n "$PACK_PATCH_DIR" ]; then
   cd "$PKGING_DIR" || exit 1
-  for file in "$PACK_PATCH_DIR/"*; do
+  for file in "$PACK_PATCH_DIR"/*; do
     if [ -f "$file" ]; then
       echo "    Applying Packaging patch: $file"
       patch -p1 < "$file"
@@ -484,25 +488,25 @@ fi
 if $SKIP_BUILD; then
   echo "    Skipping mythtv configure and make"
 else
-  CONFIG_CMD="./configure --prefix=$INSTALL_DIR \
-                         --runprefix=$RUNPREFIX \
-                         $ENABLE_MAC_BUNDLE \
-                         $EXTRA_CONF_FLAGS\
-                         --qmake=$QMAKE_CMD \
-                         --cc=$CLANG_CMD \
-                         --cxx=$CLANGPP_CMD \
-                         --disable-backend \
-                         --disable-distcc \
-                         --disable-lirc \
-                         --disable-firewire \
-                         --disable-libcec \
-                         --disable-x11 \
-                         --enable-libmp3lame \
-                         --enable-libxvid \
-                         --enable-libx264 \
-                         --enable-libx265 \
-                         --enable-libvpx \
-                         --enable-bdjava \
+  CONFIG_CMD="./configure --prefix=$INSTALL_DIR    \
+                         --runprefix=$RUNPREFIX    \
+                         $ENABLE_MAC_BUNDLE        \
+                         $EXTRA_CONF_FLAGS         \
+                         --qmake=$QMAKE_CMD        \
+                         --cc=$CLANG_CMD           \
+                         --cxx=$CLANGPP_CMD        \
+                         --disable-backend         \
+                         --disable-distcc          \
+                         --disable-lirc            \
+                         --disable-firewire        \
+                         --disable-libcec          \
+                         --disable-x11             \
+                         --enable-libmp3lame       \
+                         --enable-libxvid          \
+                         --enable-libx264          \
+                         --enable-libx265          \
+                         --enable-libvpx           \
+                         --enable-bdjava           \
                          --python=$PYTHON_VENV_BIN"
   eval "${CONFIG_CMD}"
   echo "------------ Compiling Mythtv ------------"
@@ -521,7 +525,7 @@ if $BUILD_PLUGINS; then
   # apply specified patches if flag is set
   if [ "$APPLY_PATCHES" ] && [ -n "$PLUGINS_PATCH_DIR" ]; then
     cd "$PLUGINS_DIR" || exit 1
-    for file in "$PLUGINS_PATCH_DIR/"*; do
+    for file in "$PLUGINS_PATCH_DIR"/*; do
       if [ -f "$file" ]; then
         echo "    Applying Plugins patch: $file"
         patch -p1 < "$file"
@@ -535,21 +539,21 @@ if $BUILD_PLUGINS; then
     echo "    Skipping mythplugins configure and make"
 
   else
-    CONFIG_CMD="./configure --prefix=$INSTALL_DIR \
-                            --runprefix=$RUNPREFIX \
-                            --qmake=$QMAKE_CMD \
+    CONFIG_CMD="./configure --prefix=$INSTALL_DIR     \
+                            --runprefix=$RUNPREFIX    \
+                            --qmake=$QMAKE_CMD        \
                             --qmakespecs=$QMAKE_SPECS \
-                            --cc=$CLANG_CMD \
-                            --cxx=$CLANGPP_CMD \
-                            --enable-mythgame \
-                            --enable-mythmusic \
-                            --enable-cdio \
-                            --enable-mythnews \
-                            --enable-mythweather \
-                            --disable-mytharchive \
-                            --disable-mythnetvision \
-                            --disable-mythzoneminder \
-                            --disable-mythzmserver \
+                            --cc=$CLANG_CMD           \
+                            --cxx=$CLANGPP_CMD        \
+                            --enable-mythgame         \
+                            --enable-mythmusic        \
+                            --enable-cdio             \
+                            --enable-mythnews         \
+                            --enable-mythweather      \
+                            --disable-mytharchive     \
+                            --disable-mythnetvision   \
+                            --disable-mythzoneminder  \
+                            --disable-mythzmserver    \
                             --python=$PYTHON_VENV_BIN \
                             $EXTRA_MYTHPLUGIN_FLAGS"
     eval "${CONFIG_CMD}"
@@ -575,7 +579,7 @@ fi
 if [ -z $ENABLE_MAC_BUNDLE ]; then
   echo "    Mac Bundle disabled - Skipping app bundling commands"
   echo "    Rebasing @rpath to $RUNPREFIX"
-  for mythExec in "$INSTALL_DIR/bin/"myth*; do
+  for mythExec in "$INSTALL_DIR/bin"/myth*; do
         echo "     rebasing $mythExec"
         rebaseLibs "$mythExec"
   done
@@ -587,31 +591,12 @@ fi
 echo "------------ Copying in Mythfrontend.app icon  ------------"
 cd "$APP_DIR" || exit 1
 # copy in the icon
-cp "$APP_DIR/mythfrontend.icns" "$APP_RSRC_DIR/application.icns"
+cp -RHp "$APP_DIR/mythfrontend.icns" "$APP_RSRC_DIR/application.icns"
 
 echo "------------ Copying mythtv share directory into executable  ------------"
 # copy in i18n, fonts, themes, plugin resources, etc from the install directory (share)
 mkdir -p "$APP_RSRC_DIR/share/mythtv"
-cp -RHp "$INSTALL_DIR/share/mythtv/"* "$APP_RSRC_DIR/share/mythtv/"
-
-echo "------------ Deploying QT to Mythfrontend Executable ------------"
-# Do this last in case we want to codesign later
-# Package up the executable
-cd "$APP_DIR" || exit 1
-$MACDEPLOYQT_CMD "$APP" \
-                    -verbose=1                             \
-                    -libpath="$INSTALL_DIR/lib/"           \
-                    -libpath="$PKGMGR_INST_PATH/lib"       \
-                    -libpath="$QT_PATH/lib"                \
-                    -libpath="$QT_PATH/plugins"            \
-                    -libpath="$QT_PATH/plugins/sqldrivers" \
-                    -qmlimport="$QT_PATH/qml"
-
-# move the QT PlugIns into the App's framework to pass app signing
-# we'll set the QT_QPA_PLATFORM_PLUGIN_PATH to point the app to the new location
-mkdir -p "$APP_PLUGINS_DIR"
-mv "$APP/Contents/PlugIns/"* "$APP_PLUGINS_DIR"
-gsed -i "2c\Plugins = Frameworks/PlugIns" "$APP_RSRC_DIR/qt.conf"
+cp -RLp "$INSTALL_DIR/share/mythtv"/* "$APP_RSRC_DIR"/share/mythtv/
 
 echo "------------ Updating application plist  ------------"
 # Update the plist.  Must be done after macdeployqt else macdeployqt gets pointed to the wrong bundle
@@ -621,27 +606,45 @@ gsed -i "14a\ <key>CFBundleShortVersionString</key>\n <string>$VERS</string>" "$
 gsed -i "18c\ <string>mythtv</string>\n <key>NSAppleScriptEnabled</key>\n <string>NO</string>\n <key>CFBundleGetInfoString</key>\n  <string></string>\n <key>CFBundleVersion</key>\n  <string>1.0</string>\n  <key>NSHumanReadableCopyright</key>\n <string>MythTV Team</string>" "$APP_INFO_FILE"
 gsed -i "34a\ <key>ATSApplicationFontsPath</key>\n  <string>share/mythtv/fonts</string>" "$APP_INFO_FILE"
 
+echo "------------ Deploying QT to Mythfrontend Executable ------------"
+# Do this last so that qt gets copied in correctly
+cd "$APP_DIR" || exit 1
+MACDEPLOYQT_FULL_CMD="$MACDEPLOYQT_CMD  $APP \
+                                        -verbose=1                            \
+                                        -libpath=$INSTALL_DIR/lib/            \
+                                        -libpath=$PKGMGR_INST_PATH/lib/       \
+                                        -libpath=$QT_PATH/lib/                \
+                                        -libpath=$QT_PATH/plugins/            \
+                                        -libpath=$QT_PATH/plugins/sqldrivers/ \
+                                        -qmlimport=$QT_PATH/qml/"
+eval "${MACDEPLOYQT_FULL_CMD}"
+
 echo "------------ Update Mythfrontend.app to use internal dylibs ------------"
 # find all mythtv dylibs linked via @rpath in mythfrontend, move them into the
 # application application Framwork dir and update the internal link to point to
 # the application
 cd "$APP_EXE_DIR" || exit 1
 installLibs "$APP_EXE_DIR/mythfrontend"
+mkdir -p "$APP_FMWK_DIR/PlugIns"
+# clean up the copies in mythtv based libs
+for dylib in "$APP_FMWK_DIR"/*.dylib; do
+    installLibs "$dylib"
+done
 
 if $BUILD_PLUGINS; then
   echo "------------ Copying Mythplugins dylibs into app ------------"
   # copy the mythPluins dylibs into the application
-  for plugFilePath in "$INSTALL_DIR/lib/mythtv/plugins/"*.dylib; do
+  for plugFilePath in "$INSTALL_DIR/lib/mythtv/plugins"/*.dylib; do
     libFileName=$(basename "$plugFilePath")
     echo "    Installing $libFileName into app"
-    cp "$plugFilePath" "$APP_PLUGINS_DIR"
+    cp -RLp "$plugFilePath" "$APP_PLUGINS_DIR/"
     installLibs "$APP_PLUGINS_DIR/$libFileName"
   done
 fi
 
 echo "------------ Installing additional mythtv utility executables into Mythfrontend.app  ------------"
 # loop over the compiler apps copying in the desired ones for mythfrontend
-for helperBinPath in "$INSTALL_DIR/bin/"*; do
+for helperBinPath in "$INSTALL_DIR/bin"/*; do
   case $helperBinPath in
     *"mythutil"*|*"mythpreviewgen"*)
       # extract the filename from the path
@@ -650,7 +653,7 @@ for helperBinPath in "$INSTALL_DIR/bin/"*; do
       helperBinPath=$helperBinPath/Contents/MacOS/$helperBinFile
       echo "    Installing $helperBinFile into app"
       # copy into the app
-      cp -RHp "$helperBinPath" "$APP_EXE_DIR"
+      cp -RLp "$helperBinPath" "$APP_EXE_DIR"/
       installLibs "$APP_EXE_DIR/$helperBinFile"
     ;;
   esac
@@ -658,8 +661,8 @@ done
 
 echo "------------ Copying mythtv lib/python* and lib/perl directory into application  ------------"
 mkdir -p "$APP_RSRC_DIR/lib"
-cp -RHp "$INSTALL_DIR/lib/"python* "$APP_RSRC_DIR/lib/"
-cp -RHp "$INSTALL_DIR/lib/"perl* "$APP_RSRC_DIR/lib/"
+cp -RLp "$INSTALL_DIR/lib"/python* "$APP_RSRC_DIR"/lib/
+cp -RLp "$INSTALL_DIR/lib"/perl* "$APP_RSRC_DIR"/lib/
 if [ ! -f "$APP_RSRC_DIR/lib/python" ]; then
   cd "$APP_RSRC_DIR/lib" || exit 1
   ln -s "python$PYTHON_DOT_VERS" python
@@ -684,19 +687,19 @@ $PY2APPLET_BIN -i "$PY2APP_PKGS" -p "$PY2APP_PKGS" --use-pythonpath --no-report-
 $PYTHON_VENV_BIN setup.py -q py2app 2>&1 > /dev/null
 # now we need to copy over the python app's pieces into the mythfrontend.app to get it working
 echo "    Copying in Python Framework libraries"
-mv -n "$APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Frameworks/*" "$APP_FMWK_DIR"
+mv -n "$APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Frameworks"/* "$APP_FMWK_DIR"
 echo "    Copying in Python Binary"
 mv "$APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/MacOS/python" "$APP_EXE_DIR"
 if [ -f "$APP_EXE_DIR/python3" ]; then
   ln -s "$APP_EXE_DIR/pyton" "$APP_EXE_DIR/python3"
 fi
 echo "    Copying in Python Resources"
-mv -n "$APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Resources/*" "$APP_RSRC_DIR"
+mv -n "$APP_DIR/PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Resources"/* "$APP_RSRC_DIR"
 # clean up temp application
 cd "$APP_DIR" || exit 1
 rm -Rf "$PYTHON_APP"
 echo "    Copying in Site Packages from Virtual Enironment"
-cp -RL "$PYTHON_VENV_PATH/lib/python$PYTHON_DOT_VERS/site-packages/*" "$APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages"
+cp -RLp "$PYTHON_VENV_PATH/lib/python$PYTHON_DOT_VERS/site-packages"/* "$APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages"
 # do not need/want py2app in the application
 rm -Rf "$APP_RSRC_DIR/lib/python$PYTHON_DOT_VERS/site-packages/py2app"
 
@@ -718,8 +721,8 @@ grep -rlI "$PYTHON_PKMGR_BIN" "$APP_RSRC_DIR" | xargs gsed -i "$sedSTR"
 
 echo "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
 # copy in missing fonts
-cp "$PKGMGR_INST_PATH/share/fonts/dejavu-fonts/*.ttf" "$APP_RSRC_DIR/share/mythtv/fonts/"
-cp "$PKGMGR_INST_PATH/share/fonts/liberation-fonts/*.ttf" "$APP_RSRC_DIR/share/mythtv/fonts/"
+cp -RLp "$PKGMGR_INST_PATH/share/fonts/dejavu-fonts"/*.ttf "$APP_RSRC_DIR/share/mythtv/fonts/"
+cp -RLp "$PKGMGR_INST_PATH/share/fonts/liberation-fonts"/*.ttf "$APP_RSRC_DIR/share/mythtv/fonts/"
 
 echo "------------ Add symbolic link structure for copied in files  ------------"
 # make some symbolic links to match past working copies
@@ -729,9 +732,14 @@ if $BUILD_PLUGINS; then
   ln -s ../../../Frameworks/PlugIns plugins
 fi
 
+# move the QT PlugIns into the App's framework to pass app signing
+# we'll set the QT_QPA_PLATFORM_PLUGIN_PATH to point the app to the new location
+mv "$APP"/Contents/PlugIns/* "$APP_PLUGINS_DIR"/
+gsed -i "2c\Plugins = Frameworks/PlugIns" "$APP_RSRC_DIR/qt.conf"
+
 echo "------------ Searching Applicaition for missing libraries ------------"
 # Do one last sweep for missing dylibs in the Framework Directory
-for dylib in "$APP_FMWK_DIR/"*.dylib; do
+for dylib in "$APP_FMWK_DIR"/*.dylib; do
   pathDepList=$(/usr/bin/otool -L "$dylib"|grep -e $"PKGMGR_INST_PATH/lib" -e "$INSTALL_DIR")
   if [ -n "$pathDepList" ] ; then
     installLibs "$dylib"
