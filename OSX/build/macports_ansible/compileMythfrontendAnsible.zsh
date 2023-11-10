@@ -392,6 +392,15 @@ else
   FFMPEG_INSTALLED=false
 fi
 
+case "$DATABASE_VERS" in
+  # Add flags to allow pip3 / python to find mysql8
+  *mysql8*)
+    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PKGMGR_INST_PATH/lib/mysql8/pkgconfig/
+    export MYSQLCLIENT_LDFLAGS=$(pkg-config --libs mysqlclient)
+    export MYSQLCLIENT_CFLAGS=$(pkg-config --cflags mysqlclient)
+  ;;
+esac
+
 if $SKIP_BUILD; then
   echo "    Skipping port installation via ansible (repackaging only)"
 else
@@ -459,24 +468,6 @@ if [ "$APPLY_PATCHES" ] && [ -n "$MYTHTV_PATCH_DIR" ]; then
       patch -p1 < "$file"
     fi
   done
-fi
-
-echo "------------ Cloning / Updating Packaging Git Repository ------------"
-# get packaging
-cd "$REPO_DIR/mythtv" || exit 1
-# check if the repo exists and update (if the flag is set)
-if [ -d "$PKGING_DIR" ]; then
-  cd "$PKGING_DIR" || exit 1
-  if $UPDATE_GIT  && ! $SKIP_BUILD; then
-    echo "    Update packaging git repo"
-    git pull
-  else
-    echo "    Skipping packaging git repo update"
-  fi
-# else pull down a fresh copy of the repo from github
-else
-  echo "    Cloning mythtv-packaging git repo"
-  git clone -b "$MYTHTV_VERS" https://github.com/MythTV/packaging.git
 fi
 
 # apply any user specified patches if the flag is set
