@@ -456,7 +456,7 @@ rebaseLibs(){
     while read -r dep; do
         lib=${dep##*/}
         if [ -n "$lib" ]; then
-            install_name_tool -change "$dep" "$RUNPREFIX/lib/$lib"" $binFile"
+            install_name_tool -change "$dep" "$RUNPREFIX/lib/$lib" "$binFile"
         fi
     done <<< "$rpathDepList"
 }
