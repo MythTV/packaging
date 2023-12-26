@@ -6,26 +6,54 @@ Usage: compileMythtvAnsible.sh [options]
 Options: [defaults in brackets after descriptions]
 
 Standard options:
-  --help                                 Print this message
-  --build-plugins=BUILD_PLUGINS          Build Mythtvplugins (false)
+  --help                                 Print this help message
+  --build-plugins=BUILD_PLUGINS          Build Mythtv Plugins (false)
   --python-version=PYTHON_VERS           Desired Python 3 Version (${2})
+                                           Example: python-11
   --version=MYTHTV_VERS                  Requested mythtv git repo (${1})
+                                           Example: master for the latest master
+                                                    fixes/33 for version 33
   --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (${3})
   --qt-version=qt5                       Select Qt version to build against (${4})
+                                           Example: qt5 for qt5
+                                                    qt6 for qt6
   --repo-prefix=REPO_PREFIX              Directory base to install the working repository (~)
-  --generate-app=GENERATE_APP            Generate .app bundles for executables (true)
+  --generate-app=GENERATE_APP            Generate Applicaiton Bundles for executables (true)
+                                         Currently, setting this to true only builds a working
+                                         MythFrontend.app.  If building for unix-style executables, 
+                                         set this to false.
+  --custom-install-dir=INSTALL_DIR       Directory to copy the compiled executables and support files. ("")
+                                           When generating app bundles (i.e. --generate-app=false),
+                                           this defaults to the build directory.
+                                           When building executables (i.e. --generate-app=false),
+                                           this defaults to the either MacPors or Homebrews
+
 Build Options
   --update-git=UPDATE_GIT                Update git repositories to latest (true)
-  --skip-build=SKIP_BUILD                Skip configure and make - used when you just want to repackage (false)
-  --alt-compiler=ALT_COMPILER            Flag to specify compiler version to build with (clang)
-  --extra-conf-flags=EXTRA_CONF_FLAGS    Addtional configure flags for mythtv ("")
+                                         This is only used when the source has already been cloned via 
+                                         git and you do not want to pull any updates from the master repo
+  --skip-build=SKIP_BUILD                Skip configure and make
+                                         This is used when you just want to repackage (false)
   --skip-ansible=SKIP_ANSIBLE            Skip ansible install (false)
+                                         This avoids re-running ansible and should only be used
+                                         if all packages have been correctly installed.
+  --alt-compiler=ALT_COMPILER            Flag to specify compiler version to build with (clang)
+                                         Use the format compiler-PackMgr-VersionNumber to
+                                         specify customer compilers
+                                           Example: clang for deafult Xcode/Commandline tools compiler
+                                                    gcc-mp-13 For gcc 13 on MacPorts
+                                                    gcc-hb-13 for gcc 13 on Hobebrew
+                                                    clang-mp-17 for clang/llvm 17 on MacPorts
+                                                    clang-hb-17 for clang/llvm 17 on Homebrew
+  --extra-conf-flags=EXTRA_CONF_FLAGS    Addtional configure flags for mythtv ("")
+
 Patch Options
   --apply-patches=APPLY_PATCHES          Apply patches specified in additional arguments (false)
   --mythtv-patch-dir=MYTHTV_PATCH_DIR    Directory containing patch files to be applied to Mythtv
   --plugins-patch-dir=PLUGINS_PATCH_DR   Directory containing patch files to be applied to Mythplugins
+
 Support Ports Options
-  --update-ports=UPDATE_PORTS            Update macports (false)
+  --update-pkgmgr=UPDATE_PKGMGR          Update macports (false)
 
 EOF
 
@@ -33,43 +61,44 @@ EOF
 }
 
 echoC(){
-  COLOR=${1}
-  MESSAGE=${2}
-  END_CODE='\033[m'
-  case $COLOR in
-  ### echo color codes
-  RED)
-    CODE='\033[31m'
-  ;;
-  ORANGE)
-    CODE='\033[33m'
-  ;;
-  GREEN)
-    CODE='\033[32m'
-  ;;
-  BLUE)
-    CODE='\033[34m'
-  ;;
-  CYAN)
-    CODE='\033[36m'
-  ;;
-  esac
-  echo -e $CODE"$MESSAGE"$END_CODE
+  MESSAGE=${1}
+  COLOR=${2}
+  COLOR=${COLOR:u}
+  if [ ! -d $COLOR ]; then
+    END_CODE='\033[m'
+    case $COLOR in
+    ### echo color codes
+    RED)
+      CODE='\033[31m'
+    ;;
+    ORANGE)
+      CODE='\033[33m'
+    ;;
+    GREEN)
+      CODE='\033[32m'
+    ;;
+    BLUE)
+      CODE='\033[34m'
+    ;;
+    CYAN)
+      CODE='\033[36m'
+    ;;
+    esac
+    echo -e $CODE"$MESSAGE"$END_CODE
+  else
+    echo $MESSAGE
+  fi
 }
 
 ### Note - macports or homebrew must be installed on your system for this script to work!!!!!
-echoC CYAN '****************************************************************************'
 if [ -x "$(command -v port)" ]; then
-  echoC CYAN '***** Setting macports for package installation ****************************'
   PKGMGR='macports'
 elif [ -x "$(command -v brew)" ]; then
-  echoC CYAN '***** Setting homebrew for package installation ****************************'
   PKGMGR='homebrew'
 else
-  echoC RED 'Error Neither macports or homebrew are present. Exiting...'
+  echoC 'Error Neither macports or homebrew are present. Exiting...' RED
   exit 1
 fi
-echoC CYAN '****************************************************************************'
 
 ###########################################################################################
 ### OS Specific Variables #################################################################
@@ -92,6 +121,7 @@ MYTHTV_VERS="fixes/33"
 MYTHTV_PYTHON_SCRIPT="ttvdb4"
 QT_VERS=qt5
 GENERATE_APP=true
+INSTALL_DIR=""
 UPDATE_GIT=true
 SKIP_BUILD=false
 ALT_COMPILER=clang
@@ -125,6 +155,9 @@ else
   esac
 fi
 
+# force expansion of magic substrings
+set -o magicequalsubst
+
 # parse user inputs into variables
 for i in "$@"; do
   case $i in
@@ -138,8 +171,8 @@ for i in "$@"; do
       --python-version=*)
         PYTHON_VERS="${i#*=}"
       ;;
-      --update-ports=*)
-        UPDATE_PORTS="${i#*=}"
+      --update-pkgmgr=*)
+        UPDATE_PKGMGR="${i#*=}"
       ;;
       --skip-build=*)
         SKIP_BUILD="${i#*=}"
@@ -168,6 +201,9 @@ for i in "$@"; do
       --generate-app=*)
         GENERATE_APP="${i#*=}"
       ;;
+      --custom-install-dir=*)
+        INSTALL_DIR="${i#*=}"
+      ;;
       --update-git*)
         UPDATE_GIT="${i#*=}"
       ;;
@@ -188,6 +224,19 @@ for i in "$@"; do
   esac
 done
 
+# Remove any magic substrings
+if [ ! -z $REPO_PREFIX ]; then
+  eval "REPO_PREFIX=$REPO_PREFIX"
+fi
+if [ ! -z $INSTALL_DIR ]; then
+  eval "INSTALL_DIR=$INSTALL_DIR"
+fi
+
+echoC '****************************************************************************' CYAN
+echoC "***** Setting $PKGMGR for package installation ****************************" CYAN
+echoC '****************************************************************************' CYAN
+
+echoC "------------ Setting Up Build Variables ------------" GREEN
 ###########################################################################################
 ### MythTV Specific Variables #############################################################
 ###########################################################################################
@@ -217,23 +266,6 @@ case $MYTHTV_VERS in
 esac
 
 ###########################################################################################
-### Build Output Variables ################################################################
-###########################################################################################
-# Setup version specific working path
-REPO_DIR=$REPO_PREFIX/mythtv-$VERS
-
-# Setup app build outputs and lib linking
-if $GENERATE_APP; then
-  ENABLE_MAC_BUNDLE="--enable-mac-bundle"
-  INSTALL_DIR=$REPO_DIR/$VERS-osx-64bit
-  RUNPREFIX=../Resources
-else
-  ENABLE_MAC_BUNDLE=""
-  INSTALL_DIR=$PKGMGR_INST_PATH
-  RUNPREFIX=$INSTALL_DIR
-fi
-
-###########################################################################################
 ### PKGMGR Specific Variables #############################################################
 ###########################################################################################
 PYTHON_DOT_VERS="${PYTHON_VERS:0:1}.${PYTHON_VERS:1:4}"
@@ -241,30 +273,36 @@ PYTHON_CMD="python$PYTHON_DOT_VERS"
 case $PKGMGR in
   macports)
     PKGMGR_INST_PATH=$(dirname $(dirname $(which port)))
-    PKGMGR_ALT_PATH=$PKGMGR_INST_PATH/libexec
-    ANSIBLE_PB_EXE="$PKGMGR_INST_PATH/bin/ansible-playbook-$PYTHON_DOT_VERS"
-    FONT_PATH=$PKGMGR_INST_PATH/share/fonts
+    PKGMGR_ALT_PATH="$PKGMGR_INST_PATH/libexec"
+    PKGMGR_BIN="$PKGMGR_INST_PATH/bin"
+    PKGMGR_INC="$PKGMGR_INST_PATH/include"
+    PKGMGR_LIB="$PKGMGR_INST_PATH/lib"
+    ANSIBLE_PB_EXE="$PKGMGR_BIN/ansible-playbook-$PYTHON_DOT_VERS"
+    FONT_PATH="$PKGMGR_INST_PATH/share/fonts"
     # Select the correct QT version of tools / libraries
-    QT_PATH=$PKGMGR_INST_PATH/libexec/$QT_VERS
-    HDHOMERUN_LIB=$PKGMGR_INST_PATH/include/libhdhomerun
+    HDHR_INC_PATH="$PKGMGR_INC/libhdhomerun"
+    HDHR_LIB_PATH="$PKGMGR_LIB/libhdhomerun.dylib"
     INSTALL_WEBKIT=true
   ;;
   homebrew)
     PKGMGR_INST_PATH=$(brew --prefix)
-    PKGMGR_ALT_PATH=$PKGMGR_INST_PATH/opt
-    ANSIBLE_PB_EXE="$PKGMGR_INST_PATH/bin/ansible-playbook"
-    FONT_PATH=$HOME/Library/Fonts
-    QT_PATH=$PKGMGR_INST_PATH/opt/$QT_VERS
-    HDHOMERUN_LIB="$PKGMGR_INST_PATH/opt/libhdhomerun/lib/"
+    PKGMGR_ALT_PATH="$PKGMGR_INST_PATH/opt"
+    PKGMGR_BIN="$PKGMGR_INST_PATH/bin"
+    PKGMGR_INC="$PKGMGR_INST_PATH/include"
+    PKGMGR_LIB="$PKGMGR_INST_PATH/lib"
+    ANSIBLE_PB_EXE="$PKGMGR_BIN/ansible-playbook"
+    FONT_PATH="$HOME/Library/Fonts"
+    HDHR_INC_PATH="$PKGMGR_ALT_PATH/libhdhomerun/include"
+    HDHR_LIB_PATH="$PKGMGR_ALT_PATH/libhdhomerun/lib"
     INSTALL_WEBKIT=false
     # Special handling for hdhomerun on arm where the internal dylib path is setup
     # to point to an incorrectly named dylib
     case $OS_ARCH in
       arm64)
-        HDHOMERUN_ARM=$HDHOMERUN_LIB/libhdhomerun_arm64.dylib
-        if [ ! -f $HDHOMERUN_ARM ]; then
-          cp -Hnp $HDHOMERUN_LIB/libhdhomerun.dylib $HDHOMERUN_ARM
-          chmod ug+w $HDHOMERUN_ARM
+        HDHR_ARM=$HDHR_LIB_PATH/libhdhomerun_arm64.dylib
+        if [ ! -f $HDHR_ARM ]; then
+          cp -Hnp $HDHR_LIB_PATH/libhdhomerun.dylib $HDHR_ARM
+          chmod ug+w $HDHR_ARM
         fi
       ;;
     esac
@@ -273,33 +311,182 @@ esac
 if ! $BUILD_PLUGINS; then
   INSTALL_WEBKIT=false
 fi
+export PATH=$PKGMGR_LIB/$DATABASE_VERS/bin:$PATH
+BLURAY_INC_PATH="$PKGMGR_INC/libbluray"
 
 ###########################################################################################
-### Build Variable and Pathing ############################################################
+### Setup QT Specific Parameters ##########################################################
+###########################################################################################
+QT_PATH="$PKGMGR_ALT_PATH/$QT_VERS"
+QT_INC_PATH="$QT_PATH/include"
+QT_LIB_PATH="$QT_PATH/lib"
+QT_PLUGINS_PATH="$QT_PATH/plugins"
+QT_SQL_PATH="$QT_PLUGINS_PATH/sqldrivers"
+# Setup QT variables (QT_PATH should handle both qt version and PKGMGR paths)
+QMAKE_CMD=$QT_PATH/bin/qmake
+QMAKE_SPECS=$QT_PATH/mkspecs/macx-clang
+ANSIBLE_QT=mythtv.yml
+MACDEPLOYQT_CMD=$QT_PATH/bin/macdeployqt
+# if we're running qt6, disable plugins
+case $QT_VERS in
+    qt6|qt@6)
+       echoC '    Building with Qt6 - disabling plugins' BLUE
+       BUILD_PLUGINS=false
+    ;;
+esac
+
+###########################################################################################
+### Build Output Variables ################################################################
+###########################################################################################
+# Setup version specific working path
+REPO_DIR=$REPO_PREFIX/mythtv-$VERS
+echo $REPO_DIR
+# setup some paths to make the following commands easier to understand
+SRC_DIR=$REPO_DIR/mythtv/mythtv
+PLUGINS_DIR=$REPO_DIR/mythtv/mythplugins
+
+# Setup app build outputs and lib linking
+if $GENERATE_APP; then
+  ENABLE_MAC_BUNDLE="--enable-mac-bundle"
+  if [ -z $INSTALL_DIR ]; then
+    INSTALL_DIR="$REPO_DIR/$VERS-osx-64bit"
+  fi
+  RUNPREFIX=../Resources
+else
+  ENABLE_MAC_BUNDLE=""
+  if [ -z $INSTALL_DIR ]; then
+    INSTALL_DIR=$PKGMGR_INST_PATH
+  fi
+  RUNPREFIX=$INSTALL_DIR
+fi
+
+echoC "    Installing Build Outputs to $INSTALL_DIR" BLUE
+
+###########################################################################################
+### Setup Python Specific variables #######################################################
 ###########################################################################################
 # Setup Initial Python variables and dependencies for port / ansible installation
-PYTHON_PKMGR_BIN="$PKGMGR_INST_PATH/bin/$PYTHON_CMD"
+PYTHON_PKMGR_BIN="$PKGMGR_BIN/bin/$PYTHON_CMD"
 PYTHON_VENV_PATH="$HOME/.mythtv/python-virtualenv"
 PY2APP_PKGS="MySQLdb,pycurl,requests_cache,urllib3,future,lxml,oauthlib,requests,simplejson,\
   audiofile,bs4,argparse,common,configparser,datetime,discid,et,features,HTMLParser,httplib2,\
   musicbrainzngs,port,put,traceback2,markdown,dateutil,importlib_metadata"
+# Add flags to allow pip3 / python to find mysql8
+case $PKGMGR in
+  macports)
+    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PKGMGR_LIB/mysql8/pkgconfig/
+  ;;
+  homebrew)
+    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PKGMGR_LIB/pkgconfig/mysqlclient.pc
+  ;;
+esac
 
+###########################################################################################
+### Setup Compiler and Related Search Paths ###############################################
+###########################################################################################
+# First verify that the SDK is setup and command line tools license has been accepted
+SDK_SWITCH="$(xcodebuild -showsdks | awk '/^$/{p=0};p; /macOS SDKs:/{p=1}'| tail -1 | cut -f3)"
+SDK_PATH="xcodebuild -version $SDK_SWITCH Path"
+SDK_PATH="$(eval ${SDK_PATH})"
+if [ ! -n  $SDK_PATH ]; then
+  echoC "Error: macOS SDK is not set!!!" RED
+  echoC "To set the SDK, you must accept the Xcode Developer Tool License."
+  echoC "To accept the license, run the following command."
+  echoC "Per Apple licensing, sudo privledges are required."
+  echoC "     sudo xcodebuild -license" GREEN
+  exit 1
+fi
+# Set COMP_LDFLAGS and COMP_INC to null since we only need to add paths for custom compilers
 # Check if the user specifed a compiler
 case $ALT_COMPILER in
-    clang-mp*)
-      if [ $PKGMGR = "homebrew" ]; then
-        echoC RED 'Error: Homebrew compile currently only supports clang or gcc based compiles.  Exiting!'
+    *mp*)
+      # macports specific case
+      if [ ! $PKGMGR = "macports" ]; then
+        echoC 'Error: You requested a MacPorts compiler on Homebrew.  Exiting!' RED
         exit 1
       fi
-      # macports specific case
-      C_CMD=$PKGMGR_INST_PATH/bin/$ALT_COMPILER
-      CPP_CMD=$PKGMGR_INST_PATH/bin/${ALT_COMPILER/clang/clang++}
-      # check is specified compiler is installed
-      if ! [ -x "$(command -v "$C_CMD")" ]; then
-        CLANG_PORT=${ALT_COMPILER/clang-mp/clang}
-        echoC BLUE '    Macports: Installing the requested compiler'
-        sudo port -N install "$CLANG_PORT"
+
+      # macports kindly labels all of their alternative compilers as compilerName-mp-compilerVersion,
+      # for macport, we need the version string
+      COMP_NAME=${ALT_COMPILER%%-*}
+      COMP_VERS=${ALT_COMPILER##*-}
+
+      # Setup the path to the requested c/cpp compilers
+      # as well as assemble the port name in case it's not
+      # installed
+      C_CMD="$PKGMGR_BIN/$ALT_COMPILER"
+      case $COMP_NAME in
+        clang*)
+          COMP_PATH="$PKGMGR_ALT_PATH/llvm-$COMP_VERS"
+          CPP_CMD="$PKGMGR_BIN/clang++-mp-$COMP_VERS"
+          COMP_PORT="clang-$COMP_VERS"
+          COMP_LDFLAGS="-L$COMP_PATH/lib -Wl,-rpath,$COMP_PATH/lib"
+          COMP_INC="$COMP_PATH/include"
+          export PATH="$COMP_PATH/bin:$COMP_PATH/libexec:$PATH"
+        ;;
+        gcc*)
+          COMP_PATH="$PKGMGR_ALT_PATH/gcc$COMP_VERS"
+          CPP_CMD="$PKGMGR_BIN/g++-mp-$COMP_VERS"
+          COMP_PORT="gcc$COMP_VERS"
+          COMP_LDFLAGS="-L$COMP_PATH/lib/$COMP_PORT"
+          COMP_INC="$PKGMGR_INC/$COMP_PORT:$PKGMGR_INC/$COMP_PORT/c++"
+        ;;
+      esac
+      # check if specified compiler is installed
+      if [ ! -d "$COMP_PATH" ]; then
+        echoC '    Macports: Installing missing compiler: COMP_PORT' ORANGE
+        sudo port -N install "$COMP_PORT"
       fi
+
+      echoC "    Compiling with custom compiler: $ALT_COMPILER" BLUE
+    ;;
+    *hb*)
+      # homebrew specific case
+      if [ ! $PKGMGR = "homebrew" ]; then
+        echoC 'Error: You requested a Homebrew compiler on MacPorts.  Exiting!' RED
+        exit 1
+      fi
+
+      # homebrew stashes all of the compilers in their own directory in the $PKGMGR_INST_PATH
+      # to use them, we'll need the compile name and version string
+      COMP_NAME=${ALT_COMPILER%%-*}
+      COMP_VERS=${ALT_COMPILER##*-}
+
+      # Setup the path to the requested c/cpp compilers  as well as assemble the recipe name
+      # in case it's not installed
+      case $COMP_NAME in
+        clang*)
+          COMP_PATH="$(realpath "$PKGMGR_ALT_PATH/llvm@$COMP_VERS")"
+          COMP_RCP="llvm@$COMP_VERS"
+          COMP_BIN="$COMP_PATH/bin"
+          C_CMD="$COMP_BIN/clang"
+          CPP_CMD="$COMP_BIN/clang++"
+          COMP_LIB_PATH="$COMP_PATH/lib/"
+          COMP_INC_PATH="$COMP_PATH/include"
+          COMP_LDFLAGS="-L$COMP_LIB_PATH/c++ -Wl,-rpath,$COMP_LIB_PATH/c++"
+          COMP_INC="$COMP_INC_PATH:$COMP_INC_PATH/c++:$COMP_INC_PATH/c++/v1"
+        ;;
+        gcc*)
+          COMP_PATH="$(realpath "$PKGMGR_ALT_PATH/gcc@$COMP_VERS")"
+          COMP_RCP="gcc@$COMP_VERS"
+          COMP_BIN="$COMP_PATH/bin"
+          C_CMD="$COMP_BIN/gcc-$COMP_VERS"
+          CPP_CMD="$COMP_BIN/g++-$COMP_VERS"
+          COMP_LIB_PATH="$COMP_PATH/lib/gcc/$COMP_VERS"
+          COMP_INC="$COMP_PATH/include/c++/$COMP_VERS"
+        ;;
+      esac
+
+      # check is specified compiler is installed
+      if [ ! -d "$COMP_PATH" ]; then
+        echoC "    Homebrew: Installing missing compiler: $COMP_RCP" ORANGE
+        brew install "$COMP_RCP"
+      fi
+
+      # Update the path to use the compiler's executables
+      #export PATH="$COMP_PATH/bin:$PATH"
+
+      echoC "    Compiling with custom compiler: $ALT_COMPILER" ORANGE
     ;;
     gcc)
       C_CMD="gcc"
@@ -310,50 +497,49 @@ case $ALT_COMPILER in
       CPP_CMD="clang++"
     ;;
     *)
-      echoC RED 'Error: unkown compiler specified.  Exiting!'
+      echoC 'Error: unkown compiler specified.  Exiting!' RED
       exit 1
     ;;
 esac
 
-# Setup QT variables (QT_PATH should handle both qt version and PKGMGR paths)
-QMAKE_CMD=$QT_PATH/bin/qmake
-QMAKE_SPECS=$QT_PATH/mkspecs/macx-clang
-ANSIBLE_QT=mythtv.yml
-MACDEPLOYQT_CMD=$QT_PATH/bin/macdeployqt
-# if we're running qt6, disable plugins
-case $QT_VERS in
-    qt6|qt@6)
-       echoC BLUE '    Building with Qt6 - disabling plugins'
-       BUILD_PLUGINS=false
-    ;;
-esac
+# There's a conflice with FFMPEG and mythtv at least on macports.  Force mythtv's version to the front of the 
+# include search path
+INC_SRC="$SRC_DIR/external/FFmpeg"
+# Add include paths for the compiler to find the package manager locations
+for INC in "$PKGMGR_INC" "$QT_INC_PATH" "$BLURAY_INC_PATH" "$HDHR_INC_PATH" "$COMP_INC" "$SDK_INC_PATH"; do
+  if [ -n "$INC" ]; then
+    INC_SRCH="$INC_SRCH:$INC"
+  fi
+done
+export C_INCLUDE_PATH="$INC_SRCH:$C_INCLUDE_PATH"
+export CPLUS_INCLUDE_PATH="$INC_SRCH:$CPLUS_INCLUDE_PATH"
 
-# Add some flags for the compiler to find the package manager locations
-export LDFLAGS="$LDFLAGS -L$QT_PATH/lib -L$QT_PATH/plugins -L$PKGMGR_INST_PATH/lib"
-export C_INCLUDE_PATH=$QT_PATH/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$HDHOMERUN_LIB:$PKGMGR_INST_PATH/include/glslang:$PKGMGR_INST_PATH/include/vulkan:$C_INCLUDE_PATH
-export CPLUS_INCLUDE_PATH=$QT_PATH/include/:$PKGMGR_INST_PATH/include:$PKGMGR_INST_PATH/include/libbluray:$HDHOMERUN_LIB:$PKGMGR_INST_PATH/include/glslang:$PKGMGR_INST_PATH/include/vulkan:$CPLUS_INCLUDE_PATH
-export LIBRARY_PATH=$QT_PATH/lib:$QT_PATH/plugins:$PKGMGR_INST_PATH/lib:$PKGMGR_INST_PATH/share/qt/plugins/sqldrivers:$LIBRARY_PATH
+# Add library paths for the compiler to find the package manager libraries
+for LIB in "$PKGMGR_LIB" "$QT_LIB_PATH" "$QT_PLUGINS_PATH" "$QT_SQL_PATH" "$HDHR_LIB_PATH" "$COMP_LIB_PATH"; do
+  if [ -n "$LIB" ]; then
+    if [ ! -n "$LDFLAGS" ]; then
+      LDFLAGS="-L$LIB"
+    else
+      LDFLAGS="$LDFLAGS -L$LIB"
+    fi
+    if [ ! -n "$LIBRARY_PATH" ]; then
+      LIBRARY_PATH="$LIB"
+    else
+      LIBRARY_PATH="$LIBRARY_PATH:$LIB"
+    fi
+  fi
+done
+export LDFLAGS="$LDFLAGS $COMP_LDFLAGS"
+export LIBRARY_PATH=$LIBRARY_PATH
 
-# Add flags to allow pip3 / python to find mysql8
-case $PKGMGR in
-  macports)
-    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PKGMGR_INST_PATH/lib/mysql8/pkgconfig/
-  ;;
-  homebrew)
-    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PKGMGR_INST_PATH/opt/lib/pkgconfig/mysqlclient.pc
-  ;;
-esac
-export MYSQLCLIENT_LDFLAGS=$(pkg-config --libs mysqlclient)
-export MYSQLCLIENT_CFLAGS=$(pkg-config --cflags mysqlclient)
-
-# setup some paths to make the following commands easier to understand
-SRC_DIR=$REPO_DIR/mythtv/mythtv
-PLUGINS_DIR=$REPO_DIR/mythtv/mythplugins
-export PATH=$PKGMGR_INST_PATH/lib/$DATABASE_VERS/bin:$PATH
-
-# macOS internal appliction paths
-APP_DIR=$SRC_DIR/programs/mythfrontend
-APP=$APP_DIR/mythfrontend.app
+###########################################################################################
+### Setup Application Bundle Variables ####################################################
+###########################################################################################
+# These variables are used to bundle the mythfronend.app application bundle.
+# They point to internal appliction paths and are currently hardcoded to mythfrontend.
+APP_NAME=mythfrontend
+APP_DIR=$SRC_DIR/programs/$APP_NAME
+APP=$APP_DIR/$APP_NAME.app
 APP_RSRC_DIR=$APP/Contents/Resources
 APP_FMWK_DIR=$APP/Contents/Frameworks
 APP_EXE_DIR=$APP/Contents/MacOS
@@ -374,7 +560,7 @@ installLibs(){
   pathDepList=$(echo "$pathDepList"| gsed 's/(.*//')
   while read -r dep; do
     if [ "$loopCTR" = 0 ]; then
-      echoC BLUE "    installLibs: Parsing $binFile for linked libraries"
+      echoC "    installLibs: Parsing $binFile for linked libraries" BLUE
     fi
     loopCTR=$loopCTR+1
     lib=${dep##*/}
@@ -413,34 +599,27 @@ installLibs(){
           islib=true
         ;;
         *)
-          echoC RED "Unable to install $lib into Application Bundle"
+          echoC "Unable to install $lib into Application Bundle" RED
           exit 1
         ;;
       esac
       # Copy in any missing files
       if $needsCopy && $islib; then
-        echoC BLUE "      +++installLibs: Installing $lib into app"
-        case $PKGMGR in
-          macports)
-            sourcePath=$(find "$INSTALL_DIR" "$PKGMGR_INST_PATH/libexec" "$PKGMGR_INST_PATH/lib" -name "$lib" -print -quit)
-          ;;
-          homebrew)
-            sourcePath=$(find "$INSTALL_DIR" "$PKGMGR_INST_PATH/lib" "$PKGMGR_INST_PATH/opt" -name "$lib" -print -quit)
-          ;;
-        esac
+        echoC "      +++installLibs: Installing $lib into app" BLUE
+        sourcePath=$(find "$INSTALL_DIR" "$PKGMGR_LIB" "$PKGMGR_ALT_PATH" -name "$lib" -print -quit)
         destinPath="$APP_FMWK_DIR"
         cp -RHn "$sourcePath" "$destinPath/"
         # we'll need to do this recursively
         recurse=true
       fi
       # update the link in the app/executable to the new interal Framework
-      echoC BLUE "      ---installLibs: Updating $binFileName $lib link to internal lib"
+      echoC "      ---installLibs: Updating $binFileName $lib link to internal lib" BLUE
       # it should now be in the App Bundle Frameworks, we just need to update the link
       NAME_TOOL_CMD="install_name_tool -change $dep $newLink $binFile"
       eval "${NAME_TOOL_CMD}"
       # If a new lib was copied in, recursively check it
       if  $needsCopy && $recurse ; then
-        echoC BLUE "      ^^^installLibs: Recursively install $lib"
+        echoC "      ^^^installLibs: Recursively install $lib" BLUE
         installLibs "$destinPath/$lib"
       fi
     fi
@@ -450,15 +629,16 @@ installLibs(){
 # rebaseLibs finds all @rpath dylibs for the input binary/dylib
 # changing the rpath to a direct path on the system
 rebaseLibs(){
-    binFile=$1
-    rpathDepList=$(/usr/bin/otool -L "$binFile"|grep rpath)
-    rpathDepList=$(echo "$rpathDepList"| gsed 's/(.*//')
-    while read -r dep; do
-        lib=${dep##*/}
-        if [ -n "$lib" ]; then
-            install_name_tool -change "$dep" "$RUNPREFIX/lib/$lib" "$binFile"
-        fi
-    done <<< "$rpathDepList"
+  binFile=$1
+  rpathDepList=$(/usr/bin/otool -L "$binFile"|grep rpath)
+  rpathDepList=$(echo "$rpathDepList"| gsed 's/(.*//')
+  while read -r dep; do
+    lib=${dep##*/}
+    if [ -n "$lib" ]; then
+      NAME_TOOL_CMD="install_name_tool -change $dep $RUNPREFIX/lib/$lib $binFile"
+      eval "${NAME_TOOL_CMD}"
+    fi
+  done <<< "$rpathDepList"
 }
 
 # On homebrew, some dylibs get incorrectly internally linked, this utiltiy helps
@@ -473,20 +653,19 @@ correctHomebrewLibs(){
   case $ARCH in
     arm64)
       srchSTR="_arm64"
-      srchPATH="$APP_FMWK_DIRm$INSTALL_DIR $PKGMGR_INST_PATH/lib $PKGMGR_INST_PATH/libexec"
     ;;
     # cover all intel arch cases as the fall out condition
     *)
       srchSTR="_x64"
-      srchPATH="$APP_FMWK_DIR $INSTALL_DIR $PKGMGR_INST_PATH/lib $PKGMGR_INST_PATH/opt"
     ;;
   esac
+  srchPATH="$APP_FMWK_DIR $INSTALL_DIR $PKGMGR_LIB $PKGMGR_ALT_PATH"
   # assemble a list of poorly linked dylib
   dylibList=$(/usr/bin/otool -L "$binFile"|grep -e $srchSTR)
   dylibList=$(echo "$dylibList"| gsed 's/(.*//')
   # loop over the list
   while read -r dep; do
-    echoC BLUE "    correctHomebrewLibs: $(basename "$binFile") - Correcting internal link for $dep"
+    echoC "    correctHomebrewLibs: $(basename "$binFile") - Correcting internal link for $dep" BLUE
     badlib=${dep##*/}
     libPATH=$(dirname $dep)
     # Parse the lib if it isn't null
@@ -497,7 +676,7 @@ correctHomebrewLibs(){
       # check if its already in the framework, if not we need to add and symlink it
       FMWK_LIB=$(find "$APP_FMWK_DIR" -name "$lib" -print -quit)
       if [ ! -f "$FMWK_LIB" ]; then
-        echoC BLUE "      +++correctHomebrewLibs: Installing $lib into app"
+        echoC "      +++correctHomebrewLibs: Installing $lib into app" BLUE
         cp -RHn "$correctLIB" "$APP_FMWK_DIR/"
         # create a symlink to the improper filename (some links are not updateable)
         ln -s $lib $(basename dep)
@@ -505,7 +684,7 @@ correctHomebrewLibs(){
       fi
       # update the link in the app/executable to the new interal Framework
       newLink="@executable_path/../Frameworks/$lib"
-      echoC BLUE "      ---correctHomebrewLibs: Updating $binFileName $badlib link to internal lib"
+      echoC "      ---correctHomebrewLibs: Updating $binFileName $badlib link to internal lib" BLUE
       # the lib should now be in the App Bundle Frameworks, we just need to update the link
       NAME_TOOL_CMD="install_name_tool -change $dep $newLink $binFile"
       eval "${NAME_TOOL_CMD}"
@@ -520,22 +699,22 @@ buildQT5MYSQL(){
   QTVERS=$($QMAKE_CMD -query QT_VERSION)
   QT_SOURCES="$(pwd)/qt5_src/qt@5-$QTVERS"
   QT_INSTALL_PREFIX="$($QMAKE_CMD -query QT_INSTALL_PREFIX)"
-  QT_SQLDRIVERS="$QT_SOURCES/qtbase/src/plugins/sqldrivers"
+  QT_SQLDRIVERS_SRC="$QT_SOURCES/qtbase/src/plugins/sqldrivers"
   MYSQL_PREFIX=$(brew --prefix mysql)
   MYSQL_INCDIR="$MYSQL_PREFIX/include/mysql"
   MYSQL_LIBDIR="$MYSQL_PREFIX/lib"
 
-  echoC BLUE "    Build QT SQL Plugin"
-  cd "$QT_SQLDRIVERS"
+  echoC "    Build QT SQL Plugin" BLUE
+  cd "$QT_SQLDRIVERS_SRC"
   $($QMAKE_CMD sqldrivers.pro -- MYSQL_INCDIR=$MYSQL_INCDIR MYSQL_LIBDIR=$MYSQL_LIBDIR)
 
-  echoC BLUE "    Build QT MySQL Plugin"
-  cd "$QT_SQLDRIVERS/mysql"
+  echoC "    Build QT MySQL Plugin" BLUE
+  cd "$QT_SQLDRIVERS_SRC/mysql"
   $($QMAKE_CMD mysql.pro)
   make
 
-  echoC BLUE "    Copying plugins intto QT plugins directory"
-  cp -vr "$QT_SQLDRIVERS/plugins/sqldrivers/libqsqlmysql.dylib" "$QT_PATH/plugins/sqldrivers/"
+  echoC "    Copying plugins intto QT plugins directory" BLUE
+  cp -vr "$QT_SQLDRIVERS_SRC/plugins/sqldrivers/libqsqlmysql.dylib" "$QT_PATH/plugins/sqldrivers/"
 }
 
 # Function used to convert version strings into integers for comparison
@@ -547,7 +726,7 @@ version (){
 ### Main Function #########################################################################
 ###########################################################################################
 
-echoC GREEN "------------ Setting Up Output Directory Structure ------------"
+echoC "------------ Setting Up Output Directory Structure ------------" GREEN
 # setup the working directory structure
 mkdir -p "$REPO_DIR"
 cd "$REPO_DIR" || exit 1
@@ -557,8 +736,8 @@ mkdir -p "$INSTALL_DIR"
 # install and configure ansible and gsed
 # ansible to install the missing required ports,
 # gsed for the plist update later
-echoC GREEN "------------ Setting Up Initial Ports for Ansible ------------"
-if $UPDATE_PORTS; then
+echoC "------------ Setting Up Initial Ports for Ansible ------------" GREEN
+if $UPDATE_PKGMGR; then
   # tell macport to retrieve the latest repo
   sudo port selfupdate
   # upgrade all outdated ports
@@ -566,47 +745,47 @@ if $UPDATE_PORTS; then
 fi
 
 if [ ! $SKIP_ANSIBLE ]; then
-  # check if ANSIBLE_PB_EXE is installed, if not install it
+  # check if the ANSIBLE_PB_EXE is installed, if not install it
   if ! [ -x "$(command -v "$ANSIBLE_PB_EXE")" ]; then
-    echoC BLUE "    Installing python and ansilble"
+    echoC "    Installing python and ansilble" BLUE
     case $PKGMGR in
       macports)
-        echoC "    Macports: Insatlling Ansible"
+        echoC "    Macports: Insatlling Ansible" ORANGE
         sudo port -N install "py$PYTHON_VERS-ansible"
         sudo port select --set python "python$PYTHON_VERS"
         sudo port select --set python3 "python$PYTHON_VERS"
       ;;
       homebrew)
-        echoC "    Homebrew: Insatlling Ansible"
+        echoC "    Homebrew: Insatlling Ansible" ORANGE
         brew install python@$PYTHON_DOT_VERS
         brew install ansible
     esac
   else
-    echoC BLUE "    Ansible is correctly installed"
+    echoC "    Ansible is correctly installed" BLUE
   fi
 fi
 
 if $SKIP_BUILD; then
-  echoC RED "    Skipping package installation via ansible (repackaging only)"
+  echoC "    Skipping package installation via ansible (repackaging only)" ORANGE
 else
   if $SKIP_ANSIBLE; then
-      echoC RED "    Skipping ansible installation"
+      echoC "    Skipping ansible installation" ORANGE
   else
-    echoC GREEN "------------ Running Ansible ------------"
+    echoC "------------ Running Ansible ------------" GREEN
     # get mythtv's ansible playbooks, and install required ports
     # if the repo exists, update (assume the flag is set)
     if [ -d "$REPO_DIR/ansible" ]; then
-      echoC BLUE "    Updating mythtv-anisble git repo"
+      echoC "    Updating mythtv-anisble git repo" BLUE
       cd "$REPO_DIR/ansible" || exit 1
       if $UPDATE_GIT; then
-        echoC BLUE "    Updating ansible git repo"
+        echoC "    Updating ansible git repo" BLUE
         git pull
       else
-        echoC RED "    Skipping ansible git repo update"
+        echoC "    Skipping ansible git repo update" ORANGE
       fi
     # pull down a fresh repo if none exist
     else
-      echoC BLUE "    Cloning mythtv-anisble git repo"
+      echoC "    Cloning mythtv-anisble git repo" BLUE
       git clone https://github.com/MythTV/ansible.git
     fi
     cd "$REPO_DIR/ansible" || exit 1
@@ -632,11 +811,11 @@ else
       case $QT_VERS in
         qt5)
           if [ ! -f $QT_PATH/plugins/sqldrivers/libqsqlmysql.dylib ]; then
-            echoC BLUE "    Homebrew: Installing QTMYSQL plugin for $QT_VERS"
+            echoC "    Homebrew: Installing QTMYSQL plugin for $QT_VERS" BLUE
             brew unpack qt5 --destdir qt5_src
             buildQT5MYSQL
           else
-            echoC BLUE "    Homebrew: QTMYSQL plugin is installed for $QT_VERS"
+            echoC "    Homebrew: QTMYSQL plugin is installed for $QT_VERS" BLUE
           fi
         ;;
       esac
@@ -644,26 +823,32 @@ else
   esac
 fi
 
-echoC GREEN "------------ Source the Python Virtual Environment ------------"
+# This needs to be done after ansible installs pkg-config and the requested version of mysql
+export MYSQLCLIENT_LDFLAGS=$(pkg-config --libs mysqlclient)
+export MYSQLCLIENT_CFLAGS=$(pkg-config --cflags mysqlclient)
+
+echoC "------------ Source the Python Virtual Environment ------------" GREEN
+# since we're using a custom python virtual environment, we need to source it to get the
+# build process to use it.
 source "$PYTHON_VENV_PATH/bin/activate"
 PYTHON_VENV_BIN=$PYTHON_VENV_PATH/bin/$PYTHON_CMD
 PY2APPLET_BIN=$PYTHON_VENV_PATH/bin/py2applet
 
-echoC GREEN "------------ Cloning / Updating Mythtv Git Repository ------------"
+echoC "------------ Cloning / Updating Mythtv Git Repository ------------" GREEN
 # setup mythtv source from git
 cd "$REPO_DIR" || exit 1
 # if the repo exists, update it (assuming the flag is set)
 if [ -d "$REPO_DIR/mythtv" ]; then
   cd "$REPO_DIR/mythtv" || exit 1
   if $UPDATE_GIT && ! $SKIP_BUILD ; then
-    echoC BLUE "    Updating mythtv/mythplugins git repo"
+    echoC "    Updating mythtv/mythplugins git repo" BLUE
     git pull
   else
-    echoC RED "    Skipping mythtv/mythplugins git repo update"
+    echoC "    Skipping mythtv/mythplugins git repo update" ORANGE
   fi
 # else pull down a fresh copy of the repo from github
 else
-  echoC BLUE "    Cloning mythtv git repo"
+  echoC "    Cloning mythtv git repo" BLUE
   git clone -b "$MYTHTV_VERS" https://github.com/MythTV/mythtv.git
 fi
 # apply specified patches
@@ -671,14 +856,14 @@ if [ "$APPLY_PATCHES" ] && [ -n "$MYTHTV_PATCH_DIR" ]; then
   cd "$REPO_DIR/mythtv" || exit 1
   for file in "$MYTHTV_PATCH_DIR"/*; do
     if [ -f "$file" ]; then
-      echoC BLUE "    Applying Mythtv patch: $file"
+      echoC "    Applying Mythtv patch: $file" BLUE
       patch -p1 < "$file"
     fi
   done
 fi
 
-echoC GREEN "------------ Configuring Mythtv ------------"
-# configure mythfrontend
+echoC "------------ Configuring Mythtv ------------" GREEN
+# configure mythtv
 cd "$SRC_DIR" || exit 1
 GIT_VERS=$(git log -1 --format="%h")
 GIT_BRANCH=$(git symbolic-ref --short -q HEAD)
@@ -686,12 +871,13 @@ GIT_TAG=$(git describe --tags --exact-match 2>/dev/null)
 GIT_BRANCH_OR_TAG="${GIT_BRANCH:-${GIT_TAG}}"
 
 if [ -d "$APP" ]; then
-  echoC BLUE "    Cleaning up past Mythfrontend application"
-  rm -Rf "$APP"
+  echoC "    Cleaning up past Builds" BLUE
+  find $SRC_DIR -name "*.app"|xargs rm -Rf
 fi
 if $SKIP_BUILD; then
-  echoC RED "    Skipping mythtv configure and make"
+  echoC "    Skipping MythTV configure and make" ORANGE
 else
+  echoC "    Running configure" BLUE
   CONFIG_CMD="./configure --prefix=$INSTALL_DIR    \
                          --runprefix=$RUNPREFIX    \
                          $ENABLE_MAC_BUNDLE        \
@@ -713,25 +899,26 @@ else
                          --enable-bdjava           \
                          --python=$PYTHON_VENV_BIN"
   eval "${CONFIG_CMD}"
-  echoC GREEN "------------ Compiling Mythtv ------------"
-  #compile mythfrontend
+  echoC "------------ Compiling Mythtv ------------" GREEN
+  #compile MythTV
+  echoC "    Running make" BLUE
   make || { echo 'Compiling Mythtv failed' ; exit 1; }
 fi
 
-echoC GRREN"------------ Installing Mythtv ------------"
+echoC "------------ Installing Mythtv ------------" GREEN
 # This is necessary for both standalone and application builds.
 # The latter because macdeployqt is told to search for the
 # installed binaries at the install prefix
 make install
 
 if $BUILD_PLUGINS; then
-  echoC GREEN "------------ Configuring Mythplugins ------------"
+  echoC "------------ Configuring Mythplugins ------------" GREEN
   # apply specified patches if flag is set
   if [ "$APPLY_PATCHES" ] && [ -n "$PLUGINS_PATCH_DIR" ]; then
     cd "$PLUGINS_DIR" || exit 1
     for file in "$PLUGINS_PATCH_DIR"/*; do
       if [ -f "$file" ]; then
-        echoC BLUE "    Applying Plugins patch: $file"
+        echoC "    Applying Plugins patch: $file" BLUE
         patch -p1 < "$file"
       fi
     done
@@ -740,9 +927,10 @@ if $BUILD_PLUGINS; then
   # configure plugins
   cd "$PLUGINS_DIR" || exit 1
   if $SKIP_BUILD; then
-    echoC RED "    Skipping mythplugins configure and make"
+    echoC "    Skipping Plugins configure and make" ORANGE
 
   else
+    echoC "    Running configure" BLUE
     CONFIG_CMD="./configure --prefix=$INSTALL_DIR     \
                             --runprefix=$RUNPREFIX    \
                             --qmake=$QMAKE_CMD        \
@@ -761,28 +949,32 @@ if $BUILD_PLUGINS; then
                             --python=$PYTHON_VENV_BIN \
                             $EXTRA_MYTHPLUGIN_FLAGS"
     eval "${CONFIG_CMD}"
-    echoC GREEN "------------ Compiling Mythplugins ------------"
+    echoC "------------ Compiling Mythplugins ------------" GREEN
     #compile plugins
+    echoC "    Running qmake/make" BLUE
     $QMAKE_CMD mythplugins.pro
-    #compile mythfrontend
+    #compile mythplugins
     make || { echo 'Compiling Plugins failed' ; exit 1; }
   fi
-  echoC GREEN "------------ Installing Mythplugins ------------"
+  echoC "------------ Installing Mythplugins ------------" GREEN
   make install
 else
-  echoC RED "------------ Skipping Mythplugins Compile ------------"
+  echoC "------------ Skipping Mythplugins Compile ------------" ORANGE
 fi
 
-echoC GREEN "------------ Performing Post Compile Cleanup ------------"
+echoC "------------ Performing Post Compile Cleanup ------------" GREEN
 
 if [ -z $ENABLE_MAC_BUNDLE ]; then
-  echoC RED "    Mac Bundle disabled - Skipping app bundling commands"
-  echoC GREEN "    Rebasing @rpath to $RUNPREFIX"
-  for mythExec in "$INSTALL_DIR/bin"/myth*; do
-        echoC BLUE "     rebasing $mythExec"
-        rebaseLibs "$mythExec"
+  echoC "    Mac Bundle disabled - Skipping app bundling commands" ORANGE
+  echoC "    Rebasing @rpath to $RUNPREFIX" GREEN
+  for mythExec in "$INSTALL_DIR/bin/"myth*; do
+        if [ -x "$mythExec" ] && file "$mythExec" | grep -q "Mach-O"; then
+          echoC "     rebasing $mythExec" BLUE
+          rebaseLibs "$mythExec"
+          install_name_tool -add_rpath "$QT_LIB_PATH" "$mythExec"
+        fi
   done
-  echoC GREEN "Done"
+  echoC "Done" GREEN
   exit 0
 fi
 
@@ -792,27 +984,27 @@ fi
 #################################################################################
 #################################################################################
 
-# on homebrew, point mythfrontend to the correct
+# Fix incorrectly linked dylibs on homebrew
 case $PKGMGR in
   homebrew)
     if [ ! -d $APP_FMWK_DIR ]; then
       mkdir -p "$APP_FMWK_DIR"
     fi
-    correctHomebrewLibs "$OS_ARCH" "$APP_EXE_DIR/mythfrontend"
+    correctHomebrewLibs "$OS_ARCH" "$APP_EXE_DIR/$APP_NAME"
   ;;
 esac
 
-echoC GREEN "------------ Copying in Mythfrontend.app icon  ------------"
+echoC "------------ Copying in Application Bundle icon  ------------" GREEN
 cd "$APP_DIR" || exit 1
 # copy in the icon
-cp -RHnp "$APP_DIR/mythfrontend.icns" "$APP_RSRC_DIR/application.icns"
+cp -RHnp "$APP_DIR/$APP_NAME.icns" "$APP_RSRC_DIR/application.icns"
 
-echoC GREEN "------------ Copying mythtv share directory into executable  ------------"
+echoC "------------ Copying mythtv share directory into executable  ------------" GREEN
 # copy in i18n, fonts, themes, plugin resources, etc from the install directory (share)
 mkdir -p "$APP_RSRC_DIR/share/mythtv"
 cp -RHn "$INSTALL_DIR/share/mythtv"/* "$APP_RSRC_DIR"/share/mythtv/
 
-echoC GREEN "------------ Updating application plist  ------------"
+echoC "------------ Updating application plist  ------------" GREEN
 # Update the plist
 /usr/libexec/PlistBuddy -c "Add ATSApplicationFontsPath string 'share/mythtv/fonts'" "$APP_INFO_FILE"
 /usr/libexec/PlistBuddy -c "Add CFBundleGetInfoString string ''" "$APP_INFO_FILE"
@@ -825,15 +1017,15 @@ echoC GREEN "------------ Updating application plist  ------------"
 /usr/libexec/PlistBuddy -c "Add NSAppleScriptEnabled string NO" "$APP_INFO_FILE"
 /usr/libexec/PlistBuddy -c "Add NSHumanReadableCopyright string 'MythTV Team'" "$APP_INFO_FILE"
 
-echoC GREEN "------------ Copying libmyth* dylibs to Application Bundle ------------"
+echoC "------------ Copying libmyth* dylibs to Application Bundle ------------" GREEN
 mkdir -p "$APP_FMWK_DIR/PlugIns"
 cp -RHn "$INSTALL_DIR/lib"/*.dylib "$APP_FMWK_DIR"
 if $BUILD_PLUGINS; then
-  echoC GREEN "------------ Copying Mythplugins dylibs into app ------------"
+  echoC "------------ Copying Mythplugins dylibs into app ------------" GREEN
   # copy the mythPluins dylibs into the application
   for plugFilePath in "$INSTALL_DIR/lib/mythtv/plugins"/*.dylib; do
     libFileName=$(basename "$plugFilePath")
-    echoC BLUE "    Installing $libFileName into app"
+    echoC "    Installing $libFileName into app" BLUE
     destFile="$APP_PLUGINS_DIR/$libFileName"
     cp -RHn "$plugFilePath" "$destFile"
     case $PKGMGR in
@@ -844,24 +1036,24 @@ if $BUILD_PLUGINS; then
   done
 fi
 
-echoC GREEN "------------ Deploying QT to Mythfrontend Executable ------------"
+echoC "------------ Deploying QT to Application Bundle ------------" GREEN
 # Do this last so that qt gets copied in correctly
 cd "$APP_DIR" || exit 1
 MACDEPLOYQT_FULL_CMD="$MACDEPLOYQT_CMD  $APP \
                                         -verbose=1                            \
                                         -libpath=$INSTALL_DIR/lib/            \
-                                        -libpath=$PKGMGR_INST_PATH/lib/       \
+                                        -libpath=$PKGMGR_LIB/                 \
                                         -libpath=$QT_PATH/lib/                \
                                         -libpath=$QT_PATH/plugins/            \
                                         -libpath=$QT_PATH/plugins/sqldrivers/ \
                                         -qmlimport=$QT_PATH/qml/"
 eval "${MACDEPLOYQT_FULL_CMD}"
 
-echoC GREEN "------------ Update Mythfrontend.app to use internal dylibs ------------"
+echoC "------------ Update Application Bundle to use internal dylibs ------------" GREEN
 # clean up dylib links for mythtv based libs in Frameworks
 # macdeployqt leaves @rpath based links for mythtv libs and we need to replace these with
 # @executable_path links
-# We'lll want to do this with the dylibs first, then move onto mythfrontend to reduce recursion
+# We'lll want to do this with the dylibs first, then move onto the executble to reduce recursion
 for dylib in "$APP_FMWK_DIR"/*.dylib; do
     installLibs "$dylib"
 done
@@ -871,13 +1063,13 @@ if $BUILD_PLUGINS; then
     installLibs "$plugDylib"
   done
 fi
-# find all mythtv dylibs linked via @rpath in mythfrontend updating the internal link to point to
-# the application
+# find all mythtv dylibs linked via @rpath in the application bundle updating the internal link
+# to point to the application
 cd "$APP_EXE_DIR" || exit 1
-installLibs "$APP_EXE_DIR/mythfrontend"
+installLibs "$APP_EXE_DIR/$APP_NAME"
 
-echoC GREEN "------------ Installing additional mythtv utility executables into Mythfrontend.app  ------------"
-# loop over the compiler apps copying in the desired ones for mythfrontend
+echoC "------------ Installing additional mythtv utility executables into the Application Bundle  ------------" GREEN
+# loop over the utility apps copying in the desired ones into the application bundle
 for helperBinPath in "$INSTALL_DIR/bin"/*; do
   case $helperBinPath in
     *"mythutil"*|*"mythpreviewgen"*)
@@ -885,7 +1077,7 @@ for helperBinPath in "$INSTALL_DIR/bin"/*; do
       helperBinFile=$(basename "$helperBinPath")
       helperBinFile=${helperBinFile%.app}
       helperBinPath=$helperBinPath/Contents/MacOS/$helperBinFile
-      echoC BLUE "    Installing $helperBinFile into app"
+      echoC "    Installing $helperBinFile into app" BLUE
       # copy into the app
       cp -RHn "$helperBinPath" "$APP_EXE_DIR"/
       # update the dylib links to internal
@@ -894,7 +1086,7 @@ for helperBinPath in "$INSTALL_DIR/bin"/*; do
   esac
 done
 
-echoC GREEN "------------ Copying mythtv lib/python* and lib/perl directory into application  ------------"
+echoC "------------ Copying mythtv lib/python* and lib/perl directory into application  ------------" GREEN
 mkdir -p "$APP_RSRC_DIR/lib"
 cp -RHn "$INSTALL_DIR/lib"/python* "$APP_RSRC_DIR"/lib/
 cp -RHn "$INSTALL_DIR/lib"/perl* "$APP_RSRC_DIR"/lib/
@@ -904,7 +1096,7 @@ if [ ! -f "$APP_RSRC_DIR/lib/python" ]; then
   cd "$APP_DIR" || exit 1
 fi
 
-echoC GREEN "------------ Deploying python packages into application  ------------"
+echoC "------------ Deploying python packages into application  ------------" GREEN
 # make an application from  to package up python and the correct support libraries
 PYTHON_APP=$APP_DIR/PYTHON_APP
 mkdir -p "$PYTHON_APP"
@@ -914,32 +1106,32 @@ if [ -f setup.py ]; then
   rm setup.py
 fi
 
-echoC BLUE "    Creating a temporary application from $MYTHTV_PYTHON_SCRIPT"
+echoC "    Creating a temporary application from $MYTHTV_PYTHON_SCRIPT" BLUE
 # in order to get python embedded in the application we're going to make a temporyary application
 # from one of the python scripts which will copy in all the required libraries for running
 # and will make a standalone python executable not tied to the system ttvdb4 seems to be more
 # particular than others (tmdb3)...
 $PY2APPLET_BIN -i "$PY2APP_PKGS" -p "$PY2APP_PKGS" --use-pythonpath --no-report-missing-conditional-import --make-setup "$INSTALL_DIR/share/mythtv/metadata/Television/$MYTHTV_PYTHON_SCRIPT.py"
 $PYTHON_VENV_BIN setup.py -q py2app 2>&1 > /dev/null
-# now we need to copy over the python app's pieces into the mythfrontend.app to get it working
-echoC BLUE "    Copying in Python Framework libraries"
+# now we need to copy over the python app's pieces into the application bundle to get it working
+echoC "    Copying in Python Framework libraries" BLUE
 mv -n "$PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Frameworks"/* "$APP_FMWK_DIR"
-echoC BLUE "    Copying in Python Binary"
+echoC "    Copying in Python Binary" BLUE
 mv "$PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/MacOS/python" "$APP_EXE_DIR"
 if [ -f "$APP_EXE_DIR/python3" ]; then
   ln -s "$APP_EXE_DIR/pyton" "$APP_EXE_DIR/python3"
 fi
-echoC BLUE "    Copying in Python Resources"
+echoC "    Copying in Python Resources" BLUE
 mv -n "$PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Resources"/* "$APP_RSRC_DIR"
 # clean up temp application
 cd "$APP_DIR" || exit 1
 rm -Rf "$PYTHON_APP"
-echoC BLUE "    Copying in Site Packages from Virtual Enironment"
+echoC "    Copying in Site Packages from Virtual Enironment" BLUE
 cp -RHn "$PYTHON_VENV_PATH/lib/$PYTHON_CMD/site-packages"/* "$APP_RSRC_DIR/lib/$PYTHON_CMD/site-packages"
 # do not need/want py2app in the application
 rm -Rf "$APP_RSRC_DIR/lib/$PYTHON_CMD/site-packages/py2app"
 
-echoC GREEN "------------ Replace application perl/python paths to relative paths inside the application   ------------"
+echoC "------------ Replace application perl/python paths to relative paths inside the application   ------------" GREEN
 # mythtv "fixes" the shebang in all python scripts to an absolute path on the compiling system.  We need to
 # change this to a relative path pointint internal to the application.
 # Note - when MacOS apps run, their starting path is the path as the directory the .app is stored in
@@ -955,7 +1147,7 @@ grep -rlI "$PYTHON_VENV_BIN" "$APP_RSRC_DIR" | xargs gsed -i "$sedSTR"
 sedSTR=s#$PYTHON_PKMGR_BIN#python#g
 grep -rlI "$PYTHON_PKMGR_BIN" "$APP_RSRC_DIR" | xargs gsed -i "$sedSTR"
 
-echoC GREEN "------------ Copying in dejavu and liberation fonts into Mythfrontend.app   ------------"
+echoC "------------ Copying in dejavu and liberation fonts into the Application Bundle   ------------" GREEN
 # copy in missing fonts
 case $PKGMGR in
   macports)
@@ -968,7 +1160,7 @@ case $PKGMGR in
   ;;
 esac
 
-echoC GREEN "------------ Add symbolic link structure for copied in files  ------------"
+echoC "------------ Add symbolic link structure for copied in files  ------------" GREEN
 # make some symbolic links to match past working copies
 if $BUILD_PLUGINS; then
   mkdir -p "$APP_RSRC_DIR/lib/mythtv"
@@ -981,19 +1173,18 @@ fi
 mv "$APP"/Contents/PlugIns/* "$APP_PLUGINS_DIR"/
 gsed -i "2c\Plugins = Frameworks/PlugIns" "$APP_RSRC_DIR/qt.conf"
 
-echoC GREEN "------------ Searching Applicaition for missing libraries ------------"
+echoC "------------ Searching Applicaition for missing libraries ------------" GREEN
 # Do one last sweep for missing or rpath linked dylibs in the Framework Directory
 for dylib in "$APP_FMWK_DIR"/*.dylib; do
-  pathDepList=$(/usr/bin/otool -L "$dylib"|grep -e rpath -e $"PKGMGR_INST_PATH/lib" -e "$INSTALL_DIR")
+  pathDepList=$(/usr/bin/otool -L "$dylib"|grep -e rpath -e $"PKGMGR_LIB" -e "$INSTALL_DIR")
   if [ -n "$pathDepList" ] ; then
     installLibs "$dylib"
   fi
 done
 
-echoC GREEN "------------ Generating mythfrontend startup script ------------"
-# since we now have python installed internally, we need to make sure that the mythfrontend
-# executable launched from the curret directory so that the python relative paths point int
-# to the internal python
+echoC "------------ Generating Application Bundle startup script ------------" GREEN
+# since we now have python installed internally, we need to make sure that the
+# executable launched from the curret directory points to the internal python
 # We need to do this step after macdeployqt since the startup script breaks macdeployqt
 cd "$APP_EXE_DIR" || exit 1
 echo "#!/bin/sh
@@ -1010,17 +1201,17 @@ export PYTHONPATH=\$APP_DIR/Contents/Resources/lib/$PYTHON_CMD:\$APP_DIR/Content
 PATH=\$(pwd):\$PATH
 
 cd \$BASEDIR
-./mythfrontend \$@" > mythfrontend.sh
+./$APP_NAME \$@" > $APP_NAME.sh
 
-chmod +x mythfrontend.sh
+chmod +x $APP_NAME.sh
 
 # Update the plist to use the startup script
-/usr/libexec/PlistBuddy -c "Set CFBundleExecutable mythfrontend.sh" "$APP_INFO_FILE"
+/usr/libexec/PlistBuddy -c "Set CFBundleExecutable $APP_NAME.sh" "$APP_INFO_FILE"
 
-echoC GREEN "------------ Build Complete ------------"
-echo "     Application is located:"
-echoC GREEN "     $APP"
-echo "If you intend to distribute the application, then next steps are to codesign
+echoC "------------ Build Complete ------------" GREEN
+echoC "     Application is located:"
+echoC "     $APP" GREEN
+echoC "If you intend to distribute the application, then next steps are to codesign
 and notarize the appliction using the codesignAndPackage.zsh script with the
 following command:"
-echoC GREEN "    ./codesignAndPackage.zsh $APP"
+echoC "    ./codesignAndPackage.zsh $APP" GREEN
