@@ -30,9 +30,11 @@ Build-Depends:
  libcdparanoia-dev | libcdparanoia0-dev,
  libcec-dev,
  libclass-dbi-perl,
+ libcoverart-dev,
  libdate-manip-perl,
  libdatetime-format-iso8601-perl,
  libdbd-mysql-perl,
+ libdiscid-dev,
  libdrm-dev,
  libdvdnav-dev,
  libdvdread-dev | libdvdread3-dev,
@@ -54,6 +56,7 @@ Build-Depends:
  liblzo2-dev,
  libmad0-dev,
  libmp3lame-dev | liblame-dev,
+ libmusicbrainz5-dev,
  libnet-upnp-perl,
  libpulse-dev,
  libqt5opengl5-dev,
@@ -545,6 +548,9 @@ Description: Emulator & PC Game frontend module for MythTV
 Package: mythmusic
 Architecture: amd64 arm64
 Depends:
+ libcoverartcc1v5,
+ libdiscid0,
+ libmusicbrainz5cc2v5,
  mythtv-frontend (>= ${binary:Version}),
  ${misc:Depends},
  ${shlibs:Depends},
