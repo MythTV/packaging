@@ -52,7 +52,7 @@ Build-Depends:
  libimlib2-dev,
  libio-socket-inet6-perl,
  libjson-perl,
- liblircclient-dev,
+ liblircclient-dev | liblirc-dev,
  liblzo2-dev,
  libmad0-dev,
  libmp3lame-dev | liblame-dev,
