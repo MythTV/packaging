@@ -1,1 +1,2 @@
-extend-diff-ignore=.github|.dockerignore|.clang-tidy|.clazy
+extend-diff-ignore=.github|.dockerignore|.clang-tidy|.clazy|.cmake-format.py|.cppcheck*
+ 
