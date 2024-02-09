@@ -96,6 +96,7 @@ export HOME=$(CURDIR)/debian/home_$(DEB_BUILD_ARCH)
 	dh $@ --parallel --with python3
 
 #Rather than have a configure/build/install phase, combine them all so we can do each part in order
+override_dh_auto_configure:
 override_dh_auto_install:
 	# create the DESCRIBE file that Myth's version.sh will use to get the version
 	DEB_VERSION="$(shell dpkg-parsechangelog -S version)" ;\
