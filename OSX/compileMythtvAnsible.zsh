@@ -9,7 +9,7 @@ Standard options:
   --help                                 Print this help message
   --build-plugins=BUILD_PLUGINS          Build Mythtv Plugins (false)
   --python-version=PYTHON_VERS           Desired Python 3 Version (${2})
-                                           Example: python-11
+                                           Example: ${2}
   --version=MYTHTV_VERS                  Requested mythtv git repo (${1})
                                            Example: master for the latest master
                                                     fixes/33 for version 33
@@ -150,7 +150,7 @@ else
       DATABASE_VERS=mysql8
     ;;
     homebrew)
-      DATABASE_VERS=mysql
+      DATABASE_VERS=mysql@8.0
     ;;
   esac
 fi
@@ -281,7 +281,8 @@ case $PKGMGR in
     FONT_PATH="$PKGMGR_INST_PATH/share/fonts"
     # Select the correct QT version of tools / libraries
     HDHR_INC_PATH="$PKGMGR_INC/libhdhomerun"
-    HDHR_LIB_PATH="$PKGMGR_LIB/libhdhomerun.dylib"
+    #set as null since its on the default macports location 
+    HDHR_LIB_PATH=""
     INSTALL_WEBKIT=true
   ;;
   homebrew)
@@ -366,7 +367,7 @@ echoC "    Installing Build Outputs to $INSTALL_DIR" BLUE
 ### Setup Python Specific variables #######################################################
 ###########################################################################################
 # Setup Initial Python variables and dependencies for port / ansible installation
-PYTHON_PKMGR_BIN="$PKGMGR_BIN/bin/$PYTHON_CMD"
+PYTHON_PKMGR_BIN="$PKGMGR_BIN/$PYTHON_CMD"
 PYTHON_VENV_PATH="$HOME/.mythtv/python-virtualenv"
 PY2APP_PKGS="MySQLdb,pycurl,requests_cache,urllib3,future,lxml,oauthlib,requests,simplejson,\
   audiofile,bs4,argparse,common,configparser,datetime,discid,et,features,HTMLParser,httplib2,\
@@ -374,10 +375,10 @@ PY2APP_PKGS="MySQLdb,pycurl,requests_cache,urllib3,future,lxml,oauthlib,requests
 # Add flags to allow pip3 / python to find mysql8
 case $PKGMGR in
   macports)
-    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PKGMGR_LIB/mysql8/pkgconfig/
+    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PKGMGR_LIB/$DATABASE_VERS/pkgconfig/
   ;;
   homebrew)
-    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PKGMGR_LIB/pkgconfig/mysqlclient.pc
+    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PKGMGR_LIB/opt/$DATABASE_VERS/lib/pkgconfig/
   ;;
 esac
 
@@ -385,10 +386,9 @@ esac
 ### Setup Compiler and Related Search Paths ###############################################
 ###########################################################################################
 # First verify that the SDK is setup and command line tools license has been accepted
-SDK_SWITCH="$(xcodebuild -showsdks | awk '/^$/{p=0};p; /macOS SDKs:/{p=1}'| tail -1 | cut -f3)"
-SDK_PATH="xcodebuild -version $SDK_SWITCH Path"
-SDK_PATH="$(eval ${SDK_PATH})"
-if [ ! -n  $SDK_PATH ]; then
+export SDK_ROOT=$(xcrun --sdk macosx --show-sdk-path)
+export SDK_VERS=$(xcrun --sdk macosx --show-sdk-version)
+if [ ! -n  $SDK_ROOT ]; then
   echoC "Error: macOS SDK is not set!!!" RED
   echoC "To set the SDK, you must accept the Xcode Developer Tool License."
   echoC "To accept the license, run the following command."
@@ -396,6 +396,11 @@ if [ ! -n  $SDK_PATH ]; then
   echoC "     sudo xcodebuild -license" GREEN
   exit 1
 fi
+
+if [ ${SDK_VERS%%.*} -ge 14 ]; then 
+    COMP_LDFLAGS="-Wl,-ld_classic" 
+fi
+
 # Set COMP_LDFLAGS and COMP_INC to null since we only need to add paths for custom compilers
 # Check if the user specifed a compiler
 case $ALT_COMPILER in
@@ -506,7 +511,7 @@ esac
 # include search path
 INC_SRC="$SRC_DIR/external/FFmpeg"
 # Add include paths for the compiler to find the package manager locations
-for INC in "$PKGMGR_INC" "$QT_INC_PATH" "$BLURAY_INC_PATH" "$HDHR_INC_PATH" "$COMP_INC" "$SDK_INC_PATH"; do
+for INC in "$PKGMGR_INC" "$QT_INC_PATH" "$BLURAY_INC_PATH" "$HDHR_INC_PATH" "$COMP_INC"; do
   if [ -n "$INC" ]; then
     INC_SRCH="$INC_SRCH:$INC"
   fi
@@ -790,7 +795,6 @@ else
     fi
     cd "$REPO_DIR/ansible" || exit 1
     ANSIBLE_FLAGS="--limit=localhost"
-  
     case $QT_VERS in
         qt5)
            ANSIBLE_EXTRA_FLAGS="--extra-vars \"ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS install_qtwebkit=$INSTALL_WEBKIT\""
@@ -878,25 +882,25 @@ if $SKIP_BUILD; then
   echoC "    Skipping MythTV configure and make" ORANGE
 else
   echoC "    Running configure" BLUE
-  CONFIG_CMD="./configure --prefix=$INSTALL_DIR    \
-                         --runprefix=$RUNPREFIX    \
-                         $ENABLE_MAC_BUNDLE        \
-                         $EXTRA_CONF_FLAGS         \
-                         --qmake=$QMAKE_CMD        \
-                         --cc=$C_CMD               \
-                         --cxx=$CPP_CMD            \
-                         --disable-backend         \
-                         --disable-distcc          \
-                         --disable-lirc            \
-                         --disable-firewire        \
-                         --disable-libcec          \
-                         --disable-x11             \
-                         --enable-libmp3lame       \
-                         --enable-libxvid          \
-                         --enable-libx264          \
-                         --enable-libx265          \
-                         --enable-libvpx           \
-                         --enable-bdjava           \
+  CONFIG_CMD="./configure --prefix=$INSTALL_DIR     \
+                         --runprefix=$RUNPREFIX     \
+                         $ENABLE_MAC_BUNDLE         \
+                         $EXTRA_CONF_FLAGS          \
+                         --qmake=$QMAKE_CMD         \
+                         --cc=$C_CMD                \
+                         --cxx=$CPP_CMD             \
+                         --disable-backend          \
+                         --disable-distcc           \
+                         --disable-lirc             \
+                         --disable-firewire         \
+                         --disable-libcec           \
+                         --disable-x11              \
+                         --enable-libmp3lame        \
+                         --enable-libxvid           \
+                         --enable-libx264           \
+                         --enable-libx265           \
+                         --enable-libvpx            \
+                         --enable-bdjava            \
                          --python=$PYTHON_VENV_BIN"
   eval "${CONFIG_CMD}"
   echoC "------------ Compiling Mythtv ------------" GREEN
