@@ -1,3 +1,9 @@
+mythtv (2:34.0+fixes) mantic; urgency=medium
+
+  * Dummy entry to bump version to fixes/34
+
+ -- Roland Ernst <rcrernst@gmail.com>  Tue, 13 Feb 2024 21:15:49 +0100
+
 mythtv (2:34.0~master) lunar; urgency=medium
 
   * Dummy entry to bump version to 34
