@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
-ARG SDK_VER=21
+ARG SDK_VER=29
 RUN apt-get update && apt-get -y upgrade && \
     apt-get -y install \
     openjdk-8-jdk \
@@ -20,7 +20,8 @@ RUN apt-get update && apt-get -y upgrade && \
     autopoint \
     libfreetype6-dev \
     sudo \
-    wget
+    wget \
+    python3
 
 COPY docker_init.sh /
 
@@ -29,5 +30,5 @@ ENTRYPOINT ["/docker_init.sh"]
 ADD commandlinetools-linux.tgz /opt/android
 
 # Install required Android packages
-RUN echo "y" | /opt/android/cmdline-tools/bin/sdkmanager --sdk_root=/opt/android "build-tools;28.0.3" "ndk;21.0.6113669" "platforms;android-$SDK_VER" "cmake;3.10.2.4988404" && /opt/android/cmdline-tools/bin/sdkmanager --sdk_root=/opt/android --uninstall "emulator"
+RUN echo "y" | /opt/android/cmdline-tools/bin/sdkmanager --sdk_root=/opt/android "build-tools;29.0.2" "ndk;21.4.7075529" "platforms;android-$SDK_VER" "cmake;3.22.1" && /opt/android/cmdline-tools/bin/sdkmanager --sdk_root=/opt/android --uninstall "emulator"
 

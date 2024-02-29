@@ -12,7 +12,7 @@ IFS=
 THISDIR=$(readlinkf ${BASH_SOURCE%/*})
 BASEDIR=$(readlinkf ${BASH_SOURCE%/*}/../../..)
 
-SDK_VER=21
+SDK_VER=29
 COMMAND=""
 
 function usage() {
