@@ -2030,7 +2030,7 @@ return $ERR
 
 build_libbluray() {
 rm -rf build
-LIBBLURAYVER=1.1.2
+LIBBLURAYVER=1.3.4
 LIBBLURAY=libbluray-$LIBBLURAYVER
 echo -e "\n**** $LIBBLURAY ****"
 setup_lib ftp://ftp.videolan.org/pub/videolan/libbluray/$LIBBLURAYVER/$LIBBLURAY.tar.bz2 $LIBBLURAY
