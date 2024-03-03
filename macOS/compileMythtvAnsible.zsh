@@ -69,19 +69,22 @@ echoC(){
     case $COLOR in
     ### echo color codes
     RED)
-      CODE='\033[31m'
+      CODE='\033[0;31m'
     ;;
     ORANGE)
-      CODE='\033[33m'
+      CODE='\033[0;33m'
+    ;;
+    YELLOW)
+      CODE='\033[1;33m'
     ;;
     GREEN)
-      CODE='\033[32m'
+      CODE='\033[0;32m'
     ;;
     BLUE)
-      CODE='\033[34m'
+      CODE='\033[0;34m'
     ;;
     CYAN)
-      CODE='\033[36m'
+      CODE='\033[0;36m'
     ;;
     esac
     echo -e $CODE"$MESSAGE"$END_CODE
@@ -115,11 +118,9 @@ OS_ARCH=$(/usr/bin/arch)
 ###########################################################################################
 # setup default variables
 BUILD_PLUGINS=false
-PYTHON_VERS="311"
 UPDATE_PKGMGR=false
 MYTHTV_VERS="master"
 MYTHTV_PYTHON_SCRIPT="ttvdb4"
-QT_VERS=qt5
 GENERATE_APP=true
 INSTALL_DIR=""
 UPDATE_GIT=true
@@ -133,6 +134,21 @@ MYTHTV_PATCH_DIR=""
 PLUGINS_PATCH_DIR=""
 REPO_PREFIX=$HOME
 
+# macports / homebrew have different naming conventions
+# for mysql, python, and qt
+case $PKGMGR in
+  macports)
+    DATABASE_VERS=mysql8
+    PYTHON_VERS="311"
+    QT_VERS=qt5
+  ;;
+  homebrew)
+    DATABASE_VERS=mysql@8.0
+    PYTHON_VERS="312"
+    QT_VERS=qt@5
+  ;;
+esac
+
 # macports doesn't support mysql 8 for older versions of macOS, for those installs default to mariadb (unless the user overries)
 # also, homebrew drops the version numbers...
 if [ "$OS_MAJOR" -le 11 ] && [ "$OS_MINOR" -le 15 ]; then
@@ -142,15 +158,6 @@ if [ "$OS_MAJOR" -le 11 ] && [ "$OS_MINOR" -le 15 ]; then
     ;;
     homebrew)
       DATABASE_VERS=mariadb
-    ;;
-  esac
-else
-  case $PKGMGR in
-    macports)
-      DATABASE_VERS=mysql8
-    ;;
-    homebrew)
-      DATABASE_VERS=mysql@8.0
     ;;
   esac
 fi
@@ -318,6 +325,11 @@ BLURAY_INC_PATH="$PKGMGR_INC/libbluray"
 ###########################################################################################
 ### Setup QT Specific Parameters ##########################################################
 ###########################################################################################
+case $PKGMGR in
+  homebrew)
+    QT_VERS="qt@${QT_VERS: -1}"
+  ;;
+esac
 QT_PATH="$PKGMGR_ALT_PATH/$QT_VERS"
 QT_INC_PATH="$QT_PATH/include"
 QT_LIB_PATH="$QT_PATH/lib"
@@ -371,7 +383,8 @@ PYTHON_PKMGR_BIN="$PKGMGR_BIN/$PYTHON_CMD"
 PYTHON_VENV_PATH="$HOME/.mythtv/python-virtualenv"
 PY2APP_PKGS="MySQLdb,pycurl,requests_cache,urllib3,future,lxml,oauthlib,requests,simplejson,\
   audiofile,bs4,argparse,common,configparser,datetime,discid,et,features,HTMLParser,httplib2,\
-  musicbrainzngs,port,put,traceback2,markdown,dateutil,importlib_metadata"
+  musicbrainzngs,traceback2,dateutil,importlib_metadata"
+PY2APP_EXLCUDE="soundfile"
 # Add flags to allow pip3 / python to find mysql8
 case $PKGMGR in
   macports)
@@ -565,7 +578,7 @@ installLibs(){
   pathDepList=$(echo "$pathDepList"| gsed 's/(.*//')
   while read -r dep; do
     if [ "$loopCTR" = 0 ]; then
-      echoC "    installLibs: Parsing $binFile for linked libraries" BLUE
+      echoC "    installLibs: Parsing $binFile for linked libraries" YELLOW
     fi
     loopCTR=$loopCTR+1
     lib=${dep##*/}
@@ -705,7 +718,7 @@ buildQT5MYSQL(){
   QT_SOURCES="$(pwd)/qt5_src/qt@5-$QTVERS"
   QT_INSTALL_PREFIX="$($QMAKE_CMD -query QT_INSTALL_PREFIX)"
   QT_SQLDRIVERS_SRC="$QT_SOURCES/qtbase/src/plugins/sqldrivers"
-  MYSQL_PREFIX=$(brew --prefix mysql)
+  MYSQL_PREFIX=$(brew --prefix $DATABASE_VERS)
   MYSQL_INCDIR="$MYSQL_PREFIX/include/mysql"
   MYSQL_LIBDIR="$MYSQL_PREFIX/lib"
 
@@ -764,6 +777,8 @@ if [ ! $SKIP_ANSIBLE ]; then
         echoC "    Homebrew: Insatlling Ansible" ORANGE
         brew install python@$PYTHON_DOT_VERS
         brew install ansible
+        alias python=python3
+        alias pip=pip3
     esac
   else
     echoC "    Ansible is correctly installed" BLUE
@@ -796,7 +811,7 @@ else
     cd "$REPO_DIR/ansible" || exit 1
     ANSIBLE_FLAGS="--limit=localhost"
     case $QT_VERS in
-        qt5)
+        *5*)
            ANSIBLE_EXTRA_FLAGS="--extra-vars \"ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS install_qtwebkit=$INSTALL_WEBKIT\""
         ;;
         *)
@@ -807,16 +822,17 @@ else
     # Need to use eval as zsh does not split multiple-word variables (https://zsh.sourceforge.io/FAQ/zshfaq03.html)
     eval "${ANSIBLE_FULL_CMD}"
   fi
+  cd "$REPO_DIR" || exit 1
 
   # if we're on homebrew and using qt5, we need to do more work to get the
   # QTMYSQL plugin working...
   case $PKGMGR in
     homebrew)
       case $QT_VERS in
-        qt5)
+        *5*)
           if [ ! -f $QT_PATH/plugins/sqldrivers/libqsqlmysql.dylib ]; then
             echoC "    Homebrew: Installing QTMYSQL plugin for $QT_VERS" BLUE
-            brew unpack qt5 --destdir qt5_src
+            brew unpack $QT_VERS --destdir qt5_src
             buildQT5MYSQL
           else
             echoC "    Homebrew: QTMYSQL plugin is installed for $QT_VERS" BLUE
@@ -906,7 +922,7 @@ else
   echoC "------------ Compiling Mythtv ------------" GREEN
   #compile MythTV
   echoC "    Running make" BLUE
-  make || { echo 'Compiling Mythtv failed' ; exit 1; }
+  make -j4 || { echo 'Compiling Mythtv failed' ; exit 1; }
 fi
 
 echoC "------------ Installing Mythtv ------------" GREEN
@@ -958,7 +974,7 @@ if $BUILD_PLUGINS; then
     echoC "    Running qmake/make" BLUE
     $QMAKE_CMD mythplugins.pro
     #compile mythplugins
-    make || { echo 'Compiling Plugins failed' ; exit 1; }
+    make -j4 || { echo 'Compiling Plugins failed' ; exit 1; }
   fi
   echoC "------------ Installing Mythplugins ------------" GREEN
   make install
@@ -1115,18 +1131,15 @@ echoC "    Creating a temporary application from $MYTHTV_PYTHON_SCRIPT" BLUE
 # from one of the python scripts which will copy in all the required libraries for running
 # and will make a standalone python executable not tied to the system ttvdb4 seems to be more
 # particular than others (tmdb3)...
-$PY2APPLET_BIN -i "$PY2APP_PKGS" -p "$PY2APP_PKGS" --use-pythonpath --no-report-missing-conditional-import --make-setup "$INSTALL_DIR/share/mythtv/metadata/Television/$MYTHTV_PYTHON_SCRIPT.py"
+$PY2APPLET_BIN -i "$PY2APP_PKGS" -p "$PY2APP_PKGS" -e "$PY2APP_EXLCUDE" --use-pythonpath --no-report-missing-conditional-import --make-setup "$INSTALL_DIR/share/mythtv/metadata/Television/$MYTHTV_PYTHON_SCRIPT.py"
 $PYTHON_VENV_BIN setup.py -q py2app 2>&1 > /dev/null
 # now we need to copy over the python app's pieces into the application bundle to get it working
 echoC "    Copying in Python Framework libraries" BLUE
-mv -n "$PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Frameworks"/* "$APP_FMWK_DIR"
+cp -RHn "$PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Frameworks"/* "$APP_FMWK_DIR"
 echoC "    Copying in Python Binary" BLUE
-mv "$PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/MacOS/python" "$APP_EXE_DIR"
-if [ -f "$APP_EXE_DIR/python3" ]; then
-  ln -s "$APP_EXE_DIR/pyton" "$APP_EXE_DIR/python3"
-fi
+cp -RHn "$PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/MacOS"/py* "$APP_EXE_DIR/"
 echoC "    Copying in Python Resources" BLUE
-mv -n "$PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Resources"/* "$APP_RSRC_DIR"
+cp -RHn "$PYTHON_APP/dist/$MYTHTV_PYTHON_SCRIPT.app/Contents/Resources"/* "$APP_RSRC_DIR"
 # clean up temp application
 cd "$APP_DIR" || exit 1
 rm -Rf "$PYTHON_APP"
