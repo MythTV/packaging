@@ -411,7 +411,9 @@ if [ ! -n  $SDK_ROOT ]; then
 fi
 
 if [ ${SDK_VERS%%.*} -ge 14 ]; then 
-    COMP_LDFLAGS="-Wl,-ld_classic" 
+    COMP_LDFLAGS="-Wl"
+else
+    COMP_LDFLAGS="-Wl,-headerpad_max_install_names"
 fi
 
 # Set COMP_LDFLAGS and COMP_INC to null since we only need to add paths for custom compilers
@@ -1169,7 +1171,11 @@ echoC "------------ Copying in dejavu and liberation fonts into the Application 
 case $PKGMGR in
   macports)
     cp -RHn "$FONT_PATH/dejavu-fonts"/*.ttf "$APP_RSRC_DIR/share/mythtv/fonts/"
-    cp -RHn "$FONT_PATH/liberation-fonts"/*.ttf "$APP_RSRC_DIR/share/mythtv/fonts/"
+    if [ -f $FONT_PATH/TTF/LiberationMono-Regular.ttf ]; then
+      cp -RHn "$FONT_PATH/TTF/Liberation"*.ttf "$APP_RSRC_DIR/share/mythtv/fonts/"
+    else
+      cp -RHn "$FONT_PATH/liberation-fonts"/*.ttf "$APP_RSRC_DIR/share/mythtv/fonts/"
+    fi
   ;;
   homebrew)
     cp -RHn "$FONT_PATH"/DejaVu*.ttf "$APP_RSRC_DIR/share/mythtv/fonts/"
