@@ -48,6 +48,10 @@ gitbranch=`git branch | grep '*'| cut -f2 -d' '`
 if [[ "$gitbranch" == '(HEAD' ]] ; then
     gitbranch=`git branch | grep '*'| cut -f3 -d' '`
 fi
+# support for bisect:
+if [[ "$branch" == '(no' ]] ; then
+    branch=detached
+fi
 # example of packagever 30-Pre-545-g51d6fdf
 packagever=`env LD_LIBRARY_PATH=$sourcedir/usr/lib $sourcedir/usr/bin/mythutil --version |grep "MythTV Version"|cut -d ' ' -f 4|cut -c2-`
 packagebranch=`env LD_LIBRARY_PATH=$sourcedir/usr/lib $sourcedir/usr/bin/mythutil --version |grep "MythTV Branch"|cut -d ' ' -f 4`

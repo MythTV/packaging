@@ -15,6 +15,10 @@ branch=`git branch | grep '*'| cut -f2 -d' '`
 if [[ "$branch" == '(HEAD' ]] ; then
     branch=`git branch | grep '*'| cut -f3 -d' '`
 fi
+# support for bisect:
+if [[ "$branch" == '(no' ]] ; then
+    branch=detached
+fi
 projdir=$(basename "$gitbasedir")
 echo "chroot: $SCHROOT_CHROOT_NAME" > $gitbasedir/../config_${projdir}.out
 echo "arch: $arch codename: $codename projdir: $projdir branch: $branch" >> $gitbasedir/../config_${projdir}.out

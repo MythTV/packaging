@@ -20,6 +20,10 @@ branch=`git branch | grep '*'| cut -f2 -d' '`
 if [[ "$branch" == '(HEAD' ]] ; then
     branch=`git branch | grep '*'| cut -f3 -d' '`
 fi
+# support for bisect:
+if [[ "$branch" == '(no' ]] ; then
+    branch=detached
+fi
 projdir=$(basename "$gitbasedir")
 echo projdir=$projdir
 date > $gitbasedir/../build_${projdir}.out

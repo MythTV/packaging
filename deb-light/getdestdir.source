@@ -27,6 +27,10 @@ branch=`git branch | grep '*'| cut -f2 -d' ' | sed 's!/!-!g'`
 if [[ "$branch" == '(HEAD' ]] ; then
     branch=`git branch | grep '*'| cut -f3 -d' '`
 fi
+# support for bisect:
+if [[ "$branch" == '(no' ]] ; then
+    branch=detached
+fi
 
 dirty=`git status --porcelain|grep -v "^??"|wc -l`
 
