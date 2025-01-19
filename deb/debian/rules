@@ -133,10 +133,6 @@ override_dh_auto_install:
 	mv debian/tmp/usr/bin/mythtv-setup debian/tmp/usr/bin/mythtv-setup.real
 
 override_dh_install:
-	install -m0755 -d ${buildroot}/etc/php5/apache2/conf.d
-	install -m0644 debian/20-mythweb.ini   ${buildroot}/etc/php5/apache2/conf.d
-	install -m0755 -d ${buildroot}/etc/php/7.0/apache2/conf.d
-	install -m0644 debian/20-mythweb.ini   ${buildroot}/etc/php/7.0/apache2/conf.d
 	dh_install -Xusr/share/mythtv/fonts/Free \
                    -Xusr/share/mythtv/fonts/Purisa \
                    -Xusr/share/mythtv/fonts/texgyrechorus \
@@ -177,14 +173,6 @@ override_dh_installdocs:
 	find debian/mythtv-backend/usr/share/doc/mythtv-backend/contrib \
 		-name "COPYING" -delete
 	rm -f debian/mythtv-common/usr/share/mythtv/themes/Terra/watermarks/README.license
-
-	#(MythWeb)
-	for file in LICENSE README INSTALL; do \
-		rm -f debian/mythweb/usr/share/mythtv/mythweb/$$file ;\
-	done
-	find debian/mythweb -name ".gitignore" -type f -delete || true
-	rm -rf debian/mythweb/usr/share/mythtv/mythweb/data/tv_icons
-	rm -rf debian/mythweb/usr/share/mythtv/mythweb/data/cache
 
 	#(Myththemes)
 	rm -f debian/mythtv-theme-childish/usr/share/mythtv/themes/Childish/COPYING

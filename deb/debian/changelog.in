@@ -1,3 +1,9 @@
+mythtv (2:35.0~master) noble; urgency=medium
+
+  * Remove mythweb in version to 35
+
+ -- Roland Ernst <rcrernst@gmail.com>  Sun, 19 Jan 2025 14:15:49 +0100
+
 mythtv (2:35.0~master) mantic; urgency=medium
 
   * Dummy entry to bump version to 35
