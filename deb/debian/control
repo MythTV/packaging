@@ -270,9 +270,11 @@ Depends:
  ${shlibs:Depends},
 Conflicts:
  mythtv (<< 0.8-1),
+ mythweb,
 Replaces:
  mythtv (<< 0.8-1),
  mythtv-frontend (<= 0.20-0.4),
+ mythweb,
 Recommends:
  hdhomerun-config,
  libmyth-python,
@@ -282,7 +284,6 @@ Recommends:
 Suggests:
  mythtv-database,
  mythtv-frontend,
- mythweb,
  xmltv-util,
 Description: Personal video recorder application (server)
  MythTV provides a unified graphical interface for recording and viewing
@@ -498,8 +499,6 @@ Depends:
  mythtv-database,
  ntp | time-daemon | ntp-simple,
  ${misc:Depends},
-Recommends:
- mythweb,
 Description: Metapackage to setup and configure a "Master Backend" profile of MythTV
  This Meta-package will install and configure all necessary packages for this
  machine to behave as a "Master" Backend for a mythtv network.  This package
@@ -523,7 +522,6 @@ Depends:
  mythmusic,
  mythnews,
  mythweather,
- mythweb,
  ${misc:Depends},
 Description: Metapackage package for MythTV plugins
  This Metapackage will install all available MythTV plugins.
@@ -591,27 +589,6 @@ Replaces:
 Description: Weather add-on module for MythTV
  MythWeather displays current and forecast weather information within
  MythTV.
-
-Package: mythweb
-Architecture: all
-Depends:
- apache2 | httpd,
- libapache2-mod-php | libapache2-mod-php5 | php | php5,
- libhttp-date-perl,
- libjs-prototype,
- libjs-scriptaculous,
- mythtv-common (>= ${binary:Version}),
- php-mysql | php5-mysql,
- php-mythtv,
- ${misc:Depends},
- ${perl:Depends},
-Recommends:
- libmath-round-perl,
-Description: Web interface add-on module for MythTV
- MythWeb provides a web interface which can be used to view listings,
- schedule recordings, delete recordings, and search for programs. It can
- also browse mythmusic's music database, and may eventually support playing
- music streams as well.
 
 Package: mytharchive
 Architecture: amd64 arm64

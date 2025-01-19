@@ -25,7 +25,6 @@ TODAY:=$(shell date +%Y%m%d)
 CURRENT_GIT_HASH:=$(shell git rev-parse --short HEAD)
 
 MAIN_GIT_URL=https://github.com/MythTV/mythtv.git
-MYTHWEB_GIT_URL=https://github.com/MythTV/mythweb.git
 MYTHBUNTU_THEME_GIT_URL=https://github.com/MythTV-Themes/Mythbuntu.git
 
 ifeq "$(GIT_TYPE)" "master"
@@ -60,27 +59,11 @@ get-git-source:
 		git fetch ;\
 		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 		git pull --rebase; \
-		git clean -f -d -X -e Mythbuntu/ -e mythplugins/mythweb/;\
+		git clean -f -d -X -e Mythbuntu/;\
 	else \
 		git clone $(MAIN_GIT_URL) tmp ;\
 		mv tmp/.[!.]* tmp/* . ;\
 		rm -rf tmp ;\
-		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
-	fi
-
-	#checkout mythweb
-	if [ -d mythplugins/mythweb/.git ]; then \
-		cd mythplugins/mythweb; \
-		git fetch ;\
-		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
-		git pull --rebase ;\
-		git clean -f -d -X;\
-	else \
-		mkdir -p mythplugins/mythweb ;\
-		git clone $(MYTHWEB_GIT_URL) tmp ;\
-		mv tmp/.[!.]* tmp/* mythplugins/mythweb ;\
-		rm -rf tmp ;\
-		cd mythplugins/mythweb ;\
 		git checkout $(GIT_BRANCH) || git checkout $(GIT_BRANCH_FALLBACK);\
 	fi
 
