@@ -28,7 +28,6 @@ generate "MythTV guide database filler" debian/tmp/usr/bin/mythfilldatabase
 generate "MythTV Job Queue manager" debian/tmp/usr/bin/mythjobqueue
 generate "MythTV metadata lookup" debian/tmp/usr/bin/mythmetadatalookup
 generate "MythTV Screen Wizard" debian/tmp/usr/bin/mythscreenwizard
-generate "MythTV Setup (real)" debian/tmp/usr/bin/mythtv-setup.real
 generate "MythTV Archive helper" debian/mytharchive/usr/bin/mytharchivehelper
 generate "MythTV Zoneminder server" debian/mythzoneminder/usr/bin/mythzmserver
 #these don't have a --help right now

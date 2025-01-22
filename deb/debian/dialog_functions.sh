@@ -10,7 +10,7 @@ find_dialog()
 DIALOG=`which zenity`
 
     if [ -z $DIALOG ]; then
-        failure "You need zenity for first run of mythfrontend or mythtv-setup.\n Install with 'sudo apt install zenity'"
+        failure "You need zenity for first run of mythfrontend.\n Install with 'sudo apt install zenity'"
     fi
 }
 
@@ -20,7 +20,7 @@ find_su()
 SU=`which sudo`
 
     if [ -z "$SU" ]; then
-        failure "You need sudo installed for first run of mythfrontend or mythtv-setup"
+        failure "You need sudo installed for first run of mythfrontend"
     fi
 }
 

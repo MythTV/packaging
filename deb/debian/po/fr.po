@@ -163,19 +163,19 @@ msgstr ""
 #~ msgid "Port number the MythTV server is listening on:"
 #~ msgstr "Quel est le numéro du port du serveur MythTV :"
 
-#~ msgid "mythtv-setup must be run in order to complete MythTV installation"
+#~ msgid "Web App must be run in order to complete MythTV installation"
 #~ msgstr ""
-#~ "mythtv-setup doit être exécuter pour finir l'installation de MythTV."
+#~ "Web App doit être exécuter pour finir l'installation de MythTV."
 
 #, fuzzy
 #~ msgid ""
-#~ "You must run mythtv-setup as a user in the 'mythtv' group in order to "
+#~ "You must run Web App as a user in the 'mythtv' group in order to "
 #~ "complete  mythtv configuration.  Note that this program requires an X "
 #~ "display, so you must either login to an X session as a user in the "
 #~ "'mythtv' group, or otherwise  arrange for that user to have access to "
 #~ "your X display."
 #~ msgstr ""
-#~ "Vous devez exécuter mythtv-setup en tant qu'utilisateur 'mythtv' pour "
+#~ "Vous devez exécuter Web App en tant qu'utilisateur 'mythtv' pour "
 #~ "finir la configuration. Notez que ce programme a besoin d'un interface "
 #~ "graphique, il faut donc vous connecter a une session X en tant "
 #~ "qu'utilisateur 'mythtv, ou vous arrangez pour donner accès à la session X "
@@ -198,10 +198,10 @@ msgstr ""
 
 #, fuzzy
 #~ msgid ""
-#~ "You must run mythtv-setup as a user in the 'mythtv' group in order to "
+#~ "You must run Web App as a user in the 'mythtv' group in order to "
 #~ "complete mythtv configuration."
 #~ msgstr ""
-#~ "Vous devez exécuter mythtv-setup en tant qu'utilisateur 'mythtv' pour "
+#~ "Vous devez exécuter Web App en tant qu'utilisateur 'mythtv' pour "
 #~ "finir la configuration de mythtv.  Par exemple, en tant que root :"
 
 #~ msgid "tv_grab_de, tv_grab_na, tv_grab_sn, tv_grab_uk, tv_grab_uk_rt"
@@ -257,9 +257,6 @@ msgstr ""
 
 #~ msgid "localhost"
 #~ msgstr "localhost"
-
-#~ msgid "su - mythtv -c mythtv-setup"
-#~ msgstr "su - mythtv -c mythtv-setup"
 
 #~ msgid ""
 #~ "and follow any instructions that it gives.  Once you have done this, you "

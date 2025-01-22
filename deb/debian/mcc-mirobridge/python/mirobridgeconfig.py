@@ -1046,7 +1046,7 @@ class MirobridgeConfigFunctions():
         try:
             self.Channel().create(data)
         except MythError, e:
-            errmsg = u"Failed writing the Miro channel record. Most likely the Channel Id and number already exists.\nUse MythTV set up program (mythtv-setup) to alter or remove the offending channel.\nSpecified Channel ID (%d) and Channel Number (%d), error(%s)" % (channel_id, channel_num, e.args[0])
+            errmsg = u"Failed writing the Miro channel record. Most likely the Channel Id and number already exists.\nUse Web App (http:yourbackend:6544) to alter or remove the offending channel.\nSpecified Channel ID (%d) and Channel Number (%d), error(%s)" % (channel_id, channel_num, e.args[0])
             self.logger.critical(errmsg)
             raise MirobridgeconfigPlugin_error(errmsg)
     # end addMiroBridgeChannel()

@@ -128,9 +128,8 @@ override_dh_auto_install:
 		$(MAKE) -C mythplugins/$$plugin install INSTALL_ROOT=$(CURDIR)/debian/$$plugin; \
 	done
 
-	#(MythTV) We replace these with shell scripts
+	#(MythTV) We replace the following with shell scripts
 	mv debian/tmp/usr/bin/mythfrontend debian/tmp/usr/bin/mythfrontend.real
-	mv debian/tmp/usr/bin/mythtv-setup debian/tmp/usr/bin/mythtv-setup.real
 
 override_dh_install:
 	dh_install -Xusr/share/mythtv/fonts/Free \
