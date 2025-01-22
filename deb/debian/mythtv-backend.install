@@ -4,17 +4,14 @@ usr/bin/mythcommflag
 usr/bin/mythfilerecorder
 usr/bin/mythfilldatabase
 usr/bin/mythjobqueue
-usr/bin/mythtv-setup.real
 usr/bin/mythpreviewgen
 usr/bin/mythexternrecorder
 usr/share/mythtv/backend-config
 usr/share/mythtv/externrecorder
 
 #Copied in from debian/
-debian/mythtv-setup.desktop 			usr/share/applications
 debian/41-mythtv-permissions.rules		lib/udev/rules.d
 debian/mythtv-backend.if-up.d 			etc/network/if-up.d
-debian/mythtv-setup.sh				usr/share/mythtv
 
 ## Mythbuntu control centre
 # plugin for mcc-mirobridge

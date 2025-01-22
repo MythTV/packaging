@@ -31,7 +31,6 @@ A few things to note:
         mythbackend
         mythfilldatabase
         mythfrontend
-        mythtv-setup
         
   * I'm using the 4.8.0 version of Qt Library for VS2010 which can be 
     downloaded and installed from: http://qt.nokia.com/downloads

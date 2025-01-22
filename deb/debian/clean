@@ -20,7 +20,6 @@ debian/man/mythreplex.1
 debian/man/mythscreenwizard.1
 debian/man/mythshutdown.1
 debian/man/mythtranscode.1
-debian/man/mythtv-setup.real.1
 debian/man/mythutil.1
 debian/man/mythwelcome.1
 debian/man/mythzmserver.1

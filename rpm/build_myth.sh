@@ -181,7 +181,6 @@ EOF
             /usr/src/redhat/RPMS/x86_64/mythtv-base-themes-$GITVER-0.1.git.$GITREV.*.rpm  \
             /usr/src/redhat/RPMS/x86_64/mythtv-frontend-$GITVER-0.1.git.$GITREV.*.rpm     \
             /usr/src/redhat/RPMS/x86_64/mythtv-backend-$GITVER-0.1.git.$GITREV.*.rpm      \
-            /usr/src/redhat/RPMS/x86_64/mythtv-setup-$GITVER-0.1.git.$GITREV.*.rpm        \
             /usr/src/redhat/RPMS/x86_64/mythtv-common-$GITVER-0.1.git.$GITREV.*.rpm       \
             /usr/src/redhat/RPMS/x86_64/perl-MythTV-$GITVER-0.1.git.$GITREV.*.rpm         \
             /usr/src/redhat/RPMS/x86_64/python-MythTV-$GITVER-0.1.git.$GITREV.*.rpm       \

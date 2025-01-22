@@ -58,7 +58,7 @@
 ################################################################################
 
 # A list of which applications we want to put into the desktop menu system
-%define desktop_applications mythfrontend mythtv-setup
+%define desktop_applications mythfrontend
 
 # The vendor name we should attribute the aforementioned entries to
 %define desktop_vendor  mythtv
@@ -139,9 +139,7 @@ Source103: mythtv.logrotate
 Source104: mythbackend.service
 Source106: mythfrontend.png
 Source107: mythfrontend.desktop
-Source108: mythtv-setup.png
-Source109: mythtv-setup.desktop
-Source110: mysql.txt
+Source108: mysql.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -336,7 +334,6 @@ Requires:  mythtv-base-themes = %{version}-%{release}
 Requires:  mythtv-common      = %{version}-%{release}
 Requires:  mythtv-docs        = %{version}-%{release}
 Requires:  mythtv-frontend    = %{version}-%{release}
-Requires:  mythtv-setup       = %{version}-%{release}
 Requires:  perl-MythTV        = %{version}-%{release}
 Requires:  php-MythTV         = %{version}-%{release}
 Requires:  python-MythTV      = %{version}-%{release}
@@ -1080,7 +1077,6 @@ cd mythtv
 
     make install INSTALL_ROOT=%{buildroot}
 
-    ln -s mythtv-setup %{buildroot}%{_bindir}/mythtvsetup
     mkdir -p %{buildroot}%{_localstatedir}/lib/mythtv
     mkdir -p %{buildroot}%{_localstatedir}/cache/mythtv
     mkdir -p %{buildroot}%{_localstatedir}/log/mythtv
@@ -1098,7 +1094,7 @@ cd mythtv
 
 # mysql.txt and other config/init files
     install -m 644 %{SOURCE110} %{buildroot}%{_sysconfdir}/mythtv/
-    echo "# to be filled in by mythtv-setup" > %{buildroot}%{_sysconfdir}/mythtv/config.xml
+    echo "# to be filled in by Web App" > %{buildroot}%{_sysconfdir}/mythtv/config.xml
     %if %{with_systemd}
     install -D -p -m 0644 %{SOURCE104} %{buildroot}%{_unitdir}/
     %else
@@ -1276,13 +1272,6 @@ fi
 %{_datadir}/mythtv/internetcontent/*
 %dir %{_datadir}/mythtv/html
 %{_datadir}/mythtv/html/*
-
-%files setup
-%defattr(-,root,root,-)
-%{_bindir}/mythtv-setup
-%{_bindir}/mythtvsetup
-%{_datadir}/mythtv/setup.xml
-%{_datadir}/applications/*mythtv-setup.desktop
 
 %files frontend
 %defattr(-,root,root,-)
@@ -1718,7 +1707,6 @@ fi
 
 * Sat Apr 05 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-2
 - RPMFusion package review cleanups
-- Put mythtv-setup.desktop in mythtv-setup package
 - Fix up initscript to start properly
 - Drop unused %%ghostattr define
 - Attempt to clarify licensing

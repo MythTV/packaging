@@ -43,5 +43,3 @@ cd ..
 TIMEOUT 1 /nobreak
 "bin/mythbackend.exe"
 TIMEOUT 2 /nobreak
-"bin/mythtv-setup.exe"
-"bin/mythtv-setup.exe"
