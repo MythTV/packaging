@@ -72,7 +72,6 @@ Source: configuremysql.vbs; DestDir: {app}
 [Icons]
 Name: {group}\Myth Frontend; Filename: {app}\bin\mythfrontend.exe; WorkingDir: {app}\bin
 Name: {group}\Myth Backend; Filename: {app}\bin\mythbackend.exe; WorkingDir: {app}\bin
-Name: {group}\Setup; Filename: {app}\bin\mythtv-setup.exe; WorkingDir: {app}\bin
 Name: {group}\Readme; Filename: {app}\readme.txt; WorkingDir: {app}
 Name: {group}\Uninstall {#MyAppName}; Filename: {app}\UninsHs.exe; Parameters: /u0={#MyAppName}
 Name: {group}\Utilities\MythCommFlag; Filename: {app}\bin\mythcommflag.exe; WorkingDir: {app}\bin

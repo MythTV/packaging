@@ -2527,10 +2527,6 @@ fi
 :<<"COMMENT"
 cat <<-EOF
 
-To simplify setting up and running MythTV on Linux or Windows, try this script:
-wget http://www.softsystem.co.uk/download/mythtv/mythrun && chmod +x mythrun
-Run mythfrontend: ./mythrun fe [args]
-Run mythbackend: ./mythrun be [args]
-Run mythtv-setup: ./mythrun su [args]
+To sett up MythTV on Linux or Windows, use the Web App (http://yourbackend:6544)
 EOF
 COMMENT

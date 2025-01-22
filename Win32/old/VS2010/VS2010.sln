@@ -67,12 +67,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mythbackend", "programs\myt
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mythservicecontracts", "libs\libmythservicecontracts\libmythservicecontracts.vcxproj", "{EE870E70-C989-4D20-9394-3CB613D62B73}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mythtv-setup", "programs\mythtv-setup\mythtv-setup.vcxproj", "{6B9BDC7B-4DD5-4BCD-BB86-14769F462EE6}"
-	ProjectSection(ProjectDependencies) = postProject
-		{145FB06B-4348-4226-9835-48FF732FE05E} = {145FB06B-4348-4226-9835-48FF732FE05E}
-		{9B6BC8F2-BA46-4D47-BA86-9913259F88C9} = {9B6BC8F2-BA46-4D47-BA86-9913259F88C9}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mythfrontend", "programs\mythfrontend\mythfrontend.vcxproj", "{A9D3D34F-BE77-4D13-AA34-603288AB9B02}"
 	ProjectSection(ProjectDependencies) = postProject
 		{AEC82D17-0C44-4EBD-A70F-BF9B3FE4DC36} = {AEC82D17-0C44-4EBD-A70F-BF9B3FE4DC36}
