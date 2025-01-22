@@ -7317,8 +7317,8 @@ Index: mythtv/i18n/mythfrontend_cz.ts
 +        <translation type="unfinished">MythTV používá všechny vstupy pro živou TV?</translation>
 +    </message>
 +    <message>
-+        <source>MythTV has no capture cards defined. Please run the mythtv-setup program.</source>
-+        <translation type="unfinished">Nejsou definovány žádné zachytávací karty. Spusťte prosím program mythtv-setup.</translation>
++        <source>MythTV has no capture cards defined. Please run the Web App.</source>
++        <translation type="unfinished">Nejsou definovány žádné zachytávací karty. Spusťte prosím program Web App.</translation>
 +    </message>
  </context>
  <context>
@@ -10762,8 +10762,8 @@ Index: mythtv/i18n/mythfrontend_sv.ts
 +        <translation>Använder MythTV alla ingångar för TV mottagning?</translation>
 +    </message>
 +    <message>
-+        <source>MythTV has no capture cards defined. Please run the mythtv-setup program.</source>
-+        <translation>MythTV har inga mottagare definierade. Var god och kör mythtv-setup programmet.</translation>
++        <source>MythTV has no capture cards defined. Please run the Web App.</source>
++        <translation>MythTV har inga mottagare definierade. Var god och kör Web App.</translation>
 +    </message>
  </context>
  <context>
@@ -14143,8 +14143,8 @@ Index: mythtv/i18n/mythfrontend_he.ts
 +        <translation>התוכנה משתמשת בכל הכניסות לשידור חי ?</translation>
 +    </message>
 +    <message>
-+        <source>MythTV has no capture cards defined. Please run the mythtv-setup program.</source>
-+        <translation>אין לתוכנה כרטיסי דגימה מוגדרים. אנא הפעל את mythtv-setup.</translation>
++        <source>MythTV has no capture cards defined. Please run the Web App.</source>
++        <translation>אין לתוכנה כרטיסי דגימה מוגדרים. אנא הפעל את Web App.</translation>
 +    </message>
  </context>
  <context>
@@ -23752,7 +23752,6 @@ Index: mythtv/contrib/Win32/build/mythtvsetup.iss
 +[Icons]
 +Name: {group}\Myth Frontend; Filename: {app}\mythfrontend.exe; WorkingDir: {app}
 +Name: {group}\Myth Backend; Filename: {app}\mythbackend.exe; WorkingDir: {app}
-+Name: {group}\Setup; Filename: {app}\mythtv-setup.exe; WorkingDir: {app}
 +Name: {group}\Readme; Filename: {app}\readme.txt; WorkingDir: {app}
 +Name: {group}\Uninstall {#MyAppName}; Filename: {app}\UninsHs.exe; Parameters: /u0={#MyAppName}
 +Name: {group}\Utilities\MythCommFlag; Filename: {app}\mythcommflag.exe; WorkingDir: {app}
