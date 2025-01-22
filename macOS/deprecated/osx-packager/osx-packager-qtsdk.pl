@@ -55,7 +55,7 @@ our @components = ( 'mythplugins' );
 # The OS X programs that we are likely to be interested in.
 our @targets   = ( 'MythFrontend',  'MythWelcome' );
 our @targetsJT = ( 'MythCommFlag', 'MythJobQueue');
-our @targetsBE = ( 'MythBackend',  'MythFillDatabase', 'MythTV-Setup');
+our @targetsBE = ( 'MythBackend',  'MythFillDatabase');
 
 # Name of the PlugIns directory in the application bundle
 our $BundlePlugins = "PlugIns";
@@ -1670,7 +1670,7 @@ foreach my $target ( @targets )
     unlink "$SCRIPTDIR/$target" or die;
 
     # Themes are required by all GUI apps. The filters and plugins are not
-    # used by mythtv-setup or mythwelcome, but for simplicity, do them all.
+    # used by mythwelcome, but for simplicity, do them all.
     if ( $target eq "MythFrontend" or
          $target eq "MythWelcome" or $target =~ m/^MythTV-/ )
     {
@@ -1882,9 +1882,8 @@ if ( $backend && grep(m/MythBackend/, @targets) )
     &AddFakeBinDir($BE);
 }
 
-if ( $backend && grep(m/MythTV-Setup/, @targets) )
+if ( $backend, @targets) )
 {
-    my $SET = "$SCRIPTDIR/MythTV-Setup.app";
     my $SRC  = "$PREFIX/bin/mythfilldatabase";
     if ( -e $SRC )
     {
