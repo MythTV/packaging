@@ -1,8 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=mythTV setup
+Name=MythTV Web App Backend Setup
 Comment=Setup for mythTV.
+GenericName=MythTV Web App Backend Setup
 Icon=mythtv-setup.png
-Exec=mythtv-setup
+URL=http://localhost:6544/setupwizard
 Terminal=false
-Type=Application
+Type=Link
