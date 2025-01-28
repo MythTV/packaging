@@ -1,5 +1,11 @@
 mythtv (2:35.0~master) noble; urgency=medium
 
+  * Switch desktop to use the Web App rather than mythtv-setup
+
+ -- Bill Meek <bmeek@mythtv.org>  Mon, 27 Jan 2025 19:01:23 -0600
+
+mythtv (2:35.0~master) noble; urgency=medium
+
   * Remove mythweb in version to 35
 
  -- Roland Ernst <rcrernst@gmail.com>  Sun, 19 Jan 2025 14:15:49 +0100
