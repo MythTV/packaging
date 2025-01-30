@@ -140,13 +140,14 @@ FINISH
             cat >$installdir/$packagename/usr/share/applications/mythtv-setup.desktop \
             <<FINISH
 [Desktop Entry]
-Name=MythTV Web App Backend Setup
+Name=MythTV Backend Setup
 Comment=Used to configure a backend
-GenericName=MythTV Web App Backend Setup
-URL=http://localhost:6544/setupwizard
-Type=Link
+GenericName=mythtv-setup
+Exec=@env@/usr/bin/mythtv-setup --logpath /tmp
+Type=Application
+Encoding=UTF-8
 Icon=/usr/share/pixmaps/mythtv.png
-Categories=GTK;System;Settings;
+Categories=GTK;System;Settings
 X-AppInstall-Package=mythtv
 FINISH
             mkdir -p $installdir/$packagename/usr/share/pixmaps/
