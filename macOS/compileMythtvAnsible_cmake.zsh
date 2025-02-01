@@ -35,12 +35,12 @@ Configure and Build Options
                                             This is used when you just want to repackage (false)
   --extra-cmake-flags=EXTRA_CMAKE_FLAGS   Addtional configure flags for mythtv ("")
 Bundling, Signing, and Notarization Options
-  --frontend-bundle=BUILD_FRONTEND_BUNDLE Generate an Applicaiton Bundle for Mythfrontend (false)
-                                            Setting this to true builds a working MythFrontend.app.
+  --frontend-bundle=BUILD_FRONTEND_BUNDLE Generate an Applicaiton Bundle for Mythfrontend (OFF)
+                                            Setting this to ON builds a working MythFrontend.app.
                                             If building for unix-style executables,
                                             set this to OFF.
-  --generate-distribution=DISTIBUTE_APP   Generate the Distribution Package (false)
-                                            Setting to true will enable App Signing and Notarization
+  --generate-distribution=DISTIBUTE_APP   Generate the Distribution Package (OFF)
+                                            Setting to ON will enable App Signing and Notarization
   --signing-id=CODESIGN_ID                ID for signing the app bundles. ("")
                                             Default uses the environmental variable CODESIGN_ID.
                                             IF CODESIGN_ID is not set, the distribution package will
@@ -50,8 +50,14 @@ Bundling, Signing, and Notarization Options
                                             IF NOTAR_KEYCHAIN is not set, the distribution package
                                             will not be notarized
                                             hese can be stored by running the following command:
-
 xcrun notarytool store-credentials KEYCHAIN_NAME --apple-id APPLE_ID --team-id=TEAM_ID --password APP_PWD"
+                                          Note: Notarization can take quite a bit of time
+                                                occasionally beyond the default keychain lock time.
+                                                To extend (unfortunately permanently) the keychain
+                                                lock time run the following command where the last
+                                                value is your preferred timeout in seconds
+                                                two hours - 7200 sec has worked so far:
+                                          security set-keychain-settings -t 7200
 
 EOF
   exit 0
@@ -139,6 +145,10 @@ OS_MINOR=${OS_VERS_PARTS[2]}
 OS_MAJOR=${OS_VERS_PARTS[1]}
 OS_ARCH=$(/usr/bin/arch)
 
+### Github Specific Variables ##########################################################################
+isGITHUB=false
+if [ -n GITHUB_ENV ]; then isGITHUB=true; fi
+
 ### Input Parsing ##################################################################################
 # setup default variables
 MYTHTV_VERS="master"
@@ -167,12 +177,12 @@ case $PKGMGR in
     if [ "$OS_MAJOR" -le 11 ] && [ "$OS_MINOR" -le 15 ]; then
       DATABASE_VERS=mariadb-10.5
     fi
-    QT_PKMGR_VERS=qt5
+    QT_PKMGR_VERS=qt6
     PYTHON_VERS="312"
   ;;
   homebrew)
     DATABASE_VERS=mariadb
-    QT_PKMGR_VERS=qt@5
+    QT_PKMGR_VERS=qt@6
     PYTHON_VERS="313"
   ;;
 esac
@@ -226,11 +236,11 @@ for i in "$@"; do
       --signing-id=*)
         CODESIGN_ID="${i#*=}"
       ;;
-      --notarization-keychain==*)
+      --notarization-keychain=*)
         NOTAR_KEYCHAIN="${i#*=}"
       ;;
       *)
-        echo -e 'Unknown or incomplete option '"\033[31m"$i"\033[m"
+        echo -e 'compileMythtv: Unknown or incomplete option '"\033[31m"$i"\033[m"
               # unknown option
         exit 1
       ;;
@@ -356,12 +366,6 @@ if [ ! -n  $SDK_ROOT ]; then
   echoC "Per Apple licensing, sudo privileges are required."
   echoC "     sudo xcodebuild -license accept" GREEN
   exit 1
-fi
-
-if [ ${SDK_VERS%%.*} -ge 14 ]; then
-    COMP_LDFLAGS="-Wl"
-else
-    COMP_LDFLAGS="-Wl,-headerpad_max_install_names"
 fi
 
 # Add flags to allow pkgconfig to find mysql8
@@ -552,7 +556,11 @@ postBuild(){
   else
     if [[ $DISTIBUTE_APP == "ON" ]]; then
       echoC "------------ Generating DragNDrop dmg's with CPack ------------" GREEN
-      /usr/bin/security unlock-keychain
+      # no need to request security unlock on github
+      if [ ! $isGITHUB ]; then
+        # see help message for note on keychain lock time
+        /usr/bin/security unlock-keychain
+      fi
       CPACK_CFG=$(find $WORKING_DIR/mythtv -name "CPackConfig.cmake")
       CPACK_CMD="cpack --config $CPACK_CFG"
       eval "${CPACK_CMD}" || { echo 'Bundling MythTV failed' ; exit 1; }
