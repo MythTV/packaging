@@ -139,7 +139,7 @@ REPO_PREFIX=$HOME
 case $PKGMGR in
   macports)
     DATABASE_VERS=mysql8
-    PYTHON_VERS="312"
+    PYTHON_VERS="313"
     QT_VERS=qt5
   ;;
   homebrew)
@@ -380,11 +380,11 @@ echoC "    Installing Build Outputs to $INSTALL_DIR" BLUE
 ###########################################################################################
 # Setup Initial Python variables and dependencies for port / ansible installation
 PYTHON_PKMGR_BIN="$PKGMGR_BIN/$PYTHON_CMD"
-PYTHON_VENV_PATH="$HOME/.mythtv/python-virtualenv"
+PYTHON_VENV_PATH="$HOME/.mythtv/python-venv$PYTHON_VERS"
 PY2APP_PKGS="MySQLdb,pycurl,requests_cache,urllib3,future,lxml,oauthlib,requests,simplejson,\
   audiofile,bs4,argparse,common,configparser,datetime,discid,et,features,HTMLParser,httplib2,\
   musicbrainzngs,traceback2,dateutil,importlib_metadata"
-PY2APP_EXLCUDE="soundfile"
+PY2APP_EXLCUDE="soundfile,py2app,wheel,pip,packaging"
 # Add flags to allow pip3 / python to find mysql8
 case $PKGMGR in
   macports)
@@ -853,6 +853,7 @@ echoC "------------ Source the Python Virtual Environment ------------" GREEN
 # since we're using a custom python virtual environment, we need to source it to get the
 # build process to use it.
 source "$PYTHON_VENV_PATH/bin/activate"
+pip3 install py2app future
 PYTHON_VENV_BIN=$PYTHON_VENV_PATH/bin/$PYTHON_CMD
 PY2APPLET_BIN=$PYTHON_VENV_PATH/bin/py2applet
 
@@ -913,6 +914,7 @@ else
                          --disable-firewire         \
                          --disable-libcec           \
                          --disable-x11              \
+                         --disable-egl              \
                          --enable-libmp3lame        \
                          --enable-libxvid           \
                          --enable-libx264           \
