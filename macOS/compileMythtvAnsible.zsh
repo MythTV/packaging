@@ -20,7 +20,7 @@ Standard options:
   --repo-prefix=REPO_PREFIX              Directory base to install the working repository (~)
   --generate-app=GENERATE_APP            Generate Applicaiton Bundles for executables (true)
                                          Currently, setting this to true only builds a working
-                                         MythFrontend.app.  If building for unix-style executables, 
+                                         MythFrontend.app.  If building for unix-style executables,
                                          set this to false.
   --custom-install-dir=INSTALL_DIR       Directory to copy the compiled executables and support files. ("")
                                            When generating app bundles (i.e. --generate-app=false),
@@ -30,7 +30,7 @@ Standard options:
 
 Build Options
   --update-git=UPDATE_GIT                Update git repositories to latest (true)
-                                         This is only used when the source has already been cloned via 
+                                         This is only used when the source has already been cloned via
                                          git and you do not want to pull any updates from the master repo
   --skip-build=SKIP_BUILD                Skip configure and make
                                          This is used when you just want to repackage (false)
@@ -139,17 +139,17 @@ REPO_PREFIX=$HOME
 case $PKGMGR in
   macports)
     DATABASE_VERS=mysql8
-    PYTHON_VERS="311"
+    PYTHON_VERS="313"
     QT_VERS=qt5
   ;;
   homebrew)
     DATABASE_VERS=mysql@8.0
-    PYTHON_VERS="312"
+    PYTHON_VERS="313"
     QT_VERS=qt@5
   ;;
 esac
 
-# macports doesn't support mysql 8 for older versions of macOS, for those installs default to mariadb (unless the user overries)
+# macports doesn't support mysql 8 for older versions of macOS, for those installs default to mariadb (unless the user overrides)
 # also, homebrew drops the version numbers...
 if [ "$OS_MAJOR" -le 11 ] && [ "$OS_MINOR" -le 15 ]; then
   case $PKGMGR in
@@ -162,7 +162,7 @@ if [ "$OS_MAJOR" -le 11 ] && [ "$OS_MINOR" -le 15 ]; then
   esac
 fi
 
-# force expansion of magic substrings
+# force expansion of magic sub-strings
 set -o magicequalsubst
 
 # parse user inputs into variables
@@ -288,7 +288,7 @@ case $PKGMGR in
     FONT_PATH="$PKGMGR_INST_PATH/share/fonts"
     # Select the correct QT version of tools / libraries
     HDHR_INC_PATH="$PKGMGR_INC/libhdhomerun"
-    #set as null since its on the default macports location 
+    #set as null since its on the default macports location
     HDHR_LIB_PATH=""
     INSTALL_WEBKIT=true
   ;;
@@ -380,11 +380,11 @@ echoC "    Installing Build Outputs to $INSTALL_DIR" BLUE
 ###########################################################################################
 # Setup Initial Python variables and dependencies for port / ansible installation
 PYTHON_PKMGR_BIN="$PKGMGR_BIN/$PYTHON_CMD"
-PYTHON_VENV_PATH="$HOME/.mythtv/python-virtualenv"
+PYTHON_VENV_PATH="$HOME/.mythtv/python-venv$PYTHON_VERS"
 PY2APP_PKGS="MySQLdb,pycurl,requests_cache,urllib3,future,lxml,oauthlib,requests,simplejson,\
   audiofile,bs4,argparse,common,configparser,datetime,discid,et,features,HTMLParser,httplib2,\
   musicbrainzngs,traceback2,dateutil,importlib_metadata"
-PY2APP_EXLCUDE="soundfile"
+PY2APP_EXLCUDE="soundfile,py2app,wheel,pip,packaging"
 # Add flags to allow pip3 / python to find mysql8
 case $PKGMGR in
   macports)
@@ -410,7 +410,7 @@ if [ ! -n  $SDK_ROOT ]; then
   exit 1
 fi
 
-if [ ${SDK_VERS%%.*} -ge 14 ]; then 
+if [ ${SDK_VERS%%.*} -ge 14 ]; then
     COMP_LDFLAGS="-Wl"
 else
     COMP_LDFLAGS="-Wl,-headerpad_max_install_names"
@@ -517,12 +517,12 @@ case $ALT_COMPILER in
       CPP_CMD="clang++"
     ;;
     *)
-      echoC 'Error: unkown compiler specified.  Exiting!' RED
+      echoC 'Error: unknown compiler specified.  Exiting!' RED
       exit 1
     ;;
 esac
 
-# There's a conflice with FFMPEG and mythtv at least on macports.  Force mythtv's version to the front of the 
+# There's a conflict with FFMPEG and mythtv at least on macports.  Force mythtv's version to the front of the
 # include search path
 INC_SRC="$SRC_DIR/external/FFmpeg"
 # Add include paths for the compiler to find the package manager locations
@@ -555,8 +555,8 @@ export LIBRARY_PATH=$LIBRARY_PATH
 ###########################################################################################
 ### Setup Application Bundle Variables ####################################################
 ###########################################################################################
-# These variables are used to bundle the mythfronend.app application bundle.
-# They point to internal appliction paths and are currently hardcoded to mythfrontend.
+# These variables are used to bundle the mythfrontend.app application bundle.
+# They point to internal application paths and are currently hard-coded to mythfrontend.
 APP_NAME=mythfrontend
 APP_DIR=$SRC_DIR/programs/$APP_NAME
 APP=$APP_DIR/$APP_NAME.app
@@ -567,7 +567,7 @@ APP_PLUGINS_DIR=$APP_FMWK_DIR/PlugIns
 APP_INFO_FILE=$APP/Contents/Info.plist
 
 ###########################################################################################
-### Utiltity Functions ####################################################################
+### Utility Functions #####################################################################
 ###########################################################################################
 # installLibs finds all linked dylibs for the input binary/dylib
 # copying any missing ones in the application's FrameWork directory
@@ -587,7 +587,7 @@ installLibs(){
 
     # Parse the lib if it isn't null
     if [ -n "$lib" ]; then
-      #check if it is already installed in the framewrk, if so
+      #check if it is already installed in the framework, if so
       #update the link
       needsCopy=false
       FMWK_LIB=$(find "$APP_FMWK_DIR" -name "$lib" -print -quit)
@@ -714,7 +714,7 @@ correctHomebrewLibs(){
   cd $startDIR
 }
 
-# QT5 on homebrew no longe porvides a mechanism to install the QTMYSQL driver
+# QT5 on homebrew no longer porvides a mechanism to install the QTMYSQL driver
 buildQT5MYSQL(){
   QTVERS=$($QMAKE_CMD -query QT_VERSION)
   QT_SOURCES="$(pwd)/qt5_src/qt@5-$QTVERS"
@@ -853,6 +853,7 @@ echoC "------------ Source the Python Virtual Environment ------------" GREEN
 # since we're using a custom python virtual environment, we need to source it to get the
 # build process to use it.
 source "$PYTHON_VENV_PATH/bin/activate"
+pip3 install py2app future
 PYTHON_VENV_BIN=$PYTHON_VENV_PATH/bin/$PYTHON_CMD
 PY2APPLET_BIN=$PYTHON_VENV_PATH/bin/py2applet
 
@@ -913,6 +914,7 @@ else
                          --disable-firewire         \
                          --disable-libcec           \
                          --disable-x11              \
+                         --disable-egl              \
                          --enable-libmp3lame        \
                          --enable-libxvid           \
                          --enable-libx264           \
@@ -1129,7 +1131,7 @@ if [ -f setup.py ]; then
 fi
 
 echoC "    Creating a temporary application from $MYTHTV_PYTHON_SCRIPT" BLUE
-# in order to get python embedded in the application we're going to make a temporyary application
+# in order to get python embedded in the application we're going to make a temporary application
 # from one of the python scripts which will copy in all the required libraries for running
 # and will make a standalone python executable not tied to the system ttvdb4 seems to be more
 # particular than others (tmdb3)...
@@ -1152,7 +1154,7 @@ rm -Rf "$APP_RSRC_DIR/lib/$PYTHON_CMD/site-packages/py2app"
 
 echoC "------------ Replace application perl/python paths to relative paths inside the application   ------------" GREEN
 # mythtv "fixes" the shebang in all python scripts to an absolute path on the compiling system.  We need to
-# change this to a relative path pointint internal to the application.
+# change this to a relative path pointing internal to the application.
 # Note - when MacOS apps run, their starting path is the path as the directory the .app is stored in
 
 cd "$APP_RSRC_DIR/share/mythtv/metadata" || exit 1
@@ -1207,7 +1209,7 @@ done
 
 echoC "------------ Generating Application Bundle startup script ------------" GREEN
 # since we now have python installed internally, we need to make sure that the
-# executable launched from the curret directory points to the internal python
+# executable launched from the current directory points to the internal python
 # We need to do this step after macdeployqt since the startup script breaks macdeployqt
 cd "$APP_EXE_DIR" || exit 1
 echo "#!/bin/sh
@@ -1235,6 +1237,6 @@ echoC "------------ Build Complete ------------" GREEN
 echoC "     Application is located:"
 echoC "     $APP" GREEN
 echoC "If you intend to distribute the application, then next steps are to codesign
-and notarize the appliction using the codesignAndPackage.zsh script with the
+and notarize the application using the codesignAndPackage.zsh script with the
 following command:"
 echoC "    ./codesignAndPackage.zsh $APP" GREEN
