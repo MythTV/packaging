@@ -14,6 +14,10 @@ if [[ "$BUILD_PREPARE" != "" ]] ; then
     $BUILD_PREPARE
 fi
 
+if [[ "$BUILD_METHOD" == '' ]]; then
+    BUILD_METHOD=cmake
+fi
+
 . "$scriptpath/setccache.source"
 
 branch=`git branch | grep '*'| cut -f2 -d' '`
@@ -52,13 +56,29 @@ if [[ `arch` == arm* ]] ; then
 fi
 
 rc=0
-if [[ ! -f Makefile ]] ; then
-    echo ERROR No Makefile found.
-    rc=999
-else
-    set -o pipefail
-    make -j $numjobs |& tee -a $gitbasedir/../build_${projdir}.out || rc=$?
-fi
+case $BUILD_METHOD in
+    cmake)
+        cd ..
+        set -o pipefail
+        cmake --build build-qt5 |& tee -a $gitbasedir/../build_${projdir}.out || rc=$?
+        set +o pipefail
+        ;;
+    make)
+        if [[ ! -f Makefile ]] ; then
+            echo ERROR No Makefile found.
+            rc=999
+        else
+            set -o pipefail
+            make -j $numjobs |& tee -a $gitbasedir/../build_${projdir}.out || rc=$?
+            set +o pipefail
+        fi
+        ;;
+    *)
+        echo "ERROR: Invalid Build Method $BUILD_METHOD"
+        exit 2
+        ;;
+esac
+
 echo Log File:
 echo "$gitbasedir/../build_${projdir}.out"
 

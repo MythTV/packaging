@@ -7,6 +7,28 @@ gitbasedir=`git rev-parse --show-toplevel`
 
 projname=`basename $PWD`
 
+if [[ -f $HOME/.buildrc ]] ; then
+    . $HOME/.buildrc
+fi
+
+if [[ "$BUILD_METHOD" == '' ]]; then
+    BUILD_METHOD=cmake
+fi
+
+case $BUILD_METHOD in
+    cmake)
+        echo "With cmake the build script also installs software. Nothing to do in the install.sh script"
+        exit 0
+        ;;
+    make)
+        # Continue with rest of script below
+        ;;
+    *)
+        echo "ERROR: Invalid Build Method $BUILD_METHOD"
+        exit 2
+        ;;
+esac
+
 # This will get projname and destdir
 . "$scriptpath/getdestdir.source"
 

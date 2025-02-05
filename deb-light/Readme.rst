@@ -1,7 +1,7 @@
 MythTV Light Debian & Ubuntu Packaging (.deb)
 =============================================
 This is an alternative package for Debian & Ubuntu systems.
-It is used for the "MythTV Light" packages for Raspberry Pi.
+It is also used for the "MythTV Light" packages for Raspberry Pi.
 
 Differences
 -----------
@@ -19,6 +19,14 @@ MythTV Light includes a suite of tools to support building and
 testing of multiple versions of MythTV on one computer. You can
 also test the built software before creating a package.
 
+make vs cmake
+-------------
+MythTV historically was built using a Makefile in the mythtv and mythplugins
+directories. There is now a cmake option, which will be preferred in future.
+The deb-light build process caters for both methods and defaults to cmake.
+Note the cmake option has not been tested on Raspberry Pi, so if you
+encounter problems, use the make option.
+
 Setup for building
 ------------------
 Set up your system this way.
@@ -35,14 +43,41 @@ Set up your system this way.
   path to avoid entering it every time.
 - Make sure you have the build dependencies installed. You can use the
   ansible repository to install them. See github MythTV/ansible.
+- If you are using cmake (which is the default), make sure you install the
+  cmake prerequisites. See README.CMake.md in  the mythtv repository.
 
 Options
 .......
-If you want to override configuration options, you can either supply them 
-on the command line of config.sh or add a MYTHTV_CONFIG_OPT_EXTRA line to
-$HOME/.buildrc, for example::
+Options can be set in the $HOME/.buildrc file. Create the file if it does not
+exist. Specify the build method (make or cmake) by adding a line as follows.
+The options are make or cmake. The default is cmake:
+
+    BUILD_METHOD=cmake
+
+make Options
+^^^^^^^^^^^^
+
+If you want to override configuration options, you can supply them by
+adding a MYTHTV_CONFIG_OPT_EXTRA line to $HOME/.buildrc.
 
   MYTHTV_CONFIG_OPT_EXTRA="--enable-opengl-video --enable-opengl"
+
+cmake Options
+^^^^^^^^^^^^^
+
+Add options applicable to the cmake command, for example:
+
+  MYTHTV_CONFIG_OPT_EXTRA="-DENABLE_<FEATURE>=OFF"
+
+Change the preset. Default is qt5. For other options run cmake --list-presets
+in the top level mythtv directory:
+
+    BUILD_PRESET=qt5
+
+Change the build type. Default is Debug. For other options see README.CMake.md
+in the mythtv repository:
+
+    BUILD_TYPE=Debug
 
 Building the packages
 ---------------------
@@ -73,7 +108,7 @@ mythplugins-light
     cd <dir1>/mythtv/mythplugins
     /<dir2>/build_package.sh
 
-- The package will be in <dir1>
+- The package will be in <dir1>.
 
 Developing and Testing
 ======================
@@ -84,6 +119,9 @@ of MythTV on one system at the same time.
 
 config.sh
 ---------
+With cmake builds, the config script does not run MythTV configure. It
+configures cmake for a build,
+
 This script works from the mythtv or the mythplugins directory. It first
 cleans all old build data. It does not interfere with any source code
 changes or patches you may have made. It then runs configure with the
@@ -99,10 +137,14 @@ against.
 build.sh
 --------
 After running config.sh, build.sh performs the make against the source.
+If building with cmake (the default), it does the MythTV configure, build, and install as described below.
 
-install.sh
-----------
-This script installs the build into the directory selected for test builds
+install
+-------
+The install into the build directory is done by the build.sh script
+when using cmake. Whan using make, it is done by running install.sh.
+
+The script installs the build into the directory selected for test builds
 the first time you run. It creates a hierarchy of directories for
 each environment and branch, so that you can have several branches and
 environments installed at once. It creates a separate directory for patched
@@ -115,11 +157,13 @@ subdirectories. The mythplugins subdirectories contain both the mythtv and
 the plugins so that you can test mythtv with the plugins.
 
 Versions that have git differences (dirty), are put in a directory with "-tst"
-appended tio the name. If you want a different extension applied, for example
+appended to the name. If you want a different extension applied, for example
 if you are working on multiple builds, add a "BUILD_DIRTY" line
 to $HOME/.buildrc, for example::
 
-  BUILD_DIRTY=ogl
+  BUILD_DIRTY=xxx
+
+When using cmake build (the default), install.sh does nothing.
 
 package.sh
 ----------

@@ -4,7 +4,9 @@ scriptpath=`dirname "$scriptname"`
 scriptargs=("$@")
 set -e
 
-#options
+if [[ -f $HOME/.buildrc ]] ; then
+    . $HOME/.buildrc
+fi
 
 strip=
 while (( "$#" >= 1 )) ; do
@@ -140,14 +142,13 @@ FINISH
             cat >$installdir/$packagename/usr/share/applications/mythtv-setup.desktop \
             <<FINISH
 [Desktop Entry]
-Name=MythTV Backend Setup
+Name=MythTV Web App Backend Setup
 Comment=Used to configure a backend
-GenericName=mythtv-setup
-Exec=@env@/usr/bin/mythtv-setup --logpath /tmp
-Type=Application
-Encoding=UTF-8
+GenericName=MythTV Web App Backend Setup
+URL=http://localhost:6544/setupwizard
+Type=Link
 Icon=/usr/share/pixmaps/mythtv.png
-Categories=GTK;System;Settings
+Categories=GTK;System;Settings;
 X-AppInstall-Package=mythtv
 FINISH
             mkdir -p $installdir/$packagename/usr/share/pixmaps/
