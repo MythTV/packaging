@@ -98,15 +98,21 @@ case $projname in
         fi
         rm -rf $installdir/$packagename $installdir/$packagename.deb
         cp -a "$sourcedir/" "$installdir/$packagename/"
+
+        # Remove files not needed for package
+        rm -rf "$installdir/$packagename/usr/lib/cmake/"
+        rm -rf "$installdir/$packagename/usr/lib/pkgconfig/"
+        rm -rf "$installdir/$packagename/usr/lib/libmythexiv2-xmp.a"
+        rm -rf "$installdir/$packagename/usr/lib/"*/perl/*/auto/MythTV/.packlist
+        for (( x=0; x<6; x++ )) ; do
+            # run this 6 times to remove empty nested directories up to 6 levels
+            find $installdir/$packagename/usr/lib  -type d -empty -delete
+        done
+
         mkdir -p $installdir/$packagename/DEBIAN
         if [[ "$strip" != "_nostrip" ]] ; then
             strip -g `find $installdir/$packagename/usr/bin/ -type f -executable`
             strip -g `find $installdir/$packagename/usr/lib/ -type f -executable -name '*.so*'`
-        fi
-
-		deps="libexiv2-27, "
-        if [[ "$codename" == buster ]] ; then
-            deps="libexiv2-14, "
         fi
 
         cat >$installdir/$packagename/DEBIAN/control <<FINISH
@@ -118,7 +124,7 @@ Architecture: $arch
 Essential: no
 Installed-Size: `du -B1024 -d0 $installdir/$packagename | cut  -f1`
 Maintainer: Peter Bennett <pbennett@mythtv.org>
-Depends: $deps libtag1v5, libavahi-compat-libdnssd1, libqt5widgets5, libqt5script5, libqt5sql5-mysql, libqt5xml5, libqt5network5, libqt5webkit5, pciutils, libva-x11-1 | libva-x11-2, libva-glx1 | libva-glx2, libqt5opengl5, libdbi-perl,  libdbd-mysql-perl, libnet-upnp-perl, libcec3 | libcec4 | libcec6, libfftw3-double3, libfftw3-single3, libass5 | libass9, libfftw3-3 | libfftw3-bin, libraw1394-11, libiec61883-0, libavc1394-0, fonts-liberation, libva-drm1 | libva-drm2, libmp3lame0, libxv1, libpulse0, libhdhomerun3 | libhdhomerun4 | libhdhomerun5, libxnvctrl0, libsamplerate0, libbluray1 | libbluray2, liblzo2-2, libio-socket-inet6-perl, libxml-simple-perl, python3-lxml, python3-mysqldb, python3-requests, python3-requests-cache, libxinerama1, libzip4 | libzip5, libsoundtouch1
+Depends: libtag1v5, libavahi-compat-libdnssd1, libqt5widgets5, libqt5script5, libqt5sql5-mysql, libqt5xml5, libqt5network5, libqt5webkit5, pciutils, libva-x11-1 | libva-x11-2, libva-glx1 | libva-glx2, libqt5opengl5, libdbi-perl,  libdbd-mysql-perl, libnet-upnp-perl, libcec3 | libcec4 | libcec6, libfftw3-double3, libfftw3-single3, libass5 | libass9, libfftw3-3 | libfftw3-bin, libraw1394-11, libiec61883-0, libavc1394-0, fonts-liberation, libva-drm1 | libva-drm2, libmp3lame0, libxv1, libpulse0, libhdhomerun3 | libhdhomerun4 | libhdhomerun5, libxnvctrl0, libsamplerate0, libbluray1 | libbluray2, liblzo2-2, libio-socket-inet6-perl, libxml-simple-perl, python3-lxml, python3-mysqldb, python3-requests, python3-requests-cache, libxinerama1, libzip4 | libzip5, libsoundtouch1
 Conflicts: mythtv-common, mythtv-frontend, mythtv-backend
 Homepage: http://www.mythtv.org
 Description: MythTV Light
@@ -185,6 +191,17 @@ FINISH
         fi
         rm -rf $installdir/$packagename $installdir/$packagename.deb
         cp -a "$sourcedir/" "$installdir/$packagename/"
+
+        # Remove files not needed for package
+        rm -rf "$installdir/$packagename/usr/lib/cmake/"
+        rm -rf "$installdir/$packagename/usr/lib/pkgconfig/"
+        rm -rf "$installdir/$packagename/usr/lib/libmythexiv2-xmp.a"
+        rm -rf "$installdir/$packagename/usr/lib/"*/perl/*/auto/MythTV/.packlist
+        for (( x=0; x<6; x++ )) ; do
+            # run this 6 times to remove empty nested directories up to 6 levels
+            find $installdir/$packagename/usr/lib  -type d -empty -delete
+        done
+
         # Remove mythtv files so that only plugin files remain
         cd $installdir/$packagename
         (cd $installdir/$mythtvpackagename ; find . \( -type f -o -type l \) -print0) | xargs -0 rm -f
