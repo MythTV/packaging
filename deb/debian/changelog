@@ -1,3 +1,9 @@
+mythtv (2:35.0+fixes) noble; urgency=medium
+
+  * Dummy entry to bump version to fixes/35
+
+ -- Roland Ernst <rcrernst@gmail.com>  Thu, 13 Feb 2025 20:15:49 +0100
+
 mythtv (2:35.0~master) noble; urgency=medium
 
   * Switch desktop to use the Web App rather than mythtv-setup
