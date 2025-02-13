@@ -12,7 +12,7 @@ Standard options:
                                            Example: ${2}
   --version=MYTHTV_VERS                  Requested mythtv git repo (${1})
                                            Example: master for the latest master
-                                                    fixes/34 for version 34
+                                                    fixes/35 for version 35
   --database-version=DATABASE_VERS       Requested version of mariadb/mysql to build agains (${3})
   --qt-version=qt5                       Select Qt version to build against (${4})
                                            Example: qt5 for qt5
@@ -119,7 +119,7 @@ OS_ARCH=$(/usr/bin/arch)
 # setup default variables
 BUILD_PLUGINS=false
 UPDATE_PKGMGR=false
-MYTHTV_VERS="master"
+MYTHTV_VERS="fixes/35"
 MYTHTV_PYTHON_SCRIPT="ttvdb4"
 GENERATE_APP=true
 INSTALL_DIR=""

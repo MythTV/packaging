@@ -9,7 +9,7 @@ Standard Options:
   --help                                  Print this help message
   --version=MYTHTV_VERS                   Requested mythtv git repo (${1})
                                             Example: master for the latest master
-                                                     fixes/34 for version 34
+                                                     fixes/35 for version 35
   --build-plugins=BUILD_PLUGINS           Build MythTV Plugins (false)
 Environmental Options:
   --database-version=DATABASE_VERS        Requested version of mariadb/mysql to build agains (${3})
@@ -152,7 +152,7 @@ if [ -n "$GITHUB_ENV" ]; then
 fi
 ### Input Parsing ##################################################################################
 # setup default variables
-MYTHTV_VERS="master"
+MYTHTV_VERS="fixes/35"
 BUILD_PLUGINS=false
 BUNDLE_APPLICTION=false
 BUILD_FRONTEND_BUNDLE=OFF
