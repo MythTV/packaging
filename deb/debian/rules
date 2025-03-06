@@ -124,7 +124,7 @@ override_dh_auto_install:
 	$(MAKE) -j$(PROCESSORS) -C mythplugins
 	for plugin in mytharchive \
 	mythgame mythmusic mythnews \
-	mythweather mythzoneminder mythbrowser ; do \
+	mythweather mythzoneminder ; do \
 		$(MAKE) -C mythplugins/$$plugin install INSTALL_ROOT=$(CURDIR)/debian/$$plugin; \
 	done
 
