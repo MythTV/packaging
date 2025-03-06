@@ -60,7 +60,6 @@ Build-Depends:
  libnet-upnp-perl,
  libpulse-dev,
  libqt5opengl5-dev,
- libqt5webkit5-dev,
  libraspberrypi-dev [armhf],
  libsamplerate0-dev,
  libsoap-lite-perl,
@@ -168,6 +167,7 @@ Depends:
 Suggests:
  mythtv-doc,
 Conflicts:
+ mythbrowser,
  mythcontrols,
  mythmusic (<< 0.20.99+trunk14393),
  mythtv (<< 0.8-1),
@@ -517,7 +517,6 @@ Replaces:
  mythmovies,
 Depends:
  mytharchive,
- mythbrowser,
  mythgame,
  mythmusic,
  mythnews,
@@ -636,16 +635,6 @@ Description: view status and display footage recorded with zoneminder
  MythZoneMinder interfaces with Zoneminder, a CCTV solution.
  You can view the status of ZoneMinder and watch live camera shots and
  recorded surveillance footage.
-
-Package: mythbrowser
-Architecture: amd64 arm64
-Depends:
- mythtv-frontend (>= ${binary:Version}),
- ${misc:Depends},
- ${shlibs:Depends},
-Description: Web browser plugin for MythTV
- Mythbrowser is a standards compliant web browser plugin for MythTV built
- on top of Webkit.
 
 Package: mythtv-theme-mythbuntu
 Architecture: all
