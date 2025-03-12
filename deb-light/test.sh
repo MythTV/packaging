@@ -27,6 +27,10 @@ project=$(basename $(dirname "$longname"))
 case $project in
     mythtv|mythplugins)
         basedir=$destdir/usr
+        perl5=`ls -d $basedir/local/share/perl/*||true`
+        if [[ "$perl5" == "" ]]; then
+            perl5=`ls -d $basedir/share/perl/*||true`
+        fi
         set -x
         export PATH=$basedir/bin:$basedir/local/bin:$PATH
         export MYTHTVDIR=$basedir
@@ -34,7 +38,7 @@ case $project in
         export MYTHCONFDIR=$HOME/.mythtv-$shortname
         # dist-packages if installed by debian
         export PYTHONPATH=`ls -d $basedir/local/lib/python*/dist-packages`
-        export PERL5LIB=`ls -d $basedir/local/share/perl/*`${PERL5LIB:+:${PERL5LIB}}
+        export PERL5LIB=$perl5${PERL5LIB:+:${PERL5LIB}}
         exec $pgm "$@"
         ;;
     *)
