@@ -348,7 +348,6 @@ else
     INSTALL_DIR=$PKGMGR_INST_PATH
   fi
 fi
-
 RUNPREFIX=$INSTALL_DIR
 echoC "    Installing Build Outputs to $INSTALL_DIR" BLUE
 
@@ -380,7 +379,12 @@ case $PKGMGR in
 esac
 
 ### Configure and Build Functions ##################################################################
+# check to see if the working directory exists, if not create it
+if [ ! -d $WORKING_DIR ]; then
+  mkdir -p $WORKING_DIR
+fi
 runAnsible(){
+  cd $WORKING_DIR
   if $SKIP_ANSIBLE; then
     echoC "    User requested skip of ansible package installation" ORANGE
     return 0
@@ -540,6 +544,7 @@ configureAndBuild(){
                     -B $CMAKE_BUILD_DIR                   \
                     -G Ninja                              \
                     -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR   \
+                    -DCMAKE_RUN_PREFIX=$RUNPREFIX         \
                     $EXTRA_CMAKE_FLAGS"
   eval "${CONFIG_CMD}"
   echoC "------------ Building MythTV ------------" GREEN
