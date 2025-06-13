@@ -150,7 +150,7 @@ Depends:
  default-mysql-client | virtual-mysql-client | mysql-client-5.7 | mysql-client-5.6 | mariadb-client,
  fonts-dejavu,
  fonts-droid-fallback | fonts-droid | ttf-droid,
- fonts-freefonts-ttf,
+ fonts-freefont-ttf,
  fonts-liberation | ttf-liberation,
  fonts-texgyre | tex-gyre,
  fonts-tlwg-purisa,
