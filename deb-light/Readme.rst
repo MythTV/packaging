@@ -163,7 +163,12 @@ to $HOME/.buildrc, for example::
 
   BUILD_DIRTY=xxx
 
-When using cmake build (the default), install.sh does nothing.
+When using cmake build (the default), install.sh does nothing. With cmake,
+the -tst or DIRTY option does not work. All builds are put into the same
+directory, whether dirty or not. It is not practical to use separate
+directories as the dirtectory is set up in config, and you do not want to
+run config very often as it causes the build to take a long time. If you 
+want to save the commit build, copy or move it to another directory.
 
 package.sh
 ----------
