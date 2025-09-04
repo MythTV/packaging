@@ -52,6 +52,6 @@ Examples:
  - DEBFULLNAME='NAME HERE' DEBEMAIL='user@example.com' UBUNTU_RELEASE='bionic' DEBIAN_SUFFIX='0ubuntu2' ./build-dsc.sh fixes/29 /tmp
 	This would build source packages (that could be later built somewhere such as
 	launchpad PPA's) from the fixes/29 branch, in the tmp directory. It would
-        also force the debian suffix '0ubuntu1'. However, it will not sign the source
-        ackages, so they will need to be signed later (using 'debsign' for
-        ser@example.com) prior to uploading them to the Ubuntu repository.
+        also force the debian suffix '0ubuntu2'. However, it will not sign the source
+        packages, so they will need to be signed later (using 'debsign' for
+        user@example.com) prior to uploading them to the Ubuntu repository.
