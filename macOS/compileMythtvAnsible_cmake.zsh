@@ -354,7 +354,7 @@ echoC "    Installing Build Outputs to $INSTALL_DIR" BLUE
 
 ### Setup Python Specific variables ################################################################
 PYTHON_PKMGR_BIN="$PKGMGR_BIN/$PYTHON_CMD"
-PYTHON_VENV_PATH="$HOME/.mythtv/python-venv$PYTHON_VERS"
+PYTHON_VENV_PATH="$HOME/.virtualenvs/mythtv/python-venv$PYTHON_VERS"
 
 ### Setup Compiler and Related Search Paths ########################################################
 # First verify that the SDK is setup and command line tools license has been accepted
