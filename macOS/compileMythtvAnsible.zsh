@@ -380,7 +380,7 @@ echoC "    Installing Build Outputs to $INSTALL_DIR" BLUE
 ###########################################################################################
 # Setup Initial Python variables and dependencies for port / ansible installation
 PYTHON_PKMGR_BIN="$PKGMGR_BIN/$PYTHON_CMD"
-PYTHON_VENV_PATH="$HOME/.mythtv/python-venv$PYTHON_VERS"
+PYTHON_VENV_PATH="$HOME/.virtualenvs/mythtv/python-venv$PYTHON_VERS"
 PY2APP_PKGS="MySQLdb,pycurl,requests_cache,urllib3,future,lxml,oauthlib,requests,simplejson,\
   audiofile,bs4,argparse,common,configparser,datetime,discid,et,features,HTMLParser,httplib2,\
   musicbrainzngs,traceback2,dateutil,importlib_metadata"
