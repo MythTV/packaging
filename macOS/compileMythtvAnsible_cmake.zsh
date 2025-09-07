@@ -308,7 +308,7 @@ case $PKGMGR in
     PKGMGR_INST_PATH=$(brew --prefix)
     PKGMGR_BIN="$PKGMGR_INST_PATH/bin"
     PKGMGR_LIB="$PKGMGR_INST_PATH/lib"
-    ANSIBLE_PB_EXE="$PKGMGR_BIN/ansible-playbook"
+    ANSIBLE_PB_EXE="ANSIBLE_BECOME=false ANSIBLE_BECOME_ASK_PASS=False $PKGMGR_BIN/ansible-playbook"
     FONT_PATH="$HOME/Library/Fonts"
   ;;
 esac
@@ -353,7 +353,7 @@ echoC "    Installing Build Outputs to $INSTALL_DIR" BLUE
 
 ### Setup Python Specific variables ################################################################
 PYTHON_PKMGR_BIN="$PKGMGR_BIN/$PYTHON_CMD"
-PYTHON_VENV_PATH="$HOME/.mythtv/python-venv$PYTHON_VERS"
+PYTHON_VENV_PATH="$HOME/.virtualenvs/mythtv/python-venv$PYTHON_VERS"
 
 ### Setup Compiler and Related Search Paths ########################################################
 # First verify that the SDK is setup and command line tools license has been accepted
