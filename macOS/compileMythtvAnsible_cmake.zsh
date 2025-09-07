@@ -308,7 +308,7 @@ case $PKGMGR in
     PKGMGR_INST_PATH=$(brew --prefix)
     PKGMGR_BIN="$PKGMGR_INST_PATH/bin"
     PKGMGR_LIB="$PKGMGR_INST_PATH/lib"
-    ANSIBLE_PB_EXE="$PKGMGR_BIN/ansible-playbook"
+    ANSIBLE_PB_EXE="ANSIBLE_BECOME=false ANSIBLE_BECOME_ASK_PASS=False $PKGMGR_BIN/ansible-playbook"
     FONT_PATH="$HOME/Library/Fonts"
   ;;
 esac
