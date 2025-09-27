@@ -338,6 +338,7 @@ if $BUNDLE_APPLICTION; then
   fi
   EXTRA_CMAKE_FLAGS="$EXTRA_CMAKE_FLAGS \
                      -DCMAKE_BUILD_TYPE=Release \
+                     -DENABLE_LTO=OFF \
                      -DDARWIN_FRONTEND_BUNDLE=$BUILD_FRONTEND_BUNDLE \
                      -DDARWIN_GENERATE_DISTRIBUTION=$DISTIBUTE_APP \
                      -DDARWIN_SIGNING_ID=\"$CODESIGN_ID\" \
@@ -423,7 +424,7 @@ runAnsible(){
   cd "$WORKING_DIR/ansible" || exit 1
   case $QT_PKMGR_VERS in
       *5*)
-         ANSIBLE_EXTRA_FLAGS="--extra-vars \"ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS\""
+         ANSIBLE_EXTRA_FLAGS="--extra-vars \"qt5=true ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS\""
       ;;
       *)
          ANSIBLE_EXTRA_FLAGS="--extra-vars \"qt6=true ansible_python_interpreter=$PYTHON_PKMGR_BIN database_version=$DATABASE_VERS\""
@@ -552,6 +553,9 @@ configureAndBuild(){
   echoC "    Building via cmake" BLUE
   BUILD_CMD="cmake --build build-$QT_CMAKE_VERS"
   eval "${BUILD_CMD}" || { echo 'Building MythTV failed' ; exit 1; }
+  TEST_CMD="cmake --build build-$QT_CMAKE_VERS -t MythTV-tests"
+  eval "${TEST_CMD}" || { echo 'Testing MythTV failed' ; exit 1; }
+  echoC "    Testing via cmake" BLUE
 }
 
 # function to perform any post compile activities
