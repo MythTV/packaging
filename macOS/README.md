@@ -6,15 +6,8 @@ https://www.mythtv.org/wiki/Building_MythFrontend_on_Mac_OS_X
 * **compileMythtvAnsible_cmake.zsh** - A script that compiles and installs all mythtv binaries using cmake. The script downloads and installs any mythtv/mythplugins dependencies as specified in the mythtv ansible repo via MacPorts.  It also clones the appropriate ansible/mythtv/packaging git repos from github, compiles mythtv and optionally mythplugins, bundles the necessary Support libraries and files into the application, and finally generates a .dmg file for distribution.  The scripts default behavior is to build the Mythfrontend.app app bundle, but a run switch
 is available to install all mythtv binaries (e.g. mythfrontend, mythbackend, mythutil) as unix executables (vs. app bundles) into a user specified path.
 
-* **compileMythtvAnsible.zsh** - A script that compiles and installs all mythtv binaries. The script downloads and installs any mythtv/mythplugins dependencies as specified in the mythtv ansible repo via MacPorts.  It also clones the appropriate ansible/mythtv/packaging git repo's from github, compiles mythtv and optionally mythplugins, bundles the necessary Support libraries and files into the application, and finally generates a .dmg file for distribution.  The scripts default behavior is to build the Mythfrontend.app app bundle, but a run switch
-is available to install all mythtv binaries (e.g. mythfrontend, mythbackend, mythutil) as unix executables (vs. app bundles) into a user specified path.
-
-* **codesignAndPackage.zsh** - A script that code signs / notarizes the Mythfrontend.app app bungle, generates a dmg file, and code signs. / notarizes the dmg bundle.
-
-* compileMythtvAnsible.zsh and codesignAndPackage.zsh will be deprecated for codesignAndPackage_cmake.zsh at a future date.
-
 Before running the script, the user must have Xcode, Xcode Command Line Tools, and MacPorts
-working on their system.
+or Hombrew working on their system.
 
 ## Step One: Install Xcode, and Xcode Command Line Tools and either Macports or Homebrew
 Both Xcode and Xcode Command Line Tools are available for installation via the Apple App Store.
@@ -37,21 +30,17 @@ Follow Homebrew's directions here: https://brew.sh/
 > brew update
 
 ## Step Two: Run the compileMythtvAnsible.zsh Script
-Run "compileMythtvAnsible.zsh".
-
-  of
-
 Run "compileMythtvAnsible_cmake.zsh".
 
 The script automatically performs the following steps:
-1. Sets up the build directory structure (tries to mirror the mythtv dev team's structure)
+1. Sets up the build directory structure
 1. Installs ansible-playbook via MacPorts or Homebrew
 1. Clones the MythTV ansible git repository
 1. Installs MythTV compile requirements and their dependencies via ansible/macports/homebrew/pip/cpanm
-1. Clones the MythTV git repository, applying any user specified patches to mythtv or plugins
-1. Clones the MythTV Packaging git repository, applying any user specified patches
-1. Configures, builds, and installs MythTV to a temp directory
-1. Optionally Configures, builds, and installs MythPlugins to a temp directory
-1. Deploys QT and python to the compiled mythfrontend.app
-1. Copies the required dylibs, support data, and fonts into the app linking
-1. Packages mythfrontend.app into a .dmg file
+1. Clones the MythTV git repository
+1. Clones the MythTV Packaging git repository
+1. Configures, builds, and installs MythTV to a user specified directory
+1. Optionally Configures, builds, and installs MythPlugins
+1. Optionally generates the mythfrontend.app bundle
+1. Optionally code signs and notarizes the app bundle
+1. Optionally Packages mythfrontend.app into a .dmg file
