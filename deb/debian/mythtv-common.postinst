@@ -30,7 +30,11 @@ case "$1" in
 
     db_get mythtv/mysql_mythtv_password
     if [ -z "$RET" ]; then
-        mythtv_password="$(pwgen -s 8)"
+        if which pwgen; then
+            mythtv_password="$(pwgen -s 8)"
+        else
+            mythtv_password="$(LC_ALL=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 8)"
+        fi
         db_set mythtv/mysql_mythtv_password "$mythtv_password"
         db_subst mythtv/display_password password "$mythtv_password"
         db_input high mythtv/display_password || true
