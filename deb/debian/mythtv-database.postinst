@@ -50,8 +50,8 @@ update_database() {
         MYSQL_NATIVE_CONF="/etc/mysql/mysql.conf.d/enable-native-password.cnf"
         if [ ! -f "$MYSQL_NATIVE_CONF" ]; then
             cat > "$MYSQL_NATIVE_CONF" <<EOF
-                [mysqld]
-                mysql_native_password=ON
+[mysqld]
+mysql_native_password=ON
             EOF
             # Reload MySQL configuration
             if systemctl is-active --quiet mysql; then
