@@ -52,7 +52,7 @@ update_database() {
             cat > "$MYSQL_NATIVE_CONF" <<EOF
 [mysqld]
 mysql_native_password=ON
-            EOF
+EOF
             # Reload MySQL configuration
             if systemctl is-active --quiet mysql; then
                 systemctl restart mysql
