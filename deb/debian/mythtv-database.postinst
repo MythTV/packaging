@@ -46,20 +46,6 @@ update_database() {
         QUERY="GRANT ALL PRIVILEGES ON $database.* TO '$mythtv_username'@'%' IDENTIFIED BY '$mythtv_password'; \
             GRANT ALL ON $database.* TO '$mythtv_username'@'%';"
     else
-        # Ensure mysql_native_password plugin is enabled before creating MythTV DB user
-        MYSQL_NATIVE_CONF="/etc/mysql/mysql.conf.d/enable-native-password.cnf"
-        if [ ! -f "$MYSQL_NATIVE_CONF" ]; then
-            cat > "$MYSQL_NATIVE_CONF" <<EOF
-[mysqld]
-mysql_native_password=ON
-EOF
-            # Reload MySQL configuration
-            if systemctl is-active --quiet mysql; then
-                systemctl restart mysql
-            else
-                systemctl start mysql
-            fi
-        fi
         QUERY="CREATE USER IF NOT EXISTS '$mythtv_username'@'%' IDENTIFIED WITH mysql_native_password; \
             ALTER USER '$mythtv_username'@'%' IDENTIFIED BY '$mythtv_password'; \
             GRANT ALL ON $database.* TO '$mythtv_username'@'%';"
