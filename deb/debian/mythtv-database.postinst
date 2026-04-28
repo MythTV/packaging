@@ -53,8 +53,8 @@ update_database() {
             GRANT ALL ON $database.* TO '$mythtv_username'@'localhost';"
     fi
 
-    if ! mysql $SECURITY_INFO --execute "$QUERY" "$database" >/dev/null 2>&1; then
-        fail_database "mysql 'hidden SECURITY_INFO' --execute=$QUERY $database"
+    if ! mysql $SECURITY_INFO --execute "$QUERY" mysql >/dev/null 2>&1; then
+        fail_database "mysql 'hidden SECURITY_INFO' --execute=$QUERY mysql"
     fi
 
     # load timezone data
