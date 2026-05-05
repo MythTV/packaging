@@ -74,6 +74,10 @@ in the top level mythtv directory:
 
     BUILD_PRESET=qt5
 
+For Ubuntu 26.04 and later, Qt6 is recommended. Use this
+
+    BUILD_PRESET=qt6
+
 Change the build type. Default is Debug. For other options see README.CMake.md
 in the mythtv repository:
 
