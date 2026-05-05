@@ -8,6 +8,10 @@ if [[ -f $HOME/.buildrc ]] ; then
     . $HOME/.buildrc
 fi
 
+if [[ "$BUILD_PRESET" == '' ]] ; then
+    BUILD_PRESET=qt5
+fi
+
 strip=
 while (( "$#" >= 1 )) ; do
     case $1 in
@@ -115,6 +119,12 @@ case $projname in
             strip -g `find $installdir/$packagename/usr/lib/ -type f -executable -name '*.so*'`
         fi
 
+        if [[ "$BUILD_PRESET" == qt6 ]] ; then
+            qt_libs="libqt6widgets6, libqt6sql6-mysql, libqt6xml6, libqt6network6,libqt6webenginewidgets6,  libqt6webenginequick6 "
+        else
+            qt_libs="libqt5widgets5, libqt5sql5-mysql, libqt5xml5, libqt5network5, libqt5script5 "
+        fi
+
         cat >$installdir/$packagename/DEBIAN/control <<FINISH
 Package: mythtv-light
 Version: $packagerel
@@ -124,7 +134,7 @@ Architecture: $arch
 Essential: no
 Installed-Size: `du -B1024 -d0 $installdir/$packagename | cut  -f1`
 Maintainer: Peter Bennett <pbennett@mythtv.org>
-Depends: libtag1v5 | libtag2, libavahi-compat-libdnssd1, libqt5widgets5, libqt5script5, libqt5sql5-mysql, libqt5xml5, libqt5network5, pciutils, libva-x11-1 | libva-x11-2, libva-glx1 | libva-glx2, libqt5opengl5, libdbi-perl,  libdbd-mysql-perl, libnet-upnp-perl, libcec3 | libcec4 | libcec6 | libcec7, libfftw3-double3, libfftw3-single3, libass5 | libass9, libfftw3-3 | libfftw3-bin, libraw1394-11, libiec61883-0, libavc1394-0, fonts-liberation, libva-drm1 | libva-drm2, libmp3lame0, libxv1, libpulse0, libhdhomerun3 | libhdhomerun4 | libhdhomerun5, libxnvctrl0, libsamplerate0, libbluray1 | libbluray2, liblzo2-2, libio-socket-inet6-perl, libxml-simple-perl, python3-lxml, python3-mysqldb, python3-requests, python3-requests-cache, libxinerama1, libzip4 | libzip5, libsoundtouch1
+Depends: libtag1v5 | libtag2, libavahi-compat-libdnssd1, $qt_libs, pciutils, libva-x11-1 | libva-x11-2, libva-glx1 | libva-glx2, libqt5opengl5, libdbi-perl,  libdbd-mysql-perl, libnet-upnp-perl, libcec3 | libcec4 | libcec6 | libcec7, libfftw3-double3, libfftw3-single3, libass5 | libass9, libfftw3-3 | libfftw3-bin, libraw1394-11, libiec61883-0, libavc1394-0, fonts-liberation, libva-drm1 | libva-drm2, libmp3lame0, libxv1, libpulse0, libhdhomerun3 | libhdhomerun4 | libhdhomerun5, libxnvctrl0, libsamplerate0, libbluray1 | libbluray2 | libbluray3, liblzo2-2, libio-socket-inet6-perl, libxml-simple-perl, python3-lxml, python3-mysqldb, python3-requests, python3-requests-cache, libxinerama1, libzip4 | libzip5, libsoundtouch1, libvdpau1, libx264-165, libx265-215
 Conflicts: mythtv-common, mythtv-frontend, mythtv-backend
 Homepage: http://www.mythtv.org
 Description: MythTV Light
