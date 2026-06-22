@@ -140,6 +140,9 @@ check_install_package fakeroot
 #need debhelper
 check_install_package dh debhelper
 
+#need dh-python for build-dsc
+check_install_package dh-python
+
 #clone in our packaging branch
 mkdir -p "$DIRECTORY/mythtv"
 rm -rf "$DIRECTORY/mythtv/debian"
