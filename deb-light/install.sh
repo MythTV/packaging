@@ -15,19 +15,6 @@ if [[ "$BUILD_METHOD" == '' ]]; then
     BUILD_METHOD=cmake
 fi
 
-case $BUILD_METHOD in
-    cmake)
-        echo "With cmake the build script also installs software. Nothing to do in the install.sh script"
-        exit 0
-        ;;
-    make)
-        # Continue with rest of script below
-        ;;
-    *)
-        echo "ERROR: Invalid Build Method $BUILD_METHOD"
-        exit 2
-        ;;
-esac
 
 # This will get projname and destdir
 . "$scriptpath/getdestdir.source"
@@ -40,6 +27,24 @@ echo projdir=$projdir
 echo "chroot: $SCHROOT_CHROOT_NAME" > $gitbasedir/../install_${projdir}.out
 echo "branch: $branch" >> $gitbasedir/../install_${projdir}.out
 echo "dest: $destdir" >> $gitbasedir/../install_${projdir}.out
+
+case $BUILD_METHOD in
+    cmake)
+        cd ..
+        set -o pipefail
+        cmake --install build-$BUILD_PRESET |& tee -a $gitbasedir/../install_${projdir}.out || rc=$?
+        set +o pipefail
+        exit
+        ;;
+    make)
+        # Continue with rest of script below
+        ;;
+    *)
+        echo "ERROR: Invalid Build Method $BUILD_METHOD"
+        exit 2
+        ;;
+esac
+
 case $projname in
     mythtv)
         rm -rf $destdir

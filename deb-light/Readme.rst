@@ -146,8 +146,7 @@ If building with cmake (the default), it does the MythTV configure, build, and i
 
 install
 -------
-The install into the build directory is done by the build.sh script
-when using cmake. Whan using make, it is done by running install.sh.
+The install into the build directory is done by running install.sh.
 
 The script installs the build into the directory selected for test builds
 the first time you run. It creates a hierarchy of directories for
