@@ -15,6 +15,9 @@ if [[ "$BUILD_METHOD" == '' ]]; then
     BUILD_METHOD=cmake
 fi
 
+if [[ "$BUILD_PRESET" == '' ]] ; then
+    BUILD_PRESET=qt5
+fi
 
 # This will get projname and destdir
 . "$scriptpath/getdestdir.source"
