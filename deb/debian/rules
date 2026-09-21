@@ -50,13 +50,13 @@ MYTHTV_CONFIGURE_OPTS +=    --compile-type=$(MYTHTV_COMPILE_TYPE) \
 #                                    #
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq "$(DEB_BUILD_ARCH)" "armhf"
-	MYTHTV_CONFIGURE_OPTS += --disable-opengl --disable-vaapi
+	MYTHTV_CONFIGURE_OPTS += --disable-vaapi
 else ifeq "$(DEB_BUILD_ARCH)" "arm64"
-	MYTHTV_CONFIGURE_OPTS += --disable-opengl --disable-vaapi
+	MYTHTV_CONFIGURE_OPTS += --disable-vaapi
 else ifeq "$(DEB_BUILD_ARCH)" "s390x"
-	MYTHTV_CONFIGURE_OPTS += --disable-opengl --disable-vaapi
+	MYTHTV_CONFIGURE_OPTS += --disable-vaapi
 else ifeq "$(DEB_BUILD_ARCH)" "ppc64el"
-	MYTHTV_CONFIGURE_OPTS += --disable-opengl --disable-vaapi
+	MYTHTV_CONFIGURE_OPTS += --disable-vaapi
 else
 	MYTHTV_CONFIGURE_OPTS += --enable-vaapi
 endif
@@ -73,10 +73,6 @@ endif
 #Mythplugins configure opts
 MYTHPLUGINS_CONFIGURE_OPTS += --prefix=/usr \
                               --qmake=/usr/bin/qmake \
-
-ifeq "$(DEB_BUILD_ARCH)" "armhf"
-	MYTHPLUGINS_CONFIGURE_OPTS += --disable-opengl
-endif
 
 #Use moar CPUs for jya
 PROCESSORS       ?= $(shell grep -ic ^processor /proc/cpuinfo)
